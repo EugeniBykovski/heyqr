@@ -58,6 +58,16 @@ export const DEFAULT_DESIGN: EditorDesign = {
   caption: "",
 };
 
+/** Customer code colours offered as quick swatches (design: Ink, Violet, Forest, Ocean, Berry, Clay). QR data, not UI tokens. */
+export const QR_INKS = [
+  { hex: "#0D0D12", name: "ink" },
+  { hex: "#4B2EE0", name: "violet" },
+  { hex: "#1F5C45", name: "forest" },
+  { hex: "#1F4E8C", name: "ocean" },
+  { hex: "#8C2F4B", name: "berry" },
+  { hex: "#9A4A22", name: "clay" },
+] as const;
+
 /** Screen base size in px; PNG exports scale it (2× by default, up to 8192 px). */
 const BASE = 512;
 

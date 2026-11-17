@@ -5,7 +5,8 @@ import { DEFAULT_DESIGN, type EditorDesign } from "@/entities/qr";
 
 const KEY = "heyqr:draft:v1";
 
-function read(): EditorDesign | null {
+/** Reads the guest draft; null when there is none or storage is unavailable (also on the server). */
+export function readDraft(): EditorDesign | null {
   try {
     const raw = window.localStorage.getItem(KEY);
     return raw ? { ...DEFAULT_DESIGN, ...(JSON.parse(raw) as Partial<EditorDesign>) } : null;
@@ -20,22 +21,25 @@ function read(): EditorDesign | null {
  */
 export function useDraft() {
   // The editor renders only in the browser (see QrEditorLoader), so storage can be read during the first render.
-  const [initial] = useState(read);
+  const [initial] = useState(readDraft);
   const [design, setDesign] = useState<EditorDesign>(initial ?? DEFAULT_DESIGN);
   const restored = initial !== null;
 
   useEffect(() => {
-    const id = window.setTimeout(() => {
-      try {
-        window.localStorage.setItem(KEY, JSON.stringify(design));
-      } catch {
-        /* storage unavailable: keep editing in memory */
-      }
-    }, 300);
+    const id = window.setTimeout(() => writeDraft(design), 300);
     return () => window.clearTimeout(id);
   }, [design]);
 
   return { design, setDesign, restored };
+}
+
+/** Saves the guest draft immediately, e.g. right before navigating to the editor. */
+export function writeDraft(design: EditorDesign) {
+  try {
+    window.localStorage.setItem(KEY, JSON.stringify(design));
+  } catch {
+    /* storage unavailable: the editor starts from defaults */
+  }
 }
 
 export function clearDraft() {

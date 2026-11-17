@@ -1,82 +1,113 @@
-import { PlusIcon, QrCodeIcon } from "lucide-react";
+import { QrCodeIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { getFormatter, getTranslations } from "next-intl/server";
-import { QrPreview } from "@/entities/qr";
 import { Link } from "@/i18n/navigation";
+import { resolveLocale } from "@/i18n/server";
 import { requireUser } from "@/server/auth";
 import { encodedValue } from "@/server/qr/export";
 import { listQrCodes } from "@/server/qr/repository";
-import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
-import { Card } from "@/shared/ui/card";
-import { resolveLocale } from "@/i18n/server";
+import { segmentedOption, SegmentedTrack } from "@/shared/ui/segmented";
+import { libraryList, QrCard, type QrCardStatus } from "@/widgets/qr-library";
+import { LibraryHeader } from "./library-header";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("dashboard");
   return { title: t("title") };
 }
 
-const STATUS_VARIANT = { draft: "neutral", active: "success", paused: "warning", archived: "neutral" } as const;
+const FILTERS = ["all", "static", "dynamic"] as const;
+type Filter = (typeof FILTERS)[number];
 
-export default async function DashboardPage({ params }: PageProps<"/[locale]/dashboard">) {
+export default async function DashboardPage({ params, searchParams }: PageProps<"/[locale]/dashboard">) {
   await resolveLocale(params);
-  const [t, format, user] = await Promise.all([getTranslations("dashboard"), getFormatter(), requireUser()]);
+  const [t, tTypes, format, user, query] = await Promise.all([
+    getTranslations("dashboard"),
+    getTranslations("contentTypes"),
+    getFormatter(),
+    requireUser(),
+    searchParams,
+  ]);
   const codes = await listQrCodes(user.id);
+  const filter: Filter = FILTERS.find((f) => f === query.filter) ?? "all";
+  const counts = {
+    all: codes.length,
+    static: codes.filter((c) => c.model === "static").length,
+    dynamic: codes.filter((c) => c.model === "dynamic").length,
+  };
+  const dynamicActive = codes.filter((c) => c.model === "dynamic" && c.status === "active").length;
+  const visible = filter === "all" ? codes : codes.filter((c) => c.model === filter);
 
-  return (
-    <>
-      <header className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-h1">{t("title")}</h1>
-        <Button asChild variant="primary">
-          <Link href="/create">
-            <PlusIcon aria-hidden />
-            {t("new")}
-          </Link>
-        </Button>
-      </header>
-      {codes.length === 0 ? (
-        <Card className="items-center gap-3 py-16 text-center">
-          <span className="grid size-14 place-items-center rounded-full bg-accent text-accent-foreground">
-            <QrCodeIcon aria-hidden className="size-7" />
+  const header = (
+    <LibraryHeader
+      title={t("title")}
+      createLabel={t("new")}
+      sub={<p>{codes.length ? t("sub", { count: codes.length, dynamic: dynamicActive }) : t("subEmpty")}</p>}
+    />
+  );
+
+  if (codes.length === 0)
+    return (
+      <div>
+        {header}
+        <div className="flex flex-col items-center gap-3.5 rounded-2xl border border-dashed border-input bg-surface px-5 py-12 text-center">
+          <span className="grid size-28 place-items-center rounded-xl bg-subtle text-muted-foreground">
+            <QrCodeIcon aria-hidden className="size-10" strokeWidth={1.5} />
           </span>
           <h2 className="text-h2">{t("empty.title")}</h2>
-          <p className="text-body text-secondary-foreground">{t("empty.text")}</p>
-          <Button asChild variant="primary">
+          <p className="max-w-measure text-secondary-foreground">{t("empty.text")}</p>
+          <Button asChild variant="primary" size="lg">
             <Link href="/create">{t("empty.cta")}</Link>
           </Button>
-        </Card>
-      ) : (
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {codes.map((qr) => {
-            const layout = qr.layouts[0];
-            return (
-              <li key={qr.id}>
-                <Link
-                  href={`/dashboard/qr/${qr.id}`}
-                  aria-label={t("open", { name: qr.name })}
-                  className="flex h-full flex-col gap-3 rounded-xl border border-border bg-surface p-4 shadow-1 transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-2"
-                >
-                  <div className="grid aspect-square place-items-center rounded-lg bg-stage p-4">
-                    {layout ? (
-                      <QrPreview layout={layout.design.layout} value={encodedValue(qr)} label={qr.name} className="size-full" />
-                    ) : null}
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <span className="truncate text-h3">{qr.name}</span>
-                    <span className="flex flex-wrap gap-1.5">
-                      <Badge variant={STATUS_VARIANT[qr.status]}>{t(`status.${qr.status}`)}</Badge>
-                      <Badge variant={qr.model === "dynamic" ? "accent" : "neutral"}>{t(`model.${qr.model}`)}</Badge>
-                    </span>
-                    <span className="text-caption text-muted-foreground">
-                      {t("updated", { date: format.dateTime(qr.updatedAt, { dateStyle: "medium" }) })}
-                    </span>
-                  </div>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-    </>
+        </div>
+      </div>
+    );
+
+  return (
+    <div>
+      {header}
+      <SegmentedTrack role="group" aria-label={t("filterLabel")} className="mb-3.5 max-w-[23.75rem]">
+        {FILTERS.map((f) => (
+          <Link
+            key={f}
+            href={f === "all" ? "/dashboard" : `/dashboard?filter=${f}`}
+            aria-current={f === filter ? "page" : undefined}
+            className={segmentedOption}
+          >
+            {t(`filters.${f}`, { count: counts[f] })}
+          </Link>
+        ))}
+      </SegmentedTrack>
+      <ul aria-label={t("title")} className={libraryList}>
+        {visible.map((qr) => {
+          const layout = qr.layouts[0];
+          const paid = qr.model === "dynamic" ? qr.status === "active" : qr.purchasedAt !== null;
+          const status: QrCardStatus = qr.status === "active" ? (qr.model === "static" ? "purchased" : "active") : qr.status;
+          return (
+            <QrCard
+              key={qr.id}
+              name={qr.name}
+              href={`/dashboard/qr/${qr.id}`}
+              exportHref={layout ? `/create/export?qr=${qr.id}&layout=${layout.id}` : undefined}
+              layout={layout?.design.layout}
+              value={encodedValue(qr)}
+              typeLabel={tTypes(qr.content.type)}
+              model={qr.model}
+              modelLabel={t(`model.${qr.model}`)}
+              status={status}
+              statusLabel={t(`status.${status}`)}
+              meta={t("updated", { date: format.dateTime(qr.updatedAt, { dateStyle: "medium" }) })}
+              paid={paid}
+              labels={{
+                open: t("open", { name: qr.name }),
+                edit: t("actions.edit"),
+                download: t("actions.download"),
+                buy: t("actions.buy"),
+              }}
+            />
+          );
+        })}
+      </ul>
+    </div>
   );
 }

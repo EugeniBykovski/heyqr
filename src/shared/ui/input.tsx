@@ -17,3 +17,17 @@ export const fieldControl = [
 export function Input({ className, type = "text", ...props }: ComponentProps<"input">) {
   return <input type={type} data-slot="input" className={cn(fieldControl, "min-h-control", className)} {...props} />;
 }
+
+/** Design "affix": a fixed prefix (e.g. https://) joined to the input that follows it. */
+export function InputPrefix({ className, ...props }: ComponentProps<"span">) {
+  return (
+    <span
+      data-slot="input-prefix"
+      className={cn(
+        "flex shrink-0 items-center rounded-l-md border border-r-0 border-input bg-subtle px-2.5 text-[0.875rem] whitespace-nowrap text-secondary-foreground",
+        className,
+      )}
+      {...props}
+    />
+  );
+}

@@ -1,34 +1,42 @@
 "use client";
 
 import { composeLayout, encodePayload } from "@heyqr/qr-core";
-import { ArrowRightIcon, LoaderCircleIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useEffect, useEffectEvent, useMemo, useRef, useTransition } from "react";
+import { ArrowLeftIcon, ArrowRightIcon, LoaderCircleIcon } from "lucide-react";
+import { useFormatter, useTranslations } from "next-intl";
+import { Tabs as TabsPrimitive } from "radix-ui";
+import { useEffect, useEffectEvent, useMemo, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { env } from "@/env";
 import { designToLayout, isContentComplete, QrPreview, type EditorDesign } from "@/entities/qr";
-import { useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { saveDraft } from "@/server/actions/qr";
-import { cn } from "@/shared/lib/utils";
+import { pricing } from "@/shared/config/pricing";
+import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
-import { Card } from "@/shared/ui/card";
 import { Field } from "@/shared/ui/field";
 import { Input } from "@/shared/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
+import { Segmented } from "@/shared/ui/segmented";
+import { Stage, StageBar, StageCanvas, StageFoot } from "@/shared/ui/stage";
 import { ContentForm } from "./content-form";
 import { DesignPanel } from "./design-panel";
+import { editorPanel, editorRoot, editorStage, editorTopBar, editorTopBarInner } from "./editor-layout";
+import { EditorSteps } from "./editor-steps";
 import { FramePanel } from "./frame-panel";
 import { ScanStatus } from "./scan-status";
 import { clearDraft, useDraft } from "./use-draft";
 
 /** Placeholder encoded in dynamic previews: the real short code is assigned when the plan starts. */
 const DYNAMIC_PREVIEW_CODE = "preview";
+const STEPS = ["content", "design", "frame"] as const;
+type Step = (typeof STEPS)[number];
 
 export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: boolean }) {
   const t = useTranslations("editor");
   const tErrors = useTranslations("errors");
+  const format = useFormatter();
   const router = useRouter();
   const { design, setDesign, restored } = useDraft();
+  const [step, setStep] = useState<Step>("content");
   const [saving, startSaving] = useTransition();
   const autoResumed = useRef(false);
   const patch = (p: Partial<EditorDesign>) => setDesign((d) => ({ ...d, ...p }));
@@ -44,6 +52,11 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
   }, [design.model, design.content, complete]);
   const layout = useMemo(() => designToLayout({ ...design, caption: design.caption || t("captionPlaceholder") }), [design, t]);
   const scan = useMemo(() => composeLayout(layout, value).scan, [layout, value]);
+  const price = format.number((design.model === "dynamic" ? pricing.dynamicMonthlyCents : pricing.staticCents) / 100, {
+    style: "currency",
+    currency: pricing.currency,
+  });
+  const canDownload = complete && scan.ok && !saving;
 
   const download = () =>
     startSaving(async () => {
@@ -72,82 +85,109 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
     if (resume && signedIn && restored) continueAfterSignIn();
   }, [resume, signedIn, restored]);
 
-  return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,26rem)] lg:items-start">
-      <Card className="order-2 lg:order-1">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field id="qr-name" label={t("name")}>
-            <Input
-              id="qr-name"
-              value={design.name}
-              maxLength={80}
-              placeholder={t("namePlaceholder")}
-              onChange={(e) => patch({ name: e.target.value })}
-            />
-          </Field>
-          <fieldset className="flex flex-col gap-1.5">
-            <legend className="mb-1.5 text-label">{t("model.label")}</legend>
-            <div className="grid grid-cols-2 gap-1 rounded-full bg-subtle p-1">
-              {(["static", "dynamic"] as const).map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  aria-pressed={design.model === m}
-                  title={t(`model.${m}Hint`)}
-                  onClick={() => patch({ model: m })}
-                  className={cn(
-                    "min-h-9 cursor-pointer rounded-full text-label text-secondary-foreground",
-                    design.model === m && "bg-surface text-foreground shadow-1",
-                  )}
-                >
-                  {t(`model.${m}`)}
-                </button>
-              ))}
-            </div>
-            <p className="text-caption text-muted-foreground">{t(`model.${design.model}Hint`)}</p>
-          </fieldset>
-        </div>
-        <Tabs defaultValue="content">
-          <TabsList>
-            <TabsTrigger value="content">{t("steps.content")}</TabsTrigger>
-            <TabsTrigger value="design">{t("steps.design")}</TabsTrigger>
-            <TabsTrigger value="frame">{t("steps.frame")}</TabsTrigger>
-          </TabsList>
-          <TabsContent value="content">
-            <ContentForm content={design.content} onChange={(content) => patch({ content })} />
-          </TabsContent>
-          <TabsContent value="design">
-            <DesignPanel design={design} onChange={patch} />
-          </TabsContent>
-          <TabsContent value="frame">
-            <FramePanel design={design} onChange={patch} />
-          </TabsContent>
-        </Tabs>
-      </Card>
+  const downloadButton = (size: "sm" | "md" | "lg", className?: string) => (
+    <Button variant="primary" size={size} className={className} disabled={!canDownload} aria-busy={saving || undefined} onClick={download}>
+      {saving ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
+      {saving ? t("saving") : t("download")}
+      {!saving ? <ArrowRightIcon aria-hidden /> : null}
+    </Button>
+  );
 
-      <aside
-        aria-label={t("preview")}
-        className="order-1 flex flex-col gap-4 lg:sticky lg:top-[calc(var(--spacing-header)+1.5rem)] lg:order-2"
-      >
-        <Card className="items-center gap-5">
-          <div className="relative w-full overflow-hidden rounded-lg bg-stage p-6 select-none">
-            <QrPreview layout={layout} value={value} label={t("preview")} className="mx-auto aspect-square max-w-80" />
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-0 grid -rotate-30 place-items-center text-h1 font-bold tracking-[0.3em] text-ink-950/7 uppercase"
-            >
-              {t("preview")}
-            </span>
+  return (
+    <TabsPrimitive.Root value={step} onValueChange={(v) => setStep(v as Step)} className="flex flex-col">
+      <div className={editorTopBar}>
+        <div className={editorTopBarInner}>
+          <div className="flex min-w-0 flex-1">
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/">
+                <ArrowLeftIcon aria-hidden />
+                <span className="max-sm:sr-only">{t("back")}</span>
+              </Link>
+            </Button>
           </div>
-          <ScanStatus report={scan} />
-          <Button variant="primary" size="lg" className="w-full" disabled={!complete || !scan.ok || saving} onClick={download}>
-            {saving ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
-            {saving ? t("saving") : t("download")}
-            {!saving ? <ArrowRightIcon aria-hidden /> : null}
-          </Button>
-          <p className="text-center text-caption text-muted-foreground">{t("previewNote")}</p>
-        </Card>
-      </aside>
-    </div>
+          <EditorSteps label={t("stepsLabel")} current={step} steps={STEPS.map((s) => ({ value: s, label: t(`steps.${s}`) }))} />
+          <div className="flex min-w-0 flex-1 justify-end">{downloadButton("sm", "max-sm:hidden")}</div>
+        </div>
+      </div>
+
+      <div className={editorRoot}>
+        <section aria-label={t("preview")} className={editorStage}>
+          <Stage className="rounded-xl">
+            <StageBar>
+              <span className="min-w-0 grow truncate px-1 text-label">{design.name.trim() || t("namePlaceholder")}</span>
+              <Badge variant={design.model === "dynamic" ? "accent" : "neutral"}>{t(`model.${design.model}`)}</Badge>
+            </StageBar>
+            <StageCanvas className="select-none">
+              <div className="relative size-full">
+                <QrPreview layout={layout} value={value} label={t("preview")} className="size-full" />
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 grid -rotate-30 place-items-center text-h1 font-bold tracking-[0.3em] text-foreground/7 uppercase"
+                >
+                  {t("preview")}
+                </span>
+              </div>
+            </StageCanvas>
+            <StageFoot>
+              <ScanStatus report={scan} compact />
+              <span className="text-caption text-muted-foreground max-lg:hidden">{t("previewNote")}</span>
+              {downloadButton("md", "max-lg:hidden")}
+            </StageFoot>
+          </Stage>
+        </section>
+
+        <section aria-label={t("settings")} className={editorPanel}>
+          <div className="mb-5 flex flex-col gap-4 @[25rem]/panel:grid @[25rem]/panel:grid-cols-2">
+            <Field id="qr-name" label={t("name")}>
+              <Input
+                id="qr-name"
+                value={design.name}
+                maxLength={80}
+                placeholder={t("namePlaceholder")}
+                onChange={(e) => patch({ name: e.target.value })}
+              />
+            </Field>
+            <div className="flex flex-col gap-1.5">
+              <span id="qr-model" className="text-label">
+                {t("model.label")}
+              </span>
+              <Segmented
+                label={t("model.label")}
+                value={design.model}
+                options={(["static", "dynamic"] as const).map((m) => ({ value: m, label: t(`model.${m}`), hint: t(`model.${m}Hint`) }))}
+                onChange={(model) => patch({ model })}
+              />
+              <p className="text-caption text-muted-foreground">{t(`model.${design.model}Hint`)}</p>
+            </div>
+          </div>
+
+          {!scan.ok ? (
+            <div className="mb-5">
+              <ScanStatus report={scan} />
+            </div>
+          ) : null}
+
+          <TabsPrimitive.Content value="content" className="animate-rise outline-none">
+            <ContentForm content={design.content} onChange={(content) => patch({ content })} />
+          </TabsPrimitive.Content>
+          <TabsPrimitive.Content value="design" className="animate-rise outline-none">
+            <DesignPanel design={design} onChange={patch} />
+          </TabsPrimitive.Content>
+          <TabsPrimitive.Content value="frame" className="animate-rise outline-none">
+            <FramePanel design={design} onChange={patch} />
+          </TabsPrimitive.Content>
+
+          {/* Phones and tablets: sticky action bar with the price; it stops being sticky while a field has focus,
+              so the field and its error stay visible above the keyboard. */}
+          <div className="sticky bottom-0 z-10 -mx-4 mt-7 flex items-center gap-3 border-t border-border bg-page/92 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur-md group-has-[input:focus,textarea:focus,select:focus]/ed:static sm:-mx-6 sm:px-6 lg:hidden">
+            <div className="flex min-w-0 flex-1 flex-col">
+              <b className="text-[0.9375rem]">{t(design.model === "dynamic" ? "pricePerMonth" : "priceOnce", { price })}</b>
+              <span className="truncate text-[0.75rem] text-muted-foreground">{t("previewFree")}</span>
+            </div>
+            {downloadButton("md")}
+          </div>
+        </section>
+      </div>
+    </TabsPrimitive.Root>
   );
 }

@@ -6,39 +6,86 @@
   "nav": {
     "create": "Create",
     "pricing": "Pricing",
-    "myCodes": "My codes",
-    "billing": "Billing",
+    "myCodes": "My QR codes",
+    "billing": "Plan & billing",
     "signIn": "Sign in",
     "signOut": "Sign out",
-    "account": "Account menu",
+    "account": "Account and billing, {name}",
     "language": "Language",
     "skipToContent": "Skip to content",
-    "home": "Hey QR home"
+    "home": "Hey QR home",
+    "createCode": "Create QR code",
+    "menu": "Menu",
+    "main": "Main"
   },
   "footer": {
-    "tagline": "QR codes that look like your brand and always scan.",
     "terms": "Terms",
     "privacy": "Privacy",
-    "rights": "© {year} Hey QR"
+    "rights": "© {year} Hey QR",
+    "pricing": "Pricing",
+    "label": "Footer"
   },
   "home": {
-    "eyebrow": "QR code studio",
-    "title": "QR codes that look like your brand",
-    "lead": "Pick colors, shapes, a logo and a frame. Every edit is checked with a real scanner, so what you print is what scans.",
-    "cta": "Create a QR code",
-    "secondary": "See pricing",
-    "previewLabel": "Example QR code for a portfolio",
-    "features": {
-      "title": "Everything a printed code needs",
-      "scan": { "title": "Scan check on every edit", "text": "We decode your code at sticker, card and poster sizes before you pay." },
-      "design": { "title": "Your colors, shapes and logo", "text": "8 module styles, 5 corner styles, icons or your own logo." },
-      "frames": { "title": "Frames and captions", "text": "Add a call to action like “Scan for the menu” in 8 frame styles." },
-      "files": { "title": "Lossless files", "text": "SVG for print shops, PNG up to 8192 px or 1200 dpi." },
-      "dynamic": {
-        "title": "Change the link after printing",
-        "text": "Dynamic codes redirect through a short link you can edit any time."
+    "hero": {
+      "eyebrow": "QR studio · free to design and preview",
+      "title": "A QR code that looks like it’s yours.",
+      "lead": "Paste a link and style it here. The preview updates as you type, and designing is free."
+    },
+    "tool": {
+      "typesLabel": "What should the code open?",
+      "more": "More +",
+      "url": "Website address",
+      "urlPlaceholder": "yourname.com/portfolio",
+      "errors": {
+        "empty": "Enter a web address, like yourname.com.",
+        "spaces": "Web addresses can’t contain spaces."
       },
-      "types": { "title": "9 content types", "text": "Website, Wi-Fi, contact card, email, phone, SMS, location, event or text." }
+      "color": "Code color",
+      "inks": {
+        "ink": "Ink",
+        "violet": "Violet",
+        "forest": "Forest",
+        "ocean": "Ocean",
+        "berry": "Berry",
+        "clay": "Clay"
+      },
+      "caption": "Caption",
+      "captionDefault": "View portfolio",
+      "continue": "Continue designing",
+      "priceNote": "Free to design and preview. Downloading the PNG and SVG costs <b>{price}</b> per code, once.",
+      "seePricing": "See pricing",
+      "stageTitle": "{type} · live preview",
+      "scans": "Scans",
+      "livePreview": "Live preview",
+      "realCode": "Real, scannable code",
+      "previewLabel": "Preview of your QR code"
+    },
+    "how": {
+      "label": "How it works",
+      "content": {
+        "title": "Add your content",
+        "text": "A link, text, Wi-Fi details or a contact card."
+      },
+      "design": {
+        "title": "Design it",
+        "text": "Layout, size, shapes, colors, logo and caption, with a live scan check."
+      },
+      "download": {
+        "title": "Pay and download",
+        "text": "Sign in with Google, pay once, download PNG or SVG again anytime."
+      }
+    },
+    "models": {
+      "title": "Will you change the link after printing?",
+      "lead": "That one question decides which code you need.",
+      "static": {
+        "badge": "No · Static QR",
+        "text": "The link is built into the pattern. One payment of <b>{price}</b> per code."
+      },
+      "dynamic": {
+        "badge": "Yes · Dynamic QR",
+        "text": "The code holds a permanent short link you can redirect anytime. <b>{price}</b>/month for up to {limit} codes."
+      }
     }
   },
   "pricing": {
@@ -105,7 +152,11 @@
   },
   "editor": {
     "title": "Create a QR code",
-    "steps": { "content": "Content", "design": "Design", "frame": "Frame" },
+    "steps": {
+      "content": "Content",
+      "design": "Design",
+      "frame": "Frame"
+    },
     "type": "What should the code open?",
     "model": {
       "label": "Code type",
@@ -127,7 +178,11 @@
     "logoUpload": "Upload logo",
     "logoSize": "Logo size",
     "layout": "Layout",
-    "presets": { "qr": "Code only", "caption": "With caption", "frame": "Frame" },
+    "presets": {
+      "qr": "Code only",
+      "caption": "With caption",
+      "frame": "Frame"
+    },
     "frameStyle": "Frame style",
     "caption": "Caption",
     "captionPlaceholder": "Scan me",
@@ -169,7 +224,14 @@
       "star": "Star",
       "coffee": "Coffee",
       "pin": "Pin"
-    }
+    },
+    "back": "Home",
+    "stepsLabel": "Create a QR code",
+    "settings": "Design settings",
+    "scanFailed": "Check scan",
+    "priceOnce": "{price} once",
+    "pricePerMonth": "{price} / month",
+    "previewFree": "Preview free · pay when you download"
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",
@@ -194,13 +256,40 @@
     "secure": "Payments are processed by Stripe."
   },
   "dashboard": {
-    "title": "My codes",
-    "new": "New code",
-    "empty": { "title": "No codes yet", "text": "Design your first QR code. It takes about a minute.", "cta": "Create a QR code" },
-    "status": { "draft": "Draft", "active": "Active", "paused": "Paused", "archived": "Archived" },
-    "model": { "static": "Static", "dynamic": "Dynamic" },
+    "title": "My QR codes",
+    "new": "Create QR code",
+    "empty": {
+      "title": "No QR codes yet",
+      "text": "Codes you buy or start designing appear here. You can download them again and add new layouts anytime.",
+      "cta": "Create your first QR code"
+    },
+    "status": {
+      "draft": "Draft",
+      "active": "Active",
+      "paused": "Paused",
+      "archived": "Archived",
+      "purchased": "Purchased"
+    },
+    "model": {
+      "static": "Static",
+      "dynamic": "Dynamic"
+    },
     "updated": "Updated {date}",
-    "open": "Open {name}"
+    "open": "Open {name}",
+    "sub": "{count, plural, one {# code} other {# codes}} · {dynamic} dynamic active",
+    "subEmpty": "Your purchased and draft codes live here.",
+    "filterLabel": "Filter",
+    "filters": {
+      "all": "All {count}",
+      "static": "Static {count}",
+      "dynamic": "Dynamic {count}"
+    },
+    "actions": {
+      "edit": "Edit design",
+      "download": "Download",
+      "buy": "Buy & download"
+    },
+    "loading": "Loading your QR codes"
   },
   "qr": {
     "back": "All codes",
@@ -228,13 +317,24 @@
     "noPurchases": "No purchases yet."
   },
   "legal": {
-    "terms": { "title": "Terms of Service" },
-    "privacy": { "title": "Privacy Policy" },
+    "terms": {
+      "title": "Terms of Service"
+    },
+    "privacy": {
+      "title": "Privacy Policy"
+    },
     "draft": "This page is a placeholder until the legal text is approved."
   },
   "errors": {
-    "notFound": { "title": "Page not found", "text": "The page you’re looking for doesn’t exist.", "cta": "Go home" },
-    "linkUnavailable": { "title": "This link is not active", "text": "The owner of this QR code has paused it or it no longer exists." },
+    "notFound": {
+      "title": "Page not found",
+      "text": "The page you’re looking for doesn’t exist.",
+      "cta": "Go home"
+    },
+    "linkUnavailable": {
+      "title": "This link is not active",
+      "text": "The owner of this QR code has paused it or it no longer exists."
+    },
     "generic": "Something went wrong. Please try again.",
     "invalid": "Please check the highlighted fields.",
     "unauthorized": "Please sign in to continue."
