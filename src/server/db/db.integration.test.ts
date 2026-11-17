@@ -22,8 +22,26 @@ describe.skipIf(!url)("database (real PostgreSQL)", () => {
     if (!url) return;
     assertAllowed("reset", "test", url);
     pool = new Pool({ connectionString: url, max: 2 });
-    // Removes everything the test role owns in this database (tables, types, the drizzle schema); works whoever owns "public".
-    await pool.query("drop owned by current_user cascade; create schema if not exists public;");
+    // Removes the app's objects only: the drizzle schema plus the tables, sequences and enum types the test role owns
+    // in "public". Works whether the role is a plain owner (local) or the container superuser (CI), where
+    // `drop owned by` fails because a superuser also owns system objects.
+    await pool.query(`
+      drop schema if exists drizzle cascade;
+      do $$
+      declare r record;
+      begin
+        for r in select tablename as name from pg_tables where schemaname = 'public' and tableowner = current_user loop
+          execute format('drop table if exists public.%I cascade', r.name);
+        end loop;
+        for r in select sequencename as name from pg_sequences where schemaname = 'public' and sequenceowner = current_user loop
+          execute format('drop sequence if exists public.%I cascade', r.name);
+        end loop;
+        for r in select t.typname as name from pg_type t join pg_namespace n on n.oid = t.typnamespace
+                 where n.nspname = 'public' and t.typtype = 'e' and pg_get_userbyid(t.typowner) = current_user loop
+          execute format('drop type if exists public.%I cascade', r.name);
+        end loop;
+      end $$;
+    `);
   });
   afterAll(async () => {
     await pool?.end();
