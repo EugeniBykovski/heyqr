@@ -1,87 +1,70 @@
-import {
-  ArrowRightIcon,
-  FileImageIcon,
-  FrameIcon,
-  LayersIcon,
-  PaletteIcon,
-  RefreshCwIcon,
-  ShieldCheckIcon,
-  type LucideIcon,
-} from "lucide-react";
-import { getTranslations } from "next-intl/server";
-import { DEFAULT_DESIGN, designToLayout, QrPreview } from "@/entities/qr";
-import { Link } from "@/i18n/navigation";
-import { Button } from "@/shared/ui/button";
-import { Card } from "@/shared/ui/card";
+import { getFormatter, getTranslations } from "next-intl/server";
+import { env } from "@/env";
+import { QuickStart } from "@/features/qr-editor";
 import { resolveLocale } from "@/i18n/server";
+import { pricing } from "@/shared/config/pricing";
+import { Badge } from "@/shared/ui/badge";
+import { Card } from "@/shared/ui/card";
+import { Container } from "@/shared/ui/container";
 
-const FEATURES: { key: "scan" | "design" | "frames" | "files" | "dynamic" | "types"; icon: LucideIcon }[] = [
-  { key: "scan", icon: ShieldCheckIcon },
-  { key: "design", icon: PaletteIcon },
-  { key: "frames", icon: FrameIcon },
-  { key: "files", icon: FileImageIcon },
-  { key: "dynamic", icon: RefreshCwIcon },
-  { key: "types", icon: LayersIcon },
-];
-
-const heroLayout = designToLayout({
-  ...DEFAULT_DESIGN,
-  fg: "#24137A",
-  pattern: "dot",
-  eyeFrame: "rounded",
-  eyeBall: "circle",
-  logo: { kind: "icon", icon: "globe" },
-  preset: "frame",
-  frameStyle: "bar",
-  caption: "View portfolio",
-});
+const STEPS = ["content", "design", "download"] as const;
 
 export default async function HomePage({ params }: PageProps<"/[locale]">) {
   await resolveLocale(params);
-  const t = await getTranslations("home");
+  const [t, format] = await Promise.all([getTranslations("home"), getFormatter()]);
+  const money = (cents: number) => format.number(cents / 100, { style: "currency", currency: pricing.currency });
+  const b = (chunks: React.ReactNode) => <b className="font-semibold">{chunks}</b>;
 
   return (
-    <>
-      <section className="mx-auto grid max-w-page items-center gap-10 px-4 pt-12 pb-16 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:pt-20">
-        <div className="flex animate-rise flex-col items-start gap-6">
-          <span className="rounded-full bg-accent px-3 py-1 text-micro text-accent-foreground uppercase">{t("eyebrow")}</span>
-          <h1 className="text-display text-balance">{t("title")}</h1>
-          <p className="max-w-xl text-body-lg text-secondary-foreground">{t("lead")}</p>
-          <div className="flex flex-wrap gap-3">
-            <Button asChild variant="primary" size="lg">
-              <Link href="/create">
-                {t("cta")}
-                <ArrowRightIcon aria-hidden />
-              </Link>
-            </Button>
-            <Button asChild size="lg">
-              <Link href="/pricing">{t("secondary")}</Link>
-            </Button>
+    <Container>
+      <QuickStart
+        copy={
+          <>
+            <span className="inline-flex items-center gap-2 self-start rounded-full border border-border bg-surface py-1 pr-3 pl-1.5 text-[0.8125rem] font-semibold text-secondary-foreground">
+              <i aria-hidden className="ml-1.5 size-2 rounded-full bg-selected-mark" />
+              {t("hero.eyebrow")}
+            </span>
+            <h1 className="text-display text-balance">{t("hero.title")}</h1>
+            <p className="max-w-measure text-body-lg text-secondary-foreground">{t("hero.lead")}</p>
+          </>
+        }
+      />
+
+      <section aria-label={t("how.label")} className="grid gap-3 pb-8 md:grid-cols-3">
+        {STEPS.map((step, i) => (
+          <div key={step} className="flex items-start gap-3.5 rounded-lg border border-border bg-surface p-4.5">
+            <span
+              aria-hidden
+              className="grid size-7 shrink-0 place-items-center rounded-full bg-accent text-[0.8125rem] font-bold text-accent-foreground ring-1 ring-accent-strong ring-inset"
+            >
+              {i + 1}
+            </span>
+            <div className="flex flex-col gap-0.5">
+              <h2 className="text-h3">{t(`how.${step}.title`)}</h2>
+              <p className="text-secondary-foreground">{t(`how.${step}.text`)}</p>
+            </div>
           </div>
-        </div>
-        <div className="mx-auto w-full max-w-md rounded-2xl bg-surface p-8 shadow-3 sm:p-10">
-          <QrPreview layout={heroLayout} value="https://anareyes.studio/portfolio" label={t("previewLabel")} />
-        </div>
+        ))}
       </section>
 
-      <section aria-labelledby="features" className="mx-auto max-w-page px-4 pb-20 sm:px-6">
-        <h2 id="features" className="mb-6 text-h1">
-          {t("features.title")}
-        </h2>
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map(({ key, icon: Icon }) => (
-            <li key={key}>
-              <Card className="h-full">
-                <span className="grid size-10 place-items-center rounded-md bg-accent text-accent-foreground">
-                  <Icon aria-hidden className="size-5" />
-                </span>
-                <h3 className="text-h3">{t(`features.${key}.title`)}</h3>
-                <p className="text-body text-secondary-foreground">{t(`features.${key}.text`)}</p>
-              </Card>
-            </li>
-          ))}
-        </ul>
+      <section aria-labelledby="models-title" className="grid gap-3 pb-12 md:grid-cols-[1.2fr_1fr_1fr] md:items-stretch">
+        <div className="flex flex-col gap-2 py-2">
+          <h2 id="models-title" className="text-h2">
+            {t("models.title")}
+          </h2>
+          <p className="text-secondary-foreground">{t("models.lead")}</p>
+        </div>
+        <Card className="gap-3">
+          <Badge className="self-start">{t("models.static.badge")}</Badge>
+          <p>{t.rich("models.static.text", { price: money(pricing.staticCents), b })}</p>
+        </Card>
+        <Card className="gap-3">
+          <Badge variant="accent" className="self-start">
+            {t("models.dynamic.badge")}
+          </Badge>
+          <p>{t.rich("models.dynamic.text", { price: money(pricing.dynamicMonthlyCents), limit: env.DYNAMIC_ACTIVE_CODE_LIMIT, b })}</p>
+        </Card>
       </section>
-    </>
+    </Container>
   );
 }

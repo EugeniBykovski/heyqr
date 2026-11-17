@@ -6,6 +6,7 @@ export {
   EYE_FRAME_SHAPES,
   FRAME_STYLES,
   MODULE_SHAPES,
+  QR_INKS,
   designToLayout,
   type CenterIcon,
   type CenterLogo,
