@@ -6,7 +6,6 @@ import { useTransition } from "react";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { LOCALES, localeMeta, type Locale } from "@/i18n/locales";
 import { cn } from "@/shared/lib/utils";
-import { Button } from "@/shared/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +17,7 @@ import {
 
 function Flag({ className }: { className: string }) {
   return (
-    <span aria-hidden className={cn("h-3.5 w-5 shrink-0 rounded-[3px] bg-cover shadow-[inset_0_0_0_1px_rgb(13_13_18/0.12)]", className)} />
+    <span aria-hidden className={cn("h-3.75 w-5.5 shrink-0 rounded-xs bg-cover shadow-[inset_0_0_0_1px_rgb(13_13_18/0.12)]", className)} />
   );
 }
 
@@ -34,11 +33,19 @@ export function LanguageSwitch() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" aria-label={`${t("language")}: ${current.native}`} disabled={pending}>
+        <button
+          type="button"
+          aria-label={`${t("language")}: ${current.native}`}
+          disabled={pending}
+          className="group inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-full border border-border bg-surface pr-2.5 pl-2 text-[0.8125rem] font-bold tracking-[0.02em] transition-[border-color,box-shadow] duration-(--motion-fast) hover:border-border-hover hover:shadow-1 disabled:opacity-40 aria-expanded:border-accent-strong-hover aria-expanded:ring-3 aria-expanded:ring-ring-soft"
+        >
           <Flag className={current.flag} />
-          <span className="font-semibold">{current.short}</span>
-          <ChevronDownIcon aria-hidden className="text-muted-foreground" />
-        </Button>
+          <span>{current.short}</span>
+          <ChevronDownIcon
+            aria-hidden
+            className="size-3.5 text-muted-foreground transition-transform duration-(--motion-base) group-aria-expanded:rotate-180"
+          />
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64">
         <DropdownMenuLabel>{t("language")}</DropdownMenuLabel>

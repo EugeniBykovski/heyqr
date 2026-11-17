@@ -14,7 +14,13 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
 import { Logo } from "@/shared/ui/logo";
+import { MobileMenu } from "./mobile-menu";
+import { NavLink } from "./nav-links";
 
+/*
+ * Design "header": translucent paper with blur, hairline bottom border, 60 px high, wide container.
+ * Phones: logo, language, Sign in or avatar, menu button. Wider: Pricing / My QR codes nav and the Create action.
+ */
 export async function SiteHeader() {
   const t = await getTranslations("nav");
   const session = await getSession();
@@ -25,33 +31,33 @@ export async function SiteHeader() {
     .slice(0, 2)
     .join("")
     .toUpperCase();
+  const items = [
+    { href: "/pricing", label: t("pricing") },
+    ...(user
+      ? [
+          { href: "/dashboard", label: t("myCodes") },
+          { href: "/dashboard/billing", label: t("billing") },
+        ]
+      : []),
+  ];
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-page/85 backdrop-blur-md backdrop-saturate-150">
-      <div className="mx-auto flex h-header max-w-page items-center gap-3 px-3 sm:gap-4 sm:px-6">
+    <header className="sticky top-0 z-30 border-b border-border bg-page/86 backdrop-blur-[14px] backdrop-saturate-160">
+      <div className="relative mx-auto flex h-header max-w-wide items-center gap-3 pr-4 pl-3 sm:gap-4 sm:pr-6 sm:pl-5">
         <Link href="/" aria-label={t("home")} className="-ml-0.5 flex min-h-11 items-center rounded-sm p-1.5">
           <Logo />
         </Link>
-        <nav aria-label="Main" className="ml-2 hidden items-center gap-1 md:flex">
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/create">{t("create")}</Link>
-          </Button>
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/pricing">{t("pricing")}</Link>
-          </Button>
-          {user ? (
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/dashboard">{t("myCodes")}</Link>
-            </Button>
-          ) : null}
+        <nav aria-label={t("main")} className="hidden items-center gap-0.5 sm:flex">
+          <NavLink href="/pricing">{t("pricing")}</NavLink>
+          {user ? <NavLink href="/dashboard">{t("myCodes")}</NavLink> : null}
         </nav>
         <div className="ml-auto flex items-center gap-2">
           <LanguageSwitch />
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger
-                aria-label={t("account")}
-                className="grid size-9 cursor-pointer place-items-center rounded-full bg-violet-100 text-caption font-bold text-violet-800"
+                aria-label={t("account", { name: user.name })}
+                className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-full bg-accent-hover text-caption font-bold text-accent-foreground"
               >
                 {initials}
               </DropdownMenuTrigger>
@@ -74,13 +80,14 @@ export async function SiteHeader() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild size="sm">
+            <Button asChild variant="ghost" size="sm">
               <Link href="/sign-in">{t("signIn")}</Link>
             </Button>
           )}
           <Button asChild variant="primary" size="sm" className="hidden sm:inline-flex">
-            <Link href="/create">{t("create")}</Link>
+            <Link href="/create">{t("createCode")}</Link>
           </Button>
+          <MobileMenu menuLabel={t("menu")} primary={{ href: "/create", label: t("createCode") }} items={items} />
         </div>
       </div>
     </header>
