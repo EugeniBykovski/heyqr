@@ -1,0 +1,12 @@
+# Adds the Jira key from the branch name (HEY-12-frame-gallery) as the commit scope
+# when the message has none: "feat: add frames" → "feat(HEY-12): add frames".
+case "$2" in merge|squash) exit 0 ;; esac
+branch=$(git symbolic-ref --short HEAD 2>/dev/null || true)
+key=$(printf '%s' "$branch" | grep -oE '^HEY-[0-9]+' || true)
+[ -z "$key" ] && exit 0
+first=$(head -n1 "$1")
+if printf '%s' "$first" | grep -qE '^[a-z]+(\([^)]*\))?!?: '; then
+  if ! printf '%s' "$first" | grep -qE '^[a-z]+\('; then
+    sed -i.bak -E "1s/^([a-z]+)(!?): /\1($key)\2: /" "$1" && rm -f "$1.bak"
+  fi
+fi

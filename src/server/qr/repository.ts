@@ -1,0 +1,44 @@
+import "server-only";
+import { and, asc, desc, eq, gte, sql } from "drizzle-orm";
+import { db, schema } from "../db";
+
+export async function listQrCodes(userId: string) {
+  return db.query.qrCode.findMany({
+    where: eq(schema.qrCode.userId, userId),
+    orderBy: desc(schema.qrCode.updatedAt),
+    with: { layouts: { orderBy: asc(schema.qrLayout.sortOrder), limit: 1 } },
+  });
+}
+
+export async function getQrCode(userId: string, id: string) {
+  return db.query.qrCode.findFirst({
+    where: and(eq(schema.qrCode.id, id), eq(schema.qrCode.userId, userId)),
+    with: { layouts: { orderBy: asc(schema.qrLayout.sortOrder) } },
+  });
+}
+
+export async function getLayoutWithQr(layoutId: string) {
+  return db.query.qrLayout.findFirst({ where: eq(schema.qrLayout.id, layoutId), with: { qrCode: true } });
+}
+
+/** Daily scans for the last `days` days, zero-filled, oldest first. */
+export async function dailyScans(qrCodeId: string, days = 14) {
+  const since = new Date(Date.now() - (days - 1) * 86_400_000).toISOString().slice(0, 10);
+  const rows = await db
+    .select({ day: schema.scanDaily.day, count: schema.scanDaily.count })
+    .from(schema.scanDaily)
+    .where(and(eq(schema.scanDaily.qrCodeId, qrCodeId), gte(schema.scanDaily.day, since)));
+  const byDay = new Map(rows.map((r) => [r.day, r.count]));
+  return Array.from({ length: days }, (_, i) => {
+    const day = new Date(Date.now() - (days - 1 - i) * 86_400_000).toISOString().slice(0, 10);
+    return { day, count: byDay.get(day) ?? 0 };
+  });
+}
+
+export async function recordScan(qrCodeId: string) {
+  const day = new Date().toISOString().slice(0, 10);
+  await db
+    .insert(schema.scanDaily)
+    .values({ qrCodeId, day, count: 1 })
+    .onConflictDoUpdate({ target: [schema.scanDaily.qrCodeId, schema.scanDaily.day], set: { count: sql`${schema.scanDaily.count} + 1` } });
+}

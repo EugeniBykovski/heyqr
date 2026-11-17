@@ -1,0 +1,247 @@
+{
+  "meta": {
+    "title": "Hey QR — QR codes that look like your brand",
+    "description": "Design a QR code, check that it scans, and download print-ready PNG and SVG files."
+  },
+  "nav": {
+    "create": "Create",
+    "pricing": "Pricing",
+    "myCodes": "My codes",
+    "billing": "Billing",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "account": "Account menu",
+    "language": "Language",
+    "skipToContent": "Skip to content",
+    "home": "Hey QR home"
+  },
+  "footer": {
+    "tagline": "QR codes that look like your brand and always scan.",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "rights": "© {year} Hey QR"
+  },
+  "home": {
+    "eyebrow": "QR code studio",
+    "title": "QR codes that look like your brand",
+    "lead": "Pick colors, shapes, a logo and a frame. Every edit is checked with a real scanner, so what you print is what scans.",
+    "cta": "Create a QR code",
+    "secondary": "See pricing",
+    "previewLabel": "Example QR code for a portfolio",
+    "features": {
+      "title": "Everything a printed code needs",
+      "scan": { "title": "Scan check on every edit", "text": "We decode your code at sticker, card and poster sizes before you pay." },
+      "design": { "title": "Your colors, shapes and logo", "text": "8 module styles, 5 corner styles, icons or your own logo." },
+      "frames": { "title": "Frames and captions", "text": "Add a call to action like “Scan for the menu” in 8 frame styles." },
+      "files": { "title": "Lossless files", "text": "SVG for print shops, PNG up to 8192 px or 1200 dpi." },
+      "dynamic": {
+        "title": "Change the link after printing",
+        "text": "Dynamic codes redirect through a short link you can edit any time."
+      },
+      "types": { "title": "9 content types", "text": "Website, Wi-Fi, contact card, email, phone, SMS, location, event or text." }
+    }
+  },
+  "pricing": {
+    "title": "Simple pricing",
+    "lead": "Design for free. Pay only when you download.",
+    "static": {
+      "name": "Static code",
+      "price": "{price} once",
+      "text": "The content is stored in the code itself. Works forever, no subscription.",
+      "points": ["All layouts and formats included", "PNG and SVG, print-ready", "Re-download any time"]
+    },
+    "dynamic": {
+      "name": "Dynamic codes",
+      "price": "{price} / month",
+      "text": "The code points to a short link you can change after printing.",
+      "points": ["Up to {limit} active codes", "Edit the destination any time", "Scan statistics"]
+    },
+    "cta": "Start designing"
+  },
+  "auth": {
+    "title": "Sign in to Hey QR",
+    "lead": "Your design is saved to your account so you can download it after payment.",
+    "google": "Continue with Google",
+    "legal": "By continuing you agree to the Terms and Privacy Policy.",
+    "failed": "Sign-in failed. Please try again."
+  },
+  "contentTypes": {
+    "website": "Website",
+    "text": "Text",
+    "wifi": "Wi-Fi",
+    "contact": "Contact",
+    "email": "Email",
+    "phone": "Phone",
+    "sms": "SMS",
+    "location": "Location",
+    "event": "Event"
+  },
+  "fields": {
+    "url": "Web address",
+    "text": "Text",
+    "ssid": "Network name",
+    "security": "Security",
+    "password": "Password",
+    "hidden": "Hidden network",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "title": "Job title",
+    "company": "Company",
+    "phone": "Phone",
+    "email": "Email",
+    "website": "Website",
+    "to": "Email address",
+    "subject": "Subject",
+    "body": "Message",
+    "number": "Phone number",
+    "message": "Message",
+    "name": "Place name",
+    "address": "Address",
+    "eventTitle": "Event name",
+    "start": "Starts",
+    "end": "Ends",
+    "place": "Place",
+    "securityNone": "None"
+  },
+  "editor": {
+    "title": "Create a QR code",
+    "steps": { "content": "Content", "design": "Design", "frame": "Frame" },
+    "type": "What should the code open?",
+    "model": {
+      "label": "Code type",
+      "static": "Static",
+      "staticHint": "One payment, works forever",
+      "dynamic": "Dynamic",
+      "dynamicHint": "Change the link after printing"
+    },
+    "name": "Name (only you see it)",
+    "namePlaceholder": "Portfolio card",
+    "pattern": "Modules",
+    "eyeFrame": "Corner frame",
+    "eyeBall": "Corner center",
+    "colors": "Colors",
+    "fg": "Code",
+    "bg": "Background",
+    "logo": "Center",
+    "logoNone": "None",
+    "logoUpload": "Upload logo",
+    "logoSize": "Logo size",
+    "layout": "Layout",
+    "presets": { "qr": "Code only", "caption": "With caption", "frame": "Frame" },
+    "frameStyle": "Frame style",
+    "caption": "Caption",
+    "captionPlaceholder": "Scan me",
+    "preview": "Preview",
+    "previewNote": "Watermarked preview. Full-size files are created after payment.",
+    "download": "Download",
+    "saving": "Saving…",
+    "draftRestored": "We restored your last design.",
+    "scanOk": "Scan verified",
+    "scanFix": "Fix",
+    "shapes": {
+      "square": "Square",
+      "rounded": "Rounded",
+      "dot": "Dots",
+      "diamond": "Diamonds",
+      "leaf": "Leaf",
+      "fluid": "Fluid",
+      "vbars": "Vertical bars",
+      "hbars": "Horizontal bars",
+      "cushion": "Cushion",
+      "circle": "Circle"
+    },
+    "frames": {
+      "bar": "Bar",
+      "tab": "Tab",
+      "bubble": "Bubble",
+      "pill": "Pill",
+      "corners": "Corners",
+      "circle": "Circle",
+      "ticket": "Ticket",
+      "phone": "Phone"
+    },
+    "icons": {
+      "globe": "Globe",
+      "wifi": "Wi-Fi",
+      "phone": "Phone",
+      "mail": "Mail",
+      "heart": "Heart",
+      "star": "Star",
+      "coffee": "Coffee",
+      "pin": "Pin"
+    }
+  },
+  "scan": {
+    "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",
+    "contrast": "Not enough contrast between the code and its background. Aim for at least 4:1.",
+    "eyes": "The corner markers are too light. Scanners find the code by them.",
+    "logo": "The logo hides too much of the code. Make it smaller.",
+    "text": "The text in the code is too long. Keep it to about 8 characters."
+  },
+  "export": {
+    "title": "Download your code",
+    "format": "Format",
+    "png": "PNG",
+    "pngHint": "For screens and most printers",
+    "svg": "SVG",
+    "svgHint": "Vector, for print shops",
+    "pay": "Pay {price} and download",
+    "subscribe": "Subscribe for {price} / month",
+    "download": "Download {format}",
+    "paid": "Payment received. Your files are ready.",
+    "pending": "Confirming your payment…",
+    "cancelled": "Payment was cancelled. Nothing was charged.",
+    "secure": "Payments are processed by Stripe."
+  },
+  "dashboard": {
+    "title": "My codes",
+    "new": "New code",
+    "empty": { "title": "No codes yet", "text": "Design your first QR code. It takes about a minute.", "cta": "Create a QR code" },
+    "status": { "draft": "Draft", "active": "Active", "paused": "Paused", "archived": "Archived" },
+    "model": { "static": "Static", "dynamic": "Dynamic" },
+    "updated": "Updated {date}",
+    "open": "Open {name}"
+  },
+  "qr": {
+    "back": "All codes",
+    "layouts": "Layouts",
+    "shortLink": "Short link",
+    "destination": "Destination",
+    "destinationHint": "Printed codes keep working; they now open this address.",
+    "save": "Save",
+    "saved": "Saved",
+    "scans": "Scans, last 14 days",
+    "scansTotal": "{count, plural, one {# scan} other {# scans}}",
+    "download": "Download",
+    "buy": "Buy to download",
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "billing": {
+    "title": "Billing",
+    "plan": "Dynamic plan",
+    "active": "Active until {date}",
+    "cancels": "Cancels on {date}",
+    "none": "You don’t have a subscription. Static codes are paid once.",
+    "manage": "Manage subscription",
+    "purchases": "Purchases",
+    "noPurchases": "No purchases yet."
+  },
+  "legal": {
+    "terms": { "title": "Terms of Service" },
+    "privacy": { "title": "Privacy Policy" },
+    "draft": "This page is a placeholder until the legal text is approved."
+  },
+  "errors": {
+    "notFound": { "title": "Page not found", "text": "The page you’re looking for doesn’t exist.", "cta": "Go home" },
+    "linkUnavailable": { "title": "This link is not active", "text": "The owner of this QR code has paused it or it no longer exists." },
+    "generic": "Something went wrong. Please try again.",
+    "invalid": "Please check the highlighted fields.",
+    "unauthorized": "Please sign in to continue."
+  },
+  "common": {
+    "close": "Close",
+    "loading": "Loading…",
+    "required": "Required"
+  }
+}

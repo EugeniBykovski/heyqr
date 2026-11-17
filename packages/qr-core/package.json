@@ -1,0 +1,25 @@
+{
+  "name": "@heyqr/qr-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "QR encoder, SVG renderer and scan check shared by the HeyQR editor and export server.",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./raster": "./src/raster.ts",
+    "./verify": "./src/verify.ts",
+    "./node": "./src/node.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@resvg/resvg-js": "2.6.2",
+    "zxing-wasm": "3.1.7"
+  },
+  "devDependencies": {
+    "jsqr": "1.4.0"
+  }
+}
