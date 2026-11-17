@@ -9,13 +9,14 @@ export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 export const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 export const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 
+/* Design "popover" (language picker): white, hairline border, 20 px radius, shadow-3, 12 px padding, pop-in 240 ms. */
 export function DropdownMenuContent({ className, sideOffset = 6, ...props }: ComponentProps<typeof DropdownMenuPrimitive.Content>) {
   return (
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.Content
         sideOffset={sideOffset}
         className={cn(
-          "z-50 max-h-(--radix-dropdown-menu-content-available-height) min-w-48 overflow-y-auto rounded-lg border border-border bg-popover p-1.5 text-popover-foreground shadow-2 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+          "z-50 flex max-h-(--radix-dropdown-menu-content-available-height) min-w-48 flex-col gap-1 overflow-y-auto rounded-xl border border-border bg-popover p-3 text-popover-foreground shadow-3 data-[state=open]:animate-pop",
           className,
         )}
         {...props}
@@ -24,8 +25,9 @@ export function DropdownMenuContent({ className, sideOffset = 6, ...props }: Com
   );
 }
 
+/* Items: 48 px rows, 12 px radius; hover is the subtle fill, the selected item gets the selected fill and a violet-200 border. */
 const item =
-  "relative flex min-h-10 cursor-pointer items-center gap-2.5 rounded-sm px-2.5 text-body outline-none select-none data-disabled:opacity-50 data-highlighted:bg-subtle [&_svg]:size-4";
+  "relative flex min-h-12 cursor-pointer items-center gap-2.5 rounded-md border border-transparent px-2.5 py-1.5 text-body outline-none select-none transition-colors duration-(--motion-fast) data-disabled:cursor-not-allowed data-disabled:opacity-40 data-highlighted:bg-subtle [&_svg]:size-4 [&_svg]:shrink-0";
 
 export function DropdownMenuItem({ className, ...props }: ComponentProps<typeof DropdownMenuPrimitive.Item>) {
   return <DropdownMenuPrimitive.Item className={cn(item, className)} {...props} />;
@@ -33,7 +35,7 @@ export function DropdownMenuItem({ className, ...props }: ComponentProps<typeof 
 export function DropdownMenuRadioItem({ className, ...props }: ComponentProps<typeof DropdownMenuPrimitive.RadioItem>) {
   return (
     <DropdownMenuPrimitive.RadioItem
-      className={cn(item, "data-[state=checked]:bg-accent data-[state=checked]:text-accent-foreground", className)}
+      className={cn(item, "data-[state=checked]:border-accent-strong data-[state=checked]:bg-selected", className)}
       {...props}
     />
   );
@@ -42,5 +44,5 @@ export function DropdownMenuLabel({ className, ...props }: ComponentProps<typeof
   return <DropdownMenuPrimitive.Label className={cn("px-2.5 py-1.5 text-micro text-muted-foreground uppercase", className)} {...props} />;
 }
 export function DropdownMenuSeparator({ className, ...props }: ComponentProps<typeof DropdownMenuPrimitive.Separator>) {
-  return <DropdownMenuPrimitive.Separator className={cn("-mx-1.5 my-1.5 h-px bg-border", className)} {...props} />;
+  return <DropdownMenuPrimitive.Separator className={cn("-mx-3 my-1 h-px bg-border", className)} {...props} />;
 }
