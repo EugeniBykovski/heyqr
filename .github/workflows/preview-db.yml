@@ -1,0 +1,55 @@
+name: Preview database
+
+# Applies committed migrations to the shared preview database before preview deployments use them.
+# Runs on pull requests that change the schema or migrations, and on demand. One run at a time;
+# db:migrate also takes a Postgres advisory lock, so overlapping runs from elsewhere are serialised too.
+on:
+  pull_request:
+    paths: ["drizzle/**", "src/server/db/**"]
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: "Also load the demo fixtures (safe to rerun)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: preview-database
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    environment: preview
+    env:
+      # Repository or "preview" environment secrets: Neon's preview branch, direct and pooled connection strings.
+      DATABASE_URL: ${{ secrets.PREVIEW_DATABASE_URL }}
+      DATABASE_URL_UNPOOLED: ${{ secrets.PREVIEW_DATABASE_URL_UNPOOLED }}
+      DATABASE_TARGET: preview
+    steps:
+      - name: Check the preview database is configured
+        id: configured
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "::notice::PREVIEW_DATABASE_URL is not set, so preview migrations are skipped. See docs/DATABASE.md#preview."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.configured.outputs.ready == 'true'
+        uses: actions/checkout@v4
+      - if: steps.configured.outputs.ready == 'true'
+        uses: pnpm/action-setup@v4
+      - if: steps.configured.outputs.ready == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - if: steps.configured.outputs.ready == 'true'
+        run: pnpm install --frozen-lockfile
+      - if: steps.configured.outputs.ready == 'true'
+        run: pnpm db:migrate
+      - if: steps.configured.outputs.ready == 'true' && inputs.seed
+        run: pnpm db:seed
+      - if: steps.configured.outputs.ready == 'true'
+        run: pnpm db:verify
