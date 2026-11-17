@@ -27,12 +27,15 @@ Requirements: Node 24, pnpm 12 (`corepack enable`), Docker.
 
 ```bash
 pnpm install
-cp .env.example .env.local        # fill in the keys, see docs/INTEGRATIONS.md
-pnpm db:up                        # Postgres + MinIO in Docker
+cp .env.example .env              # fill in the keys, see docs/INTEGRATIONS.md
+pnpm db:up                        # Postgres + MinIO in Docker (or local Postgres, see docs/DATABASE.md)
 pnpm db:migrate
-pnpm db:seed                      # optional demo data
+pnpm db:seed                      # optional demo data, safe to rerun
+pnpm db:verify                    # connectivity, tables and migrations
 pnpm dev                          # http://localhost:3000
 ```
+
+Database targets (local, test, preview, production), migrations, seeding and the preview database: [docs/DATABASE.md](docs/DATABASE.md).
 
 Stripe webhooks locally: `pnpm stripe:listen` (Stripe CLI) and copy the `whsec_…` into `.env.local`.
 Email templates: `pnpm email:dev` (http://localhost:3001).

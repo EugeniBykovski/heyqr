@@ -27,3 +27,39 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
+
+  # Migrations, seeds and the health check against a real, throw-away PostgreSQL (target "test").
+  database:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: heyqr
+          POSTGRES_PASSWORD: heyqr
+          POSTGRES_DB: heyqr_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U heyqr -d heyqr_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://heyqr:heyqr@localhost:5432/heyqr_test
+      DATABASE_TARGET: test
+      TEST_DATABASE_URL: postgres://heyqr:heyqr@localhost:5432/heyqr_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Migrate a fresh database, then rerun (must apply nothing)
+        run: pnpm db:migrate && pnpm db:migrate
+      - name: Seed twice (must not duplicate)
+        run: pnpm db:seed && pnpm db:seed
+      - run: pnpm db:verify
+      - name: Integration tests (reset the test database themselves)
+        run: pnpm test:db
