@@ -1,0 +1,322 @@
+Issue Type,Summary,Description,Priority,Labels,Labels
+Task,"Project foundation: Next.js 16 stack, architecture, DB schema, qr-core package","Scaffold the single Next.js 16 app (App Router, React 19, TypeScript strict, Tailwind 4, shadcn/ui on Radix), pnpm workspace with @heyqr/qr-core, Drizzle schema for Postgres, Better Auth (Google), Stripe checkout/webhook, Resend, S3 storage, next-intl with 21 locales, default pages, git conventions (commitlint + Jira key hooks), docs and ADRs.
+
+*Acceptance criteria*
+* pnpm quality passes (lint, format, typecheck, test, build)
+* qr-core decodes with ZXing for all 8 module styles and 8 frames
+* Initial migration drizzle/0000_init.sql generated
+* Docs: README, ARCHITECTURE, GIT_WORKFLOW, INTEGRATIONS, ADRs, backlog
+
+*Branch:* HEY-1-<short-description>  *Commits:* <type>(HEY-1): <description>",Highest,heyqr,foundation
+Task,"Environments: Vercel project, Neon Postgres, preview database branches","Create the Vercel project linked to GitHub, Neon project with main + preview branches (Neon Vercel integration), and set all environment variables from .env.example for Production / Preview / Development.
+
+*Acceptance criteria*
+* Every PR gets a Vercel preview with its own Neon branch
+* Migrations run on deploy (pnpm db:migrate in the build step or a GitHub Action)
+* No secrets in Git; env documented in .env.example
+
+*Depends on:* HEY-1
+
+*Branch:* HEY-2-<short-description>  *Commits:* <type>(HEY-2): <description>",Highest,heyqr,foundation
+Task,CI quality gates and GitHub for Jira integration,"GitHub Actions workflow runs pnpm quality on every PR. Install the GitHub for Jira app on the heyqr repository so branches, commits and PRs named with HEY-<n> show in the ticket's Development panel. Protect main (PR + green CI required).
+
+*Acceptance criteria*
+* CI required on main
+* A test branch HEY-<n>-x with commit feat(HEY-<n>): … appears on the ticket
+* Branch protection on main
+
+*Depends on:* HEY-1
+
+*Branch:* HEY-3-<short-description>  *Commits:* <type>(HEY-3): <description>",High,heyqr,foundation
+Task,Google OAuth production setup,"Google Cloud project, OAuth consent screen (app name, logo, privacy/terms URLs, domain verification), Web client with redirect URIs for production, preview and localhost. Better Auth trusted origins per environment.
+
+*Acceptance criteria*
+* Sign-in works on localhost, preview and production
+* Consent screen verified/published
+* Users table stores name, email, avatar, locale
+
+*Depends on:* HEY-2
+
+*Branch:* HEY-4-<short-description>  *Commits:* <type>(HEY-4): <description>",High,heyqr,auth
+Task,Guest draft → sign-in → saved code flow,"A guest designs in /create (draft in localStorage), presses Download, signs in with Google and returns to /create?resume=1; the draft is saved to the account and the user lands on the export step.
+
+*Acceptance criteria*
+* Draft survives the OAuth round trip
+* Draft saved once (no duplicates on refresh)
+* E2E test (Playwright) with a mocked OAuth provider
+
+*Depends on:* HEY-4
+
+*Branch:* HEY-5-<short-description>  *Commits:* <type>(HEY-5): <description>",High,heyqr,auth
+Task,Account settings: delete account and export data (GDPR),"Account page with profile, language preference, data export (JSON of codes/layouts/purchases) and account deletion that cancels subscriptions and removes S3 assets.
+
+*Acceptance criteria*
+* Deletion cascades in DB and removes S3 objects
+* Active subscription is cancelled in Stripe
+* Confirmation email via Resend
+
+*Depends on:* HEY-5
+
+*Branch:* HEY-6-<short-description>  *Commits:* <type>(HEY-6): <description>",Medium,heyqr,auth
+Task,Content step: all 9 content types per design,"Implement the Content step exactly per artboards S-C01…S-C04: type cards with icons, per-type forms (website, text, Wi-Fi, contact, email, phone, SMS, location, event), inline validation messages (UX only), and the payload preview.
+
+*Acceptance criteria*
+* Every type encodes correctly (unit tests per type)
+* Forms are keyboard and screen-reader accessible
+* Matches 390/834/1440 artboards
+
+*Depends on:* HEY-1
+
+*Branch:* HEY-7-<short-description>  *Commits:* <type>(HEY-7): <description>",High,heyqr,editor
+Task,"Design step: shape thumbnails, palettes and style presets","Visual option cards with mini previews for modules, corner frames and corner centers; style presets (Classic, Soft, Dots, …) and brand palettes from the design; hex inputs with contrast guidance.
+
+*Acceptance criteria*
+* Thumbnails render from qr-core (no images)
+* Scan status updates on every change
+* Presets match the Design System sheet
+
+*Depends on:* HEY-7
+
+*Branch:* HEY-8-<short-description>  *Commits:* <type>(HEY-8): <description>",High,heyqr,editor
+Task,Logo upload to S3,"Replace the in-browser data URI with an upload: POST /api/uploads/presign → PUT to S3 → store the public URL in the layout. Validate type/size, strip EXIF, rasterize SVG safely, and embed the image at export time.
+
+*Acceptance criteria*
+* PNG/JPG/SVG/WebP up to 10 MB
+* Uploaded logos show in preview and in PNG/SVG exports
+* Unused assets cleaned up by a scheduled job
+
+*Depends on:* HEY-2
+
+*Branch:* HEY-9-<short-description>  *Commits:* <type>(HEY-9): <description>",High,heyqr,editor
+Task,"Frame step: frame color, caption font and caption position","Customize frame color and caption color, font family/weight, alignment and position (below, above, inside the code), per artboards S-C08…S-C10.
+
+*Acceptance criteria*
+* All 8 frames customizable
+* Caption auto-fits without clipping
+* Scan check covers text inside the code
+
+*Depends on:* HEY-8
+
+*Branch:* HEY-10-<short-description>  *Commits:* <type>(HEY-10): <description>",Medium,heyqr,editor
+Task,"Card layouts: business card, poster, sticker (mm) with brand logo","Physical layouts in millimetres (vertical/horizontal cards, poster, round sticker) with optional top logo and brand name, hairline border, bleed-safe sizes; preview at true aspect ratio.
+
+*Acceptance criteria*
+* Exports keep physical size (width=""90mm"")
+* PNG export at 300 DPI by default, up to 1200 DPI
+* Layouts match the Composition artboards
+
+*Depends on:* HEY-10
+
+*Branch:* HEY-11-<short-description>  *Commits:* <type>(HEY-11): <description>",Medium,heyqr,editor
+Task,Multiple layouts per QR code,"Layout manager: add, duplicate, rename, reorder and delete layouts of one code (one payment covers all layouts of a static code).
+
+*Acceptance criteria*
+* Layouts persisted with sort order
+* Dashboard shows the first layout as the cover
+* Export works per layout
+
+*Depends on:* HEY-11
+
+*Branch:* HEY-12-<short-description>  *Commits:* <type>(HEY-12): <description>",Medium,heyqr,editor
+Task,In-browser ZXing scan verification,"Run zxing-wasm in a Web Worker on the rendered SVG (debounced) to show “Scan verified” from a real decoder, in addition to the structural check in qr-core.
+
+*Acceptance criteria*
+* Worker does not block typing
+* Verification at 3 sizes
+* Fallback to structural check if wasm fails
+
+*Depends on:* HEY-8
+
+*Branch:* HEY-13-<short-description>  *Commits:* <type>(HEY-13): <description>",Medium,heyqr,editor
+Task,Responsive and accessibility pass for the editor,"Match the 390/834/1440 artboards (sticky preview, bottom action bar on mobile), keyboard navigation through option grids, focus management between steps, axe audit.
+
+*Acceptance criteria*
+* No horizontal scroll from 320 px
+* axe: zero serious issues
+* Visual QA against artboards
+
+*Depends on:* HEY-7
+
+*Branch:* HEY-14-<short-description>  *Commits:* <type>(HEY-14): <description>",High,heyqr,editor
+Task,"Stripe products, prices, tax and production webhook","Create products/prices (static one-time, dynamic monthly), enable Stripe Tax, customer portal configuration, production webhook endpoint /api/stripe/webhook with the required events.
+
+*Acceptance criteria*
+* Price IDs set per environment
+* Webhook signature verified; idempotent processing
+* Customer portal allows cancel and payment method update
+
+*Depends on:* HEY-2
+
+*Branch:* HEY-15-<short-description>  *Commits:* <type>(HEY-15): <description>",Highest,heyqr,payments
+Task,Checkout flow end-to-end tests,"Playwright + Stripe test mode: static purchase unlocks downloads; dynamic subscription assigns a short code; cancelled checkout leaves nothing charged; webhook retries are idempotent.
+
+*Acceptance criteria*
+* Tests run in CI against a Stripe test account
+* Pending state shown until the webhook arrives
+
+*Depends on:* HEY-15
+
+*Branch:* HEY-16-<short-description>  *Commits:* <type>(HEY-16): <description>",High,heyqr,payments
+Task,"Refunds, disputes and subscription lapses","Handle charge.refunded, charge.dispute.created and subscription past_due/canceled: revoke download entitlement and pause dynamic redirects with a grace period; notify the user by email.
+
+*Acceptance criteria*
+* Entitlements follow Stripe state
+* Paused dynamic codes show the link-unavailable page
+
+*Depends on:* HEY-15
+
+*Branch:* HEY-17-<short-description>  *Commits:* <type>(HEY-17): <description>",Medium,heyqr,payments
+Task,Billing page and plan limits,"Billing page with invoices (from Stripe), plan status, and enforcement of the active dynamic code limit (DYNAMIC_ACTIVE_CODE_LIMIT).
+
+*Acceptance criteria*
+* Creating code N+1 on the plan shows an upgrade prompt
+* Invoices downloadable
+
+*Depends on:* HEY-15
+
+*Branch:* HEY-18-<short-description>  *Commits:* <type>(HEY-18): <description>",Medium,heyqr,payments
+Task,Bundle fonts for PNG export,"resvg on Vercel has no system fonts. Bundle DM Sans (and fonts offered for captions) as files and pass them to rasterizeSvg so captions render identically to the preview.
+
+*Acceptance criteria*
+* Caption text renders in PNG exports on Vercel
+* Snapshot test of a captioned PNG
+
+*Depends on:* HEY-1
+
+*Branch:* HEY-19-<short-description>  *Commits:* <type>(HEY-19): <description>",Highest,heyqr,export
+Task,Export cache in S3 and signed downloads,"Cache rendered files in S3 keyed by layout + format + size + content hash (export_file table) and redirect to a short-lived signed URL instead of rendering on every download.
+
+*Acceptance criteria*
+* Second download of the same file is served from S3
+* Cache invalidated when the layout changes
+
+*Depends on:* HEY-9
+
+*Branch:* HEY-20-<short-description>  *Commits:* <type>(HEY-20): <description>",Medium,heyqr,export
+Task,"PDF export (vector, print-ready)","Vector PDF of a layout at physical size with optional crop marks and bleed, for print shops. The export route currently answers 501 for format=pdf.
+
+*Acceptance criteria*
+* PDF opens in Acrobat/Preview at exact mm size
+* Text is real text, code is vector
+
+*Depends on:* HEY-11
+
+*Branch:* HEY-21-<short-description>  *Commits:* <type>(HEY-21): <description>",Low,heyqr,export
+Task,Server-side scan verification gate,"Before issuing a paid file, decode it with ZXing (@heyqr/qr-core/verify) in a separate serverless function (wasm kept out of the main bundle) and refuse files that do not decode.
+
+*Acceptance criteria*
+* Unscannable designs cannot be bought
+* Verification result stored with the export
+
+*Depends on:* HEY-20
+
+*Branch:* HEY-22-<short-description>  *Commits:* <type>(HEY-22): <description>",Medium,heyqr,export
+Task,Short link domain and fast redirects,"Configure the short domain (e.g. hqr.to) on Vercel pointing to /r/[code]; add rate limiting (Upstash) and cache headers; 404/paused codes go to /link-unavailable.
+
+*Acceptance criteria*
+* Redirect p95 < 100 ms
+* Rate limit per IP
+* Printed codes use NEXT_PUBLIC_SHORT_LINK_BASE
+
+*Depends on:* HEY-2
+
+*Branch:* HEY-23-<short-description>  *Commits:* <type>(HEY-23): <description>",High,heyqr,dynamic-links
+Task,Scan analytics,"Privacy-friendly analytics per scan: day, country (x-vercel-ip-country), device class; no IP storage. Dashboard charts for 7/30/90 days.
+
+*Acceptance criteria*
+* Counts recorded after the response (after())
+* Charts accessible with table fallback
+
+*Depends on:* HEY-23
+
+*Branch:* HEY-24-<short-description>  *Commits:* <type>(HEY-24): <description>",Medium,heyqr,dynamic-links
+Task,"Pause, archive and destination history","Pause/resume/archive dynamic codes, destination change history with one-click undo, and validation of destination URLs (no javascript:, data:).
+
+*Acceptance criteria*
+* Status changes reflected in redirects immediately
+* Undo restores the previous destination
+
+*Depends on:* HEY-23
+
+*Branch:* HEY-25-<short-description>  *Commits:* <type>(HEY-25): <description>",Medium,heyqr,dynamic-links
+Task,Resend domain and transactional templates,"Verify the sending domain in Resend (SPF, DKIM, DMARC). React Email templates: welcome, purchase receipt, subscription started/cancelled/payment failed. Localized subjects.
+
+*Acceptance criteria*
+* Emails pass SPF/DKIM
+* Templates previewable with pnpm email:dev
+
+*Depends on:* HEY-2
+
+*Branch:* HEY-26-<short-description>  *Commits:* <type>(HEY-26): <description>",High,heyqr,email
+Task,Admin area,"Role-based /admin: users, codes, purchases, subscriptions, refunds via Stripe, takedown of abusive dynamic links, audit log.
+
+*Acceptance criteria*
+* Only admins can access (server-checked)
+* All admin actions logged
+
+*Depends on:* HEY-17
+
+*Branch:* HEY-27-<short-description>  *Commits:* <type>(HEY-27): <description>",Medium,heyqr,admin
+Task,Publish @heyqr/qr-core to npm,"Build the package with tsup (ESM + types), semantic versioning with changesets, README with examples, browser and Node entry points (raster/verify).
+
+*Acceptance criteria*
+* npm install @heyqr/qr-core works in a plain Node and a Vite app
+* Same version used by the editor and the server
+
+*Depends on:* HEY-1
+
+*Branch:* HEY-28-<short-description>  *Commits:* <type>(HEY-28): <description>",Medium,heyqr,public-api-npm
+Task,Public REST API with API keys (paid),"Versioned /api/v1 to create codes and render files, API keys per account (hashed), usage metering and Stripe usage-based billing, OpenAPI document.
+
+*Acceptance criteria*
+* Keys can be created and revoked
+* Rate limits and metering per key
+
+*Depends on:* HEY-28
+
+*Branch:* HEY-29-<short-description>  *Commits:* <type>(HEY-29): <description>",Low,heyqr,public-api-npm
+Task,Translate the remaining 19 languages,"Professional translations for es, zh, hi, ar (RTL), pt, fr, de, ja, ko, it, tr, id, vi, pl, uk, be, nl, th, sv. English and Russian exist.
+
+*Acceptance criteria*
+* Every locale passes the messages test
+* RTL layout reviewed for Arabic
+
+*Depends on:* HEY-7
+
+*Branch:* HEY-30-<short-description>  *Commits:* <type>(HEY-30): <description>",Medium,heyqr,i18n-marketing
+Task,"SEO: sitemap, hreflang, OG images, landing pages per QR type","Localized metadata, sitemap.xml and robots.txt, hreflang alternates, dynamic OG images, and landing pages like /wifi-qr-code.
+
+*Acceptance criteria*
+* Lighthouse SEO 100 on home and landings
+* All locales listed in hreflang
+
+*Depends on:* HEY-30
+
+*Branch:* HEY-31-<short-description>  *Commits:* <type>(HEY-31): <description>",Medium,heyqr,i18n-marketing
+Task,Legal pages and cookie consent,"Terms, Privacy Policy, refund policy; cookie consent only if non-essential cookies are used.
+
+*Acceptance criteria*
+* Legal text approved
+* Linked from footer and Google consent screen
+
+*Depends on:* HEY-1
+
+*Branch:* HEY-32-<short-description>  *Commits:* <type>(HEY-32): <description>",High,heyqr,i18n-marketing
+Task,"Observability: Sentry, product analytics, uptime","Sentry for client/server errors with source maps, privacy-friendly analytics (Plausible or PostHog), uptime checks for /api/health and the redirect domain.
+
+*Acceptance criteria*
+* Errors reported with release tags
+* Alerts on webhook failures
+
+*Depends on:* HEY-2
+
+*Branch:* HEY-33-<short-description>  *Commits:* <type>(HEY-33): <description>",Medium,heyqr,ops
+Task,Launch checklist,"Production keys switched to live mode, DNS, backups (Neon PITR), load test of redirects, security review (headers, CSP, rate limits), final design QA.
+
+*Acceptance criteria*
+* Checklist signed off
+* Rollback plan documented
+
+*Depends on:* HEY-33
+
+*Branch:* HEY-34-<short-description>  *Commits:* <type>(HEY-34): <description>",High,heyqr,ops
