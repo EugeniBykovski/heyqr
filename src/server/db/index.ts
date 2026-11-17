@@ -3,11 +3,31 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { env } from "@/env";
 import * as schema from "./schema";
+import { describeDatabaseUrl, resolveDbTarget } from "./target";
 
 const globalForDb = globalThis as unknown as { pool?: Pool };
 
-/** One pool per server instance (reused across hot reloads in development). */
-const pool = globalForDb.pool ?? new Pool({ connectionString: env.DATABASE_URL, max: 10 });
+/**
+ * One pool per server instance, reused across hot reloads in development.
+ * On Vercel each function instance gets a small pool that releases idle connections quickly; DATABASE_URL there is
+ * Neon's pooled (PgBouncer) endpoint, so many instances share few Postgres connections. Locally a larger pool is fine.
+ */
+function createPool() {
+  const serverless = Boolean(process.env.VERCEL);
+  const pool = new Pool({
+    connectionString: env.DATABASE_URL,
+    max: serverless ? 5 : 10,
+    idleTimeoutMillis: serverless ? 5_000 : 30_000,
+    connectionTimeoutMillis: 10_000,
+  });
+  // An idle client can be dropped by the server (restart, pooler timeout); log it without the connection string.
+  pool.on("error", (error) => {
+    console.error(`[db] idle client error on the ${resolveDbTarget()} database ${describeDatabaseUrl(env.DATABASE_URL)}: ${error.message}`);
+  });
+  return pool;
+}
+
+const pool = globalForDb.pool ?? createPool();
 if (process.env.NODE_ENV !== "production") globalForDb.pool = pool;
 
 export const db = drizzle(pool, { schema, casing: "snake_case" });
