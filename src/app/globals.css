@@ -279,6 +279,7 @@
   --surface: var(--color-bg-surface);
   --subtle: var(--color-bg-subtle);
   --stage: var(--color-bg-stage);
+  --stage-dot: var(--color-ink-200);
   --foreground: var(--color-text-primary);
   --secondary-foreground: var(--color-text-secondary);
   --muted-foreground: var(--color-text-muted);
@@ -353,6 +354,7 @@
   --color-muted: var(--subtle);
   --color-secondary: var(--subtle);
   --color-stage: var(--stage);
+  --color-stage-dot: var(--stage-dot);
   --color-foreground: var(--foreground);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted-foreground: var(--muted-foreground);
