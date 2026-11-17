@@ -42,7 +42,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 
   return (
     <>
-      <section className="mx-auto grid max-w-wide items-center gap-10 px-4 pt-12 pb-16 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:pt-20">
+      <section className="mx-auto grid max-w-page items-center gap-10 px-4 pt-12 pb-16 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:pt-20">
         <div className="flex animate-rise flex-col items-start gap-6">
           <span className="rounded-full bg-accent px-3 py-1 text-micro text-accent-foreground uppercase">{t("eyebrow")}</span>
           <h1 className="text-display text-balance">{t("title")}</h1>
@@ -64,7 +64,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         </div>
       </section>
 
-      <section aria-labelledby="features" className="mx-auto max-w-wide px-4 pb-20 sm:px-6">
+      <section aria-labelledby="features" className="mx-auto max-w-page px-4 pb-20 sm:px-6">
         <h2 id="features" className="mb-6 text-h1">
           {t("features.title")}
         </h2>
