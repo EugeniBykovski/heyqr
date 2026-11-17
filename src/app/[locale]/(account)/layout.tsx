@@ -6,5 +6,5 @@ import { resolveLocale } from "@/i18n/server";
 export default async function AccountLayout({ children, params }: LayoutProps<"/[locale]">) {
   const locale = await resolveLocale(params);
   if (!(await getSession())) redirect({ href: "/sign-in?next=/dashboard", locale });
-  return <div className="mx-auto flex max-w-wide flex-col gap-6 px-4 py-8 sm:px-6 sm:py-10">{children}</div>;
+  return <div className="mx-auto flex max-w-page flex-col gap-6 px-4 py-8 sm:px-6 sm:py-10">{children}</div>;
 }

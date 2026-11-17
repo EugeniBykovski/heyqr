@@ -2,15 +2,23 @@
 @import "tw-animate-css";
 
 /*
- * Hey QR design tokens (from the Claude Design canvas → Tokens / Design System).
- * Tier 1 primitives → tier 2 semantic tokens → shadcn variable names.
- * Components use semantic utilities only: bg-surface, text-muted-foreground, border-border, bg-primary…
- * Raw palette classes (bg-violet-600, text-zinc-500) and hex values do not belong in components.
+ * Hey QR design tokens, synced 1:1 with the Claude Design canvas
+ * (Brand, Design system · foundations, Design system · components, Tokens).
+ *
+ *   1 · primitives  (@theme static)  raw ink / violet / status ramps, type, space, radius, depth, motion
+ *   2 · semantic    (:root)          design names: --color-bg-page, --color-action-primary-bg, --motion-fast…
+ *   3 · component   (:root)          shadcn names (--primary, --border…) and component tokens (--button-height…)
+ *
+ * Components use tier-3 utilities only: bg-surface, text-muted-foreground, bg-primary, h-control, text-h1…
+ * Hex values live in this file only; raw palette classes (bg-violet-600) don't belong in components.
+ * The design defines a light theme only.
  */
 
-@custom-variant dark (&:where(.dark, .dark *));
+/* ───────────────────────── 1 · primitives ───────────────────────── */
 
-@theme {
+@theme static {
+  /* The design palette replaces Tailwind's default colours. */
+  --color-*: initial;
   --color-ink-990: #050508;
   --color-ink-950: #0d0d12;
   --color-ink-900: #1a1a22;
@@ -24,6 +32,7 @@
   --color-ink-100: #f3f3f5;
   --color-ink-75: #f7f7f8;
   --color-ink-50: #fbfbfc;
+  --color-white: #ffffff;
   --color-violet-900: #24137a;
   --color-violet-800: #3b22b8;
   --color-violet-700: #4b2ee0;
@@ -33,16 +42,26 @@
   --color-violet-200: #d4ccff;
   --color-violet-100: #eae6ff;
   --color-violet-50: #f5f3ff;
+  --color-green-700: #157f4f;
+  --color-green-50: #e8f6ee;
+  --color-amber-700: #8a5300;
+  --color-amber-50: #fff4de;
+  --color-red-700: #c2261e;
+  --color-red-50: #fdecea;
+  --color-blue-700: #2556c4;
+  --color-blue-50: #ebf1fc;
 
+  /* DM Sans (opsz 9–40, 400–700) for the interface, IBM Plex Mono for HEX, codes and tokens. */
   --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
-  /* Type roles (design: t-display … t-micro). Use these, not text-xl etc. */
-  --text-display: clamp(2.25rem, 2.8vw + 1.5rem, 4.25rem);
+  /* Type roles (design: t-display … t-micro). Use these, not text-xl etc.
+     Fluid roles use cqi: the nearest size container, or the viewport when there is none. */
+  --text-display: clamp(2.25rem, 2.8cqi + 1.5rem, 4.25rem);
   --text-display--line-height: 1;
   --text-display--letter-spacing: -0.045em;
   --text-display--font-weight: 700;
-  --text-h1: clamp(1.625rem, 1.2vw + 1.3rem, 2.5rem);
+  --text-h1: clamp(1.625rem, 1.2cqi + 1.3125rem, 2.5rem);
   --text-h1--line-height: 1.1;
   --text-h1--letter-spacing: -0.03em;
   --text-h1--font-weight: 700;
@@ -68,26 +87,61 @@
   --text-micro--letter-spacing: 0.08em;
   --text-micro--font-weight: 600;
 
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-2xl: 28px;
+  /* Spacing: 4 px base (space-1 … space-20 = Tailwind 1 … 20). */
+  --spacing: 0.25rem;
 
+  /* Radius: fields 12 · cards 20 · stage and dialogs 28 · buttons and segments full. */
+  --radius-*: initial;
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
+
+  /* Depth: shadow-1 cards · shadow-2 hover and pills · shadow-3 dialogs, popovers and toasts. */
+  --shadow-*: initial;
   --shadow-1: 0 1px 2px rgb(13 13 18 / 0.05), 0 0 0 1px rgb(13 13 18 / 0.04);
   --shadow-2: 0 1px 2px rgb(13 13 18 / 0.04), 0 12px 32px -10px rgb(13 13 18 / 0.16);
   --shadow-3: 0 2px 6px rgb(13 13 18 / 0.06), 0 32px 72px -20px rgb(13 13 18 / 0.36);
+  --shadow-control: 0 1px 1px rgb(13 13 18 / 0.04);
+  --shadow-segment: 0 1px 2px rgb(13 13 18 / 0.08), 0 0 0 1px rgb(13 13 18 / 0.06);
   --shadow-primary: 0 1px 2px rgb(59 34 184 / 0.28), 0 6px 16px -8px rgb(91 59 255 / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.22);
 
+  /* Motion. */
   --ease-out: cubic-bezier(0.2, 0, 0, 1);
-  --container-wide: 80rem;
-  --spacing-header: 4rem;
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Breakpoints: phone < 600 · tablet 600 · two panels 1024 · wide 1440 · extra wide 1920.
+     768 is the design's 3-column break for marketing grids. */
+  --breakpoint-sm: 37.5rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 90rem;
+  --breakpoint-2xl: 120rem;
+
+  /* Containers: page content 1240 · header and editor 1760 · text measure 62ch. */
+  --container-page: 77.5rem;
+  --container-wide: 110rem;
+  --container-measure: 62ch;
+
+  /* Component sizes. */
+  --spacing-header: 3.75rem;
+  --spacing-control: 2.75rem;
+  --spacing-control-sm: 2.25rem;
+  --spacing-control-lg: 3.25rem;
+  --spacing-swatch: 2.25rem;
 
   --animate-pulse-primary: pulse-primary 1.7s var(--ease-out) infinite;
   --animate-pulse-neutral: pulse-neutral 1.7s var(--ease-out) infinite;
+  --animate-pulse-accent: pulse-accent 1.7s var(--ease-out) infinite;
   --animate-rise: rise 240ms var(--ease-out) both;
+  --animate-fade: fade 200ms var(--ease-out) both;
+  --animate-pop: pop 240ms var(--ease-out) both;
+  --animate-shimmer: shimmer 1500ms ease-in-out infinite;
+  --animate-indeterminate: indeterminate 1.3s var(--ease-in-out) infinite;
 
+  /* Hover pulse: a soft ring expands to 10 px and fades, looping while hovered. */
   @keyframes pulse-primary {
     0% {
       box-shadow:
@@ -116,63 +170,180 @@
       box-shadow: 0 0 0 0 rgb(13 13 18 / 0);
     }
   }
+  @keyframes pulse-accent {
+    0% {
+      box-shadow: 0 0 0 0 rgb(110 82 255 / 0.3);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgb(110 82 255 / 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgb(110 82 255 / 0);
+    }
+  }
   @keyframes rise {
     from {
       opacity: 0;
       transform: translateY(6px);
     }
   }
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.98);
+    }
+  }
+  @keyframes shimmer {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes indeterminate {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(250%);
+    }
+  }
 }
+
+/* ───────────────────────── 2 · semantic ───────────────────────── */
 
 :root {
-  --page: var(--color-ink-75);
-  --surface: #ffffff;
-  --subtle: var(--color-ink-100);
-  --foreground: var(--color-ink-950);
-  --secondary-foreground: var(--color-ink-700);
-  --muted-foreground: var(--color-ink-600);
-  --border: var(--color-ink-200);
-  --input: var(--color-ink-500);
-  --ring: var(--color-violet-600);
-  --primary: var(--color-violet-600);
-  --primary-hover: var(--color-violet-700);
-  --primary-pressed: var(--color-violet-800);
-  --primary-foreground: #ffffff;
-  --accent: var(--color-violet-50);
-  --accent-strong: var(--color-violet-200);
-  --accent-foreground: var(--color-violet-800);
-  --success: #157f4f;
-  --success-soft: #e8f6ee;
-  --warning: #8a5300;
-  --warning-soft: #fff4de;
-  --danger: #c2261e;
-  --danger-soft: #fdecea;
-  --info: #2556c4;
-  --info-soft: #ebf1fc;
-  --stage: var(--color-ink-100);
+  --color-bg-page: var(--color-ink-75);
+  --color-bg-surface: var(--color-white);
+  --color-bg-subtle: var(--color-ink-100);
+  --color-bg-stage: var(--color-ink-100);
+  --color-text-primary: var(--color-ink-950);
+  --color-text-secondary: var(--color-ink-700);
+  --color-text-muted: var(--color-ink-600);
+  --color-text-inverse: var(--color-white);
+  --color-text-accent: var(--color-violet-700);
+  --color-border-subtle: var(--color-ink-200);
+  --color-border-control: var(--color-ink-500);
+  --color-border-strong: var(--color-ink-950);
+  --color-action-primary-bg: var(--color-violet-600);
+  --color-action-primary-bg-hover: var(--color-violet-700);
+  --color-action-primary-bg-pressed: var(--color-violet-800);
+  --color-action-primary-fg: var(--color-white);
+  --color-accent-bg: var(--color-violet-500);
+  --color-accent-bg-hover: var(--color-violet-600);
+  --color-accent-fg: var(--color-white);
+  --color-accent-soft: var(--color-violet-50);
+  --color-selected-bg: var(--color-violet-50);
+  --color-selected-border: var(--color-violet-500);
+  --color-selected-mark: var(--color-violet-500);
+  --color-focus-ring: var(--color-violet-600);
+  --color-status-success-fg: var(--color-green-700);
+  --color-status-success-bg: var(--color-green-50);
+  --color-status-warning-fg: var(--color-amber-700);
+  --color-status-warning-bg: var(--color-amber-50);
+  --color-status-danger-fg: var(--color-red-700);
+  --color-status-danger-bg: var(--color-red-50);
+  --color-status-info-fg: var(--color-blue-700);
+  --color-status-info-bg: var(--color-blue-50);
+  --skeleton-base: var(--color-ink-150);
+  --skeleton-highlight: var(--color-ink-50);
+  --skeleton-accent: var(--color-violet-100);
+  --motion-fast: 160ms;
+  --motion-base: 200ms;
+  --motion-panel: 240ms;
+  --motion-pulse: 1700ms;
+  --motion-shimmer: 1500ms;
+  --motion-ease: var(--ease-out);
 }
 
-.dark {
-  --page: var(--color-ink-990);
-  --surface: var(--color-ink-950);
-  --subtle: var(--color-ink-900);
-  --foreground: var(--color-ink-75);
-  --secondary-foreground: var(--color-ink-300);
-  --muted-foreground: var(--color-ink-500);
-  --border: var(--color-ink-800);
-  --input: var(--color-ink-600);
-  --ring: var(--color-violet-300);
-  --primary: var(--color-violet-500);
-  --primary-hover: var(--color-violet-600);
-  --accent: var(--color-violet-900);
-  --accent-strong: var(--color-violet-800);
-  --accent-foreground: var(--color-violet-100);
-  --stage: var(--color-ink-900);
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms;
+    --motion-base: 0ms;
+    --motion-panel: 0ms;
+  }
+}
+
+/* ───────────────────────── 3 · component ───────────────────────── */
+
+:root {
+  /* shadcn names */
+  --background: var(--color-bg-page);
+  --page: var(--color-bg-page);
+  --surface: var(--color-bg-surface);
+  --subtle: var(--color-bg-subtle);
+  --stage: var(--color-bg-stage);
+  --foreground: var(--color-text-primary);
+  --secondary-foreground: var(--color-text-secondary);
+  --muted-foreground: var(--color-text-muted);
+  --border: var(--color-border-subtle);
+  --border-strong: var(--color-border-strong);
+  --border-hover: var(--color-ink-300);
+  --input: var(--color-border-control);
+  --input-hover: var(--color-ink-700);
+  --ring: var(--color-focus-ring);
+  --ring-soft: var(--color-violet-100);
+  --primary: var(--color-action-primary-bg);
+  --primary-hover: var(--color-action-primary-bg-hover);
+  --primary-pressed: var(--color-action-primary-bg-pressed);
+  --primary-foreground: var(--color-action-primary-fg);
+  --accent: var(--color-accent-soft);
+  --accent-hover: var(--color-violet-100);
+  --accent-strong: var(--color-violet-200);
+  --accent-strong-hover: var(--color-violet-300);
+  --accent-foreground: var(--color-violet-800);
+  --accent-text: var(--color-text-accent);
+  --selected: var(--color-selected-bg);
+  --selected-border: var(--color-selected-border);
+  --selected-mark: var(--color-selected-mark);
+  --inverse: var(--color-ink-950);
+  --inverse-foreground: var(--color-text-inverse);
+  --inverse-muted: var(--color-ink-300);
+  --inverse-accent: var(--color-violet-300);
+  --success: var(--color-status-success-fg);
+  --success-soft: var(--color-status-success-bg);
+  --warning: var(--color-status-warning-fg);
+  --warning-soft: var(--color-status-warning-bg);
+  --danger: var(--color-status-danger-fg);
+  --danger-soft: var(--color-status-danger-bg);
+  --info: var(--color-status-info-fg);
+  --info-soft: var(--color-status-info-bg);
+  --overlay: rgb(13 13 18 / 0.42);
+
+  /* component tokens */
+  --button-radius: 9999px;
+  --button-height: 2.75rem;
+  --button-height-sm: 2.25rem;
+  --button-height-lg: 3.25rem;
+  --field-radius: var(--radius-md);
+  --field-height: 2.75rem;
+  --card-radius: var(--radius-xl);
+  --swatch-size: 2.25rem;
+  --header-height: 3.75rem;
+  --panel-width: 25rem;
+  --skeleton-radius: var(--radius-sm);
+  --logo-mark-bg: var(--color-ink-950);
+  --logo-mark-fg: var(--color-white);
+  --logo-mark-dot: var(--color-violet-500);
+  --logo-word: var(--color-ink-950);
+  --logo-tag-text: var(--color-violet-700);
+  /* Off-ramp value taken as-is from the Brand board's inverse lockup. */
+  --logo-inverse-tag-border: #8b74ff;
+  --logo-inverse-tag-text: var(--color-violet-200);
+  --google-btn-bg: #ffffff;
+  --google-btn-border: #747775;
+  --google-btn-fg: #1f1f1f;
 }
 
 @theme inline {
+  --color-background: var(--background);
   --color-page: var(--page);
-  --color-background: var(--page);
   --color-surface: var(--surface);
   --color-card: var(--surface);
   --color-card-foreground: var(--foreground);
@@ -180,21 +351,35 @@
   --color-popover-foreground: var(--foreground);
   --color-subtle: var(--subtle);
   --color-muted: var(--subtle);
+  --color-secondary: var(--subtle);
   --color-stage: var(--stage);
   --color-foreground: var(--foreground);
-  --color-secondary: var(--subtle);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-border-hover: var(--border-hover);
   --color-input: var(--input);
+  --color-input-hover: var(--input-hover);
   --color-ring: var(--ring);
+  --color-ring-soft: var(--ring-soft);
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-primary-pressed: var(--primary-pressed);
   --color-primary-foreground: var(--primary-foreground);
   --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
   --color-accent-strong: var(--accent-strong);
+  --color-accent-strong-hover: var(--accent-strong-hover);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent-text: var(--accent-text);
+  --color-selected: var(--selected);
+  --color-selected-border: var(--selected-border);
+  --color-selected-mark: var(--selected-mark);
+  --color-inverse: var(--inverse);
+  --color-inverse-foreground: var(--inverse-foreground);
+  --color-inverse-muted: var(--inverse-muted);
+  --color-inverse-accent: var(--inverse-accent);
   --color-destructive: var(--danger);
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
@@ -204,6 +389,16 @@
   --color-danger-soft: var(--danger-soft);
   --color-info: var(--info);
   --color-info-soft: var(--info-soft);
+  --color-overlay: var(--overlay);
+  --color-skeleton: var(--skeleton-base);
+  --color-skeleton-highlight: var(--skeleton-highlight);
+  --color-skeleton-accent: var(--skeleton-accent);
+  --color-logo-ring: var(--logo-mark-bg);
+  --color-logo-core: var(--logo-mark-dot);
+  --color-logo-word: var(--logo-word);
+  --color-logo-tag-text: var(--logo-tag-text);
+  --color-logo-inverse-tag-border: var(--logo-inverse-tag-border);
+  --color-logo-inverse-tag-text: var(--logo-inverse-tag-text);
 }
 
 @layer base {

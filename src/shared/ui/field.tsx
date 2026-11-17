@@ -24,7 +24,11 @@ export function Field({
       <Label htmlFor={id}>{label}</Label>
       {children}
       {error ? (
-        <p id={`${id}-error`} role="alert" className="flex items-start gap-1.5 text-caption font-medium text-danger">
+        <p
+          id={`${id}-error`}
+          role="alert"
+          className="flex animate-rise items-start gap-1.5 text-caption font-medium text-danger [animation-duration:var(--motion-fast)]"
+        >
           <CircleAlertIcon className="mt-0.5 size-3.5 shrink-0" aria-hidden />
           {error}
         </p>
