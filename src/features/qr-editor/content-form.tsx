@@ -15,8 +15,9 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { CONTENT_FIELDS, emptyContent } from "@/entities/qr";
+import { cn } from "@/shared/lib/utils";
 import { Field } from "@/shared/ui/field";
-import { Input } from "@/shared/ui/input";
+import { fieldControl, Input } from "@/shared/ui/input";
 import { Textarea } from "@/shared/ui/textarea";
 import { OptionGrid } from "./option-grid";
 
@@ -65,7 +66,7 @@ export function ContentForm({ content, onChange }: { content: QrContent; onChang
               <label key={field.name} className="flex min-h-11 cursor-pointer items-center gap-2.5 text-body sm:col-span-2">
                 <input
                   type="checkbox"
-                  className="size-5 accent-violet-600"
+                  className="size-5 accent-primary"
                   checked={value === true}
                   onChange={(e) => set(field.name, e.target.checked)}
                 />
@@ -80,7 +81,7 @@ export function ContentForm({ content, onChange }: { content: QrContent; onChang
               ) : field.kind === "security" ? (
                 <select
                   id={id}
-                  className="h-11 w-full rounded-md border border-input bg-surface px-3 text-base"
+                  className={cn(fieldControl, "min-h-control cursor-pointer")}
                   value={String(value ?? "WPA")}
                   onChange={(e) => set(field.name, e.target.value)}
                 >

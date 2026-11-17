@@ -85,8 +85,8 @@ export function DesignPanel({ design, onChange }: { design: EditorDesign; onChan
                 aria-label={key === "none" ? t("logoNone") : t(`icons.${key}`)}
                 onClick={() => onChange({ logo: key === "none" ? { kind: "none" } : { kind: "icon", icon: key } })}
                 className={cn(
-                  "grid aspect-square cursor-pointer place-items-center rounded-lg border border-border bg-surface hover:border-ink-300",
-                  selected && "border-violet-500 bg-accent",
+                  "grid aspect-square cursor-pointer place-items-center rounded-lg border border-border bg-surface transition-[border-color,box-shadow] duration-(--motion-fast) hover:border-border-hover",
+                  "aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]",
                 )}
               >
                 {key === "none" ? (
@@ -109,8 +109,8 @@ export function DesignPanel({ design, onChange }: { design: EditorDesign; onChan
           })}
           <label
             className={cn(
-              "relative grid aspect-square cursor-pointer place-items-center rounded-lg border border-dashed border-input bg-surface focus-within:outline-2 focus-within:outline-ring hover:border-ink-600",
-              design.logo.kind === "image" && "border-solid border-violet-500 bg-accent",
+              "relative grid aspect-square cursor-pointer place-items-center rounded-lg border border-dashed border-input bg-surface focus-within:outline-2 focus-within:outline-ring hover:border-input-hover",
+              design.logo.kind === "image" && "border-solid border-selected-border bg-selected",
             )}
           >
             <ImagePlusIcon aria-hidden className="size-5" />
@@ -140,7 +140,7 @@ export function DesignPanel({ design, onChange }: { design: EditorDesign; onChan
               step={0.01}
               value={design.logoSize}
               onChange={(e) => onChange({ logoSize: Number(e.target.value) })}
-              className="h-11 w-full accent-violet-600"
+              className="h-11 w-full accent-primary"
             />
           </div>
         ) : null}
