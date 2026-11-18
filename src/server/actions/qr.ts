@@ -1,13 +1,13 @@
 "use server";
 
-import type { Layout, QrContent } from "@heyqr/qr-core";
+import type { QrContent } from "@heyqr/qr-core";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireUser } from "../auth";
 import { createCheckout, createPortalSession } from "../billing/checkout";
 import { db, schema } from "../db";
-import { newId } from "../db/ids";
+import { saveQrWithLayouts } from "../qr/save-qr";
 
 export type ActionResult<T = undefined> = { ok: true; data: T } | { ok: false; error: "unauthorized" | "invalid" | "not_found" | "failed" };
 
@@ -22,7 +22,9 @@ const draftSchema = z.object({
       z.object({
         id: z.string().optional(),
         name: z.string().trim().min(1).max(60),
-        layout: z.custom<Layout>((v) => typeof v === "object" && v !== null),
+        // Validated against the versioned design contract in saveQrWithLayouts.
+        layout: z.unknown(),
+        editor: z.unknown().optional(),
       }),
     )
     .min(1)
@@ -47,29 +49,9 @@ export async function saveDraft(input: DraftInput): Promise<ActionResult<{ qrCod
     const user = await requireUser();
     const parsed = draftSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "invalid" };
-    const d = parsed.data;
-
-    return db.transaction(async (tx) => {
-      const qrCodeId = d.qrCodeId ?? newId();
-      if (d.qrCodeId) {
-        const updated = await tx
-          .update(schema.qrCode)
-          .set({ name: d.name, content: d.content, destination: d.destination ?? null })
-          .where(and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, user.id)))
-          .returning({ id: schema.qrCode.id });
-        if (updated.length === 0) return { ok: false, error: "not_found" } as const;
-      } else {
-        await tx
-          .insert(schema.qrCode)
-          .values({ id: qrCodeId, userId: user.id, name: d.name, model: d.model, content: d.content, destination: d.destination ?? null });
-      }
-
-      await tx.delete(schema.qrLayout).where(eq(schema.qrLayout.qrCodeId, qrCodeId));
-      const rows = d.layouts.map((l, i) => ({ id: l.id ?? newId(), qrCodeId, name: l.name, design: { layout: l.layout }, sortOrder: i }));
-      await tx.insert(schema.qrLayout).values(rows);
-      revalidatePath("/[locale]/dashboard", "page");
-      return { ok: true, data: { qrCodeId, layoutIds: rows.map((r) => r.id) } } as const;
-    });
+    const result = await saveQrWithLayouts(db, user.id, parsed.data);
+    if (result.ok) revalidatePath("/[locale]/dashboard", "page");
+    return result;
   });
 }
 

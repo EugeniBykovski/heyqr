@@ -8,6 +8,8 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { DEFAULT_DESIGN, designToLayout } from "../../entities/qr/model/design";
+import { designSettingsOf, readLayoutRecord } from "../../entities/qr/model/design-schema";
+import { saveQrWithLayouts } from "../qr/save-qr";
 import { checkDatabase, EXPECTED_MIGRATIONS, REQUIRED_TABLES } from "./check";
 import { SEED_SCAN_DAYS, seedFixtures } from "./fixtures";
 import { runMigrations } from "./migrator";
@@ -138,8 +140,8 @@ describe.skipIf(!url)("QR codes and design variants (real PostgreSQL)", () => {
         content: { type: "wifi", ssid: "Little Fern Guest", security: "WPA", password: "fern-latte-7" },
       });
       await tx.insert(schema.qrLayout).values([
-        { id: "hey11-poster", qrCodeId: "hey11-code", name: "Poster", design: { layout: poster }, sortOrder: 1 },
-        { id: "hey11-card", qrCodeId: "hey11-code", name: "Table tent", design: { layout: card }, sortOrder: 0 },
+        { id: "hey11-poster", qrCodeId: "hey11-code", name: "Poster", design: { schemaVersion: 1, layout: poster }, sortOrder: 1 },
+        { id: "hey11-card", qrCodeId: "hey11-code", name: "Table tent", design: { schemaVersion: 1, layout: card }, sortOrder: 0 },
       ]);
     });
 
@@ -164,7 +166,9 @@ describe.skipIf(!url)("QR codes and design variants (real PostgreSQL)", () => {
 
   it("rejects a variant for a code that does not exist", async () => {
     await expect(
-      db.insert(schema.qrLayout).values({ id: "hey11-orphan", qrCodeId: "no-such-code", name: "Orphan", design: { layout: card } }),
+      db
+        .insert(schema.qrLayout)
+        .values({ id: "hey11-orphan", qrCodeId: "no-such-code", name: "Orphan", design: { schemaVersion: 1, layout: card } }),
     ).rejects.toMatchObject({ cause: { code: "23503", constraint: "qr_layout_qr_code_id_qr_code_id_fk" } });
   });
 
@@ -191,9 +195,86 @@ describe.skipIf(!url)("QR codes and design variants (real PostgreSQL)", () => {
     expect(await db.query.exportFile.findFirst({ where: (f, { eq }) => eq(f.id, "hey11-file") })).toBeUndefined();
 
     await db.insert(schema.qrCode).values({ id: "hey11-second", userId: other.id, name: "Second", content: { type: "text", text: "hi" } });
-    await db.insert(schema.qrLayout).values({ id: "hey11-second-l", qrCodeId: "hey11-second", name: "Main", design: { layout: card } });
+    await db
+      .insert(schema.qrLayout)
+      .values({ id: "hey11-second-l", qrCodeId: "hey11-second", name: "Main", design: { schemaVersion: 1, layout: card } });
     await db.delete(schema.user).where(eq(schema.user.id, other.id));
     expect(await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, "hey11-second") })).toBeUndefined();
     expect(await db.query.qrLayout.findFirst({ where: (l, { eq }) => eq(l.id, "hey11-second-l") })).toBeUndefined();
+  });
+});
+
+/* Versioned design JSON (HEY-12): what the save path writes, and what the read boundary accepts. */
+describe.skipIf(!url)("versioned design records (real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "hey12-owner", name: "Owner", email: "owner@hey12.test" };
+  const design = {
+    ...DEFAULT_DESIGN,
+    fg: "#8C2F4B",
+    pattern: "rounded" as const,
+    preset: "frame" as const,
+    frameStyle: "bubble" as const,
+    caption: "See the menu",
+  };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 2 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("saves a variant through saveQrWithLayouts as schemaVersion 1 and reads it back unchanged", async () => {
+    const result = await saveQrWithLayouts(db, owner.id, {
+      name: "Menu sticker",
+      model: "dynamic",
+      content: { type: "website", url: "https://littlefern.cafe/menu" },
+      layouts: [{ name: "Sticker", layout: designToLayout(design), editor: designSettingsOf(design) }],
+    });
+    expect(result.ok).toBe(true);
+    const layoutId = result.ok ? result.data.layoutIds[0] : "";
+
+    const { rows } = await pool.query(`select design from qr_layout where id = $1`, [layoutId]);
+    const stored = rows[0].design;
+    expect(stored.schemaVersion).toBe(1);
+    expect(stored.editor).toEqual(designSettingsOf(design));
+    expect(readLayoutRecord(stored)).toEqual({
+      ok: true,
+      from: "current",
+      value: { schemaVersion: 1, layout: designToLayout(design), editor: designSettingsOf(design) },
+    });
+  });
+
+  it("refuses to save a variant that doesn't match the contract", async () => {
+    const result = await saveQrWithLayouts(db, owner.id, {
+      name: "Broken",
+      model: "static",
+      content: { type: "text", text: "hi" },
+      layouts: [{ name: "Bad", layout: { preset: "qr" } }],
+    });
+    expect(result).toEqual({ ok: false, error: "invalid" });
+    expect((await pool.query(`select count(*)::int as n from qr_code where name = 'Broken'`)).rows[0].n).toBe(0);
+  });
+
+  it("reads legacy rows written before versioning, and reports rows from a newer version", async () => {
+    await pool.query(
+      `insert into qr_code (id, user_id, name, content) values ('hey12-legacy', $1, 'Legacy', '{"type":"text","text":"hi"}')`,
+      [owner.id],
+    );
+    await pool.query(
+      `insert into qr_layout (id, qr_code_id, name, design, sort_order) values ('hey12-old', 'hey12-legacy', 'Old', $1, 0), ('hey12-new', 'hey12-legacy', 'Future', $2, 1)`,
+      [JSON.stringify({ layout: designToLayout(design) }), JSON.stringify({ schemaVersion: 2, layout: designToLayout(design) })],
+    );
+    const { rows } = await pool.query(`select id, design from qr_layout where qr_code_id = 'hey12-legacy' order by sort_order`);
+    expect(readLayoutRecord(rows[0].design)).toEqual({
+      ok: true,
+      from: "legacy",
+      value: { schemaVersion: 1, layout: designToLayout(design) },
+    });
+    expect(readLayoutRecord(rows[1].design)).toEqual({ ok: false, reason: "unsupported", version: 2 });
   });
 });
