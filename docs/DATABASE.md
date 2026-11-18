@@ -5,15 +5,14 @@ The app uses PostgreSQL through Drizzle ORM and the `pg` driver (`src/server/db`
 
 ## Database targets
 
-Every process knows which database it is pointed at. The target comes from `DATABASE_TARGET`, or from `VERCEL_ENV` on
-Vercel; when both are set they must agree, otherwise commands stop with an error (`src/server/db/target.ts`).
+Every process knows which database it is pointed at (`src/server/db/target.ts`). The target is the app environment
+from `APP_ENV` / `VERCEL_ENV` (see [ENVIRONMENTS.md](ENVIRONMENTS.md)), except that automated tests use `test`.
 
-| Target       | Used by                              | Database                                    | Seeding | Migrating                                  |
-| ------------ | ------------------------------------ | ------------------------------------------- | ------- | ------------------------------------------ |
-| `local`      | `pnpm dev` on your machine (default) | `heyqr` on local Postgres                   | yes     | yes                                        |
-| `test`       | `pnpm test:db`, CI `database` job    | a database whose name ends in `_test`       | yes     | yes; tests also reset it                   |
-| `preview`    | Vercel preview deployments           | one shared preview database (a Neon branch) | yes     | yes, via the Preview database workflow     |
-| `production` | Vercel production                    | the production database                     | never   | only with `CONFIRM_PRODUCTION_MIGRATION=1` |
+| Target       | Used by                                                    | Database                                  | Seeding | Migrating                                  |
+| ------------ | ---------------------------------------------------------- | ----------------------------------------- | ------- | ------------------------------------------ |
+| `dev`        | `pnpm dev` locally (default) and Vercel Preview            | local `heyqr`, or the Neon **dev** branch | yes     | yes; hosted via the Dev database workflow  |
+| `production` | Vercel Production                                          | the Neon **production** branch            | never   | only with `CONFIRM_PRODUCTION_MIGRATION=1` |
+| `test`       | `pnpm test:db`, CI `database` job (`DATABASE_TARGET=test`) | a database whose name ends in `_test`     | yes     | yes; tests also reset it                   |
 
 Logs, `pnpm db:verify` and `GET /api/health` identify a database only by its target and `host:port/name`, never by
 credentials.
@@ -24,11 +23,12 @@ credentials.
 | ----------------------- | -------- | ------------------------------------------------------------------------------------------ |
 | `DATABASE_URL`          | yes      | Connection used by the app (on Neon: the **pooled** endpoint).                             |
 | `DATABASE_URL_UNPOOLED` | on Neon  | Direct connection used by `pnpm db:migrate` and drizzle-kit. Falls back to `DATABASE_URL`. |
-| `DATABASE_TARGET`       | no       | `local`, `test`, `preview` or `production`. Leave empty locally; on Vercel it is implied.  |
+| `APP_ENV`               | no       | `dev` or `production`; selects the target. Empty locally (dev); implied on Vercel.         |
+| `DATABASE_TARGET`       | tests    | Only `test`, for CI fixtures. Refused on Vercel.                                           |
 | `TEST_DATABASE_URL`     | tests    | Database that `pnpm test:db` **drops and recreates**. Its name must end in `_test`.        |
 
-Values go in `.env` locally (copied from `.env.example`) and in Vercel's project settings per environment. Never commit
-them.
+Values go in `.env` locally (copied from `.env.example`), in Vercel per scope, and in the GitHub `dev` / `production`
+environments for the migration workflows. Never commit them.
 
 Why two URLs: Neon's pooler is PgBouncer in transaction mode. It is right for many short-lived serverless connections,
 but it can't hold the session-level advisory lock that `pnpm db:migrate` takes, so migrations use the direct endpoint.
@@ -71,7 +71,7 @@ pnpm dev                       # http://localhost:3000/api/health reports the sa
 3. `pnpm db:migrate`: applies it locally. Commit the migration together with the schema change.
 
 `pnpm db:push` writes the schema straight to a database without a migration file. Use it only on a throw-away local
-database; preview and production only ever receive committed migrations.
+database; hosted dev and production only ever receive committed migrations.
 
 `pnpm db:migrate` applies only the migrations the database hasn't recorded (`drizzle.__drizzle_migrations`), so it is
 safe to rerun. It holds a Postgres advisory lock, so concurrent runs against the same database wait for each other.
@@ -93,56 +93,42 @@ it refuses a database where `ana@example.com` belongs to a different account.
   - the health check.
 - CI runs the same against a fresh `postgres:17` service: migrate twice, seed twice, `db:verify`, `test:db`.
 
-## Preview
+## Hosted dev
 
-Preview deployments run on Vercel and use one shared preview database, separate from production.
+Vercel Preview deployments are the hosted **dev** environment and share one dev database (a Neon `dev` branch),
+separate from production. Setup and the full variable matrix are in [ENVIRONMENTS.md](ENVIRONMENTS.md#one-time-hosted-setup-not-done-yet).
 
-One-time setup (needs the Vercel project and a Neon account):
+Every pull request that changes `drizzle/` or `src/server/db/` runs the **Dev database** workflow, which migrates the
+dev database (GitHub environment `dev`, secrets `DEV_DATABASE_URL` and `DEV_DATABASE_URL_UNPOOLED`) before the
+deployment uses it. Runs are queued one at a time; run it by hand with "seed" ticked to load the demo data.
 
-1. In Neon, create a branch `preview` from `main` (or a separate project) for preview data.
-2. In Vercel → Project → Settings → Environment Variables, **Preview** environment:
-   - `DATABASE_URL` = the preview branch's pooled connection string;
-   - `DATABASE_URL_UNPOOLED` = its direct connection string;
-   - `DATABASE_TARGET` = `preview`.
+Verify with `https://<dev-domain>/api/health`: `"environment": "dev"`, `"target": "dev"`, `"ok": true`.
 
-   The **Production** environment gets the production branch's URLs and `DATABASE_TARGET=production`. If you use Neon's
-   Vercel integration instead, it sets the two URLs for you; keep it on one shared preview branch (don't enable a branch
-   per deployment).
-
-3. In GitHub → Settings → Environments → `preview`, add secrets `PREVIEW_DATABASE_URL` and
-   `PREVIEW_DATABASE_URL_UNPOOLED` with the same two values.
-4. Run **Actions → Preview database → Run workflow** with "seed" ticked once to migrate and load the demo data.
-
-After that, every pull request that changes `drizzle/` or `src/server/db/` runs the **Preview database** workflow,
-which migrates the preview database before the deployment uses it. Runs are queued one at a time.
-
-Verify a preview deployment with `https://<preview-url>/api/health`. It should return `"ok": true` and
-`"target": "preview"`.
-
-Because the preview database is shared, two open pull requests with conflicting migrations can't both be previewed.
-Merge or rebase one first, or reset the Neon preview branch from `main`.
+Because the dev database is shared, two open pull requests with conflicting migrations can't both be deployed to dev.
+Merge or rebase one first, or reset the Neon dev branch from `main`.
 
 ## Production
 
-Production migrations are explicit:
+Production migrations are explicit: run **Actions → Production database**, type `production`, and approve the
+`production` environment. Locally, with the production URLs:
 
 ```bash
-DATABASE_TARGET=production CONFIRM_PRODUCTION_MIGRATION=1 \
-DATABASE_URL=… DATABASE_URL_UNPOOLED=… pnpm db:migrate
+APP_ENV=production CONFIRM_PRODUCTION_MIGRATION=1 DATABASE_URL=… DATABASE_URL_UNPOOLED=… pnpm db:migrate
 ```
 
 Fixtures are never loaded into production.
 
 ## Troubleshooting
 
-| Symptom                                                                 | Fix                                                                                                                     |
-| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `Cannot connect … (ECONNREFUSED)`                                       | Postgres isn't running: `pnpm db:up` or `brew services start postgresql@17`; check the host and port in `DATABASE_URL`. |
-| `password authentication failed` / `role "heyqr" does not exist`        | Create the role and databases as shown in Local setup, or fix the credentials in `.env`.                                |
-| `database "heyqr_test" does not exist`                                  | `createdb -O heyqr heyqr_test`.                                                                                         |
-| `/api/health` returns 503 with `schema_missing` or `migrations_pending` | Run `pnpm db:migrate` against that target.                                                                              |
-| `DATABASE_TARGET is "…" but this is a Vercel … deployment`              | Set `DATABASE_TARGET` for that Vercel environment to match it (`preview` or `production`), or remove it.                |
-| `Refusing to seed …` / `Refusing to migrate the production database …`  | Expected safeguard; check you are pointed at the database you meant.                                                    |
-| Migration fails half-way                                                | Each migration runs in a transaction and is rolled back. Fix the SQL or the data, then rerun `pnpm db:migrate`.         |
-| `must be owner of …` during `pnpm test:db`                              | The test database must be owned by the role in `TEST_DATABASE_URL`: `alter database heyqr_test owner to heyqr;`.        |
-| `pnpm db:migrate` waits forever                                         | Another run holds the migration lock: let it finish, or check `select * from pg_locks where locktype = 'advisory';`.    |
+| Symptom                                                                 | Fix                                                                                                                            |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `Cannot connect … (ECONNREFUSED)`                                       | Postgres isn't running: `pnpm db:up` or `brew services start postgresql@17`; check the host and port in `DATABASE_URL`.        |
+| `password authentication failed` / `role "heyqr" does not exist`        | Create the role and databases as shown in Local setup, or fix the credentials in `.env`.                                       |
+| `database "heyqr_test" does not exist`                                  | `createdb -O heyqr heyqr_test`.                                                                                                |
+| `/api/health` returns 503 with `schema_missing` or `migrations_pending` | Run `pnpm db:migrate` against that environment.                                                                                |
+| `APP_ENV is "…" but Vercel's … scope serves …`                          | Set `APP_ENV` in that Vercel scope to the value named in the error (Preview → `dev`, Production → `production`), or remove it. |
+| `DATABASE_TARGET only accepts "test"`                                   | HEY-7's `local` / `preview` / `production` targets are now `APP_ENV`; remove `DATABASE_TARGET` or set `APP_ENV`.               |
+| `Refusing to seed …` / `Refusing to migrate the production database …`  | Expected safeguard; check you are pointed at the database you meant.                                                           |
+| Migration fails half-way                                                | Each migration runs in a transaction and is rolled back. Fix the SQL or the data, then rerun `pnpm db:migrate`.                |
+| `must be owner of …` during `pnpm test:db`                              | The test database must be owned by the role in `TEST_DATABASE_URL`: `alter database heyqr_test owner to heyqr;`.               |
+| `pnpm db:migrate` waits forever                                         | Another run holds the migration lock: let it finish, or check `select * from pg_locks where locktype = 'advisory';`.           |
