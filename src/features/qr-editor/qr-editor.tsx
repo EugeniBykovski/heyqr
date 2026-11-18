@@ -42,7 +42,8 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
   const patch = (p: Partial<EditorDesign>) => setDesign((d) => ({ ...d, ...p }));
 
   useEffect(() => {
-    if (restored && !resume) toast(t("draftRestored"));
+    // Fixed id: shown once even when the effect runs twice (React Strict Mode in development).
+    if (restored && !resume) toast(t("draftRestored"), { id: "draft-restored" });
   }, [restored, resume, t]);
 
   const complete = isContentComplete(design.content);
