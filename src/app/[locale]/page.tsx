@@ -10,7 +10,7 @@ import {
   ShieldCheckIcon,
   type LucideIcon,
 } from "lucide-react";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { CENTER_ICONS, FRAME_STYLES } from "@/entities/qr";
 import { env } from "@/env";
@@ -24,6 +24,8 @@ import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
 import { Container } from "@/shared/ui/container";
 import { HomeFooter } from "@/widgets/site-footer";
+import { Studio, StudioSkeleton } from "@/widgets/studio";
+import { getSession } from "@/server/auth";
 
 const STEPS = ["content", "design", "download"] as const;
 const FEATURES: { key: "scan" | "style" | "logo" | "frames" | "files" | "dynamic"; icon: LucideIcon }[] = [
@@ -60,7 +62,7 @@ const section = "reveal py-12 lg:py-18";
 
 export default async function HomePage({ params }: PageProps<"/[locale]">) {
   await resolveLocale(params);
-  const [t, tNav, format] = await Promise.all([getTranslations("home"), getTranslations("nav"), getFormatter()]);
+  const [t, tNav, format, session] = await Promise.all([getTranslations("home"), getTranslations("nav"), getFormatter(), getSession()]);
   const money = (cents: number) => format.number(cents / 100, { style: "currency", currency: pricing.currency });
   const prices = { static: money(pricing.staticCents), dynamic: money(pricing.dynamicMonthlyCents), limit: env.DYNAMIC_ACTIVE_CODE_LIMIT };
   const b = (chunks: ReactNode) => <b className="font-semibold">{chunks}</b>;
@@ -79,6 +81,12 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           </>
         }
       />
+
+      {session ? (
+        <Suspense fallback={<StudioSkeleton label={t("studio.loading")} />}>
+          <Studio userId={session.user.id} name={session.user.name} />
+        </Suspense>
+      ) : null}
 
       <section aria-label={t("how.label")} className="grid reveal gap-3 pb-8 md:grid-cols-3">
         {STEPS.map((step, i) => (

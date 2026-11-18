@@ -229,6 +229,61 @@
       "title": "Your first code takes about a minute.",
       "lead": "Design it for free. Pay {price} only when you download.",
       "pricing": "See pricing"
+    },
+    "studio": {
+      "kicker": "Your studio",
+      "welcome": "Welcome back, {name}",
+      "summaryTop": "{name} was scanned {count, plural, one {# time} other {# times}} today. Everything you made is one tap away.",
+      "summary": "Everything you made is one tap away: files, links and scans.",
+      "summaryEmpty": "Make your first code and it will show up here with its files and scans.",
+      "billing": "Plan & billing",
+      "library": "Open My QR codes",
+      "kpi": {
+        "codes": "QR codes",
+        "codesNote": "{paid} paid · {drafts, plural, one {# draft} other {# drafts}}",
+        "scans": "Scans · 14 days",
+        "scansNone": "No scans yet",
+        "scansDelta": "{delta, number, ::sign-always percent} vs previous week",
+        "dynamic": "Dynamic codes",
+        "dynamicNote": "{left, plural, one {# slot} other {# slots}} left on your plan",
+        "dynamicMeter": "Dynamic codes in use",
+        "files": "Files ready",
+        "filesNote": "{count, plural, one {layout} other {layouts}} to download as PNG or SVG"
+      },
+      "chart": {
+        "title": "Scans · last 14 days",
+        "sub": "All dynamic codes together",
+        "empty": "Scans of your dynamic codes will show up here.",
+        "today": "Today",
+        "label": "Daily scans across dynamic codes for the last 14 days"
+      },
+      "top": "Top code",
+      "topNote": "{count, plural, one {# scan} other {# scans}} in 14 days · {link}",
+      "topNone": "No dynamic codes yet",
+      "topNoneNote": "Dynamic codes count every scan.",
+      "recent": "Recent codes",
+      "seeAll": "See all {count}",
+      "recentEmpty": "Your codes will live here, with their files and scans.",
+      "createFirst": "Create your first code",
+      "open": "Open",
+      "openName": "Open {name}",
+      "status": {
+        "dynamic": "Dynamic · active",
+        "paid": "Paid",
+        "draft": "Draft"
+      },
+      "metricScans": "{count, plural, one {# scan} other {# scans}}",
+      "metricLayouts": "{count, plural, one {# layout} other {# layouts}}",
+      "metricFinish": "Finish to download",
+      "perksTitle": "Included with your account",
+      "perks": {
+        "again": "Download every paid layout again, as PNG or SVG, at no cost",
+        "redirect": "Point dynamic codes somewhere new without reprinting",
+        "scans": "Daily scan counts for every dynamic code",
+        "drafts": "Drafts saved to your account on every device",
+        "billing": "Receipts, plan and payment method in Plan & billing"
+      },
+      "loading": "Loading your studio"
     }
   },
   "pricing": {
