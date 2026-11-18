@@ -9,15 +9,13 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("title") };
 }
 
-/** Design "editor": full-width workspace (step bar, settings panel, live canvas); the heading is for assistive tech. */
+/** Design "editor": Type → Content → Design on one route; the step is in ?step=. */
 export default async function CreatePage({ params, searchParams }: PageProps<"/[locale]/create">) {
   await resolveLocale(params);
-  const [t, session, query] = await Promise.all([getTranslations("editor"), getSession(), searchParams]);
+  const [session, query] = await Promise.all([getSession(), searchParams]);
 
   return (
-    <>
-      <h1 className="sr-only">{t("title")}</h1>
-      <QrEditor signedIn={Boolean(session)} resume={query.resume === "1"} />
-    </>
+    // Each editor step renders its own h1 (Type, Content, Design).
+    <QrEditor signedIn={Boolean(session)} resume={query.resume === "1"} />
   );
 }

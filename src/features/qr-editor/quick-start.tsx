@@ -57,16 +57,18 @@ export function QuickStart({ copy }: { copy: ReactNode }) {
   const price = format.number(pricing.staticCents / 100, { style: "currency", currency: pricing.currency });
 
   const patch = (p: Partial<EditorDesign>) => setDesign((d) => ({ ...d, ...p }));
-  const goToEditor = (next: EditorDesign) => {
+  /** Same handoff as the design: a typed website goes straight to Design, other choices to their step. */
+  const goToEditor = (next: EditorDesign, step: "type" | "content" | "design") => {
     writeDraft(next);
-    router.push("/create");
+    router.push(`/create?step=${step}`);
   };
   const pickType = (type: HomeType) => {
     if (type === "website") {
       if (design.content.type !== "website") patch({ content: emptyContent("website") });
       return;
     }
-    goToEditor(type === "more" ? design : { ...design, content: emptyContent(type), model: modeFor(type, design.model) });
+    if (type === "more") goToEditor(design, "type");
+    else goToEditor({ ...design, content: emptyContent(type), model: modeFor(type, design.model) }, "content");
   };
   const onContinue = () => {
     if (design.content.type === "website" && (!url.trim() || /\s/.test(url.trim()))) {
@@ -74,7 +76,7 @@ export function QuickStart({ copy }: { copy: ReactNode }) {
       urlRef.current?.focus();
       return;
     }
-    goToEditor(design);
+    goToEditor(design, "design");
   };
 
   return (

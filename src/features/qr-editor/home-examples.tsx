@@ -36,7 +36,7 @@ export function HomeExamples() {
           aria-label={t("use", { title: t(`items.${ex.id}.title`) })}
           onClick={() => {
             writeDraft({ ...DEFAULT_DESIGN, ...ex.design, name: t(`items.${ex.id}.title`), model: ex.model, content: ex.content });
-            router.push("/create");
+            router.push("/create?step=design");
           }}
           className="group flex cursor-pointer snap-start flex-col gap-3.5 rounded-xl border border-border bg-surface p-3 text-left shadow-1 transition-[border-color,box-shadow] duration-(--motion-base) ease-out hover:border-border-hover hover:shadow-2"
         >

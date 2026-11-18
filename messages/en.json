@@ -297,7 +297,8 @@
     "steps": {
       "content": "Content",
       "design": "Design",
-      "frame": "Frame"
+      "frame": "Frame",
+      "type": "Type"
     },
     "type": "What should the code open?",
     "model": {
@@ -391,6 +392,116 @@
       "unavailable": "{type} codes are always static: the content goes straight into the pattern. Dynamic is for website links.",
       "switched": "{type} codes are static, so this code is now Static. Dynamic is for website links.",
       "adjusted": "Your draft was Dynamic, but only website links can be dynamic, so it’s Static now. Your content and design are unchanged."
+    },
+    "backTo": {
+      "home": "Home",
+      "type": "Type",
+      "content": "Content"
+    },
+    "continue": "Continue",
+    "export": "Export",
+    "previewFrom": "Preview free · download from {price}",
+    "optional": "optional",
+    "frameGroup": "Frame and caption",
+    "typeStep": {
+      "title": "What should your code open?",
+      "lead": "Everything is free to try. You pay only when you download the finished file.",
+      "groupLabel": "QR type",
+      "example": "e.g. {example}",
+      "next": "Next: add your content",
+      "examples": {
+        "website": "anareyes.studio/portfolio",
+        "text": "“Ring the bell twice”",
+        "wifi": "Reyes Studio Guest",
+        "contact": "Ana Reyes · Designer",
+        "email": "hello@reyes.studio",
+        "phone": "+1 415 555 0142",
+        "sms": "“RSVP yes”",
+        "location": "21 Pier St, San Francisco",
+        "event": "Spring show · Dec 5"
+      }
+    },
+    "contentStep": {
+      "titles": {
+        "website": "Which page should it open?",
+        "text": "What should people read?",
+        "wifi": "Which network should guests join?",
+        "contact": "Who should people save?",
+        "email": "Who should the email go to?",
+        "phone": "Which number should it call?",
+        "sms": "Who gets the text message?",
+        "location": "Which place should it open?",
+        "event": "What’s the event?"
+      },
+      "subs": {
+        "website": "Paste the full address. You’ll see what people get after scanning.",
+        "text": "Plain text appears on the phone right after scanning.",
+        "wifi": "Phones join the network after scanning. No typing needed.",
+        "contact": "Phones offer to save this contact after scanning.",
+        "email": "Scanning opens a new email with the address, subject and message filled in.",
+        "phone": "Scanning offers to call the number. No typing.",
+        "sms": "Scanning opens a text message, ready to send.",
+        "location": "Scanning opens the place in the phone’s maps app.",
+        "event": "Scanning offers to add the event to the calendar."
+      },
+      "nameLabel": "Name in My QR codes",
+      "stepOf": "Step 2 of 3",
+      "kept": "Your entries are kept if you go back.",
+      "continue": "Continue to design",
+      "errorsOne": "Fix the highlighted field to continue. Everything else is saved.",
+      "errorsMany": "Fix the {count} highlighted fields to continue. Everything else is saved.",
+      "back": "Back"
+    },
+    "errors": {
+      "urlEmpty": "Enter a web address, like yourname.com.",
+      "urlSpaces": "Web addresses can’t contain spaces.",
+      "urlInvalid": "Check the address. It needs a domain, like yourname.com.",
+      "text": "Type the text people should see after scanning.",
+      "ssid": "Enter the network name exactly as it appears on phones.",
+      "password": "Enter the Wi-Fi password, or choose “No password”.",
+      "passwordShort": "WPA passwords have at least 8 characters.",
+      "contactName": "Add at least a first or last name.",
+      "phone": "Use digits, spaces and an optional + for the country code.",
+      "email": "Check the email address. It needs a name, @ and a domain, like ana@studio.com.",
+      "emailTo": "Enter the address the email should go to.",
+      "emailInvalid": "Check the address. It needs a name, @ and a domain.",
+      "phoneNumber": "Enter a phone number with the country code, like +1 415 555 0142.",
+      "smsTo": "Enter the number that should receive the message.",
+      "address": "Enter the address the maps app should open.",
+      "eventTitle": "Give the event a name.",
+      "eventStart": "Choose when the event starts."
+    },
+    "afterScanning": {
+      "label": "After scanning",
+      "toggleHint": "See what people get on their phone",
+      "caption": "What people see after scanning",
+      "websitePlaceholder": "Your web page",
+      "dynamicNote": "Opens your short link first, then redirects here.",
+      "textPlaceholder": "Your text appears here.",
+      "wifiPlaceholder": "Join the network?",
+      "security": "Security",
+      "open": "None",
+      "password": "Password",
+      "join": "Join",
+      "contactPlaceholder": "New contact",
+      "phone": "Phone",
+      "email": "Email",
+      "company": "Company",
+      "save": "Save contact",
+      "emailPlaceholder": "New email",
+      "subject": "Subject",
+      "compose": "Write email",
+      "phonePlaceholder": "Phone number",
+      "call": "Call",
+      "message": "Message",
+      "text": "Send text",
+      "locationPlaceholder": "A place",
+      "address": "Address",
+      "openMaps": "Open in Maps",
+      "eventPlaceholder": "New event",
+      "starts": "Starts",
+      "place": "Place",
+      "addToCalendar": "Add to calendar"
     }
   },
   "scan": {

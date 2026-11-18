@@ -11,7 +11,7 @@ function useOpenType() {
   const router = useRouter();
   return (type: QrContentType) => {
     writeDraft(draftForType(type));
-    router.push("/create");
+    router.push("/create?step=content");
   };
 }
 
