@@ -77,7 +77,12 @@ export function ContentForm({
                 {label}
               </label>
             );
-          const wide = field.kind === "textarea" || field.kind === "url" || content.type === "website" || content.type === "wifi";
+          const wide =
+            field.kind === "textarea" ||
+            field.kind === "url" ||
+            content.type === "website" ||
+            content.type === "wifi" ||
+            (content.type === "contact" && !field.half);
           const common = {
             id,
             "aria-invalid": error ? true : undefined,
@@ -88,7 +93,7 @@ export function ContentForm({
             <div key={field.name} className={cn("flex flex-col gap-1.5", wide && "sm:col-span-2")}>
               <Label htmlFor={id}>
                 {label}
-                {!required ? <span className="font-normal text-muted-foreground">· {t("editor.optional")}</span> : null}
+                {!required && !field.unmarked ? <span className="font-normal text-muted-foreground">· {t("editor.optional")}</span> : null}
               </Label>
               {field.kind === "textarea" ? (
                 <Textarea {...common} rows={4} value={String(value ?? "")} onChange={(e) => set(field.name, e.target.value)} />
@@ -118,6 +123,7 @@ export function ContentForm({
                 <Input
                   {...common}
                   type={field.kind}
+                  placeholder={field.placeholder}
                   autoComplete={field.autoComplete}
                   inputMode={field.kind === "url" ? "url" : field.kind === "tel" ? "tel" : field.kind === "email" ? "email" : undefined}
                   value={String(value ?? "")}

@@ -41,6 +41,11 @@ export function contentErrors(content: QrContent): ContentErrors {
       if (!text("firstName").trim() && !text("lastName").trim()) e.firstName = "contactName";
       if (text("phone") && !PHONE.test(text("phone"))) e.phone = "phone";
       if (text("email") && !EMAIL.test(text("email"))) e.email = "email";
+      // Optional, but when given it must be an address phones can open (same rules as a Website code).
+      if (text("website").trim()) {
+        const p = urlProblem(text("website"));
+        if (p) e.website = p;
+      }
       break;
     case "email":
       if (!EMAIL.test(text("to"))) e.to = text("to") ? "emailInvalid" : "emailTo";

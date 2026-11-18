@@ -544,7 +544,7 @@
       "phone": "Телефон",
       "email": "Email",
       "company": "Компания",
-      "save": "Сохранить контакт",
+      "save": "Добавить в контакты",
       "emailPlaceholder": "Новое письмо",
       "subject": "Тема",
       "compose": "Написать",
@@ -559,7 +559,8 @@
       "starts": "Начало",
       "place": "Место",
       "addToCalendar": "Добавить в календарь",
-      "wifiKicker": "Подключиться к Wi-Fi"
+      "wifiKicker": "Подключиться к Wi-Fi",
+      "website": "Сайт"
     },
     "passwordShow": "Показать",
     "passwordHide": "Скрыть",

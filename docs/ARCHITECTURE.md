@@ -10,7 +10,7 @@ heyqr/
 │  ├─ src/encode.ts           QR encoder (versions 1–20, ECL L/M/Q/H, masks)
 │  ├─ src/render.ts           styled SVG (8 module shapes, 5 eye frames, 5 eye balls, logo/text plates) + scan check
 │  ├─ src/compose.ts          layouts: code only, caption, vertical/horizontal cards, 8 frames
-│  ├─ src/payload.ts          9 content types → payload strings (Wi-Fi, MECARD, VEVENT, …)
+│  ├─ src/payload.ts          9 content types → payload strings (Wi-Fi, vCard 3.0, VEVENT, …)
 │  ├─ src/raster.ts           Node only: SVG → PNG (resvg)          → "@heyqr/qr-core/raster"
 │  └─ src/verify.ts           Node only: ZXing decode at 3 sizes    → "@heyqr/qr-core/verify"
 ├─ messages/<locale>.json     UI copy (English is the source and fallback)

@@ -6,6 +6,12 @@ export type ContentField = {
   label: string;
   kind: "text" | "url" | "tel" | "email" | "textarea" | "datetime-local" | "security" | "checkbox";
   required?: boolean;
+  /** Not required, but not labelled "optional" either (design 1.3: name, phone and email carry no marker). */
+  unmarked?: boolean;
+  /** Half width beside its neighbour from 600 px (design "pair"); other fields of these types are full width. */
+  half?: boolean;
+  /** Suggested value shown while empty. */
+  placeholder?: string;
   autoComplete?: string;
 };
 
@@ -20,13 +26,14 @@ export const CONTENT_FIELDS: Record<QrContentType, ContentField[]> = {
     { name: "hidden", label: "hidden", kind: "checkbox" },
   ],
   contact: [
-    { name: "firstName", label: "firstName", kind: "text", autoComplete: "given-name" },
-    { name: "lastName", label: "lastName", kind: "text", autoComplete: "family-name" },
-    { name: "phone", label: "phone", kind: "tel", autoComplete: "tel" },
-    { name: "email", label: "email", kind: "email", autoComplete: "email" },
-    { name: "company", label: "company", kind: "text", autoComplete: "organization" },
-    { name: "title", label: "title", kind: "text", autoComplete: "organization-title" },
-    { name: "website", label: "website", kind: "url", autoComplete: "url" },
+    // Design 1.3 Content · contact card: first | last, job title | company, then phone, email, website.
+    { name: "firstName", label: "firstName", kind: "text", unmarked: true, half: true, autoComplete: "given-name" },
+    { name: "lastName", label: "lastName", kind: "text", unmarked: true, half: true, autoComplete: "family-name" },
+    { name: "title", label: "title", kind: "text", half: true, autoComplete: "organization-title" },
+    { name: "company", label: "company", kind: "text", half: true, autoComplete: "organization" },
+    { name: "phone", label: "phone", kind: "tel", unmarked: true, placeholder: "+1 415 555 0142", autoComplete: "tel" },
+    { name: "email", label: "email", kind: "email", unmarked: true, placeholder: "you@studio.com", autoComplete: "email" },
+    { name: "website", label: "website", kind: "url", placeholder: "yourname.com", autoComplete: "url" },
   ],
   email: [
     { name: "to", label: "to", kind: "email", required: true, autoComplete: "email" },
