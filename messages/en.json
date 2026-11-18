@@ -373,7 +373,8 @@
     "scanFailed": "Check scan",
     "priceOnce": "{price} once",
     "pricePerMonth": "{price} / month",
-    "previewFree": "Preview free · pay when you download"
+    "previewFree": "Preview free · pay when you download",
+    "draftUnreadable": "We couldn't open your last design, so you're starting fresh. It's kept in this browser."
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",
