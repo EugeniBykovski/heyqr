@@ -66,4 +66,32 @@ describe("useDraft", () => {
     expect(draftForType("wifi")).toMatchObject({ model: "static", fg: "#8C2F4B", content: { type: "wifi" } });
     expect(draftForType("website")).toMatchObject({ model: "dynamic" });
   });
+
+  it("writes the last edit at once when the editor unmounts before the debounce (client navigation)", () => {
+    const { result, unmount } = renderHook(() => useDraft());
+    act(() => result.current.setDesign((d) => ({ ...d, name: "Quick edit" })));
+    act(() => vi.advanceTimersByTime(50));
+    expect(localStorage.getItem(KEY)).toBeNull();
+    unmount();
+    expect(JSON.parse(localStorage.getItem(KEY) ?? "{}")).toMatchObject({ schemaVersion: 1, name: "Quick edit" });
+  });
+
+  it("writes the last edit at once on pagehide (reload or tab close)", () => {
+    const { result } = renderHook(() => useDraft());
+    act(() => result.current.setDesign((d) => ({ ...d, fg: "#1F5C45" })));
+    act(() => {
+      window.dispatchEvent(new Event("pagehide"));
+    });
+    expect(JSON.parse(localStorage.getItem(KEY) ?? "{}")).toMatchObject({ fg: "#1F5C45" });
+  });
+
+  it("does not flush anything for an unreadable draft the user never edited", () => {
+    localStorage.setItem(KEY, "{broken");
+    const { unmount } = renderHook(() => useDraft());
+    act(() => {
+      window.dispatchEvent(new Event("pagehide"));
+    });
+    unmount();
+    expect(localStorage.getItem(KEY)).toBe("{broken");
+  });
 });

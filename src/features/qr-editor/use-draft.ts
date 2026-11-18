@@ -53,19 +53,44 @@ export function readDraft(): EditorDesign | null {
  * Guest drafts live in this browser until the user signs in and the draft is saved to the account.
  * Storage can be unavailable (private mode); the editor then simply works without persistence.
  * Autosave starts only after the first change, so opening the editor never overwrites a stored draft with defaults,
- * including one that couldn't be read.
+ * including one that couldn't be read. Edits are debounced by 300 ms and flushed on pagehide, when the tab is hidden
+ * and on unmount, so a quick reload or navigation never loses the last change.
  */
 export function useDraft() {
   // The editor renders only in the browser (see QrEditorLoader), so storage can be read during the first render.
   const [read] = useState(loadDraft);
   const [design, setDesign] = useState<EditorDesign>(read.status === "restored" ? read.design : DEFAULT_DESIGN);
   const initial = useRef(design);
+  /** The latest edit that the debounce hasn't written yet. */
+  const pending = useRef<EditorDesign | null>(null);
 
   useEffect(() => {
     if (design === initial.current) return;
-    const id = window.setTimeout(() => writeDraft(design), 300);
+    pending.current = design;
+    const id = window.setTimeout(() => {
+      writeDraft(design);
+      pending.current = null;
+    }, 300);
     return () => window.clearTimeout(id);
   }, [design]);
+
+  // Never drop the last edit: write it at once when the page is hidden or unloaded (reload, tab close, app switch)
+  // and when the editor unmounts (client-side navigation to another page).
+  useEffect(() => {
+    const flush = () => {
+      if (!pending.current) return;
+      writeDraft(pending.current);
+      pending.current = null;
+    };
+    const onHidden = () => document.visibilityState === "hidden" && flush();
+    window.addEventListener("pagehide", flush);
+    document.addEventListener("visibilitychange", onHidden);
+    return () => {
+      window.removeEventListener("pagehide", flush);
+      document.removeEventListener("visibilitychange", onHidden);
+      flush();
+    };
+  }, []);
 
   return {
     design,
