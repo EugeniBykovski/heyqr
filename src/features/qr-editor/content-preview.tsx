@@ -53,11 +53,14 @@ export function ContentPreview({ content, mode, className }: { content: QrConten
       );
       break;
     default: {
-      const view = centerView(content.type, v, t);
+      const view = centerView(content.type, v, t, (k) => (typeof c[k] === "string" ? (c[k] as string) : ""));
       body = (
         <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4.5 py-5 text-center">
           <span className="grid size-19 place-items-center rounded-full bg-accent-hover text-accent-foreground">{view.icon}</span>
-          <b className="text-h3">{ph(view.title, view.titlePlaceholder)}</b>
+          {view.kicker ? <span className="text-caption text-secondary-foreground">{view.kicker}</span> : null}
+          <b className={cn("text-h3", view.exactTitle && "[overflow-wrap:anywhere] whitespace-pre-wrap")}>
+            {ph(view.title, view.titlePlaceholder)}
+          </b>
           <div className="mt-2 flex flex-col gap-0.5 self-stretch">
             {view.rows.map((r) => (
               <div key={r.label} className="flex min-h-9.5 items-center gap-2.5 border-b border-border px-1 py-2 text-left text-caption">
@@ -83,18 +86,39 @@ export function ContentPreview({ content, mode, className }: { content: QrConten
 }
 
 type T = ReturnType<typeof useTranslations<"editor.afterScanning">>;
-function centerView(type: QrContent["type"], v: (k: string) => string, t: T) {
+/** `raw` reads a value untrimmed, for content whose spaces are part of what gets encoded (Wi-Fi network names). */
+function centerView(
+  type: QrContent["type"],
+  v: (k: string) => string,
+  t: T,
+  raw: (k: string) => string,
+): {
+  icon: ReactNode;
+  kicker?: string;
+  title: string;
+  titlePlaceholder: string;
+  exactTitle?: boolean;
+  rows: { label: string; value: string }[];
+  action: string;
+} {
   const icon = (I: typeof GlobeIcon) => <I aria-hidden className="size-8" strokeWidth={1.7} />;
   switch (type) {
     case "wifi":
+      // Design ContentPreview · Wi-Fi: the network name exactly as phones show it, the security mode, and the password as
+      // dots only (never its length or value); an open network has no password row.
       return {
         icon: icon(WifiIcon),
-        title: v("ssid"),
+        kicker: t("wifiKicker"),
+        title: v("ssid") ? raw("ssid") : "",
         titlePlaceholder: t("wifiPlaceholder"),
-        rows: [
-          { label: t("security"), value: v("security") === "nopass" ? t("open") : v("security") },
-          { label: t("password"), value: v("password") ? "••••••••" : "" },
-        ],
+        exactTitle: true,
+        rows:
+          v("security") === "nopass"
+            ? [{ label: t("security"), value: t("open") }]
+            : [
+                { label: t("security"), value: v("security") === "WEP" ? "WEP" : "WPA/WPA2/WPA3" },
+                { label: t("password"), value: raw("password") ? "••••••••" : "" },
+              ],
         action: t("join"),
       };
     case "contact":

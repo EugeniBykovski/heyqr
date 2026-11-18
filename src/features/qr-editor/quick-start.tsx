@@ -32,7 +32,7 @@ const isQuickType = (t: string): t is QuickType => (QUICK_TYPES as readonly stri
 /** Fields shown on the homepage; the rest of each type's fields are in the editor's Content step. */
 const QUICK_FIELDS: Record<QuickType, readonly string[]> = {
   website: ["url"],
-  wifi: ["ssid", "password", "security"],
+  wifi: ["ssid", "security", "password"],
   contact: ["firstName", "lastName", "phone", "email"],
 };
 const PLACEHOLDER_VALUE = "https://heyqr.app";
