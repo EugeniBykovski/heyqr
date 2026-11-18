@@ -4,7 +4,7 @@ import { composeLayout, encodePayload } from "@heyqr/qr-core";
 import { ArrowRightIcon, CircleAlertIcon, LockIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
-import { DEFAULT_DESIGN, designToLayout, emptyContent, QR_INKS, QrPreview, type EditorDesign } from "@/entities/qr";
+import { DEFAULT_DESIGN, designToLayout, type EditorDesign, emptyContent, modeFor, QR_INKS, QrPreview } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
 import { pricing } from "@/shared/config/pricing";
 import { cn } from "@/shared/lib/utils";
@@ -66,7 +66,7 @@ export function QuickStart({ copy }: { copy: ReactNode }) {
       if (design.content.type !== "website") patch({ content: emptyContent("website") });
       return;
     }
-    goToEditor(type === "more" ? design : { ...design, content: emptyContent(type) });
+    goToEditor(type === "more" ? design : { ...design, content: emptyContent(type), model: modeFor(type, design.model) });
   };
   const onContinue = () => {
     if (design.content.type === "website" && (!url.trim() || /\s/.test(url.trim()))) {

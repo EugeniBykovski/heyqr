@@ -7,7 +7,7 @@ import { Tabs as TabsPrimitive } from "radix-ui";
 import { useEffect, useEffectEvent, useMemo, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { env } from "@/env";
-import { designSettingsOf, designToLayout, isContentComplete, QrPreview, type EditorDesign } from "@/entities/qr";
+import { designSettingsOf, designToLayout, isContentComplete, modeFor, QrPreview, type EditorDesign } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
 import { saveDraft } from "@/server/actions/qr";
 import { pricing } from "@/shared/config/pricing";
@@ -15,7 +15,6 @@ import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Field } from "@/shared/ui/field";
 import { Input } from "@/shared/ui/input";
-import { Segmented } from "@/shared/ui/segmented";
 import { Stage, StageBar, StageCanvas, StageFoot } from "@/shared/ui/stage";
 import { ContentForm } from "./content-form";
 import { DesignPanel } from "./design-panel";
@@ -33,9 +32,10 @@ type Step = (typeof STEPS)[number];
 export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: boolean }) {
   const t = useTranslations("editor");
   const tErrors = useTranslations("errors");
+  const tTypes = useTranslations("contentTypes");
   const format = useFormatter();
   const router = useRouter();
-  const { design, setDesign, restored, unreadable } = useDraft();
+  const { design, setDesign, restored, unreadable, modeAdjusted } = useDraft();
   const [step, setStep] = useState<Step>("content");
   const [saving, startSaving] = useTransition();
   const autoResumed = useRef(false);
@@ -46,7 +46,16 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
     if (restored && !resume) toast(t("draftRestored"), { id: "draft-restored" });
     // A malformed draft or one from a newer version is kept aside, not overwritten; the editor starts fresh.
     if (unreadable) toast(t("draftUnreadable"), { id: "draft-unreadable" });
-  }, [restored, unreadable, resume, t]);
+    // A draft from an earlier build had Dynamic on a type that can't redirect; it was kept as Static.
+    if (modeAdjusted) toast(t("mode.adjusted"), { id: "mode-adjusted" });
+  }, [restored, unreadable, modeAdjusted, resume, t]);
+
+  /** New content keeps the mode when its type supports it; otherwise it becomes Static and the user is told. */
+  const changeContent = (content: EditorDesign["content"]) => {
+    const model = modeFor(content.type, design.model);
+    if (model !== design.model) toast(t("mode.switched", { type: tTypes(content.type) }), { id: "mode-switched" });
+    patch({ content, model });
+  };
 
   const complete = isContentComplete(design.content);
   const value = useMemo(() => {
@@ -146,7 +155,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
         </section>
 
         <section aria-label={t("settings")} className={editorPanel}>
-          <div className="mb-5 flex flex-col gap-4 @[25rem]/panel:grid @[25rem]/panel:grid-cols-2">
+          <div className="mb-5 flex flex-col gap-4">
             <Field id="qr-name" label={t("name")}>
               <Input
                 id="qr-name"
@@ -156,18 +165,6 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
                 onChange={(e) => patch({ name: e.target.value })}
               />
             </Field>
-            <div className="flex flex-col gap-1.5">
-              <span id="qr-model" className="text-label">
-                {t("model.label")}
-              </span>
-              <Segmented
-                label={t("model.label")}
-                value={design.model}
-                options={(["static", "dynamic"] as const).map((m) => ({ value: m, label: t(`model.${m}`), hint: t(`model.${m}Hint`) }))}
-                onChange={(model) => patch({ model })}
-              />
-              <p className="text-caption text-muted-foreground">{t(`model.${design.model}Hint`)}</p>
-            </div>
           </div>
 
           {!scan.ok ? (
@@ -177,7 +174,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
           ) : null}
 
           <TabsPrimitive.Content value="content" className="animate-rise outline-none">
-            <ContentForm content={design.content} onChange={(content) => patch({ content })} />
+            <ContentForm content={design.content} onChange={changeContent} mode={design.model} onModeChange={(model) => patch({ model })} />
           </TabsPrimitive.Content>
           <TabsPrimitive.Content value="design" className="animate-rise outline-none">
             <DesignPanel design={design} onChange={patch} />
