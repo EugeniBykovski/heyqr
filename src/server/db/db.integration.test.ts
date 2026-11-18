@@ -461,3 +461,43 @@ describe.skipIf(!url)("delete and undo QR codes (real PostgreSQL)", () => {
     expect(await restoreQrCodes(db, owner.id, [c.data.qrCodeId])).toEqual([]);
   });
 });
+
+/* HEY-24: the server never stores a static code its QR can't hold (with every variant's layout). */
+describe.skipIf(!url)("capacity on save (real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "cap-owner", name: "Owner", email: "owner@cap.test" };
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 2 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("refuses too-long static content, also when only the logo variant overflows", async () => {
+    const plain = { name: "Plain", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) };
+    const logoDesign = { ...DEFAULT_DESIGN, logo: { kind: "icon", icon: "coffee" } } as const;
+    const logo = { name: "Logo", layout: designToLayout(logoDesign), editor: designSettingsOf(logoDesign) };
+    const text = (n: number) => ({ type: "text", text: "x".repeat(n) }) as const;
+
+    expect(await saveQrWithLayouts(db, owner.id, { name: "Too long", model: "static", content: text(667), layouts: [plain] })).toEqual({
+      ok: false,
+      error: "too_long",
+    });
+    // 500 bytes fit at M but not at H: the variant with a center logo makes the whole save fail.
+    expect(await saveQrWithLayouts(db, owner.id, { name: "Mixed", model: "static", content: text(500), layouts: [plain, logo] })).toEqual({
+      ok: false,
+      error: "too_long",
+    });
+    expect((await saveQrWithLayouts(db, owner.id, { name: "Fits", model: "static", content: text(666), layouts: [plain] })).ok).toBe(true);
+    // Dynamic codes encode only their short link.
+    const long = { type: "website", url: `https://example.com/${"a".repeat(900)}` } as const;
+    expect(
+      (await saveQrWithLayouts(db, owner.id, { name: "Dyn", model: "dynamic", content: long, destination: long.url, layouts: [logo] })).ok,
+    ).toBe(true);
+    expect(await db.query.qrCode.findMany({ where: (q, { eq }) => eq(q.userId, owner.id) })).toHaveLength(2);
+  });
+});

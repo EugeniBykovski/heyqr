@@ -1,6 +1,6 @@
 "use client";
 
-import { composeLayout, encodePayload, type QrContent } from "@heyqr/qr-core";
+import { composeLayout, encodePayload, layoutCapacity, type QrContent } from "@heyqr/qr-core";
 import { ArrowRightIcon, CircleAlertIcon, InfoIcon, LockIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -21,6 +21,7 @@ import { bareUrl, fromAddressField, schemeOf } from "./address-field";
 import { ContentForm } from "./content-form";
 import { contentErrors } from "./content-validation";
 import { ScanStatus } from "./scan-status";
+import { TooLongNotice } from "./too-long-notice";
 import { readDraft, writeDraft } from "./use-draft";
 
 /** Types the quick builder edits in place; "more" opens the editor's Type step. */
@@ -74,14 +75,14 @@ export function QuickStart({ copy }: { copy: ReactNode }) {
   const valid = Object.keys(errors).length === 0;
   // A website address with spaces is flagged while typing; everything else after the first Continue.
   const shownErrors = tried ? errors : errors.url === "urlSpaces" ? { url: errors.url } : {};
-  const value =
-    design.model === "dynamic"
-      ? `${env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "")}/preview`
-      : valid
-        ? encodePayload(design.content)
-        : PLACEHOLDER_VALUE;
   const layout = useMemo(() => designToLayout(design), [design]);
-  const scan = useMemo(() => composeLayout(layout, value).scan, [layout, value]);
+  // Same rule as the editor (HEY-24): capacity is checked on what the code would actually hold.
+  const encoded =
+    design.model === "dynamic" ? `${env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "")}/preview` : encodePayload(design.content);
+  const capacity = useMemo(() => layoutCapacity(layout, encoded), [layout, encoded]);
+  const tooLong = capacity.ok ? null : capacity;
+  const value = design.model === "dynamic" || valid || tooLong ? encoded : PLACEHOLDER_VALUE;
+  const scan = useMemo(() => (tooLong ? null : composeLayout(layout, value).scan), [layout, value, tooLong]);
   const price = format.number(pricing.staticCents / 100, { style: "currency", currency: pricing.currency });
 
   const patch = (p: Partial<EditorDesign>) => setDesign((d) => ({ ...d, ...p }));
@@ -108,6 +109,11 @@ export function QuickStart({ copy }: { copy: ReactNode }) {
   /** Valid → Design. A problem in a field shown here → stay and focus it. A problem only the editor shows → Content. */
   const onContinue = () => {
     const keys = Object.keys(errors);
+    if (tooLong) {
+      // The notice under the form says what to shorten; keep everything typed and focus the first field.
+      window.setTimeout(() => document.querySelector<HTMLElement>("[id^=content-]:is(input, textarea)")?.focus(), 30);
+      return;
+    }
     if (keys.length === 0) return openEditor(design, "design");
     const first = keys.find((k) => quick !== null && QUICK_FIELDS[quick].includes(k));
     if (!first) return openEditor(design, "content");
@@ -132,13 +138,21 @@ export function QuickStart({ copy }: { copy: ReactNode }) {
         <Stage>
           <StageBar>
             <span className="min-w-0 grow truncate px-1 text-label">{t("stageTitle", { type: tTypes(type) })}</span>
-            <Badge variant={scan.ok && valid ? "success" : "neutral"}>{scan.ok && valid ? t("scans") : t("livePreview")}</Badge>
+            <Badge variant={tooLong ? "danger" : scan?.ok && valid ? "success" : "neutral"}>
+              {tooLong ? tEditor("tooLong.badge") : scan?.ok && valid ? t("scans") : t("livePreview")}
+            </Badge>
           </StageBar>
           <StageCanvas height="clamp(13.75rem, 26cqi, 26rem)">
-            <QrPreview layout={layout} value={value} label={t("previewLabel")} className="size-full" />
+            <QrPreview
+              layout={layout}
+              value={value}
+              label={t("previewLabel")}
+              tooLongLabel={tEditor("tooLong.preview")}
+              className="size-full"
+            />
           </StageCanvas>
           <StageFoot>
-            <ScanStatus report={scan} compact />
+            {scan ? <ScanStatus report={scan} compact /> : null}
             <span className="text-caption text-muted-foreground">{t("realCode")}</span>
           </StageFoot>
         </Stage>
@@ -198,6 +212,8 @@ export function QuickStart({ copy }: { copy: ReactNode }) {
             {t("otherType", { type: tTypes(type) })}
           </p>
         )}
+
+        {tooLong ? <TooLongNotice capacity={tooLong} /> : null}
 
         <div className="grid gap-6 min-[26.875rem]:grid-cols-[auto_minmax(0,1fr)] lg:max-[80rem]:grid-cols-1">
           <div className="flex flex-col gap-2">

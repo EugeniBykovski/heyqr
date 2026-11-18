@@ -1,5 +1,5 @@
 import { contrastRatio, luminance } from "./color";
-import { encodeQr, type QrMatrix } from "./encode";
+import { encodeQr, type ErrorCorrectionLevel, type QrMatrix } from "./encode";
 import { circle, diamond, escapeXml, round3 as f, roundedRect as rr } from "./geometry";
 import type { EyeBallShape, EyeFrameShape, ModuleShape, QrStyle, RenderedQr, ScanIssue, ScanReport } from "./types";
 
@@ -116,11 +116,15 @@ function eyeBallPath(shape: EyeBallShape, x: number, y: number): string {
  * and compares them with what Reed–Solomon can recover (≤ ecc/2 errors per block),
  * refuses covered finder/timing patterns, and checks color contrast.
  */
+/** Error correction for a style: H when a logo or text covers the center (it must be recoverable), M otherwise. */
+export function eclForStyle(style: Pick<QrStyle, "logo" | "centerText">): ErrorCorrectionLevel {
+  return style.logo || style.centerText?.text ? "H" : "M";
+}
+
 export function renderQr(value: string, style: QrStyle): RenderedQr {
   const logo = style.logo ?? null;
   const centerText = style.centerText?.text ? style.centerText : null;
-  const hasCenter = Boolean(logo) || Boolean(centerText);
-  const m = encodeQr(value, hasCenter ? "H" : "M");
+  const m = encodeQr(value, eclForStyle(style));
   const n = m.size;
   const q = QUIET;
   const V = n + 2 * q;

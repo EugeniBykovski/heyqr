@@ -1,3 +1,4 @@
+import { layoutCapacity, QrCapacityError } from "@heyqr/qr-core";
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/server/auth";
@@ -31,7 +32,17 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/api/export/[
   if (format === "pdf") return NextResponse.json({ error: "not_implemented", ticket: "HEY-21" }, { status: 501 });
 
   const value = encodedValue(record.qrCode);
-  const file = await renderExport(record.design.layout, value, format, { dpi, scale, transparent: transparent === "1" });
+  // HEY-24: content that doesn't fit is a clear 422, never a 500 or a truncated code. Sizes only, no content.
+  const capacity = layoutCapacity(record.design.layout, value);
+  const tooLong = { error: "too_long", bytes: capacity.bytes, maxBytes: capacity.maxBytes } as const;
+  if (!capacity.ok) return NextResponse.json(tooLong, { status: 422 });
+  let file;
+  try {
+    file = await renderExport(record.design.layout, value, format, { dpi, scale, transparent: transparent === "1" });
+  } catch (error) {
+    if (error instanceof QrCapacityError) return NextResponse.json(tooLong, { status: 422 });
+    throw error;
+  }
   if (!file.scan.ok) return NextResponse.json({ error: "scan_check_failed", issues: file.scan.issues }, { status: 422 });
 
   const safeName =

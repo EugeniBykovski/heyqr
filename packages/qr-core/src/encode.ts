@@ -133,9 +133,26 @@ export function pickVersion(byteLength: number, ecl: ErrorCorrectionLevel): numb
   return 0;
 }
 
+/** Largest payload, in UTF-8 bytes, that fits at `ecl` within MAX_VERSION (byte mode, 16-bit length field). */
+export function maxPayloadBytes(ecl: ErrorCorrectionLevel): number {
+  const ei = ECL_INFO[ecl][0];
+  const v = MAX_VERSION;
+  const capacityBits = (Math.floor(rawDataModules(v) / 8) - ECC_CODEWORDS_PER_BLOCK[ei][v] * NUM_ERROR_CORRECTION_BLOCKS[ei][v]) * 8;
+  return Math.floor((capacityBits - 4 - 16) / 8);
+}
+
+/** Size of the payload as the encoder sees it: UTF-8 bytes of the final serialized string. */
+export function payloadBytes(text: string): number {
+  return new TextEncoder().encode(text).length;
+}
+
+/** Thrown only when the data doesn't fit; carries sizes, never the content. */
 export class QrCapacityError extends Error {
-  constructor(public readonly byteLength: number) {
-    super(`Content is too long for a QR code (${byteLength} bytes).`);
+  constructor(
+    public readonly byteLength: number,
+    public readonly maxBytes?: number,
+  ) {
+    super(`Content is too long for a QR code (${byteLength} bytes${maxBytes === undefined ? "" : ` of ${maxBytes}`}).`);
     this.name = "QrCapacityError";
   }
 }
@@ -144,7 +161,7 @@ export function encodeQr(text: string, ecl: ErrorCorrectionLevel = "M"): QrMatri
   const [ei, formatEcl] = ECL_INFO[ecl];
   const bytes = Array.from(new TextEncoder().encode(text));
   const ver = pickVersion(bytes.length, ecl);
-  if (!ver) throw new QrCapacityError(bytes.length);
+  if (!ver) throw new QrCapacityError(bytes.length, maxPayloadBytes(ecl));
 
   const capacityBits = (Math.floor(rawDataModules(ver) / 8) - ECC_CODEWORDS_PER_BLOCK[ei][ver] * NUM_ERROR_CORRECTION_BLOCKS[ei][ver]) * 8;
   const bits: number[] = [];

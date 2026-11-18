@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { layoutCapacity } from "@heyqr/qr-core";
 import { QrPreview } from "@/entities/qr";
+import { TooLongNotice } from "@/features/qr-editor";
 import { ExportPanel } from "@/features/checkout";
 import { redirect } from "@/i18n/navigation";
 import { getSession } from "@/server/auth";
@@ -33,6 +35,8 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
   const entitled = await canDownload(session.user.id, qr);
   const checkout = query.checkout === "success" || query.checkout === "cancelled" ? query.checkout : undefined;
   const cents = qr.model === "dynamic" ? pricing.dynamicMonthlyCents : pricing.staticCents;
+  // HEY-24: a code saved before the capacity check could hold more than a QR fits; never offer a broken file.
+  const capacity = layoutCapacity(layout.design.layout, encodedValue(qr));
 
   return (
     <section className="mx-auto grid max-w-5xl gap-6 px-4 py-10 sm:px-6 md:grid-cols-2 md:items-start">
@@ -42,14 +46,18 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
       </Card>
       <Card>
         <h1 className="text-h1">{t("title")}</h1>
-        <ExportPanel
-          qrCodeId={qr.id}
-          layoutId={layout.id}
-          model={qr.model}
-          entitled={entitled}
-          checkout={checkout}
-          price={{ cents, currency: pricing.currency }}
-        />
+        {!capacity.ok ? (
+          <TooLongNotice capacity={capacity} />
+        ) : (
+          <ExportPanel
+            qrCodeId={qr.id}
+            layoutId={layout.id}
+            model={qr.model}
+            entitled={entitled}
+            checkout={checkout}
+            price={{ cents, currency: pricing.currency }}
+          />
+        )}
       </Card>
     </section>
   );

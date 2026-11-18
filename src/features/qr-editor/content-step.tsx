@@ -1,6 +1,6 @@
 "use client";
 
-import type { QrContent } from "@heyqr/qr-core";
+import type { QrCapacity, QrContent } from "@heyqr/qr-core";
 import { ChevronDownIcon, CircleAlertIcon, SmartphoneIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, type FormEvent } from "react";
@@ -12,6 +12,7 @@ import { BottomBar, BottomBarInfo } from "./bottom-bar";
 import { ContentForm } from "./content-form";
 import { ContentPreview } from "./content-preview";
 import type { ContentErrors } from "./content-validation";
+import { TooLongNotice } from "./too-long-notice";
 
 /*
  * Design "1.3–1.5, 1.14 Content": the form for the chosen type beside an "After scanning" phone preview
@@ -23,6 +24,7 @@ export function ContentStep({
   name,
   errors,
   showErrors,
+  tooLong,
   onContentChange,
   onNameChange,
   onBack,
@@ -33,6 +35,8 @@ export function ContentStep({
   name: string;
   errors: ContentErrors;
   showErrors: boolean;
+  /** Set when the serialized content doesn't fit a QR code (HEY-24); shown while typing, not only on Continue. */
+  tooLong?: QrCapacity | null;
   onContentChange: (content: QrContent) => void;
   onNameChange: (name: string) => void;
   onBack: () => void;
@@ -104,6 +108,8 @@ export function ContentStep({
             onChange={(e) => onNameChange(e.target.value)}
           />
         </div>
+
+        {tooLong ? <TooLongNotice id="content-too-long" capacity={tooLong} /> : null}
 
         {errorCount ? (
           <div
