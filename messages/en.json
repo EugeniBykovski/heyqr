@@ -63,7 +63,8 @@
       "scans": "Scans",
       "livePreview": "Live preview",
       "realCode": "Real, scannable code",
-      "previewLabel": "Preview of your QR code"
+      "previewLabel": "Preview of your QR code",
+      "otherType": "Your draft is a {type} code. Continue designing opens it in the editor."
     },
     "how": {
       "label": "How it works",

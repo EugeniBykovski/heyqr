@@ -29,7 +29,8 @@ export function Segmented<T extends string>({
   /** Accessible name of the group. */
   label: string;
   options: readonly SegmentedOption<T>[];
-  value: T;
+  /** Selected option; undefined when none applies. */
+  value: T | undefined;
   onChange: (value: T) => void;
   className?: string;
 }) {
