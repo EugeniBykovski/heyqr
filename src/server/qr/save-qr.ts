@@ -2,6 +2,7 @@ import type { QrContent } from "@heyqr/qr-core";
 import { and, eq } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { createLayoutRecord } from "../../entities/qr/model/design-schema";
+import { supportsMode } from "../../entities/qr/model/modes";
 import { newId } from "../db/ids";
 import * as schema from "../db/schema";
 
@@ -22,6 +23,8 @@ export type SaveQrResult = { ok: true; data: { qrCodeId: string; layoutIds: stri
  * Plain module (no "server-only") so the PostgreSQL tests exercise the same write path as the saveDraft action.
  */
 export async function saveQrWithLayouts(db: NodePgDatabase<typeof schema>, userId: string, input: SaveQrInput): Promise<SaveQrResult> {
+  // Only website codes can be dynamic: the short link redirects to a web address (entities/qr/model/modes.ts).
+  if (!supportsMode(input.content.type, input.model)) return { ok: false, error: "invalid" };
   const designs = input.layouts.map((l) => createLayoutRecord(l.layout, l.editor));
   if (designs.some((d) => d === null)) return { ok: false, error: "invalid" };
 

@@ -43,6 +43,34 @@ describe("guest draft (readDraftDesign)", () => {
     }
   });
 
+  it("restores the mode with the draft", () => {
+    const dynamic = { ...draft, model: "dynamic" as const };
+    expect(readDraftDesign(JSON.parse(JSON.stringify(serializeDraftDesign(dynamic))), DEFAULT_DESIGN)).toEqual({
+      ok: true,
+      value: dynamic,
+      from: "current",
+    });
+  });
+
+  it("keeps a draft with an unsupported mode but makes it static and flags it", () => {
+    const wifi = {
+      ...draft,
+      model: "dynamic" as const,
+      content: { type: "wifi" as const, ssid: "Little Fern Guest", security: "WPA" as const },
+    };
+    const result = readDraftDesign(serializeDraftDesign(wifi), DEFAULT_DESIGN);
+    expect(result).toEqual({ ok: true, value: { ...wifi, model: "static" }, from: "current", adjusted: "mode" });
+    // Pre-versioning drafts get the same treatment, with every other setting kept.
+    const legacy: Record<string, unknown> = { ...serializeDraftDesign(wifi) };
+    delete legacy.schemaVersion;
+    expect(readDraftDesign(legacy, DEFAULT_DESIGN)).toMatchObject({
+      ok: true,
+      from: "legacy",
+      adjusted: "mode",
+      value: { model: "static", fg: "#1F5C45", caption: "See the menu" },
+    });
+  });
+
   it("reports drafts from a newer version as unsupported", () => {
     expect(readDraftDesign({ ...serializeDraftDesign(draft), schemaVersion: 2 }, DEFAULT_DESIGN)).toEqual({
       ok: false,

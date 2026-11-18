@@ -114,7 +114,7 @@
         },
         "eventPoster": {
           "title": "Event poster",
-          "kind": "Event · dynamic"
+          "kind": "Website · dynamic"
         },
         "contactBadge": {
           "title": "Contact badge",
@@ -374,7 +374,24 @@
     "priceOnce": "{price} once",
     "pricePerMonth": "{price} / month",
     "previewFree": "Preview free · pay when you download",
-    "draftUnreadable": "We couldn't open your last design, so you're starting fresh. It's kept in this browser."
+    "draftUnreadable": "We couldn't open your last design, so you're starting fresh. It's kept in this browser.",
+    "mode": {
+      "question": "Can the link change after printing?",
+      "lead": "Decide now: a printed static code can’t be pointed somewhere else later.",
+      "static": {
+        "eyebrow": "No, it stays the same",
+        "title": "Static QR",
+        "text": "The content is built into the pattern. Changing it means a new code. Pay once: {price}."
+      },
+      "dynamic": {
+        "eyebrow": "Yes, I may change it",
+        "title": "Dynamic QR",
+        "text": "The code holds a permanent short link. Change where it goes and see daily scans. {price}/month."
+      },
+      "unavailable": "{type} codes are always static: the content goes straight into the pattern. Dynamic is for website links.",
+      "switched": "{type} codes are static, so this code is now Static. Dynamic is for website links.",
+      "adjusted": "Your draft was Dynamic, but only website links can be dynamic, so it’s Static now. Your content and design are unchanged."
+    }
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",

@@ -2,7 +2,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_DESIGN } from "@/entities/qr";
-import { useDraft, writeDraft } from "./use-draft";
+import { draftForType, useDraft, writeDraft } from "./use-draft";
 
 const KEY = "heyqr:draft:v1";
 
@@ -48,5 +48,22 @@ describe("useDraft", () => {
     renderHook(() => useDraft());
     act(() => vi.advanceTimersByTime(1000));
     expect(localStorage.getItem(KEY)).toBeNull();
+  });
+
+  it("restores the selected mode, and flags a draft whose mode had to become static", () => {
+    writeDraft({ ...DEFAULT_DESIGN, model: "dynamic", content: { type: "website", url: "https://littlefern.cafe/menu" } });
+    expect(renderHook(() => useDraft()).result.current).toMatchObject({ modeAdjusted: false, design: { model: "dynamic" } });
+
+    localStorage.setItem(KEY, JSON.stringify({ ...DEFAULT_DESIGN, model: "dynamic", content: { type: "sms", number: "+14155550142" } }));
+    expect(renderHook(() => useDraft()).result.current).toMatchObject({
+      modeAdjusted: true,
+      design: { model: "static", content: { type: "sms" } },
+    });
+  });
+
+  it("switches to static when a type chip starts a type that can't be dynamic", () => {
+    writeDraft({ ...DEFAULT_DESIGN, model: "dynamic", fg: "#8C2F4B", content: { type: "website", url: "https://littlefern.cafe/menu" } });
+    expect(draftForType("wifi")).toMatchObject({ model: "static", fg: "#8C2F4B", content: { type: "wifi" } });
+    expect(draftForType("website")).toMatchObject({ model: "dynamic" });
   });
 });

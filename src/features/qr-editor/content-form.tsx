@@ -2,15 +2,26 @@
 
 import { QR_CONTENT_TYPES, type QrContent } from "@heyqr/qr-core";
 import { useTranslations } from "next-intl";
-import { CONTENT_FIELDS, emptyContent } from "@/entities/qr";
+import { CONTENT_FIELDS, emptyContent, type QrMode } from "@/entities/qr";
 import { cn } from "@/shared/lib/utils";
 import { Field } from "@/shared/ui/field";
 import { fieldControl, Input } from "@/shared/ui/input";
 import { Textarea } from "@/shared/ui/textarea";
+import { ModeChoice } from "./mode-choice";
 import { OptionGrid } from "./option-grid";
 import { TYPE_ICONS } from "./type-icons";
 
-export function ContentForm({ content, onChange }: { content: QrContent; onChange: (content: QrContent) => void }) {
+export function ContentForm({
+  content,
+  onChange,
+  mode,
+  onModeChange,
+}: {
+  content: QrContent;
+  onChange: (content: QrContent) => void;
+  mode: QrMode;
+  onModeChange: (mode: QrMode) => void;
+}) {
   const t = useTranslations();
   const values = content as Record<string, string | boolean | undefined>;
   const set = (name: string, value: string | boolean) => onChange({ ...content, [name]: value } as QrContent);
@@ -33,6 +44,7 @@ export function ContentForm({ content, onChange }: { content: QrContent; onChang
           );
         }}
       />
+      <ModeChoice type={content.type} value={mode} onChange={onModeChange} />
       <div className="grid gap-4 sm:grid-cols-2">
         {CONTENT_FIELDS[content.type].map((field) => {
           const id = `content-${field.name}`;

@@ -52,7 +52,8 @@ export const QR_EXAMPLES: readonly QrExample[] = [
   {
     id: "eventPoster",
     model: "dynamic",
-    content: { type: "event", title: "Spring show", start: "2026-12-05T19:00", place: "Reyes Studio" },
+    // Dynamic codes redirect to a web address, so the poster links to the event page (see model/modes.ts).
+    content: { type: "website", url: "https://reyes.studio/spring-show" },
     design: { fg: "#1F4E8C", bg: "#EEF3FA", pattern: "fluid", preset: "caption", caption: "RSVP inside" },
   },
   {

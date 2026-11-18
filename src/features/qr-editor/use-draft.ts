@@ -2,7 +2,7 @@
 
 import type { QrContentType } from "@heyqr/qr-core";
 import { useEffect, useRef, useState } from "react";
-import { DEFAULT_DESIGN, emptyContent, readDraftDesign, serializeDraftDesign, type EditorDesign } from "@/entities/qr";
+import { DEFAULT_DESIGN, emptyContent, modeFor, readDraftDesign, serializeDraftDesign, type EditorDesign } from "@/entities/qr";
 
 /** Browser slot for the guest draft. ":v1" names the slot; the JSON inside carries its own schemaVersion. */
 const KEY = "heyqr:draft:v1";
@@ -11,7 +11,7 @@ const UNREADABLE_KEY = "heyqr:draft:unreadable";
 
 export type DraftRead =
   | { status: "none" }
-  | { status: "restored"; design: EditorDesign; from: "current" | "legacy" }
+  | { status: "restored"; design: EditorDesign; from: "current" | "legacy"; modeAdjusted: boolean }
   | { status: "unreadable"; reason: "malformed" | "unsupported" };
 
 /**
@@ -33,7 +33,7 @@ export function loadDraft(): DraftRead {
     parsed = undefined;
   }
   const result = readDraftDesign(parsed, DEFAULT_DESIGN);
-  if (result.ok) return { status: "restored", design: result.value, from: result.from };
+  if (result.ok) return { status: "restored", design: result.value, from: result.from, modeAdjusted: result.adjusted === "mode" };
   try {
     window.localStorage.setItem(UNREADABLE_KEY, raw);
   } catch {
@@ -67,7 +67,13 @@ export function useDraft() {
     return () => window.clearTimeout(id);
   }, [design]);
 
-  return { design, setDesign, restored: read.status === "restored", unreadable: read.status === "unreadable" };
+  return {
+    design,
+    setDesign,
+    restored: read.status === "restored",
+    unreadable: read.status === "unreadable",
+    modeAdjusted: read.status === "restored" && read.modeAdjusted,
+  };
 }
 
 /** Saves the guest draft immediately with the current schemaVersion, e.g. right before navigating to the editor. */
@@ -82,7 +88,7 @@ export function writeDraft(design: EditorDesign) {
 /** Keeps the current draft's look but starts new content of `type` (home type chips and footer links). */
 export function draftForType(type: QrContentType): EditorDesign {
   const current = readDraft() ?? DEFAULT_DESIGN;
-  return current.content.type === type ? current : { ...current, content: emptyContent(type) };
+  return current.content.type === type ? current : { ...current, content: emptyContent(type), model: modeFor(type, current.model) };
 }
 
 export function clearDraft() {
