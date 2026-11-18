@@ -36,6 +36,13 @@ describe("Button", () => {
     expect(screen.getByRole("button", { name: "Link" }).className).not.toContain("animate-pulse");
   });
 
+  it("never moves on hover; pressing only scales in place", () => {
+    render(<Button variant="primary">Export</Button>);
+    const className = screen.getByRole("button", { name: "Export" }).className;
+    expect(className).not.toMatch(/translate-y/);
+    expect(className).toContain("active:scale-[.985]");
+  });
+
   it("keeps the design control heights", () => {
     render(
       <>

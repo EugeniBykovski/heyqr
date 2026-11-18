@@ -5,14 +5,15 @@ import { cn } from "@/shared/lib/utils";
 
 /*
  * Design "Button": full pill, 600 weight, 44 px (36 sm / 52 lg).
- * Hover: a soft ring pulses out to 10 px (violet for primary and accent), primary lifts 1 px.
- * Pressed: moves down 1 px and scales to 98.5 %. Disabled: 40 % opacity. Focus: 2 px violet outline, 2 px offset.
+ * Buttons never move on hover: feedback is colour plus a soft ring that pulses out to 10 px
+ * (violet for primary and accent). Pressed: a tiny scale-down in place (98.5 %).
+ * Disabled: 40 % opacity. Focus: 2 px violet outline, 2 px offset.
  */
 const buttonVariants = cva(
   [
     "inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border leading-[1.1] font-semibold whitespace-nowrap no-underline select-none",
     "transition-[background-color,border-color,transform,box-shadow] duration-(--motion-fast) ease-out",
-    "active:translate-y-px active:scale-[.985] active:animate-none",
+    "active:scale-[.985] active:animate-none",
     "disabled:cursor-not-allowed disabled:opacity-40 aria-disabled:cursor-not-allowed aria-disabled:opacity-40",
     "[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   ],
@@ -21,8 +22,8 @@ const buttonVariants = cva(
       variant: {
         primary: [
           "border-transparent bg-primary bg-linear-to-b from-white/18 to-transparent to-58% text-primary-foreground shadow-primary",
-          "hover:-translate-y-px hover:bg-primary-hover not-disabled:hover:animate-pulse-primary motion-reduce:hover:translate-y-0",
-          "active:translate-y-0 active:bg-primary-pressed",
+          "hover:bg-primary-hover not-disabled:hover:animate-pulse-primary",
+          "active:bg-primary-pressed",
         ],
         secondary:
           "border-border bg-surface text-foreground shadow-control hover:border-border-hover hover:bg-subtle not-disabled:hover:animate-pulse-neutral",

@@ -65,6 +65,11 @@
   --text-h1--line-height: 1.1;
   --text-h1--letter-spacing: -0.03em;
   --text-h1--font-weight: 700;
+  /* Section titles on long-form pages (design: t-h1x). */
+  --text-h1x: clamp(1.625rem, 1.6cqi + 1.25rem, 2.75rem);
+  --text-h1x--line-height: 1.1;
+  --text-h1x--letter-spacing: -0.03em;
+  --text-h1x--font-weight: 700;
   --text-h2: 1.375rem;
   --text-h2--line-height: 1.2;
   --text-h2--letter-spacing: -0.02em;
@@ -86,6 +91,11 @@
   --text-micro--line-height: 1.3;
   --text-micro--letter-spacing: 0.08em;
   --text-micro--font-weight: 600;
+  /* Section eyebrow (design: kicker); pair with `uppercase`. */
+  --text-kicker: 0.75rem;
+  --text-kicker--line-height: 1.3;
+  --text-kicker--letter-spacing: 0.08em;
+  --text-kicker--font-weight: 600;
 
   /* Spacing: 4 px base (space-1 … space-20 = Tailwind 1 … 20). */
   --spacing: 0.25rem;
@@ -135,6 +145,7 @@
   --animate-pulse-primary: pulse-primary 1.7s var(--ease-out) infinite;
   --animate-pulse-neutral: pulse-neutral 1.7s var(--ease-out) infinite;
   --animate-pulse-accent: pulse-accent 1.7s var(--ease-out) infinite;
+  --animate-pulse-inverse: pulse-inverse 1.7s var(--ease-out) infinite;
   --animate-rise: rise 240ms var(--ease-out) both;
   --animate-fade: fade 200ms var(--ease-out) both;
   --animate-pop: pop 240ms var(--ease-out) both;
@@ -179,6 +190,23 @@
     }
     100% {
       box-shadow: 0 0 0 0 rgb(110 82 255 / 0);
+    }
+  }
+  @keyframes pulse-inverse {
+    0% {
+      box-shadow: 0 0 0 0 rgb(255 255 255 / 0.14);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgb(255 255 255 / 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgb(255 255 255 / 0);
+    }
+  }
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
     }
   }
   @keyframes rise {
@@ -307,6 +335,9 @@
   --inverse-foreground: var(--color-text-inverse);
   --inverse-muted: var(--color-ink-300);
   --inverse-accent: var(--color-violet-300);
+  --inverse-border: var(--color-ink-700);
+  --inverse-border-hover: var(--color-ink-500);
+  --icon-muted: var(--color-ink-800);
   --success: var(--color-status-success-fg);
   --success-soft: var(--color-status-success-bg);
   --warning: var(--color-status-warning-fg);
@@ -382,6 +413,9 @@
   --color-inverse-foreground: var(--inverse-foreground);
   --color-inverse-muted: var(--inverse-muted);
   --color-inverse-accent: var(--inverse-accent);
+  --color-inverse-border: var(--inverse-border);
+  --color-inverse-border-hover: var(--inverse-border-hover);
+  --color-icon-muted: var(--icon-muted);
   --color-destructive: var(--danger);
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
@@ -424,6 +458,18 @@
       animation-duration: 1ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 1ms !important;
+    }
+  }
+}
+
+/* Design "reveal": long-form sections ease in as they scroll into view. Scroll-driven, no JS; sections stay fully
+   visible where the browser lacks view timelines or the reader prefers reduced motion. */
+@utility reveal {
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
     }
   }
 }
