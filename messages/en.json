@@ -564,7 +564,16 @@
     },
     "passwordShow": "Show",
     "passwordHide": "Hide",
-    "wifiPasswordHint": "The preview hides the password. It is stored in the code itself, so anyone who scans it can join."
+    "wifiPasswordHint": "The preview hides the password. It is stored in the code itself, so anyone who scans it can join.",
+    "tooLong": {
+      "title": "Too long for a QR code",
+      "text": "It’s about {over}% over what a QR code can hold. Shorten the content and the code comes back right away. Nothing you typed is lost.",
+      "centerHint": "A logo or caption in the middle of the code lowers the limit. Removing it also makes room.",
+      "detail": "{bytes} of {max} bytes",
+      "edit": "Edit content",
+      "badge": "Too long",
+      "preview": "QR code not shown: the content is too long"
+    }
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",
@@ -709,7 +718,8 @@
     },
     "generic": "Something went wrong. Please try again.",
     "invalid": "Please check the highlighted fields.",
-    "unauthorized": "Please sign in to continue."
+    "unauthorized": "Please sign in to continue.",
+    "too_long": "This content is too long for a QR code. Shorten it and try again."
   },
   "common": {
     "close": "Close",

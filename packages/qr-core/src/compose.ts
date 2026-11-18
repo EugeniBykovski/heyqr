@@ -1,5 +1,6 @@
 import { circle, escapeXml, round3 as f, roundedRect } from "./geometry";
-import { renderQr } from "./render";
+import { maxPayloadBytes, payloadBytes, type ErrorCorrectionLevel } from "./encode";
+import { eclForStyle, renderQr } from "./render";
 import type { FrameStyle, Layout, ScanReport } from "./types";
 
 const rr = (x: number, y: number, w: number, h: number, r: number) => roundedRect(x, y, w, h, r);
@@ -225,16 +226,46 @@ export interface ComposeOptions {
  * Full layout SVG: frame or card, QR symbol, caption and top logo.
  * The editor preview and the paid export both call this, so the file matches the preview exactly.
  */
+/** The QR style a layout renders with (shared by composeLayout and the capacity check, so both use the same ECL). */
+function layoutQrStyle(layout: Layout) {
+  const col = layout.colors;
+  const cap = layout.caption;
+  const inCode = cap.position === "center" && Boolean(cap.text);
+  return {
+    ...layout.style,
+    colors: { fg: col.fg, eye: col.eye, eyeIn: col.eyeIn, bg: col.bg },
+    centerText: inCode ? { text: cap.text.split("\n")[0] ?? "", bg: col.fg, color: col.bg, fontFamily: cap.fontFamily } : null,
+  };
+}
+
+export type QrCapacity = {
+  ok: boolean;
+  /** UTF-8 bytes of the value that is actually encoded (escaping, folding and multibyte characters included). */
+  bytes: number;
+  /** The most this layout's QR can hold (byte mode, version 40 is not used: MAX_VERSION). */
+  maxBytes: number;
+  ecl: ErrorCorrectionLevel;
+  /** A logo or in-code caption raises error correction to H, which roughly halves the capacity. */
+  centerCovered: boolean;
+};
+
+/**
+ * Whether `value` fits the QR this layout renders, decided by the encoder's own limits. Check this before
+ * composeLayout/renderQr so a too-long value becomes a message, not an exception.
+ */
+export function layoutCapacity(layout: Layout, value: string): QrCapacity {
+  const style = layoutQrStyle(layout);
+  const ecl = eclForStyle(style);
+  const bytes = payloadBytes(value);
+  const maxBytes = maxPayloadBytes(ecl);
+  return { ok: bytes <= maxBytes, bytes, maxBytes, ecl, centerCovered: ecl === "H" };
+}
+
 export function composeLayout(layout: Layout, value: string, options: ComposeOptions = {}): ComposedLayout {
   const g = layoutGeometry(layout);
   const col = layout.colors;
   const cap = layout.caption;
-  const inCode = cap.position === "center" && Boolean(cap.text);
-  const qr = renderQr(value, {
-    ...layout.style,
-    colors: { fg: col.fg, eye: col.eye, eyeIn: col.eyeIn, bg: col.bg },
-    centerText: inCode ? { text: cap.text.split("\n")[0] ?? "", bg: col.fg, color: col.bg, fontFamily: cap.fontFamily } : null,
-  });
+  const qr = renderQr(value, layoutQrStyle(layout));
   // The scan check always uses the real background; a transparent export only drops the fill.
   const qrInner = options.transparent ? qr.inner.replace(`fill="${col.bg}"/>`, 'fill="none"/>') : qr.inner;
 

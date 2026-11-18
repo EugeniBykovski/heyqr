@@ -1,4 +1,4 @@
-import type { QrContent } from "@heyqr/qr-core";
+import { encodePayload, layoutCapacity, type QrContent } from "@heyqr/qr-core";
 import { and, eq, isNull } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { createLayoutRecord } from "../../entities/qr/model/design-schema";
@@ -15,7 +15,8 @@ export type SaveQrInput = {
   layouts: { id?: string; name: string; layout: unknown; editor?: unknown }[];
 };
 
-export type SaveQrResult = { ok: true; data: { qrCodeId: string; layoutIds: string[] } } | { ok: false; error: "invalid" | "not_found" };
+export type SaveQrResult =
+  { ok: true; data: { qrCodeId: string; layoutIds: string[] } } | { ok: false; error: "invalid" | "not_found" | "too_long" };
 
 /**
  * Writes a QR code and replaces its design variants in one transaction, for its owner only.
@@ -27,6 +28,12 @@ export async function saveQrWithLayouts(db: NodePgDatabase<typeof schema>, userI
   if (!supportsMode(input.content.type, input.model)) return { ok: false, error: "invalid" };
   const designs = input.layouts.map((l) => createLayoutRecord(l.layout, l.editor));
   if (designs.some((d) => d === null)) return { ok: false, error: "invalid" };
+  // HEY-24: a static code must be encodable with every variant's layout (a center logo lowers the limit). Dynamic codes
+  // encode only their short link, which always fits.
+  if (input.model === "static") {
+    const payload = encodePayload(input.content);
+    if (designs.some((d) => d && !layoutCapacity(d.layout, payload).ok)) return { ok: false, error: "too_long" };
+  }
 
   return db.transaction(async (tx) => {
     const qrCodeId = input.qrCodeId ?? newId();

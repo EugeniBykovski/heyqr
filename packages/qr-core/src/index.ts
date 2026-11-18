@@ -1,5 +1,14 @@
-export { encodeQr, pickVersion, QrCapacityError, MAX_VERSION, type QrMatrix, type ErrorCorrectionLevel } from "./encode";
-export { renderQr, renderQrSvg } from "./render";
+export {
+  encodeQr,
+  maxPayloadBytes,
+  payloadBytes,
+  pickVersion,
+  QrCapacityError,
+  MAX_VERSION,
+  type QrMatrix,
+  type ErrorCorrectionLevel,
+} from "./encode";
+export { eclForStyle, renderQr, renderQrSvg } from "./render";
 export {
   composeLayout,
   layoutGeometry,
@@ -7,6 +16,8 @@ export {
   captionFontSize,
   FRAME_RATIOS,
   LABEL_ON_FRAME,
+  layoutCapacity,
+  type QrCapacity,
   type ComposedLayout,
   type LayoutGeometry,
 } from "./compose";

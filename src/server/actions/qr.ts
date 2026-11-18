@@ -10,7 +10,8 @@ import { db, schema } from "../db";
 import { restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
 
-export type ActionResult<T = undefined> = { ok: true; data: T } | { ok: false; error: "unauthorized" | "invalid" | "not_found" | "failed" };
+export type ActionResult<T = undefined> =
+  { ok: true; data: T } | { ok: false; error: "unauthorized" | "invalid" | "not_found" | "too_long" | "failed" };
 
 const draftSchema = z.object({
   qrCodeId: z.string().optional(),
