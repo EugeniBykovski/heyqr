@@ -1,6 +1,6 @@
 "use client";
 
-import type { QrContent } from "@heyqr/qr-core";
+import { parseWebsiteUrl, type QrContent } from "@heyqr/qr-core";
 import { CalendarIcon, GlobeIcon, LockIcon, MailIcon, MapPinIcon, MessageSquareIcon, PhoneIcon, UserIcon, WifiIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
@@ -20,9 +20,13 @@ export function ContentPreview({ content, mode, className }: { content: QrConten
   let body: ReactNode;
   switch (content.type) {
     case "website": {
-      const host = v("url")
-        .replace(/^https?:\/\//i, "")
-        .split("/")[0];
+      const parsed = parseWebsiteUrl(v("url"));
+      const host = parsed.ok
+        ? new URL(parsed.url).host
+        : v("url")
+            .trim()
+            .replace(/^https?:\/\//i, "")
+            .split(/[/?#]/)[0];
       body = (
         <>
           <div className="mx-3 mt-3.5 mb-2 flex h-8.5 min-w-0 items-center gap-1.5 rounded-full bg-subtle px-3 text-caption font-semibold">

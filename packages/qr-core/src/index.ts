@@ -10,6 +10,14 @@ export {
   type ComposedLayout,
   type LayoutGeometry,
 } from "./compose";
-export { encodePayload, normalizeUrl, QR_CONTENT_TYPES, type QrContent, type QrContentType } from "./payload";
+export {
+  encodePayload,
+  normalizeUrl,
+  parseWebsiteUrl,
+  QR_CONTENT_TYPES,
+  type WebsiteUrlProblem,
+  type QrContent,
+  type QrContentType,
+} from "./payload";
 export { contrastRatio, luminance, isHexColor } from "./color";
 export type * from "./types";

@@ -17,6 +17,7 @@ import { Textarea } from "@/shared/ui/textarea";
 import { Segmented } from "@/shared/ui/segmented";
 import { Stage, StageBar, StageCanvas, StageFoot } from "@/shared/ui/stage";
 import { Swatch } from "@/shared/ui/swatch";
+import { bareUrl, fromAddressField, schemeOf } from "./address-field";
 import { ContentForm } from "./content-form";
 import { contentErrors } from "./content-validation";
 import { ScanStatus } from "./scan-status";
@@ -35,8 +36,6 @@ const QUICK_FIELDS: Record<QuickType, readonly string[]> = {
   contact: ["firstName", "lastName", "phone", "email"],
 };
 const PLACEHOLDER_VALUE = "https://heyqr.app";
-
-const bareUrl = (url: string) => url.replace(/^https?:\/\//i, "");
 
 /**
  * Design "hero": the real tool on the first screen. Copy, live stage and tool card share one grid:
@@ -162,7 +161,7 @@ export function QuickStart({ copy }: { copy: ReactNode }) {
               {t("url")}
             </label>
             <div className="flex min-w-0 items-stretch">
-              <InputPrefix>https://</InputPrefix>
+              <InputPrefix>{schemeOf(design.content.url)}</InputPrefix>
               <Input
                 id="content-url"
                 type="url"
@@ -173,7 +172,12 @@ export function QuickStart({ copy }: { copy: ReactNode }) {
                 value={bareUrl(design.content.url)}
                 aria-invalid={urlError ? true : undefined}
                 aria-describedby={urlError ? "content-url-error" : undefined}
-                onChange={(e) => setContent({ type: "website", url: e.target.value ? `https://${bareUrl(e.target.value)}` : "" })}
+                onChange={(e) =>
+                  setContent({
+                    type: "website",
+                    url: fromAddressField(e.target.value, design.content.type === "website" ? design.content.url : ""),
+                  })
+                }
               />
             </div>
             {urlError ? (

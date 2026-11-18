@@ -5,6 +5,7 @@ import {
   composeLayout,
   encodePayload,
   encodeQr,
+  parseWebsiteUrl,
   renderQr,
   renderQrSvg,
   type ErrorCorrectionLevel,
@@ -141,4 +142,34 @@ describe("encodePayload", () => {
   it("builds a calendar event", () => {
     expect(encodePayload({ type: "event", title: "Spring show", start: "2026-12-05T19:00" })).toContain("DTSTART:20261205T190000");
   });
+});
+
+describe("parseWebsiteUrl (HEY-20)", () => {
+  const ok: [string, string][] = [
+    ["littlefern.cafe/menu", "https://littlefern.cafe/menu"],
+    ["  littlefern.cafe/menu  ", "https://littlefern.cafe/menu"],
+    ["https://littlefern.cafe/menu?table=4&lang=en#drinks", "https://littlefern.cafe/menu?table=4&lang=en#drinks"],
+    ["http://legacy.example.com/path", "http://legacy.example.com/path"],
+    ["example.com:8080/x", "https://example.com:8080/x"],
+  ];
+  for (const [input, url] of ok)
+    it(`accepts ${JSON.stringify(input)}`, () => {
+      expect(parseWebsiteUrl(input)).toEqual({ ok: true, url });
+      expect(encodePayload({ type: "website", url: input })).toBe(url);
+    });
+  const bad: [string, string][] = [
+    ["", "empty"],
+    ["   ", "empty"],
+    ["exa mple.com", "spaces"],
+    ["localhost", "invalid"],
+    ["ftp://files.example.com", "invalid"],
+    ["mailto:ana@example.com", "invalid"],
+    ["javascript:alert(1)", "invalid"],
+    ["user:pass@example.com", "invalid"],
+    ["https://", "invalid"],
+  ];
+  for (const [input, problem] of bad)
+    it(`rejects ${JSON.stringify(input)} as ${problem}`, () => {
+      expect(parseWebsiteUrl(input)).toEqual({ ok: false, problem });
+    });
 });

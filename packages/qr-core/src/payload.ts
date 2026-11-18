@@ -34,11 +34,30 @@ export const QR_CONTENT_TYPES: readonly QrContentType[] = [
   "event",
 ];
 
-/** Prefixes https:// when the user typed a bare domain. */
+/** Trims and prefixes https:// when the user typed a bare domain; an explicit http:// or https:// is kept. */
 export function normalizeUrl(input: string): string {
   const value = input.trim();
   if (!value) return "";
   return /^https?:\/\//i.test(value) ? value : `https://${value}`;
+}
+
+export type WebsiteUrlProblem = "empty" | "spaces" | "invalid";
+
+/**
+ * The single check for a Website destination: the normalized URL (path, query and fragment kept) or why it can't be used.
+ * Rejects blank input, spaces, other schemes (ftp://, mailto:, javascript:…), credentials and hosts without a dot.
+ */
+export function parseWebsiteUrl(input: string): { ok: true; url: string } | { ok: false; problem: WebsiteUrlProblem } {
+  const value = normalizeUrl(input);
+  if (!value) return { ok: false, problem: "empty" };
+  if (/\s/.test(value)) return { ok: false, problem: "spaces" };
+  try {
+    const url = new URL(value);
+    const ok = (url.protocol === "https:" || url.protocol === "http:") && !url.username && !url.password && url.hostname.includes(".");
+    return ok ? { ok: true, url: value } : { ok: false, problem: "invalid" };
+  } catch {
+    return { ok: false, problem: "invalid" };
+  }
 }
 
 const wifiEscape = (s: string) => s.replace(/([\\;,:"])/g, "\\$1");

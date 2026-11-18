@@ -1,4 +1,4 @@
-import type { QrContent } from "@heyqr/qr-core";
+import { parseWebsiteUrl, type QrContent } from "@heyqr/qr-core";
 
 /**
  * Content step validation (design: contentErrors). Keys are the content field names (inputs have id `content-<name>`),
@@ -9,17 +9,12 @@ export type ContentErrors = Record<string, string>;
 const PHONE = /^[+()\d\s.-]{6,}$/;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-/** A web address people can open: no spaces, and a host with a dot (http/https added when missing). */
+const URL_ERRORS = { empty: "urlEmpty", spaces: "urlSpaces", invalid: "urlInvalid" } as const;
+
+/** A web address people can open, checked by the same parser the QR encoding relies on (qr-core parseWebsiteUrl). */
 export function urlProblem(raw: string): "urlEmpty" | "urlSpaces" | "urlInvalid" | null {
-  const value = raw.trim();
-  if (!value) return "urlEmpty";
-  if (/\s/.test(value)) return "urlSpaces";
-  try {
-    const url = new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`);
-    return url.hostname.includes(".") ? null : "urlInvalid";
-  } catch {
-    return "urlInvalid";
-  }
+  const parsed = parseWebsiteUrl(raw);
+  return parsed.ok ? null : URL_ERRORS[parsed.problem];
 }
 
 export function contentErrors(content: QrContent): ContentErrors {

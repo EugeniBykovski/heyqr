@@ -12,6 +12,16 @@ import { DEFAULT_DESIGN, designToLayout } from "./design";
 const CASES: { name: string; content: QrContent; expected: string }[] = [
   { name: "Website", content: { type: "website", url: "littlefern.cafe/menu" }, expected: "https://littlefern.cafe/menu" },
   {
+    name: "Website · pasted with query and fragment",
+    content: { type: "website", url: "  https://littlefern.cafe/menu?table=4&lang=en#drinks  " },
+    expected: "https://littlefern.cafe/menu?table=4&lang=en#drinks",
+  },
+  {
+    name: "Website · explicit http",
+    content: { type: "website", url: "http://legacy.example.com/path" },
+    expected: "http://legacy.example.com/path",
+  },
+  {
     name: "Text",
     content: { type: "text", text: "Open daily 8:00–18:00\nKitchen closes at 17:30" },
     expected: "Open daily 8:00–18:00\nKitchen closes at 17:30",

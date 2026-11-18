@@ -16,7 +16,7 @@ const draftSchema = z.object({
   name: z.string().trim().min(1).max(80),
   model: z.enum(["static", "dynamic"]),
   content: z.custom<QrContent>((v) => typeof v === "object" && v !== null && "type" in v),
-  destination: z.url().optional(),
+  destination: z.url({ protocol: /^https?$/ }).optional(),
   layouts: z
     .array(
       z.object({
