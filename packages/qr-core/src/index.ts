@@ -12,6 +12,8 @@ export {
 } from "./compose";
 export {
   encodePayload,
+  encodeVCard,
+  VCARD_VERSION,
   normalizeUrl,
   parseWebsiteUrl,
   QR_CONTENT_TYPES,

@@ -544,7 +544,7 @@
       "phone": "Phone",
       "email": "Email",
       "company": "Company",
-      "save": "Save contact",
+      "save": "Add to contacts",
       "emailPlaceholder": "New email",
       "subject": "Subject",
       "compose": "Write email",
@@ -559,7 +559,8 @@
       "starts": "Starts",
       "place": "Place",
       "addToCalendar": "Add to calendar",
-      "wifiKicker": "Join Wi-Fi network"
+      "wifiKicker": "Join Wi-Fi network",
+      "website": "Website"
     },
     "passwordShow": "Show",
     "passwordHide": "Hide",

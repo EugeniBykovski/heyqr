@@ -58,9 +58,12 @@ export function ContentPreview({ content, mode, className }: { content: QrConten
         <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4.5 py-5 text-center">
           <span className="grid size-19 place-items-center rounded-full bg-accent-hover text-accent-foreground">{view.icon}</span>
           {view.kicker ? <span className="text-caption text-secondary-foreground">{view.kicker}</span> : null}
-          <b className={cn("text-h3", view.exactTitle && "[overflow-wrap:anywhere] whitespace-pre-wrap")}>
+          <b className={cn("text-h3 [overflow-wrap:anywhere]", view.exactTitle && "whitespace-pre-wrap")}>
             {ph(view.title, view.titlePlaceholder)}
           </b>
+          {view.subtitle ? (
+            <span className="-mt-2 text-caption [overflow-wrap:anywhere] text-secondary-foreground">{view.subtitle}</span>
+          ) : null}
           <div className="mt-2 flex flex-col gap-0.5 self-stretch">
             {view.rows.map((r) => (
               <div key={r.label} className="flex min-h-9.5 items-center gap-2.5 border-b border-border px-1 py-2 text-left text-caption">
@@ -98,6 +101,8 @@ function centerView(
   title: string;
   titlePlaceholder: string;
   exactTitle?: boolean;
+  /** Second line under the title (contact: "title · company"). */
+  subtitle?: string;
   rows: { label: string; value: string }[];
   action: string;
 } {
@@ -121,18 +126,25 @@ function centerView(
               ],
         action: t("join"),
       };
-    case "contact":
+    case "contact": {
+      // Design ContentPreview · contact: initials, full name, "title · company", then phone, email and website.
+      const letters = [v("firstName"), v("lastName")]
+        .map((n) => [...n][0] ?? "")
+        .join("")
+        .toUpperCase();
       return {
-        icon: icon(UserIcon),
+        icon: letters ? <span className="text-h2 font-bold tracking-[-0.02em]">{letters}</span> : icon(UserIcon),
         title: [v("firstName"), v("lastName")].filter(Boolean).join(" "),
         titlePlaceholder: t("contactPlaceholder"),
+        subtitle: [v("title"), v("company")].filter(Boolean).join(" · "),
         rows: [
           { label: t("phone"), value: v("phone") },
           { label: t("email"), value: v("email") },
-          { label: t("company"), value: v("company") },
+          { label: t("website"), value: v("website").replace(/^https?:\/\//i, "") },
         ],
         action: t("save"),
       };
+    }
     case "email":
       return {
         icon: icon(MailIcon),

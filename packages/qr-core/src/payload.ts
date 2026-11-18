@@ -65,6 +65,64 @@ const digits = (s: string) => s.replace(/[^+\d]/g, "");
 /** "2026-12-05T19:00" → "20261205T190000" (floating local time, as calendar apps expect). */
 const icsDate = (iso: string) => iso.replace(/[-:]/g, "").replace(/\.\d+/, "").slice(0, 15).padEnd(15, "0");
 
+type Contact = Extract<QrContent, { type: "contact" }>;
+
+/** vCard version written for Contact codes (RFC 2426), the one phone camera apps read most reliably. */
+export const VCARD_VERSION = "3.0";
+
+/**
+ * vCard 3.0 TEXT escaping (RFC 2426 §4): backslash, semicolon and comma are backslash-escaped and a line break
+ * becomes "\n", so an embedded newline can never start a new property and punctuation stays distinct from the
+ * component separators of structured values (N, ORG). Applied exactly once, to the raw value.
+ */
+const vText = (s: string) =>
+  s
+    .replace(/\r\n?/g, "\n")
+    .replace(/[\\;,]/g, "\\$&")
+    .replace(/\n/g, "\\n");
+/** URI and phone values are not TEXT: they are not escaped, but a line break can't be allowed to end the property. */
+const vLine = (s: string) => s.replace(/[\r\n]+/g, " ");
+const enc = new TextEncoder();
+
+/** Folds a content line at 75 octets (RFC 2425 §5.8.1) with CRLF + space, never splitting a UTF-8 character. */
+function foldLine(line: string): string {
+  const out: string[] = [];
+  let current = "";
+  let bytes = 0;
+  for (const ch of line) {
+    const size = enc.encode(ch).length;
+    const limit = out.length === 0 ? 75 : 74; // continuation lines start with one space
+    if (bytes + size > limit) {
+      out.push(current);
+      current = "";
+      bytes = 0;
+    }
+    current += ch;
+    bytes += size;
+  }
+  out.push(current);
+  return out.join("\r\n ");
+}
+
+/**
+ * Contact card as vCard 3.0, UTF-8, CRLF line endings, folded at 75 octets. Empty optional properties are left out;
+ * FN (required by the format) is the full name, falling back to the company.
+ */
+export function encodeVCard(contact: Contact): string {
+  const v = (k: keyof Omit<Contact, "type">) => (contact[k] ?? "").trim();
+  const first = v("firstName");
+  const last = v("lastName");
+  const fullName = [first, last].filter(Boolean).join(" ") || v("company") || v("email") || v("phone");
+  const lines = ["BEGIN:VCARD", `VERSION:${VCARD_VERSION}`, `N:${vText(last)};${vText(first)};;;`, `FN:${vText(fullName)}`];
+  if (v("company")) lines.push(`ORG:${vText(v("company"))}`);
+  if (v("title")) lines.push(`TITLE:${vText(v("title"))}`);
+  if (v("phone")) lines.push(`TEL;TYPE=CELL:${vLine(v("phone"))}`);
+  if (v("email")) lines.push(`EMAIL;TYPE=INTERNET:${vText(v("email"))}`);
+  if (v("website")) lines.push(`URL:${vLine(normalizeUrl(v("website")))}`);
+  lines.push("END:VCARD");
+  return lines.map(foldLine).join("\r\n") + "\r\n";
+}
+
 export function encodePayload(content: QrContent): string {
   switch (content.type) {
     case "website":
@@ -75,17 +133,8 @@ export function encodePayload(content: QrContent): string {
       const pass = content.security === "nopass" ? "" : `P:${wifiEscape(content.password ?? "")};`;
       return `WIFI:T:${content.security};S:${wifiEscape(content.ssid)};${pass}${content.hidden ? "H:true;" : ""};`;
     }
-    case "contact": {
-      const note = [content.title, content.company].filter(Boolean).join(", ");
-      return (
-        `MECARD:N:${content.lastName ?? ""},${content.firstName ?? ""};` +
-        (content.phone ? `TEL:${digits(content.phone)};` : "") +
-        (content.email ? `EMAIL:${content.email};` : "") +
-        (content.website ? `URL:${content.website};` : "") +
-        (note ? `NOTE:${note};` : "") +
-        ";"
-      );
-    }
+    case "contact":
+      return encodeVCard(content);
     case "email": {
       const params = new URLSearchParams();
       if (content.subject) params.set("subject", content.subject);

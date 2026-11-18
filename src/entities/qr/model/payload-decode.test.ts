@@ -34,7 +34,9 @@ const CASES: { name: string; content: QrContent; expected: string }[] = [
   {
     name: "Contact",
     content: { type: "contact", firstName: "Test", lastName: "Person", phone: "+1 555 0100", email: "test.person@example.com" },
-    expected: "MECARD:N:Person,Test;TEL:+15550100;EMAIL:test.person@example.com;;",
+    // vCard 3.0 since HEY-23 (was MECARD).
+    expected:
+      "BEGIN:VCARD\r\nVERSION:3.0\r\nN:Person;Test;;;\r\nFN:Test Person\r\nTEL;TYPE=CELL:+1 555 0100\r\nEMAIL;TYPE=INTERNET:test.person@example.com\r\nEND:VCARD\r\n",
   },
 ];
 

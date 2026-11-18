@@ -50,12 +50,12 @@ export function ContentStep({
 
   return (
     <div className="group/step mx-auto grid w-full max-w-page gap-6 px-4 pt-6 pb-8 sm:px-6 lg:grid-cols-[minmax(0,1fr)_23.75rem] lg:items-start lg:gap-14 lg:px-8 lg:pt-10 lg:pb-16 xl:grid-cols-[minmax(0,38.75rem)_26.25rem] xl:justify-center xl:gap-24">
-      <form noValidate onSubmit={submit} aria-labelledby="content-title" className="flex min-w-0 flex-col gap-4.5">
+      <form noValidate onSubmit={submit} aria-labelledby="content-step-title" className="flex min-w-0 flex-col gap-4.5">
         <header className="mb-1 flex max-w-measure flex-col gap-2">
           <span className="text-label text-accent-text">
             {tTypes(`${content.type}.label`)} · {t(`model.${mode}`)}
           </span>
-          <h1 id="content-title" className="text-h1">
+          <h1 id="content-step-title" className="text-h1">
             {t(`contentStep.titles.${content.type}`)}
           </h1>
           <p className="text-secondary-foreground">{t(`contentStep.subs.${content.type}`)}</p>
