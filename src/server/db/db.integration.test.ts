@@ -3,7 +3,7 @@
  * Runs when TEST_DATABASE_URL points at a database whose name ends in "_test" (CI, `pnpm test:db`); skipped otherwise.
  * The test drops and recreates that database's schema, so it never runs against anything else.
  */
-import { eq, inArray } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -298,5 +298,103 @@ describe.skipIf(!url)("versioned design records (real PostgreSQL)", () => {
       value: { schemaVersion: 1, layout: designToLayout(design) },
     });
     expect(readLayoutRecord(rows[1].design)).toEqual({ ok: false, reason: "unsupported", version: 2 });
+  });
+});
+
+/* Owner indexes and owner scoping (HEY-14): the indexes the owner queries rely on, and two accounts kept apart. */
+describe.skipIf(!url)("owner indexes and owner-scoped access (real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const ana = { id: "hey14-ana", name: "Ana", email: "ana@hey14.test" };
+  const ben = { id: "hey14-ben", name: "Ben", email: "ben@hey14.test" };
+  const design = { ...DEFAULT_DESIGN, fg: "#1F5C45" };
+  const layouts = (n: number) =>
+    Array.from({ length: n }, (_, i) => ({ name: `Variant ${i + 1}`, layout: designToLayout(design), editor: designSettingsOf(design) }));
+  /** Same shape as listQrCodes: the owner's codes, newest first, with their first variant. */
+  const list = (userId: string) =>
+    db.query.qrCode.findMany({
+      where: (q, { eq }) => eq(q.userId, userId),
+      orderBy: (q, { desc }) => desc(q.updatedAt),
+      with: { layouts: { orderBy: (l, { asc }) => asc(l.sortOrder), limit: 1 } },
+    });
+  /** Same shape as getQrCode: one code, only for its owner, with all variants. */
+  const get = (userId: string, id: string) =>
+    db.query.qrCode.findFirst({
+      where: (q, { and, eq }) => and(eq(q.id, id), eq(q.userId, userId)),
+      with: { layouts: { orderBy: (l, { asc }) => asc(l.sortOrder) } },
+    });
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 2 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([ana, ben]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [ana.id, ben.id]));
+    await pool?.end();
+  });
+
+  it("has the owner list index and the variant index the queries use", async () => {
+    const { rows } = await pool.query(
+      `select indexname, indexdef from pg_indexes where schemaname = 'public' and indexname in ('qr_code_user_idx', 'qr_layout_qr_idx') order by indexname`,
+    );
+    expect(rows.map((r) => r.indexname)).toEqual(["qr_code_user_idx", "qr_layout_qr_idx"]);
+    expect(rows[0].indexdef).toContain("(user_id, updated_at)");
+    expect(rows[1].indexdef).toContain("(qr_code_id, sort_order)");
+  });
+
+  it("shows each account only its own codes and variants", async () => {
+    const a1 = await saveQrWithLayouts(db, ana.id, {
+      name: "Ana menu",
+      model: "static",
+      content: { type: "text", text: "a" },
+      layouts: layouts(2),
+    });
+    const a2 = await saveQrWithLayouts(db, ana.id, {
+      name: "Ana card",
+      model: "static",
+      content: { type: "text", text: "b" },
+      layouts: layouts(1),
+    });
+    const b1 = await saveQrWithLayouts(db, ben.id, {
+      name: "Ben flyer",
+      model: "static",
+      content: { type: "text", text: "c" },
+      layouts: layouts(3),
+    });
+    if (!a1.ok || !a2.ok || !b1.ok) throw new Error("fixture save failed");
+
+    expect((await list(ana.id)).map((q) => q.name).sort()).toEqual(["Ana card", "Ana menu"]);
+    expect((await list(ben.id)).map((q) => q.name)).toEqual(["Ben flyer"]);
+    expect((await get(ana.id, a1.data.qrCodeId))?.layouts.map((l) => l.name)).toEqual(["Variant 1", "Variant 2"]);
+    expect((await get(ben.id, b1.data.qrCodeId))?.layouts).toHaveLength(3);
+  });
+
+  it("does not let one account read or update the other's code", async () => {
+    const [anaCode] = await list(ana.id);
+    if (!anaCode) throw new Error("missing fixture");
+    expect(await get(ben.id, anaCode.id)).toBeUndefined();
+
+    // Ben tries to overwrite Ana's code through the real save path: nothing changes, variants included.
+    const hijack = await saveQrWithLayouts(db, ben.id, {
+      qrCodeId: anaCode.id,
+      name: "hijacked",
+      model: "static",
+      content: { type: "text", text: "evil" },
+      layouts: layouts(1),
+    });
+    expect(hijack).toEqual({ ok: false, error: "not_found" });
+    const after = await get(ana.id, anaCode.id);
+    expect(after?.name).toBe(anaCode.name);
+    expect(after?.content).toEqual(anaCode.content);
+    expect(after?.layouts.length).toBeGreaterThan(0);
+
+    // A direct owner-scoped update (as in renameQr) by the wrong owner touches no rows.
+    const updated = await db
+      .update(schema.qrCode)
+      .set({ name: "hijacked" })
+      .where(and(eq(schema.qrCode.id, anaCode.id), eq(schema.qrCode.userId, ben.id)))
+      .returning({ id: schema.qrCode.id });
+    expect(updated).toEqual([]);
   });
 });
