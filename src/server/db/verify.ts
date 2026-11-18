@@ -1,7 +1,8 @@
 /** `pnpm db:verify`: connects with the runtime URL and checks the schema and migrations, like GET /api/health. */
 import { Client } from "pg";
 import { checkDatabase } from "./check";
-import { DatabaseConfigError, describeDatabaseUrl, resolveDbTarget, runtimeUrl } from "./target";
+import { describeDatabaseUrl, resolveDbTarget, runtimeUrl } from "./target";
+import { EnvConfigError } from "../../shared/config/app-env";
 
 async function main() {
   const target = resolveDbTarget();
@@ -26,6 +27,6 @@ async function main() {
 }
 
 main().catch((error: unknown) => {
-  console.error(error instanceof DatabaseConfigError ? error.message : error);
+  console.error(error instanceof EnvConfigError ? error.message : error);
   process.exitCode = 1;
 });

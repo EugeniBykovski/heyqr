@@ -1,6 +1,7 @@
-/** `pnpm db:migrate`: applies committed migrations to the database DATABASE_TARGET / VERCEL_ENV points at. */
+/** `pnpm db:migrate`: applies committed migrations to the database of the selected environment (APP_ENV / VERCEL_ENV, or test). */
 import { runMigrations } from "./migrator";
-import { assertAllowed, DatabaseConfigError, describeDatabaseUrl, migrationUrl, resolveDbTarget } from "./target";
+import { assertAllowed, describeDatabaseUrl, migrationUrl, resolveDbTarget } from "./target";
+import { EnvConfigError } from "../../shared/config/app-env";
 
 async function main() {
   const target = resolveDbTarget();
@@ -14,6 +15,6 @@ async function main() {
 }
 
 main().catch((error: unknown) => {
-  console.error(error instanceof DatabaseConfigError ? error.message : error);
+  console.error(error instanceof EnvConfigError ? error.message : error);
   process.exitCode = 1;
 });
