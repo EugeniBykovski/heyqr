@@ -47,7 +47,8 @@ export function ContentPreview({ content, mode, className }: { content: QrConten
     case "text":
       body = (
         <div className="m-3.5 self-stretch overflow-hidden rounded-[18px_18px_18px_6px] bg-subtle px-4 py-3.5 text-[0.875rem] leading-normal [overflow-wrap:anywhere] whitespace-pre-wrap">
-          {ph(v("text"), t("textPlaceholder"))}
+          {/* Text is shown exactly as encoded: leading/trailing spaces and empty lines are content (HEY-21). */}
+          {ph(v("text") ? String(c.text ?? "") : "", t("textPlaceholder"))}
         </div>
       );
       break;
