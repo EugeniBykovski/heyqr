@@ -1,18 +1,6 @@
 "use client";
 
-import { QR_CONTENT_TYPES, type QrContent, type QrContentType } from "@heyqr/qr-core";
-import {
-  CalendarIcon,
-  ContactIcon,
-  GlobeIcon,
-  MailIcon,
-  MapPinIcon,
-  MessageSquareIcon,
-  PhoneIcon,
-  TypeIcon,
-  WifiIcon,
-  type LucideIcon,
-} from "lucide-react";
+import { QR_CONTENT_TYPES, type QrContent } from "@heyqr/qr-core";
 import { useTranslations } from "next-intl";
 import { CONTENT_FIELDS, emptyContent } from "@/entities/qr";
 import { cn } from "@/shared/lib/utils";
@@ -20,18 +8,7 @@ import { Field } from "@/shared/ui/field";
 import { fieldControl, Input } from "@/shared/ui/input";
 import { Textarea } from "@/shared/ui/textarea";
 import { OptionGrid } from "./option-grid";
-
-const TYPE_ICONS: Record<QrContentType, LucideIcon> = {
-  website: GlobeIcon,
-  text: TypeIcon,
-  wifi: WifiIcon,
-  contact: ContactIcon,
-  email: MailIcon,
-  phone: PhoneIcon,
-  sms: MessageSquareIcon,
-  location: MapPinIcon,
-  event: CalendarIcon,
-};
+import { TYPE_ICONS } from "./type-icons";
 
 export function ContentForm({ content, onChange }: { content: QrContent; onChange: (content: QrContent) => void }) {
   const t = useTranslations();

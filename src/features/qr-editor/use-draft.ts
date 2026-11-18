@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DEFAULT_DESIGN, type EditorDesign } from "@/entities/qr";
+import { DEFAULT_DESIGN, emptyContent, type EditorDesign } from "@/entities/qr";
+import type { QrContentType } from "@heyqr/qr-core";
 
 const KEY = "heyqr:draft:v1";
 
@@ -40,6 +41,12 @@ export function writeDraft(design: EditorDesign) {
   } catch {
     /* storage unavailable: the editor starts from defaults */
   }
+}
+
+/** Keeps the current draft's look but starts new content of `type` (home type chips and footer links). */
+export function draftForType(type: QrContentType): EditorDesign {
+  const current = readDraft() ?? DEFAULT_DESIGN;
+  return current.content.type === type ? current : { ...current, content: emptyContent(type) };
 }
 
 export function clearDraft() {

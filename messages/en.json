@@ -23,7 +23,12 @@
     "privacy": "Privacy",
     "rights": "© {year} Hey QR",
     "pricing": "Pricing",
-    "label": "Footer"
+    "label": "Footer",
+    "tagline": "QR codes that look like your brand and always scan.",
+    "product": "Product",
+    "makeFor": "Make a code for",
+    "company": "Company",
+    "smallPrint": "21 languages · Payments by Stripe"
   },
   "home": {
     "hero": {
@@ -86,6 +91,143 @@
         "badge": "Yes · Dynamic QR",
         "text": "The code holds a permanent short link you can redirect anytime. <b>{price}</b>/month for up to {limit} codes."
       }
+    },
+    "examples": {
+      "kicker": "Examples",
+      "title": "Made for print and screen",
+      "lead": "Start from a real, scannable layout and make it yours. Every example opens in the editor with its colors, shapes and frame.",
+      "hint": "Scroll for more",
+      "use": "Start from the {title} example",
+      "useShort": "Use",
+      "items": {
+        "businessCard": {
+          "title": "Business card",
+          "kind": "Website · static"
+        },
+        "tableTent": {
+          "title": "Café table tent",
+          "kind": "Wi-Fi · static"
+        },
+        "menuSticker": {
+          "title": "Menu sticker",
+          "kind": "Website · dynamic"
+        },
+        "eventPoster": {
+          "title": "Event poster",
+          "kind": "Event · dynamic"
+        },
+        "contactBadge": {
+          "title": "Contact badge",
+          "kind": "Contact · static"
+        },
+        "windowSticker": {
+          "title": "Window sticker",
+          "kind": "Website · static"
+        }
+      }
+    },
+    "features": {
+      "kicker": "Why HeyQR",
+      "title": "Everything a printed code needs",
+      "lead": "Design tools that stay out of your way, and a scanner that checks your work before you pay.",
+      "scan": {
+        "title": "A scan check on every edit",
+        "text": "We read your code the way a phone camera does and tell you exactly what to fix: low contrast, inverted colors or a logo that covers too much."
+      },
+      "style": {
+        "title": "Your shapes and colors",
+        "text": "Eight module shapes, five corner styles and any color you like, with contrast kept in check."
+      },
+      "logo": {
+        "title": "Logo or icon in the center",
+        "text": "Upload your logo or pick from {icons} icons. We size it so the code still reads."
+      },
+      "frames": {
+        "title": "Frames and captions",
+        "text": "{frames} frames with a call to action like “Scan for the menu”, or short text right inside the code."
+      },
+      "files": {
+        "title": "Print-ready files",
+        "text": "Vector SVG and sharp PNG at real sizes: business cards, posters, table tents and stickers."
+      },
+      "dynamic": {
+        "title": "Change it after printing",
+        "text": "Dynamic codes point to a short link you can redirect anytime, with daily scan counts."
+      }
+    },
+    "types": {
+      "kicker": "Nine content types",
+      "title": "One studio for every kind of code",
+      "lead": "Pick what the code should open. The form asks only for what that type needs.",
+      "website": {
+        "label": "Website",
+        "desc": "Open a page, portfolio or menu."
+      },
+      "text": {
+        "label": "Text",
+        "desc": "Show a note, hours or instructions."
+      },
+      "wifi": {
+        "label": "Wi-Fi",
+        "desc": "Guests join your network without typing."
+      },
+      "contact": {
+        "label": "Contact card",
+        "desc": "Save name, phone and email in one tap."
+      },
+      "email": {
+        "label": "Email",
+        "desc": "Open a ready-to-send email."
+      },
+      "phone": {
+        "label": "Phone call",
+        "desc": "Call a number in one tap."
+      },
+      "sms": {
+        "label": "Text message",
+        "desc": "Start an SMS with your words."
+      },
+      "location": {
+        "label": "Location",
+        "desc": "Open a place in the maps app."
+      },
+      "event": {
+        "label": "Event",
+        "desc": "Add an event to the calendar."
+      }
+    },
+    "faq": {
+      "kicker": "Questions",
+      "title": "Good to know",
+      "lead": "Short answers about paying, files and scanning.",
+      "items": {
+        "model": {
+          "q": "Static or dynamic: which one do I need?",
+          "a": "A static code has the content built into its pattern and works forever after one payment of {static}. A dynamic code holds a short link you can point somewhere else after printing, for {dynamic}/month for up to {limit} codes."
+        },
+        "scan": {
+          "q": "Will my code still scan with a logo and colors?",
+          "a": "Every change is checked as you design. If the contrast is too low, the colors are inverted or the logo covers too much, we say so and offer a one-tap fix before you pay."
+        },
+        "account": {
+          "q": "Do I need an account to design?",
+          "a": "No. Designing and previewing are free. You sign in with Google only when you download, and your design comes with you."
+        },
+        "files": {
+          "q": "Which files do I get?",
+          "a": "A sharp PNG for screens and printers and a vector SVG for print shops, for every layout of the code you bought."
+        },
+        "again": {
+          "q": "Can I download the files again later?",
+          "a": "Yes. Your codes stay in My QR codes, and you can download them again in any format at no extra cost."
+        }
+      }
+    },
+    "cta": {
+      "label": "Get started",
+      "title": "Your first code takes about a minute.",
+      "lead": "Design it for free. Pay {price} only when you download.",
+      "pricing": "See pricing"
     }
   },
   "pricing": {

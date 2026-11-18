@@ -15,3 +15,4 @@ export {
 } from "./model/design";
 export { CONTENT_FIELDS, emptyContent, isContentComplete, type ContentField } from "./model/content";
 export { QrPreview } from "./ui/qr-preview";
+export { QR_EXAMPLES, type QrExample } from "./model/examples";

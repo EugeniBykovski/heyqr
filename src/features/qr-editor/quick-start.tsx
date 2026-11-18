@@ -1,7 +1,7 @@
 "use client";
 
 import { composeLayout, encodePayload } from "@heyqr/qr-core";
-import { ArrowRightIcon, CircleAlertIcon, InfoIcon } from "lucide-react";
+import { ArrowRightIcon, CircleAlertIcon, LockIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { DEFAULT_DESIGN, designToLayout, emptyContent, QR_INKS, QrPreview, type EditorDesign } from "@/entities/qr";
@@ -12,6 +12,7 @@ import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
 import { Input, InputPrefix } from "@/shared/ui/input";
+import { Textarea } from "@/shared/ui/textarea";
 import { Segmented } from "@/shared/ui/segmented";
 import { Stage, StageBar, StageCanvas, StageFoot } from "@/shared/ui/stage";
 import { Swatch } from "@/shared/ui/swatch";
@@ -102,7 +103,7 @@ export function QuickStart({ copy }: { copy: ReactNode }) {
         </Stage>
       </div>
 
-      <Card className="gap-4 p-4 [grid-area:tool] sm:p-5">
+      <Card className="gap-6 p-5 [grid-area:tool] sm:gap-7 sm:p-6">
         <Segmented
           label={t("typesLabel")}
           value={(HOME_TYPES as readonly string[]).includes(design.content.type) ? (design.content.type as HomeType) : "more"}
@@ -110,7 +111,7 @@ export function QuickStart({ copy }: { copy: ReactNode }) {
           onChange={pickType}
         />
 
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-2">
           <label htmlFor={`${ids}-url`} className="text-label">
             {t("url")}
           </label>
@@ -141,8 +142,8 @@ export function QuickStart({ copy }: { copy: ReactNode }) {
           ) : null}
         </div>
 
-        <div className="grid gap-4 min-[26.875rem]:grid-cols-[auto_minmax(0,1fr)] lg:max-[80rem]:grid-cols-1">
-          <div className="flex flex-col gap-1.5">
+        <div className="grid gap-6 min-[26.875rem]:grid-cols-[auto_minmax(0,1fr)] lg:max-[80rem]:grid-cols-1">
+          <div className="flex flex-col gap-2">
             <span id={`${ids}-color`} className="text-label">
               {t("color")}
             </span>
@@ -159,14 +160,16 @@ export function QuickStart({ copy }: { copy: ReactNode }) {
               ))}
             </div>
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-2">
             <label htmlFor={`${ids}-caption`} className="text-label">
               {t("caption")}
             </label>
-            <Input
+            <Textarea
               id={`${ids}-caption`}
+              rows={2}
               value={design.caption}
-              maxLength={40}
+              maxLength={60}
+              className="min-h-19 resize-none"
               onChange={(e) => patch({ caption: e.target.value, preset: e.target.value.trim() ? "caption" : "qr" })}
             />
           </div>
@@ -176,8 +179,8 @@ export function QuickStart({ copy }: { copy: ReactNode }) {
           {t("continue")}
           <ArrowRightIcon aria-hidden />
         </Button>
-        <p className="flex items-start gap-2 text-caption text-secondary-foreground">
-          <InfoIcon aria-hidden className="mt-0.5 size-4 shrink-0" />
+        <p className="flex items-start gap-2 pt-0.5 text-caption leading-[1.6] text-secondary-foreground">
+          <LockIcon aria-hidden className="mt-0.5 size-4 shrink-0" />
           <span>
             {t.rich("priceNote", { price, b: (chunks) => <b className="font-semibold text-foreground">{chunks}</b> })}{" "}
             <Link href="/pricing" className="font-semibold text-foreground underline underline-offset-3">
