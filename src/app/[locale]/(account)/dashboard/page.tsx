@@ -8,8 +8,8 @@ import { encodedValue } from "@/server/qr/export";
 import { listQrCodes } from "@/server/qr/repository";
 import { Button } from "@/shared/ui/button";
 import { segmentedOption, SegmentedTrack } from "@/shared/ui/segmented";
-import { libraryList, QrCard, type QrCardStatus } from "@/widgets/qr-library";
-import { LibraryHeader } from "./library-header";
+import { env } from "@/env";
+import { LibraryHeader, type LibraryItem, QrLibraryManager, type QrCardStatus } from "@/widgets/qr-library";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("dashboard");
@@ -63,51 +63,56 @@ export default async function DashboardPage({ params, searchParams }: PageProps<
       </div>
     );
 
+  const shortBase = env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "");
+  const items: LibraryItem[] = visible.map((qr) => {
+    const layout = qr.layouts[0];
+    const paid = qr.model === "dynamic" ? qr.status === "active" : qr.purchasedAt !== null;
+    const status: QrCardStatus = qr.status === "active" ? (qr.model === "static" ? "purchased" : "active") : qr.status;
+    return {
+      id: qr.id,
+      name: qr.name,
+      href: `/dashboard/qr/${qr.id}`,
+      exportHref: layout ? `/create/export?qr=${qr.id}&layout=${layout.id}` : undefined,
+      layout: layout?.design.layout,
+      value: encodedValue(qr),
+      typeLabel: tTypes(qr.content.type),
+      model: qr.model,
+      modelLabel: t(`model.${qr.model}`),
+      status,
+      statusLabel: t(`status.${status}`),
+      meta: t("updated", { date: format.dateTime(qr.updatedAt, { dateStyle: "medium" }) }),
+      paid,
+      shortLink: qr.shortCode ? `${shortBase.replace(/^https?:\/\//, "")}/${qr.shortCode}` : undefined,
+      labels: {
+        open: t("open", { name: qr.name }),
+        edit: t("actions.edit"),
+        download: t("actions.download"),
+        buy: t("actions.buy"),
+      },
+    };
+  });
+
   return (
-    <div>
-      {header}
-      <SegmentedTrack role="group" aria-label={t("filterLabel")} className="mb-3.5 max-w-[23.75rem]">
-        {FILTERS.map((f) => (
-          <Link
-            key={f}
-            href={f === "all" ? "/dashboard" : `/dashboard?filter=${f}`}
-            aria-current={f === filter ? "page" : undefined}
-            className={segmentedOption}
-          >
-            {t(`filters.${f}`, { count: counts[f] })}
-          </Link>
-        ))}
-      </SegmentedTrack>
-      <ul aria-label={t("title")} className={libraryList}>
-        {visible.map((qr) => {
-          const layout = qr.layouts[0];
-          const paid = qr.model === "dynamic" ? qr.status === "active" : qr.purchasedAt !== null;
-          const status: QrCardStatus = qr.status === "active" ? (qr.model === "static" ? "purchased" : "active") : qr.status;
-          return (
-            <QrCard
-              key={qr.id}
-              name={qr.name}
-              href={`/dashboard/qr/${qr.id}`}
-              exportHref={layout ? `/create/export?qr=${qr.id}&layout=${layout.id}` : undefined}
-              layout={layout?.design.layout}
-              value={encodedValue(qr)}
-              typeLabel={tTypes(qr.content.type)}
-              model={qr.model}
-              modelLabel={t(`model.${qr.model}`)}
-              status={status}
-              statusLabel={t(`status.${status}`)}
-              meta={t("updated", { date: format.dateTime(qr.updatedAt, { dateStyle: "medium" }) })}
-              paid={paid}
-              labels={{
-                open: t("open", { name: qr.name }),
-                edit: t("actions.edit"),
-                download: t("actions.download"),
-                buy: t("actions.buy"),
-              }}
-            />
-          );
-        })}
-      </ul>
-    </div>
+    <QrLibraryManager
+      title={t("title")}
+      createLabel={t("new")}
+      sub={<p>{t("sub", { count: codes.length, dynamic: dynamicActive })}</p>}
+      total={codes.length}
+      items={items}
+      filters={
+        <SegmentedTrack role="group" aria-label={t("filterLabel")} className="mb-3.5 max-w-[23.75rem]">
+          {FILTERS.map((f) => (
+            <Link
+              key={f}
+              href={f === "all" ? "/dashboard" : `/dashboard?filter=${f}`}
+              aria-current={f === filter ? "page" : undefined}
+              className={segmentedOption}
+            >
+              {t(`filters.${f}`, { count: counts[f] })}
+            </Link>
+          ))}
+        </SegmentedTrack>
+      }
+    />
   );
 }

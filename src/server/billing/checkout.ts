@@ -1,5 +1,5 @@
 import "server-only";
-import { and, eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { env } from "@/env";
 import { paymentsConfig } from "@/server/config";
 import { db, schema } from "../db";
@@ -31,7 +31,9 @@ type CheckoutInput = {
  * success/cancel URLs return to the same export screen with the same layout and format.
  */
 export async function createCheckout({ user, qrCodeId, layoutId, format, locale }: CheckoutInput): Promise<string> {
-  const qr = await db.query.qrCode.findFirst({ where: and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, user.id)) });
+  const qr = await db.query.qrCode.findFirst({
+    where: and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, user.id), isNull(schema.qrCode.deletedAt)),
+  });
   if (!qr) throw new Error("QR code not found");
 
   const back = `${env.NEXT_PUBLIC_APP_URL}/${locale}/create/export?layout=${layoutId}&format=${format}`;

@@ -1,0 +1,1 @@
+ALTER TABLE "qr_code" ADD COLUMN "deleted_at" timestamp with time zone;

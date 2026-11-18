@@ -95,6 +95,8 @@ export const qrCode = pgTable(
     previousDestination: text("previous_destination"),
     /** Set when a static code is bought. Every layout and format is then included. */
     purchasedAt: timestamp("purchased_at", { withTimezone: true }),
+    /** Soft delete: hidden everywhere and the short link stops; cleared again by Undo. */
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
     ...timestamps,
   },
   (t) => [index("qr_code_user_idx").on(t.userId, t.updatedAt)],

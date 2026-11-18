@@ -1,5 +1,5 @@
 import type { QrContent } from "@heyqr/qr-core";
-import { and, eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { createLayoutRecord } from "../../entities/qr/model/design-schema";
 import { supportsMode } from "../../entities/qr/model/modes";
@@ -34,7 +34,7 @@ export async function saveQrWithLayouts(db: NodePgDatabase<typeof schema>, userI
       const updated = await tx
         .update(schema.qrCode)
         .set({ name: input.name, content: input.content, destination: input.destination ?? null })
-        .where(and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId)))
+        .where(and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)))
         .returning({ id: schema.qrCode.id });
       if (updated.length === 0) return { ok: false, error: "not_found" } as const;
     } else {

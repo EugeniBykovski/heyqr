@@ -561,7 +561,46 @@
       "download": "Download",
       "buy": "Buy & download"
     },
-    "loading": "Loading your QR codes"
+    "loading": "Loading your QR codes",
+    "manage": {
+      "select": "Select",
+      "done": "Done",
+      "selectAll": "Select all",
+      "selectOne": "Select {name}",
+      "chooseToDelete": "Choose codes to delete",
+      "selected": "{count} of {total} selected",
+      "deleteSelected": "{count, plural, =0 {Delete} other {Delete #}}",
+      "deleteOne": "Delete {name}",
+      "cancel": "Cancel",
+      "dialog": {
+        "titleOne": "Delete “{name}”?",
+        "titleMany": "Delete {count} QR codes?",
+        "leadOne": "It disappears from My QR codes on every device.",
+        "leadMany": "They disappear from My QR codes on every device.",
+        "dynamicTitle": "{count, plural, one {Its short link stops working} other {Their short links stop working}}",
+        "dynamicText": "{links} {count, plural, one {stops} other {stop}} redirecting right away. Printed copies will open a “link not active” page. {count, plural, one {One plan slot is} other {# plan slots are}} freed.",
+        "staticTitle": "Printed copies keep working",
+        "staticText": "A static code carries its content in the pattern, so printed copies still scan. You won’t be able to download or edit {count, plural, one {this purchase} other {these # purchases}} again, and deleting doesn’t refund it.",
+        "draftTitle": "{count, plural, one {The draft is removed} other {# drafts are removed}}",
+        "draftText": "Nothing was paid for {count, plural, one {it} other {them}}, so nothing else changes.",
+        "confirmOne": "Delete code",
+        "confirmMany": "Delete {count} codes",
+        "undoNote": "You can undo for a few seconds after deleting.",
+        "close": "Close",
+        "metaDynamic": "Dynamic",
+        "metaStatic": "Static",
+        "metaActive": "active",
+        "metaPurchased": "purchased",
+        "metaDraft": "draft"
+      },
+      "deletedOne": "“{name}” deleted.",
+      "deletedMany": "{count} codes deleted.",
+      "undo": "Undo",
+      "restoredOne": "Code restored.",
+      "restoredMany": "{count} codes restored.",
+      "deleteFailed": "Couldn’t delete. Try again.",
+      "restoreFailed": "Couldn’t restore it. Undo is available for a few minutes after deleting."
+    }
   },
   "qr": {
     "back": "All codes",

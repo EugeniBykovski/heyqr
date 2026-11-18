@@ -9,6 +9,7 @@ import { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { DEFAULT_DESIGN, designToLayout } from "../../entities/qr/model/design";
 import { designSettingsOf, readLayoutRecord } from "../../entities/qr/model/design-schema";
+import { RESTORE_WINDOW_MS, restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { checkDatabase, EXPECTED_MIGRATIONS, REQUIRED_TABLES } from "./check";
 import { SEED_SCAN_DAYS, seedFixtures } from "./fixtures";
@@ -396,5 +397,67 @@ describe.skipIf(!url)("owner indexes and owner-scoped access (real PostgreSQL)",
       .where(and(eq(schema.qrCode.id, anaCode.id), eq(schema.qrCode.userId, ben.id)))
       .returning({ id: schema.qrCode.id });
     expect(updated).toEqual([]);
+  });
+});
+
+/* Delete from My QR codes (design 4.10–4.12): soft delete for the owner only, Undo within the restore window. */
+describe.skipIf(!url)("delete and undo QR codes (real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "del-owner", name: "Owner", email: "owner@del.test" };
+  const other = { id: "del-other", name: "Other", email: "other@del.test" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const live = (userId: string) =>
+    db.query.qrCode.findMany({ where: (q, { and, eq, isNull }) => and(eq(q.userId, userId), isNull(q.deletedAt)) });
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 2 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("hides deleted codes, keeps their variants for Undo, and only touches the owner's rows", async () => {
+    const a = await saveQrWithLayouts(db, owner.id, { name: "Menu", model: "static", content: { type: "text", text: "a" }, layouts });
+    const b = await saveQrWithLayouts(db, owner.id, { name: "Card", model: "static", content: { type: "text", text: "b" }, layouts });
+    if (!a.ok || !b.ok) throw new Error("fixture save failed");
+
+    expect(await softDeleteQrCodes(db, other.id, [a.data.qrCodeId])).toEqual([]);
+    expect(await softDeleteQrCodes(db, owner.id, [a.data.qrCodeId, b.data.qrCodeId])).toHaveLength(2);
+    expect(await live(owner.id)).toEqual([]);
+    const variants = await db.query.qrLayout.findMany({ where: (l, { eq }) => eq(l.qrCodeId, a.data.qrCodeId) });
+    expect(variants).toHaveLength(1);
+
+    // A deleted code can't be saved over either.
+    const resave = await saveQrWithLayouts(db, owner.id, {
+      qrCodeId: a.data.qrCodeId,
+      name: "x",
+      model: "static",
+      content: { type: "text", text: "x" },
+      layouts,
+    });
+    expect(resave).toEqual({ ok: false, error: "not_found" });
+
+    expect(await restoreQrCodes(db, other.id, [a.data.qrCodeId])).toEqual([]);
+    expect((await restoreQrCodes(db, owner.id, [a.data.qrCodeId, b.data.qrCodeId])).sort()).toEqual(
+      [a.data.qrCodeId, b.data.qrCodeId].sort(),
+    );
+    expect((await live(owner.id)).map((q) => q.name).sort()).toEqual(["Card", "Menu"]);
+    const before = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, a.data.qrCodeId) });
+    await softDeleteQrCodes(db, owner.id, [a.data.qrCodeId]);
+    await restoreQrCodes(db, owner.id, [a.data.qrCodeId]);
+    const after = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, a.data.qrCodeId) });
+    expect(after?.updatedAt).toEqual(before?.updatedAt);
+  });
+
+  it("refuses Undo after the restore window", async () => {
+    const c = await saveQrWithLayouts(db, owner.id, { name: "Old", model: "static", content: { type: "text", text: "c" }, layouts });
+    if (!c.ok) throw new Error("fixture save failed");
+    const deletedAt = new Date(Date.now() - RESTORE_WINDOW_MS - 60_000);
+    await softDeleteQrCodes(db, owner.id, [c.data.qrCodeId], deletedAt);
+    expect(await restoreQrCodes(db, owner.id, [c.data.qrCodeId])).toEqual([]);
   });
 });

@@ -14,5 +14,12 @@ export const libraryRow = cn(
   "lg:grid-cols-[4rem_minmax(0,1.4fr)_auto] lg:rounded-none lg:border-0 lg:border-b lg:px-5 lg:py-3 lg:last:border-b-0",
 );
 
+/** Select mode (design 4.10): a checkbox column first, actions hidden; a selected row is tinted violet. */
+export const libraryRowSelecting = cn(
+  "grid-cols-[1.75rem_4.75rem_minmax(0,1fr)] lg:grid-cols-[1.75rem_4rem_minmax(0,1fr)]",
+  "transition-[border-color,background-color,box-shadow] duration-(--motion-fast)",
+);
+export const libraryRowSelected = "border-selected-border bg-selected ring-1 ring-selected-border lg:ring-inset";
+
 export const libraryThumb = "grid size-19 shrink-0 place-items-center rounded-md bg-subtle p-2 lg:size-16";
 export const libraryActions = "col-span-full flex flex-wrap items-center gap-1.5 lg:col-auto lg:justify-end";

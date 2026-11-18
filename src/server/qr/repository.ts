@@ -1,5 +1,5 @@
 import "server-only";
-import { and, asc, desc, eq, gte, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gte, isNull, sql } from "drizzle-orm";
 import { readLayoutRecord } from "@/entities/qr";
 import { db, schema } from "../db";
 
@@ -20,7 +20,7 @@ function readable<T extends { id: string; design: unknown }>(layouts: T[]): T[] 
 
 export async function listQrCodes(userId: string) {
   const codes = await db.query.qrCode.findMany({
-    where: eq(schema.qrCode.userId, userId),
+    where: and(eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)),
     orderBy: desc(schema.qrCode.updatedAt),
     with: { layouts: { orderBy: asc(schema.qrLayout.sortOrder), limit: 1 } },
   });
@@ -29,7 +29,7 @@ export async function listQrCodes(userId: string) {
 
 export async function getQrCode(userId: string, id: string) {
   const qr = await db.query.qrCode.findFirst({
-    where: and(eq(schema.qrCode.id, id), eq(schema.qrCode.userId, userId)),
+    where: and(eq(schema.qrCode.id, id), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)),
     with: { layouts: { orderBy: asc(schema.qrLayout.sortOrder) } },
   });
   return qr && { ...qr, layouts: readable(qr.layouts) };
@@ -37,7 +37,8 @@ export async function getQrCode(userId: string, id: string) {
 
 export async function getLayoutWithQr(layoutId: string) {
   const record = await db.query.qrLayout.findFirst({ where: eq(schema.qrLayout.id, layoutId), with: { qrCode: true } });
-  return record && readable([record])[0];
+  // A deleted code can't be exported, even by its owner.
+  return record && !record.qrCode.deletedAt ? readable([record])[0] : undefined;
 }
 
 /** Daily scans for the last `days` days, zero-filled, oldest first. */

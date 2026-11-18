@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Skeleton } from "@/shared/ui/skeleton";
-import { QrLibrarySkeleton } from "@/widgets/qr-library";
-import { LibraryHeader } from "./library-header";
+import { LibraryHeader, QrLibrarySkeleton } from "@/widgets/qr-library";
 
 /** Network wait for the library: same header and row boxes as the loaded page, plus one polite status message. */
 export default async function DashboardLoading() {

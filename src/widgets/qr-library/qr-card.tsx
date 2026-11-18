@@ -1,11 +1,11 @@
 import type { Layout } from "@heyqr/qr-core";
-import { DownloadIcon } from "lucide-react";
+import { DownloadIcon, Trash2Icon } from "lucide-react";
 import { QrPreview } from "@/entities/qr";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
-import { libraryActions, libraryRow, libraryThumb } from "./layout";
+import { libraryActions, libraryRow, libraryRowSelected, libraryRowSelecting, libraryThumb } from "./layout";
 
 export type QrCardStatus = "purchased" | "active" | "draft" | "paused" | "archived";
 
@@ -26,6 +26,8 @@ export function QrCard({
   meta,
   paid,
   labels,
+  select,
+  onDelete,
 }: {
   name: string;
   href: string;
@@ -39,10 +41,20 @@ export function QrCard({
   statusLabel: string;
   meta: string;
   paid: boolean;
-  labels: { open: string; edit: string; download: string; buy: string };
+  labels: { open: string; edit: string; download: string; buy: string; delete?: string; select?: string };
+  /** Select mode (My QR codes · select): a checkbox replaces the actions. */
+  select?: { selected: boolean; onToggle: () => void };
+  /** Shows the quiet delete action (design 4.11 entry point). */
+  onDelete?: () => void;
 }) {
   return (
-    <li className={cn(libraryRow, "animate-rise")}>
+    <li className={cn(libraryRow, "animate-rise", select && libraryRowSelecting, select?.selected && libraryRowSelected)}>
+      {select ? (
+        <label className="grid h-11 w-7 cursor-pointer place-items-center">
+          <input type="checkbox" className="size-5 cursor-pointer accent-primary" checked={select.selected} onChange={select.onToggle} />
+          <span className="sr-only">{labels.select}</span>
+        </label>
+      ) : null}
       <Link href={href} aria-label={labels.open} className={libraryThumb}>
         {layout ? <QrPreview layout={layout} value={value} label={name} className="size-full" /> : null}
       </Link>
@@ -57,19 +69,26 @@ export function QrCard({
           <span className="text-caption text-muted-foreground">{meta}</span>
         </div>
       </div>
-      <div className={libraryActions}>
-        <Button asChild size="sm">
-          <Link href={href}>{labels.edit}</Link>
-        </Button>
-        {exportHref ? (
-          <Button asChild size="sm" variant={paid ? "secondary" : "primary"} className={cn(!paid && "ml-auto lg:ml-0")}>
-            <Link href={exportHref}>
-              <DownloadIcon aria-hidden />
-              {paid ? labels.download : labels.buy}
-            </Link>
+      {select ? null : (
+        <div className={libraryActions}>
+          {onDelete ? (
+            <Button size="icon-sm" variant="ghost-danger" aria-label={labels.delete} title={labels.delete} onClick={onDelete}>
+              <Trash2Icon aria-hidden />
+            </Button>
+          ) : null}
+          <Button asChild size="sm">
+            <Link href={href}>{labels.edit}</Link>
           </Button>
-        ) : null}
-      </div>
+          {exportHref ? (
+            <Button asChild size="sm" variant={paid ? "secondary" : "primary"} className={cn(!paid && "ml-auto lg:ml-0")}>
+              <Link href={exportHref}>
+                <DownloadIcon aria-hidden />
+                {paid ? labels.download : labels.buy}
+              </Link>
+            </Button>
+          ) : null}
+        </div>
+      )}
     </li>
   );
 }

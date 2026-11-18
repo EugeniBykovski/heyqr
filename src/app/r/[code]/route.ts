@@ -11,7 +11,7 @@ import { recordScan } from "@/server/qr/repository";
 export async function GET(_request: NextRequest, ctx: RouteContext<"/r/[code]">) {
   const { code } = await ctx.params;
   const qr = await db.query.qrCode.findFirst({ where: eq(schema.qrCode.shortCode, code) });
-  if (!qr || qr.status !== "active" || !qr.destination)
+  if (!qr || qr.deletedAt || qr.status !== "active" || !qr.destination)
     return NextResponse.redirect(new URL("/link-unavailable", env.NEXT_PUBLIC_APP_URL), 302);
 
   after(() => recordScan(qr.id));

@@ -1,12 +1,13 @@
 "use server";
 
 import type { QrContent } from "@heyqr/qr-core";
-import { and, eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireUser } from "../auth";
 import { createCheckout, createPortalSession } from "../billing/checkout";
 import { db, schema } from "../db";
+import { restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
 
 export type ActionResult<T = undefined> = { ok: true; data: T } | { ok: false; error: "unauthorized" | "invalid" | "not_found" | "failed" };
@@ -63,7 +64,7 @@ export async function renameQr(qrCodeId: string, name: string): Promise<ActionRe
     await db
       .update(schema.qrCode)
       .set({ name: value.data })
-      .where(and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, user.id)));
+      .where(and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, user.id), isNull(schema.qrCode.deletedAt)));
     revalidatePath("/[locale]/dashboard", "layout");
     return { ok: true, data: undefined };
   });
@@ -75,7 +76,9 @@ export async function updateDestination(qrCodeId: string, destination: string): 
     const user = await requireUser();
     const url = z.url({ protocol: /^https?$/ }).safeParse(destination.trim());
     if (!url.success) return { ok: false, error: "invalid" };
-    const qr = await db.query.qrCode.findFirst({ where: and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, user.id)) });
+    const qr = await db.query.qrCode.findFirst({
+      where: and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, user.id), isNull(schema.qrCode.deletedAt)),
+    });
     if (!qr || qr.model !== "dynamic") return { ok: false, error: "not_found" };
     await db
       .update(schema.qrCode)
@@ -104,5 +107,35 @@ export async function openBillingPortal(locale: string): Promise<ActionResult<{ 
     const user = await requireUser();
     if (!user.stripeCustomerId) return { ok: false, error: "not_found" };
     return { ok: true, data: { url: await createPortalSession(user.stripeCustomerId, locale) } };
+  });
+}
+
+const idsSchema = z.array(z.string().min(1).max(64)).min(1).max(100);
+
+/** My QR codes: delete one or several of the owner's codes. Undo is available for a short time (restoreQrs). */
+export async function deleteQrs(ids: string[]): Promise<ActionResult<{ ids: string[] }>> {
+  return guard(async () => {
+    const user = await requireUser();
+    const parsed = idsSchema.safeParse(ids);
+    if (!parsed.success) return { ok: false, error: "invalid" };
+    const deleted = await softDeleteQrCodes(db, user.id, parsed.data);
+    if (deleted.length === 0) return { ok: false, error: "not_found" };
+    revalidatePath("/[locale]/dashboard", "layout");
+    revalidatePath("/[locale]", "page");
+    return { ok: true, data: { ids: deleted } };
+  });
+}
+
+/** Undo for deleteQrs. */
+export async function restoreQrs(ids: string[]): Promise<ActionResult<{ ids: string[] }>> {
+  return guard(async () => {
+    const user = await requireUser();
+    const parsed = idsSchema.safeParse(ids);
+    if (!parsed.success) return { ok: false, error: "invalid" };
+    const restored = await restoreQrCodes(db, user.id, parsed.data);
+    if (restored.length === 0) return { ok: false, error: "not_found" };
+    revalidatePath("/[locale]/dashboard", "layout");
+    revalidatePath("/[locale]", "page");
+    return { ok: true, data: { ids: restored } };
   });
 }
