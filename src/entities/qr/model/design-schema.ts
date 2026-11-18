@@ -1,5 +1,6 @@
 import { QR_CONTENT_TYPES, type Layout, type QrContent } from "@heyqr/qr-core";
 import { z } from "zod";
+import { modeFor, QR_MODES } from "./modes";
 import { CENTER_ICONS, EDITOR_PRESETS, EYE_BALL_SHAPES, EYE_FRAME_SHAPES, FRAME_STYLES, MODULE_SHAPES, type EditorDesign } from "./design";
 
 /*
@@ -43,7 +44,7 @@ const contentSchema = z
 
 const draftFields = designSettingsSchema.extend({
   name: z.string().max(80),
-  model: z.enum(["static", "dynamic"]),
+  model: z.enum(QR_MODES),
   content: contentSchema,
 });
 
@@ -74,7 +75,8 @@ const layoutSchema = z
 export type LayoutRecordDesign = { schemaVersion: typeof DESIGN_SCHEMA_VERSION; layout: Layout; editor?: DesignSettings };
 
 export type ReadResult<T> =
-  { ok: true; value: T; from: "current" | "legacy" } | { ok: false; reason: "malformed" | "unsupported"; version?: unknown };
+  | { ok: true; value: T; from: "current" | "legacy"; adjusted?: "mode" }
+  | { ok: false; reason: "malformed" | "unsupported"; version?: unknown };
 
 /** Splits a raw record into its version: missing → legacy, 1 → current, another number → unsupported. */
 function versionOf(raw: unknown): "legacy" | "current" | "unsupported" | "malformed" {
@@ -94,7 +96,11 @@ export function readDraftDesign(raw: unknown, defaults: EditorDesign): ReadResul
   const candidate = kind === "legacy" ? { ...defaults, ...(raw as object) } : raw;
   const parsed = draftFields.safeParse(candidate);
   if (!parsed.success) return { ok: false, reason: "malformed" };
-  return { ok: true, value: parsed.data as EditorDesign, from: kind };
+  const draft = parsed.data as EditorDesign;
+  // Earlier builds let any type be dynamic. Keep the draft, but switch an unsupported mode to static and say so.
+  const model = modeFor(draft.content.type, draft.model);
+  if (model !== draft.model) return { ok: true, value: { ...draft, model }, from: kind, adjusted: "mode" };
+  return { ok: true, value: draft, from: kind };
 }
 
 /** What the browser stores: the draft plus the contract version. */

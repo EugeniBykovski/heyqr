@@ -28,3 +28,4 @@ export {
   type LayoutRecordDesign,
   type ReadResult,
 } from "./model/design-schema";
+export { MODES_BY_TYPE, modeFor, QR_MODES, supportsMode, type QrMode } from "./model/modes";

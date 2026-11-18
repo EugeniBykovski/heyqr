@@ -260,6 +260,28 @@ describe.skipIf(!url)("versioned design records (real PostgreSQL)", () => {
     expect((await pool.query(`select count(*)::int as n from qr_code where name = 'Broken'`)).rows[0].n).toBe(0);
   });
 
+  it("saves dynamic website codes and refuses dynamic codes of other types (HEY-13)", async () => {
+    const layouts = [{ name: "Main", layout: designToLayout(design), editor: designSettingsOf(design) }];
+    const dynamicSite = await saveQrWithLayouts(db, owner.id, {
+      name: "Dynamic site",
+      model: "dynamic",
+      content: { type: "website", url: "https://littlefern.cafe/menu" },
+      layouts,
+    });
+    expect(dynamicSite.ok).toBe(true);
+    const dynamicWifi = await saveQrWithLayouts(db, owner.id, {
+      name: "Dynamic Wi-Fi",
+      model: "dynamic",
+      content: { type: "wifi", ssid: "Guest", security: "WPA" },
+      layouts,
+    });
+    expect(dynamicWifi).toEqual({ ok: false, error: "invalid" });
+    const { rows } = await pool.query(`select name, model from qr_code where user_id = $1 and name like 'Dynamic%' order by name`, [
+      owner.id,
+    ]);
+    expect(rows).toEqual([{ name: "Dynamic site", model: "dynamic" }]);
+  });
+
   it("reads legacy rows written before versioning, and reports rows from a newer version", async () => {
     await pool.query(
       `insert into qr_code (id, user_id, name, content) values ('hey12-legacy', $1, 'Legacy', '{"type":"text","text":"hi"}')`,
