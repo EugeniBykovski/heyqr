@@ -275,9 +275,27 @@ export function composeLayout(layout: Layout, value: string, options: ComposeOpt
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${f(W)}${unit}" height="${f(H)}${unit}" viewBox="0 0 ${f(W)} ${f(H)}">`;
 
   if (g.frame) {
-    for (const p of g.frame.paths) {
-      const fill = p.fill === "bg" ? (options.transparent ? "none" : col.bg) : col.frame;
-      svg += `<path d="${p.d}" fill="${fill}"/>`;
+    const paths = g.frame.paths;
+    if (!options.transparent) {
+      for (const p of paths) svg += `<path d="${p.d}" fill="${p.fill === "bg" ? col.bg : col.frame}"/>`;
+    } else {
+      // Transparent export: a "bg" window painted over the frame colour would just become fill="none", and the frame
+      // colour would show through the code and its quiet zone (HEY-27). Every frame-coloured shape is masked by the
+      // symbol box (matrix + 4-module quiet zone) and by the windows drawn after it, so both become real holes.
+      // Opaque output is unchanged: there the symbol's own background already covers that area.
+      const symbolBox = `<rect x="${f(g.qr[0])}" y="${f(g.qr[1])}" width="${f(g.qr[2])}" height="${f(g.qr[2])}" fill="#000"/>`;
+      let defs = "";
+      let body = "";
+      paths.forEach((p, i) => {
+        if (p.fill === "bg") return;
+        const windows = paths.slice(i + 1).filter((w) => w.fill === "bg");
+        const id = `hq-frame-cut-${i}`;
+        defs +=
+          `<mask id="${id}" maskUnits="userSpaceOnUse" x="0" y="0" width="${f(W)}" height="${f(H)}">` +
+          `<rect width="${f(W)}" height="${f(H)}" fill="#fff"/>${symbolBox}${windows.map((w) => `<path d="${w.d}" fill="#000"/>`).join("")}</mask>`;
+        body += `<path d="${p.d}" fill="${col.frame}" mask="url(#${id})"/>`;
+      });
+      svg += (defs ? `<defs>${defs}</defs>` : "") + body;
     }
   } else {
     const card = layout.preset === "vertical" || layout.preset === "horizontal";
