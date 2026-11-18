@@ -1,6 +1,7 @@
 import { relations, sql } from "drizzle-orm";
 import { boolean, date, index, integer, jsonb, pgEnum, pgTable, primaryKey, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
-import type { Layout as LayoutDesign, QrContent, QrStyle } from "@heyqr/qr-core";
+import type { QrContent } from "@heyqr/qr-core";
+import type { LayoutRecordDesign } from "../../entities/qr/model/design-schema";
 
 const timestamps = {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -99,13 +100,6 @@ export const qrCode = pgTable(
   (t) => [index("qr_code_user_idx").on(t.userId, t.updatedAt)],
 );
 
-export type LayoutRecordDesign = {
-  layout: LayoutDesign;
-  /** Editor-only state that is not part of the rendered file (e.g. selected group). */
-  editor?: Record<string, unknown>;
-  logo?: QrStyle["logo"];
-};
-
 /** A named design of a QR code (Business card, Poster…). One QR has many layouts. */
 export const qrLayout = pgTable(
   "qr_layout",
@@ -115,6 +109,7 @@ export const qrLayout = pgTable(
       .notNull()
       .references(() => qrCode.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
+    /** Versioned design record (schemaVersion, layout, editor settings); read it through readLayoutRecord. */
     design: jsonb("design").$type<LayoutRecordDesign>().notNull(),
     sortOrder: integer("sort_order").notNull().default(0),
     ...timestamps,
