@@ -615,5 +615,12 @@
     "close": "Close",
     "loading": "Loading…",
     "required": "Required"
+  },
+  "loading": {
+    "page": "Loading",
+    "details": "Loading the QR code",
+    "billing": "Loading your plan and purchases",
+    "export": "Loading your file",
+    "editor": "Loading the editor"
   }
 }

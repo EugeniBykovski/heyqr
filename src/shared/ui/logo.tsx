@@ -2,10 +2,11 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/shared/lib/utils";
 
 /*
- * Hey QR identity 4.0.
+ * Hey QR identity 5.0.
  * Mark: a QR finder drawn as one hairline squircle ring (radius 8.3, speech-tail corner radius 2) with a violet core,
  * on a 32-unit grid. Ring stroke 2.6 units; 3.2 below 20 px; 3.6 (core radius 3) at 16 px.
- * Wordmark: "Hey" in DM Sans 600 with tight tracking; "QR" at 58 % size, tracking +8 %, in an outlined tag.
+ * Wordmark: "Hey" in DM Sans 600 with tight tracking; "QR" is the reply, a solid violet bubble cut from the mark's squircle:
+ * height 0.95 × "Hey", gap 0.2 ×, corners 32 % of its height with a 9 % bottom-left tail, "QR" 700 at 52 %, tracking +5 %.
  * Clear space = core width on all sides. Below 14 px use the mark alone.
  */
 
@@ -72,12 +73,12 @@ const lockup = cva("inline-flex shrink-0 items-center", {
   defaultVariants: { size: "md" },
 });
 
-const word = cva("inline-flex items-center leading-none font-semibold whitespace-nowrap", {
+const word = cva("inline-flex items-center gap-[0.2em] leading-none font-semibold whitespace-nowrap", {
   variants: {
     size: {
-      sm: "gap-1 text-[0.875rem] tracking-[-0.03em]",
-      md: "gap-1.5 text-[1.1875rem] tracking-[-0.035em]",
-      lg: "gap-2.5 text-[2.75rem] tracking-[-0.04em]",
+      sm: "text-[0.875rem] tracking-[-0.03em]",
+      md: "text-[1.1875rem] tracking-[-0.035em]",
+      lg: "text-[2.75rem] tracking-[-0.04em]",
     },
     tone: {
       default: "text-logo-word",
@@ -87,20 +88,19 @@ const word = cva("inline-flex items-center leading-none font-semibold whitespace
   defaultVariants: { size: "md", tone: "default" },
 });
 
-const tag = cva("inline-flex items-center leading-none font-semibold", {
-  variants: {
-    size: {
-      sm: "h-3.5 rounded-xs border-[1.2px] px-0.75 text-[0.53125rem] tracking-[0.06em]",
-      md: "h-4.5 rounded-[0.375rem] border-[1.5px] px-1.25 text-[0.6875rem] tracking-[0.08em]",
-      lg: "h-9 rounded-[0.6875rem] border-[2.5px] px-2.25 text-[1.5rem] tracking-[0.07em]",
+/** The QR bubble, sized in em of its own 52 % font size so one rule draws it at every lockup size. */
+const tag = cva(
+  "relative -top-[0.04em] inline-flex h-[1.82em] min-w-[2.1em] items-center justify-center rounded-[0.58em_0.58em_0.58em_0.16em] px-[0.46em] text-[0.52em] leading-none font-bold tracking-[0.05em] text-logo-tag-text",
+  {
+    variants: {
+      tone: {
+        default: "bg-logo-tag",
+        inverse: "bg-logo-inverse-tag",
+      },
     },
-    tone: {
-      default: "border-logo-core text-logo-tag-text",
-      inverse: "border-logo-inverse-tag-border text-logo-inverse-tag-text",
-    },
+    defaultVariants: { tone: "default" },
   },
-  defaultVariants: { size: "md", tone: "default" },
-});
+);
 
 const markSize = { sm: 18, md: 28, lg: 56 } as const;
 
@@ -112,7 +112,7 @@ export type LogoProps = VariantProps<typeof lockup> & {
   className?: string;
 };
 
-/** Full lockup: mark + "Hey" + outlined "QR" tag. Exposed to assistive tech as one image named "Hey QR". */
+/** Full lockup: mark + "Hey" + the violet "QR" bubble. Exposed to assistive tech as one image named "Hey QR". */
 export function Logo({ size, tone = "default", label = "Hey QR", className }: LogoProps) {
   const s = size ?? "md";
   return (
@@ -120,7 +120,7 @@ export function Logo({ size, tone = "default", label = "Hey QR", className }: Lo
       <LogoMark size={markSize[s]} tone={tone} />
       <span aria-hidden className={word({ size: s, tone })}>
         Hey
-        <span className={tag({ size: s, tone })}>QR</span>
+        <span className={tag({ tone })}>QR</span>
       </span>
     </span>
   );

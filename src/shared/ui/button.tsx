@@ -21,7 +21,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary: [
-          "border-transparent bg-primary bg-linear-to-b from-white/18 to-transparent to-58% text-primary-foreground shadow-primary",
+          "border-transparent bg-primary text-primary-foreground shadow-primary",
           "hover:bg-primary-hover not-disabled:hover:animate-pulse-primary",
           "active:bg-primary-pressed",
         ],
@@ -33,6 +33,10 @@ const buttonVariants = cva(
         link: "border-transparent bg-transparent text-foreground underline underline-offset-3",
         danger:
           "border-border bg-surface text-danger shadow-control hover:border-border-hover hover:bg-subtle not-disabled:hover:animate-pulse-neutral",
+        /** Destructive confirm: solid red (design btn--danger-solid). */
+        "danger-solid": "border-transparent bg-danger text-inverse-foreground shadow-danger hover:bg-danger-hover",
+        /** Quiet destructive icon action on cards (design btn--ghost btn--danger). */
+        "ghost-danger": "border-transparent bg-transparent text-danger hover:bg-danger-soft",
       },
       size: {
         sm: "min-h-control-sm px-3.5 text-[0.875rem]",

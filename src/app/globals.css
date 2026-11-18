@@ -116,7 +116,9 @@
   --shadow-3: 0 2px 6px rgb(13 13 18 / 0.06), 0 32px 72px -20px rgb(13 13 18 / 0.36);
   --shadow-control: 0 1px 1px rgb(13 13 18 / 0.04);
   --shadow-segment: 0 1px 2px rgb(13 13 18 / 0.08), 0 0 0 1px rgb(13 13 18 / 0.06);
-  --shadow-primary: 0 1px 2px rgb(59 34 184 / 0.28), 0 6px 16px -8px rgb(91 59 255 / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.22);
+  /* Flat primary (design 5.0): no top highlight; depth only from the soft violet shadow below. */
+  --shadow-danger: 0 1px 2px rgb(194 38 30 / 0.24);
+  --shadow-primary: 0 1px 2px rgb(59 34 184 / 0.22), 0 6px 16px -8px rgb(91 59 255 / 0.55);
 
   /* Motion. */
   --ease-out: cubic-bezier(0.2, 0, 0, 1);
@@ -277,6 +279,8 @@
   --color-status-warning-bg: var(--color-amber-50);
   --color-status-danger-fg: var(--color-red-700);
   --color-status-danger-bg: var(--color-red-50);
+  /* Destructive confirm (My QR codes delete): pressed/hover shade and its soft red shadow. */
+  --color-status-danger-hover: #a61f18;
   --color-status-info-fg: var(--color-blue-700);
   --color-status-info-bg: var(--color-blue-50);
   --skeleton-base: var(--color-ink-150);
@@ -344,6 +348,7 @@
   --warning-soft: var(--color-status-warning-bg);
   --danger: var(--color-status-danger-fg);
   --danger-soft: var(--color-status-danger-bg);
+  --danger-hover: var(--color-status-danger-hover);
   --info: var(--color-status-info-fg);
   --info-soft: var(--color-status-info-bg);
   --overlay: rgb(13 13 18 / 0.42);
@@ -364,10 +369,10 @@
   --logo-mark-fg: var(--color-white);
   --logo-mark-dot: var(--color-violet-500);
   --logo-word: var(--color-ink-950);
-  --logo-tag-text: var(--color-violet-700);
-  /* Off-ramp value taken as-is from the Brand board's inverse lockup. */
-  --logo-inverse-tag-border: #8b74ff;
-  --logo-inverse-tag-text: var(--color-violet-200);
+  /* Wordmark 5.0: the "QR" reply bubble (violet 600 on paper, violet 500 on ink). */
+  --logo-tag-bg: var(--color-violet-600);
+  --logo-tag-text: var(--color-white);
+  --logo-inverse-tag-bg: var(--color-violet-500);
   --google-btn-bg: #ffffff;
   --google-btn-border: #747775;
   --google-btn-fg: #1f1f1f;
@@ -423,6 +428,7 @@
   --color-warning-soft: var(--warning-soft);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
+  --color-danger-hover: var(--danger-hover);
   --color-info: var(--info);
   --color-info-soft: var(--info-soft);
   --color-overlay: var(--overlay);
@@ -432,9 +438,9 @@
   --color-logo-ring: var(--logo-mark-bg);
   --color-logo-core: var(--logo-mark-dot);
   --color-logo-word: var(--logo-word);
+  --color-logo-tag: var(--logo-tag-bg);
   --color-logo-tag-text: var(--logo-tag-text);
-  --color-logo-inverse-tag-border: var(--logo-inverse-tag-border);
-  --color-logo-inverse-tag-text: var(--logo-inverse-tag-text);
+  --color-logo-inverse-tag: var(--logo-inverse-tag-bg);
 }
 
 @layer base {

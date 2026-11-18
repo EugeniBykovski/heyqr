@@ -51,7 +51,7 @@ export async function SiteHeader() {
           <NavLink href="/pricing">{t("pricing")}</NavLink>
           {user ? <NavLink href="/dashboard">{t("myCodes")}</NavLink> : null}
         </nav>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-3 sm:gap-4 lg:gap-5">
           <LanguageSwitch />
           {user ? (
             <DropdownMenu>
