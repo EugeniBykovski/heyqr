@@ -1,0 +1,41 @@
+name: Production database
+
+# Applies committed migrations to the HeyQR production database. Manual only: type "production" to confirm.
+# Uses the GitHub "production" environment, so its protection rules (required reviewers) apply. Never seeds.
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "production" to migrate the production database'
+        required: true
+
+concurrency:
+  group: production-database
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    if: inputs.confirm == 'production'
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      APP_ENV: production
+      CONFIRM_PRODUCTION_MIGRATION: "1"
+      DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+      DATABASE_URL_UNPOOLED: ${{ secrets.PRODUCTION_DATABASE_URL_UNPOOLED }}
+    steps:
+      - name: Check the production database is configured
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "::error::PRODUCTION_DATABASE_URL is not set in the GitHub 'production' environment. See docs/ENVIRONMENTS.md."
+            exit 1
+          fi
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm db:migrate
+      - run: pnpm db:verify

@@ -35,7 +35,7 @@ pnpm db:verify                    # connectivity, tables and migrations
 pnpm dev                          # http://localhost:3000
 ```
 
-Database targets (local, test, preview, production), migrations, seeding and the preview database: [docs/DATABASE.md](docs/DATABASE.md).
+Environments (dev and production), variables and Vercel scopes: [docs/ENVIRONMENTS.md](docs/ENVIRONMENTS.md). Database targets, migrations and seeding: [docs/DATABASE.md](docs/DATABASE.md).
 
 Stripe webhooks locally: `pnpm stripe:listen` (Stripe CLI) and copy the `whsec_…` into `.env.local`.
 Email templates: `pnpm email:dev` (http://localhost:3001).

@@ -1,12 +1,13 @@
 /**
- * Demo data for local, test and preview databases: one user with a purchased static code and a dynamic code with scans.
+ * Demo data for the dev and test databases: one user with a purchased static code and a dynamic code with scans.
  * Run with `pnpm db:seed` after `pnpm db:migrate`. Safe to rerun; refuses the production database.
  */
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { SEED_USER, seedFixtures } from "./fixtures";
 import * as schema from "./schema";
-import { assertAllowed, DatabaseConfigError, describeDatabaseUrl, resolveDbTarget, runtimeUrl } from "./target";
+import { assertAllowed, describeDatabaseUrl, resolveDbTarget, runtimeUrl } from "./target";
+import { EnvConfigError } from "../../shared/config/app-env";
 
 async function main() {
   const target = resolveDbTarget();
@@ -23,6 +24,6 @@ async function main() {
 }
 
 main().catch((error: unknown) => {
-  console.error(error instanceof DatabaseConfigError ? error.message : error);
+  console.error(error instanceof EnvConfigError ? error.message : error);
   process.exitCode = 1;
 });

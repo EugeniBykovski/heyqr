@@ -25,7 +25,7 @@ export function pngWidth(layout: Layout, width: number, opts: { dpi?: number; sc
  */
 async function embed(href: string | undefined): Promise<string | undefined> {
   if (!href || href.startsWith("data:")) return href;
-  if (!href.startsWith(env.S3_PUBLIC_URL)) return undefined;
+  if (!env.S3_PUBLIC_URL || !href.startsWith(env.S3_PUBLIC_URL)) return undefined;
   const res = await fetch(href);
   if (!res.ok) return undefined;
   const type = res.headers.get("content-type") ?? "image/png";

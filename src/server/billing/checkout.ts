@@ -1,6 +1,7 @@
 import "server-only";
 import { and, eq } from "drizzle-orm";
 import { env } from "@/env";
+import { paymentsConfig } from "@/server/config";
 import { db, schema } from "../db";
 import { newId } from "../db/ids";
 import { stripe } from "./stripe";
@@ -41,7 +42,7 @@ export async function createCheckout({ user, qrCodeId, layoutId, format, locale 
     const session = await stripe().checkout.sessions.create({
       mode: "subscription",
       customer,
-      line_items: [{ price: env.STRIPE_PRICE_DYNAMIC_MONTHLY, quantity: 1 }],
+      line_items: [{ price: paymentsConfig().STRIPE_PRICE_DYNAMIC_MONTHLY, quantity: 1 }],
       success_url: `${back}&checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${back}&checkout=cancelled`,
       metadata,
@@ -56,7 +57,7 @@ export async function createCheckout({ user, qrCodeId, layoutId, format, locale 
   const session = await stripe().checkout.sessions.create({
     mode: "payment",
     customer,
-    line_items: [{ price: env.STRIPE_PRICE_STATIC, quantity: 1 }],
+    line_items: [{ price: paymentsConfig().STRIPE_PRICE_STATIC, quantity: 1 }],
     success_url: `${back}&checkout=success&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${back}&checkout=cancelled`,
     metadata,
