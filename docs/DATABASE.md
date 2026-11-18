@@ -76,6 +76,23 @@ database; hosted dev and production only ever receive committed migrations.
 `pnpm db:migrate` applies only the migrations the database hasn't recorded (`drizzle.__drizzle_migrations`), so it is
 safe to rerun. It holds a Postgres advisory lock, so concurrent runs against the same database wait for each other.
 
+## Design JSON versions
+
+QR designs are stored as versioned JSON. The contract and its only readers live in `src/entities/qr/model/design-schema.ts`.
+
+| Where                              | Shape (schemaVersion 1)                                                 | Reader             |
+| ---------------------------------- | ----------------------------------------------------------------------- | ------------------ |
+| `qr_layout.design` (saved variant) | `{ schemaVersion, layout, editor? }`: rendered layout + editor settings | `readLayoutRecord` |
+| Browser `localStorage` guest draft | `{ schemaVersion, name, model, content, ...design settings }`           | `readDraftDesign`  |
+
+- `schemaVersion` versions the JSON shape. The `:v1` in the browser key `heyqr:draft:v1` only names the storage slot.
+- Records without `schemaVersion` were written before versioning. They are read as their known shape (`{ layout }`, or
+  a plain editor draft) and become version 1 the next time they are saved. No database migration is needed.
+- Malformed records and records from a newer `schemaVersion` are never shown with a guessed design. A saved variant is
+  left out of the page and logged by id. A guest draft is kept as-is (plus a copy under `heyqr:draft:unreadable`),
+  the editor starts fresh with a notice, and nothing is autosaved until the user edits.
+- When the shape changes: bump `DESIGN_SCHEMA_VERSION`, keep reading the previous version, and add a test for it.
+
 ## Seeding
 
 `pnpm db:seed` loads synthetic fixtures (`src/server/db/fixtures.ts`): one user and two QR codes with fixed `seed-` ids,

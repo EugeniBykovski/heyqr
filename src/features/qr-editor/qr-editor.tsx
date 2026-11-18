@@ -7,7 +7,7 @@ import { Tabs as TabsPrimitive } from "radix-ui";
 import { useEffect, useEffectEvent, useMemo, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { env } from "@/env";
-import { designToLayout, isContentComplete, QrPreview, type EditorDesign } from "@/entities/qr";
+import { designSettingsOf, designToLayout, isContentComplete, QrPreview, type EditorDesign } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
 import { saveDraft } from "@/server/actions/qr";
 import { pricing } from "@/shared/config/pricing";
@@ -35,7 +35,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
   const tErrors = useTranslations("errors");
   const format = useFormatter();
   const router = useRouter();
-  const { design, setDesign, restored } = useDraft();
+  const { design, setDesign, restored, unreadable } = useDraft();
   const [step, setStep] = useState<Step>("content");
   const [saving, startSaving] = useTransition();
   const autoResumed = useRef(false);
@@ -44,7 +44,9 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
   useEffect(() => {
     // Fixed id: shown once even when the effect runs twice (React Strict Mode in development).
     if (restored && !resume) toast(t("draftRestored"), { id: "draft-restored" });
-  }, [restored, resume, t]);
+    // A malformed draft or one from a newer version is kept aside, not overwritten; the editor starts fresh.
+    if (unreadable) toast(t("draftUnreadable"), { id: "draft-unreadable" });
+  }, [restored, unreadable, resume, t]);
 
   const complete = isContentComplete(design.content);
   const value = useMemo(() => {
@@ -67,7 +69,13 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
       }
       const name = design.name.trim() || t("namePlaceholder");
       const destination = design.model === "dynamic" && design.content.type === "website" ? encodePayload(design.content) : undefined;
-      const result = await saveDraft({ name, model: design.model, content: design.content, destination, layouts: [{ name, layout }] });
+      const result = await saveDraft({
+        name,
+        model: design.model,
+        content: design.content,
+        destination,
+        layouts: [{ name, layout, editor: designSettingsOf(design) }],
+      });
       if (!result.ok) {
         toast.error(tErrors(result.error === "unauthorized" || result.error === "invalid" ? result.error : "generic"));
         return;

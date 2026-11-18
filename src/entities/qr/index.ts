@@ -16,3 +16,15 @@ export {
 export { CONTENT_FIELDS, emptyContent, isContentComplete, type ContentField } from "./model/content";
 export { QrPreview } from "./ui/qr-preview";
 export { QR_EXAMPLES, type QrExample } from "./model/examples";
+export {
+  createLayoutRecord,
+  DESIGN_SCHEMA_VERSION,
+  designSettingsOf,
+  designSettingsSchema,
+  readDraftDesign,
+  readLayoutRecord,
+  serializeDraftDesign,
+  type DesignSettings,
+  type LayoutRecordDesign,
+  type ReadResult,
+} from "./model/design-schema";

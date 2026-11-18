@@ -1,10 +1,18 @@
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
-import { DEFAULT_DESIGN, designToLayout } from "../../entities/qr/model/design";
+import { DEFAULT_DESIGN, designToLayout, type EditorDesign } from "../../entities/qr/model/design";
+import { createLayoutRecord, designSettingsOf } from "../../entities/qr/model/design-schema";
 import * as schema from "./schema";
 
 /** Synthetic demo data. Every row has a fixed `seed-` id, so reruns insert nothing new and never touch other rows. */
 export const SEED_USER = { id: "seed-user", name: "Ana Reyes", email: "ana@example.com" } as const;
 export const SEED_SCAN_DAYS = 14;
+
+/** Fixture variants use the same versioned design record as saved codes. */
+function versioned(design: EditorDesign) {
+  const record = createLayoutRecord(designToLayout(design), designSettingsOf(design));
+  if (!record) throw new Error("Fixture design does not match the design schema.");
+  return record;
+}
 
 export async function seedFixtures(db: NodePgDatabase<typeof schema>) {
   await db.transaction(async (tx) => {
@@ -48,22 +56,20 @@ export async function seedFixtures(db: NodePgDatabase<typeof schema>) {
           id: "seed-static-l1",
           qrCodeId: "seed-static",
           name: "Portfolio card",
-          design: {
-            layout: designToLayout({
-              ...DEFAULT_DESIGN,
-              pattern: "dot",
-              fg: "#24137A",
-              preset: "frame",
-              frameStyle: "bar",
-              caption: "View portfolio",
-            }),
-          },
+          design: versioned({
+            ...DEFAULT_DESIGN,
+            pattern: "dot",
+            fg: "#24137A",
+            preset: "frame",
+            frameStyle: "bar",
+            caption: "View portfolio",
+          }),
         },
         {
           id: "seed-dynamic-l1",
           qrCodeId: "seed-dynamic",
           name: "Table tent",
-          design: { layout: designToLayout({ ...DEFAULT_DESIGN, fg: "#1D4743" }) },
+          design: versioned({ ...DEFAULT_DESIGN, fg: "#1D4743" }),
         },
       ])
       .onConflictDoNothing();
