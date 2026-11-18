@@ -3,9 +3,11 @@
  * Runs when TEST_DATABASE_URL points at a database whose name ends in "_test" (CI, `pnpm test:db`); skipped otherwise.
  * The test drops and recreates that database's schema, so it never runs against anything else.
  */
+import { eq, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { DEFAULT_DESIGN, designToLayout } from "../../entities/qr/model/design";
 import { checkDatabase, EXPECTED_MIGRATIONS, REQUIRED_TABLES } from "./check";
 import { SEED_SCAN_DAYS, seedFixtures } from "./fixtures";
 import { runMigrations } from "./migrator";
@@ -95,5 +97,103 @@ describe.skipIf(!url)("database (real PostgreSQL)", () => {
     });
     expect((await pool.query(`select name from qr_code where id = 'seed-static'`)).rows[0].name).toBe("Renamed by the user");
     expect((await pool.query(`select name from "user" where id = 'real-user'`)).rows[0].name).toBe("Someone Else");
+  });
+});
+
+/*
+ * QR codes and their design variants (HEY-11). Runs after the block above has migrated the test database.
+ * A code holds what it encodes and who owns it; each qr_layout row is one named design variant of it.
+ */
+describe.skipIf(!url)("QR codes and design variants (real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "hey11-owner", name: "Owner", email: "owner@hey11.test" };
+  const other = { id: "hey11-other", name: "Other", email: "other@hey11.test" };
+  const card = designToLayout({
+    ...DEFAULT_DESIGN,
+    fg: "#1F5C45",
+    bg: "#EEF6F0",
+    pattern: "dot",
+    preset: "caption",
+    caption: "Scan to join",
+  });
+  const poster = designToLayout({ ...DEFAULT_DESIGN, fg: "#8C2F4B", preset: "frame", frameStyle: "bubble", caption: "See the menu" });
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 2 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("round-trips a code with its payload and ordered design variants", async () => {
+    await db.transaction(async (tx) => {
+      await tx.insert(schema.qrCode).values({
+        id: "hey11-code",
+        userId: owner.id,
+        name: "Café Wi-Fi",
+        content: { type: "wifi", ssid: "Little Fern Guest", security: "WPA", password: "fern-latte-7" },
+      });
+      await tx.insert(schema.qrLayout).values([
+        { id: "hey11-poster", qrCodeId: "hey11-code", name: "Poster", design: { layout: poster }, sortOrder: 1 },
+        { id: "hey11-card", qrCodeId: "hey11-code", name: "Table tent", design: { layout: card }, sortOrder: 0 },
+      ]);
+    });
+
+    const loaded = await db.query.qrCode.findFirst({
+      where: (q, { and, eq }) => and(eq(q.id, "hey11-code"), eq(q.userId, owner.id)),
+      with: { layouts: { orderBy: (l, { asc }) => asc(l.sortOrder) } },
+    });
+    expect(loaded).toMatchObject({ name: "Café Wi-Fi", model: "static", status: "draft", shortCode: null, purchasedAt: null });
+    expect(loaded?.content).toEqual({ type: "wifi", ssid: "Little Fern Guest", security: "WPA", password: "fern-latte-7" });
+    expect(loaded?.layouts.map((l) => l.name)).toEqual(["Table tent", "Poster"]);
+    // The jsonb design comes back exactly as saved, so a variant renders the same after a reload.
+    expect(loaded?.layouts[0]?.design.layout).toEqual(card);
+    expect(loaded?.layouts[1]?.design.layout).toEqual(poster);
+  });
+
+  it("keeps a code private to its owner", async () => {
+    const asOther = await db.query.qrCode.findFirst({
+      where: (q, { and, eq }) => and(eq(q.id, "hey11-code"), eq(q.userId, other.id)),
+    });
+    expect(asOther).toBeUndefined();
+  });
+
+  it("rejects a variant for a code that does not exist", async () => {
+    await expect(
+      db.insert(schema.qrLayout).values({ id: "hey11-orphan", qrCodeId: "no-such-code", name: "Orphan", design: { layout: card } }),
+    ).rejects.toMatchObject({ cause: { code: "23503", constraint: "qr_layout_qr_code_id_qr_code_id_fk" } });
+  });
+
+  it("requires every variant to name its code", async () => {
+    await expect(
+      pool.query(`insert into qr_layout (id, name, design) values ('hey11-null', 'No code', '{}'::jsonb)`),
+    ).rejects.toMatchObject({
+      code: "23502",
+      column: "qr_code_id",
+    });
+  });
+
+  it("deletes a code's variants and their export cache with the code, and a user's codes with the user", async () => {
+    await db.insert(schema.exportFile).values({
+      id: "hey11-file",
+      layoutId: "hey11-card",
+      format: "png",
+      pixelWidth: 1024,
+      contentHash: "abc",
+      storageKey: "exports/hey11.png",
+    });
+    await db.delete(schema.qrCode).where(eq(schema.qrCode.id, "hey11-code"));
+    expect(await db.query.qrLayout.findMany({ where: (l, { eq }) => eq(l.qrCodeId, "hey11-code") })).toEqual([]);
+    expect(await db.query.exportFile.findFirst({ where: (f, { eq }) => eq(f.id, "hey11-file") })).toBeUndefined();
+
+    await db.insert(schema.qrCode).values({ id: "hey11-second", userId: other.id, name: "Second", content: { type: "text", text: "hi" } });
+    await db.insert(schema.qrLayout).values({ id: "hey11-second-l", qrCodeId: "hey11-second", name: "Main", design: { layout: card } });
+    await db.delete(schema.user).where(eq(schema.user.id, other.id));
+    expect(await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, "hey11-second") })).toBeUndefined();
+    expect(await db.query.qrLayout.findFirst({ where: (l, { eq }) => eq(l.id, "hey11-second-l") })).toBeUndefined();
   });
 });
