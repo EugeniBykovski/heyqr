@@ -35,6 +35,13 @@ export async function decodeSvg(svg: string, width = 720): Promise<string | null
   return results[0]?.text ?? null;
 }
 
+/** Decodes an encoded image file (e.g. the exported PNG) exactly as stored. Returns the decoded text or null. */
+export async function decodeImage(file: Uint8Array, type = "image/png"): Promise<string | null> {
+  await ensureZXing();
+  const results = await readBarcodes(new Blob([file as Uint8Array<ArrayBuffer>], { type }), { formats: ["QRCode"], tryHarder: true });
+  return results[0]?.text ?? null;
+}
+
 /** Decodes at several sizes (small sticker to poster); passes only if every size returns the expected value. */
 export async function verifyScan(svg: string, expected: string, widths: number[] = [300, 600, 1200]): Promise<boolean> {
   for (const w of widths) {
