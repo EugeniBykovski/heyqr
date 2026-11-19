@@ -141,7 +141,8 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
     }
     startSaving(async () => {
       if (!signedIn) {
-        router.push(`/sign-in?next=${encodeURIComponent("/create?resume=1")}`);
+        // Design 3.1: a guest first sees the export screen (layout, file, price), then continues with Google.
+        router.push("/create/export");
         return;
       }
       const name = design.name.trim() || t("namePlaceholder");
@@ -160,7 +161,16 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
         return;
       }
       clearDraft();
-      router.push(`/create/export?qr=${result.data.qrCodeId}&layout=${result.data.layoutIds[0]}`);
+      // Back from sign-in (3.3): the export screen opens with the format, size and transparency chosen as a guest.
+      const next = new URLSearchParams({ qr: result.data.qrCodeId, layout: result.data.layoutIds[0] ?? "" });
+      if (resume) {
+        next.set("signedIn", "1");
+        for (const k of ["format", "res", "transparent"]) {
+          const v = params.get(k);
+          if (v) next.set(k, v);
+        }
+      }
+      router.push(`/create/export?${next.toString()}`);
     });
   };
 

@@ -47,6 +47,28 @@ export function withEmbeddedFonts(svg: string, faces: { family: string; weight: 
 }
 
 /** What the printed code contains: the payload for static codes, the permanent short link for dynamic ones. */
+/**
+ * The download's file name (Content-Disposition). Header values must be Latin-1, so the name is sent twice (RFC 6266):
+ * an ASCII `filename` fallback and the real name as UTF-8 in `filename*`. A Cyrillic name used to throw here.
+ */
+export function downloadFileName(name: string, ext: string): { name: string; header: string } {
+  const slug =
+    name
+      .normalize("NFC")
+      .replace(/[^\p{L}\p{N}\- ]+/gu, "")
+      .trim()
+      .replace(/\s+/g, "-")
+      .toLowerCase() || "qr-code";
+  const ascii =
+    slug
+      .normalize("NFKD")
+      .replace(/[^\x20-\x7e]/g, "")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "") || "qr-code";
+  const file = `${slug}.${ext}`;
+  return { name: file, header: `attachment; filename="${ascii}.${ext}"; filename*=UTF-8''${encodeURIComponent(file)}` };
+}
+
 export function encodedValue(qr: { model: "static" | "dynamic"; content: QrContent; shortCode: string | null }) {
   if (qr.model === "dynamic" && qr.shortCode) return `${env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "")}/${qr.shortCode}`;
   return encodePayload(qr.content);

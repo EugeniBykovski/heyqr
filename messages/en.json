@@ -866,14 +866,73 @@
     "subscribe": "Subscribe for {price} / month",
     "download": "Download {format}",
     "paid": "Payment received. Your files are ready.",
-    "pending": "Confirming your payment…",
-    "cancelled": "Payment was cancelled. Nothing was charged.",
+    "pending": "Confirming your payment… This usually takes a few seconds. Your settings are locked so the file matches the receipt.",
+    "cancelled": "<b>Checkout cancelled.</b> You weren’t charged. Your design and format are saved, so you can pay whenever you’re ready.",
     "secure": "Payments are processed by Stripe.",
     "resolution": "Resolution",
     "scale": "{scale}×",
     "dpi": "{dpi} dpi",
     "pixels": "{width} × {height} px",
-    "limit": "larger sizes exceed {max} px"
+    "limit": "larger sizes exceed {max} px",
+    "titleBuy": "Buy and download",
+    "titleGuest": "Ready to download",
+    "subGuest": "Check the layout and file, then sign in with Google to pay and download. Your design stays as it is.",
+    "subPay": "Pay once to download this code in every format, as often as you need.",
+    "subEntitled": "This code is yours. Download any format, as often as you need.",
+    "stageLabel": "Layout to download",
+    "layouts": "Layouts of this code",
+    "backToDesign": "Back to design",
+    "model": {
+      "static": "Static",
+      "dynamic": "Dynamic"
+    },
+    "dims": {
+      "layout": "Layout",
+      "file": "File"
+    },
+    "scanOk": "Scan verified",
+    "scanFail": "May not scan",
+    "transparent": "Transparent background",
+    "quality": "<b>No quality loss.</b> SVG is pure vector: modules, icons and text scale to any size. PNG renders from the same vector.",
+    "returned": "Signed in with Google. Your layout and <b>{format}</b> are just as you left them.",
+    "confirming": "Confirming your payment…",
+    "preparing": "Preparing your {format}…",
+    "ready": "Your {format} is ready.",
+    "downloaded": "<b>Downloaded {name}.</b> It’s also in My QR codes, ready to download again.",
+    "downloadAgain": "Download again",
+    "tryAgain": "Try again",
+    "errors": {
+      "failed": "<b>We couldn’t prepare your {format}.</b> Your payment and settings are safe. Try again in a moment.",
+      "scan": "<b>This layout may not scan.</b> Open the design to fix it; files are only made for codes that pass the scan check.",
+      "size": "<b>That size is too large for one file.</b> Choose a smaller PNG size or SVG.",
+      "payment": "<b>This code isn’t unlocked yet.</b> Nothing was charged. Refresh in a moment, or pay to download."
+    },
+    "checkoutFailed": "We couldn’t open checkout. Nothing was charged; try again.",
+    "continueGoogle": "Continue with Google",
+    "guestNote": "Free to design. You pay only when you download.",
+    "receipt": {
+      "title": "Receipt",
+      "paid": "Paid",
+      "tax": "Tax included as calculated by Stripe."
+    },
+    "lines": {
+      "single": "Single QR",
+      "dynamic": "Dynamic QR"
+    },
+    "perMonth": "{price}/month",
+    "summary": {
+      "title": "Order summary",
+      "code": "QR code",
+      "type": "Type",
+      "layout": "Layout",
+      "file": "File",
+      "total": "Total",
+      "tax": "Tax, if any, is calculated at checkout.",
+      "included": "Included"
+    },
+    "emptyTitle": "Nothing to download yet",
+    "emptyText": "Design a QR code first. Your draft stays in this browser until you download it.",
+    "emptyAction": "Create a QR code"
   },
   "dashboard": {
     "title": "My QR codes",

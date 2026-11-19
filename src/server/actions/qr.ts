@@ -134,10 +134,21 @@ export async function startCheckout(input: {
   layoutId: string;
   format: "png" | "svg" | "pdf";
   locale: string;
+  resolution?: number;
+  transparent?: boolean;
 }): Promise<ActionResult<{ url: string }>> {
   return guard(async () => {
     const user = await requireUser();
-    const url = await createCheckout({ user, ...input });
+    const resolution = z.number().int().min(1).max(1200).optional().safeParse(input.resolution);
+    const url = await createCheckout({
+      user,
+      qrCodeId: input.qrCodeId,
+      layoutId: input.layoutId,
+      format: input.format,
+      locale: input.locale,
+      resolution: resolution.success ? resolution.data : undefined,
+      transparent: input.transparent === true,
+    });
     return { ok: true, data: { url } };
   });
 }

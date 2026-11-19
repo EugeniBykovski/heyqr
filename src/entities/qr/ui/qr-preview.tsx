@@ -14,6 +14,7 @@ export function QrPreview({
   label,
   tooLongLabel,
   className,
+  transparent = false,
 }: {
   layout: Layout;
   value: string;
@@ -21,6 +22,8 @@ export function QrPreview({
   /** Accessible name when the content doesn't fit; defaults to `label`. */
   tooLongLabel?: string;
   className?: string;
+  /** Draw without the background (design "Transparent background"), as the transparent export does. */
+  transparent?: boolean;
 }) {
   if (!layoutCapacity(layout, value).ok)
     return (
@@ -37,7 +40,7 @@ export function QrPreview({
         <TextCursorInputIcon aria-hidden className="size-1/4 max-h-12 max-w-12" strokeWidth={1.6} />
       </div>
     );
-  const { svg, scan } = composeLayout(layout, value);
+  const { svg, scan } = composeLayout(layout, value, { transparent });
   const sized = svg.replace(/\swidth="[^"]*"\s+height="[^"]*"/, ' width="100%" height="100%"');
   return (
     <div

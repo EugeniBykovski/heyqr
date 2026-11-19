@@ -32,35 +32,35 @@ verification script result (named here).
 
 ## 2 · Branded, end to end
 
-| Frame                              | Route                                       | 390 | 834 | 1440 | Notes                                                                                                   |
-| ---------------------------------- | ------------------------------------------- | --- | --- | ---- | ------------------------------------------------------------------------------------------------------- |
-| 2.1 Website · loading              | `/create` first load                        | ✅  | ✅  | ✅   | Heading and stepper at once; type cards hold their exact size (HEY-41 skeletons)                        |
-| 2.2 Content · empty                | `/create?step=content`                      | ✅  | ✅  | ✅   | After scanning shows placeholders (final-content-*.png)                                                 |
-| 2.3 Content · domain               | Content with a URL                          | ✅  | ✅  | ✅   | Preview shows the host                                                                                  |
-| 2.4 Choose mode (custom / branded) | —                                           | ❌  | ❌  | ❌   | Branded mode not built                                                                                  |
-| 2.5 Branded · upload               | —                                           | ❌  | ❌  | ❌   | Logo upload exists for the center logo only                                                             |
-| 2.6 Branded · reading              | —                                           | ❌  | ❌  | ❌   | Palette extraction not built                                                                            |
-| 2.7 Branded · three looks          | —                                           | ❌  | ❌  | ❌   |                                                                                                         |
-| 2.8 Branded · brand card           | —                                           | ❌  | ❌  | ❌   | Card layouts (vertical/horizontal) not in the editor model                                              |
-| 2.9 Branded · colors changed       | —                                           | ❌  | ❌  | ❌   |                                                                                                         |
-| 2.10 Export · guest                | `/create?step=design` → Export (signed out) | 🟡  | 🟡  | 🟡   | Export sends guests to Google sign-in; design shows the export screen first with "Continue with Google" |
-| 2.11 Paid PNG                      | `/create/export` after payment              | ⛔  | ⛔  | ⛔   | Needs Stripe (HEY-8 hosted setup)                                                                       |
+| Frame                              | Route                          | 390 | 834 | 1440 | Notes                                                                                           |
+| ---------------------------------- | ------------------------------ | --- | --- | ---- | ----------------------------------------------------------------------------------------------- |
+| 2.1 Website · loading              | `/create` first load           | ✅  | ✅  | ✅   | Heading and stepper at once; type cards hold their exact size (HEY-41 skeletons)                |
+| 2.2 Content · empty                | `/create?step=content`         | ✅  | ✅  | ✅   | After scanning shows placeholders (final-content-*.png)                                         |
+| 2.3 Content · domain               | Content with a URL             | ✅  | ✅  | ✅   | Preview shows the host                                                                          |
+| 2.4 Choose mode (custom / branded) | —                              | ❌  | ❌  | ❌   | Branded mode not built                                                                          |
+| 2.5 Branded · upload               | —                              | ❌  | ❌  | ❌   | Logo upload exists for the center logo only                                                     |
+| 2.6 Branded · reading              | —                              | ❌  | ❌  | ❌   | Palette extraction not built                                                                    |
+| 2.7 Branded · three looks          | —                              | ❌  | ❌  | ❌   |                                                                                                 |
+| 2.8 Branded · brand card           | —                              | ❌  | ❌  | ❌   | Card layouts (vertical/horizontal) not in the editor model                                      |
+| 2.9 Branded · colors changed       | —                              | ❌  | ❌  | ❌   |                                                                                                 |
+| 2.10 Export · guest                | `/create/export` (signed out)  | ✅  | ✅  | ✅   | Same surface from the browser draft; Continue with Google carries format, size and transparency |
+| 2.11 Paid PNG                      | `/create/export` after payment | ⛔  | ⛔  | ⛔   | Needs Stripe (HEY-8 hosted setup)                                                               |
 
 ## 3 · Export & purchase
 
-| Frame                  | Route                               | 390 | 834 | 1440 | Notes                                                                                               |
-| ---------------------- | ----------------------------------- | --- | --- | ---- | --------------------------------------------------------------------------------------------------- |
-| 3.1 Export · guest     | as 2.10                             | 🟡  | 🟡  | 🟡   |                                                                                                     |
-| 3.2 Google sign-in     | `/sign-in?next=…`                   | 🟡  | 🟡  | 🟡   | Google-only sign-in works up to Google; full sign-in pending the owner's manual check               |
-| 3.3 Back from Google   | `/create?resume=1`                  | 🟡  | 🟡  | 🟡   | Resumes and saves automatically; design shows a "Signed in with Google" banner on the export screen |
-| 3.4 Checkout           | Stripe Checkout                     | ⛔  | ⛔  | ⛔   | Stripe not configured locally (optional in dev, HEY-8)                                              |
-| 3.5 Cancelled          | `/create/export?checkout=cancelled` | 🟡  | 🟡  | 🟡   | Banner exists (`export.cancelled`)                                                                  |
-| 3.6 Confirming payment | `?checkout=success` before webhook  | 🟡  | 🟡  | 🟡   | "pending" state exists; ⛔ live webhook                                                             |
-| 3.7 Preparing file     | —                                   | ❌  | ❌  | ❌   | Download is a direct link; no preparing state                                                       |
-| 3.8 File ready         | —                                   | ❌  | ❌  | ❌   |                                                                                                     |
-| 3.9 Downloaded         | —                                   | ❌  | ❌  | ❌   |                                                                                                     |
-| 3.10 Export error      | —                                   | ❌  | ❌  | ❌   | API returns 422/501; no error UI with Try again                                                     |
-| 3.11 Download again    | `/dashboard/qr/[id]`                | 🟡  | 🟡  | 🟡   | Download links exist on details; not aligned                                                        |
+| Frame                  | Route                              | 390 | 834 | 1440 | Notes                                                                                          |
+| ---------------------- | ---------------------------------- | --- | --- | ---- | ---------------------------------------------------------------------------------------------- |
+| 3.1 Export · guest     | `/create/export` (signed out)      | ✅  | ✅  | ✅   | Layout, PNG/SVG, PNG size, transparency, order summary, Continue with Google                   |
+| 3.2 Google sign-in     | `/sign-in?next=…`                  | 🟡  | 🟡  | 🟡   | Google-only sign-in works up to Google; full sign-in pending the owner's manual check          |
+| 3.3 Back from Google   | `/create?resume=1&format=…`        | ✅  | ✅  | ✅   | Saves the draft, opens export with the same settings and the "Signed in with Google" banner    |
+| 3.4 Checkout           | Stripe Checkout                    | ⛔  | ⛔  | ⛔   | Stripe not configured locally (optional in dev, HEY-8)                                         |
+| 3.5 Cancelled          | `?checkout=cancelled`              | ✅  | ✅  | ✅   | "You weren’t charged" banner; settings kept (fixed: return URLs lacked the code id → 404)      |
+| 3.6 Confirming payment | `?checkout=success` before webhook | ✅  | ✅  | ✅   | Controls frozen, preview kept, the page re-checks every 2.5 s; ⛔ live webhook not run locally |
+| 3.7 Preparing file     | Download                           | ✅  | ✅  | ✅   | "Preparing your PNG…" in the preview and the action; settings frozen                           |
+| 3.8 File ready         | after preparing                    | ✅  | ✅  | ✅   | One action: Download PNG (the user’s own click saves the prepared file)                        |
+| 3.9 Downloaded         | after download                     | ✅  | ✅  | ✅   | Real file name from the server (UTF-8 names fixed), Download again                             |
+| 3.10 Export error      | API error                          | ✅  | ✅  | ✅   | Payment and settings safe; Try again repeats the same request                                  |
+| 3.11 Download again    | `/create/export?qr=…&layout=…`     | ✅  | ✅  | ✅   | Layout tabs per named layout; second layout (Poster) as SVG verified and decoded               |
 
 ## 4 · Account
 

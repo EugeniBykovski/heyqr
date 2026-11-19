@@ -2,16 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { layoutCapacity } from "@heyqr/qr-core";
-import { QrPreview } from "@/entities/qr";
+import { ExportSurface, type ExportFormat } from "@/features/checkout";
 import { TooLongNotice } from "@/features/qr-editor";
-import { ExportPanel } from "@/features/checkout";
-import { redirect } from "@/i18n/navigation";
 import { getSession } from "@/server/auth";
 import { canDownload } from "@/server/billing/entitlements";
 import { encodedValue } from "@/server/qr/export";
-import { getQrCode } from "@/server/qr/repository";
+import { getQrCode, paidPurchase } from "@/server/qr/repository";
 import { pricing } from "@/shared/config/pricing";
-import { Card } from "@/shared/ui/card";
+import { GuestExport } from "@/widgets/export-screen";
 import { resolveLocale } from "@/i18n/server";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -19,47 +17,84 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("title"), robots: { index: false } };
 }
 
-export default async function ExportPage({ params, searchParams }: PageProps<"/[locale]/create/export">) {
-  const locale = await resolveLocale(params);
-  const query = await searchParams;
-  const session = await getSession();
-  if (!session) return redirect({ href: "/sign-in?next=/dashboard", locale });
+const one = (v: string | string[] | undefined) => (typeof v === "string" ? v : undefined);
 
-  const qrId = typeof query.qr === "string" ? query.qr : undefined;
-  const layoutId = typeof query.layout === "string" ? query.layout : undefined;
+/** Export settings carried in the URL across sign-in and checkout (design 3.3 / 3.5 / 3.9). */
+function settingsFrom(query: Record<string, string | string[] | undefined>) {
+  const format = one(query.format);
+  const res = Number(one(query.res));
+  return {
+    format: format === "png" || format === "svg" ? (format as ExportFormat) : undefined,
+    resolution: Number.isInteger(res) && res > 0 ? res : undefined,
+    transparent: one(query.transparent) === "1",
+  };
+}
+
+/*
+ * Design 3.x "Export". Guests see the export surface for their browser draft and continue with Google; signed-in users
+ * see it for a saved code and layout. Entitlement, prices and files stay on the server (canDownload, Stripe, /api/export).
+ */
+export default async function ExportPage({ params, searchParams }: PageProps<"/[locale]/create/export">) {
+  await resolveLocale(params);
+  const query = await searchParams;
+  const initial = settingsFrom(query);
+  const session = await getSession();
+  if (!session) return <GuestExport initial={initial} />;
+
+  const qrId = one(query.qr);
+  const layoutId = one(query.layout);
   const qr = qrId ? await getQrCode(session.user.id, qrId) : undefined;
   const layout = qr?.layouts.find((l) => l.id === layoutId) ?? qr?.layouts[0];
   if (!qr || !layout) notFound();
 
-  const t = await getTranslations("export");
-  const entitled = await canDownload(session.user.id, qr);
+  const [t, tTypes, entitled, purchase] = await Promise.all([
+    getTranslations("export"),
+    getTranslations("contentTypes"),
+    canDownload(session.user.id, qr),
+    paidPurchase(session.user.id, qr.id),
+  ]);
   const checkout = query.checkout === "success" || query.checkout === "cancelled" ? query.checkout : undefined;
-  const cents = qr.model === "dynamic" ? pricing.dynamicMonthlyCents : pricing.staticCents;
+  const value = encodedValue(qr);
   // HEY-24: a code saved before the capacity check could hold more than a QR fits; never offer a broken file.
-  const capacity = layoutCapacity(layout.design.layout, encodedValue(qr));
+  const capacity = layoutCapacity(layout.design.layout, value);
+  if (!capacity.ok)
+    return (
+      <main className="mx-auto max-w-measure px-4 py-10 sm:px-6">
+        <h1 className="mb-4 text-h1">{t("title")}</h1>
+        <TooLongNotice capacity={capacity} />
+      </main>
+    );
+
+  const keep = new URLSearchParams();
+  for (const k of ["format", "res", "transparent"] as const) {
+    const v = one(query[k]);
+    if (v) keep.set(k, v);
+  }
+  const hrefFor = (id: string) =>
+    `/create/export?${new URLSearchParams({ qr: qr.id, layout: id, ...Object.fromEntries(keep) }).toString()}`;
 
   return (
-    <section className="mx-auto grid max-w-5xl gap-6 px-4 py-10 sm:px-6 md:grid-cols-2 md:items-start">
-      <Card className="items-center">
-        <QrPreview layout={layout.design.layout} value={encodedValue(qr)} label={qr.name} className="w-full max-w-80" />
-        <p className="text-h3">{qr.name}</p>
-      </Card>
-      <Card>
-        <h1 className="text-h1">{t("title")}</h1>
-        {!capacity.ok ? (
-          <TooLongNotice capacity={capacity} />
-        ) : (
-          <ExportPanel
-            qrCodeId={qr.id}
-            layoutId={layout.id}
-            layout={layout.design.layout}
-            model={qr.model}
-            entitled={entitled}
-            checkout={checkout}
-            price={{ cents, currency: pricing.currency }}
-          />
-        )}
-      </Card>
-    </section>
+    <ExportSurface
+      mode="signed"
+      qrCodeId={qr.id}
+      layoutId={layout.id}
+      entitled={entitled}
+      title={entitled ? t("title") : t("titleBuy")}
+      heading={`${qr.name} · ${layout.name}`}
+      layout={layout.design.layout}
+      value={value}
+      model={qr.model}
+      typeLabel={tTypes(qr.content.type)}
+      layoutName={layout.name}
+      layouts={qr.layouts.map((l) => ({ id: l.id, name: l.name, href: hrefFor(l.id), active: l.id === layout.id }))}
+      backHref={`/edit/${qr.id}?layout=${layout.id}`}
+      initial={initial}
+      price={{ cents: qr.model === "dynamic" ? pricing.dynamicMonthlyCents : pricing.staticCents, currency: pricing.currency }}
+      returnedFromSignIn={one(query.signedIn) === "1"}
+      checkout={checkout}
+      receipt={
+        purchase?.paidAt ? { amountCents: purchase.amountTotal, currency: purchase.currency, paidAt: purchase.paidAt.toISOString() } : null
+      }
+    />
   );
 }

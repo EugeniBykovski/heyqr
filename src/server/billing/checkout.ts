@@ -24,19 +24,41 @@ type CheckoutInput = {
   layoutId: string;
   format: "png" | "svg" | "pdf";
   locale: string;
+  /** Export settings to restore on return (PNG scale or dpi, transparent background). */
+  resolution?: number;
+  transparent?: boolean;
 };
+
+/**
+ * Where Stripe returns to: the same export screen with the same code, layout and file settings (design 3.5 / 3.9).
+ * The code id is required: the export page looks the code up by it.
+ */
+export function exportReturnUrl(input: Pick<CheckoutInput, "qrCodeId" | "layoutId" | "format" | "locale" | "resolution" | "transparent">) {
+  const q = new URLSearchParams({ qr: input.qrCodeId, layout: input.layoutId, format: input.format });
+  if (input.resolution !== undefined) q.set("res", String(input.resolution));
+  if (input.transparent) q.set("transparent", "1");
+  return `${env.NEXT_PUBLIC_APP_URL}/${input.locale}/create/export?${q.toString()}`;
+}
 
 /**
  * Creates a Stripe Checkout session. Static codes: one-time payment. Dynamic codes: the monthly plan.
  * success/cancel URLs return to the same export screen with the same layout and format.
  */
-export async function createCheckout({ user, qrCodeId, layoutId, format, locale }: CheckoutInput): Promise<string> {
+export async function createCheckout({
+  user,
+  qrCodeId,
+  layoutId,
+  format,
+  locale,
+  resolution,
+  transparent,
+}: CheckoutInput): Promise<string> {
   const qr = await db.query.qrCode.findFirst({
     where: and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, user.id), isNull(schema.qrCode.deletedAt)),
   });
   if (!qr) throw new Error("QR code not found");
 
-  const back = `${env.NEXT_PUBLIC_APP_URL}/${locale}/create/export?layout=${layoutId}&format=${format}`;
+  const back = exportReturnUrl({ qrCodeId, layoutId, format, locale, resolution, transparent });
   const customer = await customerFor(user);
   const metadata = { userId: user.id, qrCodeId, layoutId, format };
 

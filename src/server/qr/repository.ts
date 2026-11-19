@@ -46,6 +46,14 @@ export async function getLayoutForEdit(userId: string, qrCodeId: string, layoutI
   return layout ? { qr, layout } : null;
 }
 
+/** The paid purchase of a static code, for its receipt (amount as Stripe charged it, tax included). */
+export async function paidPurchase(userId: string, qrCodeId: string) {
+  return db.query.purchase.findFirst({
+    where: and(eq(schema.purchase.userId, userId), eq(schema.purchase.qrCodeId, qrCodeId), eq(schema.purchase.status, "paid")),
+    orderBy: desc(schema.purchase.paidAt),
+  });
+}
+
 export async function getLayoutWithQr(layoutId: string) {
   const record = await db.query.qrLayout.findFirst({ where: eq(schema.qrLayout.id, layoutId), with: { qrCode: true } });
   // A deleted code can't be exported, even by its owner.
