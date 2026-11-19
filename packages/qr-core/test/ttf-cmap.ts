@@ -1,5 +1,14 @@
-/** Test helper: the code points a TrueType file maps (cmap formats 4 and 12) and its family / weight. */
-export function readTtf(buf: Uint8Array): { codePoints: Set<number>; family: string; weight: number } {
+/**
+ * Reads what caption tests and the metrics generator need from a TrueType file: the mapped code points (cmap formats
+ * 4 and 12) with their glyphs, each code point's advance width (hmtx), units per em, family and weight.
+ */
+export function readTtf(buf: Uint8Array): {
+  codePoints: Set<number>;
+  advances: Map<number, number>;
+  unitsPerEm: number;
+  family: string;
+  weight: number;
+} {
   const v = new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
   const tables = new Map<string, number>();
   for (let i = 0, n = v.getUint16(4); i < n; i++) {
@@ -8,6 +17,7 @@ export function readTtf(buf: Uint8Array): { codePoints: Set<number>; family: str
   }
   const cmap = tables.get("cmap") ?? 0;
   const codePoints = new Set<number>();
+  const glyphOf = new Map<number, number>();
   for (let i = 0, n = v.getUint16(cmap + 2); i < n; i++) {
     const sub = cmap + v.getUint32(cmap + 4 + i * 8 + 4);
     const format = v.getUint16(sub);
@@ -24,13 +34,19 @@ export function readTtf(buf: Uint8Array): { codePoints: Set<number>; family: str
         const ro = v.getUint16(offsets + s * 2);
         for (let c = start; c <= end && c !== 0xffff; c++) {
           const glyph = ro === 0 ? (c + delta) & 0xffff : v.getUint16(offsets + s * 2 + ro + (c - start) * 2);
-          if (glyph !== 0) codePoints.add(c);
+          if (glyph !== 0) {
+            codePoints.add(c);
+            glyphOf.set(c, glyph);
+          }
         }
       }
     } else if (format === 12) {
       for (let g = 0, groups = v.getUint32(sub + 12); g < groups; g++) {
         const r = sub + 16 + g * 12;
-        for (let c = v.getUint32(r); c <= v.getUint32(r + 4); c++) codePoints.add(c);
+        for (let c = v.getUint32(r), g0 = v.getUint32(r + 8); c <= v.getUint32(r + 4); c++) {
+          codePoints.add(c);
+          glyphOf.set(c, g0 + (c - v.getUint32(r)));
+        }
       }
     }
   }
@@ -45,5 +61,10 @@ export function readTtf(buf: Uint8Array): { codePoints: Set<number>; family: str
     names.set(v.getUint16(r + 6), s);
   }
   const os2 = tables.get("OS/2") ?? 0;
-  return { codePoints, family: names.get(16) ?? names.get(1) ?? "", weight: v.getUint16(os2 + 4) };
+  const unitsPerEm = v.getUint16((tables.get("head") ?? 0) + 18);
+  const metricsCount = v.getUint16((tables.get("hhea") ?? 0) + 34);
+  const hmtx = tables.get("hmtx") ?? 0;
+  const advanceOf = (glyph: number) => v.getUint16(hmtx + Math.min(glyph, metricsCount - 1) * 4);
+  const advances = new Map([...glyphOf].map(([c, glyph]) => [c, advanceOf(glyph)]));
+  return { codePoints, advances, unitsPerEm, family: names.get(16) ?? names.get(1) ?? "", weight: v.getUint16(os2 + 4) };
 }

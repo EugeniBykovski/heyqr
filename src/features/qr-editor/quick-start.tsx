@@ -3,7 +3,7 @@
 import { composeLayout, encodePayload, layoutCapacity, type QrContent } from "@heyqr/qr-core";
 import { ArrowRightIcon, CircleAlertIcon, InfoIcon, LockIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { env } from "@/env";
 import { DEFAULT_DESIGN, designToLayout, type EditorDesign, emptyContent, modeFor, QR_INKS, QrPreview } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
@@ -59,17 +59,6 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
     contact: emptyContent("contact"),
   }));
   const [tried, setTried] = useState(false);
-  // The preview card's height places where the reveal line pins (it changes with the type, caption and form).
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [cardHeight, setCardHeight] = useState<number | null>(null);
-  useEffect(() => {
-    const el = cardRef.current;
-    // Without ResizeObserver the line simply stays in normal flow below the preview.
-    if (!el || typeof ResizeObserver === "undefined") return;
-    const observer = new ResizeObserver(() => setCardHeight(Math.round(el.getBoundingClientRect().height)));
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
 
   // The draft lives in localStorage, so it is restored after hydration to keep server and client markup identical.
   useEffect(() => {
@@ -146,58 +135,45 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
       <div className="flex max-w-[40rem] flex-col gap-3.5 [grid-area:copy]">{copy}</div>
 
       {/*
-       * HEY-46 hero reveal. Phones, tablets and reduced motion: the line simply follows the preview. On desktop the
-       * card stays pinned for a short stretch (--hero-travel) while the line rises behind its bottom edge, so the card
-       * covers the top of the lettering; then the line pins where it met the card while the card scrolls on, revealing
-       * it whole (--hero-reveal-travel). Plain sticky positioning: both scroll directions, all space reserved here.
+       * HEY-47 hero reveal. On desktop with motion allowed, the preview column fills the hero: the card keeps its sticky
+       * descent through the whole column (as before HEY-46) and comes to rest at its bottom. The empty area below the
+       * card holds the line, centred both ways; the opaque card is layered above it, so on its way down the card passes
+       * in front of the line and at one point covers all of it. Scrolling back up uncovers it. Phones, tablets and
+       * reduced motion: the line is centred in normal flow below the preview. Only this column takes part; the form
+       * and Continue designing are in their own column.
        */}
-      <div
-        className="flex flex-col [--hero-overlap:2.25rem] [--hero-reveal-travel:5.5rem] [--hero-sticky-top:calc(var(--spacing-header)+1.5rem)] [--hero-travel:6.5rem] [grid-area:stage] lg:mt-1"
-        style={cardHeight ? ({ "--hero-card-h": `${cardHeight}px` } as CSSProperties) : undefined}
-      >
-        {/* The card's sticky track: the card plus its travel (a spacer, since sticky elements don't move into padding). */}
-        <div>
-          <div
-            ref={cardRef}
-            data-slot="hero-preview"
-            className="relative z-10 motion-safe:lg:sticky motion-safe:lg:top-(--hero-sticky-top)"
-          >
-            <Stage>
-              <StageBar>
-                <span className="min-w-0 grow truncate px-1 text-label">{t("stageTitle", { type: tTypes(type) })}</span>
-                <Badge variant={tooLong ? "danger" : scan?.ok && valid ? "success" : "neutral"}>
-                  {tooLong ? tEditor("tooLong.badge") : scan?.ok && valid ? t("scans") : t("livePreview")}
-                </Badge>
-              </StageBar>
-              <StageCanvas height="clamp(13.75rem, 26cqi, 26rem)">
-                <QrPreview
-                  layout={layout}
-                  value={value}
-                  label={t("previewLabel")}
-                  tooLongLabel={tEditor("tooLong.preview")}
-                  className="size-full"
-                />
-              </StageCanvas>
-              <StageFoot>
-                {scan ? <ScanStatus report={scan} compact /> : null}
-                <span className="text-caption text-muted-foreground">{t("realCode")}</span>
-              </StageFoot>
-            </Stage>
-          </div>
-          <div aria-hidden className="motion-safe:lg:h-(--hero-travel)" />
-        </div>
-        <p
-          data-slot="hero-reveal"
-          className={cn(
-            "mt-5 text-h1x text-balance text-foreground",
-            // Pinned only once the card is measured, so the line never jumps on the first paint.
-            cardHeight &&
-              "motion-safe:lg:sticky motion-safe:lg:top-[calc(var(--hero-sticky-top)+var(--hero-card-h)-var(--hero-overlap))] motion-safe:lg:-mt-(--hero-overlap)",
-          )}
+      <div className="flex flex-col [grid-area:stage] lg:mt-1 motion-safe:lg:self-stretch">
+        <div
+          data-slot="hero-preview"
+          className="relative z-10 motion-safe:lg:sticky motion-safe:lg:top-[calc(var(--spacing-header)+1.5rem)]"
         >
-          {revealLine}
-        </p>
-        <div aria-hidden className="motion-safe:lg:h-(--hero-reveal-travel)" />
+          <Stage>
+            <StageBar>
+              <span className="min-w-0 grow truncate px-1 text-label">{t("stageTitle", { type: tTypes(type) })}</span>
+              <Badge variant={tooLong ? "danger" : scan?.ok && valid ? "success" : "neutral"}>
+                {tooLong ? tEditor("tooLong.badge") : scan?.ok && valid ? t("scans") : t("livePreview")}
+              </Badge>
+            </StageBar>
+            <StageCanvas height="clamp(13.75rem, 26cqi, 26rem)">
+              <QrPreview
+                layout={layout}
+                value={value}
+                label={t("previewLabel")}
+                tooLongLabel={tEditor("tooLong.preview")}
+                className="size-full"
+              />
+            </StageCanvas>
+            <StageFoot>
+              {scan ? <ScanStatus report={scan} compact /> : null}
+              <span className="text-caption text-muted-foreground">{t("realCode")}</span>
+            </StageFoot>
+          </Stage>
+        </div>
+        <div data-slot="hero-sweep" className="mt-8 grid place-items-center motion-safe:lg:mt-0 motion-safe:lg:flex-1 motion-safe:lg:py-12">
+          <p data-slot="hero-reveal" className="w-full text-center text-display text-foreground">
+            {revealLine}
+          </p>
+        </div>
       </div>
 
       <Card className="gap-6 p-5 [grid-area:tool] sm:gap-7 sm:p-6">
