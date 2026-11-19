@@ -36,7 +36,7 @@ const CASES: Case[] = [
     ],
   },
   {
-    // Bar frame 45.6 × 57.6 mm: at 300 dpi 538.58 → 539 px wide; height keeps the aspect ratio (680.84 → 681).
+    // Bar frame 45.6 × 57.6 mm: at 300 dpi 538.58 × 680.31 → 539 × 680; at 600 dpi 1077.17 × 1360.63 → 1077 × 1361.
     name: "framed (bar) · 40 mm code",
     design: {
       ...DEFAULT_DESIGN,
@@ -47,8 +47,8 @@ const CASES: Case[] = [
       size: { unit: "mm", qr: 40, width: 40, height: 40 },
     },
     res: [
-      [{ dpi: 300 }, [539, 681]],
-      [{ dpi: 600 }, [1077, 1360]],
+      [{ dpi: 300 }, [539, 680]],
+      [{ dpi: 600 }, [1077, 1361]],
     ],
   },
   {
