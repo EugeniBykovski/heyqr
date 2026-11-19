@@ -351,10 +351,10 @@ export type PngResolution = { scale?: number; dpi?: number };
 /** Exact pixel size of the PNG for a layout at a resolution, and whether it is within the export limits. */
 export function pngPixelSize(layout: Layout, resolution: PngResolution = {}): { width: number; height: number; ok: boolean } {
   const g = layoutGeometry(layout);
-  const width = Math.round(
-    layout.unit === "mm" ? (g.width / 25.4) * (resolution.dpi ?? PNG_DEFAULTS.dpi) : g.width * (resolution.scale ?? PNG_DEFAULTS.scale),
-  );
-  const height = Math.round((g.height * width) / g.width);
+  // Each side is rounded from its own size (HEY-39): a print PNG has exactly the pixels of its physical size at the DPI.
+  const factor = layout.unit === "mm" ? (resolution.dpi ?? PNG_DEFAULTS.dpi) / 25.4 : (resolution.scale ?? PNG_DEFAULTS.scale);
+  const width = Math.round(g.width * factor);
+  const height = Math.round(g.height * factor);
   const ok = Math.min(width, height) >= PNG_MIN_SIDE && Math.max(width, height) <= PNG_MAX_SIDE;
   return { width, height, ok };
 }

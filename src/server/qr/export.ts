@@ -63,5 +63,11 @@ export async function renderExport(
   // HEY-37: the whole layout at the requested resolution, aspect ratio kept; validated before rasterizing.
   const size = pngPixelSize(layout, opts);
   if (!size.ok) throw new ExportSizeError(size);
-  return { body: rasterizeSvg(composed.svg, { width: size.width }), contentType: "image/png", scan: composed.scan, size };
+  // The rasterizer gets the exact pixel size on the root (viewBox unchanged), so both sides are rounded from their own
+  // physical size rather than the height following the rounded width (HEY-39). The SVG file itself keeps its units.
+  const forRaster = composed.svg.replace(
+    /^<svg ([^>]*?)width="[^"]*" height="[^"]*"/,
+    `<svg $1width="${size.width}" height="${size.height}" preserveAspectRatio="none"`,
+  );
+  return { body: rasterizeSvg(forRaster, { width: size.width }), contentType: "image/png", scan: composed.scan, size };
 }

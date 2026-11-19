@@ -40,7 +40,7 @@ describe("PNG resolution on the export page (HEY-37)", () => {
       designToLayout({ ...DEFAULT_DESIGN, preset: "frame", frameStyle: "bar", size: { unit: "mm", qr: 40, width: 40, height: 40 } }),
     );
     fireEvent.click(screen.getByRole("button", { name: "600 dpi" }));
-    expect(screen.getByText("1077 × 1360 px")).toBeInTheDocument();
+    expect(screen.getByText("1077 × 1361 px")).toBeInTheDocument();
     expect(href()).toBe("/api/export/l1?format=png&dpi=600");
     fireEvent.click(screen.getByLabelText(/SVG/));
     expect(screen.queryByText("Resolution")).toBeNull();
