@@ -19,6 +19,13 @@ export function contrastRatio(a: string, b: string): number {
   return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
 }
 
+/** The one HEX colour rule (HEY-34): "#RRGGBB", either letter case. Used by the editor, the draft schema and the renderer. */
 export function isHexColor(value: string): boolean {
   return /^#[0-9a-f]{6}$/i.test(value);
+}
+
+/** What the user typed, as a colour the design can use: trimmed and upper-cased "#RRGGBB", or null when it isn't one. */
+export function parseHexColor(text: string): string | null {
+  const value = text.trim();
+  return isHexColor(value) ? value.toUpperCase() : null;
 }

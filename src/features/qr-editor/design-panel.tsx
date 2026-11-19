@@ -1,7 +1,9 @@
 "use client";
 
-import { ImagePlusIcon } from "lucide-react";
+import { parseHexColor } from "@heyqr/qr-core";
+import { CircleAlertIcon, ImagePlusIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 import {
   CENTER_ICONS,
   DEFAULT_DESIGN,
@@ -19,7 +21,51 @@ import { OptionGrid } from "./option-grid";
 
 const MAX_INLINE_LOGO = 512 * 1024;
 
-function ColorField({ id, label, value, onChange }: { id: string; label: string; value: string; onChange: (v: string) => void }) {
+/**
+ * One colour: a native picker plus a HEX text field (HEY-34). The text being edited is kept apart from the last valid
+ * colour: only a valid "#RRGGBB" (either case) reaches the design, so the preview, draft and export never see partial or
+ * invalid text. The error shows after blur (or when Export is attempted) and clears as soon as the text is valid.
+ */
+function ColorField({
+  id,
+  label,
+  value,
+  onChange,
+  forceError,
+  onValidity,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  forceError?: boolean;
+  onValidity?: (id: string, valid: boolean) => void;
+}) {
+  const t = useTranslations("editor");
+  const [text, setText] = useState(value);
+  const [synced, setSynced] = useState(value);
+  const [touched, setTouched] = useState(false);
+  // The colour changed from outside (picker, Reset colors, inherited module colour): show it.
+  if (value !== synced) {
+    setSynced(value);
+    setText(value);
+    setTouched(false);
+  }
+  const valid = parseHexColor(text) !== null;
+  const showError = !valid && (touched || Boolean(forceError));
+  // A field that disappears (another step, reset) can't keep Export blocked.
+  useEffect(() => () => onValidity?.(id, true), [id, onValidity]);
+
+  const edit = (next: string) => {
+    setText(next);
+    const parsed = parseHexColor(next);
+    onValidity?.(id, parsed !== null);
+    if (parsed) {
+      if (parsed !== value) onChange(parsed);
+      setTouched(false);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-1.5">
       <Label htmlFor={id}>{label}</Label>
@@ -28,23 +74,51 @@ function ColorField({ id, label, value, onChange }: { id: string; label: string;
           type="color"
           aria-label={label}
           value={value}
-          onChange={(e) => onChange(e.target.value.toUpperCase())}
+          onChange={(e) => edit(e.target.value)}
           className="size-11 shrink-0 cursor-pointer rounded-md border border-border bg-surface p-1"
         />
         <Input
           id={id}
-          value={value}
-          maxLength={7}
-          onChange={(e) => onChange(e.target.value.toUpperCase())}
-          className="font-mono uppercase"
+          value={text}
+          maxLength={9}
+          inputMode="text"
+          autoComplete="off"
           spellCheck={false}
+          aria-invalid={showError || undefined}
+          aria-describedby={showError ? `${id}-error` : undefined}
+          data-color-invalid={valid ? undefined : "true"}
+          onChange={(e) => edit(e.target.value)}
+          onBlur={() => {
+            const parsed = parseHexColor(text);
+            if (parsed) setText(parsed);
+            else setTouched(true);
+          }}
+          className="font-mono uppercase"
         />
       </div>
+      {showError ? (
+        <p id={`${id}-error`} className="flex items-start gap-1.5 text-caption font-medium text-danger">
+          <CircleAlertIcon aria-hidden className="mt-0.5 size-3.5 shrink-0" />
+          {t("colorInvalid")}
+        </p>
+      ) : null}
     </div>
   );
 }
 
-export function DesignPanel({ design, onChange }: { design: EditorDesign; onChange: (patch: Partial<EditorDesign>) => void }) {
+export function DesignPanel({
+  design,
+  onChange,
+  showColorErrors,
+  onColorValidity,
+}: {
+  design: EditorDesign;
+  onChange: (patch: Partial<EditorDesign>) => void;
+  /** Show every invalid colour field's error now (an Export was attempted). */
+  showColorErrors?: boolean;
+  /** Reports whether a colour field's text is a valid colour, so Export can stop before using the previous colour. */
+  onColorValidity?: (id: string, valid: boolean) => void;
+}) {
   const t = useTranslations("editor");
   const iconKeys = Object.keys(CENTER_ICONS) as CenterIcon[];
   const logoValue = design.logo.kind === "icon" ? design.logo.icon : design.logo.kind;
@@ -91,10 +165,38 @@ export function DesignPanel({ design, onChange }: { design: EditorDesign; onChan
             </Button>
           ) : null}
         </legend>
-        <ColorField id="color-fg" label={t("fg")} value={design.fg} onChange={(fg) => onChange({ fg })} />
-        <ColorField id="color-eye" label={t("eyeColor")} value={design.eye ?? design.fg} onChange={(eye) => onChange({ eye })} />
-        <ColorField id="color-eye-in" label={t("eyeInColor")} value={design.eyeIn ?? design.fg} onChange={(eyeIn) => onChange({ eyeIn })} />
-        <ColorField id="color-bg" label={t("bg")} value={design.bg} onChange={(bg) => onChange({ bg })} />
+        <ColorField
+          forceError={showColorErrors}
+          onValidity={onColorValidity}
+          id="color-fg"
+          label={t("fg")}
+          value={design.fg}
+          onChange={(fg) => onChange({ fg })}
+        />
+        <ColorField
+          forceError={showColorErrors}
+          onValidity={onColorValidity}
+          id="color-eye"
+          label={t("eyeColor")}
+          value={design.eye ?? design.fg}
+          onChange={(eye) => onChange({ eye })}
+        />
+        <ColorField
+          forceError={showColorErrors}
+          onValidity={onColorValidity}
+          id="color-eye-in"
+          label={t("eyeInColor")}
+          value={design.eyeIn ?? design.fg}
+          onChange={(eyeIn) => onChange({ eyeIn })}
+        />
+        <ColorField
+          forceError={showColorErrors}
+          onValidity={onColorValidity}
+          id="color-bg"
+          label={t("bg")}
+          value={design.bg}
+          onChange={(bg) => onChange({ bg })}
+        />
       </fieldset>
       <fieldset className="flex flex-col gap-3">
         <legend className="mb-2 text-label">{t("logo")}</legend>

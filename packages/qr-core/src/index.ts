@@ -32,5 +32,5 @@ export {
   type QrContent,
   type QrContentType,
 } from "./payload";
-export { contrastRatio, luminance, isHexColor } from "./color";
+export { contrastRatio, luminance, isHexColor, parseHexColor } from "./color";
 export type * from "./types";

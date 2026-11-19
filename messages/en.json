@@ -576,7 +576,8 @@
     },
     "eyeColor": "Corner frames",
     "eyeInColor": "Corner centers",
-    "resetColors": "Reset colors"
+    "resetColors": "Reset colors",
+    "colorInvalid": "Use a HEX colour like #1F4D3A: # and 6 characters from 0–9 and A–F."
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",

@@ -5,7 +5,7 @@ import { ArrowLeftIcon, ArrowRightIcon, LoaderCircleIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useFormatter, useTranslations } from "next-intl";
 import { Tabs as TabsPrimitive } from "radix-ui";
-import { useEffect, useEffectEvent, useMemo, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { env } from "@/env";
 import { designSettingsOf, designToLayout, emptyContent, isContentComplete, modeFor, QrPreview, type EditorDesign } from "@/entities/qr";
@@ -118,7 +118,22 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
     patch({ content: emptyContent(type), model });
   };
 
-  const download = () =>
+  // HEY-34: colour fields whose text isn't a valid HEX colour. Export stops there instead of using the previous colour.
+  const [invalidColors, setInvalidColors] = useState<string[]>([]);
+  const [showColorErrors, setShowColorErrors] = useState(false);
+  const onColorValidity = useCallback(
+    (id: string, valid: boolean) =>
+      setInvalidColors((cur) => (valid ? (cur.includes(id) ? cur.filter((x) => x !== id) : cur) : cur.includes(id) ? cur : [...cur, id])),
+    [],
+  );
+
+  const download = () => {
+    const firstInvalid = invalidColors[0];
+    if (firstInvalid) {
+      setShowColorErrors(true);
+      document.getElementById(firstInvalid)?.focus();
+      return;
+    }
     startSaving(async () => {
       if (!signedIn) {
         router.push(`/sign-in?next=${encodeURIComponent("/create?resume=1")}`);
@@ -142,6 +157,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
       clearDraft();
       router.push(`/create/export?qr=${result.data.qrCodeId}&layout=${result.data.layoutIds[0]}`);
     });
+  };
 
   // Coming back from Google sign-in: continue to the export step automatically.
   const continueAfterSignIn = useEffectEvent(() => {
@@ -254,7 +270,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
               </div>
             ) : null}
             <div className="flex flex-col gap-8">
-              <DesignPanel design={design} onChange={patch} />
+              <DesignPanel design={design} onChange={patch} showColorErrors={showColorErrors} onColorValidity={onColorValidity} />
               <section aria-labelledby="design-frame" className="flex flex-col gap-4 border-t border-border pt-6">
                 <h2 id="design-frame" className="text-h3">
                   {t("frameGroup")}
