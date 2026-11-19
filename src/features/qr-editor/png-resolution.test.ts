@@ -91,7 +91,8 @@ describe("PNG export resolution (HEY-37)", () => {
         const svg = (await renderExport(layout, VALUE, "svg", {})).body.toString();
         for (const fill of Object.values(PALETTE)) expect(svg).toContain(`fill="${fill}"`);
         expect(await decodeImage(rasterizeSvg(svg, { width: 800 })), "exported SVG rasterized at 800 px").toBe(VALUE);
-      });
+        // Up to 7680 × 4320 px rendered and decoded: give it room when the suite runs other renders in parallel.
+      }, 30_000);
 
   it("refuses a PNG outside the export limits before rasterizing (no silent downscale)", async () => {
     const layout = designToLayout({ ...DEFAULT_DESIGN, preset: "caption", caption: "Scan me", size: presetSize(1920, 1080) });
