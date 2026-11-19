@@ -8,7 +8,15 @@ import { Tabs as TabsPrimitive } from "radix-ui";
 import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { env } from "@/env";
-import { designSettingsOf, designToLayout, emptyContent, isContentComplete, modeFor, type EditorDesign } from "@/entities/qr";
+import {
+  DEFAULT_DESIGN,
+  designSettingsOf,
+  designToLayout,
+  emptyContent,
+  isContentComplete,
+  modeFor,
+  type EditorDesign,
+} from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
 import { saveDraft } from "@/server/actions/qr";
 import { pricing } from "@/shared/config/pricing";
@@ -22,6 +30,15 @@ import { editorTopBar, editorTopBarInner } from "./editor-layout";
 import { EditorSteps } from "./editor-steps";
 import { TypeStep } from "./type-step";
 import { clearDraft, useDraft } from "./use-draft";
+
+/** True while no design setting differs from the defaults (content, mode and name aside). */
+function isUntouchedDesign(d: EditorDesign): boolean {
+  const skip = new Set(["name", "model", "content"]);
+  const a = d as unknown as Record<string, unknown>;
+  const b = DEFAULT_DESIGN as unknown as Record<string, unknown>;
+  const keys = new Set([...Object.keys(a), ...Object.keys(b)].filter((k) => !skip.has(k)));
+  return [...keys].every((k) => JSON.stringify(a[k]) === JSON.stringify(b[k]));
+}
 
 /** Placeholder encoded in dynamic previews: the real short code is assigned when the plan starts. */
 const DYNAMIC_PREVIEW_CODE = "preview";
@@ -252,6 +269,8 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
         <DesignStep
           design={design}
           onChange={patch}
+          // Design 2.4: a new design asks Custom or Branded first; a draft that already has design work goes straight on.
+          offerChooser={design.designMode === undefined && isUntouchedDesign(design)}
           title={design.name.trim() || t("namePlaceholder")}
           shown={{ layout: shownLayout, value: shownValue, rebuilding }}
           scan={scan}

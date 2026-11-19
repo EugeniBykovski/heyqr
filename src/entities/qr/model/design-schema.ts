@@ -75,6 +75,11 @@ export const designSettingsSchema = z.object({
   border: z.boolean().optional(),
   logoPosition: z.enum(["center", "top"]).optional(),
   brandName: z.string().max(40).optional(),
+  // Optional (Branded design, 2.4–2.9).
+  designMode: z.enum(["custom", "branded"]).optional(),
+  brand: z.object({ palette: z.array(hex).max(8), name: z.string().max(120).optional() }).optional(),
+  look: z.enum(["center", "card", "art"]).optional(),
+  art: z.object({ tint: hex, tint2: hex }).optional(),
 });
 export type DesignSettings = z.infer<typeof designSettingsSchema>;
 
@@ -215,6 +220,10 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     border,
     logoPosition,
     brandName,
+    designMode,
+    brand,
+    look,
+    art,
   } = design;
   return {
     pattern,
@@ -243,5 +252,9 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     ...(border === undefined ? {} : { border }),
     ...(logoPosition === undefined ? {} : { logoPosition }),
     ...(brandName === undefined ? {} : { brandName }),
+    ...(designMode === undefined ? {} : { designMode }),
+    ...(brand === undefined ? {} : { brand }),
+    ...(look === undefined ? {} : { look }),
+    ...(art === undefined ? {} : { art }),
   };
 }

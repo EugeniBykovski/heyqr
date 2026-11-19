@@ -32,19 +32,19 @@ verification script result (named here).
 
 ## 2 · Branded, end to end
 
-| Frame                              | Route                          | 390 | 834 | 1440 | Notes                                                                                           |
-| ---------------------------------- | ------------------------------ | --- | --- | ---- | ----------------------------------------------------------------------------------------------- |
-| 2.1 Website · loading              | `/create` first load           | ✅  | ✅  | ✅   | Heading and stepper at once; type cards hold their exact size (HEY-41 skeletons)                |
-| 2.2 Content · empty                | `/create?step=content`         | ✅  | ✅  | ✅   | After scanning shows placeholders (final-content-*.png)                                         |
-| 2.3 Content · domain               | Content with a URL             | ✅  | ✅  | ✅   | Preview shows the host                                                                          |
-| 2.4 Choose mode (custom / branded) | —                              | ❌  | ❌  | ❌   | Branded mode not built                                                                          |
-| 2.5 Branded · upload               | —                              | ❌  | ❌  | ❌   | Logo upload exists for the center logo only                                                     |
-| 2.6 Branded · reading              | —                              | ❌  | ❌  | ❌   | Palette extraction not built                                                                    |
-| 2.7 Branded · three looks          | —                              | ❌  | ❌  | ❌   |                                                                                                 |
-| 2.8 Branded · brand card           | —                              | ❌  | ❌  | ❌   | Card layouts (vertical/horizontal) not in the editor model                                      |
-| 2.9 Branded · colors changed       | —                              | ❌  | ❌  | ❌   |                                                                                                 |
-| 2.10 Export · guest                | `/create/export` (signed out)  | ✅  | ✅  | ✅   | Same surface from the browser draft; Continue with Google carries format, size and transparency |
-| 2.11 Paid PNG                      | `/create/export` after payment | ⛔  | ⛔  | ⛔   | Needs Stripe (HEY-8 hosted setup)                                                               |
+| Frame                              | Route                          | 390 | 834 | 1440 | Notes                                                                                                   |
+| ---------------------------------- | ------------------------------ | --- | --- | ---- | ------------------------------------------------------------------------------------------------------- |
+| 2.1 Website · loading              | `/create` first load           | ✅  | ✅  | ✅   | Heading and stepper at once; type cards hold their exact size (HEY-41 skeletons)                        |
+| 2.2 Content · empty                | `/create?step=content`         | ✅  | ✅  | ✅   | After scanning shows placeholders (final-content-*.png)                                                 |
+| 2.3 Content · domain               | Content with a URL             | ✅  | ✅  | ✅   | Preview shows the host                                                                                  |
+| 2.4 Choose mode (custom / branded) | Design, new draft              | ✅  | ✅  | ✅   | Two live examples of the same code; Custom/Branded switch in the panel keeps content                    |
+| 2.5 Branded · upload               | Design → Brand                 | ✅  | ✅  | ✅   | Drop zone (desktop), photos or files (phone), sample logo; same intake rules as logos (HEY-50)          |
+| 2.6 Branded · reading              | Design → Brand                 | ✅  | ✅  | ✅   | File name + "Reading colors…"; last design stays; newer files win (stale results dropped)               |
+| 2.7 Branded · three looks          | Design → Brand                 | ✅  | ✅  | ✅   | Palette roles with HEX, reset and contrast note; Logo in the code / Brand card / Artwork (renderer art) |
+| 2.8 Branded · brand card           | Design → Brand → Brand card    | ✅  | ✅  | ✅   | Vertical card, logo and name above the code                                                             |
+| 2.9 Branded · colors changed       | Design → Brand → roles         | ✅  | ✅  | ✅   | Only the QR changes; the scan check judges the new colours (sage accent flagged with its fix)           |
+| 2.10 Export · guest                | `/create/export` (signed out)  | ✅  | ✅  | ✅   | Same surface from the browser draft; Continue with Google carries format, size and transparency         |
+| 2.11 Paid PNG                      | `/create/export` after payment | ⛔  | ⛔  | ⛔   | Needs Stripe (HEY-8 hosted setup)                                                                       |
 
 ## 3 · Export & purchase
 
@@ -92,7 +92,7 @@ verification script result (named here).
 | --------------------------- | --------------------------------- | --- | --- | ---- | ------------------------------------------------------------------------------- |
 | 5.1 Content · loading       | `/create?step=content` first load | ✅  | ✅  | ✅   | Form boxes and the preview shapes; the empty Website preview is static (HEY-41) |
 | 5.2 Design · loading        | `/create` first load              | 🟡  | 🟡  | 🟡   | Skeleton matches the Design layout; Type/Content steps need their own           |
-| 5.3 Rebuilding branded look | —                                 | ❌  | ❌  | ❌   | Depends on branded mode                                                         |
+| 5.3 Rebuilding branded look | Design, Branded                   | ✅  | ✅  | ✅   | "Updating branded design… keep editing" over the last ready canvas              |
 | 5.4 My QR codes · loading   | `/dashboard` loading              | ✅  | ✅  | ✅   | HEY-3 (verified with a temporary delay)                                         |
 
 ## Components, breakpoints and system boards

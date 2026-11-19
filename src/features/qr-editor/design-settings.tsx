@@ -33,6 +33,7 @@ import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 import { Swatch } from "@/shared/ui/swatch";
+import { BrandGroup } from "./brand-group";
 import { CaptionField } from "./caption-field";
 import { CaptionSizeField } from "./caption-size-field";
 import { ColorField } from "./design-panel";
@@ -43,7 +44,7 @@ import { ShapeThumb } from "./shape-thumb";
 import { SizePanel } from "./size-panel";
 
 export const DESIGN_GROUPS = ["layout", "frame", "size", "pattern", "colors", "logo", "caption"] as const;
-export type DesignGroup = (typeof DESIGN_GROUPS)[number];
+export type DesignGroup = (typeof DESIGN_GROUPS)[number] | "brand";
 
 type Change = (patch: Partial<EditorDesign>) => void;
 interface GroupProps {
@@ -65,16 +66,20 @@ interface GroupProps {
 export function DesignSettings({
   group,
   onGroupChange,
+  onBrandBusy,
   ...props
-}: GroupProps & { group: DesignGroup; onGroupChange: (g: DesignGroup) => void }) {
+}: GroupProps & { group: DesignGroup; onGroupChange: (g: DesignGroup) => void; onBrandBusy?: (busy: boolean) => void }) {
   const t = useTranslations("editor.groups");
+  // Design 2.5: Branded design adds the Brand group first; every other group stays available to fine-tune.
+  const groups: readonly DesignGroup[] = props.design.designMode === "branded" ? ["brand", ...DESIGN_GROUPS] : DESIGN_GROUPS;
+  const active = groups.includes(group) ? group : "layout";
   return (
-    <TabsPrimitive.Root value={group} onValueChange={(v) => onGroupChange(v as DesignGroup)} className="flex flex-col gap-5">
+    <TabsPrimitive.Root value={active} onValueChange={(v) => onGroupChange(v as DesignGroup)} className="flex flex-col gap-5">
       <TabsPrimitive.List
         aria-label={t("label")}
         className="-mx-4 flex [scrollbar-width:none] gap-1 overflow-x-auto px-3 py-1 sm:mx-0 sm:flex-wrap sm:px-0"
       >
-        {DESIGN_GROUPS.map((g) => (
+        {groups.map((g) => (
           <TabsPrimitive.Trigger
             key={g}
             value={g}
@@ -88,8 +93,18 @@ export function DesignSettings({
           </TabsPrimitive.Trigger>
         ))}
       </TabsPrimitive.List>
-      {DESIGN_GROUPS.map((g) => (
+      {groups.map((g) => (
         <TabsPrimitive.Content key={g} value={g} className="flex flex-col gap-6 outline-none">
+          {g === "brand" ? (
+            <BrandGroup
+              design={props.design}
+              onChange={props.onChange}
+              onBusy={(b) => onBrandBusy?.(b)}
+              onGoTo={onGroupChange}
+              onFieldValidity={props.onFieldValidity}
+              value={props.value}
+            />
+          ) : null}
           {g === "layout" ? <LayoutGroup {...props} /> : null}
           {g === "frame" ? <FrameGroup {...props} /> : null}
           {g === "size" ? (

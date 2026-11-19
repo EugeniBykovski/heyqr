@@ -71,6 +71,7 @@ function settingsFromLayout(layout: Layout): Partial<EditorDesign> {
     ...(logo?.tile ? { logoTile: true } : {}),
     ...(preset === "frame" && layout.colors.caption !== layout.colors.bg ? { frameTextColor: layout.colors.caption } : {}),
     ...(preset === "caption" && layout.border ? { border: true } : {}),
+    ...(layout.style.art ? { art: { tint: layout.style.art.tint, tint2: layout.style.art.tint2 }, designMode: "branded" as const } : {}),
   };
 }
 

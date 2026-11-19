@@ -102,8 +102,13 @@ async function embed(href: string | undefined): Promise<string | undefined> {
 
 export async function withEmbeddedImages(layout: Layout): Promise<Layout> {
   const logo = layout.style.logo;
-  const [logoHref, topLogoHref] = await Promise.all([embed(logo?.href), embed(layout.topLogoHref)]);
-  return { ...layout, topLogoHref, style: { ...layout.style, logo: logo ? { ...logo, href: logoHref } : logo } };
+  const art = layout.style.art;
+  const [logoHref, topLogoHref, artImage] = await Promise.all([embed(logo?.href), embed(layout.topLogoHref), embed(art?.image)]);
+  return {
+    ...layout,
+    topLogoHref,
+    style: { ...layout.style, logo: logo ? { ...logo, href: logoHref } : logo, art: art ? { ...art, image: artImage } : art },
+  };
 }
 
 export async function renderExport(

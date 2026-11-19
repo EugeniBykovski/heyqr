@@ -8,7 +8,7 @@ export {
   type QrMatrix,
   type ErrorCorrectionLevel,
 } from "./encode";
-export { CENTER_LOGO_SIZE, centerLogoSize, eclForStyle, MIN_CONTRAST, renderQr, renderQrSvg } from "./render";
+export { ART_TINT_OPACITY, CENTER_LOGO_SIZE, centerLogoSize, eclForStyle, MIN_CONTRAST, renderQr, renderQrSvg } from "./render";
 export {
   composeLayout,
   layoutGeometry,
@@ -40,7 +40,7 @@ export {
   type QrContent,
   type QrContentType,
 } from "./payload";
-export { contrastRatio, luminance, isHexColor, parseHexColor } from "./color";
+export { contrastRatio, luminance, isHexColor, mixColors, parseHexColor } from "./color";
 export {
   CAPTION_FONT_IDS,
   CAPTION_FONTS,

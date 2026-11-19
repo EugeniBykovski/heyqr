@@ -5,13 +5,14 @@ import { Maximize2Icon, Redo2Icon, Undo2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
-import type { EditorDesign } from "@/entities/qr";
+import { brandColorPatch, brandLookPatch, designToLayout, QrPreview, type EditorDesign } from "@/entities/qr";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/shared/ui/dialog";
 import { Stage, StageBar, StageCanvas, StageFoot, type StageTone } from "@/shared/ui/stage";
 import { BottomBar } from "./bottom-bar";
+import { SAMPLE_LOGO } from "./brand-group";
 import { DesignCanvas } from "./design-canvas";
 import { DesignSettings, type DesignGroup } from "./design-settings";
 import { editorPanel, editorRoot, editorStage } from "./editor-layout";
@@ -58,6 +59,7 @@ export function DesignStep({
   action,
   bottomInfo,
   note,
+  offerChooser = false,
 }: {
   design: EditorDesign;
   onChange: (patch: Partial<EditorDesign>) => void;
@@ -73,12 +75,22 @@ export function DesignStep({
   action: (size: "md", className?: string) => ReactNode;
   bottomInfo: ReactNode;
   note: string;
+  /** New codes ask Custom or Branded first (design 2.4); a saved layout opens straight in the workspace. */
+  offerChooser?: boolean;
 }) {
   const t = useTranslations("editor");
   const ts = useTranslations("editor.stage");
   const history = useDesignHistory(design, onChange);
   const view = useStageView();
-  const [group, setGroup] = useState<DesignGroup>("layout");
+  const [group, setGroup] = useState<DesignGroup>(design.designMode === "branded" ? "brand" : "layout");
+  // Design 2.6 / 5.3: while an image is read, the last ready design stays and the canvas says what is happening.
+  const [brandBusy, setBrandBusy] = useState(false);
+  const tm = useTranslations("editor.designMode");
+  const chooseMode = (mode: "custom" | "branded") => {
+    // Only the mode changes: content, colours and every other setting stay (switching never loses work).
+    history.change({ designMode: mode });
+    setGroup(mode === "branded" ? "brand" : "layout");
+  };
   const [full, setFull] = useState(false);
   const expandRef = useRef<HTMLButtonElement>(null);
   const dims = layoutDims(shown.layout);
@@ -120,13 +132,15 @@ export function DesignStep({
     <DesignCanvas
       layout={shown.layout}
       value={shown.value}
-      rebuilding={shown.rebuilding}
+      rebuilding={shown.rebuilding || brandBusy}
       label={t("preview")}
       tooLongLabel={t("tooLong.preview")}
       watermark={t("preview")}
-      updatingLabel={t("updatingPreview")}
+      updatingLabel={brandBusy ? t("brand.readingCanvas") : design.designMode === "branded" ? t("brand.updating") : t("updatingPreview")}
     />
   );
+
+  if (offerChooser && design.designMode === undefined) return <ModeChooser design={design} value={shown.value} onChoose={chooseMode} />;
 
   return (
     <div className={`${editorRoot} group/step`}>
@@ -200,6 +214,19 @@ export function DesignStep({
           <span className="text-label">{t("groups.label")}</span>
           {historyButtons}
         </div>
+        <div role="group" aria-label={tm("label")} className="mb-5 flex rounded-full border border-border bg-subtle p-0.75">
+          {(["custom", "branded"] as const).map((m) => (
+            <button
+              key={m}
+              type="button"
+              aria-pressed={(design.designMode ?? "custom") === m}
+              onClick={() => chooseMode(m)}
+              className="min-h-9 flex-1 cursor-pointer rounded-full px-3 text-label text-secondary-foreground aria-pressed:bg-surface aria-pressed:text-foreground aria-pressed:shadow-segment"
+            >
+              {tm(m)}
+            </button>
+          ))}
+        </div>
         {tooLong ? (
           <TooLongNotice className="mb-5" capacity={tooLong} onEdit={onEditContent} />
         ) : scan && !scan.ok && !shown.rebuilding ? (
@@ -217,6 +244,7 @@ export function DesignStep({
           value={shown.value}
           logoScanMax={scan?.maxLogoSize}
           onNotice={notice}
+          onBrandBusy={setBrandBusy}
         />
         <BottomBar className="lg:hidden">
           {bottomInfo}
@@ -335,5 +363,54 @@ function FullPreview({
         </Button>
       </DialogContent>
     </Dialog>
+  );
+}
+
+/*
+ * Design 2.4 "How do you want to design it?": two large examples of the same code. Custom keeps the current design;
+ * Branded opens the Brand group to start from a logo or image. Either can be switched later without losing content.
+ */
+function ModeChooser({ design, value, onChoose }: { design: EditorDesign; value: string; onChoose: (mode: "custom" | "branded") => void }) {
+  const t = useTranslations("editor.designMode");
+  const custom = designToLayout(design);
+  const branded = designToLayout({
+    ...design,
+    ...brandColorPatch({ primary: "#1F4D3A", bg: "#F7F1E6", accent: "#C8643B" }),
+    logo: { kind: "image", href: SAMPLE_LOGO },
+    brand: { palette: ["#1F4D3A", "#F7F1E6", "#C8643B", "#8DB596"] },
+    ...brandLookPatch(
+      { ...design, brand: { palette: ["#1F4D3A", "#F7F1E6", "#C8643B", "#8DB596"] }, fg: "#1F4D3A", bg: "#F7F1E6", eyeIn: "#C8643B" },
+      "art",
+    ),
+  });
+  const card = (mode: "custom" | "branded", layout: typeof custom, badge?: string) => (
+    <button
+      type="button"
+      onClick={() => onChoose(mode)}
+      className="flex cursor-pointer flex-col gap-4 rounded-2xl border border-border bg-surface p-4 text-left shadow-1 transition-[border-color,box-shadow] duration-(--motion-fast) hover:border-violet-300 hover:shadow-2 sm:p-5"
+    >
+      <span className="grid h-56 place-items-center rounded-xl bg-stage bg-[radial-gradient(var(--color-stage-dot)_1px,transparent_1.3px)] bg-size-[18px_18px] p-4 sm:h-64">
+        <QrPreview layout={layout} value={value} label="" className="size-full [&_svg]:size-full" />
+      </span>
+      <span className="flex flex-col gap-1">
+        <span className="flex flex-wrap items-center gap-2">
+          <span className="text-h2">{t(mode === "custom" ? "customTitle" : "brandedTitle")}</span>
+          {badge ? <Badge variant="accent">{badge}</Badge> : null}
+        </span>
+        <span className="text-secondary-foreground">{t(mode === "custom" ? "customText" : "brandedText")}</span>
+      </span>
+    </button>
+  );
+  return (
+    <main className="mx-auto flex w-full max-w-page flex-col gap-6 px-4 py-8 sm:px-6 lg:py-12">
+      <header className="flex max-w-measure flex-col gap-2">
+        <h1 className="text-h1">{t("chooseTitle")}</h1>
+        <p className="text-secondary-foreground">{t("chooseLead")}</p>
+      </header>
+      <div className="grid gap-4 md:grid-cols-2">
+        {card("custom", custom)}
+        {card("branded", branded, t("brandedBadge"))}
+      </div>
+    </main>
   );
 }

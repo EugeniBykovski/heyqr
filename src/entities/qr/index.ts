@@ -81,3 +81,15 @@ export {
   type SizeField,
   type SizeUnit,
 } from "./model/size";
+export {
+  BRAND_LOOKS,
+  brandColorPatch,
+  brandColorsOf,
+  brandLookPatch,
+  brandNameFromFile,
+  brandRoles,
+  extractPalette,
+  type BrandColors,
+  type BrandLook,
+  type BrandRole,
+} from "./model/brand";

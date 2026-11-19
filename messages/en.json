@@ -797,7 +797,8 @@
       "pattern": "Pattern",
       "colors": "Colors",
       "logo": "Logo",
-      "caption": "Caption"
+      "caption": "Caption",
+      "brand": "Brand"
     },
     "quickStyles": {
       "title": "Quick styles",
@@ -902,7 +903,89 @@
     },
     "scanChecking": "Checking scan",
     "darkenCorners": "Darken corner markers",
-    "textCount": "{count} of {max} characters. Short text makes a simpler, easier-to-scan code."
+    "textCount": "{count} of {max} characters. Short text makes a simpler, easier-to-scan code.",
+    "brand": {
+      "step1": "1 · Your logo or image",
+      "step1Hint": "PNG, JPG, WebP or SVG",
+      "step1Ready": "Replace it any time",
+      "drag": "Drag your logo here",
+      "dropNow": "Drop to upload",
+      "add": "Add your logo or image",
+      "formats": "PNG, JPG, WebP or SVG, up to 10 MB. A transparent background works best.",
+      "choose": "Choose image",
+      "chooseMobile": "Choose from photos or files",
+      "chooseLabel": "Choose a logo image",
+      "sample": "Try a sample logo",
+      "error": "We couldn’t read that file. Try a PNG, JPG, WebP or SVG up to 10 MB.",
+      "reading": "Reading colors from your image…",
+      "preview": "Uploaded image",
+      "image": "Your image",
+      "colorsFound": "{count, plural, one {# color found} other {# colors found}}",
+      "replace": "Replace image",
+      "replaceLabel": "Replace the logo image",
+      "remove": "Remove image",
+      "step2": "2 · Colors from your image",
+      "step2Hint": "Applied to the QR",
+      "roles": "Brand color roles",
+      "role": {
+        "primary": "Code color",
+        "bg": "Background",
+        "accent": "Accent"
+      },
+      "roleHint": {
+        "primary": "Modules and corner frames",
+        "bg": "Behind the code and card",
+        "accent": "Corner centers and details"
+      },
+      "fromImage": "From your image",
+      "found": "Colors found in your image",
+      "hexFor": "HEX for {role}",
+      "reset": "Reset",
+      "contrast": {
+        "ok": "Code on background: {ratio}:1 · easy to read. The scan check has the final word.",
+        "warn": "Code on background: {ratio}:1 · readable, but more contrast is safer.",
+        "err": "Code on background: {ratio}:1 · too low to scan reliably."
+      },
+      "appColors": "These colors style your QR only. HeyQR’s buttons and menus keep their own colors.",
+      "step3": "3 · Pick a direction",
+      "step3Hint": "Same code, three looks",
+      "looks": "Branded looks",
+      "lookCards": {
+        "center": {
+          "title": "Logo in the code",
+          "desc": "Your mark sits on a plate in the middle."
+        },
+        "card": {
+          "title": "Brand card",
+          "desc": "Logo and name above the code, in a frame."
+        },
+        "art": {
+          "title": "Artwork",
+          "desc": "Your image flows into the dots and corners."
+        }
+      },
+      "step4": "4 · Fine-tune",
+      "fine": {
+        "logo": "Image size & backing",
+        "pattern": "Dots & corners",
+        "caption": "Caption & font",
+        "size": "Size"
+      },
+      "updating": "Updating branded design… keep editing",
+      "readingCanvas": "Reading your image…"
+    },
+    "designMode": {
+      "label": "Design mode",
+      "custom": "Custom",
+      "branded": "Branded",
+      "chooseTitle": "How do you want to design it?",
+      "chooseLead": "Both start from the same code. You can switch at any time without losing your content.",
+      "customTitle": "Custom design",
+      "customText": "Choose the layout, shapes, colors, frame and caption yourself.",
+      "brandedTitle": "Branded design",
+      "brandedBadge": "From your logo",
+      "brandedText": "Upload your logo or an image. We pick up its colors and suggest three looks."
+    }
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",

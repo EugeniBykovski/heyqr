@@ -136,6 +136,14 @@ export interface EditorDesign {
   logoPosition?: "center" | "top";
   /** Design 2.8 Brand card: the name beside the logo above the code (cards with a top logo). */
   brandName?: string;
+  /** Design 2.4: Custom or Branded. Unset = the chooser hasn't been answered (new drafts); behaves as Custom. */
+  designMode?: "custom" | "branded";
+  /** Design 2.6: colours read from the uploaded image (the image itself is `logo`), and its file name. */
+  brand?: { palette: string[]; name?: string };
+  /** Design 2.7: the branded look last applied. */
+  look?: "center" | "card" | "art";
+  /** Design 2.7 Artwork: tints of the shapes behind the code (the uploaded image is drawn faint behind them). */
+  art?: { tint: string; tint2: string };
 }
 
 /** An uploaded image sits above the code only on the cards; everywhere else it stays in the centre. */
@@ -284,7 +292,13 @@ export function designToLayout(d: EditorDesign): Layout {
       // The frame label keeps its own styling (background colour on the frame); captions may have their own colour.
       caption: d.preset === "frame" ? (d.frameTextColor ?? d.bg) : (d.captionColor ?? d.fg),
     },
-    style: { pattern: d.pattern, eyeFrame: d.eyeFrame, eyeBall: d.eyeBall, logo },
+    style: {
+      pattern: d.pattern,
+      eyeFrame: d.eyeFrame,
+      eyeBall: d.eyeBall,
+      logo,
+      ...(d.art ? { art: { ...d.art, ...(d.logo.kind === "image" ? { image: d.logo.href } : {}) } } : {}),
+    },
     ...(top ? { topLogoHref: top, ...(d.brandName?.trim() ? { brandName: d.brandName.trim() } : {}) } : {}),
     caption: {
       text: captionText,
