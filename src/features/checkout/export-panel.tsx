@@ -1,5 +1,6 @@
 "use client";
 
+import { PNG_DEFAULTS, PNG_DPIS, PNG_MAX_SIDE, PNG_SCALES, pngPixelSize, type Layout } from "@heyqr/qr-core";
 import { DownloadIcon, LoaderCircleIcon, LockIcon } from "lucide-react";
 import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
@@ -8,12 +9,14 @@ import { useRouter } from "@/i18n/navigation";
 import { startCheckout } from "@/server/actions/qr";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
+import { Segmented } from "@/shared/ui/segmented";
 
 type Format = "png" | "svg";
 
 export function ExportPanel({
   qrCodeId,
   layoutId,
+  layout,
   model,
   entitled,
   checkout,
@@ -21,6 +24,8 @@ export function ExportPanel({
 }: {
   qrCodeId: string;
   layoutId: string;
+  /** The variant being exported: decides px (scale) or mm (DPI) resolutions and the PNG's pixel size. */
+  layout: Layout;
   model: "static" | "dynamic";
   entitled: boolean;
   checkout?: "success" | "cancelled";
@@ -34,6 +39,17 @@ export function ExportPanel({
   const [selected, setSelected] = useState<Format>("png");
   const [pending, startTransition] = useTransition();
   const amount = format.number(price.cents / 100, { style: "currency", currency: price.currency });
+
+  // HEY-37: PNG resolution (design: 1×–8× for screen layouts, 300–1200 dpi for print). Only sizes within the export
+  // limits are offered; the label shows the exact PNG size the download will have.
+  const print = layout.unit === "mm";
+  const choices = (print ? PNG_DPIS : PNG_SCALES).filter((v) => pngPixelSize(layout, print ? { dpi: v } : { scale: v }).ok);
+  const fallback = print ? PNG_DEFAULTS.dpi : PNG_DEFAULTS.scale;
+  const [resolution, setResolution] = useState<number>(
+    (choices as readonly number[]).includes(fallback) ? fallback : (choices[0] ?? fallback),
+  );
+  const query = print ? `dpi=${resolution}` : `scale=${resolution}`;
+  const pixels = pngPixelSize(layout, print ? { dpi: resolution } : { scale: resolution });
 
   const pay = () =>
     startTransition(async () => {
@@ -74,9 +90,25 @@ export function ExportPanel({
         ))}
       </fieldset>
 
+      {selected === "png" ? (
+        <div className="flex flex-col gap-2">
+          <span className="text-label">{t("resolution")}</span>
+          <Segmented
+            label={t("resolution")}
+            value={String(resolution)}
+            options={choices.map((v) => ({ value: String(v), label: print ? t("dpi", { dpi: v }) : t("scale", { scale: v }) }))}
+            onChange={(v) => setResolution(Number(v))}
+          />
+          <span className="text-caption text-muted-foreground tabular-nums">
+            {t("pixels", { width: pixels.width, height: pixels.height })}
+            {choices.length < (print ? PNG_DPIS : PNG_SCALES).length ? ` · ${t("limit", { max: PNG_MAX_SIDE })}` : ""}
+          </span>
+        </div>
+      ) : null}
+
       {entitled ? (
         <Button asChild variant="primary" size="lg">
-          <a href={`/api/export/${layoutId}?format=${selected}`} download>
+          <a href={`/api/export/${layoutId}?format=${selected}${selected === "png" ? `&${query}` : ""}`} download>
             <DownloadIcon aria-hidden />
             {t("download", { format: selected.toUpperCase() })}
           </a>

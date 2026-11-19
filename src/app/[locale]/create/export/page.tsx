@@ -52,6 +52,7 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
           <ExportPanel
             qrCodeId={qr.id}
             layoutId={layout.id}
+            layout={layout.design.layout}
             model={qr.model}
             entitled={entitled}
             checkout={checkout}
