@@ -20,7 +20,7 @@ const stored = () => JSON.parse(localStorage.getItem(KEY) ?? "null");
 const renderHome = () =>
   render(
     <NextIntlClientProvider locale="en" messages={messages} timeZone="UTC">
-      <QuickStart copy={null} />
+      <QuickStart copy={null} revealLine="Good things are one scan away." />
     </NextIntlClientProvider>,
   );
 const tab = (name: string) => screen.getByRole("button", { name });

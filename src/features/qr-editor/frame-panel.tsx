@@ -10,11 +10,22 @@ import {
   supportedWeights,
 } from "@heyqr/qr-core";
 import { useTranslations } from "next-intl";
-import { EDITOR_PRESETS, FRAME_STYLES, ORIGINAL_CAPTION_FONT, type EditorDesign, type EditorPreset } from "@/entities/qr";
+import {
+  CAPTION_ALIGNS,
+  EDITOR_PRESETS,
+  FRAME_STYLES,
+  ORIGINAL_CAPTION_FONT,
+  QR_INKS,
+  type EditorDesign,
+  type EditorPreset,
+} from "@/entities/qr";
+import { Button } from "@/shared/ui/button";
+import { Swatch } from "@/shared/ui/swatch";
 import { Field } from "@/shared/ui/field";
 import { Input } from "@/shared/ui/input";
 import { CaptionField } from "./caption-field";
 import { CaptionSizeField } from "./caption-size-field";
+import { ColorField } from "./design-panel";
 import { OptionGrid } from "./option-grid";
 
 export function FramePanel({
@@ -62,6 +73,7 @@ export function FramePanel({
       {design.preset !== "qr" ? <CaptionFontPicker design={design} onChange={onChange} /> : null}
       {/* The frame label sizes itself to the frame (design "Frame text"); the caption layout has a Size field. */}
       {design.preset === "caption" ? <CaptionSizeField design={design} onChange={onChange} onValidity={onValidity} /> : null}
+      {design.preset === "caption" ? <CaptionStyle design={design} onChange={onChange} onValidity={onValidity} /> : null}
       {design.preset === "frame" ? (
         // The frame label has its own rules (design "Frame text"); unchanged here.
         <Field id="caption" label={t("caption")}>
@@ -123,6 +135,66 @@ function CaptionFontPicker({ design, onChange }: { design: EditorDesign; onChang
         onChange={(w) => onChange({ captionWeight: weightFor(font, Number(w)) as 400 | 500 | 700 })}
         render={(w) => <span style={{ fontWeight: Number(w) }}>{t(`weights.${w as "400" | "500" | "700"}`)}</span>}
       />
+    </div>
+  );
+}
+
+/*
+ * Design "Caption → Align" and "Caption color" (HEY-46), for the caption layout. Each line is aligned within the caption
+ * band; the colour is the caption's own, using the same HEX field and checks as the code colours plus the QR inks.
+ * "Match code" (unset) follows the module colour, as every caption did before. The frame label keeps its own styling.
+ */
+function CaptionStyle({
+  design,
+  onChange,
+  onValidity,
+}: {
+  design: EditorDesign;
+  onChange: (patch: Partial<EditorDesign>) => void;
+  onValidity?: (id: string, valid: boolean) => void;
+}) {
+  const t = useTranslations("editor.captionStyle");
+  const tInks = useTranslations("home.tool.inks");
+  const color = design.captionColor ?? design.fg;
+  return (
+    <div className="flex flex-col gap-4">
+      <OptionGrid
+        label={t("align")}
+        value={design.captionAlign ?? "center"}
+        options={CAPTION_ALIGNS}
+        columns="grid-cols-3"
+        onChange={(captionAlign) => onChange({ captionAlign })}
+        render={(a) => t(`aligns.${a}`)}
+      />
+      <div className="flex flex-col gap-2">
+        <ColorField
+          id="caption-color"
+          label={t("color")}
+          value={color}
+          onChange={(captionColor) => onChange({ captionColor })}
+          onValidity={onValidity}
+        />
+        <div role="group" aria-label={t("palette")} className="flex flex-wrap items-center gap-2">
+          <Button
+            type="button"
+            size="sm"
+            variant={design.captionColor === undefined ? "secondary" : "ghost"}
+            aria-pressed={design.captionColor === undefined}
+            onClick={() => onChange({ captionColor: undefined })}
+          >
+            {t("matchCode")}
+          </Button>
+          {QR_INKS.map((ink) => (
+            <Swatch
+              key={ink.hex}
+              color={ink.hex}
+              selected={design.captionColor?.toUpperCase() === ink.hex}
+              aria-label={tInks(ink.name)}
+              onClick={() => onChange({ captionColor: ink.hex })}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

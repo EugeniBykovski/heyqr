@@ -4,6 +4,7 @@ import {
   DEFAULT_DESIGN,
   EDITOR_PRESETS,
   ORIGINAL_CAPTION_FONT,
+  type CaptionAlign,
   type CenterIcon,
   type EditorDesign,
   type EditorPreset,
@@ -51,6 +52,8 @@ function settingsFromLayout(layout: Layout): Partial<EditorDesign> {
     preset,
     frameStyle: layout.frameStyle ?? DEFAULT_DESIGN.frameStyle,
     caption: layout.caption.text,
+    ...(preset === "caption" && layout.caption.align !== "center" ? { captionAlign: layout.caption.align as CaptionAlign } : {}),
+    ...(preset === "caption" && layout.colors.caption !== layout.colors.fg ? { captionColor: layout.colors.caption } : {}),
     ...(isValidSize(size) ? { size } : {}),
   };
 }

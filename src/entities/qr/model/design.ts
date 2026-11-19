@@ -63,11 +63,18 @@ export interface EditorDesign {
   /** Caption font and weight (HEY-44). Unset (drafts before HEY-44) = DEFAULT_CAPTION_FONT / DEFAULT_CAPTION_WEIGHT. */
   captionFont?: CaptionFontId | typeof ORIGINAL_CAPTION_FONT;
   captionWeight?: CaptionWeight;
+  /** Caption alignment within its band (HEY-46). Unset = center, as every layout before. Caption layout only. */
+  captionAlign?: CaptionAlign;
+  /** Caption text colour (HEY-46). Unset = the module colour, as every layout before. Caption layout only. */
+  captionColor?: string;
   /** Caption type size (HEY-45): px for px layouts, pt for mm layouts. Unset = defaultCaptionSize (older layouts). */
   captionSize?: number;
   /** Design 1.8 Size. Unset (every draft before HEY-35) renders at LEGACY_SIZE, exactly as before. */
   size?: DesignSize;
 }
+
+export type CaptionAlign = "left" | "center" | "right";
+export const CAPTION_ALIGNS: readonly CaptionAlign[] = ["left", "center", "right"];
 
 export const DEFAULT_DESIGN: EditorDesign = {
   name: "",
@@ -128,14 +135,23 @@ export function designToLayout(d: EditorDesign): Layout {
     ...canvas,
     qrSize: size.qr,
     border: false,
-    colors: { fg: d.fg, eye: d.eye ?? d.fg, eyeIn: d.eyeIn ?? d.fg, bg: d.bg, frame: d.fg, caption: d.preset === "frame" ? d.bg : d.fg },
+    colors: {
+      fg: d.fg,
+      eye: d.eye ?? d.fg,
+      eyeIn: d.eyeIn ?? d.fg,
+      bg: d.bg,
+      frame: d.fg,
+      // The frame label keeps its own styling (background colour on the frame); captions may have their own colour.
+      caption: d.preset === "frame" ? d.bg : (d.captionColor ?? d.fg),
+    },
     style: { pattern: d.pattern, eyeFrame: d.eyeFrame, eyeBall: d.eyeBall, logo },
     caption: {
       text: captionText,
       ...captionTypeface(d),
       // px layouts: px. mm layouts: pt (the renderer's caption unit for print). Unset: a share of the code, as before.
       size: d.captionSize ?? defaultCaptionSize(size),
-      align: "center",
+      // Frames centre their label; the caption layout aligns its lines as chosen (HEY-46).
+      align: d.preset === "caption" ? (d.captionAlign ?? "center") : "center",
       position: "after",
     },
   };
