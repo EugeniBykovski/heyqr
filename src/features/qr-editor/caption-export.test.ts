@@ -7,11 +7,11 @@ import { readPng } from "../../../packages/qr-core/test/png-reader";
 
 vi.mock("server-only", () => ({}));
 vi.mock("@/env", () => ({ env: { S3_PUBLIC_URL: undefined, NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr" } }));
-const { renderExport, CAPTION_FONT_FILES } = await import("@/server/qr/export");
+const { renderExport, captionFontFaces } = await import("@/server/qr/export");
 
 /*
- * HEY-43: the exported PNG draws the caption with DM Sans, the font of the on-screen preview (it fell back to a system
- * font before), the caption stays inside its box, and the caption never changes the encoded payload.
+ * HEY-43 / HEY-44: the exported PNG draws the caption with the caption font's own files, the ones the on-screen preview
+ * loads (it fell back to a system font before HEY-43), the caption stays inside its box, and the caption never changes the encoded payload.
  */
 const VALUE = "https://littlefern.cafe/menu?table=4";
 const AT_LIMIT = "Little Fern Café · seasonal menu & wifi\nScan at your table, order, pay in-app!!!";
@@ -39,21 +39,23 @@ function captionInk(png: Buffer) {
 }
 
 describe("caption in exported files (HEY-43)", () => {
-  it("bundles DM Sans for the PNG renderer", () => {
-    expect(CAPTION_FONT_FILES.every((f) => existsSync(f))).toBe(true);
+  it("the caption's font files exist for the PNG renderer", () => {
+    const files = captionFontFaces(layoutFor("Scan\nme")).map((f) => f.file);
+    expect(files).toHaveLength(2);
+    expect(files.every((f) => existsSync(f))).toBe(true);
   });
 
   for (const caption of ["Scan for the menu\nTable 4 · Little Fern Café", AT_LIMIT])
-    it(`PNG caption is drawn with DM Sans, inside its box, and the code decodes: ${JSON.stringify(caption.slice(0, 24))}…`, async () => {
+    it(`PNG caption is drawn with the caption font, inside its box, and the code decodes: ${JSON.stringify(caption.slice(0, 24))}…`, async () => {
       const layout = layoutFor(caption);
       const svg = (await renderExport(layout, VALUE, "svg", {})).body.toString();
       const png = (await renderExport(layout, VALUE, "png", { scale: 2 })).body;
       const ink = captionInk(png);
       expect([ink.width, ink.height]).toEqual([1024, 1250]);
-      // The export rasterizes with the bundled DM Sans: same pixels as a render given those files, and not the
+      // The export rasterizes with the caption font's files: same pixels as a render given those files, and not the
       // system-font fallback it produced before.
       const sized = svg.replace(/^<svg ([^>]*?)width="[^"]*" height="[^"]*"/, '<svg $1width="1024" height="1250"');
-      expect(ink).toEqual(captionInk(rasterizeSvg(sized, { width: 1024, fontFiles: CAPTION_FONT_FILES })));
+      expect(ink).toEqual(captionInk(rasterizeSvg(sized, { width: 1024, fontFiles: captionFontFaces(layout).map((f) => f.file) })));
       expect(ink).not.toEqual(captionInk(rasterizeSvg(sized, { width: 1024 })));
       // Inside the caption box (6 %–94 % of the width, under the code): nothing clipped at the edges.
       expect(ink.x0).toBeGreaterThan(1024 * 0.06);

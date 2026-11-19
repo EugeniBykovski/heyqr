@@ -40,4 +40,20 @@ export {
   type QrContentType,
 } from "./payload";
 export { contrastRatio, luminance, isHexColor, parseHexColor } from "./color";
+export {
+  CAPTION_FONT_IDS,
+  CAPTION_FONTS,
+  CAPTION_WEIGHTS,
+  captionFaces,
+  captionFontFamily,
+  captionWeightFor,
+  DEFAULT_CAPTION_FONT,
+  DEFAULT_CAPTION_WEIGHT,
+  isCaptionFontId,
+  LEGACY_CAPTION_FONT,
+  supportedWeights,
+  type CaptionFont,
+  type CaptionFontId,
+  type CaptionWeight,
+} from "./caption-fonts";
 export type * from "./types";

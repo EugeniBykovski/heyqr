@@ -1,4 +1,18 @@
-import type { EyeBallShape, EyeFrameShape, FrameStyle, Layout, ModuleShape, QrContent } from "@heyqr/qr-core";
+import {
+  CAPTION_FONTS,
+  captionFontFamily,
+  captionWeightFor,
+  DEFAULT_CAPTION_FONT,
+  DEFAULT_CAPTION_WEIGHT,
+  type CaptionFontId,
+  type CaptionWeight,
+  type EyeBallShape,
+  type EyeFrameShape,
+  type FrameStyle,
+  type Layout,
+  type ModuleShape,
+  type QrContent,
+} from "@heyqr/qr-core";
 import { LEGACY_SIZE, type DesignSize } from "./size";
 
 /** 24×24 stroke icons for the code center (Lucide geometry, drawn by qr-core). */
@@ -45,6 +59,9 @@ export interface EditorDesign {
   preset: EditorPreset;
   frameStyle: FrameStyle;
   caption: string;
+  /** Caption font and weight (HEY-44). Unset (drafts before HEY-44) = DEFAULT_CAPTION_FONT / DEFAULT_CAPTION_WEIGHT. */
+  captionFont?: CaptionFontId;
+  captionWeight?: CaptionWeight;
   /** Design 1.8 Size. Unset (every draft before HEY-35) renders at LEGACY_SIZE, exactly as before. */
   size?: DesignSize;
 }
@@ -88,6 +105,7 @@ export function designToLayout(d: EditorDesign): Layout {
         ? { href: d.logo.href, size: d.logoSize, plate: "square" as const, plateColor: d.bg }
         : null;
   const captionText = d.preset === "qr" ? "" : d.caption;
+  const captionFont = d.captionFont ?? DEFAULT_CAPTION_FONT;
   const size = d.size ?? LEGACY_SIZE;
   // "qr" and "frame" derive their canvas from the code (layoutGeometry); "caption" has its own width × height.
   const canvas = d.preset === "caption" ? { width: size.width, height: size.height } : { width: size.qr, height: size.qr };
@@ -102,10 +120,11 @@ export function designToLayout(d: EditorDesign): Layout {
     style: { pattern: d.pattern, eyeFrame: d.eyeFrame, eyeBall: d.eyeBall, logo },
     caption: {
       text: captionText,
-      fontFamily: "DM Sans, sans-serif",
+      font: captionFont,
+      fontFamily: captionFontFamily(CAPTION_FONTS[captionFont]),
       // px layouts: px. mm layouts: pt (the renderer's caption unit for print), same share of the code as on screen.
       size: ((CAPTION_PX_AT_LEGACY * size.qr) / LEGACY_SIZE.qr) * (size.unit === "mm" ? 1 / MM_PER_PT : 1),
-      weight: 700,
+      weight: captionWeightFor(captionFont, d.captionWeight ?? DEFAULT_CAPTION_WEIGHT),
       align: "center",
       position: "after",
     },

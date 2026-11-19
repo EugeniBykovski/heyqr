@@ -1,3 +1,4 @@
+import { CAPTION_FONTS, captionFontFamily, captionWeightFor } from "./caption-fonts";
 import { circle, escapeXml, round3 as f, roundedRect } from "./geometry";
 import { maxPayloadBytes, payloadBytes, type ErrorCorrectionLevel } from "./encode";
 import { eclForStyle, renderQr } from "./render";
@@ -199,14 +200,16 @@ export function layoutGeometry(layout: Layout): LayoutGeometry {
 export function captionFontSize(layout: Layout, g: LayoutGeometry): number {
   const lines = String(layout.caption.text || "").split("\n");
   if (!g.caption) return 0;
+  // Average character width of the caption's font (HEY-44); older layouts keep the DM Sans estimate.
+  const cw = layout.caption.font ? CAPTION_FONTS[layout.caption.font].charWidth : 0.56;
   if (layout.preset === "frame") {
     const longest = Math.max(1, ...lines.map((t) => t.length));
-    return Math.min(((g.caption[3] * 0.5) / lines.length) * 1.1, (g.caption[2] * 0.86) / (longest * 0.56));
+    return Math.min(((g.caption[3] * 0.5) / lines.length) * 1.1, (g.caption[2] * 0.86) / (longest * cw));
   }
   const base = layout.unit === "px" ? layout.caption.size : layout.caption.size * 0.3528;
   const first = (lines[0] ?? "").length;
   const sub = Math.max(0, ...lines.slice(1).map((t) => t.length));
-  const fitW = (g.caption[2] * 0.94) / Math.max(1, first * 0.56, sub * 0.56 * 0.74);
+  const fitW = (g.caption[2] * 0.94) / Math.max(1, first * cw, sub * cw * 0.74);
   const fitH = (g.caption[3] * 0.86) / (1.18 * (1 + (lines.length - 1) * 0.74));
   return Math.min(base, fitW, fitH);
 }
@@ -316,12 +319,21 @@ export function composeLayout(layout: Layout, value: string, options: ComposeOpt
     const tx = align === "left" ? g.caption[0] : align === "right" ? g.caption[0] + g.caption[2] : g.caption[0] + g.caption[2] / 2;
     const total = fs * 1.15 + (lines.length - 1) * fs2 * 1.3;
     const ty = g.caption[1] + g.caption[3] / 2 - total / 2 + fs * 0.85;
-    // Optical size pinned (HEY-43): browsers otherwise pick it from the font size, so the on-screen preview and the
-    // exported files (rasterized with static DM Sans at 14 pt) would draw slightly different letterforms.
-    svg += `<text font-family="${escapeXml(cap.fontFamily)}" fill="${col.caption}" text-anchor="${anchor}" style="font-variation-settings:'opsz' 14">`;
+    // HEY-44: a caption font ID draws with that font's shipped static faces (same files in the browser, resvg and the
+    // SVG's embedded @font-face), at the nearest weight it ships. Older layouts keep their family string and DM Sans
+    // with the optical size pinned (HEY-43), exactly as they were exported.
+    const face = cap.font ? CAPTION_FONTS[cap.font] : null;
+    const family = face ? captionFontFamily(face) : cap.fontFamily;
+    const firstWeight = cap.font ? captionWeightFor(cap.font, cap.weight) : cap.weight;
+    // Inline previews inherit the page's text settings (the app sets stylistic set 1 on body); the caption resets
+    // them so every host draws the same glyphs as the exported files.
+    const textStyle = face
+      ? ` style="font-feature-settings:normal;font-variant:normal;letter-spacing:normal;word-spacing:normal;font-synthesis:none"`
+      : ` style="font-variation-settings:'opsz' 14"`;
+    svg += `<text font-family="${escapeXml(family)}" fill="${col.caption}" text-anchor="${anchor}"${textStyle}>`;
     lines.forEach((line, i) => {
       const y = i === 0 ? ty : ty + fs * 0.3 + i * fs2 * 1.3;
-      svg += `<tspan x="${f(tx)}" y="${f(y)}" font-size="${f(i === 0 ? fs : fs2)}" font-weight="${i === 0 ? cap.weight : 400}"${i === 0 ? "" : ' fill-opacity="0.72"'}>${escapeXml(line)}</tspan>`;
+      svg += `<tspan x="${f(tx)}" y="${f(y)}" font-size="${f(i === 0 ? fs : fs2)}" font-weight="${i === 0 ? firstWeight : 400}"${i === 0 ? "" : ' fill-opacity="0.72"'}>${escapeXml(line)}</tspan>`;
     });
     svg += "</text>";
   }

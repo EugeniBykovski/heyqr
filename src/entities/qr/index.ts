@@ -16,6 +16,8 @@ export {
 export { CAPTION_MAX_CHARS, CAPTION_MAX_LINES, captionLength, checkCaption, normalizeCaption, type CaptionCheck } from "./model/caption";
 export { CONTENT_FIELDS, emptyContent, isContentComplete, type ContentField } from "./model/content";
 export { QrPreview } from "./ui/qr-preview";
+export { CaptionFontFaces, captionFontUrl } from "./ui/caption-font-faces";
+export { captionFontQueries, useCaptionFontsReady } from "./model/use-caption-fonts-ready";
 export { QR_EXAMPLES, type QrExample } from "./model/examples";
 export {
   createLayoutRecord,

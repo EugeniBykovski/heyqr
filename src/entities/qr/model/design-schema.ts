@@ -1,4 +1,4 @@
-import { isHexColor, QR_CONTENT_TYPES, type Layout, type QrContent } from "@heyqr/qr-core";
+import { CAPTION_FONT_IDS, isHexColor, QR_CONTENT_TYPES, type Layout, type QrContent } from "@heyqr/qr-core";
 import { isValidSize } from "./size";
 import { z } from "zod";
 import { modeFor, QR_MODES } from "./modes";
@@ -39,6 +39,9 @@ export const designSettingsSchema = z.object({
   preset: oneOf(EDITOR_PRESETS),
   frameStyle: oneOf(FRAME_STYLES),
   caption: z.string().max(200),
+  // Optional: drafts and records from before HEY-44 have no caption font; they get the default.
+  captionFont: oneOf(CAPTION_FONT_IDS).optional(),
+  captionWeight: z.union([z.literal(400), z.literal(500), z.literal(700)]).optional(),
   // Optional: drafts and records from before HEY-35 have no size and render at LEGACY_SIZE.
   size: z
     .object({ unit: z.enum(["px", "mm"]), qr: z.number(), width: z.number(), height: z.number() })
@@ -73,6 +76,8 @@ const layoutSchema = z
     caption: z.looseObject({
       text: z.string(),
       fontFamily: z.string(),
+      // HEY-44; absent on older layouts (DM Sans). An unknown ID is refused rather than rendered with the wrong font.
+      font: oneOf(CAPTION_FONT_IDS).optional(),
       size: z.number(),
       weight: z.number(),
       align: z.enum(["left", "center", "right"]),
@@ -143,7 +148,8 @@ export function createLayoutRecord(layout: unknown, editor?: unknown): LayoutRec
 
 /** The design settings part of an editor draft (what a saved variant keeps in `editor`). */
 export function designSettingsOf(design: EditorDesign): DesignSettings {
-  const { pattern, eyeFrame, eyeBall, fg, bg, eye, eyeIn, logo, logoSize, preset, frameStyle, caption, size } = design;
+  const { pattern, eyeFrame, eyeBall, fg, bg, eye, eyeIn, logo, logoSize, preset, frameStyle, caption, captionFont, captionWeight, size } =
+    design;
   return {
     pattern,
     eyeFrame,
@@ -157,6 +163,8 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     preset,
     frameStyle,
     caption,
+    ...(captionFont === undefined ? {} : { captionFont }),
+    ...(captionWeight === undefined ? {} : { captionWeight }),
     ...(size === undefined ? {} : { size }),
   };
 }

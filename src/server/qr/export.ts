@@ -1,5 +1,6 @@
 import "server-only";
 import {
+  captionFaces,
   composeLayout,
   encodePayload,
   PNG_MAX_SIDE,
@@ -9,20 +10,41 @@ import {
   type PngResolution,
   type QrContent,
 } from "@heyqr/qr-core";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { rasterizeSvg } from "@heyqr/qr-core/raster";
 import { env } from "@/env";
 
 export type ExportFormat = "png" | "svg";
 
+/** Caption font files (HEY-44): the same files the browser preview loads from /caption-fonts. Traced via next.config.ts. */
+export const CAPTION_FONT_DIR = path.join(process.cwd(), "public/caption-fonts");
+
+/** The caption's font faces (family, weight, file) for a layout: none when it shows no caption. */
+export function captionFontFaces(layout: Layout): { family: string; weight: number; file: string }[] {
+  if (!layout.caption.text || layout.preset === "qr") return [];
+  const { font, weights } = captionFaces(layout.caption);
+  return weights.flatMap((weight) => {
+    const file = font.faces[weight];
+    return file ? [{ family: font.family, weight, file: path.join(CAPTION_FONT_DIR, file) }] : [];
+  });
+}
+
 /**
- * DM Sans, the caption font of the on-screen preview, as static TTF files (400 and 700, optical size 14) for resvg
- * (HEY-43). Without them the PNG caption fell back to a system font. Traced into the build via next.config.ts.
- * Characters DM Sans lacks (Cyrillic, emoji) still fall back to system fonts, as they do in the browser.
+ * A downloaded SVG must look the same without the app, its network or locally installed fonts: the caption's faces
+ * are embedded as @font-face data URLs (the OFL allows embedding the fonts in documents). resvg ignores this block and
+ * gets the same files directly.
  */
-export const CAPTION_FONT_FILES = ["DMSans-Regular.ttf", "DMSans-Bold.ttf"].map((f) =>
-  path.join(process.cwd(), "packages/qr-core/fonts", f),
-);
+export function withEmbeddedFonts(svg: string, faces: { family: string; weight: number; file: string }[]): string {
+  if (faces.length === 0 || !svg.includes("<text")) return svg;
+  const css = faces
+    .map(
+      (f) =>
+        `@font-face{font-family:'${f.family}';font-weight:${f.weight};font-style:normal;src:url(data:font/ttf;base64,${readFileSync(f.file).toString("base64")}) format('truetype')}`,
+    )
+    .join("");
+  return svg.replace(/^(<svg [^>]*>)/, `$1<defs><style>${css}</style></defs>`);
+}
 
 /** What the printed code contains: the payload for static codes, the permanent short link for dynamic ones. */
 export function encodedValue(qr: { model: "static" | "dynamic"; content: QrContent; shortCode: string | null }) {
@@ -69,7 +91,9 @@ export async function renderExport(
   opts: { dpi?: number; scale?: number; transparent?: boolean },
 ) {
   const composed = composeLayout(await withEmbeddedImages(layout), value, { transparent: opts.transparent });
-  if (format === "svg") return { body: Buffer.from(composed.svg), contentType: "image/svg+xml", scan: composed.scan };
+  const faces = captionFontFaces(layout);
+  if (format === "svg")
+    return { body: Buffer.from(withEmbeddedFonts(composed.svg, faces)), contentType: "image/svg+xml", scan: composed.scan };
   // HEY-37: the whole layout at the requested resolution, aspect ratio kept; validated before rasterizing.
   const size = pngPixelSize(layout, opts);
   if (!size.ok) throw new ExportSizeError(size);
@@ -80,7 +104,7 @@ export async function renderExport(
     `<svg $1width="${size.width}" height="${size.height}" preserveAspectRatio="none"`,
   );
   return {
-    body: rasterizeSvg(forRaster, { width: size.width, fontFiles: CAPTION_FONT_FILES }),
+    body: rasterizeSvg(forRaster, { width: size.width, fontFiles: faces.map((f) => f.file) }),
     contentType: "image/png",
     scan: composed.scan,
     size,

@@ -9,8 +9,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   serverExternalPackages: ["@resvg/resvg-js", "zxing-wasm"],
   transpilePackages: ["@heyqr/qr-core"],
-  // Caption fonts read from disk by the PNG export (src/server/qr/export.ts).
-  outputFileTracingIncludes: { "/api/export/[layoutId]": ["./packages/qr-core/fonts/**"] },
+  // Caption fonts read from disk by the export (src/server/qr/export.ts): PNG rasterizing and SVG embedding.
+  outputFileTracingIncludes: { "/api/export/[layoutId]": ["./public/caption-fonts/*.ttf"] },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
