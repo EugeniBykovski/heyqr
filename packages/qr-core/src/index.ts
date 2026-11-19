@@ -8,7 +8,7 @@ export {
   type QrMatrix,
   type ErrorCorrectionLevel,
 } from "./encode";
-export { eclForStyle, renderQr, renderQrSvg } from "./render";
+export { eclForStyle, MIN_CONTRAST, renderQr, renderQrSvg } from "./render";
 export {
   composeLayout,
   layoutGeometry,

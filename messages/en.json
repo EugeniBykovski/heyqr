@@ -609,8 +609,8 @@
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",
-    "contrast": "Not enough contrast between the code and its background. Aim for at least 4:1.",
-    "eyes": "The corner markers are too light. Scanners find the code by them.",
+    "contrast": "Not enough contrast between the code and its background. It needs at least 3:1.",
+    "eyes": "The corner markers need to be darker than the background, with at least 3:1 contrast (2.5:1 for the centers). Scanners find the code by them.",
     "logo": "The logo hides too much of the code. Make it smaller.",
     "text": "The text in the code is too long. Keep it to about 8 characters."
   },
