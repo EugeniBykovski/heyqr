@@ -82,7 +82,7 @@ export function DesignStep({
           <TooLongNotice className="mb-5" capacity={tooLong} onEdit={onEditContent} />
         ) : scan && !scan.ok ? (
           <div className="mb-5">
-            <ScanStatus report={scan} />
+            <ScanStatus report={scan} onReduceLogo={(logoSize) => onChange({ logoSize })} />
           </div>
         ) : null}
         <div className="flex flex-col gap-8">

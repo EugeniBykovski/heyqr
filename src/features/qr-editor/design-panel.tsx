@@ -6,6 +6,8 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import {
   CENTER_ICONS,
+  defaultLogoPlate,
+  LOGO_PLATES,
   DEFAULT_DESIGN,
   EYE_BALL_SHAPES,
   EYE_FRAME_SHAPES,
@@ -255,6 +257,17 @@ export function DesignPanel({
               className="h-11 w-full accent-primary"
             />
           </div>
+        ) : null}
+        {design.logo.kind !== "none" ? (
+          // Design "plate" (HEY-51): the backing behind the logo. Modules under it are always cleared.
+          <OptionGrid
+            label={t("logoPlate.label")}
+            value={design.logoPlate ?? defaultLogoPlate(design.logo)}
+            options={LOGO_PLATES}
+            columns="grid-cols-3"
+            onChange={(logoPlate) => onChange({ logoPlate })}
+            render={(o) => t(`logoPlate.${o}`)}
+          />
         ) : null}
       </fieldset>
     </div>

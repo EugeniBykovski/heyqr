@@ -57,6 +57,9 @@ export interface EditorDesign {
   eyeIn?: string;
   logo: CenterLogo;
   logoSize: number;
+  /** Logo backing (HEY-51, design "plate"): none, square or circle. Unset = the look every logo had: square behind an
+   *  uploaded image, circle behind an icon. */
+  logoPlate?: LogoPlate;
   preset: EditorPreset;
   frameStyle: FrameStyle;
   caption: string;
@@ -74,6 +77,10 @@ export interface EditorDesign {
 }
 
 export type CaptionAlign = "left" | "center" | "right";
+export type LogoPlate = "none" | "square" | "circle";
+export const LOGO_PLATES: readonly LogoPlate[] = ["none", "square", "circle"];
+/** The backing a logo has when none was chosen. */
+export const defaultLogoPlate = (logo: CenterLogo): LogoPlate => (logo.kind === "icon" ? "circle" : "square");
 export const CAPTION_ALIGNS: readonly CaptionAlign[] = ["left", "center", "right"];
 
 export const DEFAULT_DESIGN: EditorDesign = {
@@ -120,9 +127,9 @@ function captionTypeface(d: EditorDesign): Pick<Layout["caption"], "font" | "fon
 export function designToLayout(d: EditorDesign): Layout {
   const logo =
     d.logo.kind === "icon"
-      ? { iconPath: CENTER_ICONS[d.logo.icon], size: d.logoSize, plate: "circle" as const, plateColor: d.bg, iconColor: d.fg }
+      ? { iconPath: CENTER_ICONS[d.logo.icon], size: d.logoSize, plate: d.logoPlate ?? "circle", plateColor: d.bg, iconColor: d.fg }
       : d.logo.kind === "image"
-        ? { href: d.logo.href, size: d.logoSize, plate: "square" as const, plateColor: d.bg }
+        ? { href: d.logo.href, size: d.logoSize, plate: d.logoPlate ?? "square", plateColor: d.bg }
         : null;
   const captionText = d.preset === "qr" ? "" : d.caption;
   const size = d.size ?? LEGACY_SIZE;

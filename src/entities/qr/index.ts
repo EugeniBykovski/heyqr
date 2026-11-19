@@ -1,6 +1,8 @@
 export {
   CAPTION_ALIGNS,
   CENTER_ICONS,
+  defaultLogoPlate,
+  LOGO_PLATES,
   DEFAULT_DESIGN,
   EDITOR_PRESETS,
   EYE_BALL_SHAPES,
@@ -11,6 +13,7 @@ export {
   QR_INKS,
   designToLayout,
   type CaptionAlign,
+  type LogoPlate,
   type CenterIcon,
   type CenterLogo,
   type EditorDesign,
