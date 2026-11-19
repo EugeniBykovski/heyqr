@@ -3,6 +3,7 @@ import { isValidSize } from "./size";
 import { z } from "zod";
 import { modeFor, QR_MODES } from "./modes";
 import {
+  CAPTION_ALIGNS,
   CENTER_ICONS,
   EDITOR_PRESETS,
   ORIGINAL_CAPTION_FONT,
@@ -51,6 +52,9 @@ export const designSettingsSchema = z.object({
   // Optional: drafts and records from before HEY-44 have no caption font; they get the default.
   captionFont: oneOf([...CAPTION_FONT_IDS, ORIGINAL_CAPTION_FONT]).optional(),
   captionWeight: z.union([z.literal(400), z.literal(500), z.literal(700)]).optional(),
+  // Optional: before HEY-46 captions were centred in the module colour.
+  captionAlign: oneOf(CAPTION_ALIGNS).optional(),
+  captionColor: hex.optional(),
   // Optional: before HEY-45 the caption size followed the code size (defaultCaptionSize).
   captionSize: z.number().min(4).max(400).optional(),
   // Optional: drafts and records from before HEY-35 have no size and render at LEGACY_SIZE.
@@ -175,6 +179,8 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     captionFont,
     captionWeight,
     captionSize,
+    captionAlign,
+    captionColor,
     size,
   } = design;
   return {
@@ -193,6 +199,8 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     ...(captionFont === undefined ? {} : { captionFont }),
     ...(captionWeight === undefined ? {} : { captionWeight }),
     ...(captionSize === undefined ? {} : { captionSize }),
+    ...(captionAlign === undefined ? {} : { captionAlign }),
+    ...(captionColor === undefined ? {} : { captionColor }),
     ...(size === undefined ? {} : { size }),
   };
 }

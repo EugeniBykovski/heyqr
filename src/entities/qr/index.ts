@@ -1,4 +1,5 @@
 export {
+  CAPTION_ALIGNS,
   CENTER_ICONS,
   DEFAULT_DESIGN,
   EDITOR_PRESETS,
@@ -9,6 +10,7 @@ export {
   ORIGINAL_CAPTION_FONT,
   QR_INKS,
   designToLayout,
+  type CaptionAlign,
   type CenterIcon,
   type CenterLogo,
   type EditorDesign,

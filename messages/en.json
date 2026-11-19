@@ -34,7 +34,8 @@
     "hero": {
       "eyebrow": "QR studio · free to design and preview",
       "title": "A QR code that looks like it’s yours.",
-      "lead": "Paste a link and style it here. The preview updates as you type, and designing is free."
+      "lead": "Paste a link and style it here. The preview updates as you type, and designing is free.",
+      "reveal": "Good things are one scan away."
     },
     "tool": {
       "typesLabel": "What should the code open?",
@@ -644,6 +645,17 @@
       "notFound": "This code or layout no longer exists.",
       "hint": "Changes apply to this layout only",
       "note": "Saving updates this layout. Content, payment and links stay the same."
+    },
+    "captionStyle": {
+      "align": "Align",
+      "aligns": {
+        "left": "Left",
+        "center": "Center",
+        "right": "Right"
+      },
+      "color": "Caption color",
+      "palette": "Caption color presets",
+      "matchCode": "Match code"
     }
   },
   "scan": {

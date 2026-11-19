@@ -70,6 +70,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
   return (
     <Container>
       <QuickStart
+        revealLine={t("hero.reveal")}
         copy={
           <>
             <span className="inline-flex items-center gap-2 self-start rounded-full border border-border bg-surface py-1 pr-3 pl-1.5 text-[0.8125rem] font-semibold text-secondary-foreground">

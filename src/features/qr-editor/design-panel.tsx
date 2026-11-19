@@ -26,7 +26,7 @@ const MAX_INLINE_LOGO = 512 * 1024;
  * colour: only a valid "#RRGGBB" (either case) reaches the design, so the preview, draft and export never see partial or
  * invalid text. The error shows after blur (or when Export is attempted) and clears as soon as the text is valid.
  */
-function ColorField({
+export function ColorField({
   id,
   label,
   value,
