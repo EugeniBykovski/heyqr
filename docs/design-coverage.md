@@ -48,19 +48,19 @@ verification script result (named here).
 
 ## 3 · Export & purchase
 
-| Frame                  | Route                              | 390 | 834 | 1440 | Notes                                                                                          |
-| ---------------------- | ---------------------------------- | --- | --- | ---- | ---------------------------------------------------------------------------------------------- |
-| 3.1 Export · guest     | `/create/export` (signed out)      | ✅  | ✅  | ✅   | Layout, PNG/SVG, PNG size, transparency, order summary, Continue with Google                   |
-| 3.2 Google sign-in     | `/sign-in?next=…`                  | 🟡  | 🟡  | 🟡   | Google-only sign-in works up to Google; full sign-in pending the owner's manual check          |
-| 3.3 Back from Google   | `/create?resume=1&format=…`        | ✅  | ✅  | ✅   | Saves the draft, opens export with the same settings and the "Signed in with Google" banner    |
-| 3.4 Checkout           | Stripe Checkout                    | ⛔  | ⛔  | ⛔   | Stripe not configured locally (optional in dev, HEY-8)                                         |
-| 3.5 Cancelled          | `?checkout=cancelled`              | ✅  | ✅  | ✅   | "You weren’t charged" banner; settings kept (fixed: return URLs lacked the code id → 404)      |
-| 3.6 Confirming payment | `?checkout=success` before webhook | ✅  | ✅  | ✅   | Controls frozen, preview kept, the page re-checks every 2.5 s; ⛔ live webhook not run locally |
-| 3.7 Preparing file     | Download                           | ✅  | ✅  | ✅   | "Preparing your PNG…" in the preview and the action; settings frozen                           |
-| 3.8 File ready         | after preparing                    | ✅  | ✅  | ✅   | One action: Download PNG (the user’s own click saves the prepared file)                        |
-| 3.9 Downloaded         | after download                     | ✅  | ✅  | ✅   | Real file name from the server (UTF-8 names fixed), Download again                             |
-| 3.10 Export error      | API error                          | ✅  | ✅  | ✅   | Payment and settings safe; Try again repeats the same request                                  |
-| 3.11 Download again    | `/create/export?qr=…&layout=…`     | ✅  | ✅  | ✅   | Layout tabs per named layout; second layout (Poster) as SVG verified and decoded               |
+| Frame                  | Route                              | 390 | 834 | 1440 | Notes                                                                                             |
+| ---------------------- | ---------------------------------- | --- | --- | ---- | ------------------------------------------------------------------------------------------------- |
+| 3.1 Export · guest     | `/create/export` (signed out)      | ✅  | ✅  | ✅   | Layout, PNG/SVG, PNG size, transparency, order summary, Continue with Google                      |
+| 3.2 Google sign-in     | `/sign-in?next=…`                  | 🟡  | 🟡  | 🟡   | Google-only sign-in works up to Google; full sign-in pending the owner's manual check             |
+| 3.3 Back from Google   | `/create?resume=1&format=…`        | ✅  | ✅  | ✅   | Saves the draft, opens export with the same settings and the "Signed in with Google" banner       |
+| 3.4 Checkout           | Stripe Checkout                    | ⛔  | ⛔  | ⛔   | Hosted Stripe Checkout; the request fails from this environment, so no live run (no charges made) |
+| 3.5 Cancelled          | `?checkout=cancelled`              | ✅  | ✅  | ✅   | "You weren’t charged" banner; settings kept (fixed: return URLs lacked the code id → 404)         |
+| 3.6 Confirming payment | `?checkout=success` before webhook | ✅  | ✅  | ✅   | Controls frozen, preview kept, the page re-checks every 2.5 s; ⛔ live webhook not run locally    |
+| 3.7 Preparing file     | Download                           | ✅  | ✅  | ✅   | "Preparing your PNG…" in the preview and the action; settings frozen                              |
+| 3.8 File ready         | after preparing                    | ✅  | ✅  | ✅   | One action: Download PNG (the user’s own click saves the prepared file)                           |
+| 3.9 Downloaded         | after download                     | ✅  | ✅  | ✅   | Real file name from the server (UTF-8 names fixed), Download again                                |
+| 3.10 Export error      | API error                          | ✅  | ✅  | ✅   | Payment and settings safe; Try again repeats the same request                                     |
+| 3.11 Download again    | `/create/export?qr=…&layout=…`     | ✅  | ✅  | ✅   | Layout tabs per named layout; second layout (Poster) as SVG verified and decoded                  |
 
 ## 4 · Account
 
@@ -68,7 +68,7 @@ verification script result (named here).
 | ------------------------- | ----------------------- | --- | --- | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 4.1 My QR codes · empty   | `/dashboard` (no codes) | ✅  | ✅  | ✅   | HEY-3                                                                                                                                                                                               |
 | 4.2 My QR codes           | `/dashboard`            | ✅  | ✅  | ✅   | Thumbnail, badges, Edit design, Download / Buy, inline rename (Enter saves, Escape cancels, failures keep the text)                                                                                 |
-| 4.3 Details · static      | `/dashboard/qr/[id]`    | 🟡  | 🟡  | 🟡   | Page exists, not aligned                                                                                                                                                                            |
+| 4.3 Details · static      | `/dashboard/qr/[id]`    | 🟡  | 🟡  | 🟡   | Page exists (layouts, downloads, Edit design); not realigned in this pass; Print Pack entry points ⛔                                                                                               |
 | 4.4 Details · dynamic     | `/dashboard/qr/[id]`    | 🟡  | 🟡  | 🟡   | Short link, destination form and scans chart exist, not aligned                                                                                                                                     |
 | 4.5 Editing destination   | details page            | 🟡  | 🟡  | 🟡   |                                                                                                                                                                                                     |
 | 4.6 Destination saved     | details page            | 🟡  | 🟡  | 🟡   |                                                                                                                                                                                                     |
@@ -94,6 +94,25 @@ verification script result (named here).
 | 6.1 Home · guest            | `/` signed out          | ✅  | ✅  | ✅   | "Every QR code, in one place." with a labelled sample workspace (fixed sample data, inert); Create / Sign in. No trial (not offered) |
 | 6.2 Home · new account      | `/` signed in, no codes | ✅  | ✅  | ✅   | Studio empty state with one action                                                                                                   |
 | 6.x Print Pack introduction | —                       | ⛔  | ⛔  | ⛔   | Print Pack is not offered by the backend; not published                                                                              |
+
+## 8 · Print Pack & Print Preview (scope ends at 8.2)
+
+| Frame                                    | Route | 390 | 834 | 1440 | Notes                                                                                     |
+| ---------------------------------------- | ----- | --- | --- | ---- | ----------------------------------------------------------------------------------------- |
+| 8.1 Print Preview · generating           | —     | ⛔  | ⛔  | ⛔   | Needs the print service (POST /api/print/preview, render keys, ICC conversion); not built |
+| 8.2 Print Preview · locked, logo warning | —     | ⛔  | ⛔  | ⛔   | Same dependency; ppi warning needs real print metadata                                    |
+
+## Missing integrations and what they block
+
+| Capability (handoff)                                                      | Status in this deployment                            | Workflows affected                                                           |
+| ------------------------------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Print service: PDF page preview, print files, render keys, CMYK profiles  | Not implemented                                      | Print Preview 8.1–8.2, Print Pack files on Export / Details                  |
+| Print Pack entitlement (+price, Studio allowance)                         | Not implemented                                      | Export Print Pack switch (7.2–7.4), Home Print Pack section, Details 8.6–8.7 |
+| Plans Starter / Studio, monthly static unlocks, static credits, usage API | Not implemented (one Dynamic plan, one static price) | Pricing packs/plans, Export limits 7.5–7.7, Billing counters                 |
+| 7-day trial                                                               | Not implemented                                      | Home and Pricing trial actions (9.x out of scope)                            |
+| Multi-currency price points (GBP, PLN)                                    | One charged currency (env)                           | Pricing shows an explicit "charged in USD" notice                            |
+| Stripe Checkout (live)                                                    | Configured but not reachable from this environment   | Pay → checkout redirect; cancel/confirm states verified with URL states only |
+| Translations other than EN/RU                                             | Fallback to English                                  | Arabic layout is RTL but text is English (punctuation order in RTL)          |
 
 ## 5 · Loading
 
