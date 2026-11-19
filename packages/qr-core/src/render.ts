@@ -121,6 +121,12 @@ export function eclForStyle(style: Pick<QrStyle, "logo" | "centerText">): ErrorC
   return style.logo || style.centerText?.text ? "H" : "M";
 }
 
+/**
+ * Minimum WCAG contrast against the background (the product's existing thresholds): data modules and corner frames
+ * 3:1, corner centres 2.5:1 (they sit inside the frame, which scanners find first).
+ */
+export const MIN_CONTRAST = { modules: 3, eyeFrame: 3, eyeCenter: 2.5 } as const;
+
 export function renderQr(value: string, style: QrStyle): RenderedQr {
   const logo = style.logo ?? null;
   const centerText = style.centerText?.text ? style.centerText : null;
@@ -187,6 +193,10 @@ export function renderQr(value: string, style: QrStyle): RenderedQr {
   const centerOk = exc ? recoverable() : true;
 
   const issues: ScanIssue[] = [];
+  // Colour rules (HEY-38). Effective colours after inheritance; WCAG relative-luminance contrast. Both the data modules
+  // and the finder parts must be darker than the background (scanners look for dark-on-light finder patterns; a light
+  // finder on a mid-tone background can pass a ratio check yet not decode) and reach the minimum contrast.
+  // This is a rule-based check, not a decode: tests confirm passing palettes with ZXing separately.
   if (luminance(fg) > luminance(bg)) {
     issues.push({
       code: "invert",
@@ -194,15 +204,20 @@ export function renderQr(value: string, style: QrStyle): RenderedQr {
       detail: "Many phone cameras can't read inverted codes.",
       fix: "Swap colors",
     });
-  } else if (contrastRatio(fg, bg) < 3) {
+  } else if (contrastRatio(fg, bg) < MIN_CONTRAST.modules) {
     issues.push({
       code: "contrast",
       title: "Not enough contrast",
-      detail: `Code and background are ${contrastRatio(fg, bg).toFixed(1)}:1. Aim for at least 4:1.`,
+      detail: `Code and background are ${contrastRatio(fg, bg).toFixed(1)}:1. It needs at least ${MIN_CONTRAST.modules}:1.`,
       fix: "Increase contrast",
     });
   }
-  if (contrastRatio(eye, bg) < 3 || contrastRatio(eyeIn, bg) < 2.5) {
+  const finderTooLight =
+    luminance(eye) > luminance(bg) ||
+    luminance(eyeIn) > luminance(bg) ||
+    contrastRatio(eye, bg) < MIN_CONTRAST.eyeFrame ||
+    contrastRatio(eyeIn, bg) < MIN_CONTRAST.eyeCenter;
+  if (finderTooLight) {
     issues.push({
       code: "eyes",
       title: "Corner markers are too light",
