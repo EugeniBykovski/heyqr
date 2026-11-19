@@ -23,6 +23,7 @@ import { editorPanel, editorRoot, editorStage, editorTopBar, editorTopBarInner }
 import { EditorSteps } from "./editor-steps";
 import { FramePanel } from "./frame-panel";
 import { ScanStatus } from "./scan-status";
+import { SizePanel } from "./size-panel";
 import { TooLongNotice } from "./too-long-notice";
 import { TypeStep } from "./type-step";
 import { clearDraft, useDraft } from "./use-draft";
@@ -118,7 +119,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
     patch({ content: emptyContent(type), model });
   };
 
-  // HEY-34: colour fields whose text isn't a valid HEX colour. Export stops there instead of using the previous colour.
+  // HEY-34 / HEY-35: colour and size fields whose text isn't valid. Export stops there instead of using the previous value.
   const [invalidColors, setInvalidColors] = useState<string[]>([]);
   const [showColorErrors, setShowColorErrors] = useState(false);
   const onColorValidity = useCallback(
@@ -276,6 +277,12 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
                   {t("frameGroup")}
                 </h2>
                 <FramePanel design={design} onChange={patch} />
+              </section>
+              <section aria-labelledby="design-size" className="flex flex-col gap-4 border-t border-border pt-6">
+                <h2 id="design-size" className="text-h3">
+                  {t("size.title")}
+                </h2>
+                <SizePanel design={design} onChange={patch} showErrors={showColorErrors} onValidity={onColorValidity} />
               </section>
             </div>
             <BottomBar className="lg:hidden">

@@ -1,4 +1,5 @@
 import { isHexColor, QR_CONTENT_TYPES, type Layout, type QrContent } from "@heyqr/qr-core";
+import { isValidSize } from "./size";
 import { z } from "zod";
 import { modeFor, QR_MODES } from "./modes";
 import { CENTER_ICONS, EDITOR_PRESETS, EYE_BALL_SHAPES, EYE_FRAME_SHAPES, FRAME_STYLES, MODULE_SHAPES, type EditorDesign } from "./design";
@@ -38,6 +39,11 @@ export const designSettingsSchema = z.object({
   preset: oneOf(EDITOR_PRESETS),
   frameStyle: oneOf(FRAME_STYLES),
   caption: z.string().max(200),
+  // Optional: drafts and records from before HEY-35 have no size and render at LEGACY_SIZE.
+  size: z
+    .object({ unit: z.enum(["px"]), qr: z.number(), width: z.number(), height: z.number() })
+    .refine(isValidSize)
+    .optional(),
 });
 export type DesignSettings = z.infer<typeof designSettingsSchema>;
 
@@ -137,7 +143,7 @@ export function createLayoutRecord(layout: unknown, editor?: unknown): LayoutRec
 
 /** The design settings part of an editor draft (what a saved variant keeps in `editor`). */
 export function designSettingsOf(design: EditorDesign): DesignSettings {
-  const { pattern, eyeFrame, eyeBall, fg, bg, eye, eyeIn, logo, logoSize, preset, frameStyle, caption } = design;
+  const { pattern, eyeFrame, eyeBall, fg, bg, eye, eyeIn, logo, logoSize, preset, frameStyle, caption, size } = design;
   return {
     pattern,
     eyeFrame,
@@ -151,5 +157,6 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     preset,
     frameStyle,
     caption,
+    ...(size === undefined ? {} : { size }),
   };
 }

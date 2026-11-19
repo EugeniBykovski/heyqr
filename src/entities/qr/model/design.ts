@@ -1,4 +1,5 @@
 import type { EyeBallShape, EyeFrameShape, FrameStyle, Layout, ModuleShape, QrContent } from "@heyqr/qr-core";
+import { LEGACY_SIZE, type DesignSize } from "./size";
 
 /** 24×24 stroke icons for the code center (Lucide geometry, drawn by qr-core). */
 export const CENTER_ICONS = {
@@ -44,6 +45,8 @@ export interface EditorDesign {
   preset: EditorPreset;
   frameStyle: FrameStyle;
   caption: string;
+  /** Design 1.8 Size. Unset (every draft before HEY-35) renders at LEGACY_SIZE, exactly as before. */
+  size?: DesignSize;
 }
 
 export const DEFAULT_DESIGN: EditorDesign = {
@@ -72,8 +75,8 @@ export const QR_INKS = [
   { hex: "#9A4A22", name: "clay" },
 ] as const;
 
-/** Screen base size in px; PNG exports scale it (2× by default, up to 8192 px). */
-const BASE = 512;
+/** Caption type size at the legacy 512 px code; it scales with the code so a resized layout keeps its look. */
+const CAPTION_PX_AT_LEGACY = 40;
 
 export function designToLayout(d: EditorDesign): Layout {
   const logo =
@@ -83,16 +86,25 @@ export function designToLayout(d: EditorDesign): Layout {
         ? { href: d.logo.href, size: d.logoSize, plate: "square" as const, plateColor: d.bg }
         : null;
   const captionText = d.preset === "qr" ? "" : d.caption;
+  const size = d.size ?? LEGACY_SIZE;
+  // "qr" and "frame" derive their canvas from the code (layoutGeometry); "caption" has its own width × height.
+  const canvas = d.preset === "caption" ? { width: size.width, height: size.height } : { width: size.qr, height: size.qr };
   return {
     preset: d.preset,
     frameStyle: d.preset === "frame" ? d.frameStyle : undefined,
-    unit: "px",
-    width: BASE,
-    height: d.preset === "caption" ? Math.round(BASE * 1.22) : BASE,
-    qrSize: BASE,
+    unit: size.unit,
+    ...canvas,
+    qrSize: size.qr,
     border: false,
     colors: { fg: d.fg, eye: d.eye ?? d.fg, eyeIn: d.eyeIn ?? d.fg, bg: d.bg, frame: d.fg, caption: d.preset === "frame" ? d.bg : d.fg },
     style: { pattern: d.pattern, eyeFrame: d.eyeFrame, eyeBall: d.eyeBall, logo },
-    caption: { text: captionText, fontFamily: "DM Sans, sans-serif", size: 40, weight: 700, align: "center", position: "after" },
+    caption: {
+      text: captionText,
+      fontFamily: "DM Sans, sans-serif",
+      size: (CAPTION_PX_AT_LEGACY * size.qr) / LEGACY_SIZE.qr,
+      weight: 700,
+      align: "center",
+      position: "after",
+    },
   };
 }

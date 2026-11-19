@@ -577,7 +577,26 @@
     "eyeColor": "Corner frames",
     "eyeInColor": "Corner centers",
     "resetColors": "Reset colors",
-    "colorInvalid": "Use a HEX colour like #1F4D3A: # and 6 characters from 0–9 and A–F."
+    "colorInvalid": "Use a HEX colour like #1F4D3A: # and 6 characters from 0–9 and A–F.",
+    "size": {
+      "title": "Size",
+      "unitHint": "Screen · px: for screens, slides and the web. 1 unit = 1 pixel at 1×.",
+      "qr": "QR code size",
+      "qrSlider": "QR code size slider",
+      "qrNote": "Includes the quiet zone around the code.",
+      "clamped": "The layout limits the visible code to {shown} {unit}. Make the layout larger to fit it.",
+      "layout": "Layout size",
+      "width": "Width",
+      "height": "Height",
+      "locked": "With “QR only” and “Frame” the size follows the code. Pick “With caption” to set the layout size.",
+      "presets": {
+        "square": "Square 1080",
+        "story": "Story 1080×1920",
+        "slide": "Slide 1920×1080"
+      },
+      "export": "PNG export: {width} × {height} {unit} (2×).",
+      "invalid": "Enter a whole number from {min} to {max} {unit}."
+    }
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",
