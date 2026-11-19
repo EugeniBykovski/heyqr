@@ -9,6 +9,8 @@ export interface RasterOptions {
   width: number;
   /** Fonts for captions, e.g. bundled DM Sans files. */
   fontFiles?: string[];
+  /** Also use the machine's installed fonts (default). Tests turn this off to prove a file needs only its own fonts. */
+  systemFonts?: boolean;
   background?: string;
 }
 
@@ -16,7 +18,7 @@ export function resvgOptions(o: RasterOptions): ResvgRenderOptions {
   return {
     fitTo: { mode: "width", value: Math.round(o.width) },
     background: o.background,
-    font: { fontFiles: o.fontFiles ?? [], loadSystemFonts: true, defaultFontFamily: "DM Sans" },
+    font: { fontFiles: o.fontFiles ?? [], loadSystemFonts: o.systemFonts ?? true, defaultFontFamily: "DM Sans" },
     shapeRendering: 2,
     textRendering: 1,
   };
