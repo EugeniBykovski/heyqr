@@ -86,7 +86,13 @@ export function DesignStep({
           </div>
         ) : null}
         <div className="flex flex-col gap-8">
-          <DesignPanel design={design} onChange={onChange} showColorErrors={showFieldErrors} onColorValidity={onFieldValidity} />
+          <DesignPanel
+            design={design}
+            onChange={onChange}
+            showColorErrors={showFieldErrors}
+            onColorValidity={onFieldValidity}
+            logoScanMax={scan?.maxLogoSize}
+          />
           <section aria-labelledby="design-frame" className="flex flex-col gap-4 border-t border-border pt-6">
             <h2 id="design-frame" className="text-h3">
               {t("frameGroup")}

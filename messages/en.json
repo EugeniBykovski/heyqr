@@ -672,7 +672,9 @@
       "square": "Square",
       "circle": "Circle"
     },
-    "reduceLogo": "Reduce logo to {size}%"
+    "reduceLogo": "Reduce logo to {size}%",
+    "logoSizeValue": "{size}% · up to {max}% scans",
+    "logoSizeLegacy": "Saved at {saved}%; drawn at the {max}% maximum. Moving the slider saves a size within it."
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",
