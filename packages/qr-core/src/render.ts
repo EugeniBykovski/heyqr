@@ -224,8 +224,13 @@ export function renderQr(value: string, style: QrStyle): RenderedQr {
   }
 
   const eyeZone = (x: number, y: number) => (x < 7 && y < 7) || (x >= n - 7 && y < 7) || (x < 7 && y >= n - 7);
-  const on = (x: number, y: number) => m.modules[y][x] && !eyeZone(x, y) && !inside(x, y, exc);
+  // Only data modules take the module style (HEY-30). Function modules (timing, alignment, format and version
+  // information, the dark module), classified by the encoder's mask, are always plain squares; finder patterns are
+  // drawn by the eye shapes. The scan check and decoders rely on these fixed patterns.
+  const on = (x: number, y: number) => m.modules[y][x] && !m.functionModules[y][x] && !inside(x, y, exc);
+  const fixed = (x: number, y: number) => m.modules[y][x] && m.functionModules[y][x] && !eyeZone(x, y) && !inside(x, y, exc);
   const data = moduleShapes(m, style.pattern, on);
+  const functionPatterns = moduleShapes(m, "square", fixed);
 
   let frames = "";
   let balls = "";
@@ -240,6 +245,7 @@ export function renderQr(value: string, style: QrStyle): RenderedQr {
 
   let inner = `<rect width="${V}" height="${V}" fill="${bg}"/>`;
   inner += `<path d="${data}" fill="${fg}"/>`;
+  inner += `<path d="${functionPatterns}" fill="${fg}"/>`;
   inner += `<path d="${frames}" fill="${eye}" fill-rule="evenodd"/>`;
   inner += `<path d="${balls}" fill="${eyeIn}"/>`;
 
