@@ -8,7 +8,9 @@ import { requireUser } from "../auth";
 import { createCheckout, createPortalSession } from "../billing/checkout";
 import { db, schema } from "../db";
 import { restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
+import { encodedValue } from "../qr/export";
 import { saveQrWithLayouts } from "../qr/save-qr";
+import { updateLayoutDesign } from "../qr/update-layout";
 
 export type ActionResult<T = undefined> =
   { ok: true; data: T } | { ok: false; error: "unauthorized" | "invalid" | "not_found" | "too_long" | "failed" };
@@ -62,6 +64,34 @@ export async function saveDraft(input: DraftInput): Promise<ActionResult<{ qrCod
     if (!parsed.success) return { ok: false, error: "invalid" };
     const result = await saveQrWithLayouts(db, user.id, parsed.data);
     if (result.ok) revalidatePath("/[locale]/dashboard", "page");
+    return result;
+  });
+}
+
+const layoutEditSchema = z.object({
+  qrCodeId: z.string().min(1).max(64),
+  layoutId: z.string().min(1).max(64),
+  // Validated against the versioned design contract in updateLayoutDesign.
+  layout: z.unknown(),
+  editor: z.unknown(),
+});
+
+/**
+ * Edit design (HEY-45): saves one layout of the user's existing code. Only that layout's design changes; the code's
+ * content, mode, payment, short link, destination and other layouts stay as they are.
+ */
+export async function saveLayoutEdit(
+  input: z.input<typeof layoutEditSchema>,
+): Promise<ActionResult<{ qrCodeId: string; layoutId: string }>> {
+  return guard(async () => {
+    const user = await requireUser();
+    const parsed = layoutEditSchema.safeParse(input);
+    if (!parsed.success) return { ok: false, error: "invalid" };
+    const result = await updateLayoutDesign(db, user.id, parsed.data, (qr) => encodedValue(qr));
+    if (result.ok) {
+      revalidatePath("/[locale]/dashboard", "page");
+      revalidatePath("/[locale]/dashboard/qr/[id]", "page");
+    }
     return result;
   });
 }

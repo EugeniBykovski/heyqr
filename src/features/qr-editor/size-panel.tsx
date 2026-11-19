@@ -5,6 +5,7 @@ import { CircleAlertIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import {
+  convertCaptionSize,
   convertSize,
   designToLayout,
   LEGACY_SIZE,
@@ -140,7 +141,15 @@ export function SizePanel({
             { value: "mm", label: t("unitMm") },
             { value: "px", label: t("unitPx") },
           ]}
-          onChange={(unit) => onChange({ size: convertSize(size, unit) })}
+          onChange={(unit) => {
+            const next = convertSize(size, unit);
+            // A chosen caption size keeps its share of the code in the new unit (HEY-45).
+            onChange(
+              design.captionSize === undefined
+                ? { size: next }
+                : { size: next, captionSize: convertCaptionSize(design.captionSize, size, next) },
+            );
+          }}
         />
         <p className="text-caption text-muted-foreground">{t(size.unit === "mm" ? "unitHintMm" : "unitHint")}</p>
       </div>

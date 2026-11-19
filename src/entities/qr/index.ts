@@ -6,6 +6,7 @@ export {
   EYE_FRAME_SHAPES,
   FRAME_STYLES,
   MODULE_SHAPES,
+  ORIGINAL_CAPTION_FONT,
   QR_INKS,
   designToLayout,
   type CenterIcon,
@@ -13,9 +14,24 @@ export {
   type EditorDesign,
   type EditorPreset,
 } from "./model/design";
-export { CAPTION_MAX_CHARS, CAPTION_MAX_LINES, captionLength, checkCaption, normalizeCaption, type CaptionCheck } from "./model/caption";
+export {
+  CAPTION_MAX_CHARS,
+  CAPTION_MAX_LINES,
+  CAPTION_SIZE_LIMITS,
+  captionLength,
+  captionSizeUnit,
+  checkCaption,
+  convertCaptionSize,
+  defaultCaptionSize,
+  MM_PER_PT,
+  normalizeCaption,
+  parseCaptionSize,
+  type CaptionCheck,
+  type CaptionSizeUnit,
+} from "./model/caption";
 export { CONTENT_FIELDS, emptyContent, isContentComplete, type ContentField } from "./model/content";
 export { QrPreview } from "./ui/qr-preview";
+export { designFromSaved, pickLayoutForEdit } from "./model/saved-design";
 export { CaptionFontFaces, captionFontUrl } from "./ui/caption-font-faces";
 export { captionFontQueries, useCaptionFontsReady } from "./model/use-caption-fonts-ready";
 export { QR_EXAMPLES, type QrExample } from "./model/examples";

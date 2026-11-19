@@ -1,6 +1,6 @@
 import "server-only";
 import { and, asc, desc, eq, gte, isNull, sql } from "drizzle-orm";
-import { readLayoutRecord } from "@/entities/qr";
+import { pickLayoutForEdit, readLayoutRecord } from "@/entities/qr";
 import { db, schema } from "../db";
 
 /**
@@ -33,6 +33,17 @@ export async function getQrCode(userId: string, id: string) {
     with: { layouts: { orderBy: asc(schema.qrLayout.sortOrder) } },
   });
   return qr && { ...qr, layouts: readable(qr.layouts) };
+}
+
+/**
+ * Edit design (HEY-45): the owner's existing code and one of its layouts: the given one, or the first by order (the one
+ * My QR codes shows). Null when the code isn't the user's, is deleted, or has no such layout.
+ */
+export async function getLayoutForEdit(userId: string, qrCodeId: string, layoutId?: string) {
+  const qr = await getQrCode(userId, qrCodeId);
+  if (!qr) return null;
+  const layout = pickLayoutForEdit(qr.layouts, layoutId);
+  return layout ? { qr, layout } : null;
 }
 
 export async function getLayoutWithQr(layoutId: string) {

@@ -72,6 +72,8 @@ export default async function DashboardPage({ params, searchParams }: PageProps<
       id: qr.id,
       name: qr.name,
       href: `/dashboard/qr/${qr.id}`,
+      // Edit design opens the first layout, the one shown here (HEY-45).
+      editHref: layout ? `/edit/${qr.id}?layout=${layout.id}` : `/edit/${qr.id}`,
       exportHref: layout ? `/create/export?qr=${qr.id}&layout=${layout.id}` : undefined,
       layout: layout?.design.layout,
       value: encodedValue(qr),

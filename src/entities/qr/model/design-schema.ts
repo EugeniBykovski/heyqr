@@ -2,7 +2,16 @@ import { CAPTION_FONT_IDS, isHexColor, QR_CONTENT_TYPES, type Layout, type QrCon
 import { isValidSize } from "./size";
 import { z } from "zod";
 import { modeFor, QR_MODES } from "./modes";
-import { CENTER_ICONS, EDITOR_PRESETS, EYE_BALL_SHAPES, EYE_FRAME_SHAPES, FRAME_STYLES, MODULE_SHAPES, type EditorDesign } from "./design";
+import {
+  CENTER_ICONS,
+  EDITOR_PRESETS,
+  ORIGINAL_CAPTION_FONT,
+  EYE_BALL_SHAPES,
+  EYE_FRAME_SHAPES,
+  FRAME_STYLES,
+  MODULE_SHAPES,
+  type EditorDesign,
+} from "./design";
 
 /*
  * Versioned QR design JSON (schemaVersion 1). Two stored formats use it:
@@ -40,8 +49,10 @@ export const designSettingsSchema = z.object({
   frameStyle: oneOf(FRAME_STYLES),
   caption: z.string().max(200),
   // Optional: drafts and records from before HEY-44 have no caption font; they get the default.
-  captionFont: oneOf(CAPTION_FONT_IDS).optional(),
+  captionFont: oneOf([...CAPTION_FONT_IDS, ORIGINAL_CAPTION_FONT]).optional(),
   captionWeight: z.union([z.literal(400), z.literal(500), z.literal(700)]).optional(),
+  // Optional: before HEY-45 the caption size followed the code size (defaultCaptionSize).
+  captionSize: z.number().min(4).max(400).optional(),
   // Optional: drafts and records from before HEY-35 have no size and render at LEGACY_SIZE.
   size: z
     .object({ unit: z.enum(["px", "mm"]), qr: z.number(), width: z.number(), height: z.number() })
@@ -148,8 +159,24 @@ export function createLayoutRecord(layout: unknown, editor?: unknown): LayoutRec
 
 /** The design settings part of an editor draft (what a saved variant keeps in `editor`). */
 export function designSettingsOf(design: EditorDesign): DesignSettings {
-  const { pattern, eyeFrame, eyeBall, fg, bg, eye, eyeIn, logo, logoSize, preset, frameStyle, caption, captionFont, captionWeight, size } =
-    design;
+  const {
+    pattern,
+    eyeFrame,
+    eyeBall,
+    fg,
+    bg,
+    eye,
+    eyeIn,
+    logo,
+    logoSize,
+    preset,
+    frameStyle,
+    caption,
+    captionFont,
+    captionWeight,
+    captionSize,
+    size,
+  } = design;
   return {
     pattern,
     eyeFrame,
@@ -165,6 +192,7 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     caption,
     ...(captionFont === undefined ? {} : { captionFont }),
     ...(captionWeight === undefined ? {} : { captionWeight }),
+    ...(captionSize === undefined ? {} : { captionSize }),
     ...(size === undefined ? {} : { size }),
   };
 }

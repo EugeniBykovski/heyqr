@@ -137,11 +137,11 @@ function ContentSkeleton({ label }: { label: string }) {
 }
 
 /** Loading state with the editor's exact boxes for the step in the URL, so the swap to the real editor doesn't shift. */
-export function EditorSkeleton() {
+export function EditorSkeleton({ design = false }: { design?: boolean }) {
   const t = useTranslations("loading");
   const params = useSearchParams();
   const step = params.get("step");
-  if (step !== "design" && !params.get("resume"))
+  if (!design && step !== "design" && !params.get("resume"))
     return (
       <div aria-busy="true" aria-label={t("editor")} className={cn("flex flex-col", skeletonReveal)}>
         <div className={editorTopBar}>
@@ -220,4 +220,7 @@ export function EditorSkeleton() {
 }
 
 /** The editor reads the guest draft from localStorage on first render, so it is rendered in the browser only. */
-export const QrEditorLoader = dynamic(() => import("./qr-editor").then((m) => m.QrEditor), { ssr: false, loading: EditorSkeleton });
+export const QrEditorLoader = dynamic(() => import("./qr-editor").then((m) => m.QrEditor), {
+  ssr: false,
+  loading: () => <EditorSkeleton />,
+});
