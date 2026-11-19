@@ -1,4 +1,4 @@
-import { QR_CONTENT_TYPES, type Layout, type QrContent } from "@heyqr/qr-core";
+import { isHexColor, QR_CONTENT_TYPES, type Layout, type QrContent } from "@heyqr/qr-core";
 import { z } from "zod";
 import { modeFor, QR_MODES } from "./modes";
 import { CENTER_ICONS, EDITOR_PRESETS, EYE_BALL_SHAPES, EYE_FRAME_SHAPES, FRAME_STYLES, MODULE_SHAPES, type EditorDesign } from "./design";
@@ -16,7 +16,8 @@ import { CENTER_ICONS, EDITOR_PRESETS, EYE_BALL_SHAPES, EYE_FRAME_SHAPES, FRAME_
 export const DESIGN_SCHEMA_VERSION = 1 as const;
 
 const oneOf = <T extends string>(values: readonly T[]) => z.enum(values as [T, ...T[]]);
-const hex = z.string().regex(/^#[0-9a-fA-F]{6}$/);
+/** Same rule as the editor and renderer (qr-core isHexColor): "#RRGGBB", either letter case. */
+const hex = z.string().refine(isHexColor);
 
 /** The editor's design settings: everything that styles a code, without its content or name. */
 export const designSettingsSchema = z.object({
