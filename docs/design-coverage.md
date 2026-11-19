@@ -1,6 +1,6 @@
 # Design coverage: Claude Design → app
 
-Reference: Claude Design artifact `5ad84e52-9181-4f2c-a6f5-04e11a8a57c9`, saved revision **1794991234-4f8a**.
+Reference: Claude Design artifact `5ad84e52-9181-4f2c-a6f5-04e11a8a57c9`, revision **1795122922-cd26** (scope: frames 1.1–8.2).
 Every "Key screens" frame renders the prototype at **390, 834 and 1440 px**; each width is recorded separately.
 
 Status: ✅ implemented and verified in the browser · 🟡 exists, needs alignment with the frame · ❌ not built ·
@@ -11,79 +11,117 @@ verification script result (named here).
 
 ## 1 · Create
 
-| Frame                             | Route / how to reach                    | 390 | 834 | 1440 | Evidence / notes                                                                                                     |
-| --------------------------------- | --------------------------------------- | --- | --- | ---- | -------------------------------------------------------------------------------------------------------------------- |
-| 1.1 Home                          | `/`                                     | ✅  | ✅  | ✅   | final-home-{390,834,1440}.png; hero tool, examples, features, types, FAQ, CTA, footer                                |
-| 1.2 Type                          | `/create?step=type` (home "More +")     | ✅  | ✅  | ✅   | final-type-*.png; editor-flow steps 1–3, 11 (cards, Static/Dynamic, bar, Continue)                                   |
-| 1.3 Content · contact card        | `/create?step=content`, Contact         | 🟡  | 🟡  | 🟡   | Fields, errors, preview done; design pairs first/last name and marks optional fields per row                         |
-| 1.4 Content · Wi-Fi               | `/create?step=content`, Wi-Fi           | 🟡  | 🟡  | 🟡   | Validation done (editor-flow step 12); design uses a security segmented control and a show/hide password button      |
-| 1.5 Content · text                | `/create?step=content`, Text            | 🟡  | 🟡  | 🟡   | Design shows "N of 300 characters" hint                                                                              |
-| 1.6 Design · colors               | `/create?step=design`                   | 🟡  | 🟡  | 🟡   | App has colour inputs; design has grouped tabs (Layout, Frame, Size, Pattern, Colors, Logo, Caption) and swatch rows |
-| 1.7 Design · pattern              | `/create?step=design`                   | 🟡  | 🟡  | 🟡   | Same group-tab gap; module/corner options exist                                                                      |
-| 1.8 Design · size                 | —                                       | ❌  | ❌  | ❌   | No units / W×H / QR size controls; layouts are px-only (`designToLayout`)                                            |
-| 1.9 Scan check failed             | `/create?step=design` with low contrast | 🟡  | 🟡  | 🟡   | Issues list shown; design offers one-tap fixes (reduce logo, increase contrast, swap colours)                        |
-| 1.10 Full-screen preview          | —                                       | ❌  | ❌  | ❌   | No full-screen view / expand button                                                                                  |
-| 1.11 Icon library                 | Design step, Center                     | 🟡  | 🟡  | 🟡   | 8 icons inline; design has a searchable library sheet                                                                |
-| 1.12 Quick styles · Undo · canvas | —                                       | ❌  | ❌  | ❌   | No quick styles, Undo, Fit/Actual size                                                                               |
-| 1.13 Language switch              | header                                  | 🟡  | 🟡  | 🟡   | Dropdown with 21 languages; design is a popover with search and a 2-column list                                      |
-| 1.14 Content · event              | `/create?step=content`, Event           | 🟡  | 🟡  | 🟡   | App uses one date-time field; design has date + start/end times                                                      |
-| 1.15 Frame gallery                | Design step, Frame and caption          | 🟡  | 🟡  | 🟡   | Frame styles as text options; design shows thumbnail cards                                                           |
-| 1.16 Caption in the code          | —                                       | ❌  | ❌  | ❌   | Center-text caption not in the editor model                                                                          |
+| Frame                             | Route / how to reach                    | 390 | 834 | 1440 | Evidence / notes                                                                                                        |
+| --------------------------------- | --------------------------------------- | --- | --- | ---- | ----------------------------------------------------------------------------------------------------------------------- |
+| 1.1 Home                          | `/`                                     | ✅  | ✅  | ✅   | final-home-{390,834,1440}.png; hero tool, examples, features, types, FAQ, CTA, footer                                   |
+| 1.2 Type                          | `/create?step=type` (home "More +")     | ✅  | ✅  | ✅   | final-type-*.png; editor-flow steps 1–3, 11 (cards, Static/Dynamic, bar, Continue)                                      |
+| 1.3 Content · contact card        | `/create?step=content`, Contact         | ✅  | ✅  | ✅   | Name / title pairs, optional private name, live phone preview, field errors with a summary banner                       |
+| 1.4 Content · Wi-Fi               | `/create?step=content`, Wi-Fi           | ✅  | ✅  | ✅   | Security segmented control, Show/Hide in the form only, hidden-network option; the preview always masks the password    |
+| 1.5 Content · text                | `/create?step=content`, Text            | ✅  | ✅  | ✅   | "N of 300 characters" hint, newlines kept; older longer texts stay usable                                               |
+| 1.6 Design · colors               | `/create?step=design` → Colors          | ✅  | ✅  | ✅   | Grouped settings; six colour roles (modules, corners, background, frame, caption), swatches, HEX, role reset, Reset all |
+| 1.7 Design · pattern              | Design → Pattern                        | ✅  | ✅  | ✅   | 8 module shapes, 5 corner frames, 5 corner centers, each with a renderer-drawn crop                                     |
+| 1.8 Design · size                 | Design → Size                           | ✅  | ✅  | ✅   | HEY-35/36 units, QR size vs layout size, presets; stage footer shows layout, QR and file dimensions                     |
+| 1.9 Scan check failed             | `/create?step=design` with low contrast | 🟡  | 🟡  | 🟡   | Issues list shown; design offers one-tap fixes (reduce logo, increase contrast, swap colours)                           |
+| 1.10 Full-screen preview          | Design, expand button (< 1024 px)       | ✅  | ✅  | —    | Dialog with the same canvas, dimensions and scan check; Done returns focus to the expand button                         |
+| 1.11 Icon library                 | Design → Logo → Icon library            | ✅  | ✅  | ✅   | 38 searchable vector icons, plate or colour tile; upload, size 10–46 %, backing, position (centre / top of card)        |
+| 1.12 Quick styles · Undo · canvas | Design → Layout; stage bar              | ✅  | ✅  | ✅   | Six quick styles + Surprise me (one undo step each), Undo/Redo, Light/Dark/Clear canvas, Fit/Actual size                |
+| 1.13 Language switch              | header                                  | ✅  | ✅  | ✅   | Searchable panel, 21 languages with flags, native and English names, 2 columns, full width on phones; Arabic → RTL      |
+| 1.14 Content · event              | `/create?step=content`, Event           | ✅  | ✅  | ✅   | Date + start/end times over start/end; date-only = all-day VEVENT; preview shows the localised date and times           |
+| 1.15 Frame gallery                | Design → Frame                          | ✅  | ✅  | ✅   | No frame + 8 live thumbnails, 16-character text, quick phrases, frame and text colours, colour presets                  |
+| 1.16 Caption in the code          | Design → Caption → Position             | ✅  | ✅  | ✅   | Below / above / in the code; the scan check flags text that hides too much                                              |
 
 ## 2 · Branded, end to end
 
-| Frame                              | Route                                       | 390 | 834 | 1440 | Notes                                                                                                   |
-| ---------------------------------- | ------------------------------------------- | --- | --- | ---- | ------------------------------------------------------------------------------------------------------- |
-| 2.1 Website · loading              | —                                           | ❌  | ❌  | ❌   | Needs a site-metadata fetch (backend) for the preview; ⛔ live                                          |
-| 2.2 Content · empty                | `/create?step=content`                      | ✅  | ✅  | ✅   | After scanning shows placeholders (final-content-*.png)                                                 |
-| 2.3 Content · domain               | Content with a URL                          | ✅  | ✅  | ✅   | Preview shows the host                                                                                  |
-| 2.4 Choose mode (custom / branded) | —                                           | ❌  | ❌  | ❌   | Branded mode not built                                                                                  |
-| 2.5 Branded · upload               | —                                           | ❌  | ❌  | ❌   | Logo upload exists for the center logo only                                                             |
-| 2.6 Branded · reading              | —                                           | ❌  | ❌  | ❌   | Palette extraction not built                                                                            |
-| 2.7 Branded · three looks          | —                                           | ❌  | ❌  | ❌   |                                                                                                         |
-| 2.8 Branded · brand card           | —                                           | ❌  | ❌  | ❌   | Card layouts (vertical/horizontal) not in the editor model                                              |
-| 2.9 Branded · colors changed       | —                                           | ❌  | ❌  | ❌   |                                                                                                         |
-| 2.10 Export · guest                | `/create?step=design` → Export (signed out) | 🟡  | 🟡  | 🟡   | Export sends guests to Google sign-in; design shows the export screen first with "Continue with Google" |
-| 2.11 Paid PNG                      | `/create/export` after payment              | ⛔  | ⛔  | ⛔   | Needs Stripe (HEY-8 hosted setup)                                                                       |
+| Frame                              | Route                          | 390 | 834 | 1440 | Notes                                                                                                   |
+| ---------------------------------- | ------------------------------ | --- | --- | ---- | ------------------------------------------------------------------------------------------------------- |
+| 2.1 Website · loading              | `/create` first load           | ✅  | ✅  | ✅   | Heading and stepper at once; type cards hold their exact size (HEY-41 skeletons)                        |
+| 2.2 Content · empty                | `/create?step=content`         | ✅  | ✅  | ✅   | After scanning shows placeholders (final-content-*.png)                                                 |
+| 2.3 Content · domain               | Content with a URL             | ✅  | ✅  | ✅   | Preview shows the host                                                                                  |
+| 2.4 Choose mode (custom / branded) | Design, new draft              | ✅  | ✅  | ✅   | Two live examples of the same code; Custom/Branded switch in the panel keeps content                    |
+| 2.5 Branded · upload               | Design → Brand                 | ✅  | ✅  | ✅   | Drop zone (desktop), photos or files (phone), sample logo; same intake rules as logos (HEY-50)          |
+| 2.6 Branded · reading              | Design → Brand                 | ✅  | ✅  | ✅   | File name + "Reading colors…"; last design stays; newer files win (stale results dropped)               |
+| 2.7 Branded · three looks          | Design → Brand                 | ✅  | ✅  | ✅   | Palette roles with HEX, reset and contrast note; Logo in the code / Brand card / Artwork (renderer art) |
+| 2.8 Branded · brand card           | Design → Brand → Brand card    | ✅  | ✅  | ✅   | Vertical card, logo and name above the code                                                             |
+| 2.9 Branded · colors changed       | Design → Brand → roles         | ✅  | ✅  | ✅   | Only the QR changes; the scan check judges the new colours (sage accent flagged with its fix)           |
+| 2.10 Export · guest                | `/create/export` (signed out)  | ✅  | ✅  | ✅   | Same surface from the browser draft; Continue with Google carries format, size and transparency         |
+| 2.11 Paid PNG                      | `/create/export` after payment | ⛔  | ⛔  | ⛔   | Needs Stripe (HEY-8 hosted setup)                                                                       |
 
 ## 3 · Export & purchase
 
-| Frame                  | Route                               | 390 | 834 | 1440 | Notes                                                                                               |
-| ---------------------- | ----------------------------------- | --- | --- | ---- | --------------------------------------------------------------------------------------------------- |
-| 3.1 Export · guest     | as 2.10                             | 🟡  | 🟡  | 🟡   |                                                                                                     |
-| 3.2 Google sign-in     | `/sign-in?next=…`                   | 🟡  | 🟡  | 🟡   | Google-only sign-in works up to Google; full sign-in pending the owner's manual check               |
-| 3.3 Back from Google   | `/create?resume=1`                  | 🟡  | 🟡  | 🟡   | Resumes and saves automatically; design shows a "Signed in with Google" banner on the export screen |
-| 3.4 Checkout           | Stripe Checkout                     | ⛔  | ⛔  | ⛔   | Stripe not configured locally (optional in dev, HEY-8)                                              |
-| 3.5 Cancelled          | `/create/export?checkout=cancelled` | 🟡  | 🟡  | 🟡   | Banner exists (`export.cancelled`)                                                                  |
-| 3.6 Confirming payment | `?checkout=success` before webhook  | 🟡  | 🟡  | 🟡   | "pending" state exists; ⛔ live webhook                                                             |
-| 3.7 Preparing file     | —                                   | ❌  | ❌  | ❌   | Download is a direct link; no preparing state                                                       |
-| 3.8 File ready         | —                                   | ❌  | ❌  | ❌   |                                                                                                     |
-| 3.9 Downloaded         | —                                   | ❌  | ❌  | ❌   |                                                                                                     |
-| 3.10 Export error      | —                                   | ❌  | ❌  | ❌   | API returns 422/501; no error UI with Try again                                                     |
-| 3.11 Download again    | `/dashboard/qr/[id]`                | 🟡  | 🟡  | 🟡   | Download links exist on details; not aligned                                                        |
+| Frame                  | Route                              | 390 | 834 | 1440 | Notes                                                                                             |
+| ---------------------- | ---------------------------------- | --- | --- | ---- | ------------------------------------------------------------------------------------------------- |
+| 3.1 Export · guest     | `/create/export` (signed out)      | ✅  | ✅  | ✅   | Layout, PNG/SVG, PNG size, transparency, order summary, Continue with Google                      |
+| 3.2 Google sign-in     | `/sign-in?next=…`                  | 🟡  | 🟡  | 🟡   | Google-only sign-in works up to Google; full sign-in pending the owner's manual check             |
+| 3.3 Back from Google   | `/create?resume=1&format=…`        | ✅  | ✅  | ✅   | Saves the draft, opens export with the same settings and the "Signed in with Google" banner       |
+| 3.4 Checkout           | Stripe Checkout                    | ⛔  | ⛔  | ⛔   | Hosted Stripe Checkout; the request fails from this environment, so no live run (no charges made) |
+| 3.5 Cancelled          | `?checkout=cancelled`              | ✅  | ✅  | ✅   | "You weren’t charged" banner; settings kept (fixed: return URLs lacked the code id → 404)         |
+| 3.6 Confirming payment | `?checkout=success` before webhook | ✅  | ✅  | ✅   | Controls frozen, preview kept, the page re-checks every 2.5 s; ⛔ live webhook not run locally    |
+| 3.7 Preparing file     | Download                           | ✅  | ✅  | ✅   | "Preparing your PNG…" in the preview and the action; settings frozen                              |
+| 3.8 File ready         | after preparing                    | ✅  | ✅  | ✅   | One action: Download PNG (the user’s own click saves the prepared file)                           |
+| 3.9 Downloaded         | after download                     | ✅  | ✅  | ✅   | Real file name from the server (UTF-8 names fixed), Download again                                |
+| 3.10 Export error      | API error                          | ✅  | ✅  | ✅   | Payment and settings safe; Try again repeats the same request                                     |
+| 3.11 Download again    | `/create/export?qr=…&layout=…`     | ✅  | ✅  | ✅   | Layout tabs per named layout; second layout (Poster) as SVG verified and decoded                  |
 
 ## 4 · Account
 
-| Frame                   | Route                   | 390 | 834 | 1440 | Notes                                                           |
-| ----------------------- | ----------------------- | --- | --- | ---- | --------------------------------------------------------------- |
-| 4.1 My QR codes · empty | `/dashboard` (no codes) | ✅  | ✅  | ✅   | HEY-3                                                           |
-| 4.2 My QR codes         | `/dashboard`            | ✅  | ✅  | ✅   | HEY-3 (rename inline still missing)                             |
-| 4.3 Details · static    | `/dashboard/qr/[id]`    | 🟡  | 🟡  | 🟡   | Page exists, not aligned                                        |
-| 4.4 Details · dynamic   | `/dashboard/qr/[id]`    | 🟡  | 🟡  | 🟡   | Short link, destination form and scans chart exist, not aligned |
-| 4.5 Editing destination | details page            | 🟡  | 🟡  | 🟡   |                                                                 |
-| 4.6 Destination saved   | details page            | 🟡  | 🟡  | 🟡   |                                                                 |
-| 4.7 No scans yet        | details page            | 🟡  | 🟡  | 🟡   |                                                                 |
-| 4.8 Pricing             | `/pricing`              | 🟡  | 🟡  | 🟡   | Page exists, not aligned                                        |
-| 4.9 Plan & billing      | `/dashboard/billing`    | 🟡  | 🟡  | 🟡   | Page exists, not aligned; ⛔ portal needs Stripe                |
+| Frame                     | Route                   | 390 | 834 | 1440 | Notes                                                                                                                                                                                               |
+| ------------------------- | ----------------------- | --- | --- | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 4.1 My QR codes · empty   | `/dashboard` (no codes) | ✅  | ✅  | ✅   | HEY-3                                                                                                                                                                                               |
+| 4.2 My QR codes           | `/dashboard`            | ✅  | ✅  | ✅   | Thumbnail, badges, Edit design, Download / Buy, inline rename (Enter saves, Escape cancels, failures keep the text)                                                                                 |
+| 4.3 Details · static      | `/dashboard/qr/[id]`    | 🟡  | 🟡  | 🟡   | Page exists (layouts, downloads, Edit design); not realigned in this pass; Print Pack entry points ⛔                                                                                               |
+| 4.4 Details · dynamic     | `/dashboard/qr/[id]`    | 🟡  | 🟡  | 🟡   | Short link, destination form and scans chart exist, not aligned                                                                                                                                     |
+| 4.5 Editing destination   | details page            | 🟡  | 🟡  | 🟡   |                                                                                                                                                                                                     |
+| 4.6 Destination saved     | details page            | 🟡  | 🟡  | 🟡   |                                                                                                                                                                                                     |
+| 4.7 No scans yet          | details page            | 🟡  | 🟡  | 🟡   |                                                                                                                                                                                                     |
+| 4.8 Pricing               | `/pricing`              | ✅  | ✅  | ✅   | One-time (Free, Single QR) and Monthly (Dynamic) groups, live-slot box, comparison table (scrolls on phones). Packs, Starter/Studio and Print Pack are not offered by the backend, so not published |
+| 4.10 My QR codes · select | `/dashboard` → Select   | ✅  | ✅  | ✅   | Checkboxes, Select all, count, Cancel, Delete; per-card trash                                                                                                                                       |
+| 4.11 Delete · confirm     | Delete                  | ✅  | ✅  | ✅   | Bottom sheet on phones, dialog from 600 px; consequences per kind of code                                                                                                                           |
+| 4.12 Deleted · undo       | after Delete            | ✅  | ✅  | ✅   | 8-second Undo restores through the server (soft delete, 10-minute window)                                                                                                                           |
+| 4.9 Plan & billing        | `/dashboard/billing`    | ✅  | ✅  | ✅   | Plan status, live Dynamic usage vs limit, renewal, payment method via Stripe portal, Compare plans, purchases with dates                                                                            |
+
+## 7 · Plans, checkout & limits
+
+| Frame                              | Route                | 390 | 834 | 1440 | Notes                                                                                                           |
+| ---------------------------------- | -------------------- | --- | --- | ---- | --------------------------------------------------------------------------------------------------------------- |
+| 7.1 Pricing · local currency       | `/pricing` → GBP/PLN | ✅  | ✅  | ✅   | Viewer preference; currencies without price points say checkout is in the charged currency (no invented prices) |
+| 7.2–7.7 Print Pack, Studio, limits | Export               | ⛔  | ⛔  | ⛔   | No Print Pack, plans, credits or unlock counters in the backend; not shown as purchasable                       |
+
+## 6 · Signed-in home
+
+| Frame                       | Route                   | 390 | 834 | 1440 | Notes                                                                                                                                |
+| --------------------------- | ----------------------- | --- | --- | ---- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| 6.1 Home · signed in        | `/` signed in           | ✅  | ✅  | ✅   | Studio: the user’s own codes, scans and plan usage (server-rendered, per user)                                                       |
+| 6.1 Home · guest            | `/` signed out          | ✅  | ✅  | ✅   | "Every QR code, in one place." with a labelled sample workspace (fixed sample data, inert); Create / Sign in. No trial (not offered) |
+| 6.2 Home · new account      | `/` signed in, no codes | ✅  | ✅  | ✅   | Studio empty state with one action                                                                                                   |
+| 6.x Print Pack introduction | —                       | ⛔  | ⛔  | ⛔   | Print Pack is not offered by the backend; not published                                                                              |
+
+## 8 · Print Pack & Print Preview (scope ends at 8.2)
+
+| Frame                                    | Route | 390 | 834 | 1440 | Notes                                                                                     |
+| ---------------------------------------- | ----- | --- | --- | ---- | ----------------------------------------------------------------------------------------- |
+| 8.1 Print Preview · generating           | —     | ⛔  | ⛔  | ⛔   | Needs the print service (POST /api/print/preview, render keys, ICC conversion); not built |
+| 8.2 Print Preview · locked, logo warning | —     | ⛔  | ⛔  | ⛔   | Same dependency; ppi warning needs real print metadata                                    |
+
+## Missing integrations and what they block
+
+| Capability (handoff)                                                      | Status in this deployment                            | Workflows affected                                                           |
+| ------------------------------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Print service: PDF page preview, print files, render keys, CMYK profiles  | Not implemented                                      | Print Preview 8.1–8.2, Print Pack files on Export / Details                  |
+| Print Pack entitlement (+price, Studio allowance)                         | Not implemented                                      | Export Print Pack switch (7.2–7.4), Home Print Pack section, Details 8.6–8.7 |
+| Plans Starter / Studio, monthly static unlocks, static credits, usage API | Not implemented (one Dynamic plan, one static price) | Pricing packs/plans, Export limits 7.5–7.7, Billing counters                 |
+| 7-day trial                                                               | Not implemented                                      | Home and Pricing trial actions (9.x out of scope)                            |
+| Multi-currency price points (GBP, PLN)                                    | One charged currency (env)                           | Pricing shows an explicit "charged in USD" notice                            |
+| Stripe Checkout (live)                                                    | Configured but not reachable from this environment   | Pay → checkout redirect; cancel/confirm states verified with URL states only |
+| Translations other than EN/RU                                             | Fallback to English                                  | Arabic layout is RTL but text is English (punctuation order in RTL)          |
 
 ## 5 · Loading
 
-| Frame                       | Route                | 390 | 834 | 1440 | Notes                                                                 |
-| --------------------------- | -------------------- | --- | --- | ---- | --------------------------------------------------------------------- |
-| 5.1 Content · loading       | —                    | ❌  | ❌  | ❌   | Editor-wide skeleton only; no content-step skeleton                   |
-| 5.2 Design · loading        | `/create` first load | 🟡  | 🟡  | 🟡   | Skeleton matches the Design layout; Type/Content steps need their own |
-| 5.3 Rebuilding branded look | —                    | ❌  | ❌  | ❌   | Depends on branded mode                                               |
-| 5.4 My QR codes · loading   | `/dashboard` loading | ✅  | ✅  | ✅   | HEY-3 (verified with a temporary delay)                               |
+| Frame                       | Route                             | 390 | 834 | 1440 | Notes                                                                           |
+| --------------------------- | --------------------------------- | --- | --- | ---- | ------------------------------------------------------------------------------- |
+| 5.1 Content · loading       | `/create?step=content` first load | ✅  | ✅  | ✅   | Form boxes and the preview shapes; the empty Website preview is static (HEY-41) |
+| 5.2 Design · loading        | `/create` first load              | 🟡  | 🟡  | 🟡   | Skeleton matches the Design layout; Type/Content steps need their own           |
+| 5.3 Rebuilding branded look | Design, Branded                   | ✅  | ✅  | ✅   | "Updating branded design… keep editing" over the last ready canvas              |
+| 5.4 My QR codes · loading   | `/dashboard` loading              | ✅  | ✅  | ✅   | HEY-3 (verified with a temporary delay)                                         |
 
 ## Components, breakpoints and system boards
 

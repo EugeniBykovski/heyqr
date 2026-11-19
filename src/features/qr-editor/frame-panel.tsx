@@ -75,7 +75,7 @@ export function FramePanel({
       {design.preset !== "qr" ? <CaptionFontPicker design={design} onChange={onChange} /> : null}
       {/* The frame label sizes itself to the frame (design "Frame text"); the caption layout has a Size field. */}
       {hasCaptionBand(design.preset) ? <CaptionSizeField design={design} onChange={onChange} onValidity={onValidity} /> : null}
-      {hasCaptionBand(design.preset) ? <CaptionStyle design={design} onChange={onChange} onValidity={onValidity} /> : null}
+      {hasCaptionBand(design.preset) ? <CaptionStyleAlign design={design} onChange={onChange} onValidity={onValidity} /> : null}
       {design.preset === "frame" ? (
         // The frame label has its own rules (design "Frame text"); unchanged here.
         <Field id="caption" label={t("caption")}>
@@ -96,7 +96,7 @@ export function FramePanel({
  * Design "Caption → Font / Weight" (HEY-44): the caption fonts, each shown in its own face, and the weights that
  * font ships. Changing the font keeps the weight when the new font has it, otherwise the nearest one it ships.
  */
-function CaptionFontPicker({ design, onChange }: { design: EditorDesign; onChange: (patch: Partial<EditorDesign>) => void }) {
+export function CaptionFontPicker({ design, onChange }: { design: EditorDesign; onChange: (patch: Partial<EditorDesign>) => void }) {
   const t = useTranslations("editor.captionFont");
   const font = design.captionFont ?? DEFAULT_CAPTION_FONT;
   const original = font === ORIGINAL_CAPTION_FONT;
@@ -146,7 +146,7 @@ function CaptionFontPicker({ design, onChange }: { design: EditorDesign; onChang
  * band; the colour is the caption's own, using the same HEX field and checks as the code colours plus the QR inks.
  * "Match code" (unset) follows the module colour, as every caption did before. The frame label keeps its own styling.
  */
-function CaptionStyle({
+export function CaptionStyleAlign({
   design,
   onChange,
   onValidity,

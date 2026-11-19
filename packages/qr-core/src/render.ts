@@ -1,4 +1,4 @@
-import { contrastRatio, luminance } from "./color";
+import { contrastRatio, luminance, mixColors } from "./color";
 import { encodeQr, type ErrorCorrectionLevel, type QrMatrix } from "./encode";
 import { circle, diamond, escapeXml, round3 as f, roundedRect as rr } from "./geometry";
 import type { EyeBallShape, EyeFrameShape, ModuleShape, QrStyle, RenderedQr, ScanIssue, ScanReport } from "./types";
@@ -140,6 +140,16 @@ export function centerLogoSize(size: number): number {
   return Math.max(CENTER_LOGO_SIZE.min, Math.min(CENTER_LOGO_SIZE.max, Number.isFinite(size) ? size : CENTER_LOGO_SIZE.min));
 }
 
+/** Design 2.7 Artwork shapes in a 100 × 100 box scaled to the symbol (prototype ART_PARTS); `t` = tint, `a` = accent. */
+const ART_PARTS = [
+  { d: "M-6 104C4 72 22 54 52 46C40 70 20 92-6 104z", k: "t", op: 0.42 },
+  { d: "M106-4C96 26 78 42 50 50C60 26 80 6 106-4z", k: "t", op: 0.42 },
+  { d: "M104 70c-14 4-26 14-32 34c16-2 28-14 32-34z", k: "a", op: 0.2 },
+  { d: "M-4 28c12-2 24 4 30 16c-14 2-26-4-30-16z", k: "a", op: 0.2 },
+] as const;
+/** The strongest tint over the background: colour rules check the code against this, not the plain background. */
+export const ART_TINT_OPACITY = 0.42;
+
 export function renderQr(value: string, style: QrStyle): RenderedQr {
   const logo = style.logo ?? null;
   const centerText = style.centerText?.text ? style.centerText : null;
@@ -208,31 +218,34 @@ export function renderQr(value: string, style: QrStyle): RenderedQr {
   }
   const centerOk = exc ? recoverable() : true;
 
+  const art = style.art ?? null;
+  // Artwork tints parts of the background: the colour rules use the most tinted background the modules may sit on.
+  const checkBg = art ? mixColors(bg, art.tint, ART_TINT_OPACITY) : bg;
   const issues: ScanIssue[] = [];
   // Colour rules (HEY-38). Effective colours after inheritance; WCAG relative-luminance contrast. Both the data modules
   // and the finder parts must be darker than the background (scanners look for dark-on-light finder patterns; a light
   // finder on a mid-tone background can pass a ratio check yet not decode) and reach the minimum contrast.
   // This is a rule-based check, not a decode: tests confirm passing palettes with ZXing separately.
-  if (luminance(fg) > luminance(bg)) {
+  if (luminance(fg) > luminance(checkBg)) {
     issues.push({
       code: "invert",
       title: "Light code on a dark background",
       detail: "Many phone cameras can't read inverted codes.",
       fix: "Swap colors",
     });
-  } else if (contrastRatio(fg, bg) < MIN_CONTRAST.modules) {
+  } else if (contrastRatio(fg, checkBg) < MIN_CONTRAST.modules) {
     issues.push({
       code: "contrast",
       title: "Not enough contrast",
-      detail: `Code and background are ${contrastRatio(fg, bg).toFixed(1)}:1. It needs at least ${MIN_CONTRAST.modules}:1.`,
+      detail: `Code and background are ${contrastRatio(fg, checkBg).toFixed(1)}:1. It needs at least ${MIN_CONTRAST.modules}:1.`,
       fix: "Increase contrast",
     });
   }
   const finderTooLight =
-    luminance(eye) > luminance(bg) ||
-    luminance(eyeIn) > luminance(bg) ||
-    contrastRatio(eye, bg) < MIN_CONTRAST.eyeFrame ||
-    contrastRatio(eyeIn, bg) < MIN_CONTRAST.eyeCenter;
+    luminance(eye) > luminance(checkBg) ||
+    luminance(eyeIn) > luminance(checkBg) ||
+    contrastRatio(eye, checkBg) < MIN_CONTRAST.eyeFrame ||
+    contrastRatio(eyeIn, checkBg) < MIN_CONTRAST.eyeCenter;
   if (finderTooLight) {
     issues.push({
       code: "eyes",
@@ -275,6 +288,11 @@ export function renderQr(value: string, style: QrStyle): RenderedQr {
   }
 
   let inner = `<rect width="${V}" height="${V}" fill="${bg}"/>`;
+  if (art) {
+    inner += `<g transform="scale(${f(V / 100)})">${ART_PARTS.map((p) => `<path d="${p.d}" fill="${p.k === "t" ? art.tint : art.tint2}" fill-opacity="${p.op}"/>`).join("")}</g>`;
+    if (art.image)
+      inner += `<image href="${escapeXml(art.image)}" x="0" y="0" width="${V}" height="${V}" opacity="0.13" preserveAspectRatio="xMidYMid slice"/>`;
+  }
   inner += `<path d="${data}" fill="${fg}"/>`;
   inner += `<path d="${functionPatterns}" fill="${fg}"/>`;
   inner += `<path d="${frames}" fill="${eye}" fill-rule="evenodd"/>`;

@@ -28,6 +28,17 @@ export interface QrLogo {
   iconColor?: string;
 }
 
+/**
+ * Design 2.7 "Artwork": organic shapes in two brand tints behind the code, and optionally the brand image itself, faint.
+ * The scan check reads the background as tinted (see ART_TINT_OPACITY).
+ */
+export interface QrArt {
+  tint: string;
+  tint2: string;
+  /** Raster/SVG image URL or data URI, drawn full size at low opacity behind the modules. */
+  image?: string;
+}
+
 export interface QrCenterText {
   text: string;
   bg: string;
@@ -42,6 +53,7 @@ export interface QrStyle {
   colors: QrColors;
   logo?: QrLogo | null;
   centerText?: QrCenterText | null;
+  art?: QrArt | null;
 }
 
 export type ScanIssueCode = "invert" | "contrast" | "eyes" | "logo" | "text";

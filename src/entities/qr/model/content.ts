@@ -4,7 +4,7 @@ export type ContentField = {
   name: string;
   /** Message key in `fields`. */
   label: string;
-  kind: "text" | "url" | "tel" | "email" | "textarea" | "datetime-local" | "security" | "checkbox";
+  kind: "text" | "url" | "tel" | "email" | "textarea" | "datetime-local" | "date" | "time" | "security" | "checkbox";
   required?: boolean;
   /** Not required, but not labelled "optional" either (design 1.3: name, phone and email carry no marker). */
   unmarked?: boolean;
@@ -14,6 +14,9 @@ export type ContentField = {
   placeholder?: string;
   autoComplete?: string;
 };
+
+/** Design 1.5: a text code holds at most this many characters (the hint counts them). */
+export const TEXT_MAX_CHARS = 300;
 
 /** Form definition per content type. Validation here is UX only; payload encoding lives in qr-core. */
 export const CONTENT_FIELDS: Record<QrContentType, ContentField[]> = {
@@ -51,8 +54,11 @@ export const CONTENT_FIELDS: Record<QrContentType, ContentField[]> = {
   ],
   event: [
     { name: "title", label: "eventTitle", kind: "text", required: true },
-    { name: "start", label: "start", kind: "datetime-local", required: true },
-    { name: "end", label: "end", kind: "datetime-local" },
+    // Design 1.14: one date, then start and end times. They are stored as the event's start / end ("YYYY-MM-DD" for an
+    // all-day event, "YYYY-MM-DDTHH:mm" with a time); startTime and endTime are views of those, not content keys.
+    { name: "start", label: "date", kind: "date", required: true, half: true },
+    { name: "startTime", label: "start", kind: "time", unmarked: true },
+    { name: "endTime", label: "end", kind: "time", unmarked: true },
     { name: "place", label: "place", kind: "text" },
   ],
 };

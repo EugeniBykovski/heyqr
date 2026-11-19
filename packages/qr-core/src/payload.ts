@@ -64,6 +64,21 @@ const wifiEscape = (s: string) => s.replace(/([\\;,:"])/g, "\\$1");
 const digits = (s: string) => s.replace(/[^+\d]/g, "");
 /** "2026-12-05T19:00" → "20261205T190000" (floating local time, as calendar apps expect). */
 const icsDate = (iso: string) => iso.replace(/[-:]/g, "").replace(/\.\d+/, "").slice(0, 15).padEnd(15, "0");
+/** A date without a time ("2026-12-05"): an all-day event. */
+const isDateOnly = (iso: string) => /^\d{4}-\d{2}-\d{2}$/.test(iso.trim());
+const compactDate = (iso: string) => iso.trim().replace(/-/g, "");
+/** The day after a date, for an all-day event's exclusive DTEND (RFC 5545 3.6.1). */
+function nextDay(iso: string): string {
+  const d = new Date(`${iso.trim()}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + 1);
+  return d.toISOString().slice(0, 10).replace(/-/g, "");
+}
+/** DTSTART / DTEND lines: timed events as before; a date-only start is an all-day event (VALUE=DATE). */
+function icsEventDates(start: string, end?: string): string[] {
+  if (!isDateOnly(start)) return [`DTSTART:${icsDate(start)}`, `DTEND:${icsDate(end ?? start)}`];
+  const endDate = end && isDateOnly(end) && end.trim() > start.trim() ? compactDate(end) : nextDay(start);
+  return [`DTSTART;VALUE=DATE:${compactDate(start)}`, `DTEND;VALUE=DATE:${endDate}`];
+}
 
 type Contact = Extract<QrContent, { type: "contact" }>;
 
@@ -152,8 +167,7 @@ export function encodePayload(content: QrContent): string {
       return [
         "BEGIN:VEVENT",
         `SUMMARY:${content.title}`,
-        `DTSTART:${icsDate(content.start)}`,
-        `DTEND:${icsDate(content.end ?? content.start)}`,
+        ...icsEventDates(content.start, content.end),
         content.place ? `LOCATION:${content.place}` : null,
         "END:VEVENT",
       ]

@@ -24,7 +24,7 @@ import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
 import { Container } from "@/shared/ui/container";
 import { HomeFooter } from "@/widgets/site-footer";
-import { Studio, StudioSkeleton } from "@/widgets/studio";
+import { SampleWorkspace, Studio, StudioSkeleton } from "@/widgets/studio";
 import { getSession } from "@/server/auth";
 
 const STEPS = ["content", "design", "download"] as const;
@@ -87,7 +87,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         <Suspense fallback={<StudioSkeleton label={t("studio.loading")} />}>
           <Studio userId={session.user.id} name={session.user.name} />
         </Suspense>
-      ) : null}
+      ) : (
+        <SampleWorkspace />
+      )}
 
       <section aria-label={t("how.label")} className="grid reveal gap-3 pb-8 md:grid-cols-3">
         {STEPS.map((step, i) => (

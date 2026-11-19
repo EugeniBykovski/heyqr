@@ -2,7 +2,7 @@
 
 import { parseWebsiteUrl, type QrContent } from "@heyqr/qr-core";
 import { CalendarIcon, GlobeIcon, LockIcon, MailIcon, MapPinIcon, MessageSquareIcon, PhoneIcon, WifiIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { cn } from "@/shared/lib/utils";
 import { Placeholder, Skeleton } from "@/shared/ui/skeleton";
@@ -26,6 +26,7 @@ export function ContentPreview({
   className?: string;
 }) {
   const t = useTranslations("editor.afterScanning");
+  const format = useFormatter();
   const c = content as Record<string, string | boolean | undefined>;
   const v = (k: string) => (loading ? "" : typeof c[k] === "string" ? (c[k] as string).trim() : "");
   const raw = (k: string) => (loading ? "" : typeof c[k] === "string" ? (c[k] as string) : "");
@@ -179,7 +180,7 @@ export function ContentPreview({
       break;
     }
     default: {
-      const view = centerView(content.type, v, t);
+      const view = centerView(content.type, v, t, (start, end) => eventWhen(format, start, end));
       body = (
         <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4.5 py-5 text-center">
           <span className="grid size-19 place-items-center rounded-full bg-accent-hover text-accent-foreground">{view.icon}</span>
@@ -230,11 +231,29 @@ function Row({ label, value }: { label: string; value: ReactNode }) {
 }
 
 type T = ReturnType<typeof useTranslations<"editor.afterScanning">>;
+
+/**
+ * Design 1.14: the event's date and times as the phone shows them, in the viewer's language ("Sat, Dec 5, 2026 ·
+ * 18:30–21:00"). The value is read as entered (local wall time), never shifted by a time zone.
+ */
+export function eventWhen(format: ReturnType<typeof useFormatter>, start: string, end: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?/.exec(start);
+  if (!m) return start;
+  const [, y, mo, d, h, mi] = m;
+  const day = new Date(Date.UTC(Number(y), Number(mo) - 1, Number(d), Number(h ?? 0), Number(mi ?? 0)));
+  const date = format.dateTime(day, { weekday: "short", month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+  if (h === undefined) return date;
+  const time = (v: Date) => format.dateTime(v, { hour: "numeric", minute: "2-digit", timeZone: "UTC" });
+  const e = /T(\d{2}):(\d{2})/.exec(end);
+  const endTime = e ? time(new Date(Date.UTC(Number(y), Number(mo) - 1, Number(d), Number(e[1]), Number(e[2])))) : null;
+  return `${date} · ${time(day)}${endTime ? `–${endTime}` : ""}`;
+}
 /** Email, phone call, text message, location and event: an icon, a title, detail rows and the action. */
 function centerView(
   type: QrContent["type"],
   v: (k: string) => string,
   t: T,
+  when: (start: string, end: string) => string,
 ): {
   icon: ReactNode;
   title: string;
@@ -276,7 +295,7 @@ function centerView(
         title: v("title"),
         titlePlaceholder: t("eventPlaceholder"),
         rows: [
-          { label: t("starts"), value: v("start").replace("T", " ") },
+          { label: t("starts"), value: when(v("start"), v("end")) },
           { label: t("place"), value: v("place") },
         ],
         action: t("addToCalendar"),

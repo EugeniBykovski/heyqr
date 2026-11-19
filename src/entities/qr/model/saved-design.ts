@@ -48,7 +48,14 @@ function settingsFromLayout(layout: Layout): Partial<EditorDesign> {
     bg: layout.colors.bg,
     eye: layout.colors.eye,
     eyeIn: layout.colors.eyeIn,
-    logo: icon ? { kind: "icon", icon } : logo?.href ? { kind: "image", href: logo.href } : { kind: "none" },
+    logo: icon
+      ? { kind: "icon", icon }
+      : logo?.href
+        ? { kind: "image", href: logo.href }
+        : layout.topLogoHref
+          ? { kind: "image", href: layout.topLogoHref }
+          : { kind: "none" },
+    ...(layout.topLogoHref && !logo ? { logoPosition: "top" as const, ...(layout.brandName ? { brandName: layout.brandName } : {}) } : {}),
     logoSize: logo?.size ?? DEFAULT_DESIGN.logoSize,
     ...(logo ? { logoPlate: logo.plate } : {}),
     preset,
@@ -57,6 +64,14 @@ function settingsFromLayout(layout: Layout): Partial<EditorDesign> {
     ...(hasCaptionBand(preset) && layout.caption.align !== "center" ? { captionAlign: layout.caption.align as CaptionAlign } : {}),
     ...(hasCaptionBand(preset) && layout.colors.caption !== layout.colors.fg ? { captionColor: layout.colors.caption } : {}),
     ...(isValidSize(size) ? { size } : {}),
+    ...(layout.colors.frame !== layout.colors.fg ? { frameColor: layout.colors.frame } : {}),
+    ...(hasCaptionBand(preset) && layout.caption.position !== "after"
+      ? { captionPosition: layout.caption.position === "before" ? ("above" as const) : ("inside" as const) }
+      : {}),
+    ...(logo?.tile ? { logoTile: true } : {}),
+    ...(preset === "frame" && layout.colors.caption !== layout.colors.bg ? { frameTextColor: layout.colors.caption } : {}),
+    ...(preset === "caption" && layout.border ? { border: true } : {}),
+    ...(layout.style.art ? { art: { tint: layout.style.art.tint, tint2: layout.style.art.tint2 }, designMode: "branded" as const } : {}),
   };
 }
 

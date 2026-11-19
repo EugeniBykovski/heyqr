@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/server/auth";
 import { canDownload } from "@/server/billing/entitlements";
-import { encodedValue, ExportSizeError, renderExport } from "@/server/qr/export";
+import { downloadFileName, encodedValue, ExportSizeError, renderExport } from "@/server/qr/export";
 import { getLayoutWithQr } from "@/server/qr/repository";
 
 const query = z.object({
@@ -47,16 +47,10 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/api/export/[
   }
   if (!file.scan.ok) return NextResponse.json({ error: "scan_check_failed", issues: file.scan.issues }, { status: 422 });
 
-  const safeName =
-    record.name
-      .replace(/[^\p{L}\p{N}\- ]+/gu, "")
-      .trim()
-      .replace(/\s+/g, "-")
-      .toLowerCase() || "qr-code";
   return new NextResponse(new Uint8Array(file.body), {
     headers: {
       "Content-Type": file.contentType,
-      "Content-Disposition": `attachment; filename="${safeName}.${format}"`,
+      "Content-Disposition": downloadFileName(record.name, format).header,
       "Cache-Control": "private, no-store",
     },
   });

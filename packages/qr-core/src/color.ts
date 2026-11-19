@@ -29,3 +29,13 @@ export function parseHexColor(text: string): string | null {
   const value = text.trim();
   return isHexColor(value) ? value.toUpperCase() : null;
 }
+
+/** `a` blended toward `b` by `t` (0–1), as "#RRGGBB": the colour a translucent `b` over `a` shows. */
+export function mixColors(a: string, b: string, t: number): string {
+  const ch = (h: string, i: number) => parseInt(h.replace("#", "").slice(i, i + 2), 16) || 0;
+  const out = [0, 2, 4].map((i) => Math.round(ch(a, i) * (1 - t) + ch(b, i) * t));
+  return `#${out
+    .map((v) => v.toString(16).padStart(2, "0"))
+    .join("")
+    .toUpperCase()}`;
+}

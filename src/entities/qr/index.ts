@@ -1,5 +1,6 @@
 export {
   CAPTION_ALIGNS,
+  CAPTION_POSITIONS,
   CARD_RATIO,
   CENTER_ICONS,
   defaultCaptionAlign,
@@ -10,12 +11,20 @@ export {
   EYE_BALL_SHAPES,
   EYE_FRAME_SHAPES,
   FRAME_STYLES,
+  FRAME_COMBOS,
+  FRAME_PHRASES,
+  FRAME_TEXT_MAX,
   hasCaptionBand,
+  QUICK_STYLES,
+  quickStylePatch,
+  SURPRISE_COLORS,
+  logoOnTop,
   MODULE_SHAPES,
   ORIGINAL_CAPTION_FONT,
   QR_INKS,
   designToLayout,
   type CaptionAlign,
+  type CaptionPosition,
   type LogoPlate,
   type CenterIcon,
   type CenterLogo,
@@ -37,7 +46,7 @@ export {
   type CaptionCheck,
   type CaptionSizeUnit,
 } from "./model/caption";
-export { CONTENT_FIELDS, emptyContent, isContentComplete, type ContentField } from "./model/content";
+export { CONTENT_FIELDS, emptyContent, isContentComplete, TEXT_MAX_CHARS, type ContentField } from "./model/content";
 export { QrPreview } from "./ui/qr-preview";
 export { checkLogoDataUrl, LOGO_ACCEPT, LOGO_MAX_BYTES, LOGO_MIME, sniffLogoFormat, type LogoFormat } from "./model/logo";
 export { designFromSaved, pickLayoutForEdit } from "./model/saved-design";
@@ -72,3 +81,15 @@ export {
   type SizeField,
   type SizeUnit,
 } from "./model/size";
+export {
+  BRAND_LOOKS,
+  brandColorPatch,
+  brandColorsOf,
+  brandLookPatch,
+  brandNameFromFile,
+  brandRoles,
+  extractPalette,
+  type BrandColors,
+  type BrandLook,
+  type BrandRole,
+} from "./model/brand";

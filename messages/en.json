@@ -16,7 +16,12 @@
     "home": "Hey QR home",
     "createCode": "Create QR code",
     "menu": "Menu",
-    "main": "Main"
+    "main": "Main",
+    "languageChoose": "Choose language",
+    "languageCount": "{count} languages",
+    "languageSearch": "Search languages",
+    "languages": "Languages",
+    "languageEmpty": "No language matches “{query}”."
   },
   "footer": {
     "terms": "Terms",
@@ -285,24 +290,115 @@
         "billing": "Receipts, plan and payment method in Plan & billing"
       },
       "loading": "Loading your studio"
+    },
+    "workspace": {
+      "kicker": "My QR codes",
+      "title": "Every QR code, in one place.",
+      "lead": "Your own private workspace once you sign in. Every code you design keeps its layouts, files and, for Dynamic codes, its scans.",
+      "points": {
+        "layouts": "Named layouts per code: business card, poster, website",
+        "files": "Download PNG and SVG again any time",
+        "edit": "Change a Dynamic code’s destination after printing",
+        "scans": "Daily scans for Dynamic codes"
+      },
+      "create": "Create a QR code",
+      "signIn": "Sign in",
+      "sampleOwner": "Sample workspace",
+      "sampleBadge": "Sample",
+      "sampleNote": "Sample codes and scans for illustration. Sign in to see your own.",
+      "tabs": {
+        "all": "All {count}",
+        "static": "Static {count}",
+        "dynamic": "Dynamic {count}"
+      },
+      "models": {
+        "static": "Static",
+        "dynamic": "Dynamic"
+      },
+      "samples": {
+        "portfolio": {
+          "name": "Portfolio card",
+          "meta": "3 layouts · purchased"
+        },
+        "menu": {
+          "name": "Café menu",
+          "meta": "Table tent · 214 scans"
+        },
+        "wifi": {
+          "name": "Guest Wi-Fi",
+          "meta": "Draft"
+        }
+      },
+      "scans": "Scan analytics · last 14 days"
     }
   },
   "pricing": {
-    "title": "Simple pricing",
-    "lead": "Design for free. Pay only when you download.",
-    "static": {
-      "name": "Static code",
-      "price": "{price} once",
-      "text": "The content is stored in the code itself. Works forever, no subscription.",
-      "points": ["All layouts and formats included", "PNG and SVG, print-ready", "Re-download any time"]
+    "title": "Pricing",
+    "head": "Pay once for a code, or monthly for codes you can change.",
+    "lead": "Designing, previewing and the scan check are always free. You pay when you download.",
+    "currency": {
+      "label": "Show prices in",
+      "unavailable": "Prices in {chosen} aren’t available yet. HeyQR charges in {charged}; your bank converts the amount. Receipts show the {charged} you paid."
+    },
+    "once": {
+      "title": "One-time",
+      "sub": "No subscription. Codes you unlock stay yours."
+    },
+    "monthly": {
+      "title": "Monthly",
+      "sub": "For Dynamic QR codes you can change after printing. Cancel anytime."
+    },
+    "free": {
+      "name": "Free",
+      "price": "{price}",
+      "q": "Design and test a code before you spend anything.",
+      "points": ["Every layout, shape, color, logo and caption", "Live scan check on every change", "Your draft is kept in this browser"],
+      "cta": "Start designing"
+    },
+    "single": {
+      "name": "Single QR",
+      "price": "{price}",
+      "per": "once",
+      "q": "One static QR with all its downloads.",
+      "points": ["PNG and SVG of every layout", "Print sizes in mm and screen sizes in px", "Download again any time, forever"],
+      "cta": "Create a QR"
     },
     "dynamic": {
-      "name": "Dynamic codes",
-      "price": "{price} / month",
-      "text": "The code points to a short link you can change after printing.",
-      "points": ["Up to {limit} active codes", "Edit the destination any time", "Scan statistics"]
+      "name": "Dynamic",
+      "price": "{price}",
+      "per": "per month",
+      "q": "A permanent short link you can point anywhere, after printing too.",
+      "live": "Live Dynamic codes",
+      "liveCount": "Up to {limit} active at once",
+      "liveHint": "A live count, not a monthly allowance: pausing or deleting a code frees its slot.",
+      "points": [
+        "Change the destination any time; the printed code stays the same",
+        "Daily scans for the last 14 days",
+        "PNG and SVG of every layout"
+      ],
+      "cta": "Create a Dynamic QR"
     },
-    "cta": "Start designing"
+    "compare": {
+      "title": "Compare",
+      "feature": "What you get",
+      "free": "Free",
+      "single": "Single QR",
+      "dynamic": "Dynamic",
+      "yes": "Included",
+      "no": "Not included",
+      "rows": {
+        "design": "Design, preview and scan check",
+        "download": "PNG and SVG downloads",
+        "repeat": "Repeat downloads",
+        "change": "Change where the code leads",
+        "analytics": "Scan analytics",
+        "codes": "Codes"
+      },
+      "codesSingle": "1 per purchase",
+      "codesDynamic": "{limit} active",
+      "codesFree": "Unlimited drafts"
+    },
+    "tax": "Prices exclude tax. Stripe adds any tax at checkout, and your receipt shows the final amount."
   },
   "auth": {
     "title": "Sign in to Hey QR",
@@ -348,7 +444,8 @@
     "end": "Ends",
     "place": "Place",
     "securityNone": "No password",
-    "securityWpa": "WPA/WPA2/WPA3"
+    "securityWpa": "WPA/WPA2/WPA3",
+    "date": "Date"
   },
   "editor": {
     "title": "Create a QR code",
@@ -403,35 +500,65 @@
       "diamond": "Diamonds",
       "leaf": "Leaf",
       "fluid": "Fluid",
-      "vbars": "Vertical bars",
-      "hbars": "Horizontal bars",
+      "vbars": "Vertical",
+      "hbars": "Horizontal",
       "cushion": "Cushion",
       "circle": "Circle"
     },
     "frames": {
-      "bar": "Bar",
-      "tab": "Tab",
-      "bubble": "Bubble",
-      "pill": "Pill",
-      "corners": "Corners",
-      "circle": "Circle",
+      "bar": "Bottom label",
+      "tab": "Top tab",
+      "bubble": "Speech bubble",
+      "pill": "Pill label",
+      "corners": "Viewfinder",
+      "circle": "Badge",
       "ticket": "Ticket",
       "phone": "Phone"
     },
     "icons": {
-      "globe": "Globe",
+      "globe": "Website",
+      "link": "Link",
       "wifi": "Wi-Fi",
       "phone": "Phone",
-      "mail": "Mail",
-      "heart": "Heart",
-      "star": "Star",
+      "mail": "Email",
+      "message": "Message",
+      "pin": "Location",
+      "calendar": "Calendar",
+      "clock": "Hours",
+      "user": "Person",
+      "users": "Team",
+      "briefcase": "Work",
+      "home": "Home",
+      "bag": "Shop",
+      "cart": "Cart",
       "coffee": "Coffee",
-      "pin": "Pin"
+      "utensils": "Menu",
+      "wine": "Bar",
+      "music": "Music",
+      "play": "Video",
+      "camera": "Photo",
+      "image": "Gallery",
+      "heart": "Like",
+      "star": "Review",
+      "gift": "Gift",
+      "ticket": "Ticket",
+      "tag": "Price",
+      "percent": "Discount",
+      "card": "Pay",
+      "download": "Download",
+      "file": "Document",
+      "book": "Guide",
+      "leaf": "Eco",
+      "sun": "Outdoor",
+      "bike": "Bike",
+      "plane": "Travel",
+      "at": "Social",
+      "smile": "Feedback"
     },
     "back": "Home",
     "stepsLabel": "Create a QR code",
     "settings": "Design settings",
-    "scanFailed": "Check scan",
+    "scanFailed": "May not scan",
     "priceOnce": "{price} once",
     "pricePerMonth": "{price} / month",
     "previewFree": "Preview free · pay when you download",
@@ -462,7 +589,32 @@
     "export": "Export",
     "previewFrom": "Preview free · download from {price}",
     "optional": "optional",
-    "frameGroup": "Frame and caption",
+    "frameGroup": {
+      "title": "Frame around the code",
+      "count": "{count} options",
+      "none": "No frame",
+      "text": "Frame text",
+      "textHint": "Text sizes itself to fit the frame. Font and weight are in Caption.",
+      "quick": "Quick text",
+      "phrases": {
+        "scanMe": "Scan me",
+        "callMe": "Call me",
+        "menu": "Menu",
+        "wifi": "Wi-Fi",
+        "payHere": "Pay here",
+        "reviewUs": "Review us",
+        "followUs": "Follow us",
+        "bookNow": "Book now"
+      },
+      "color": "Frame color",
+      "textColor": "Text color",
+      "presets": "Color presets",
+      "presetsHint": "Frame · code · background",
+      "preset": "Frame {frame}, code {code}, background {bg}",
+      "white": "White",
+      "graphite": "Graphite",
+      "violetUi": "Violet"
+    },
     "typeStep": {
       "title": "What should your code open?",
       "lead": "Everything is free to try. You pay only when you download the finished file.",
@@ -529,7 +681,7 @@
       "smsTo": "Enter the number that should receive the message.",
       "address": "Enter the address the maps app should open.",
       "eventTitle": "Give the event a name.",
-      "eventStart": "Choose when the event starts."
+      "eventStart": "Pick a date."
     },
     "afterScanning": {
       "label": "After scanning",
@@ -646,7 +798,15 @@
       "failed": "Couldn’t save the design. Your changes are still here.",
       "notFound": "This code or layout no longer exists.",
       "hint": "Changes apply to this layout only",
-      "note": "Saving updates this layout. Content, payment and links stay the same."
+      "note": "Saving updates this layout. Content, payment and links stay the same.",
+      "layouts": "Layouts of this code",
+      "newLayout": "New layout",
+      "newName": "Layout {n}",
+      "added": "“{name}” created from the current layout. The others stay as they were.",
+      "addFailed": "We couldn’t add the layout. Your edits are still here; try again.",
+      "unsavedSwitch": "This layout has unsaved changes.",
+      "discardSwitch": "Discard and switch",
+      "layoutName": "Layout name"
     },
     "captionStyle": {
       "align": "Align",
@@ -676,7 +836,204 @@
     },
     "reduceLogo": "Reduce logo to {size}%",
     "logoSizeValue": "{size}% · up to {max}% scans",
-    "logoSizeLegacy": "Saved at {saved}%; drawn at the {max}% maximum. Moving the slider saves a size within it."
+    "logoSizeLegacy": "Saved at {saved}%; drawn at the {max}% maximum. Moving the slider saves a size within it.",
+    "groups": {
+      "label": "Design settings",
+      "layout": "Layout",
+      "frame": "Frame",
+      "size": "Size",
+      "pattern": "Pattern",
+      "colors": "Colors",
+      "logo": "Logo",
+      "caption": "Caption",
+      "brand": "Brand"
+    },
+    "quickStyles": {
+      "title": "Quick styles",
+      "hint": "One tap sets shapes and colors together. Undo brings the previous look back.",
+      "surprise": "Surprise me",
+      "apply": "Apply {name} style",
+      "applied": "Style “{name}” applied. Undo brings the previous look back.",
+      "surprised": "A new look. Undo brings the previous one back.",
+      "names": {
+        "classic": "Classic",
+        "soft": "Soft",
+        "dots": "Dots",
+        "fluid": "Fluid",
+        "lines": "Lines",
+        "gem": "Gem"
+      }
+    },
+    "layoutGroup": {
+      "title": "Layout",
+      "hint": "Elements move, settings stay",
+      "border": "Frame around the layout",
+      "borderCards": "Cards always have a frame."
+    },
+    "colorsGroup": {
+      "title": "What to color",
+      "targets": "Color targets",
+      "resetAll": "Reset all",
+      "edited": "Edited",
+      "roles": {
+        "fg": "Modules",
+        "eye": "Corner frames",
+        "eyeIn": "Corner centers",
+        "bg": "Background",
+        "frame": "Frame",
+        "caption": "Caption"
+      },
+      "editing": "{role} color",
+      "swatches": "Swatches",
+      "reset": "Reset to default",
+      "note": "These colors style your QR only. HeyQR’s own buttons and menus keep their colors.",
+      "frameHint": "Frames, card borders and the frame around a layout.",
+      "captionHint": "Captions under, above or in the code."
+    },
+    "logoGroup": {
+      "source": "Logo source",
+      "icons": "Icon library",
+      "upload": "Upload logo",
+      "count": "{count} vector icons",
+      "search": "Search icons",
+      "searchPlaceholder": "Search icons: menu, wifi, shop…",
+      "empty": "No icon matches “{query}”.",
+      "style": "Icon style",
+      "plate": "On a plate",
+      "tile": "Color tile",
+      "vectorNote": "Icons stay vector in SVG, so they are sharp at any size. They take the corner-center color.",
+      "remove": "No logo",
+      "backingHint": "A backing clears the dots behind your logo so it reads cleanly.",
+      "position": "Position",
+      "positions": {
+        "center": "Center of the code",
+        "top": "Top of card"
+      },
+      "positionHint": "“Top of card” works with the vertical and horizontal cards and an uploaded image.",
+      "brandName": "Name beside the logo",
+      "brandNameHint": "Optional. Shown next to the logo above the code."
+    },
+    "captionGroup": {
+      "position": "Position",
+      "positions": {
+        "below": "Below",
+        "above": "Above",
+        "inside": "In the code"
+      },
+      "insideHint": "Short text sits on a plate in the middle of the code. The scan check asks you to shorten it if it hides too much.",
+      "hiddenNote": "“{layout}” has no caption. Choose QR + caption or a card to show it.",
+      "frameNote": "The frame’s text is set in Frame.",
+      "toLayout": "Use QR + caption",
+      "color": "Caption color"
+    },
+    "stage": {
+      "history": "History",
+      "undo": "Undo",
+      "redo": "Redo",
+      "background": "Canvas background",
+      "bg": {
+        "light": "Light",
+        "dark": "Dark",
+        "checker": "Clear"
+      },
+      "scale": "Preview scale",
+      "fit": "Fit",
+      "actual": "Actual size",
+      "dims": {
+        "layout": "Layout",
+        "qr": "QR",
+        "file": "File"
+      },
+      "scaleLabel": "{pct}%",
+      "openFull": "Open full-screen preview",
+      "fullTitle": "Full-screen preview",
+      "done": "Done"
+    },
+    "scanChecking": "Checking scan",
+    "darkenCorners": "Darken corner markers",
+    "textCount": "{count} of {max} characters. Short text makes a simpler, easier-to-scan code.",
+    "brand": {
+      "step1": "1 · Your logo or image",
+      "step1Hint": "PNG, JPG, WebP or SVG",
+      "step1Ready": "Replace it any time",
+      "drag": "Drag your logo here",
+      "dropNow": "Drop to upload",
+      "add": "Add your logo or image",
+      "formats": "PNG, JPG, WebP or SVG, up to 10 MB. A transparent background works best.",
+      "choose": "Choose image",
+      "chooseMobile": "Choose from photos or files",
+      "chooseLabel": "Choose a logo image",
+      "sample": "Try a sample logo",
+      "error": "We couldn’t read that file. Try a PNG, JPG, WebP or SVG up to 10 MB.",
+      "reading": "Reading colors from your image…",
+      "preview": "Uploaded image",
+      "image": "Your image",
+      "colorsFound": "{count, plural, one {# color found} other {# colors found}}",
+      "replace": "Replace image",
+      "replaceLabel": "Replace the logo image",
+      "remove": "Remove image",
+      "step2": "2 · Colors from your image",
+      "step2Hint": "Applied to the QR",
+      "roles": "Brand color roles",
+      "role": {
+        "primary": "Code color",
+        "bg": "Background",
+        "accent": "Accent"
+      },
+      "roleHint": {
+        "primary": "Modules and corner frames",
+        "bg": "Behind the code and card",
+        "accent": "Corner centers and details"
+      },
+      "fromImage": "From your image",
+      "found": "Colors found in your image",
+      "hexFor": "HEX for {role}",
+      "reset": "Reset",
+      "contrast": {
+        "ok": "Code on background: {ratio}:1 · easy to read. The scan check has the final word.",
+        "warn": "Code on background: {ratio}:1 · readable, but more contrast is safer.",
+        "err": "Code on background: {ratio}:1 · too low to scan reliably."
+      },
+      "appColors": "These colors style your QR only. HeyQR’s buttons and menus keep their own colors.",
+      "step3": "3 · Pick a direction",
+      "step3Hint": "Same code, three looks",
+      "looks": "Branded looks",
+      "lookCards": {
+        "center": {
+          "title": "Logo in the code",
+          "desc": "Your mark sits on a plate in the middle."
+        },
+        "card": {
+          "title": "Brand card",
+          "desc": "Logo and name above the code, in a frame."
+        },
+        "art": {
+          "title": "Artwork",
+          "desc": "Your image flows into the dots and corners."
+        }
+      },
+      "step4": "4 · Fine-tune",
+      "fine": {
+        "logo": "Image size & backing",
+        "pattern": "Dots & corners",
+        "caption": "Caption & font",
+        "size": "Size"
+      },
+      "updating": "Updating branded design… keep editing",
+      "readingCanvas": "Reading your image…"
+    },
+    "designMode": {
+      "label": "Design mode",
+      "custom": "Custom",
+      "branded": "Branded",
+      "chooseTitle": "How do you want to design it?",
+      "chooseLead": "Both start from the same code. You can switch at any time without losing your content.",
+      "customTitle": "Custom design",
+      "customText": "Choose the layout, shapes, colors, frame and caption yourself.",
+      "brandedTitle": "Branded design",
+      "brandedBadge": "From your logo",
+      "brandedText": "Upload your logo or an image. We pick up its colors and suggest three looks."
+    }
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",
@@ -696,14 +1053,73 @@
     "subscribe": "Subscribe for {price} / month",
     "download": "Download {format}",
     "paid": "Payment received. Your files are ready.",
-    "pending": "Confirming your payment…",
-    "cancelled": "Payment was cancelled. Nothing was charged.",
+    "pending": "Confirming your payment… This usually takes a few seconds. Your settings are locked so the file matches the receipt.",
+    "cancelled": "<b>Checkout cancelled.</b> You weren’t charged. Your design and format are saved, so you can pay whenever you’re ready.",
     "secure": "Payments are processed by Stripe.",
     "resolution": "Resolution",
     "scale": "{scale}×",
     "dpi": "{dpi} dpi",
     "pixels": "{width} × {height} px",
-    "limit": "larger sizes exceed {max} px"
+    "limit": "larger sizes exceed {max} px",
+    "titleBuy": "Buy and download",
+    "titleGuest": "Ready to download",
+    "subGuest": "Check the layout and file, then sign in with Google to pay and download. Your design stays as it is.",
+    "subPay": "Pay once to download this code in every format, as often as you need.",
+    "subEntitled": "This code is yours. Download any format, as often as you need.",
+    "stageLabel": "Layout to download",
+    "layouts": "Layouts of this code",
+    "backToDesign": "Back to design",
+    "model": {
+      "static": "Static",
+      "dynamic": "Dynamic"
+    },
+    "dims": {
+      "layout": "Layout",
+      "file": "File"
+    },
+    "scanOk": "Scan verified",
+    "scanFail": "May not scan",
+    "transparent": "Transparent background",
+    "quality": "<b>No quality loss.</b> SVG is pure vector: modules, icons and text scale to any size. PNG renders from the same vector.",
+    "returned": "Signed in with Google. Your layout and <b>{format}</b> are just as you left them.",
+    "confirming": "Confirming your payment…",
+    "preparing": "Preparing your {format}…",
+    "ready": "Your {format} is ready.",
+    "downloaded": "<b>Downloaded {name}.</b> It’s also in My QR codes, ready to download again.",
+    "downloadAgain": "Download again",
+    "tryAgain": "Try again",
+    "errors": {
+      "failed": "<b>We couldn’t prepare your {format}.</b> Your payment and settings are safe. Try again in a moment.",
+      "scan": "<b>This layout may not scan.</b> Open the design to fix it; files are only made for codes that pass the scan check.",
+      "size": "<b>That size is too large for one file.</b> Choose a smaller PNG size or SVG.",
+      "payment": "<b>This code isn’t unlocked yet.</b> Nothing was charged. Refresh in a moment, or pay to download."
+    },
+    "checkoutFailed": "We couldn’t open checkout. Nothing was charged; try again.",
+    "continueGoogle": "Continue with Google",
+    "guestNote": "Free to design. You pay only when you download.",
+    "receipt": {
+      "title": "Receipt",
+      "paid": "Paid",
+      "tax": "Tax included as calculated by Stripe."
+    },
+    "lines": {
+      "single": "Single QR",
+      "dynamic": "Dynamic QR"
+    },
+    "perMonth": "{price}/month",
+    "summary": {
+      "title": "Order summary",
+      "code": "QR code",
+      "type": "Type",
+      "layout": "Layout",
+      "file": "File",
+      "total": "Total",
+      "tax": "Tax, if any, is calculated at checkout.",
+      "included": "Included"
+    },
+    "emptyTitle": "Nothing to download yet",
+    "emptyText": "Design a QR code first. Your draft stays in this browser until you download it.",
+    "emptyAction": "Create a QR code"
   },
   "dashboard": {
     "title": "My QR codes",
@@ -777,7 +1193,17 @@
       "restoredOne": "Code restored.",
       "restoredMany": "{count} codes restored.",
       "deleteFailed": "Couldn’t delete. Try again.",
-      "restoreFailed": "Couldn’t restore it. Undo is available for a few minutes after deleting."
+      "restoreFailed": "Couldn’t restore it. Undo is available for a few minutes after deleting.",
+      "rename": {
+        "action": "Rename",
+        "actionOne": "Rename {name}",
+        "label": "Name of {name}",
+        "save": "Save",
+        "cancel": "Cancel",
+        "saved": "Renamed to “{name}”.",
+        "empty": "Give the code a name.",
+        "failed": "We couldn’t rename it. Your text is still here; try again."
+      }
     }
   },
   "qr": {
@@ -804,7 +1230,28 @@
     "none": "You don’t have a subscription. Static codes are paid once.",
     "manage": "Manage subscription",
     "purchases": "Purchases",
-    "noPurchases": "No purchases yet."
+    "noPurchases": "No purchases yet.",
+    "usage": "Usage",
+    "liveDynamic": "Live Dynamic codes",
+    "liveCount": "{used} of {limit}",
+    "liveHint": "Live slots free up when you pause or delete a Dynamic code.",
+    "renews": "Renews {date}",
+    "payment": "Payment method",
+    "paymentManaged": "Your card is kept by Stripe. Manage it in the billing portal.",
+    "compare": "Compare plans",
+    "statusActive": "Active",
+    "statusCanceling": "Cancels",
+    "statusNone": "No plan",
+    "date": "Date",
+    "open": "Open",
+    "receiptNote": "Stripe emails a receipt for every payment.",
+    "statuses": {
+      "paid": "Paid",
+      "pending": "Pending",
+      "refunded": "Refunded",
+      "failed": "Failed"
+    },
+    "liveNoPlan": "{used} active · no plan"
   },
   "legal": {
     "terms": {

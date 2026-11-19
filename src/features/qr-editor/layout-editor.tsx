@@ -1,14 +1,16 @@
 "use client";
 
 import { composeLayout, layoutCapacity } from "@heyqr/qr-core";
-import { ArrowLeftIcon, CheckIcon, LoaderCircleIcon } from "lucide-react";
+import { ArrowLeftIcon, CheckIcon, LoaderCircleIcon, PlusIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { designSettingsOf, designToLayout, type EditorDesign } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
-import { saveLayoutEdit } from "@/server/actions/qr";
+import { addLayout, saveLayoutEdit } from "@/server/actions/qr";
 import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
 import { BottomBarInfo } from "./bottom-bar";
 import { useShownRender } from "./design-canvas";
 import { DesignStep } from "./design-step";
@@ -24,6 +26,7 @@ export function LayoutEditor({
   qrCodeId,
   layoutId,
   layoutName,
+  layouts = [],
   initialDesign,
   value,
   detailsHref,
@@ -31,6 +34,8 @@ export function LayoutEditor({
   qrCodeId: string;
   layoutId: string;
   layoutName: string;
+  /** Every named layout of the code, in order (design "Layouts of this code" tabs). */
+  layouts?: { id: string; name: string }[];
   initialDesign: EditorDesign;
   /** What the printed code encodes: the payload of a static code, the short link of a dynamic one. */
   value: string;
@@ -42,6 +47,8 @@ export function LayoutEditor({
   const router = useRouter();
   const [design, setDesign] = useState(initialDesign);
   const [saved, setSaved] = useState(initialDesign);
+  const [name, setName] = useState(layoutName);
+  const [adding, startAdding] = useTransition();
   const [saving, startSaving] = useTransition();
   const patch = (p: Partial<EditorDesign>) => setDesign((d) => ({ ...d, ...p }));
 
@@ -53,7 +60,7 @@ export function LayoutEditor({
     () => (layoutCapacity(shown.layout, shown.value).ok ? composeLayout(shown.layout, shown.value).scan : null),
     [shown.layout, shown.value],
   );
-  const changed = design !== saved;
+  const changed = design !== saved || name.trim() !== layoutName;
 
   const [invalidFields, setInvalidFields] = useState<string[]>([]);
   const [showFieldErrors, setShowFieldErrors] = useState(false);
@@ -75,9 +82,13 @@ export function LayoutEditor({
     const submitted = design;
     startSaving(async () => {
       // A lost connection rejects the call instead of returning an error: treat it the same, keeping every edit.
-      const result = await saveLayoutEdit({ qrCodeId, layoutId, layout, editor: designSettingsOf(submitted) }).catch(
-        () => ({ ok: false, error: "failed" }) as const,
-      );
+      const result = await saveLayoutEdit({
+        qrCodeId,
+        layoutId,
+        layout,
+        editor: designSettingsOf(submitted),
+        ...(name.trim() && name.trim() !== layoutName ? { name: name.trim() } : {}),
+      }).catch(() => ({ ok: false, error: "failed" }) as const);
       if (!result.ok) {
         const message =
           result.error === "not_found"
@@ -93,6 +104,64 @@ export function LayoutEditor({
       router.push(detailsHref);
     });
   };
+
+  /** Design "New layout from this one": the current edits become a new named layout; the others stay as they were. */
+  const newLayout = () =>
+    startAdding(async () => {
+      const next = tEdit("newName", { n: layouts.length + 1 });
+      const result = await addLayout({ qrCodeId, name: next, layout, editor: designSettingsOf(design) }).catch(
+        () => ({ ok: false, error: "failed" }) as const,
+      );
+      if (!result.ok) {
+        toast.error(result.error === "too_long" ? tErrors("too_long") : tEdit("addFailed"), { id: "layout-add" });
+        return;
+      }
+      toast.success(tEdit("added", { name: next }), { id: "layout-add" });
+      router.push(`/edit/${qrCodeId}?layout=${result.data.layoutId}`);
+    });
+
+  /** Switching layouts never drops edits silently: with unsaved changes, it asks first. */
+  const openLayout = (id: string) => {
+    if (id === layoutId) return;
+    const go = () => router.push(`/edit/${qrCodeId}?layout=${id}`);
+    if (!changed) return go();
+    toast(tEdit("unsavedSwitch"), { id: "layout-switch", action: { label: tEdit("discardSwitch"), onClick: go } });
+  };
+
+  const tabs = (
+    <div role="tablist" aria-label={tEdit("layouts")} className="flex min-w-0 grow [scrollbar-width:none] gap-1 overflow-x-auto">
+      {(layouts.length ? layouts : [{ id: layoutId, name: layoutName }]).map((l) => (
+        <button
+          key={l.id}
+          type="button"
+          role="tab"
+          aria-selected={l.id === layoutId}
+          title={l.name}
+          onClick={() => openLayout(l.id)}
+          className="inline-flex min-h-9 max-w-45 flex-none cursor-pointer items-center truncate rounded-full border border-border bg-surface px-3 text-[0.8125rem] font-semibold text-secondary-foreground aria-selected:border-violet-300 aria-selected:bg-violet-50 aria-selected:text-violet-800"
+        >
+          <span className="truncate">{l.id === layoutId ? name || l.name : l.name}</span>
+        </button>
+      ))}
+      <button
+        type="button"
+        disabled={adding}
+        aria-busy={adding || undefined}
+        onClick={newLayout}
+        className="inline-flex min-h-9 flex-none cursor-pointer items-center gap-1.5 rounded-full border border-dashed border-border px-3 text-[0.8125rem] font-semibold text-secondary-foreground hover:border-border-hover disabled:opacity-60"
+      >
+        {adding ? <LoaderCircleIcon aria-hidden className="size-3.5 animate-spin" /> : <PlusIcon aria-hidden className="size-3.5" />}
+        {tEdit("newLayout")}
+      </button>
+    </div>
+  );
+
+  const nameField = (
+    <div className="mb-4 flex flex-col gap-1.5">
+      <Label htmlFor="layout-name">{tEdit("layoutName")}</Label>
+      <Input id="layout-name" value={name} maxLength={60} onChange={(e) => setName(e.target.value)} />
+    </div>
+  );
 
   const saveButton = (size: "sm" | "md", className?: string) => (
     <Button
@@ -130,7 +199,9 @@ export function LayoutEditor({
       <DesignStep
         design={design}
         onChange={patch}
-        title={`${design.name} · ${layoutName}`}
+        title={`${design.name} · ${name || layoutName}`}
+        stageTitle={tabs}
+        panelHead={nameField}
         shown={shown}
         scan={scan}
         tooLong={tooLong}
