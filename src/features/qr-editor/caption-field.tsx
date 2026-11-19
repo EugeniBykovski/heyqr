@@ -2,11 +2,12 @@
 
 import { CircleAlertIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CAPTION_MAX_CHARS, CAPTION_MAX_LINES, checkCaption, normalizeCaption } from "@/entities/qr";
 import { cn } from "@/shared/lib/utils";
 import { Label } from "@/shared/ui/label";
 import { Textarea } from "@/shared/ui/textarea";
+import { useFieldValidity } from "./use-field-validity";
 
 /*
  * Design "Design → Caption" (HEY-43): two rows, Enter for a second line, empty hides the caption.
@@ -42,13 +43,12 @@ export function CaptionField({
   const check = checkCaption(text);
   // A caption saved before the rule is shown as is and stays usable until it is edited.
   const rejected = !check.ok && normalizeCaption(text) !== value;
-  useEffect(() => () => onValidity?.(id, true), [id, onValidity]);
+  useFieldValidity(id, !rejected, onValidity);
 
   const edit = (next: string) => {
     setText(next);
     const result = checkCaption(next);
     const normalized = normalizeCaption(next);
-    onValidity?.(id, result.ok || normalized === value);
     if (result.ok && normalized !== value) {
       setSynced(normalized);
       onAccept(normalized);

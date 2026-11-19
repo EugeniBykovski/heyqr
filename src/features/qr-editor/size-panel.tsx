@@ -3,7 +3,7 @@
 import { layoutGeometry, pngPixelSize } from "@heyqr/qr-core";
 import { CircleAlertIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   convertCaptionSize,
   convertSize,
@@ -23,6 +23,7 @@ import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 import { Segmented } from "@/shared/ui/segmented";
+import { useFieldValidity } from "./use-field-validity";
 
 /**
  * One size value (HEY-35). Like the colour fields (HEY-34), the text being typed is separate from the last valid
@@ -60,13 +61,12 @@ function SizeField({
   }
   const valid = disabled || parseSizeValue(text, unit, field) !== null;
   const showError = !valid && (touched || Boolean(forceError));
-  useEffect(() => () => onValidity?.(id, true), [id, onValidity]);
+  useFieldValidity(id, valid, onValidity);
   const [min, max] = sizeLimits(unit, field);
 
   const edit = (next: string) => {
     setText(next);
     const parsed = parseSizeValue(next, unit, field);
-    onValidity?.(id, parsed !== null);
     if (parsed !== null) {
       if (parsed !== value) onChange(parsed);
       setTouched(false);

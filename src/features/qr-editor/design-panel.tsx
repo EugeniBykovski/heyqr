@@ -3,7 +3,7 @@
 import { CENTER_LOGO_SIZE, centerLogoSize, parseHexColor } from "@heyqr/qr-core";
 import { CircleAlertIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   CENTER_ICONS,
   defaultLogoPlate,
@@ -21,6 +21,7 @@ import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 import { LogoFeedback, LogoUploadTile, type LogoFeedbackState } from "./logo-upload";
 import { OptionGrid } from "./option-grid";
+import { useFieldValidity } from "./use-field-validity";
 
 /**
  * One colour: a native picker plus a HEX text field (HEY-34). The text being edited is kept apart from the last valid
@@ -54,13 +55,11 @@ export function ColorField({
   }
   const valid = parseHexColor(text) !== null;
   const showError = !valid && (touched || Boolean(forceError));
-  // A field that disappears (another step, reset) can't keep Export blocked.
-  useEffect(() => () => onValidity?.(id, true), [id, onValidity]);
+  useFieldValidity(id, valid, onValidity);
 
   const edit = (next: string) => {
     setText(next);
     const parsed = parseHexColor(next);
-    onValidity?.(id, parsed !== null);
     if (parsed) {
       if (parsed !== value) onChange(parsed);
       setTouched(false);
