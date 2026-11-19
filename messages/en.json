@@ -348,7 +348,8 @@
     "end": "Ends",
     "place": "Place",
     "securityNone": "No password",
-    "securityWpa": "WPA/WPA2/WPA3"
+    "securityWpa": "WPA/WPA2/WPA3",
+    "date": "Date"
   },
   "editor": {
     "title": "Create a QR code",
@@ -584,7 +585,7 @@
       "smsTo": "Enter the number that should receive the message.",
       "address": "Enter the address the maps app should open.",
       "eventTitle": "Give the event a name.",
-      "eventStart": "Choose when the event starts."
+      "eventStart": "Pick a date."
     },
     "afterScanning": {
       "label": "After scanning",
@@ -844,7 +845,8 @@
       "done": "Done"
     },
     "scanChecking": "Checking scan",
-    "darkenCorners": "Darken corner markers"
+    "darkenCorners": "Darken corner markers",
+    "textCount": "{count} of {max} characters. Short text makes a simpler, easier-to-scan code."
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",

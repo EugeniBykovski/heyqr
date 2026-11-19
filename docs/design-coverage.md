@@ -15,9 +15,9 @@ verification script result (named here).
 | --------------------------------- | --------------------------------------- | --- | --- | ---- | ----------------------------------------------------------------------------------------------------------------------- |
 | 1.1 Home                          | `/`                                     | ✅  | ✅  | ✅   | final-home-{390,834,1440}.png; hero tool, examples, features, types, FAQ, CTA, footer                                   |
 | 1.2 Type                          | `/create?step=type` (home "More +")     | ✅  | ✅  | ✅   | final-type-*.png; editor-flow steps 1–3, 11 (cards, Static/Dynamic, bar, Continue)                                      |
-| 1.3 Content · contact card        | `/create?step=content`, Contact         | 🟡  | 🟡  | 🟡   | Fields, errors, preview done; design pairs first/last name and marks optional fields per row                            |
-| 1.4 Content · Wi-Fi               | `/create?step=content`, Wi-Fi           | 🟡  | 🟡  | 🟡   | Validation done (editor-flow step 12); design uses a security segmented control and a show/hide password button         |
-| 1.5 Content · text                | `/create?step=content`, Text            | 🟡  | 🟡  | 🟡   | Design shows "N of 300 characters" hint                                                                                 |
+| 1.3 Content · contact card        | `/create?step=content`, Contact         | ✅  | ✅  | ✅   | Name / title pairs, optional private name, live phone preview, field errors with a summary banner                       |
+| 1.4 Content · Wi-Fi               | `/create?step=content`, Wi-Fi           | ✅  | ✅  | ✅   | Security segmented control, Show/Hide in the form only, hidden-network option; the preview always masks the password    |
+| 1.5 Content · text                | `/create?step=content`, Text            | ✅  | ✅  | ✅   | "N of 300 characters" hint, newlines kept; older longer texts stay usable                                               |
 | 1.6 Design · colors               | `/create?step=design` → Colors          | ✅  | ✅  | ✅   | Grouped settings; six colour roles (modules, corners, background, frame, caption), swatches, HEX, role reset, Reset all |
 | 1.7 Design · pattern              | Design → Pattern                        | ✅  | ✅  | ✅   | 8 module shapes, 5 corner frames, 5 corner centers, each with a renderer-drawn crop                                     |
 | 1.8 Design · size                 | Design → Size                           | ✅  | ✅  | ✅   | HEY-35/36 units, QR size vs layout size, presets; stage footer shows layout, QR and file dimensions                     |
@@ -26,7 +26,7 @@ verification script result (named here).
 | 1.11 Icon library                 | Design → Logo → Icon library            | ✅  | ✅  | ✅   | 38 searchable vector icons, plate or colour tile; upload, size 10–46 %, backing, position (centre / top of card)        |
 | 1.12 Quick styles · Undo · canvas | Design → Layout; stage bar              | ✅  | ✅  | ✅   | Six quick styles + Surprise me (one undo step each), Undo/Redo, Light/Dark/Clear canvas, Fit/Actual size                |
 | 1.13 Language switch              | header                                  | 🟡  | 🟡  | 🟡   | Dropdown with 21 languages; design is a popover with search and a 2-column list                                         |
-| 1.14 Content · event              | `/create?step=content`, Event           | 🟡  | 🟡  | 🟡   | App uses one date-time field; design has date + start/end times                                                         |
+| 1.14 Content · event              | `/create?step=content`, Event           | ✅  | ✅  | ✅   | Date + start/end times over start/end; date-only = all-day VEVENT; preview shows the localised date and times           |
 | 1.15 Frame gallery                | Design → Frame                          | ✅  | ✅  | ✅   | No frame + 8 live thumbnails, 16-character text, quick phrases, frame and text colours, colour presets                  |
 | 1.16 Caption in the code          | Design → Caption → Position             | ✅  | ✅  | ✅   | Below / above / in the code; the scan check flags text that hides too much                                              |
 
@@ -34,7 +34,7 @@ verification script result (named here).
 
 | Frame                              | Route                                       | 390 | 834 | 1440 | Notes                                                                                                   |
 | ---------------------------------- | ------------------------------------------- | --- | --- | ---- | ------------------------------------------------------------------------------------------------------- |
-| 2.1 Website · loading              | —                                           | ❌  | ❌  | ❌   | Needs a site-metadata fetch (backend) for the preview; ⛔ live                                          |
+| 2.1 Website · loading              | `/create` first load                        | ✅  | ✅  | ✅   | Heading and stepper at once; type cards hold their exact size (HEY-41 skeletons)                        |
 | 2.2 Content · empty                | `/create?step=content`                      | ✅  | ✅  | ✅   | After scanning shows placeholders (final-content-*.png)                                                 |
 | 2.3 Content · domain               | Content with a URL                          | ✅  | ✅  | ✅   | Preview shows the host                                                                                  |
 | 2.4 Choose mode (custom / branded) | —                                           | ❌  | ❌  | ❌   | Branded mode not built                                                                                  |
@@ -78,12 +78,12 @@ verification script result (named here).
 
 ## 5 · Loading
 
-| Frame                       | Route                | 390 | 834 | 1440 | Notes                                                                 |
-| --------------------------- | -------------------- | --- | --- | ---- | --------------------------------------------------------------------- |
-| 5.1 Content · loading       | —                    | ❌  | ❌  | ❌   | Editor-wide skeleton only; no content-step skeleton                   |
-| 5.2 Design · loading        | `/create` first load | 🟡  | 🟡  | 🟡   | Skeleton matches the Design layout; Type/Content steps need their own |
-| 5.3 Rebuilding branded look | —                    | ❌  | ❌  | ❌   | Depends on branded mode                                               |
-| 5.4 My QR codes · loading   | `/dashboard` loading | ✅  | ✅  | ✅   | HEY-3 (verified with a temporary delay)                               |
+| Frame                       | Route                             | 390 | 834 | 1440 | Notes                                                                           |
+| --------------------------- | --------------------------------- | --- | --- | ---- | ------------------------------------------------------------------------------- |
+| 5.1 Content · loading       | `/create?step=content` first load | ✅  | ✅  | ✅   | Form boxes and the preview shapes; the empty Website preview is static (HEY-41) |
+| 5.2 Design · loading        | `/create` first load              | 🟡  | 🟡  | 🟡   | Skeleton matches the Design layout; Type/Content steps need their own           |
+| 5.3 Rebuilding branded look | —                                 | ❌  | ❌  | ❌   | Depends on branded mode                                                         |
+| 5.4 My QR codes · loading   | `/dashboard` loading              | ✅  | ✅  | ✅   | HEY-3 (verified with a temporary delay)                                         |
 
 ## Components, breakpoints and system boards
 
