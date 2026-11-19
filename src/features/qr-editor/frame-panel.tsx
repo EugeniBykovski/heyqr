@@ -14,6 +14,7 @@ import {
   CAPTION_ALIGNS,
   EDITOR_PRESETS,
   FRAME_STYLES,
+  hasCaptionBand,
   ORIGINAL_CAPTION_FONT,
   QR_INKS,
   type EditorDesign,
@@ -48,7 +49,7 @@ export function FramePanel({
         label={t("layout")}
         value={design.preset}
         options={EDITOR_PRESETS}
-        columns="grid-cols-3"
+        columns="grid-cols-2 @[26rem]/panel:grid-cols-3"
         onChange={choosePreset}
         render={(o) => t(`presets.${o}`)}
       />
@@ -61,7 +62,7 @@ export function FramePanel({
           render={(o) => t(`frames.${o}`)}
         />
       ) : null}
-      {design.preset === "caption" ? (
+      {hasCaptionBand(design.preset) ? (
         <CaptionField
           id="caption"
           label={t("captionField.label")}
@@ -72,8 +73,8 @@ export function FramePanel({
       ) : null}
       {design.preset !== "qr" ? <CaptionFontPicker design={design} onChange={onChange} /> : null}
       {/* The frame label sizes itself to the frame (design "Frame text"); the caption layout has a Size field. */}
-      {design.preset === "caption" ? <CaptionSizeField design={design} onChange={onChange} onValidity={onValidity} /> : null}
-      {design.preset === "caption" ? <CaptionStyle design={design} onChange={onChange} onValidity={onValidity} /> : null}
+      {hasCaptionBand(design.preset) ? <CaptionSizeField design={design} onChange={onChange} onValidity={onValidity} /> : null}
+      {hasCaptionBand(design.preset) ? <CaptionStyle design={design} onChange={onChange} onValidity={onValidity} /> : null}
       {design.preset === "frame" ? (
         // The frame label has its own rules (design "Frame text"); unchanged here.
         <Field id="caption" label={t("caption")}>

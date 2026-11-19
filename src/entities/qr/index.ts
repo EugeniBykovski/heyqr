@@ -1,5 +1,6 @@
 export {
   CAPTION_ALIGNS,
+  CARD_RATIO,
   CENTER_ICONS,
   defaultLogoPlate,
   LOGO_PLATES,
@@ -8,6 +9,7 @@ export {
   EYE_BALL_SHAPES,
   EYE_FRAME_SHAPES,
   FRAME_STYLES,
+  hasCaptionBand,
   MODULE_SHAPES,
   ORIGINAL_CAPTION_FONT,
   QR_INKS,

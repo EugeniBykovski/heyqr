@@ -36,8 +36,20 @@ export const MODULE_SHAPES: readonly ModuleShape[] = ["square", "rounded", "dot"
 export const EYE_FRAME_SHAPES: readonly EyeFrameShape[] = ["square", "rounded", "cushion", "circle", "leaf"];
 export const EYE_BALL_SHAPES: readonly EyeBallShape[] = ["square", "rounded", "circle", "diamond", "leaf"];
 export const FRAME_STYLES: readonly FrameStyle[] = ["bar", "tab", "bubble", "pill", "corners", "circle", "ticket", "phone"];
-export type EditorPreset = "qr" | "caption" | "frame";
-export const EDITOR_PRESETS: readonly EditorPreset[] = ["qr", "caption", "frame"];
+export type EditorPreset = "qr" | "caption" | "vertical" | "horizontal" | "frame";
+/** Design "Layout": QR only, QR + caption, Vertical card, Horizontal card (HEY-53), Frame. */
+export const EDITOR_PRESETS: readonly EditorPreset[] = ["qr", "caption", "vertical", "horizontal", "frame"];
+/** Layouts with a caption band of their own (caption text, font, size, alignment and colour apply). */
+export const hasCaptionBand = (preset: EditorPreset) => preset === "caption" || preset === "vertical" || preset === "horizontal";
+/**
+ * Card proportions from the design's presets (mm): Vertical card 55 × 85 with a 41 mm code, Horizontal card 90 × 50 with
+ * a 35 mm code. Cards size themselves from the code, like QR only and Frame, so switching layouts never changes the
+ * QR + caption layout's own width and height.
+ */
+export const CARD_RATIO: Record<"vertical" | "horizontal", { width: number; height: number }> = {
+  vertical: { width: 55 / 41, height: 85 / 41 },
+  horizontal: { width: 90 / 35, height: 50 / 35 },
+};
 
 export type CenterLogo = { kind: "none" } | { kind: "icon"; icon: CenterIcon } | { kind: "image"; href: string };
 
@@ -134,7 +146,13 @@ export function designToLayout(d: EditorDesign): Layout {
   const captionText = d.preset === "qr" ? "" : d.caption;
   const size = d.size ?? LEGACY_SIZE;
   // "qr" and "frame" derive their canvas from the code (layoutGeometry); "caption" has its own width × height.
-  const canvas = d.preset === "caption" ? { width: size.width, height: size.height } : { width: size.qr, height: size.qr };
+  const round = (v: number) => (size.unit === "mm" ? Math.round(v * 10) / 10 : Math.round(v));
+  const canvas =
+    d.preset === "caption"
+      ? { width: size.width, height: size.height }
+      : d.preset === "vertical" || d.preset === "horizontal"
+        ? { width: round(size.qr * CARD_RATIO[d.preset].width), height: round(size.qr * CARD_RATIO[d.preset].height) }
+        : { width: size.qr, height: size.qr };
   return {
     preset: d.preset,
     frameStyle: d.preset === "frame" ? d.frameStyle : undefined,
@@ -158,7 +176,7 @@ export function designToLayout(d: EditorDesign): Layout {
       // px layouts: px. mm layouts: pt (the renderer's caption unit for print). Unset: a share of the code, as before.
       size: d.captionSize ?? defaultCaptionSize(size),
       // Frames centre their label; the caption layout aligns its lines as chosen (HEY-46).
-      align: d.preset === "caption" ? (d.captionAlign ?? "center") : "center",
+      align: hasCaptionBand(d.preset) ? (d.captionAlign ?? "center") : "center",
       position: "after",
     },
   };

@@ -3,6 +3,7 @@ import {
   CENTER_ICONS,
   DEFAULT_DESIGN,
   EDITOR_PRESETS,
+  hasCaptionBand,
   ORIGINAL_CAPTION_FONT,
   type CaptionAlign,
   type CenterIcon,
@@ -53,8 +54,8 @@ function settingsFromLayout(layout: Layout): Partial<EditorDesign> {
     preset,
     frameStyle: layout.frameStyle ?? DEFAULT_DESIGN.frameStyle,
     caption: layout.caption.text,
-    ...(preset === "caption" && layout.caption.align !== "center" ? { captionAlign: layout.caption.align as CaptionAlign } : {}),
-    ...(preset === "caption" && layout.colors.caption !== layout.colors.fg ? { captionColor: layout.colors.caption } : {}),
+    ...(hasCaptionBand(preset) && layout.caption.align !== "center" ? { captionAlign: layout.caption.align as CaptionAlign } : {}),
+    ...(hasCaptionBand(preset) && layout.colors.caption !== layout.colors.fg ? { captionColor: layout.colors.caption } : {}),
     ...(isValidSize(size) ? { size } : {}),
   };
 }
