@@ -15,6 +15,7 @@ const STATUS_VARIANT = { purchased: "success", active: "success", draft: "warnin
 export function QrCard({
   name,
   href,
+  editHref,
   exportHref,
   layout,
   value,
@@ -31,6 +32,8 @@ export function QrCard({
 }: {
   name: string;
   href: string;
+  /** Edit design (HEY-45): the Design editor for this code's first layout. */
+  editHref: string;
   exportHref?: string;
   layout?: Layout;
   value: string;
@@ -77,7 +80,7 @@ export function QrCard({
             </Button>
           ) : null}
           <Button asChild size="sm">
-            <Link href={href}>{labels.edit}</Link>
+            <Link href={editHref}>{labels.edit}</Link>
           </Button>
           {exportHref ? (
             <Button asChild size="sm" variant={paid ? "secondary" : "primary"} className={cn(!paid && "ml-auto lg:ml-0")}>

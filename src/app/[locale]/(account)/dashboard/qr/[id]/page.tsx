@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, DownloadIcon, LockIcon } from "lucide-react";
+import { ArrowLeftIcon, DownloadIcon, LockIcon, PencilIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -59,25 +59,34 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
                     <QrPreview layout={layout.design.layout} value={value} label={layout.name} className="size-full" />
                   </div>
                   <CardTitle>{layout.name}</CardTitle>
-                  {entitled ? (
-                    <div className="flex gap-2">
-                      {(["png", "svg"] as const).map((f) => (
-                        <Button key={f} asChild size="sm">
-                          <a href={`/api/export/${layout.id}?format=${f}`} download>
-                            <DownloadIcon aria-hidden />
-                            {f.toUpperCase()}
-                          </a>
-                        </Button>
-                      ))}
-                    </div>
-                  ) : (
-                    <Button asChild variant="primary" size="sm">
-                      <Link href={`/create/export?qr=${qr.id}&layout=${layout.id}`}>
-                        <LockIcon aria-hidden />
-                        {t("buy")}
+                  <div className="flex flex-wrap gap-2">
+                    {/* HEY-45: opens this exact layout in the Design editor. */}
+                    <Button asChild size="sm">
+                      <Link href={`/edit/${qr.id}?layout=${layout.id}`}>
+                        <PencilIcon aria-hidden />
+                        {t("editDesign")}
                       </Link>
                     </Button>
-                  )}
+                    {entitled ? (
+                      <>
+                        {(["png", "svg"] as const).map((f) => (
+                          <Button key={f} asChild size="sm">
+                            <a href={`/api/export/${layout.id}?format=${f}`} download>
+                              <DownloadIcon aria-hidden />
+                              {f.toUpperCase()}
+                            </a>
+                          </Button>
+                        ))}
+                      </>
+                    ) : (
+                      <Button asChild variant="primary" size="sm">
+                        <Link href={`/create/export?qr=${qr.id}&layout=${layout.id}`}>
+                          <LockIcon aria-hidden />
+                          {t("buy")}
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
                 </Card>
               </li>
             ))}

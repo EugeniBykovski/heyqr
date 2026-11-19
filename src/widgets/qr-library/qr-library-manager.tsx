@@ -20,6 +20,7 @@ export type LibraryItem = {
   id: string;
   name: string;
   href: string;
+  editHref: string;
   exportHref?: string;
   layout?: Layout;
   value: string;

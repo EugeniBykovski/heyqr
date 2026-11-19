@@ -13,6 +13,7 @@ import {
   type ModuleShape,
   type QrContent,
 } from "@heyqr/qr-core";
+import { defaultCaptionSize } from "./caption";
 import { LEGACY_SIZE, type DesignSize } from "./size";
 
 /** 24×24 stroke icons for the code center (Lucide geometry, drawn by qr-core). */
@@ -60,8 +61,10 @@ export interface EditorDesign {
   frameStyle: FrameStyle;
   caption: string;
   /** Caption font and weight (HEY-44). Unset (drafts before HEY-44) = DEFAULT_CAPTION_FONT / DEFAULT_CAPTION_WEIGHT. */
-  captionFont?: CaptionFontId;
+  captionFont?: CaptionFontId | typeof ORIGINAL_CAPTION_FONT;
   captionWeight?: CaptionWeight;
+  /** Caption type size (HEY-45): px for px layouts, pt for mm layouts. Unset = defaultCaptionSize (older layouts). */
+  captionSize?: number;
   /** Design 1.8 Size. Unset (every draft before HEY-35) renders at LEGACY_SIZE, exactly as before. */
   size?: DesignSize;
 }
@@ -92,10 +95,20 @@ export const QR_INKS = [
   { hex: "#9A4A22", name: "clay" },
 ] as const;
 
-/** Caption type size at the legacy 512 px code; it scales with the code so a resized layout keeps its look. */
-const CAPTION_PX_AT_LEGACY = 40;
-/** 1 pt in mm (the renderer converts print caption sizes with the same factor). */
-const MM_PER_PT = 0.3528;
+/**
+ * A layout saved before caption fonts (HEY-44) has no font ID and keeps DM Sans (Latin only, 400 / 700) when it is
+ * reopened for editing, so editing it doesn't change its look until another font is chosen (HEY-45).
+ */
+export const ORIGINAL_CAPTION_FONT = "dm-original" as const;
+
+/** Caption font, family, and the weight actually drawn, for the layout. */
+function captionTypeface(d: EditorDesign): Pick<Layout["caption"], "font" | "fontFamily" | "weight"> {
+  const weight = d.captionWeight ?? DEFAULT_CAPTION_WEIGHT;
+  if (d.captionFont === ORIGINAL_CAPTION_FONT)
+    return { font: undefined, fontFamily: "DM Sans, sans-serif", weight: weight >= 600 ? 700 : 400 };
+  const font = d.captionFont ?? DEFAULT_CAPTION_FONT;
+  return { font, fontFamily: captionFontFamily(CAPTION_FONTS[font]), weight: captionWeightFor(font, weight) };
+}
 
 export function designToLayout(d: EditorDesign): Layout {
   const logo =
@@ -105,7 +118,6 @@ export function designToLayout(d: EditorDesign): Layout {
         ? { href: d.logo.href, size: d.logoSize, plate: "square" as const, plateColor: d.bg }
         : null;
   const captionText = d.preset === "qr" ? "" : d.caption;
-  const captionFont = d.captionFont ?? DEFAULT_CAPTION_FONT;
   const size = d.size ?? LEGACY_SIZE;
   // "qr" and "frame" derive their canvas from the code (layoutGeometry); "caption" has its own width × height.
   const canvas = d.preset === "caption" ? { width: size.width, height: size.height } : { width: size.qr, height: size.qr };
@@ -120,11 +132,9 @@ export function designToLayout(d: EditorDesign): Layout {
     style: { pattern: d.pattern, eyeFrame: d.eyeFrame, eyeBall: d.eyeBall, logo },
     caption: {
       text: captionText,
-      font: captionFont,
-      fontFamily: captionFontFamily(CAPTION_FONTS[captionFont]),
-      // px layouts: px. mm layouts: pt (the renderer's caption unit for print), same share of the code as on screen.
-      size: ((CAPTION_PX_AT_LEGACY * size.qr) / LEGACY_SIZE.qr) * (size.unit === "mm" ? 1 / MM_PER_PT : 1),
-      weight: captionWeightFor(captionFont, d.captionWeight ?? DEFAULT_CAPTION_WEIGHT),
+      ...captionTypeface(d),
+      // px layouts: px. mm layouts: pt (the renderer's caption unit for print). Unset: a share of the code, as before.
+      size: d.captionSize ?? defaultCaptionSize(size),
       align: "center",
       position: "after",
     },

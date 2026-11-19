@@ -14,6 +14,7 @@ afterEach(cleanup);
 const base = {
   name: "Café menu",
   href: "/dashboard/qr/1",
+  editHref: "/edit/1?layout=l1",
   exportHref: "/create/export?qr=1&layout=l1",
   value: "https://example.com",
   typeLabel: "Website",
@@ -32,7 +33,8 @@ describe("QrCard", () => {
     );
     expect(screen.getByRole("link", { name: "Café menu" })).toHaveAttribute("href", "/dashboard/qr/1");
     expect(screen.getByText("Dynamic")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Edit design" })).toBeInTheDocument();
+    // HEY-45: Edit design opens the Design editor for the code's first layout, not the details page.
+    expect(screen.getByRole("link", { name: "Edit design" })).toHaveAttribute("href", "/edit/1?layout=l1");
     expect(screen.getByRole("link", { name: "Download" })).toHaveAttribute("href", "/create/export?qr=1&layout=l1");
   });
 

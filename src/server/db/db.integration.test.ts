@@ -11,6 +11,7 @@ import { DEFAULT_DESIGN, designToLayout } from "../../entities/qr/model/design";
 import { designSettingsOf, readLayoutRecord } from "../../entities/qr/model/design-schema";
 import { RESTORE_WINDOW_MS, restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
+import { updateLayoutDesign } from "../qr/update-layout";
 import { checkDatabase, EXPECTED_MIGRATIONS, REQUIRED_TABLES } from "./check";
 import { SEED_SCAN_DAYS, seedFixtures } from "./fixtures";
 import { runMigrations } from "./migrator";
@@ -499,5 +500,121 @@ describe.skipIf(!url)("capacity on save (real PostgreSQL)", () => {
       (await saveQrWithLayouts(db, owner.id, { name: "Dyn", model: "dynamic", content: long, destination: long.url, layouts: [logo] })).ok,
     ).toBe(true);
     expect(await db.query.qrCode.findMany({ where: (q, { eq }) => eq(q.userId, owner.id) })).toHaveLength(2);
+  });
+});
+
+describe.skipIf(!url)("edit one saved layout (HEY-45, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "edit-owner", name: "Owner", email: "owner@edit.test" };
+  const other = { id: "edit-other", name: "Other", email: "other@edit.test" };
+  const card = { ...DEFAULT_DESIGN, preset: "caption" as const, caption: "Portfolio" };
+  const sticker = { ...DEFAULT_DESIGN, preset: "frame" as const, caption: "Menu" };
+  const encoded = (qr: { model: string; shortCode: string | null; content: unknown }) =>
+    qr.model === "dynamic" ? `https://hey.qr/${qr.shortCode ?? ""}` : "https://littlefern.cafe/menu";
+  const rows = (qrCodeId: string) =>
+    db.query.qrLayout.findMany({ where: (l, { eq }) => eq(l.qrCodeId, qrCodeId), orderBy: (l, { asc }) => asc(l.sortOrder) });
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 2 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("replaces only that layout's design; the code, its payment, short link, destination and sibling layouts stay", async () => {
+    const saved = await saveQrWithLayouts(db, owner.id, {
+      name: "Café",
+      model: "dynamic",
+      content: { type: "website", url: "https://littlefern.cafe/menu" },
+      destination: "https://littlefern.cafe/menu",
+      layouts: [
+        { name: "Portfolio card", layout: designToLayout(card), editor: designSettingsOf(card) },
+        { name: "Menu sticker", layout: designToLayout(sticker), editor: designSettingsOf(sticker) },
+      ],
+    });
+    if (!saved.ok) throw new Error("save failed");
+    const { qrCodeId, layoutIds } = saved.data;
+    await db
+      .update(schema.qrCode)
+      .set({ shortCode: "m4Kp7", status: "active", previousDestination: "https://old.example" })
+      .where(eq(schema.qrCode.id, qrCodeId));
+    const qrBefore = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, qrCodeId) });
+    const [cardBefore, stickerBefore] = await rows(qrCodeId);
+
+    const edited = { ...card, captionFont: "fraunces" as const, captionWeight: 500 as const, captionSize: 52 };
+    const result = await updateLayoutDesign(
+      db,
+      owner.id,
+      { qrCodeId, layoutId: layoutIds[0] ?? "", layout: designToLayout(edited), editor: designSettingsOf(edited) },
+      encoded,
+    );
+    expect(result).toEqual({ ok: true, data: { qrCodeId, layoutId: layoutIds[0] } });
+
+    const [cardAfter, stickerAfter] = await rows(qrCodeId);
+    expect((await rows(qrCodeId)).map((l) => l.id)).toEqual(layoutIds); // no new layout, same ids and order
+    expect(cardAfter?.name).toBe("Portfolio card");
+    const read = readLayoutRecord(cardAfter?.design);
+    expect(read.ok && [read.value.layout.caption.font, read.value.layout.caption.weight, read.value.layout.caption.size]).toEqual([
+      "fraunces",
+      500,
+      52,
+    ]);
+    expect(read.ok && [read.value.editor?.captionFont, read.value.editor?.captionWeight, read.value.editor?.captionSize]).toEqual([
+      "fraunces",
+      500,
+      52,
+    ]);
+    expect(stickerAfter?.design).toEqual(stickerBefore?.design); // sibling untouched
+    expect(cardBefore?.id).toBe(cardAfter?.id);
+    const qrAfter = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, qrCodeId) });
+    expect(qrAfter && { ...qrAfter, updatedAt: null }).toEqual(qrBefore && { ...qrBefore, updatedAt: null });
+    expect(await db.query.qrCode.findMany({ where: (q, { eq }) => eq(q.userId, owner.id) })).toHaveLength(1);
+  });
+
+  it("refuses another account, a layout of another code, a deleted code and an invalid design", async () => {
+    const make = async (name: string) => {
+      const r = await saveQrWithLayouts(db, owner.id, {
+        name,
+        model: "static",
+        content: { type: "text", text: name },
+        layouts: [{ name: "Card", layout: designToLayout(card), editor: designSettingsOf(card) }],
+      });
+      if (!r.ok) throw new Error("save failed");
+      return r.data;
+    };
+    const a = await make("A");
+    const b = await make("B");
+    const input = (qrCodeId: string, layoutId: string) => ({
+      qrCodeId,
+      layoutId,
+      layout: designToLayout(sticker),
+      editor: designSettingsOf(sticker),
+    });
+    const before = await rows(a.qrCodeId);
+
+    expect(await updateLayoutDesign(db, other.id, input(a.qrCodeId, a.layoutIds[0] ?? ""), encoded)).toEqual({
+      ok: false,
+      error: "not_found",
+    });
+    expect(await updateLayoutDesign(db, owner.id, input(a.qrCodeId, b.layoutIds[0] ?? ""), encoded)).toEqual({
+      ok: false,
+      error: "not_found",
+    });
+    expect(
+      await updateLayoutDesign(db, owner.id, { ...input(a.qrCodeId, a.layoutIds[0] ?? ""), layout: { preset: "nope" } }, encoded),
+    ).toEqual({
+      ok: false,
+      error: "invalid",
+    });
+    await softDeleteQrCodes(db, owner.id, [a.qrCodeId]);
+    expect(await updateLayoutDesign(db, owner.id, input(a.qrCodeId, a.layoutIds[0] ?? ""), encoded)).toEqual({
+      ok: false,
+      error: "not_found",
+    });
+    expect((await rows(a.qrCodeId)).map((l) => l.design)).toEqual(before.map((l) => l.design));
   });
 });

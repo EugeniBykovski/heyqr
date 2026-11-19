@@ -624,7 +624,26 @@
         "400": "Regular",
         "500": "Medium",
         "700": "Bold"
-      }
+      },
+      "original": "DM Sans (original)",
+      "originalHint": "This layout was made before more fonts arrived. DM Sans has Latin letters only; choose another font for Cyrillic."
+    },
+    "captionSize": {
+      "label": "Size",
+      "invalid": "Enter {min}–{max} {unit}, with one decimal at most. The preview keeps the last valid size.",
+      "fitted": "Drawn at {size} {unit} so the caption fits the layout."
+    },
+    "edit": {
+      "title": "Edit design · {layout}",
+      "back": "Back to code",
+      "save": "Save changes",
+      "saved": "Design saved",
+      "unsaved": "Unsaved changes",
+      "retry": "Try again",
+      "failed": "Couldn’t save the design. Your changes are still here.",
+      "notFound": "This code or layout no longer exists.",
+      "hint": "Changes apply to this layout only",
+      "note": "Saving updates this layout. Content, payment and links stay the same."
     }
   },
   "scan": {
@@ -742,7 +761,8 @@
     "download": "Download",
     "buy": "Buy to download",
     "copy": "Copy",
-    "copied": "Copied"
+    "copied": "Copied",
+    "editDesign": "Edit design"
   },
   "billing": {
     "title": "Billing",

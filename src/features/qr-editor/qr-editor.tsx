@@ -12,20 +12,14 @@ import { designSettingsOf, designToLayout, emptyContent, isContentComplete, mode
 import { Link, useRouter } from "@/i18n/navigation";
 import { saveDraft } from "@/server/actions/qr";
 import { pricing } from "@/shared/config/pricing";
-import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
-import { Stage, StageBar, StageCanvas, StageFoot } from "@/shared/ui/stage";
-import { BottomBar, BottomBarInfo } from "./bottom-bar";
+import { BottomBarInfo } from "./bottom-bar";
 import { ContentStep } from "./content-step";
 import { contentErrors } from "./content-validation";
-import { DesignCanvas, useShownRender } from "./design-canvas";
-import { DesignPanel } from "./design-panel";
-import { editorPanel, editorRoot, editorStage, editorTopBar, editorTopBarInner } from "./editor-layout";
+import { useShownRender } from "./design-canvas";
+import { DesignStep } from "./design-step";
+import { editorTopBar, editorTopBarInner } from "./editor-layout";
 import { EditorSteps } from "./editor-steps";
-import { FramePanel } from "./frame-panel";
-import { ScanStatus } from "./scan-status";
-import { SizePanel } from "./size-panel";
-import { TooLongNotice } from "./too-long-notice";
 import { TypeStep } from "./type-step";
 import { clearDraft, useDraft } from "./use-draft";
 
@@ -245,62 +239,22 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
       </TabsPrimitive.Content>
 
       <TabsPrimitive.Content value="design" className="animate-rise outline-none">
-        <div className={`${editorRoot} group/step`}>
-          <section aria-label={t("preview")} className={editorStage}>
-            <Stage className="rounded-xl">
-              <StageBar>
-                <span className="min-w-0 grow truncate px-1 text-label">{design.name.trim() || t("namePlaceholder")}</span>
-                <Badge variant={design.model === "dynamic" ? "accent" : "neutral"}>{t(`model.${design.model}`)}</Badge>
-              </StageBar>
-              <StageCanvas className="select-none">
-                <DesignCanvas
-                  layout={shownLayout}
-                  value={shownValue}
-                  rebuilding={rebuilding}
-                  label={t("preview")}
-                  tooLongLabel={t("tooLong.preview")}
-                  watermark={t("preview")}
-                  updatingLabel={t("updatingPreview")}
-                />
-              </StageCanvas>
-              <StageFoot>
-                {scan ? <ScanStatus report={scan} compact /> : <Badge variant="danger">{t("tooLong.badge")}</Badge>}
-                <span className="text-caption text-muted-foreground max-lg:hidden">{t("previewNote")}</span>
-                {exportButton("md", "max-lg:hidden")}
-              </StageFoot>
-            </Stage>
-          </section>
-
-          <section aria-label={t("settings")} className={editorPanel}>
-            <h1 className="sr-only">{t("steps.design")}</h1>
-            {tooLong ? (
-              <TooLongNotice className="mb-5" capacity={tooLong} onEdit={() => goTo("content")} />
-            ) : scan && !scan.ok ? (
-              <div className="mb-5">
-                <ScanStatus report={scan} />
-              </div>
-            ) : null}
-            <div className="flex flex-col gap-8">
-              <DesignPanel design={design} onChange={patch} showColorErrors={showColorErrors} onColorValidity={onColorValidity} />
-              <section aria-labelledby="design-frame" className="flex flex-col gap-4 border-t border-border pt-6">
-                <h2 id="design-frame" className="text-h3">
-                  {t("frameGroup")}
-                </h2>
-                <FramePanel design={design} onChange={patch} onValidity={onColorValidity} />
-              </section>
-              <section aria-labelledby="design-size" className="flex flex-col gap-4 border-t border-border pt-6">
-                <h2 id="design-size" className="text-h3">
-                  {t("size.title")}
-                </h2>
-                <SizePanel design={design} onChange={patch} showErrors={showColorErrors} onValidity={onColorValidity} />
-              </section>
-            </div>
-            <BottomBar className="lg:hidden">
-              <BottomBarInfo title={t(design.model === "dynamic" ? "pricePerMonth" : "priceOnce", { price })} hint={t("previewFree")} />
-              {exportButton("md")}
-            </BottomBar>
-          </section>
-        </div>
+        <DesignStep
+          design={design}
+          onChange={patch}
+          title={design.name.trim() || t("namePlaceholder")}
+          shown={{ layout: shownLayout, value: shownValue, rebuilding }}
+          scan={scan}
+          tooLong={tooLong}
+          onEditContent={() => goTo("content")}
+          showFieldErrors={showColorErrors}
+          onFieldValidity={onColorValidity}
+          action={exportButton}
+          bottomInfo={
+            <BottomBarInfo title={t(design.model === "dynamic" ? "pricePerMonth" : "priceOnce", { price })} hint={t("previewFree")} />
+          }
+          note={t("previewNote")}
+        />
       </TabsPrimitive.Content>
     </TabsPrimitive.Root>
   );
