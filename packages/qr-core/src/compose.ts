@@ -1,4 +1,5 @@
 import { CAPTION_FONTS, captionFontFamily, captionWeightFor } from "./caption-fonts";
+import { fitCaption, type CaptionLine } from "./caption-wrap";
 import { circle, escapeXml, round3 as f, roundedRect } from "./geometry";
 import { maxPayloadBytes, payloadBytes, type ErrorCorrectionLevel } from "./encode";
 import { eclForStyle, renderQr } from "./render";
@@ -196,22 +197,35 @@ export function layoutGeometry(layout: Layout): LayoutGeometry {
   return out;
 }
 
-/** Caption font size in layout units, shrunk to fit its box. */
-export function captionFontSize(layout: Layout, g: LayoutGeometry): number {
-  const lines = String(layout.caption.text || "").split("\n");
-  if (!g.caption) return 0;
-  // Average character width of the caption's font (HEY-44); older layouts keep the DM Sans estimate.
-  const cw = layout.caption.font ? CAPTION_FONTS[layout.caption.font].charWidth : 0.56;
+/** The caption band's base type size in layout units (px layouts: px; mm layouts: pt converted to mm). */
+const captionBase = (layout: Layout) => (layout.unit === "px" ? layout.caption.size : layout.caption.size * 0.3528);
+
+/**
+ * The caption's lines and title size in layout units (HEY-47). Caption layouts wrap with the font's measured widths and
+ * fit the band (caption-wrap.ts); a frame label keeps its explicit lines and sizes itself to the frame, as before.
+ */
+export function layoutCaptionLines(layout: Layout, g: LayoutGeometry): { fs: number; lines: CaptionLine[] } {
+  const text = String(layout.caption.text || "");
+  if (!g.caption || !text) return { fs: 0, lines: [] };
+  const cap = layout.caption;
   if (layout.preset === "frame") {
-    const longest = Math.max(1, ...lines.map((t) => t.length));
-    return Math.min(((g.caption[3] * 0.5) / lines.length) * 1.1, (g.caption[2] * 0.86) / (longest * cw));
+    const parts = text.split("\n");
+    // Average character width of the caption's font (HEY-44); older layouts keep the DM Sans estimate.
+    const cw = cap.font ? CAPTION_FONTS[cap.font].charWidth : 0.56;
+    const longest = Math.max(1, ...parts.map((t) => t.length));
+    const fs = Math.min(((g.caption[3] * 0.5) / parts.length) * 1.1, (g.caption[2] * 0.86) / (longest * cw));
+    const weight = cap.font ? captionWeightFor(cap.font, cap.weight) : cap.weight;
+    return {
+      fs,
+      lines: parts.map((t, i) => ({ text: t, size: i === 0 ? fs : fs * 0.74, weight: i === 0 ? weight : 400, secondary: i > 0 })),
+    };
   }
-  const base = layout.unit === "px" ? layout.caption.size : layout.caption.size * 0.3528;
-  const first = (lines[0] ?? "").length;
-  const sub = Math.max(0, ...lines.slice(1).map((t) => t.length));
-  const fitW = (g.caption[2] * 0.94) / Math.max(1, first * cw, sub * cw * 0.74);
-  const fitH = (g.caption[3] * 0.86) / (1.18 * (1 + (lines.length - 1) * 0.74));
-  return Math.min(base, fitW, fitH);
+  return fitCaption(cap, captionBase(layout), g.caption[2], g.caption[3]);
+}
+
+/** Caption title size in layout units, after wrapping and fitting (what the editor reports as the drawn size). */
+export function captionFontSize(layout: Layout, g: LayoutGeometry): number {
+  return layoutCaptionLines(layout, g).fs;
 }
 
 export interface ComposedLayout {
@@ -311,13 +325,20 @@ export function composeLayout(layout: Layout, value: string, options: ComposeOpt
   svg += `<svg x="${f(g.qr[0])}" y="${f(g.qr[1])}" width="${f(g.qr[2])}" height="${f(g.qr[2])}" viewBox="0 0 ${qr.viewBox} ${qr.viewBox}">${qrInner}</svg>`;
 
   if (g.caption && cap.text) {
-    const fs = captionFontSize(layout, g);
-    const fs2 = fs * 0.74;
-    const lines = cap.text.split("\n");
+    // HEY-47: lines come wrapped and sized from the shared measurement, so every output breaks them identically.
+    const { fs, lines } = layoutCaptionLines(layout, g);
     const align = g.frame ? "center" : cap.align;
     const anchor = align === "left" ? "start" : align === "right" ? "end" : "middle";
     const tx = align === "left" ? g.caption[0] : align === "right" ? g.caption[0] + g.caption[2] : g.caption[0] + g.caption[2] / 2;
-    const total = fs * 1.15 + (lines.length - 1) * fs2 * 1.3;
+    // Baselines: title lines 1.15 × fs apart; the first secondary line 0.3 fs + 1.3 × its size below; then 1.3 × its size.
+    const ys: number[] = [];
+    let y = 0;
+    lines.forEach((line, i) => {
+      const prev = lines[i - 1];
+      if (prev) y += line.secondary ? (prev.secondary ? line.size * 1.3 : fs * 0.3 + line.size * 1.3) : fs * 1.15;
+      ys.push(y);
+    });
+    const total = lines.reduce((sum, l, i) => sum + (i === 0 ? fs * 1.15 : l.secondary ? l.size * 1.3 : fs * 1.15), 0);
     const ty = g.caption[1] + g.caption[3] / 2 - total / 2 + fs * 0.85;
     // HEY-44: a caption font ID draws with that font's shipped static faces (same files in the browser, resvg and the
     // SVG's embedded @font-face), at the nearest weight it ships. Older layouts keep their family string and DM Sans
@@ -332,8 +353,7 @@ export function composeLayout(layout: Layout, value: string, options: ComposeOpt
       : ` style="font-variation-settings:'opsz' 14"`;
     svg += `<text font-family="${escapeXml(family)}" fill="${col.caption}" text-anchor="${anchor}"${textStyle}>`;
     lines.forEach((line, i) => {
-      const y = i === 0 ? ty : ty + fs * 0.3 + i * fs2 * 1.3;
-      svg += `<tspan x="${f(tx)}" y="${f(y)}" font-size="${f(i === 0 ? fs : fs2)}" font-weight="${i === 0 ? firstWeight : 400}"${i === 0 ? "" : ' fill-opacity="0.72"'}>${escapeXml(line)}</tspan>`;
+      svg += `<tspan x="${f(tx)}" y="${f(ty + (ys[i] ?? 0))}" font-size="${f(line.size)}" font-weight="${line.secondary ? 400 : firstWeight}"${line.secondary ? ' fill-opacity="0.72"' : ""}>${escapeXml(line.text)}</tspan>`;
     });
     svg += "</text>";
   }

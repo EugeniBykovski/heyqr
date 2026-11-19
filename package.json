@@ -18,6 +18,7 @@
     "test:watch": "vitest",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "fonts:metrics": "tsx packages/qr-core/scripts/caption-metrics.ts && prettier --write packages/qr-core/src/caption-metrics.ts",
     "quality": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm build",
     "db:up": "docker compose up -d db",
     "db:generate": "drizzle-kit generate",

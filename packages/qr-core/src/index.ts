@@ -14,6 +14,7 @@ export {
   layoutGeometry,
   frameGeometry,
   captionFontSize,
+  layoutCaptionLines,
   FRAME_RATIOS,
   LABEL_ON_FRAME,
   layoutCapacity,
@@ -56,4 +57,5 @@ export {
   type CaptionFontId,
   type CaptionWeight,
 } from "./caption-fonts";
+export { captionFaceFile, fitCaption, measureCaptionText, wrapCaption, wrapCaptionLine, type CaptionLine } from "./caption-wrap";
 export type * from "./types";

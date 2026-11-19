@@ -42,7 +42,10 @@ describe("caption alignment geometry (HEY-46)", () => {
       const band = layoutGeometry(layout).caption ?? [];
       const svg = composeLayout(layout, VALUE).svg;
       expect(anchor(svg)).toBe(svgAnchor);
-      expect(lines(svg)).toEqual([at(band), at(band)].map((v) => Math.round((v ?? 0) * 1000) / 1000));
+      // Every line, including ones wrapped since HEY-47, anchors at the same point.
+      const xs = lines(svg);
+      expect(xs.length).toBeGreaterThanOrEqual(2);
+      expect(new Set(xs)).toEqual(new Set([Math.round((at(band) ?? 0) * 1000) / 1000]));
     }
   });
 
