@@ -25,6 +25,9 @@ export const designSettingsSchema = z.object({
   eyeBall: oneOf(EYE_BALL_SHAPES),
   fg: hex,
   bg: hex,
+  // Optional: drafts and records from before HEY-33 have no finder colours; they follow fg.
+  eye: hex.optional(),
+  eyeIn: hex.optional(),
   logo: z.discriminatedUnion("kind", [
     z.object({ kind: z.literal("none") }),
     z.object({ kind: z.literal("icon"), icon: oneOf(Object.keys(CENTER_ICONS) as (keyof typeof CENTER_ICONS)[]) }),
@@ -133,6 +136,19 @@ export function createLayoutRecord(layout: unknown, editor?: unknown): LayoutRec
 
 /** The design settings part of an editor draft (what a saved variant keeps in `editor`). */
 export function designSettingsOf(design: EditorDesign): DesignSettings {
-  const { pattern, eyeFrame, eyeBall, fg, bg, logo, logoSize, preset, frameStyle, caption } = design;
-  return { pattern, eyeFrame, eyeBall, fg, bg, logo, logoSize, preset, frameStyle, caption };
+  const { pattern, eyeFrame, eyeBall, fg, bg, eye, eyeIn, logo, logoSize, preset, frameStyle, caption } = design;
+  return {
+    pattern,
+    eyeFrame,
+    eyeBall,
+    fg,
+    bg,
+    ...(eye === undefined ? {} : { eye }),
+    ...(eyeIn === undefined ? {} : { eyeIn }),
+    logo,
+    logoSize,
+    preset,
+    frameStyle,
+    caption,
+  };
 }

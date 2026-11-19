@@ -371,7 +371,7 @@
     "eyeFrame": "Corner frame",
     "eyeBall": "Corner center",
     "colors": "Colors",
-    "fg": "Code",
+    "fg": "Modules",
     "bg": "Background",
     "logo": "Center",
     "logoNone": "None",
@@ -573,7 +573,10 @@
       "edit": "Edit content",
       "badge": "Too long",
       "preview": "QR code not shown: the content is too long"
-    }
+    },
+    "eyeColor": "Corner frames",
+    "eyeInColor": "Corner centers",
+    "resetColors": "Reset colors"
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",
