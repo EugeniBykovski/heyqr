@@ -64,20 +64,27 @@ verification script result (named here).
 
 ## 4 · Account
 
-| Frame                     | Route                   | 390 | 834 | 1440 | Notes                                                                                                               |
-| ------------------------- | ----------------------- | --- | --- | ---- | ------------------------------------------------------------------------------------------------------------------- |
-| 4.1 My QR codes · empty   | `/dashboard` (no codes) | ✅  | ✅  | ✅   | HEY-3                                                                                                               |
-| 4.2 My QR codes           | `/dashboard`            | ✅  | ✅  | ✅   | Thumbnail, badges, Edit design, Download / Buy, inline rename (Enter saves, Escape cancels, failures keep the text) |
-| 4.3 Details · static      | `/dashboard/qr/[id]`    | 🟡  | 🟡  | 🟡   | Page exists, not aligned                                                                                            |
-| 4.4 Details · dynamic     | `/dashboard/qr/[id]`    | 🟡  | 🟡  | 🟡   | Short link, destination form and scans chart exist, not aligned                                                     |
-| 4.5 Editing destination   | details page            | 🟡  | 🟡  | 🟡   |                                                                                                                     |
-| 4.6 Destination saved     | details page            | 🟡  | 🟡  | 🟡   |                                                                                                                     |
-| 4.7 No scans yet          | details page            | 🟡  | 🟡  | 🟡   |                                                                                                                     |
-| 4.8 Pricing               | `/pricing`              | 🟡  | 🟡  | 🟡   | Page exists, not aligned                                                                                            |
-| 4.10 My QR codes · select | `/dashboard` → Select   | ✅  | ✅  | ✅   | Checkboxes, Select all, count, Cancel, Delete; per-card trash                                                       |
-| 4.11 Delete · confirm     | Delete                  | ✅  | ✅  | ✅   | Bottom sheet on phones, dialog from 600 px; consequences per kind of code                                           |
-| 4.12 Deleted · undo       | after Delete            | ✅  | ✅  | ✅   | 8-second Undo restores through the server (soft delete, 10-minute window)                                           |
-| 4.9 Plan & billing        | `/dashboard/billing`    | 🟡  | 🟡  | 🟡   | Page exists, not aligned; ⛔ portal needs Stripe                                                                    |
+| Frame                     | Route                   | 390 | 834 | 1440 | Notes                                                                                                                                                                                               |
+| ------------------------- | ----------------------- | --- | --- | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 4.1 My QR codes · empty   | `/dashboard` (no codes) | ✅  | ✅  | ✅   | HEY-3                                                                                                                                                                                               |
+| 4.2 My QR codes           | `/dashboard`            | ✅  | ✅  | ✅   | Thumbnail, badges, Edit design, Download / Buy, inline rename (Enter saves, Escape cancels, failures keep the text)                                                                                 |
+| 4.3 Details · static      | `/dashboard/qr/[id]`    | 🟡  | 🟡  | 🟡   | Page exists, not aligned                                                                                                                                                                            |
+| 4.4 Details · dynamic     | `/dashboard/qr/[id]`    | 🟡  | 🟡  | 🟡   | Short link, destination form and scans chart exist, not aligned                                                                                                                                     |
+| 4.5 Editing destination   | details page            | 🟡  | 🟡  | 🟡   |                                                                                                                                                                                                     |
+| 4.6 Destination saved     | details page            | 🟡  | 🟡  | 🟡   |                                                                                                                                                                                                     |
+| 4.7 No scans yet          | details page            | 🟡  | 🟡  | 🟡   |                                                                                                                                                                                                     |
+| 4.8 Pricing               | `/pricing`              | ✅  | ✅  | ✅   | One-time (Free, Single QR) and Monthly (Dynamic) groups, live-slot box, comparison table (scrolls on phones). Packs, Starter/Studio and Print Pack are not offered by the backend, so not published |
+| 4.10 My QR codes · select | `/dashboard` → Select   | ✅  | ✅  | ✅   | Checkboxes, Select all, count, Cancel, Delete; per-card trash                                                                                                                                       |
+| 4.11 Delete · confirm     | Delete                  | ✅  | ✅  | ✅   | Bottom sheet on phones, dialog from 600 px; consequences per kind of code                                                                                                                           |
+| 4.12 Deleted · undo       | after Delete            | ✅  | ✅  | ✅   | 8-second Undo restores through the server (soft delete, 10-minute window)                                                                                                                           |
+| 4.9 Plan & billing        | `/dashboard/billing`    | ✅  | ✅  | ✅   | Plan status, live Dynamic usage vs limit, renewal, payment method via Stripe portal, Compare plans, purchases with dates                                                                            |
+
+## 7 · Plans, checkout & limits
+
+| Frame                              | Route                | 390 | 834 | 1440 | Notes                                                                                                           |
+| ---------------------------------- | -------------------- | --- | --- | ---- | --------------------------------------------------------------------------------------------------------------- |
+| 7.1 Pricing · local currency       | `/pricing` → GBP/PLN | ✅  | ✅  | ✅   | Viewer preference; currencies without price points say checkout is in the charged currency (no invented prices) |
+| 7.2–7.7 Print Pack, Studio, limits | Export               | ⛔  | ⛔  | ⛔   | No Print Pack, plans, credits or unlock counters in the backend; not shown as purchasable                       |
 
 ## 5 · Loading
 

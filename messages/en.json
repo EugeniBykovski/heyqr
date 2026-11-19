@@ -293,21 +293,72 @@
     }
   },
   "pricing": {
-    "title": "Simple pricing",
-    "lead": "Design for free. Pay only when you download.",
-    "static": {
-      "name": "Static code",
-      "price": "{price} once",
-      "text": "The content is stored in the code itself. Works forever, no subscription.",
-      "points": ["All layouts and formats included", "PNG and SVG, print-ready", "Re-download any time"]
+    "title": "Pricing",
+    "head": "Pay once for a code, or monthly for codes you can change.",
+    "lead": "Designing, previewing and the scan check are always free. You pay when you download.",
+    "currency": {
+      "label": "Show prices in",
+      "unavailable": "Prices in {chosen} aren’t available yet. HeyQR charges in {charged}; your bank converts the amount. Receipts show the {charged} you paid."
+    },
+    "once": {
+      "title": "One-time",
+      "sub": "No subscription. Codes you unlock stay yours."
+    },
+    "monthly": {
+      "title": "Monthly",
+      "sub": "For Dynamic QR codes you can change after printing. Cancel anytime."
+    },
+    "free": {
+      "name": "Free",
+      "price": "{price}",
+      "q": "Design and test a code before you spend anything.",
+      "points": ["Every layout, shape, color, logo and caption", "Live scan check on every change", "Your draft is kept in this browser"],
+      "cta": "Start designing"
+    },
+    "single": {
+      "name": "Single QR",
+      "price": "{price}",
+      "per": "once",
+      "q": "One static QR with all its downloads.",
+      "points": ["PNG and SVG of every layout", "Print sizes in mm and screen sizes in px", "Download again any time, forever"],
+      "cta": "Create a QR"
     },
     "dynamic": {
-      "name": "Dynamic codes",
-      "price": "{price} / month",
-      "text": "The code points to a short link you can change after printing.",
-      "points": ["Up to {limit} active codes", "Edit the destination any time", "Scan statistics"]
+      "name": "Dynamic",
+      "price": "{price}",
+      "per": "per month",
+      "q": "A permanent short link you can point anywhere, after printing too.",
+      "live": "Live Dynamic codes",
+      "liveCount": "Up to {limit} active at once",
+      "liveHint": "A live count, not a monthly allowance: pausing or deleting a code frees its slot.",
+      "points": [
+        "Change the destination any time; the printed code stays the same",
+        "Daily scans for the last 14 days",
+        "PNG and SVG of every layout"
+      ],
+      "cta": "Create a Dynamic QR"
     },
-    "cta": "Start designing"
+    "compare": {
+      "title": "Compare",
+      "feature": "What you get",
+      "free": "Free",
+      "single": "Single QR",
+      "dynamic": "Dynamic",
+      "yes": "Included",
+      "no": "Not included",
+      "rows": {
+        "design": "Design, preview and scan check",
+        "download": "PNG and SVG downloads",
+        "repeat": "Repeat downloads",
+        "change": "Change where the code leads",
+        "analytics": "Scan analytics",
+        "codes": "Codes"
+      },
+      "codesSingle": "1 per purchase",
+      "codesDynamic": "{limit} active",
+      "codesFree": "Unlimited drafts"
+    },
+    "tax": "Prices exclude tax. Stripe adds any tax at checkout, and your receipt shows the final amount."
   },
   "auth": {
     "title": "Sign in to Hey QR",
@@ -1048,7 +1099,28 @@
     "none": "You don’t have a subscription. Static codes are paid once.",
     "manage": "Manage subscription",
     "purchases": "Purchases",
-    "noPurchases": "No purchases yet."
+    "noPurchases": "No purchases yet.",
+    "usage": "Usage",
+    "liveDynamic": "Live Dynamic codes",
+    "liveCount": "{used} of {limit}",
+    "liveHint": "Live slots free up when you pause or delete a Dynamic code.",
+    "renews": "Renews {date}",
+    "payment": "Payment method",
+    "paymentManaged": "Your card is kept by Stripe. Manage it in the billing portal.",
+    "compare": "Compare plans",
+    "statusActive": "Active",
+    "statusCanceling": "Cancels",
+    "statusNone": "No plan",
+    "date": "Date",
+    "open": "Open",
+    "receiptNote": "Stripe emails a receipt for every payment.",
+    "statuses": {
+      "paid": "Paid",
+      "pending": "Pending",
+      "refunded": "Refunded",
+      "failed": "Failed"
+    },
+    "liveNoPlan": "{used} active · no plan"
   },
   "legal": {
     "terms": {

@@ -8,3 +8,4 @@ export {
   type ExportFormat,
   type ExportSettings,
 } from "./export-surface";
+export { CurrencyChoice } from "./currency-choice";
