@@ -1,5 +1,8 @@
+"use client";
+
 import type { Layout } from "@heyqr/qr-core";
-import { DownloadIcon, Trash2Icon } from "lucide-react";
+import { DownloadIcon, PencilIcon, Trash2Icon } from "lucide-react";
+import { useRef, useState, type KeyboardEvent } from "react";
 import { QrPreview } from "@/entities/qr";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/shared/lib/utils";
@@ -29,6 +32,7 @@ export function QrCard({
   labels,
   select,
   onDelete,
+  onRename,
 }: {
   name: string;
   href: string;
@@ -44,12 +48,61 @@ export function QrCard({
   statusLabel: string;
   meta: string;
   paid: boolean;
-  labels: { open: string; edit: string; download: string; buy: string; delete?: string; select?: string };
+  labels: {
+    open: string;
+    edit: string;
+    download: string;
+    buy: string;
+    delete?: string;
+    select?: string;
+    rename?: { action: string; actionOne: string; label: string; save: string; cancel: string; empty: string };
+  };
+  /** Design 4.2 inline rename: saves through the server action; resolves false when it failed (the text stays). */
+  onRename?: (name: string) => Promise<boolean>;
   /** Select mode (My QR codes · select): a checkbox replaces the actions. */
   select?: { selected: boolean; onToggle: () => void };
   /** Shows the quiet delete action (design 4.11 entry point). */
   onDelete?: () => void;
 }) {
+  const [renaming, setRenaming] = useState(false);
+  const [draft, setDraft] = useState(name);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const renameButton = useRef<HTMLButtonElement>(null);
+  const r = labels.rename;
+  const startRename = () => {
+    setDraft(name);
+    setError(null);
+    setRenaming(true);
+  };
+  const stopRename = () => {
+    setRenaming(false);
+    setError(null);
+    // Focus goes back to Rename once the button is rendered again.
+    requestAnimationFrame(() => renameButton.current?.focus());
+  };
+  const save = async () => {
+    const next = draft.trim();
+    if (!next) {
+      setError(r?.empty ?? "");
+      return;
+    }
+    if (next === name) return stopRename();
+    if (!onRename) return;
+    setSaving(true);
+    const ok = await onRename(next);
+    setSaving(false);
+    if (ok) stopRename();
+  };
+  const onKey = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      void save();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      stopRename();
+    }
+  };
   return (
     <li className={cn(libraryRow, "animate-rise", select && libraryRowSelecting, select?.selected && libraryRowSelected)}>
       {select ? (
@@ -62,9 +115,49 @@ export function QrCard({
         {layout ? <QrPreview layout={layout} value={value} label={name} className="size-full" /> : null}
       </Link>
       <div className="flex min-w-0 flex-col gap-1.5">
-        <Link href={href} title={name} className="truncate text-[1rem] font-bold underline-offset-3 hover:underline">
-          {name}
-        </Link>
+        {renaming && r ? (
+          <div className="flex flex-col gap-1">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <input
+                autoFocus
+                aria-label={r.label}
+                aria-invalid={error ? true : undefined}
+                aria-describedby={error ? `${href}-rename-error` : undefined}
+                value={draft}
+                maxLength={80}
+                disabled={saving}
+                onChange={(e) => {
+                  setDraft(e.target.value);
+                  setError(null);
+                }}
+                onKeyDown={onKey}
+                className="border-border-control focus-visible:outline-focus-ring min-h-9.5 min-w-0 flex-1 rounded-md border bg-surface px-2.5 text-[0.9375rem] focus-visible:outline-2 aria-invalid:border-danger"
+              />
+              <Button
+                type="button"
+                size="sm"
+                variant="primary"
+                aria-busy={saving || undefined}
+                disabled={saving}
+                onClick={() => void save()}
+              >
+                {r.save}
+              </Button>
+              <Button type="button" size="sm" variant="ghost" disabled={saving} onClick={stopRename}>
+                {r.cancel}
+              </Button>
+            </div>
+            {error ? (
+              <p id={`${href}-rename-error`} role="alert" className="text-caption font-medium text-danger">
+                {error}
+              </p>
+            ) : null}
+          </div>
+        ) : (
+          <Link href={href} title={name} className="truncate text-[1rem] font-bold underline-offset-3 hover:underline">
+            {name}
+          </Link>
+        )}
         <div className="flex flex-wrap items-center gap-1.5">
           <Badge>{typeLabel}</Badge>
           <Badge variant={model === "dynamic" ? "accent" : "neutral"}>{modelLabel}</Badge>
@@ -74,6 +167,12 @@ export function QrCard({
       </div>
       {select ? null : (
         <div className={libraryActions}>
+          {onRename && r && !renaming ? (
+            <Button ref={renameButton} size="sm" variant="ghost" aria-label={r.actionOne} title={r.actionOne} onClick={startRename}>
+              <PencilIcon aria-hidden />
+              <span className="max-sm:sr-only">{r.action}</span>
+            </Button>
+          ) : null}
           {onDelete ? (
             <Button size="icon-sm" variant="ghost-danger" aria-label={labels.delete} title={labels.delete} onClick={onDelete}>
               <Trash2Icon aria-hidden />

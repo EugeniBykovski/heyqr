@@ -947,7 +947,17 @@
       "restoredOne": "Code restored.",
       "restoredMany": "{count} codes restored.",
       "deleteFailed": "Couldn’t delete. Try again.",
-      "restoreFailed": "Couldn’t restore it. Undo is available for a few minutes after deleting."
+      "restoreFailed": "Couldn’t restore it. Undo is available for a few minutes after deleting.",
+      "rename": {
+        "action": "Rename",
+        "actionOne": "Rename {name}",
+        "label": "Name of {name}",
+        "save": "Save",
+        "cancel": "Cancel",
+        "saved": "Renamed to “{name}”.",
+        "empty": "Give the code a name.",
+        "failed": "We couldn’t rename it. Your text is still here; try again."
+      }
     }
   },
   "qr": {

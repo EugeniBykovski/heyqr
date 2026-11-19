@@ -7,7 +7,7 @@ import { useMemo, useState, useTransition, type ReactNode } from "react";
 import { toast } from "sonner";
 import { QrPreview } from "@/entities/qr";
 import { useRouter } from "@/i18n/navigation";
-import { deleteQrs, restoreQrs } from "@/server/actions/qr";
+import { deleteQrs, renameQr, restoreQrs } from "@/server/actions/qr";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/shared/ui/dialog";
@@ -116,6 +116,17 @@ export function QrLibraryManager({
     });
   };
 
+  const rename = async (item: LibraryItem, name: string) => {
+    const result = await renameQr(item.id, name).catch(() => ({ ok: false as const, error: "failed" }));
+    if (!result.ok) {
+      toast.error(t("rename.failed"), { id: "qr-rename" });
+      return false;
+    }
+    toast.success(t("rename.saved", { name }), { id: "qr-rename" });
+    router.refresh();
+    return true;
+  };
+
   const dynamicPaid = toDelete.filter((i) => i.model === "dynamic" && i.paid);
   const staticPaid = toDelete.filter((i) => i.model === "static" && i.paid);
   const drafts = toDelete.filter((i) => !i.paid);
@@ -167,7 +178,20 @@ export function QrLibraryManager({
           <QrCard
             key={item.id}
             {...item}
-            labels={{ ...item.labels, delete: t("deleteOne", { name: item.name }), select: t("selectOne", { name: item.name }) }}
+            labels={{
+              ...item.labels,
+              delete: t("deleteOne", { name: item.name }),
+              select: t("selectOne", { name: item.name }),
+              rename: {
+                action: t("rename.action"),
+                actionOne: t("rename.actionOne", { name: item.name }),
+                label: t("rename.label", { name: item.name }),
+                save: t("rename.save"),
+                cancel: t("rename.cancel"),
+                empty: t("rename.empty"),
+              },
+            }}
+            onRename={(name) => rename(item, name)}
             select={selecting ? { selected: chosen.includes(item.id), onToggle: () => toggle(item.id) } : undefined}
             onDelete={() => setConfirmIds([item.id])}
           />

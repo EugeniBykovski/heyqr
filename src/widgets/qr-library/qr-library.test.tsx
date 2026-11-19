@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { AnchorHTMLAttributes } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { QrCard } from "./qr-card";
@@ -45,6 +45,63 @@ describe("QrCard", () => {
       </ul>,
     );
     expect(screen.getByRole("link", { name: "Buy & download" })).toBeInTheDocument();
+  });
+});
+
+describe("QrCard · inline rename (design 4.2)", () => {
+  const rename = {
+    action: "Rename",
+    actionOne: "Rename Café menu",
+    label: "Name of Café menu",
+    save: "Save",
+    cancel: "Cancel",
+    empty: "Give the code a name.",
+  };
+  const card = (onRename: (name: string) => Promise<boolean>) =>
+    render(
+      <ul>
+        <QrCard {...base} labels={{ ...base.labels, rename }} status="active" statusLabel="Active" paid onRename={onRename} />
+      </ul>,
+    );
+
+  it("edits the name in place: Enter saves the trimmed name, the new field closes and focus returns to Rename", async () => {
+    const onRename = vi.fn(async () => true);
+    card(onRename);
+    fireEvent.click(screen.getByRole("button", { name: "Rename Café menu" }));
+    const field = screen.getByRole("textbox", { name: "Name of Café menu" });
+    expect(field).toHaveFocus();
+    expect(field).toHaveValue("Café menu");
+    fireEvent.change(field, { target: { value: "  Café menu · table 4 " } });
+    await act(async () => {
+      fireEvent.keyDown(field, { key: "Enter" });
+    });
+    expect(onRename).toHaveBeenCalledWith("Café menu · table 4");
+    expect(screen.queryByRole("textbox")).toBeNull();
+    await act(async () => new Promise((r) => requestAnimationFrame(() => r(undefined))));
+    expect(screen.getByRole("button", { name: "Rename Café menu" })).toHaveFocus();
+  });
+
+  it("Escape cancels without saving; an empty name explains instead of saving; a failed save keeps the text", async () => {
+    const onRename = vi.fn(async () => false);
+    card(onRename);
+    fireEvent.click(screen.getByRole("button", { name: "Rename Café menu" }));
+    fireEvent.keyDown(screen.getByRole("textbox"), { key: "Escape" });
+    expect(screen.queryByRole("textbox")).toBeNull();
+    expect(onRename).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("button", { name: "Rename Café menu" }));
+    fireEvent.change(screen.getByRole("textbox"), { target: { value: "   " } });
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    expect(screen.getByRole("alert")).toHaveTextContent("Give the code a name.");
+    expect(screen.getByRole("textbox")).toHaveAttribute("aria-invalid", "true");
+    expect(onRename).not.toHaveBeenCalled();
+
+    fireEvent.change(screen.getByRole("textbox"), { target: { value: "Brunch" } });
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    });
+    expect(onRename).toHaveBeenCalledWith("Brunch");
+    expect(screen.getByRole("textbox")).toHaveValue("Brunch");
   });
 });
 
