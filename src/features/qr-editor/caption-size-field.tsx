@@ -40,7 +40,7 @@ export function CaptionSizeField({
   const format = useFormatter();
   const size = design.size ?? LEGACY_SIZE;
   const unit = captionSizeUnit(size.unit);
-  const value = round1(design.captionSize ?? defaultCaptionSize(size));
+  const value = round1(design.captionSize ?? defaultCaptionSize(size, design.preset));
   const [text, setText] = useState(String(value));
   const [synced, setSynced] = useState(value);
   const [touched, setTouched] = useState(false);

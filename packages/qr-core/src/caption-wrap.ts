@@ -6,8 +6,9 @@
  * Rules:
  * - Explicit line breaks (Enter) are kept. The first line is the title line (chosen size and weight); later lines are
  *   the secondary style (0.74 of the size, Regular, 72 % opacity), and their wrapped continuations keep that style.
- * - Lines wrap at spaces. A single word wider than the line is split between grapheme clusters only, so letters with
- *   combining marks and joined emoji are never cut.
+ * - Lines wrap at spaces, and words stay whole: the caption shrinks rather than break a word. Only a token so long
+ *   that keeping it whole would shrink the caption below 60 % of the size splitting allows is split, and then only
+ *   between grapheme clusters, so letters with combining marks and joined emoji are never cut.
  * - The caption is drawn at the largest size up to the chosen one at which the wrapped lines fit the caption band
  *   (the same width and height margins as before: 94 % of the width, 86 % of the height). A caption that already fit on
  *   its lines keeps exactly the size and position it had.
@@ -57,7 +58,7 @@ export function measureCaptionText(text: string, file: string, size: number): nu
 }
 
 /** Breaks one explicit line into lines no wider than `maxWidth`: at spaces, or between graphemes for a long word. */
-export function wrapCaptionLine(text: string, maxWidth: number, measure: (s: string) => number): string[] {
+export function wrapCaptionLine(text: string, maxWidth: number, measure: (s: string) => number, splitWords = true): string[] {
   const words = text.split(/[ \t]+/).filter((w) => w !== "");
   if (words.length === 0) return [""];
   const lines: string[] = [];
@@ -69,7 +70,8 @@ export function wrapCaptionLine(text: string, maxWidth: number, measure: (s: str
       continue;
     }
     if (line) lines.push(line);
-    if (measure(word) <= maxWidth) {
+    if (measure(word) <= maxWidth || !splitWords) {
+      // Without splitting, a word wider than the line gets a line of its own (and the fit then shrinks the caption).
       line = word;
       continue;
     }
@@ -86,6 +88,9 @@ export function wrapCaptionLine(text: string, maxWidth: number, measure: (s: str
   return lines;
 }
 
+/** Below this share of the split-allowed size, a caption may split a token between graphemes (see fitCaption). */
+export const WORD_SPLIT_RATIO = 0.6;
+
 export interface CaptionLine {
   text: string;
   size: number;
@@ -99,6 +104,7 @@ export function wrapCaption(
   caption: { text: string; font?: CaptionFontId; weight: number },
   fs: number,
   maxWidth: number,
+  splitWords = true,
 ): { lines: CaptionLine[]; height: number; widest: number } {
   const titleFile = captionFaceFile(caption.font, caption.weight);
   const secondaryFile = captionFaceFile(caption.font, 400);
@@ -110,7 +116,7 @@ export function wrapCaption(
     const size = secondary ? fs * 0.74 : fs;
     const file = secondary ? secondaryFile : titleFile;
     const measure = (s: string) => measureCaptionText(s, file, size);
-    for (const text of wrapCaptionLine(paragraph, maxWidth, measure)) {
+    for (const text of wrapCaptionLine(paragraph, maxWidth, measure, splitWords)) {
       widest = Math.max(widest, measure(text));
       lines.push({ text, size, weight: secondary ? 400 : firstWeight, secondary });
     }
@@ -132,19 +138,28 @@ export function fitCaption(
 ): { fs: number; lines: CaptionLine[] } {
   const maxWidth = width * 0.94;
   const maxHeight = height * 0.86;
-  const fits = (fs: number) => {
-    const w = wrapCaption(caption, fs, maxWidth);
-    return w.height <= maxHeight && w.widest <= maxWidth + 1e-9 ? w : null;
+  // The largest title size up to `base` whose wrapped lines fit, with or without splitting words.
+  const largest = (splitWords: boolean) => {
+    const fits = (fs: number) => {
+      const w = wrapCaption(caption, fs, maxWidth, splitWords);
+      return w.height <= maxHeight && w.widest <= maxWidth + 1e-9;
+    };
+    if (fits(base)) return base;
+    let lo = 0;
+    let hi = base;
+    for (let i = 0; i < 30; i++) {
+      const mid = (lo + hi) / 2;
+      if (fits(mid)) lo = mid;
+      else hi = mid;
+    }
+    return Math.max(lo, 1e-3);
   };
-  const atBase = fits(base);
-  if (atBase) return { fs: base, lines: atBase.lines };
-  let lo = 0;
-  let hi = base;
-  for (let i = 0; i < 30; i++) {
-    const mid = (lo + hi) / 2;
-    if (fits(mid)) lo = mid;
-    else hi = mid;
-  }
-  const fs = Math.max(lo, 1e-3);
-  return { fs, lines: wrapCaption(caption, fs, maxWidth).lines };
+  // HEY-55: words stay whole. Splitting inside a token (between graphemes) is used only when keeping every word whole
+  // would shrink the caption below WORD_SPLIT_RATIO of the size splitting allows: a genuinely unbroken token such as a
+  // long name or code, not an ordinary word in a narrow column.
+  const whole = largest(false);
+  const split = whole === base ? base : largest(true);
+  const splitWords = whole < split * WORD_SPLIT_RATIO;
+  const fs = splitWords ? split : whole;
+  return { fs, lines: wrapCaption(caption, fs, maxWidth, splitWords).lines };
 }

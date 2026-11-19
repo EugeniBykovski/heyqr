@@ -12,6 +12,7 @@ import {
 import { useTranslations } from "next-intl";
 import {
   CAPTION_ALIGNS,
+  defaultCaptionAlign,
   EDITOR_PRESETS,
   FRAME_STYLES,
   hasCaptionBand,
@@ -161,7 +162,7 @@ function CaptionStyle({
     <div className="flex flex-col gap-4">
       <OptionGrid
         label={t("align")}
-        value={design.captionAlign ?? "center"}
+        value={design.captionAlign ?? defaultCaptionAlign(design.preset)}
         options={CAPTION_ALIGNS}
         columns="grid-cols-3"
         onChange={(captionAlign) => onChange({ captionAlign })}
