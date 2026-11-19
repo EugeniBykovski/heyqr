@@ -13,6 +13,7 @@ export {
   type EditorDesign,
   type EditorPreset,
 } from "./model/design";
+export { CAPTION_MAX_CHARS, CAPTION_MAX_LINES, captionLength, checkCaption, normalizeCaption, type CaptionCheck } from "./model/caption";
 export { CONTENT_FIELDS, emptyContent, isContentComplete, type ContentField } from "./model/content";
 export { QrPreview } from "./ui/qr-preview";
 export { QR_EXAMPLES, type QrExample } from "./model/examples";

@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   serverExternalPackages: ["@resvg/resvg-js", "zxing-wasm"],
   transpilePackages: ["@heyqr/qr-core"],
+  // Caption fonts read from disk by the PNG export (src/server/qr/export.ts).
+  outputFileTracingIncludes: { "/api/export/[layoutId]": ["./packages/qr-core/fonts/**"] },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "lh3.googleusercontent.com" },

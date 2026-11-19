@@ -316,7 +316,9 @@ export function composeLayout(layout: Layout, value: string, options: ComposeOpt
     const tx = align === "left" ? g.caption[0] : align === "right" ? g.caption[0] + g.caption[2] : g.caption[0] + g.caption[2] / 2;
     const total = fs * 1.15 + (lines.length - 1) * fs2 * 1.3;
     const ty = g.caption[1] + g.caption[3] / 2 - total / 2 + fs * 0.85;
-    svg += `<text font-family="${escapeXml(cap.fontFamily)}" fill="${col.caption}" text-anchor="${anchor}">`;
+    // Optical size pinned (HEY-43): browsers otherwise pick it from the font size, so the on-screen preview and the
+    // exported files (rasterized with static DM Sans at 14 pt) would draw slightly different letterforms.
+    svg += `<text font-family="${escapeXml(cap.fontFamily)}" fill="${col.caption}" text-anchor="${anchor}" style="font-variation-settings:'opsz' 14">`;
     lines.forEach((line, i) => {
       const y = i === 0 ? ty : ty + fs * 0.3 + i * fs2 * 1.3;
       svg += `<tspan x="${f(tx)}" y="${f(y)}" font-size="${f(i === 0 ? fs : fs2)}" font-weight="${i === 0 ? cap.weight : 400}"${i === 0 ? "" : ' fill-opacity="0.72"'}>${escapeXml(line)}</tspan>`;
