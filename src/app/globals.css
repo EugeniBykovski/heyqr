@@ -152,6 +152,8 @@
   --animate-fade: fade 200ms var(--ease-out) both;
   --animate-pop: pop 240ms var(--ease-out) both;
   --animate-shimmer: shimmer 1500ms ease-in-out infinite;
+  /* HEY-41: loading UI keeps its boxes from the first frame but stays blank for 200 ms, so fast loads never flash. */
+  --animate-skeleton-in: fade 160ms var(--ease-out) 200ms both;
   --animate-indeterminate: indeterminate 1.3s var(--ease-in-out) infinite;
 
   /* Hover pulse: a soft ring expands to 10 px and fades, looping while hovered. */

@@ -1,75 +1,192 @@
 "use client";
 
 import { parseWebsiteUrl, type QrContent } from "@heyqr/qr-core";
-import { CalendarIcon, GlobeIcon, LockIcon, MailIcon, MapPinIcon, MessageSquareIcon, PhoneIcon, UserIcon, WifiIcon } from "lucide-react";
+import { CalendarIcon, GlobeIcon, LockIcon, MailIcon, MapPinIcon, MessageSquareIcon, PhoneIcon, WifiIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { cn } from "@/shared/lib/utils";
+import { Placeholder, Skeleton } from "@/shared/ui/skeleton";
 
 /*
  * Design "ContentPreview · After scanning": a phone showing what people get when they scan. Empty fields show quiet
- * placeholders (static silhouette); filled values replace them. Dynamic website codes show the short link first.
+ * placeholder shapes in the layout of the chosen type (Website, Text, Wi-Fi and contact each have their own); filled
+ * values replace them. While the preview is loading (HEY-41) the same shapes shimmer and the phone keeps its size.
+ * Dynamic website codes show the short link note.
  */
-export function ContentPreview({ content, mode, className }: { content: QrContent; mode: "static" | "dynamic"; className?: string }) {
+export function ContentPreview({
+  content,
+  mode,
+  loading = false,
+  className,
+}: {
+  content: QrContent;
+  mode: "static" | "dynamic";
+  /** A real wait (the editor loading): every value becomes a shimmering shape; the phone's size doesn't change. */
+  loading?: boolean;
+  className?: string;
+}) {
   const t = useTranslations("editor.afterScanning");
   const c = content as Record<string, string | boolean | undefined>;
-  const v = (k: string) => (typeof c[k] === "string" ? (c[k] as string).trim() : "");
-  const ph = (text: string | undefined, fallback: string) =>
-    text ? <span className="animate-fade">{text}</span> : <span className="text-muted-foreground">{fallback}</span>;
+  const v = (k: string) => (loading ? "" : typeof c[k] === "string" ? (c[k] as string).trim() : "");
+  const raw = (k: string) => (loading ? "" : typeof c[k] === "string" ? (c[k] as string) : "");
+  const ph = (text: string | undefined, fallback: string, shape = "h-3 w-1/2") =>
+    text ? <span className="animate-fade">{text}</span> : <Shape loading={loading} className={shape} label={fallback} />;
 
   let body: ReactNode;
   switch (content.type) {
     case "website": {
-      const parsed = parseWebsiteUrl(v("url"));
-      const host = parsed.ok
-        ? new URL(parsed.url).host
-        : v("url")
-            .trim()
-            .replace(/^https?:\/\//i, "")
-            .split(/[/?#]/)[0];
+      // Neutral page silhouette with or without input; only the address bar and header show the domain, once valid.
+      const parsed = loading ? null : parseWebsiteUrl(v("url"));
+      const url = parsed?.ok ? new URL(parsed.url) : null;
+      const host = url?.hostname.replace(/^www\./, "") ?? "";
+      const domain = url ? `${url.host}${url.pathname === "/" ? "" : url.pathname}${url.search}` : "";
       body = (
         <>
           <div className="mx-3 mt-3.5 mb-2 flex h-8.5 min-w-0 items-center gap-1.5 rounded-full bg-subtle px-3 text-caption font-semibold">
             <LockIcon aria-hidden className="size-3.5 shrink-0 text-muted-foreground" />
-            <span className="truncate">{ph(host, t("websitePlaceholder"))}</span>
+            {domain ? (
+              <span className="animate-fade truncate">{domain}</span>
+            ) : (
+              <Shape loading={loading} className="h-2.5 w-3/5" label={t("websitePlaceholder")} />
+            )}
           </div>
           <div className="flex flex-1 flex-col gap-2.5 px-4 py-2">
-            <span className="h-28 rounded-lg bg-skeleton" />
-            <span className="h-3 w-3/4 rounded-full bg-skeleton" />
-            <span className="h-3 w-1/2 rounded-full bg-skeleton" />
-            <span className="h-3 w-2/3 rounded-full bg-skeleton" />
+            <div className="flex min-h-7 items-center gap-2.5">
+              {host ? (
+                <>
+                  <span className="grid size-7 shrink-0 animate-fade place-items-center rounded-sm bg-subtle text-[0.8125rem] font-bold">
+                    {[...host][0]?.toUpperCase()}
+                  </span>
+                  <span className="animate-fade truncate text-label">{host}</span>
+                </>
+              ) : (
+                <>
+                  <Shape loading={loading} className="size-7" />
+                  <Shape loading={loading} className="h-3 w-[46%]" />
+                </>
+              )}
+            </div>
+            <Shape loading={loading} className="h-[7.375rem] w-full rounded-[0.875rem]" />
+            <Shape loading={loading} className="h-4.5 w-[82%]" />
+            <Shape loading={loading} className="h-3 w-full" />
+            <Shape loading={loading} className="h-3 w-[92%]" />
+            <Shape loading={loading} className="h-3 w-[70%]" />
+            <div className="mt-1 grid grid-cols-2 gap-2">
+              <Shape loading={loading} className="h-16 w-full rounded-[0.625rem]" />
+              <Shape loading={loading} className="h-16 w-full rounded-[0.625rem]" />
+            </div>
           </div>
           {mode === "dynamic" ? <p className="px-4 pb-4 text-center text-[0.75rem] text-muted-foreground">{t("dynamicNote")}</p> : null}
         </>
       );
       break;
     }
-    case "text":
+    case "text": {
+      // Text is shown exactly as encoded: leading/trailing spaces and empty lines are content (HEY-21).
+      const text = v("text") ? raw("text") : "";
       body = (
-        <div className="m-3.5 self-stretch overflow-hidden rounded-[18px_18px_18px_6px] bg-subtle px-4 py-3.5 text-[0.875rem] leading-normal [overflow-wrap:anywhere] whitespace-pre-wrap">
-          {/* Text is shown exactly as encoded: leading/trailing spaces and empty lines are content (HEY-21). */}
-          {ph(v("text") ? String(c.text ?? "") : "", t("textPlaceholder"))}
+        <div className="flex flex-1 flex-col pt-4.5">
+          <span className="text-center text-caption text-muted-foreground">{t("textKicker")}</span>
+          {text ? (
+            <div className="m-3.5 self-stretch overflow-hidden rounded-[18px_18px_18px_6px] bg-subtle px-4 py-3.5 text-[0.875rem] leading-normal [overflow-wrap:anywhere] whitespace-pre-wrap">
+              <span className="animate-fade">{text}</span>
+            </div>
+          ) : (
+            <div className="m-3.5 flex flex-col gap-2.5 self-stretch rounded-[18px_18px_18px_6px] bg-subtle px-4 py-3.5">
+              <Shape loading={loading} className="h-3 w-[92%]" label={t("textPlaceholder")} />
+              <Shape loading={loading} className="h-3 w-full" />
+              <Shape loading={loading} className="h-3 w-[64%]" />
+            </div>
+          )}
         </div>
       );
       break;
+    }
+    case "wifi": {
+      // The network name exactly as phones show it, the security mode, and the password as dots only (never its
+      // length or value); an open network has no password row.
+      const open = c.security === "nopass";
+      body = (
+        <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4.5 py-5 text-center">
+          <span className="grid size-16 place-items-center rounded-full bg-accent-hover text-accent-foreground">
+            <WifiIcon aria-hidden className="size-8" strokeWidth={1.7} />
+          </span>
+          <span className="text-caption text-secondary-foreground">{t("wifiKicker")}</span>
+          {v("ssid") ? (
+            <b className="animate-fade text-h3 [overflow-wrap:anywhere] whitespace-pre-wrap">{raw("ssid")}</b>
+          ) : (
+            <Shape loading={loading} className="h-4.5 w-3/5" label={t("wifiPlaceholder")} />
+          )}
+          <div className="mt-2 flex flex-col gap-0.5 self-stretch">
+            <Row label={t("security")} value={open ? t("open") : c.security === "WEP" ? "WEP" : "WPA/WPA2/WPA3"} />
+            {open ? null : <Row label={t("password")} value={ph(raw("password") ? "••••••••" : "", "—", "h-2.5 w-2/5")} />}
+          </div>
+          <span className="mt-2 self-stretch rounded-full bg-primary px-4 py-2 text-caption font-semibold text-primary-foreground">
+            {t("join")}
+          </span>
+        </div>
+      );
+      break;
+    }
+    case "contact": {
+      // Initials, full name, "title · company", then phone, email and website, and "Add to contacts".
+      const letters = [v("firstName"), v("lastName")]
+        .map((n) => [...n][0] ?? "")
+        .join("")
+        .toUpperCase();
+      const name = [v("firstName"), v("lastName")].filter(Boolean).join(" ");
+      const role = [v("title"), v("company")].filter(Boolean).join(" · ");
+      const rows = [
+        { icon: PhoneIcon, label: t("phone"), value: v("phone"), shape: "w-[56%]" },
+        { icon: MailIcon, label: t("email"), value: v("email"), shape: "w-[70%]" },
+        { icon: GlobeIcon, label: t("website"), value: v("website").replace(/^https?:\/\//i, ""), shape: "w-[48%]" },
+      ];
+      body = (
+        <div className="flex flex-1 flex-col items-center gap-3 px-4.5 pt-8 pb-5 text-center">
+          {letters ? (
+            <span className="grid size-19 shrink-0 animate-fade place-items-center rounded-full bg-accent-hover text-h2 font-bold tracking-[-0.02em] text-accent-foreground">
+              {letters}
+            </span>
+          ) : (
+            <Shape loading={loading} className="size-19" />
+          )}
+          {name ? (
+            <b className="animate-fade text-h3 [overflow-wrap:anywhere]">{name}</b>
+          ) : (
+            <Shape loading={loading} className="h-4.5 w-[58%]" label={t("contactPlaceholder")} />
+          )}
+          {role ? (
+            <span className="-mt-1 animate-fade text-caption [overflow-wrap:anywhere] text-secondary-foreground">{role}</span>
+          ) : (
+            <Shape loading={loading} className="h-2.5 w-[44%]" />
+          )}
+          <div className="mt-2 flex flex-col gap-0.5 self-stretch">
+            {rows.map(({ icon: I, label, value, shape }) => (
+              <div key={label} className="flex min-h-9.5 items-center gap-2.5 border-b border-border px-1 py-2 text-left text-caption">
+                <I aria-hidden className="size-4 shrink-0 text-muted-foreground" />
+                <span className="sr-only">{label}</span>
+                {value ? (
+                  <span className="animate-fade truncate font-medium">{value}</span>
+                ) : (
+                  <Shape loading={loading} className={cn("h-2.5", shape)} />
+                )}
+              </div>
+            ))}
+          </div>
+          <span className="mt-auto self-stretch rounded-full border border-border px-4 py-2 text-caption font-semibold">{t("save")}</span>
+        </div>
+      );
+      break;
+    }
     default: {
-      const view = centerView(content.type, v, t, (k) => (typeof c[k] === "string" ? (c[k] as string) : ""));
+      const view = centerView(content.type, v, t);
       body = (
         <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4.5 py-5 text-center">
           <span className="grid size-19 place-items-center rounded-full bg-accent-hover text-accent-foreground">{view.icon}</span>
-          {view.kicker ? <span className="text-caption text-secondary-foreground">{view.kicker}</span> : null}
-          <b className={cn("text-h3 [overflow-wrap:anywhere]", view.exactTitle && "whitespace-pre-wrap")}>
-            {ph(view.title, view.titlePlaceholder)}
-          </b>
-          {view.subtitle ? (
-            <span className="-mt-2 text-caption [overflow-wrap:anywhere] text-secondary-foreground">{view.subtitle}</span>
-          ) : null}
+          <b className="text-h3 [overflow-wrap:anywhere]">{ph(view.title, view.titlePlaceholder, "h-4.5 w-3/5")}</b>
           <div className="mt-2 flex flex-col gap-0.5 self-stretch">
             {view.rows.map((r) => (
-              <div key={r.label} className="flex min-h-9.5 items-center gap-2.5 border-b border-border px-1 py-2 text-left text-caption">
-                <span className="text-muted-foreground">{r.label}</span>
-                <span className="ml-auto truncate font-medium">{ph(r.value, "—")}</span>
-              </div>
+              <Row key={r.label} label={r.label} value={ph(r.value, "—", "h-2.5 w-1/2")} />
             ))}
           </div>
           <span className="mt-2 rounded-full bg-primary px-4 py-2 text-caption font-semibold text-primary-foreground">{view.action}</span>
@@ -79,72 +196,54 @@ export function ContentPreview({ content, mode, className }: { content: QrConten
   }
 
   return (
-    <figure aria-label={t("label")} className={cn("flex flex-col items-center gap-3", className)}>
-      <div className="aspect-[9/17] w-full max-w-[18.75rem] rounded-[2.5rem] bg-inverse p-2 shadow-2">
+    <figure aria-label={t("label")} aria-busy={loading || undefined} className={cn("flex flex-col items-center gap-3", className)}>
+      <div aria-hidden={loading || undefined} className="aspect-[9/17] w-full max-w-[18.75rem] rounded-[2.5rem] bg-inverse p-2 shadow-2">
         <div className="flex h-full flex-col overflow-hidden rounded-[2rem] bg-surface">{body}</div>
       </div>
       <figcaption className="text-center text-[0.75rem] text-muted-foreground">{t("caption")}</figcaption>
+      {loading ? (
+        <p role="status" className="sr-only">
+          {t("loading")}
+        </p>
+      ) : null}
     </figure>
   );
 }
 
+/** An empty or loading value: the placeholder shape (shimmering while loading), with its words for screen readers. */
+function Shape({ loading, className, label }: { loading: boolean; className?: string; label?: string }) {
+  return (
+    <>
+      {loading ? <Skeleton className={cn("rounded-full", className)} /> : <Placeholder className={className} />}
+      {label && !loading ? <span className="sr-only">{label}</span> : null}
+    </>
+  );
+}
+
+function Row({ label, value }: { label: string; value: ReactNode }) {
+  return (
+    <div className="flex min-h-9.5 items-center gap-2.5 border-b border-border px-1 py-2 text-left text-caption">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="ml-auto flex min-w-0 justify-end truncate font-medium">{value}</span>
+    </div>
+  );
+}
+
 type T = ReturnType<typeof useTranslations<"editor.afterScanning">>;
-/** `raw` reads a value untrimmed, for content whose spaces are part of what gets encoded (Wi-Fi network names). */
+/** Email, phone call, text message, location and event: an icon, a title, detail rows and the action. */
 function centerView(
   type: QrContent["type"],
   v: (k: string) => string,
   t: T,
-  raw: (k: string) => string,
 ): {
   icon: ReactNode;
-  kicker?: string;
   title: string;
   titlePlaceholder: string;
-  exactTitle?: boolean;
-  /** Second line under the title (contact: "title · company"). */
-  subtitle?: string;
   rows: { label: string; value: string }[];
   action: string;
 } {
   const icon = (I: typeof GlobeIcon) => <I aria-hidden className="size-8" strokeWidth={1.7} />;
   switch (type) {
-    case "wifi":
-      // Design ContentPreview · Wi-Fi: the network name exactly as phones show it, the security mode, and the password as
-      // dots only (never its length or value); an open network has no password row.
-      return {
-        icon: icon(WifiIcon),
-        kicker: t("wifiKicker"),
-        title: v("ssid") ? raw("ssid") : "",
-        titlePlaceholder: t("wifiPlaceholder"),
-        exactTitle: true,
-        rows:
-          v("security") === "nopass"
-            ? [{ label: t("security"), value: t("open") }]
-            : [
-                { label: t("security"), value: v("security") === "WEP" ? "WEP" : "WPA/WPA2/WPA3" },
-                { label: t("password"), value: raw("password") ? "••••••••" : "" },
-              ],
-        action: t("join"),
-      };
-    case "contact": {
-      // Design ContentPreview · contact: initials, full name, "title · company", then phone, email and website.
-      const letters = [v("firstName"), v("lastName")]
-        .map((n) => [...n][0] ?? "")
-        .join("")
-        .toUpperCase();
-      return {
-        icon: letters ? <span className="text-h2 font-bold tracking-[-0.02em]">{letters}</span> : icon(UserIcon),
-        title: [v("firstName"), v("lastName")].filter(Boolean).join(" "),
-        titlePlaceholder: t("contactPlaceholder"),
-        subtitle: [v("title"), v("company")].filter(Boolean).join(" · "),
-        rows: [
-          { label: t("phone"), value: v("phone") },
-          { label: t("email"), value: v("email") },
-          { label: t("website"), value: v("website").replace(/^https?:\/\//i, "") },
-        ],
-        action: t("save"),
-      };
-    }
     case "email":
       return {
         icon: icon(MailIcon),

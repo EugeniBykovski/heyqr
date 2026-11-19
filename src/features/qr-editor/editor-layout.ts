@@ -25,3 +25,18 @@ export const editorPanel = cn(
 
 export const editorTopBar = "border-b border-border bg-surface";
 export const editorTopBarInner = "mx-auto flex min-h-14 max-w-wide items-center gap-2 px-2 sm:px-4";
+
+/* Content step (design 1.3–1.5, 5.1), shared with its loading skeleton: form | "After scanning" phone from 1024 px. */
+export const contentStepGrid = cn(
+  "mx-auto grid w-full max-w-page gap-6 px-4 pt-6 pb-8 sm:px-6 lg:grid-cols-[minmax(0,1fr)_23.75rem] lg:items-start lg:gap-14 lg:px-8 lg:pt-10 lg:pb-16",
+  "xl:grid-cols-[minmax(0,38.75rem)_26.25rem] xl:justify-center xl:gap-24",
+);
+export const contentAside = "sticky top-[calc(var(--spacing-header)+1.5rem)] max-lg:hidden";
+/** Below 1024 px: the "After scanning" bar that opens the phone above the form. */
+export const previewToggle =
+  "flex min-h-14 w-full cursor-pointer items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2.5 text-left";
+
+/* Type step (design 1.2): the type catalog, shared with its loading skeleton. */
+export const typeStepRoot = "mx-auto w-full max-w-[56.25rem] px-4 pt-6 pb-8 sm:px-6 lg:px-8 lg:pt-10 lg:pb-16";
+export const typeGrid = "grid gap-3 min-[30rem]:grid-cols-2";
+export const typeCard = "relative flex min-h-28 items-start gap-4 rounded-xl border border-border bg-surface p-4.5 text-left";
