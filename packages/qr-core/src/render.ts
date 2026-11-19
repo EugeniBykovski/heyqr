@@ -290,7 +290,11 @@ export function renderQr(value: string, style: QrStyle): RenderedQr {
       const color = logo.tile ? bg : (logo.iconColor ?? eyeIn);
       inner += `<g transform="translate(${f(c - side * k)} ${f(c - side * k)}) scale(${f((side * k * 2) / 24)})"><path d="${logo.iconPath}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>`;
     } else if (logo.href) {
-      inner += `<image href="${escapeXml(logo.href)}" x="${f(lx)}" y="${f(lx)}" width="${f(side)}" height="${f(side)}" preserveAspectRatio="xMidYMid meet"/>`;
+      // HEY-51: the image is centred in its box and keeps its aspect ratio. On a circular backing the box is the square
+      // inscribed in the circle (side / √2), so no corner of the image reaches past the plate onto the modules.
+      const box = exc.shape === "circle" && !logo.tile ? side / Math.SQRT2 : side;
+      const bx = c - box / 2;
+      inner += `<image href="${escapeXml(logo.href)}" x="${f(bx)}" y="${f(bx)}" width="${f(box)}" height="${f(box)}" preserveAspectRatio="xMidYMid meet"/>`;
     }
   }
 

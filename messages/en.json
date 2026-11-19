@@ -665,7 +665,14 @@
       "unsupported": "This file isn’t a PNG, JPG, SVG or WebP image, whatever its name says.",
       "unreadable": "This image can’t be opened. It may be damaged; export it again and retry.",
       "kept": "Your current logo is kept."
-    }
+    },
+    "logoPlate": {
+      "label": "Backing",
+      "none": "None",
+      "square": "Square",
+      "circle": "Circle"
+    },
+    "reduceLogo": "Reduce logo to {size}%"
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",

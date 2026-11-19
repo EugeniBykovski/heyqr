@@ -5,6 +5,7 @@ import { z } from "zod";
 import { modeFor, QR_MODES } from "./modes";
 import {
   CAPTION_ALIGNS,
+  LOGO_PLATES,
   CENTER_ICONS,
   EDITOR_PRESETS,
   ORIGINAL_CAPTION_FONT,
@@ -47,6 +48,8 @@ export const designSettingsSchema = z.object({
     z.object({ kind: z.literal("image"), href: z.string().min(1) }),
   ]),
   logoSize: z.number().min(0).max(1),
+  // Optional: before HEY-51 the backing followed the logo kind (defaultLogoPlate).
+  logoPlate: oneOf(LOGO_PLATES).optional(),
   preset: oneOf(EDITOR_PRESETS),
   frameStyle: oneOf(FRAME_STYLES),
   caption: z.string().max(200),
@@ -192,6 +195,7 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     captionSize,
     captionAlign,
     captionColor,
+    logoPlate,
     size,
   } = design;
   return {
@@ -212,6 +216,7 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     ...(captionSize === undefined ? {} : { captionSize }),
     ...(captionAlign === undefined ? {} : { captionAlign }),
     ...(captionColor === undefined ? {} : { captionColor }),
+    ...(logoPlate === undefined ? {} : { logoPlate }),
     ...(size === undefined ? {} : { size }),
   };
 }

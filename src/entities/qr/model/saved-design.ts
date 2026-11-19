@@ -49,6 +49,7 @@ function settingsFromLayout(layout: Layout): Partial<EditorDesign> {
     eyeIn: layout.colors.eyeIn,
     logo: icon ? { kind: "icon", icon } : logo?.href ? { kind: "image", href: logo.href } : { kind: "none" },
     logoSize: logo?.size ?? DEFAULT_DESIGN.logoSize,
+    ...(logo ? { logoPlate: logo.plate } : {}),
     preset,
     frameStyle: layout.frameStyle ?? DEFAULT_DESIGN.frameStyle,
     caption: layout.caption.text,
