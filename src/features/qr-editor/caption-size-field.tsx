@@ -3,7 +3,7 @@
 import { captionFontSize, layoutGeometry } from "@heyqr/qr-core";
 import { CircleAlertIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   CAPTION_SIZE_LIMITS,
   captionSizeUnit,
@@ -16,6 +16,7 @@ import {
 } from "@/entities/qr";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
+import { useFieldValidity } from "./use-field-validity";
 
 const round1 = (v: number) => Math.round(v * 10) / 10;
 
@@ -51,13 +52,12 @@ export function CaptionSizeField({
   }
   const valid = parseCaptionSize(text, unit) !== null;
   const showError = !valid && (touched || Boolean(forceError) || text.trim() !== "");
-  useEffect(() => () => onValidity?.("caption-size", true), [onValidity]);
+  useFieldValidity("caption-size", valid, onValidity);
   const [min, max] = CAPTION_SIZE_LIMITS[unit];
 
   const edit = (next: string) => {
     setText(next);
     const parsed = parseCaptionSize(next, unit);
-    onValidity?.("caption-size", parsed !== null);
     if (parsed !== null && parsed !== value) {
       setSynced(parsed);
       onChange({ captionSize: parsed });
