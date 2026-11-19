@@ -290,6 +290,46 @@
         "billing": "Receipts, plan and payment method in Plan & billing"
       },
       "loading": "Loading your studio"
+    },
+    "workspace": {
+      "kicker": "My QR codes",
+      "title": "Every QR code, in one place.",
+      "lead": "Your own private workspace once you sign in. Every code you design keeps its layouts, files and, for Dynamic codes, its scans.",
+      "points": {
+        "layouts": "Named layouts per code: business card, poster, website",
+        "files": "Download PNG and SVG again any time",
+        "edit": "Change a Dynamic code’s destination after printing",
+        "scans": "Daily scans for Dynamic codes"
+      },
+      "create": "Create a QR code",
+      "signIn": "Sign in",
+      "sampleOwner": "Sample workspace",
+      "sampleBadge": "Sample",
+      "sampleNote": "Sample codes and scans for illustration. Sign in to see your own.",
+      "tabs": {
+        "all": "All {count}",
+        "static": "Static {count}",
+        "dynamic": "Dynamic {count}"
+      },
+      "models": {
+        "static": "Static",
+        "dynamic": "Dynamic"
+      },
+      "samples": {
+        "portfolio": {
+          "name": "Portfolio card",
+          "meta": "3 layouts · purchased"
+        },
+        "menu": {
+          "name": "Café menu",
+          "meta": "Table tent · 214 scans"
+        },
+        "wifi": {
+          "name": "Guest Wi-Fi",
+          "meta": "Draft"
+        }
+      },
+      "scans": "Scan analytics · last 14 days"
     }
   },
   "pricing": {

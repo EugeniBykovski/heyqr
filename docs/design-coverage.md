@@ -86,6 +86,15 @@ verification script result (named here).
 | 7.1 Pricing · local currency       | `/pricing` → GBP/PLN | ✅  | ✅  | ✅   | Viewer preference; currencies without price points say checkout is in the charged currency (no invented prices) |
 | 7.2–7.7 Print Pack, Studio, limits | Export               | ⛔  | ⛔  | ⛔   | No Print Pack, plans, credits or unlock counters in the backend; not shown as purchasable                       |
 
+## 6 · Signed-in home
+
+| Frame                       | Route                   | 390 | 834 | 1440 | Notes                                                                                                                                |
+| --------------------------- | ----------------------- | --- | --- | ---- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| 6.1 Home · signed in        | `/` signed in           | ✅  | ✅  | ✅   | Studio: the user’s own codes, scans and plan usage (server-rendered, per user)                                                       |
+| 6.1 Home · guest            | `/` signed out          | ✅  | ✅  | ✅   | "Every QR code, in one place." with a labelled sample workspace (fixed sample data, inert); Create / Sign in. No trial (not offered) |
+| 6.2 Home · new account      | `/` signed in, no codes | ✅  | ✅  | ✅   | Studio empty state with one action                                                                                                   |
+| 6.x Print Pack introduction | —                       | ⛔  | ⛔  | ⛔   | Print Pack is not offered by the backend; not published                                                                              |
+
 ## 5 · Loading
 
 | Frame                       | Route                             | 390 | 834 | 1440 | Notes                                                                           |
