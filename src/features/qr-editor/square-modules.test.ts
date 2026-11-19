@@ -3,7 +3,7 @@ import { rasterizeSvg } from "@heyqr/qr-core/raster";
 import { decodeImage } from "@heyqr/qr-core/verify";
 import { describe, expect, it } from "vitest";
 import { DEFAULT_DESIGN, designToLayout } from "@/entities/qr";
-import { renderPixels } from "../../../packages/qr-core/test/pixel-probe";
+import { probeCells } from "../../../packages/qr-core/test/cell-probe";
 
 /*
  * HEY-28: square modules, checked on rendered pixels against the input matrix (so it doesn't matter whether the
@@ -16,28 +16,11 @@ const BG = "#FFFFFF";
 const SQUARE: QrStyle = { pattern: "square", eyeFrame: "square", eyeBall: "square", colors: { fg: FG, eye: FG, eyeIn: FG, bg: BG } };
 const VALUE = encodePayload({ type: "website", url: "littlefern.cafe/menu?table=4" });
 
-const rgb = (c: string) => [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16));
-
 /** Colour class of every pixel in each module cell (quiet zone included): "fg", "bg" or "mixed". */
 function cellClasses(svg: string, viewBox: number, pxPerModule: number) {
-  const img = renderPixels(svg, viewBox * pxPerModule);
-  expect(img.width).toBe(viewBox * pxPerModule);
-  const [f, b] = [rgb(FG), rgb(BG)];
-  const near = (i: number, c: number[]) =>
-    [0, 1, 2].every((k) => Math.abs((img.data[i + k] ?? -99) - (c[k] ?? 0)) <= 2) && (img.data[i + 3] ?? 0) >= 253;
-  const cell = (cx: number, cy: number) => {
-    let fg = 0;
-    let bg = 0;
-    for (let py = cy * pxPerModule; py < (cy + 1) * pxPerModule; py++)
-      for (let px = cx * pxPerModule; px < (cx + 1) * pxPerModule; px++) {
-        const i = (py * img.width + px) * 4;
-        if (near(i, f)) fg++;
-        else if (near(i, b)) bg++;
-      }
-    const all = pxPerModule * pxPerModule;
-    return fg === all ? "fg" : bg === all ? "bg" : "mixed";
-  };
-  return cell;
+  const probe = probeCells(svg, viewBox, pxPerModule, { fg: FG, bg: BG });
+  expect(probe.width).toBe(viewBox * pxPerModule);
+  return (cx: number, cy: number) => probe.cell(cx, cy).kind;
 }
 
 describe("Square modules (HEY-28)", () => {
