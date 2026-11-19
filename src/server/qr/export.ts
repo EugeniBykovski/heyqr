@@ -1,5 +1,14 @@
 import "server-only";
-import { composeLayout, encodePayload, type Layout, type QrContent } from "@heyqr/qr-core";
+import {
+  composeLayout,
+  encodePayload,
+  PNG_MAX_SIDE,
+  PNG_MIN_SIDE,
+  pngPixelSize,
+  type Layout,
+  type PngResolution,
+  type QrContent,
+} from "@heyqr/qr-core";
 import { rasterizeSvg } from "@heyqr/qr-core/raster";
 import { env } from "@/env";
 
@@ -11,12 +20,17 @@ export function encodedValue(qr: { model: "static" | "dynamic"; content: QrConte
   return encodePayload(qr.content);
 }
 
-const MAX_PNG_WIDTH = 8192;
+/** PNG width for a layout: physical layouts at a DPI (default 300), screen layouts at a scale (default 2×). */
+export function pngWidth(layout: Layout, _width: number, opts: PngResolution) {
+  return pngPixelSize(layout, opts).width;
+}
 
-/** Physical layouts render at a DPI (default 300); screen layouts at a scale factor (default 2×). */
-export function pngWidth(layout: Layout, width: number, opts: { dpi?: number; scale?: number }) {
-  const px = layout.unit === "mm" ? (width / 25.4) * (opts.dpi ?? 300) : width * (opts.scale ?? 2);
-  return Math.min(MAX_PNG_WIDTH, Math.max(64, Math.round(px)));
+/** The requested PNG would be outside the export limits (64–8192 px a side); nothing is rasterized. */
+export class ExportSizeError extends Error {
+  constructor(public readonly size: { width: number; height: number }) {
+    super(`PNG of ${size.width} × ${size.height} px is outside the export limits (${PNG_MIN_SIDE}–${PNG_MAX_SIDE} px).`);
+    this.name = "ExportSizeError";
+  }
 }
 
 /**
@@ -46,6 +60,8 @@ export async function renderExport(
 ) {
   const composed = composeLayout(await withEmbeddedImages(layout), value, { transparent: opts.transparent });
   if (format === "svg") return { body: Buffer.from(composed.svg), contentType: "image/svg+xml", scan: composed.scan };
-  const width = pngWidth(layout, composed.width, opts);
-  return { body: rasterizeSvg(composed.svg, { width }), contentType: "image/png", scan: composed.scan };
+  // HEY-37: the whole layout at the requested resolution, aspect ratio kept; validated before rasterizing.
+  const size = pngPixelSize(layout, opts);
+  if (!size.ok) throw new ExportSizeError(size);
+  return { body: rasterizeSvg(composed.svg, { width: size.width }), contentType: "image/png", scan: composed.scan, size };
 }

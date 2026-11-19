@@ -334,3 +334,27 @@ export function composeLayout(layout: Layout, value: string, options: ComposeOpt
   svg += "</svg>";
   return { svg, width: W, height: H, scan: qr.scan };
 }
+
+/* PNG export resolution (HEY-37). Screen layouts render at a scale of their px size, print layouts at a DPI of their
+ * mm size; the whole layout is rasterized, keeping its aspect ratio (height rounded like resvg's fit-to-width). */
+
+/** Resolutions offered for PNG (design export screen): 1×–8× for px layouts, 300–1200 dpi for mm layouts. */
+export const PNG_SCALES = [1, 2, 4, 8] as const;
+export const PNG_DPIS = [300, 600, 1200] as const;
+export const PNG_DEFAULTS = { scale: 2, dpi: 300 } as const;
+/** Export limits: no side smaller than 64 px or larger than 8192 px. */
+export const PNG_MIN_SIDE = 64;
+export const PNG_MAX_SIDE = 8192;
+
+export type PngResolution = { scale?: number; dpi?: number };
+
+/** Exact pixel size of the PNG for a layout at a resolution, and whether it is within the export limits. */
+export function pngPixelSize(layout: Layout, resolution: PngResolution = {}): { width: number; height: number; ok: boolean } {
+  const g = layoutGeometry(layout);
+  const width = Math.round(
+    layout.unit === "mm" ? (g.width / 25.4) * (resolution.dpi ?? PNG_DEFAULTS.dpi) : g.width * (resolution.scale ?? PNG_DEFAULTS.scale),
+  );
+  const height = Math.round((g.height * width) / g.width);
+  const ok = Math.min(width, height) >= PNG_MIN_SIDE && Math.max(width, height) <= PNG_MAX_SIDE;
+  return { width, height, ok };
+}

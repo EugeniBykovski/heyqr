@@ -627,7 +627,12 @@
     "paid": "Payment received. Your files are ready.",
     "pending": "Confirming your payment…",
     "cancelled": "Payment was cancelled. Nothing was charged.",
-    "secure": "Payments are processed by Stripe."
+    "secure": "Payments are processed by Stripe.",
+    "resolution": "Resolution",
+    "scale": "{scale}×",
+    "dpi": "{dpi} dpi",
+    "pixels": "{width} × {height} px",
+    "limit": "larger sizes exceed {max} px"
   },
   "dashboard": {
     "title": "My QR codes",

@@ -627,7 +627,12 @@
     "paid": "Оплата получена. Файлы готовы.",
     "pending": "Подтверждаем оплату…",
     "cancelled": "Оплата отменена. Деньги не списаны.",
-    "secure": "Платежи обрабатывает Stripe."
+    "secure": "Платежи обрабатывает Stripe.",
+    "resolution": "Разрешение",
+    "scale": "{scale}×",
+    "dpi": "{dpi} dpi",
+    "pixels": "{width} × {height} px",
+    "limit": "большие размеры превышают {max} px"
   },
   "dashboard": {
     "title": "Мои QR-коды",

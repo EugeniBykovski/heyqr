@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/server/auth";
 import { canDownload } from "@/server/billing/entitlements";
-import { encodedValue, renderExport } from "@/server/qr/export";
+import { encodedValue, ExportSizeError, renderExport } from "@/server/qr/export";
 import { getLayoutWithQr } from "@/server/qr/repository";
 
 const query = z.object({
@@ -41,6 +41,8 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/api/export/[
     file = await renderExport(record.design.layout, value, format, { dpi, scale, transparent: transparent === "1" });
   } catch (error) {
     if (error instanceof QrCapacityError) return NextResponse.json(tooLong, { status: 422 });
+    // HEY-37: a resolution outside the export limits is refused, never silently scaled down.
+    if (error instanceof ExportSizeError) return NextResponse.json({ error: "too_large", ...error.size }, { status: 422 });
     throw error;
   }
   if (!file.scan.ok) return NextResponse.json({ error: "scan_check_failed", issues: file.scan.issues }, { status: 422 });

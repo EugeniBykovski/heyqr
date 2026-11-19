@@ -1,6 +1,6 @@
 "use client";
 
-import { layoutGeometry } from "@heyqr/qr-core";
+import { layoutGeometry, pngPixelSize } from "@heyqr/qr-core";
 import { CircleAlertIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -124,6 +124,8 @@ export function SizePanel({
   const g = layoutGeometry(designToLayout(design));
   const [qrMin, qrMax] = SIZE_LIMITS[size.unit].qr;
   const clamped = ownCanvas && g.qr[2] < size.qr;
+  // The default PNG (2× or 300 dpi), sized by the same rule as the export (HEY-37).
+  const png = pngPixelSize(designToLayout(design));
 
   return (
     <div className="flex flex-col gap-5">
@@ -214,10 +216,10 @@ export function SizePanel({
           ? t("exportMm", {
               width: Math.round(g.width * 10) / 10,
               height: Math.round(g.height * 10) / 10,
-              pxWidth: Math.round((g.width / 25.4) * 300),
-              pxHeight: Math.round((g.height / 25.4) * 300),
+              pxWidth: png.width,
+              pxHeight: png.height,
             })
-          : t("export", { width: Math.round(g.width * 2), height: Math.round(g.height * 2), unit: size.unit })}
+          : t("export", { width: png.width, height: png.height, unit: size.unit })}
       </p>
     </div>
   );
