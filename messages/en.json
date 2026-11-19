@@ -16,7 +16,12 @@
     "home": "Hey QR home",
     "createCode": "Create QR code",
     "menu": "Menu",
-    "main": "Main"
+    "main": "Main",
+    "languageChoose": "Choose language",
+    "languageCount": "{count} languages",
+    "languageSearch": "Search languages",
+    "languages": "Languages",
+    "languageEmpty": "No language matches “{query}”."
   },
   "footer": {
     "terms": "Terms",
