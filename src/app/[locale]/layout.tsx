@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { DM_Sans, IBM_Plex_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { CaptionFontFaces } from "@/entities/qr";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { env } from "@/env";
@@ -42,6 +43,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   return (
     <html lang={locale} dir={RTL_LOCALES.includes(locale) ? "rtl" : "ltr"} className={`${dmSans.variable} ${plexMono.variable}`}>
       <body className="flex min-h-dvh flex-col">
+        <CaptionFontFaces />
         <a
           href="#main"
           className="sr-only z-50 rounded-full bg-primary px-4 py-2 text-primary-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3"

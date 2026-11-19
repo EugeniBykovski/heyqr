@@ -3,7 +3,8 @@
 import type { Layout } from "@heyqr/qr-core";
 import { LoaderCircleIcon } from "lucide-react";
 import { memo, useDeferredValue } from "react";
-import { QrPreview } from "@/entities/qr";
+import { QrPreview, useCaptionFontsReady } from "@/entities/qr";
+import { cn } from "@/shared/lib/utils";
 import { useDelayedFlag } from "@/shared/lib/use-delayed-flag";
 
 /** Re-renders only when the layout or value it shows changes, so an urgent settings update never redraws it. */
@@ -45,9 +46,17 @@ export function DesignCanvas({
   watermark: string;
   updatingLabel: string;
 }) {
-  const showPill = useDelayedFlag(rebuilding, REBUILD_PILL_DELAY_MS);
+  // HEY-44: until the caption's font faces have loaded the caption stays hidden and the canvas counts as updating, so
+  // a stand-in font is never shown as the final look.
+  const fontsReady = useCaptionFontsReady(layout);
+  const busy = rebuilding || !fontsReady;
+  const showPill = useDelayedFlag(busy, REBUILD_PILL_DELAY_MS);
   return (
-    <div className="relative size-full" aria-busy={rebuilding || undefined}>
+    <div
+      className={cn("relative size-full", !fontsReady && "[&_text]:invisible")}
+      aria-busy={busy || undefined}
+      data-caption-fonts={fontsReady ? "ready" : "loading"}
+    >
       <RenderedPreview layout={layout} value={value} label={label} tooLongLabel={tooLongLabel} className="size-full" />
       <span
         aria-hidden

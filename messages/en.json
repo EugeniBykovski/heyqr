@@ -615,6 +615,16 @@
       "tooLong": "Use up to {max} characters: remove {over, plural, one {# character} other {# characters}}. The preview keeps your last caption that fits.",
       "tooManyLines": "Use up to {max} lines. The preview keeps your last caption that fits.",
       "count": "{count} of {max} characters"
+    },
+    "captionFont": {
+      "title": "Font",
+      "hint": "Fonts for your QR. The HeyQR interface always uses DM Sans.",
+      "weight": "Weight",
+      "weights": {
+        "400": "Regular",
+        "500": "Medium",
+        "700": "Bold"
+      }
     }
   },
   "scan": {

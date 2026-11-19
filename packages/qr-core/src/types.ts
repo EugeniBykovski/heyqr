@@ -1,3 +1,4 @@
+import type { CaptionFontId } from "./caption-fonts";
 export type ModuleShape = "square" | "rounded" | "dot" | "diamond" | "leaf" | "fluid" | "vbars" | "hbars";
 export type EyeFrameShape = "square" | "rounded" | "cushion" | "circle" | "leaf";
 export type EyeBallShape = "square" | "rounded" | "circle" | "diamond" | "leaf";
@@ -76,8 +77,10 @@ export type CaptionPosition = "after" | "before" | "center";
 
 export interface LayoutCaption {
   text: string;
-  /** CSS font-family list. */
+  /** CSS font-family list (kept for layouts saved before HEY-44; derived from `font` when that is set). */
   fontFamily: string;
+  /** Caption font (HEY-44, caption-fonts.ts). Absent on older layouts, which keep DM Sans. */
+  font?: CaptionFontId;
   /** pt for mm layouts, px for px layouts. */
   size: number;
   weight: number;

@@ -135,11 +135,11 @@ describe("caption rendering, shared by preview and export (HEY-43)", () => {
     expect(svgOf("")).not.toContain("<text");
   });
 
-  it("renders exactly the accepted text, one line per line break, escaped, with the optical size pinned", () => {
+  it("renders exactly the accepted text, one line per line break, escaped, in the caption font (HEY-44)", () => {
     const svg = svgOf("Fish & Chips <today>\nTable 4");
     const lines = [...svg.matchAll(/<tspan[^>]*>([^<]*)<\/tspan>/g)].map((m) => m[1]);
     expect(lines).toEqual(["Fish &amp; Chips &lt;today&gt;", "Table 4"]);
-    expect(svg).toContain(`style="font-variation-settings:'opsz' 14"`);
+    expect(svg).toContain(`font-family="'HeyQR Onest', sans-serif"`);
   });
 
   it("the caption is display text: the code still decodes to the original payload", async () => {
