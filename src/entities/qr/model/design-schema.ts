@@ -1,4 +1,5 @@
 import { CAPTION_FONT_IDS, isHexColor, QR_CONTENT_TYPES, type Layout, type QrContent } from "@heyqr/qr-core";
+import { checkLogoDataUrl } from "./logo";
 import { isValidSize } from "./size";
 import { z } from "zod";
 import { modeFor, QR_MODES } from "./modes";
@@ -155,10 +156,20 @@ export function readLayoutRecord(raw: unknown): ReadResult<LayoutRecordDesign> {
   };
 }
 
-/** Builds the record the server writes for a variant; validates both parts first. */
+/** A logo the server stores: an uploaded file kept in our storage (URL) or an inline image that passes the logo rule. */
+const acceptableLogoHref = (href: string | undefined) => href === undefined || /^https?:\/\//.test(href) || checkLogoDataUrl(href).ok;
+
+/**
+ * Builds the record the server writes for a variant; validates both parts first. New writes also apply the logo rule
+ * (HEY-50: PNG, JPEG, WebP or SVG by content, at most 10 MB); reading stays lenient so older records still open.
+ */
 export function createLayoutRecord(layout: unknown, editor?: unknown): LayoutRecordDesign | null {
   const result = readLayoutRecord({ schemaVersion: DESIGN_SCHEMA_VERSION, layout, ...(editor === undefined ? {} : { editor }) });
-  return result.ok ? result.value : null;
+  if (!result.ok) return null;
+  const editorLogo = result.value.editor?.logo;
+  if (!acceptableLogoHref(result.value.layout.style.logo?.href)) return null;
+  if (editorLogo?.kind === "image" && !acceptableLogoHref(editorLogo.href)) return null;
+  return result.value;
 }
 
 /** The design settings part of an editor draft (what a saved variant keeps in `editor`). */

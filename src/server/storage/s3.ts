@@ -1,6 +1,7 @@
 import "server-only";
 import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { LOGO_MAX_BYTES } from "@/entities/qr/model/logo";
 import { storageConfig } from "@/server/config";
 
 let client: S3Client | null = null;
@@ -18,7 +19,8 @@ export function s3(): S3Client {
 }
 
 export const LOGO_TYPES = ["image/png", "image/jpeg", "image/svg+xml", "image/webp"] as const;
-export const MAX_LOGO_BYTES = 10 * 1024 * 1024;
+/** Same limit as the editor (entities/qr/model/logo.ts, HEY-50). */
+export const MAX_LOGO_BYTES = LOGO_MAX_BYTES;
 
 /** Short-lived URL the browser uploads a logo to directly. */
 export async function presignUpload(key: string, contentType: string, byteSize: number) {

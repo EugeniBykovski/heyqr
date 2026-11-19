@@ -33,6 +33,7 @@ export {
 } from "./model/caption";
 export { CONTENT_FIELDS, emptyContent, isContentComplete, type ContentField } from "./model/content";
 export { QrPreview } from "./ui/qr-preview";
+export { checkLogoDataUrl, LOGO_ACCEPT, LOGO_MAX_BYTES, LOGO_MIME, sniffLogoFormat, type LogoFormat } from "./model/logo";
 export { designFromSaved, pickLayoutForEdit } from "./model/saved-design";
 export { CaptionFontFaces, captionFontUrl } from "./ui/caption-font-faces";
 export { captionFontQueries, useCaptionFontsReady } from "./model/use-caption-fonts-ready";

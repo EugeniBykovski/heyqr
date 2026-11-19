@@ -1,7 +1,7 @@
 "use client";
 
 import { parseHexColor } from "@heyqr/qr-core";
-import { CircleAlertIcon, ImagePlusIcon } from "lucide-react";
+import { CircleAlertIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import {
@@ -17,9 +17,8 @@ import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
+import { LogoFeedback, LogoUploadTile, type LogoFeedbackState } from "./logo-upload";
 import { OptionGrid } from "./option-grid";
-
-const MAX_INLINE_LOGO = 512 * 1024;
 
 /**
  * One colour: a native picker plus a HEX text field (HEY-34). The text being edited is kept apart from the last valid
@@ -120,6 +119,7 @@ export function DesignPanel({
   onColorValidity?: (id: string, valid: boolean) => void;
 }) {
   const t = useTranslations("editor");
+  const [logoFeedback, setLogoFeedback] = useState<LogoFeedbackState>(null);
   const iconKeys = Object.keys(CENTER_ICONS) as CenterIcon[];
   const logoValue = design.logo.kind === "icon" ? design.logo.icon : design.logo.kind;
 
@@ -233,28 +233,14 @@ export function DesignPanel({
               </button>
             );
           })}
-          <label
-            className={cn(
-              "relative grid aspect-square cursor-pointer place-items-center rounded-lg border border-dashed border-input bg-surface focus-within:outline-2 focus-within:outline-ring hover:border-input-hover",
-              design.logo.kind === "image" && "border-solid border-selected-border bg-selected",
-            )}
-          >
-            <ImagePlusIcon aria-hidden className="size-5" />
-            <span className="sr-only">{t("logoUpload")}</span>
-            <input
-              type="file"
-              accept="image/png,image/jpeg,image/svg+xml,image/webp"
-              className="absolute inset-0 cursor-pointer opacity-0"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (!file || file.size > MAX_INLINE_LOGO) return;
-                const reader = new FileReader();
-                reader.onload = () => typeof reader.result === "string" && onChange({ logo: { kind: "image", href: reader.result } });
-                reader.readAsDataURL(file);
-              }}
-            />
-          </label>
+          <LogoUploadTile
+            selected={design.logo.kind === "image"}
+            label={t("logoUpload")}
+            onLogo={(href) => onChange({ logo: { kind: "image", href } })}
+            onFeedback={setLogoFeedback}
+          />
         </div>
+        <LogoFeedback feedback={logoFeedback} />
         {design.logo.kind !== "none" ? (
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="logo-size">{t("logoSize")}</Label>

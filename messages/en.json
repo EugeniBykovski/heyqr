@@ -656,6 +656,15 @@
       "color": "Caption color",
       "palette": "Caption color presets",
       "matchCode": "Match code"
+    },
+    "logoFile": {
+      "hint": "PNG, JPG, SVG or WebP, up to {max} MB. Choose a file or drop it on the upload tile.",
+      "reading": "Reading the image…",
+      "empty": "This file is empty.",
+      "tooLarge": "This file is over the {max} MB limit.",
+      "unsupported": "This file isn’t a PNG, JPG, SVG or WebP image, whatever its name says.",
+      "unreadable": "This image can’t be opened. It may be damaged; export it again and retry.",
+      "kept": "Your current logo is kept."
     }
   },
   "scan": {
