@@ -380,8 +380,10 @@
     "logoSize": "Logo size",
     "layout": "Layout",
     "presets": {
-      "qr": "Code only",
-      "caption": "With caption",
+      "qr": "QR only",
+      "caption": "QR + caption",
+      "vertical": "Vertical card",
+      "horizontal": "Horizontal card",
       "frame": "Frame"
     },
     "frameStyle": "Frame style",
