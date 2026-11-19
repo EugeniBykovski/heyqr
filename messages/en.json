@@ -608,7 +608,14 @@
       "invalidMm": "Enter a number from {min} to {max} mm, with at most one decimal.",
       "exportMm": "File: {width} × {height} mm · PNG at 300 dpi: {pxWidth} × {pxHeight} px."
     },
-    "updatingPreview": "Updating preview…"
+    "updatingPreview": "Updating preview…",
+    "captionField": {
+      "label": "Caption text",
+      "hint": "Press Enter for a second line. Leave empty to hide the caption.",
+      "tooLong": "Use up to {max} characters: remove {over, plural, one {# character} other {# characters}}. The preview keeps your last caption that fits.",
+      "tooManyLines": "Use up to {max} lines. The preview keeps your last caption that fits.",
+      "count": "{count} of {max} characters"
+    }
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",

@@ -13,11 +13,12 @@ import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
 import { Input, InputPrefix } from "@/shared/ui/input";
-import { Textarea } from "@/shared/ui/textarea";
+
 import { Segmented } from "@/shared/ui/segmented";
 import { Stage, StageBar, StageCanvas, StageFoot } from "@/shared/ui/stage";
 import { Swatch } from "@/shared/ui/swatch";
 import { bareUrl, fromAddressField, schemeOf } from "./address-field";
+import { CaptionField } from "./caption-field";
 import { ContentForm } from "./content-form";
 import { contentErrors } from "./content-validation";
 import { ScanStatus } from "./scan-status";
@@ -233,19 +234,12 @@ export function QuickStart({ copy }: { copy: ReactNode }) {
               ))}
             </div>
           </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="home-caption" className="text-label">
-              {t("caption")}
-            </label>
-            <Textarea
-              id="home-caption"
-              rows={2}
-              value={design.caption}
-              maxLength={60}
-              className="min-h-19 resize-none"
-              onChange={(e) => patch({ caption: e.target.value, preset: e.target.value.trim() ? "caption" : "qr" })}
-            />
-          </div>
+          <CaptionField
+            id="home-caption"
+            label={t("caption")}
+            value={design.caption}
+            onAccept={(caption) => patch({ caption, preset: caption.trim() ? "caption" : "qr" })}
+          />
         </div>
 
         <Button variant="primary" size="lg" className="w-full" onClick={onContinue}>

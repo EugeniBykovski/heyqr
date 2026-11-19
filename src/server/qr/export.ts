@@ -9,10 +9,20 @@ import {
   type PngResolution,
   type QrContent,
 } from "@heyqr/qr-core";
+import path from "node:path";
 import { rasterizeSvg } from "@heyqr/qr-core/raster";
 import { env } from "@/env";
 
 export type ExportFormat = "png" | "svg";
+
+/**
+ * DM Sans, the caption font of the on-screen preview, as static TTF files (400 and 700, optical size 14) for resvg
+ * (HEY-43). Without them the PNG caption fell back to a system font. Traced into the build via next.config.ts.
+ * Characters DM Sans lacks (Cyrillic, emoji) still fall back to system fonts, as they do in the browser.
+ */
+export const CAPTION_FONT_FILES = ["DMSans-Regular.ttf", "DMSans-Bold.ttf"].map((f) =>
+  path.join(process.cwd(), "packages/qr-core/fonts", f),
+);
 
 /** What the printed code contains: the payload for static codes, the permanent short link for dynamic ones. */
 export function encodedValue(qr: { model: "static" | "dynamic"; content: QrContent; shortCode: string | null }) {
@@ -69,5 +79,10 @@ export async function renderExport(
     /^<svg ([^>]*?)width="[^"]*" height="[^"]*"/,
     `<svg $1width="${size.width}" height="${size.height}" preserveAspectRatio="none"`,
   );
-  return { body: rasterizeSvg(forRaster, { width: size.width }), contentType: "image/png", scan: composed.scan, size };
+  return {
+    body: rasterizeSvg(forRaster, { width: size.width, fontFiles: CAPTION_FONT_FILES }),
+    contentType: "image/png",
+    scan: composed.scan,
+    size,
+  };
 }

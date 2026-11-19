@@ -64,7 +64,8 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
   }, [restored, unreadable, modeAdjusted, resume, t]);
 
   const errors = useMemo(() => contentErrors(design.content), [design.content]);
-  const layout = useMemo(() => designToLayout({ ...design, caption: design.caption || t("captionPlaceholder") }), [design, t]);
+  // An empty caption hides the caption (HEY-43); preview and export render exactly the accepted text.
+  const layout = useMemo(() => designToLayout(design), [design]);
   // What the printed code actually holds: the short link for dynamic codes, the serialized content (escaping,
   // vCard folding, UTF-8) for static ones. Capacity is checked on exactly this value with this layout's ECL (HEY-24).
   const encoded = useMemo(
@@ -285,7 +286,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
                 <h2 id="design-frame" className="text-h3">
                   {t("frameGroup")}
                 </h2>
-                <FramePanel design={design} onChange={patch} />
+                <FramePanel design={design} onChange={patch} onValidity={onColorValidity} />
               </section>
               <section aria-labelledby="design-size" className="flex flex-col gap-4 border-t border-border pt-6">
                 <h2 id="design-size" className="text-h3">
