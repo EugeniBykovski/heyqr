@@ -1,6 +1,6 @@
 # Design coverage: Claude Design → app
 
-Reference: Claude Design artifact `5ad84e52-9181-4f2c-a6f5-04e11a8a57c9`, saved revision **1794991234-4f8a**.
+Reference: Claude Design artifact `5ad84e52-9181-4f2c-a6f5-04e11a8a57c9`, revision **1795122922-cd26** (scope: frames 1.1–8.2).
 Every "Key screens" frame renders the prototype at **390, 834 and 1440 px**; each width is recorded separately.
 
 Status: ✅ implemented and verified in the browser · 🟡 exists, needs alignment with the frame · ❌ not built ·
@@ -11,24 +11,24 @@ verification script result (named here).
 
 ## 1 · Create
 
-| Frame                             | Route / how to reach                    | 390 | 834 | 1440 | Evidence / notes                                                                                                     |
-| --------------------------------- | --------------------------------------- | --- | --- | ---- | -------------------------------------------------------------------------------------------------------------------- |
-| 1.1 Home                          | `/`                                     | ✅  | ✅  | ✅   | final-home-{390,834,1440}.png; hero tool, examples, features, types, FAQ, CTA, footer                                |
-| 1.2 Type                          | `/create?step=type` (home "More +")     | ✅  | ✅  | ✅   | final-type-*.png; editor-flow steps 1–3, 11 (cards, Static/Dynamic, bar, Continue)                                   |
-| 1.3 Content · contact card        | `/create?step=content`, Contact         | 🟡  | 🟡  | 🟡   | Fields, errors, preview done; design pairs first/last name and marks optional fields per row                         |
-| 1.4 Content · Wi-Fi               | `/create?step=content`, Wi-Fi           | 🟡  | 🟡  | 🟡   | Validation done (editor-flow step 12); design uses a security segmented control and a show/hide password button      |
-| 1.5 Content · text                | `/create?step=content`, Text            | 🟡  | 🟡  | 🟡   | Design shows "N of 300 characters" hint                                                                              |
-| 1.6 Design · colors               | `/create?step=design`                   | 🟡  | 🟡  | 🟡   | App has colour inputs; design has grouped tabs (Layout, Frame, Size, Pattern, Colors, Logo, Caption) and swatch rows |
-| 1.7 Design · pattern              | `/create?step=design`                   | 🟡  | 🟡  | 🟡   | Same group-tab gap; module/corner options exist                                                                      |
-| 1.8 Design · size                 | —                                       | ❌  | ❌  | ❌   | No units / W×H / QR size controls; layouts are px-only (`designToLayout`)                                            |
-| 1.9 Scan check failed             | `/create?step=design` with low contrast | 🟡  | 🟡  | 🟡   | Issues list shown; design offers one-tap fixes (reduce logo, increase contrast, swap colours)                        |
-| 1.10 Full-screen preview          | —                                       | ❌  | ❌  | ❌   | No full-screen view / expand button                                                                                  |
-| 1.11 Icon library                 | Design step, Center                     | 🟡  | 🟡  | 🟡   | 8 icons inline; design has a searchable library sheet                                                                |
-| 1.12 Quick styles · Undo · canvas | —                                       | ❌  | ❌  | ❌   | No quick styles, Undo, Fit/Actual size                                                                               |
-| 1.13 Language switch              | header                                  | 🟡  | 🟡  | 🟡   | Dropdown with 21 languages; design is a popover with search and a 2-column list                                      |
-| 1.14 Content · event              | `/create?step=content`, Event           | 🟡  | 🟡  | 🟡   | App uses one date-time field; design has date + start/end times                                                      |
-| 1.15 Frame gallery                | Design step, Frame and caption          | 🟡  | 🟡  | 🟡   | Frame styles as text options; design shows thumbnail cards                                                           |
-| 1.16 Caption in the code          | —                                       | ❌  | ❌  | ❌   | Center-text caption not in the editor model                                                                          |
+| Frame                             | Route / how to reach                    | 390 | 834 | 1440 | Evidence / notes                                                                                                        |
+| --------------------------------- | --------------------------------------- | --- | --- | ---- | ----------------------------------------------------------------------------------------------------------------------- |
+| 1.1 Home                          | `/`                                     | ✅  | ✅  | ✅   | final-home-{390,834,1440}.png; hero tool, examples, features, types, FAQ, CTA, footer                                   |
+| 1.2 Type                          | `/create?step=type` (home "More +")     | ✅  | ✅  | ✅   | final-type-*.png; editor-flow steps 1–3, 11 (cards, Static/Dynamic, bar, Continue)                                      |
+| 1.3 Content · contact card        | `/create?step=content`, Contact         | 🟡  | 🟡  | 🟡   | Fields, errors, preview done; design pairs first/last name and marks optional fields per row                            |
+| 1.4 Content · Wi-Fi               | `/create?step=content`, Wi-Fi           | 🟡  | 🟡  | 🟡   | Validation done (editor-flow step 12); design uses a security segmented control and a show/hide password button         |
+| 1.5 Content · text                | `/create?step=content`, Text            | 🟡  | 🟡  | 🟡   | Design shows "N of 300 characters" hint                                                                                 |
+| 1.6 Design · colors               | `/create?step=design` → Colors          | ✅  | ✅  | ✅   | Grouped settings; six colour roles (modules, corners, background, frame, caption), swatches, HEX, role reset, Reset all |
+| 1.7 Design · pattern              | Design → Pattern                        | ✅  | ✅  | ✅   | 8 module shapes, 5 corner frames, 5 corner centers, each with a renderer-drawn crop                                     |
+| 1.8 Design · size                 | Design → Size                           | ✅  | ✅  | ✅   | HEY-35/36 units, QR size vs layout size, presets; stage footer shows layout, QR and file dimensions                     |
+| 1.9 Scan check failed             | `/create?step=design` with low contrast | 🟡  | 🟡  | 🟡   | Issues list shown; design offers one-tap fixes (reduce logo, increase contrast, swap colours)                           |
+| 1.10 Full-screen preview          | Design, expand button (< 1024 px)       | ✅  | ✅  | —    | Dialog with the same canvas, dimensions and scan check; Done returns focus to the expand button                         |
+| 1.11 Icon library                 | Design → Logo → Icon library            | ✅  | ✅  | ✅   | 38 searchable vector icons, plate or colour tile; upload, size 10–46 %, backing, position (centre / top of card)        |
+| 1.12 Quick styles · Undo · canvas | Design → Layout; stage bar              | ✅  | ✅  | ✅   | Six quick styles + Surprise me (one undo step each), Undo/Redo, Light/Dark/Clear canvas, Fit/Actual size                |
+| 1.13 Language switch              | header                                  | 🟡  | 🟡  | 🟡   | Dropdown with 21 languages; design is a popover with search and a 2-column list                                         |
+| 1.14 Content · event              | `/create?step=content`, Event           | 🟡  | 🟡  | 🟡   | App uses one date-time field; design has date + start/end times                                                         |
+| 1.15 Frame gallery                | Design → Frame                          | ✅  | ✅  | ✅   | No frame + 8 live thumbnails, 16-character text, quick phrases, frame and text colours, colour presets                  |
+| 1.16 Caption in the code          | Design → Caption → Position             | ✅  | ✅  | ✅   | Below / above / in the code; the scan check flags text that hides too much                                              |
 
 ## 2 · Branded, end to end
 

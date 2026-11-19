@@ -5,6 +5,7 @@ import { z } from "zod";
 import { modeFor, QR_MODES } from "./modes";
 import {
   CAPTION_ALIGNS,
+  CAPTION_POSITIONS,
   LOGO_PLATES,
   CENTER_ICONS,
   EDITOR_PRESETS,
@@ -66,6 +67,14 @@ export const designSettingsSchema = z.object({
     .object({ unit: z.enum(["px", "mm"]), qr: z.number(), width: z.number(), height: z.number() })
     .refine(isValidSize)
     .optional(),
+  // Optional: added by the grouped Design settings; every older draft and record renders as before without them.
+  frameColor: hex.optional(),
+  frameTextColor: hex.optional(),
+  captionPosition: oneOf(CAPTION_POSITIONS).optional(),
+  logoTile: z.boolean().optional(),
+  border: z.boolean().optional(),
+  logoPosition: z.enum(["center", "top"]).optional(),
+  brandName: z.string().max(40).optional(),
 });
 export type DesignSettings = z.infer<typeof designSettingsSchema>;
 
@@ -171,6 +180,8 @@ export function createLayoutRecord(layout: unknown, editor?: unknown): LayoutRec
   if (!result.ok) return null;
   const editorLogo = result.value.editor?.logo;
   if (!acceptableLogoHref(result.value.layout.style.logo?.href)) return null;
+  // A logo above the code on a card follows the same rule as the centre logo.
+  if (!acceptableLogoHref(result.value.layout.topLogoHref)) return null;
   if (editorLogo?.kind === "image" && !acceptableLogoHref(editorLogo.href)) return null;
   return result.value;
 }
@@ -197,6 +208,13 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     captionColor,
     logoPlate,
     size,
+    frameColor,
+    frameTextColor,
+    captionPosition,
+    logoTile,
+    border,
+    logoPosition,
+    brandName,
   } = design;
   return {
     pattern,
@@ -218,5 +236,12 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     ...(captionColor === undefined ? {} : { captionColor }),
     ...(logoPlate === undefined ? {} : { logoPlate }),
     ...(size === undefined ? {} : { size }),
+    ...(frameColor === undefined ? {} : { frameColor }),
+    ...(frameTextColor === undefined ? {} : { frameTextColor }),
+    ...(captionPosition === undefined ? {} : { captionPosition }),
+    ...(logoTile === undefined ? {} : { logoTile }),
+    ...(border === undefined ? {} : { border }),
+    ...(logoPosition === undefined ? {} : { logoPosition }),
+    ...(brandName === undefined ? {} : { brandName }),
   };
 }
