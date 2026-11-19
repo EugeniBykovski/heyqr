@@ -592,10 +592,19 @@
       "presets": {
         "square": "Square 1080",
         "story": "Story 1080×1920",
-        "slide": "Slide 1920×1080"
+        "slide": "Slide 1920×1080",
+        "card": "Business card 90×50",
+        "a6": "A6 105×148",
+        "sticker": "Sticker 50×62"
       },
       "export": "PNG export: {width} × {height} {unit} (2×).",
-      "invalid": "Enter a whole number from {min} to {max} {unit}."
+      "invalid": "Enter a whole number from {min} to {max} {unit}.",
+      "units": "Units",
+      "unitMm": "Print · mm",
+      "unitPx": "Screen · px",
+      "unitHintMm": "Print · mm: for print. The SVG has its real size in mm; PNG files are made at 300 dpi.",
+      "invalidMm": "Enter a number from {min} to {max} mm, with at most one decimal.",
+      "exportMm": "File: {width} × {height} mm · PNG at 300 dpi: {pxWidth} × {pxHeight} px."
     }
   },
   "scan": {

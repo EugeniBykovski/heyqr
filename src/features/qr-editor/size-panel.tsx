@@ -5,8 +5,10 @@ import { CircleAlertIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import {
+  convertSize,
   designToLayout,
   LEGACY_SIZE,
+  MM_PRESETS,
   parseSizeValue,
   presetSize,
   PX_PRESETS,
@@ -19,6 +21,7 @@ import {
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
+import { Segmented } from "@/shared/ui/segmented";
 
 /**
  * One size value (HEY-35). Like the colour fields (HEY-34), the text being typed is separate from the last valid
@@ -76,7 +79,7 @@ function SizeField({
         <Input
           id={id}
           value={text}
-          inputMode="numeric"
+          inputMode={unit === "mm" ? "decimal" : "numeric"}
           autoComplete="off"
           disabled={disabled}
           aria-invalid={showError || undefined}
@@ -92,12 +95,15 @@ function SizeField({
       {showError ? (
         <p id={`${id}-error`} className="flex items-start gap-1.5 text-caption font-medium text-danger">
           <CircleAlertIcon aria-hidden className="mt-0.5 size-3.5 shrink-0" />
-          {t("invalid", { min, max, unit })}
+          {t(unit === "mm" ? "invalidMm" : "invalid", { min, max, unit })}
         </p>
       ) : null}
     </div>
   );
 }
+
+/** Locked (derived) dimensions shown at the unit's precision: whole px, 0.1 mm. */
+const roundTo = (v: number, unit: DesignSize["unit"]) => (unit === "mm" ? Math.round(v * 10) / 10 : Math.round(v));
 
 /** Design 1.8 Size: code size (with quiet zone), layout canvas (when the layout has its own), presets, export size. */
 export function SizePanel({
@@ -121,7 +127,21 @@ export function SizePanel({
 
   return (
     <div className="flex flex-col gap-5">
-      <p className="text-caption text-muted-foreground">{t("unitHint")}</p>
+      <div className="flex flex-col gap-2">
+        <span id="size-units" className="text-label">
+          {t("units")}
+        </span>
+        <Segmented
+          label={t("units")}
+          value={size.unit}
+          options={[
+            { value: "mm", label: t("unitMm") },
+            { value: "px", label: t("unitPx") },
+          ]}
+          onChange={(unit) => onChange({ size: convertSize(size, unit) })}
+        />
+        <p className="text-caption text-muted-foreground">{t(size.unit === "mm" ? "unitHintMm" : "unitHint")}</p>
+      </div>
 
       <div className="flex flex-col gap-2">
         <SizeField
@@ -146,7 +166,7 @@ export function SizePanel({
         />
         <span className="text-caption text-muted-foreground">{t("qrNote")}</span>
         {clamped ? (
-          <p className="text-caption text-secondary-foreground">{t("clamped", { shown: Math.round(g.qr[2]), unit: size.unit })}</p>
+          <p className="text-caption text-secondary-foreground">{t("clamped", { shown: roundTo(g.qr[2], size.unit), unit: size.unit })}</p>
         ) : null}
       </div>
 
@@ -157,7 +177,7 @@ export function SizePanel({
             id="size-width"
             label={t("width")}
             field="width"
-            value={ownCanvas ? size.width : Math.round(g.width)}
+            value={ownCanvas ? size.width : roundTo(g.width, size.unit)}
             unit={size.unit}
             disabled={!ownCanvas}
             forceError={showErrors}
@@ -168,7 +188,7 @@ export function SizePanel({
             id="size-height"
             label={t("height")}
             field="height"
-            value={ownCanvas ? size.height : Math.round(g.height)}
+            value={ownCanvas ? size.height : roundTo(g.height, size.unit)}
             unit={size.unit}
             disabled={!ownCanvas}
             forceError={showErrors}
@@ -178,8 +198,8 @@ export function SizePanel({
         </div>
         {ownCanvas ? (
           <div className="flex flex-wrap gap-2">
-            {PX_PRESETS.map((p) => (
-              <Button key={p.key} type="button" size="sm" onClick={() => onChange({ size: presetSize(p.width, p.height) })}>
+            {(size.unit === "mm" ? MM_PRESETS : PX_PRESETS).map((p) => (
+              <Button key={p.key} type="button" size="sm" onClick={() => onChange({ size: presetSize(p.width, p.height, size.unit) })}>
                 {t(`presets.${p.key}`)}
               </Button>
             ))}
@@ -190,7 +210,14 @@ export function SizePanel({
       </div>
 
       <p className="rounded-md bg-subtle px-3.5 py-3 text-caption text-secondary-foreground">
-        {t("export", { width: Math.round(g.width * 2), height: Math.round(g.height * 2), unit: size.unit })}
+        {size.unit === "mm"
+          ? t("exportMm", {
+              width: Math.round(g.width * 10) / 10,
+              height: Math.round(g.height * 10) / 10,
+              pxWidth: Math.round((g.width / 25.4) * 300),
+              pxHeight: Math.round((g.height / 25.4) * 300),
+            })
+          : t("export", { width: Math.round(g.width * 2), height: Math.round(g.height * 2), unit: size.unit })}
       </p>
     </div>
   );

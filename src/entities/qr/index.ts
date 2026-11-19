@@ -30,8 +30,11 @@ export {
 } from "./model/design-schema";
 export { MODES_BY_TYPE, modeFor, QR_MODES, supportsMode, type QrMode } from "./model/modes";
 export {
+  convertSize,
   isValidSize,
   LEGACY_SIZE,
+  MM_PRESETS,
+  PX_PER_MM,
   parseSizeValue,
   presetSize,
   PX_PRESETS,

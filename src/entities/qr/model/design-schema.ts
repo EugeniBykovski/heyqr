@@ -41,7 +41,7 @@ export const designSettingsSchema = z.object({
   caption: z.string().max(200),
   // Optional: drafts and records from before HEY-35 have no size and render at LEGACY_SIZE.
   size: z
-    .object({ unit: z.enum(["px"]), qr: z.number(), width: z.number(), height: z.number() })
+    .object({ unit: z.enum(["px", "mm"]), qr: z.number(), width: z.number(), height: z.number() })
     .refine(isValidSize)
     .optional(),
 });

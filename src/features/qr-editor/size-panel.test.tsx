@@ -78,4 +78,21 @@ describe("Size panel (HEY-35)", () => {
     fireEvent.change(qrField(), { target: { value: "5" } });
     expect(qrField()).toHaveAttribute("aria-invalid", "true");
   });
+
+  it("Print · mm: the unit switch converts the size, mm accepts one decimal, and print presets apply (HEY-36)", () => {
+    renderPanel({ ...DEFAULT_DESIGN, preset: "caption", caption: "Scan me" });
+    fireEvent.click(screen.getByRole("button", { name: "Print · mm" }));
+    expect(latest.size).toEqual({ unit: "mm", qr: 43.3, width: 43.3, height: 52.9 });
+    fireEvent.change(qrField(), { target: { value: "25.5" } });
+    expect(latest.size?.qr).toBe(25.5);
+    fireEvent.change(qrField(), { target: { value: "25.55" } });
+    fireEvent.blur(qrField());
+    expect(latest.size?.qr).toBe(25.5);
+    expect(document.getElementById(qrField().getAttribute("aria-describedby") ?? "")?.textContent).toContain("10 to 200 mm");
+    fireEvent.click(screen.getByRole("button", { name: "A6 105×148" }));
+    expect(latest.size).toEqual({ unit: "mm", qr: 76, width: 105, height: 148 });
+    expect(screen.getByText(/File: 105 × 148 mm · PNG at 300 dpi: 1240 × 1748 px/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Screen · px" }));
+    expect(latest.size?.unit).toBe("px");
+  });
 });

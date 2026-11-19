@@ -77,6 +77,8 @@ export const QR_INKS = [
 
 /** Caption type size at the legacy 512 px code; it scales with the code so a resized layout keeps its look. */
 const CAPTION_PX_AT_LEGACY = 40;
+/** 1 pt in mm (the renderer converts print caption sizes with the same factor). */
+const MM_PER_PT = 0.3528;
 
 export function designToLayout(d: EditorDesign): Layout {
   const logo =
@@ -101,7 +103,8 @@ export function designToLayout(d: EditorDesign): Layout {
     caption: {
       text: captionText,
       fontFamily: "DM Sans, sans-serif",
-      size: (CAPTION_PX_AT_LEGACY * size.qr) / LEGACY_SIZE.qr,
+      // px layouts: px. mm layouts: pt (the renderer's caption unit for print), same share of the code as on screen.
+      size: ((CAPTION_PX_AT_LEGACY * size.qr) / LEGACY_SIZE.qr) * (size.unit === "mm" ? 1 / MM_PER_PT : 1),
       weight: 700,
       align: "center",
       position: "after",
