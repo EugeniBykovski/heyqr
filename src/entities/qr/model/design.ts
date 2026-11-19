@@ -33,8 +33,12 @@ export interface EditorDesign {
   pattern: ModuleShape;
   eyeFrame: EyeFrameShape;
   eyeBall: EyeBallShape;
+  /** Data modules. */
   fg: string;
   bg: string;
+  /** Corner frames (finder rings) and corner centres. Unset = follow `fg`, as before they could be set (HEY-33). */
+  eye?: string;
+  eyeIn?: string;
   logo: CenterLogo;
   logoSize: number;
   preset: EditorPreset;
@@ -87,7 +91,7 @@ export function designToLayout(d: EditorDesign): Layout {
     height: d.preset === "caption" ? Math.round(BASE * 1.22) : BASE,
     qrSize: BASE,
     border: false,
-    colors: { fg: d.fg, eye: d.fg, eyeIn: d.fg, bg: d.bg, frame: d.fg, caption: d.preset === "frame" ? d.bg : d.fg },
+    colors: { fg: d.fg, eye: d.eye ?? d.fg, eyeIn: d.eyeIn ?? d.fg, bg: d.bg, frame: d.fg, caption: d.preset === "frame" ? d.bg : d.fg },
     style: { pattern: d.pattern, eyeFrame: d.eyeFrame, eyeBall: d.eyeBall, logo },
     caption: { text: captionText, fontFamily: "DM Sans, sans-serif", size: 40, weight: 700, align: "center", position: "after" },
   };

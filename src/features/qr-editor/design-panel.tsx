@@ -2,8 +2,17 @@
 
 import { ImagePlusIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { CENTER_ICONS, EYE_BALL_SHAPES, EYE_FRAME_SHAPES, MODULE_SHAPES, type CenterIcon, type EditorDesign } from "@/entities/qr";
+import {
+  CENTER_ICONS,
+  DEFAULT_DESIGN,
+  EYE_BALL_SHAPES,
+  EYE_FRAME_SHAPES,
+  MODULE_SHAPES,
+  type CenterIcon,
+  type EditorDesign,
+} from "@/entities/qr";
 import { cn } from "@/shared/lib/utils";
+import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 import { OptionGrid } from "./option-grid";
@@ -67,9 +76,24 @@ export function DesignPanel({ design, onChange }: { design: EditorDesign; onChan
           render={(o) => t(`shapes.${o}`)}
         />
       </div>
+      {/* Design "Colors": modules, corner frames, corner centers and background. Corners follow the modules until set. */}
       <fieldset className="grid gap-4 sm:grid-cols-2">
-        <legend className="mb-2 text-label">{t("colors")}</legend>
+        <legend className="mb-2 flex w-full items-center justify-between gap-3 text-label">
+          {t("colors")}
+          {design.fg !== DEFAULT_DESIGN.fg || design.bg !== DEFAULT_DESIGN.bg || design.eye !== undefined || design.eyeIn !== undefined ? (
+            <Button
+              type="button"
+              variant="link"
+              size="sm"
+              onClick={() => onChange({ fg: DEFAULT_DESIGN.fg, bg: DEFAULT_DESIGN.bg, eye: undefined, eyeIn: undefined })}
+            >
+              {t("resetColors")}
+            </Button>
+          ) : null}
+        </legend>
         <ColorField id="color-fg" label={t("fg")} value={design.fg} onChange={(fg) => onChange({ fg })} />
+        <ColorField id="color-eye" label={t("eyeColor")} value={design.eye ?? design.fg} onChange={(eye) => onChange({ eye })} />
+        <ColorField id="color-eye-in" label={t("eyeInColor")} value={design.eyeIn ?? design.fg} onChange={(eyeIn) => onChange({ eyeIn })} />
         <ColorField id="color-bg" label={t("bg")} value={design.bg} onChange={(bg) => onChange({ bg })} />
       </fieldset>
       <fieldset className="flex flex-col gap-3">
