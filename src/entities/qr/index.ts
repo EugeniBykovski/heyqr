@@ -2,6 +2,7 @@ export {
   CAPTION_ALIGNS,
   CARD_RATIO,
   CENTER_ICONS,
+  defaultCaptionAlign,
   defaultLogoPlate,
   LOGO_PLATES,
   DEFAULT_DESIGN,

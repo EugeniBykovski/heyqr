@@ -50,8 +50,12 @@ export const captionSizeUnit = (layoutUnit: "px" | "mm"): CaptionSizeUnit => (la
 const round1 = (v: number) => Math.round(v * 10) / 10;
 
 /** The size used when none was chosen, in the layout's caption unit (unrounded, exactly as before HEY-45). */
-export function defaultCaptionSize(size: { unit: "px" | "mm"; qr: number }): number {
-  return ((CAPTION_PX_AT_LEGACY * size.qr) / LEGACY_QR_PX) * (size.unit === "mm" ? 1 / MM_PER_PT : 1);
+export function defaultCaptionSize(size: { unit: "px" | "mm"; qr: number }, preset?: string): number {
+  // Cards follow the design's card presets (HEY-55): 12 pt under a 41 mm code on the vertical card, 14 pt beside a 35 mm
+  // code on the horizontal one, kept as the same share of the code at any size or unit.
+  const share =
+    preset === "vertical" ? (12 * MM_PER_PT) / 41 : preset === "horizontal" ? (14 * MM_PER_PT) / 35 : CAPTION_PX_AT_LEGACY / LEGACY_QR_PX;
+  return share * size.qr * (size.unit === "mm" ? 1 / MM_PER_PT : 1);
 }
 
 /** A typed size in the given unit, or null when it isn't a number within the limits with at most one decimal. */

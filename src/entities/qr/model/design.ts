@@ -94,6 +94,8 @@ export const LOGO_PLATES: readonly LogoPlate[] = ["none", "square", "circle"];
 /** The backing a logo has when none was chosen. */
 export const defaultLogoPlate = (logo: CenterLogo): LogoPlate => (logo.kind === "icon" ? "circle" : "square");
 export const CAPTION_ALIGNS: readonly CaptionAlign[] = ["left", "center", "right"];
+/** The alignment a caption has when none was chosen: left beside the code on the horizontal card, centred elsewhere. */
+export const defaultCaptionAlign = (preset: EditorPreset): CaptionAlign => (preset === "horizontal" ? "left" : "center");
 
 export const DEFAULT_DESIGN: EditorDesign = {
   name: "",
@@ -174,9 +176,10 @@ export function designToLayout(d: EditorDesign): Layout {
       text: captionText,
       ...captionTypeface(d),
       // px layouts: px. mm layouts: pt (the renderer's caption unit for print). Unset: a share of the code, as before.
-      size: d.captionSize ?? defaultCaptionSize(size),
+      size: d.captionSize ?? defaultCaptionSize(size, d.preset),
       // Frames centre their label; the caption layout aligns its lines as chosen (HEY-46).
-      align: hasCaptionBand(d.preset) ? (d.captionAlign ?? "center") : "center",
+      // The horizontal card's caption sits beside the code, left-aligned by default (design preset); others centre.
+      align: hasCaptionBand(d.preset) ? (d.captionAlign ?? defaultCaptionAlign(d.preset)) : "center",
       position: "after",
     },
   };
