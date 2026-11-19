@@ -10,7 +10,8 @@ import { db, schema } from "../db";
 import { restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { encodedValue } from "../qr/export";
 import { saveQrWithLayouts } from "../qr/save-qr";
-import { updateLayoutDesign } from "../qr/update-layout";
+import { addLayoutFrom, updateLayoutDesign } from "../qr/update-layout";
+import { newId } from "../db/ids";
 
 export type ActionResult<T = undefined> =
   { ok: true; data: T } | { ok: false; error: "unauthorized" | "invalid" | "not_found" | "too_long" | "failed" };
@@ -74,6 +75,14 @@ const layoutEditSchema = z.object({
   // Validated against the versioned design contract in updateLayoutDesign.
   layout: z.unknown(),
   editor: z.unknown(),
+  name: z.string().max(60).optional(),
+});
+
+const addLayoutSchema = z.object({
+  qrCodeId: z.string().min(1).max(64),
+  name: z.string().trim().min(1).max(60),
+  layout: z.unknown(),
+  editor: z.unknown(),
 });
 
 /**
@@ -88,6 +97,21 @@ export async function saveLayoutEdit(
     const parsed = layoutEditSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "invalid" };
     const result = await updateLayoutDesign(db, user.id, parsed.data, (qr) => encodedValue(qr));
+    if (result.ok) {
+      revalidatePath("/[locale]/dashboard", "page");
+      revalidatePath("/[locale]/dashboard/qr/[id]", "page");
+    }
+    return result;
+  });
+}
+
+/** Design "New layout from this one": a new named layout of the user's code, from the current editor state. */
+export async function addLayout(input: z.input<typeof addLayoutSchema>): Promise<ActionResult<{ layoutId: string }>> {
+  return guard(async () => {
+    const user = await requireUser();
+    const parsed = addLayoutSchema.safeParse(input);
+    if (!parsed.success) return { ok: false, error: "invalid" };
+    const result = await addLayoutFrom(db, user.id, parsed.data, (qr) => encodedValue(qr), newId);
     if (result.ok) {
       revalidatePath("/[locale]/dashboard", "page");
       revalidatePath("/[locale]/dashboard/qr/[id]", "page");

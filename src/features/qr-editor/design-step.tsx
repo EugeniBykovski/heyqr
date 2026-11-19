@@ -60,6 +60,8 @@ export function DesignStep({
   bottomInfo,
   note,
   offerChooser = false,
+  stageTitle,
+  panelHead,
 }: {
   design: EditorDesign;
   onChange: (patch: Partial<EditorDesign>) => void;
@@ -77,6 +79,10 @@ export function DesignStep({
   note: string;
   /** New codes ask Custom or Branded first (design 2.4); a saved layout opens straight in the workspace. */
   offerChooser?: boolean;
+  /** Replaces the stage bar title, e.g. the layouts of a saved code as tabs (design "ltabs"). */
+  stageTitle?: ReactNode;
+  /** Shown above the settings, e.g. the layout name (Edit design). */
+  panelHead?: ReactNode;
 }) {
   const t = useTranslations("editor");
   const ts = useTranslations("editor.stage");
@@ -147,7 +153,7 @@ export function DesignStep({
       <section aria-label={t("preview")} className={editorStage}>
         <Stage className="rounded-xl" tone={view.tone}>
           <StageBar>
-            <span className="min-w-0 grow truncate px-1 text-label">{title}</span>
+            {stageTitle ?? <span className="min-w-0 grow truncate px-1 text-label">{title}</span>}
             <Badge variant={design.model === "dynamic" ? "accent" : "neutral"}>{t(`model.${design.model}`)}</Badge>
             <div className="flex basis-full flex-wrap items-center gap-2 max-sm:hidden lg:basis-auto">
               {historyButtons}
@@ -214,6 +220,7 @@ export function DesignStep({
           <span className="text-label">{t("groups.label")}</span>
           {historyButtons}
         </div>
+        {panelHead}
         <div role="group" aria-label={tm("label")} className="mb-5 flex rounded-full border border-border bg-subtle p-0.75">
           {(["custom", "branded"] as const).map((m) => (
             <button

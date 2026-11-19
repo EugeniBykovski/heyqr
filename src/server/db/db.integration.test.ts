@@ -11,7 +11,7 @@ import { DEFAULT_DESIGN, designToLayout } from "../../entities/qr/model/design";
 import { designSettingsOf, readLayoutRecord } from "../../entities/qr/model/design-schema";
 import { RESTORE_WINDOW_MS, restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
-import { updateLayoutDesign } from "../qr/update-layout";
+import { addLayoutFrom, updateLayoutDesign } from "../qr/update-layout";
 import { checkDatabase, EXPECTED_MIGRATIONS, REQUIRED_TABLES } from "./check";
 import { SEED_SCAN_DAYS, seedFixtures } from "./fixtures";
 import { runMigrations } from "./migrator";
@@ -573,6 +573,71 @@ describe.skipIf(!url)("edit one saved layout (HEY-45, real PostgreSQL)", () => {
     const qrAfter = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, qrCodeId) });
     expect(qrAfter && { ...qrAfter, updatedAt: null }).toEqual(qrBefore && { ...qrBefore, updatedAt: null });
     expect(await db.query.qrCode.findMany({ where: (q, { eq }) => eq(q.userId, owner.id) })).toHaveLength(1);
+  });
+
+  it("New layout from this one: adds a named layout after the others; the code and its layouts stay; owner only", async () => {
+    const saved = await saveQrWithLayouts(db, owner.id, {
+      name: "Café",
+      model: "static",
+      content: { type: "website", url: "https://littlefern.cafe/menu" },
+      layouts: [
+        { name: "Portfolio card", layout: designToLayout(card), editor: designSettingsOf(card) },
+        { name: "Menu sticker", layout: designToLayout(sticker), editor: designSettingsOf(sticker) },
+      ],
+    });
+    if (!saved.ok) throw new Error("save failed");
+    const { qrCodeId, layoutIds } = saved.data;
+    const before = await rows(qrCodeId);
+    const qrBefore = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, qrCodeId) });
+    const edited = { ...card, preset: "vertical" as const, fg: "#1F4D3A" };
+    let n = 0;
+    const result = await addLayoutFrom(
+      db,
+      owner.id,
+      { qrCodeId, name: "  Poster  ", layout: designToLayout(edited), editor: designSettingsOf(edited) },
+      encoded,
+      () => `new-layout-${++n}`,
+    );
+    expect(result).toEqual({ ok: true, data: { layoutId: "new-layout-1" } });
+    const after = await rows(qrCodeId);
+    expect(after.map((l) => [l.id, l.name])).toEqual([...layoutIds.map((id, i) => [id, before[i]?.name]), ["new-layout-1", "Poster"]]);
+    expect(after.slice(0, 2).map((l) => l.design)).toEqual(before.map((l) => l.design)); // the others stay as they were
+    const read = readLayoutRecord(after[2]?.design);
+    expect(read.ok && [read.value.layout.preset, read.value.editor?.fg]).toEqual(["vertical", "#1F4D3A"]);
+    const qrAfter = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, qrCodeId) });
+    expect(qrAfter && { ...qrAfter, updatedAt: null }).toEqual(qrBefore && { ...qrBefore, updatedAt: null });
+    // Another account, a deleted code, an empty name and an invalid design are refused.
+    const args = { qrCodeId, name: "X", layout: designToLayout(card), editor: designSettingsOf(card) };
+    expect(await addLayoutFrom(db, other.id, args, encoded, () => "nope")).toEqual({ ok: false, error: "not_found" });
+    expect(await addLayoutFrom(db, owner.id, { ...args, name: "   " }, encoded, () => "nope")).toEqual({ ok: false, error: "invalid" });
+    expect(await addLayoutFrom(db, owner.id, { ...args, layout: { nope: true } }, encoded, () => "nope")).toEqual({
+      ok: false,
+      error: "invalid",
+    });
+    await db.update(schema.qrCode).set({ deletedAt: new Date() }).where(eq(schema.qrCode.id, qrCodeId));
+    expect(await addLayoutFrom(db, owner.id, args, encoded, () => "nope")).toEqual({ ok: false, error: "not_found" });
+    expect(await rows(qrCodeId)).toHaveLength(3);
+  });
+
+  it("saving a layout with a name renames only that layout", async () => {
+    const saved = await saveQrWithLayouts(db, owner.id, {
+      name: "Café",
+      model: "static",
+      content: { type: "website", url: "https://littlefern.cafe/menu" },
+      layouts: [
+        { name: "Portfolio card", layout: designToLayout(card), editor: designSettingsOf(card) },
+        { name: "Menu sticker", layout: designToLayout(sticker), editor: designSettingsOf(sticker) },
+      ],
+    });
+    if (!saved.ok) throw new Error("save failed");
+    const { qrCodeId, layoutIds } = saved.data;
+    await updateLayoutDesign(
+      db,
+      owner.id,
+      { qrCodeId, layoutId: layoutIds[1] ?? "", layout: designToLayout(sticker), editor: designSettingsOf(sticker), name: " Table tent " },
+      encoded,
+    );
+    expect((await rows(qrCodeId)).map((l) => l.name)).toEqual(["Portfolio card", "Table tent"]);
   });
 
   it("refuses another account, a layout of another code, a deleted code and an invalid design", async () => {

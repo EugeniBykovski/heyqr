@@ -798,7 +798,15 @@
       "failed": "Couldn’t save the design. Your changes are still here.",
       "notFound": "This code or layout no longer exists.",
       "hint": "Changes apply to this layout only",
-      "note": "Saving updates this layout. Content, payment and links stay the same."
+      "note": "Saving updates this layout. Content, payment and links stay the same.",
+      "layouts": "Layouts of this code",
+      "newLayout": "New layout",
+      "newName": "Layout {n}",
+      "added": "“{name}” created from the current layout. The others stay as they were.",
+      "addFailed": "We couldn’t add the layout. Your edits are still here; try again.",
+      "unsavedSwitch": "This layout has unsaved changes.",
+      "discardSwitch": "Discard and switch",
+      "layoutName": "Layout name"
     },
     "captionStyle": {
       "align": "Align",

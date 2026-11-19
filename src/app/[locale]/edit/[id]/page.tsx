@@ -37,6 +37,7 @@ export default async function EditDesignPage({ params, searchParams }: PageProps
       qrCodeId={qr.id}
       layoutId={layout.id}
       layoutName={layout.name}
+      layouts={qr.layouts.map((l) => ({ id: l.id, name: l.name }))}
       initialDesign={designFromSaved(qr, layout.design)}
       value={encodedValue(qr)}
       detailsHref={`/dashboard/qr/${qr.id}`}
