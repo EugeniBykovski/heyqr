@@ -5,12 +5,14 @@ import { ChevronDownIcon, CircleAlertIcon, SmartphoneIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, type FormEvent } from "react";
 import type { QrMode } from "@/entities/qr";
+import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 import { BottomBar, BottomBarInfo } from "./bottom-bar";
 import { ContentForm } from "./content-form";
 import { ContentPreview } from "./content-preview";
+import { contentAside, contentStepGrid, previewToggle } from "./editor-layout";
 import type { ContentErrors } from "./content-validation";
 import { TooLongNotice } from "./too-long-notice";
 
@@ -53,7 +55,7 @@ export function ContentStep({
   };
 
   return (
-    <div className="group/step mx-auto grid w-full max-w-page gap-6 px-4 pt-6 pb-8 sm:px-6 lg:grid-cols-[minmax(0,1fr)_23.75rem] lg:items-start lg:gap-14 lg:px-8 lg:pt-10 lg:pb-16 xl:grid-cols-[minmax(0,38.75rem)_26.25rem] xl:justify-center xl:gap-24">
+    <div className={cn("group/step", contentStepGrid)}>
       <form noValidate onSubmit={submit} aria-labelledby="content-step-title" className="flex min-w-0 flex-col gap-4.5">
         <header className="mb-1 flex max-w-measure flex-col gap-2">
           <span className="text-label text-accent-text">
@@ -68,10 +70,11 @@ export function ContentStep({
         <div className="lg:hidden">
           <button
             type="button"
+            data-slot="preview-toggle"
             aria-expanded={previewOpen}
             aria-controls="after-scanning"
             onClick={() => setPreviewOpen((o) => !o)}
-            className="flex min-h-14 w-full cursor-pointer items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2.5 text-left"
+            className={previewToggle}
           >
             <span className="grid size-9 shrink-0 place-items-center rounded-sm bg-subtle">
               <SmartphoneIcon aria-hidden className="size-5" />
@@ -86,11 +89,10 @@ export function ContentStep({
               data-open={previewOpen}
             />
           </button>
-          {previewOpen ? (
-            <div id="after-scanning" className="animate-rise pt-4 pb-2">
-              <ContentPreview content={content} mode={mode} />
-            </div>
-          ) : null}
+          {/* Always in the document so aria-controls points at it; hidden while collapsed. */}
+          <div id="after-scanning" hidden={!previewOpen} className="animate-rise pt-4 pb-2">
+            {previewOpen ? <ContentPreview content={content} mode={mode} /> : null}
+          </div>
         </div>
 
         <ContentForm content={content} onChange={onContentChange} errors={visibleErrors} />
@@ -133,7 +135,7 @@ export function ContentStep({
         </BottomBar>
       </form>
 
-      <aside aria-label={t("afterScanning.label")} className="sticky top-[calc(var(--spacing-header)+1.5rem)] max-lg:hidden">
+      <aside aria-label={t("afterScanning.label")} className={contentAside}>
         <ContentPreview content={content} mode={mode} />
       </aside>
     </div>

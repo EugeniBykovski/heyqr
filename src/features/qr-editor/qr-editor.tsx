@@ -8,7 +8,7 @@ import { Tabs as TabsPrimitive } from "radix-ui";
 import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { env } from "@/env";
-import { designSettingsOf, designToLayout, emptyContent, isContentComplete, modeFor, QrPreview, type EditorDesign } from "@/entities/qr";
+import { designSettingsOf, designToLayout, emptyContent, isContentComplete, modeFor, type EditorDesign } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
 import { saveDraft } from "@/server/actions/qr";
 import { pricing } from "@/shared/config/pricing";
@@ -18,6 +18,7 @@ import { Stage, StageBar, StageCanvas, StageFoot } from "@/shared/ui/stage";
 import { BottomBar, BottomBarInfo } from "./bottom-bar";
 import { ContentStep } from "./content-step";
 import { contentErrors } from "./content-validation";
+import { DesignCanvas, useShownRender } from "./design-canvas";
 import { DesignPanel } from "./design-panel";
 import { editorPanel, editorRoot, editorStage, editorTopBar, editorTopBarInner } from "./editor-layout";
 import { EditorSteps } from "./editor-steps";
@@ -77,7 +78,13 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
   const tooLong = capacity.ok ? null : capacity;
   const complete = isContentComplete(design.content) && Object.keys(errors).length === 0 && !tooLong;
   const value = design.model === "dynamic" || complete || tooLong ? encoded : "https://heyqr.app";
-  const scan = useMemo(() => (tooLong ? null : composeLayout(layout, value).scan), [layout, value, tooLong]);
+  // HEY-41: the canvas and its scan check render deferred, so settings stay responsive and the canvas keeps its last
+  // finished render while a newer one is built. React discards a deferred render that newer settings overtake.
+  const { layout: shownLayout, value: shownValue, rebuilding } = useShownRender(layout, value);
+  const scan = useMemo(
+    () => (layoutCapacity(shownLayout, shownValue).ok ? composeLayout(shownLayout, shownValue).scan : null),
+    [shownLayout, shownValue],
+  );
   const price = format.number((design.model === "dynamic" ? pricing.dynamicMonthlyCents : pricing.staticCents) / 100, {
     style: "currency",
     currency: pricing.currency,
@@ -129,6 +136,8 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
   );
 
   const download = () => {
+    // The scan check shown may still describe the previous settings; export only what passes now.
+    if (!complete || !composeLayout(layout, value).scan.ok) return;
     const firstInvalid = invalidColors[0];
     if (firstInvalid) {
       setShowColorErrors(true);
@@ -243,15 +252,15 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
                 <Badge variant={design.model === "dynamic" ? "accent" : "neutral"}>{t(`model.${design.model}`)}</Badge>
               </StageBar>
               <StageCanvas className="select-none">
-                <div className="relative size-full">
-                  <QrPreview layout={layout} value={value} label={t("preview")} tooLongLabel={t("tooLong.preview")} className="size-full" />
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 grid -rotate-30 place-items-center text-h1 font-bold tracking-[0.3em] text-foreground/7 uppercase"
-                  >
-                    {t("preview")}
-                  </span>
-                </div>
+                <DesignCanvas
+                  layout={shownLayout}
+                  value={shownValue}
+                  rebuilding={rebuilding}
+                  label={t("preview")}
+                  tooLongLabel={t("tooLong.preview")}
+                  watermark={t("preview")}
+                  updatingLabel={t("updatingPreview")}
+                />
               </StageCanvas>
               <StageFoot>
                 {scan ? <ScanStatus report={scan} compact /> : <Badge variant="danger">{t("tooLong.badge")}</Badge>}

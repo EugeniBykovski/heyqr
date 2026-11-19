@@ -4,8 +4,10 @@ import { QR_CONTENT_TYPES, type QrContentType } from "@heyqr/qr-core";
 import { CheckIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { QrMode } from "@/entities/qr";
+import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { BottomBar, BottomBarInfo } from "./bottom-bar";
+import { typeCard, typeGrid, typeStepRoot } from "./editor-layout";
 import { ModeChoice } from "./mode-choice";
 import { TYPE_ICONS } from "./type-icons";
 
@@ -30,12 +32,12 @@ export function TypeStep({
   const tTypes = useTranslations("home.types");
 
   return (
-    <div className="group/step @container/panel mx-auto w-full max-w-[56.25rem] px-4 pt-6 pb-8 sm:px-6 lg:px-8 lg:pt-10 lg:pb-16">
+    <div className={cn("group/step @container/panel", typeStepRoot)}>
       <header className="mb-6 flex max-w-measure flex-col gap-2">
         <h1 className="text-h1">{t("typeStep.title")}</h1>
         <p className="text-secondary-foreground">{t("typeStep.lead")}</p>
       </header>
-      <div role="group" aria-label={t("typeStep.groupLabel")} className="grid gap-3 min-[30rem]:grid-cols-2">
+      <div role="group" aria-label={t("typeStep.groupLabel")} className={typeGrid}>
         {QR_CONTENT_TYPES.map((value) => {
           const Icon = TYPE_ICONS[value];
           const selected = value === type;
@@ -45,7 +47,10 @@ export function TypeStep({
               type="button"
               aria-pressed={selected}
               onClick={() => onTypeChange(value)}
-              className="group relative flex min-h-28 cursor-pointer items-start gap-4 rounded-xl border border-border bg-surface p-4.5 text-left transition-[border-color,box-shadow,background-color] duration-(--motion-fast) hover:border-border-hover hover:shadow-2 aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]"
+              className={cn(
+                typeCard,
+                "group cursor-pointer transition-[border-color,box-shadow,background-color] duration-(--motion-fast) hover:border-border-hover hover:shadow-2 aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]",
+              )}
             >
               {selected ? (
                 <span className="absolute top-3 right-3 grid size-5 place-items-center rounded-full bg-selected-mark text-inverse-foreground">

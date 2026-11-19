@@ -1,13 +1,13 @@
 import { getTranslations } from "next-intl/server";
-import { Skeleton } from "@/shared/ui/skeleton";
+import { Skeleton, SkeletonText, skeletonReveal } from "@/shared/ui/skeleton";
 import { LibraryHeader, QrLibrarySkeleton } from "@/widgets/qr-library";
 
 /** Network wait for the library: same header and row boxes as the loaded page, plus one polite status message. */
 export default async function DashboardLoading() {
   const t = await getTranslations("dashboard");
   return (
-    <div>
-      <LibraryHeader title={t("title")} createLabel={t("new")} sub={<Skeleton className="mt-1 h-3.5 w-48 rounded-full" />} />
+    <div className={skeletonReveal}>
+      <LibraryHeader title={t("title")} createLabel={t("new")} sub={<SkeletonText barClassName="w-48" />} />
       <p role="status" className="sr-only">
         {t("loading")}
       </p>

@@ -560,7 +560,9 @@
       "place": "Place",
       "addToCalendar": "Add to calendar",
       "wifiKicker": "Join Wi-Fi network",
-      "website": "Website"
+      "website": "Website",
+      "textKicker": "Scanned text",
+      "loading": "Loading preview"
     },
     "passwordShow": "Show",
     "passwordHide": "Hide",
@@ -605,7 +607,8 @@
       "unitHintMm": "Print · mm: for print. The SVG has its real size in mm; PNG files are made at 300 dpi.",
       "invalidMm": "Enter a number from {min} to {max} mm, with at most one decimal.",
       "exportMm": "File: {width} × {height} mm · PNG at 300 dpi: {pxWidth} × {pxHeight} px."
-    }
+    },
+    "updatingPreview": "Updating preview…"
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",

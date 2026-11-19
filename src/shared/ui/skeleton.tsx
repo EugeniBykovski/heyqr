@@ -16,3 +16,36 @@ export function Skeleton({ className, ...props }: ComponentProps<"div">) {
     />
   );
 }
+
+/**
+ * For the root of a loading view (HEY-41): its boxes are laid out from the first frame, so nothing shifts, but they
+ * appear only after 200 ms; a load that finishes sooner shows no skeleton at all. Reduced motion skips the fade.
+ */
+export const skeletonReveal = "animate-skeleton-in";
+
+/** A quiet empty-state shape: the skeleton's fill without the sheen (design "ph"). */
+export function Placeholder({ className, ...props }: ComponentProps<"span">) {
+  return <span data-slot="placeholder" aria-hidden className={cn("block shrink-0 rounded-full bg-skeleton", className)} {...props} />;
+}
+
+/** One line of text while loading: the line box of the given type role (`className`), with a bar inside it. */
+export function SkeletonText({ className, barClassName }: { className?: string; barClassName?: string }) {
+  return (
+    <span aria-hidden className={cn("flex h-[1lh] items-center", className)}>
+      <Skeleton className={cn("h-[0.7em] w-full rounded-full", barClassName)} />
+    </span>
+  );
+}
+
+/**
+ * Text whose copy is known while loading (fixed labels): the real words reserve exactly their space, line wraps included,
+ * but stay invisible and out of the accessibility tree; a bar marks the first line.
+ */
+export function SkeletonGhostText({ text, className, barClassName }: { text: string; className?: string; barClassName?: string }) {
+  return (
+    <span aria-hidden className={cn("relative", className)}>
+      <span className="invisible">{text}</span>
+      <Skeleton className={cn("absolute top-[0.15lh] left-0 h-[0.7lh] w-full rounded-full", barClassName)} />
+    </span>
+  );
+}
