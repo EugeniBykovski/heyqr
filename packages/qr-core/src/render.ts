@@ -127,6 +127,19 @@ export function eclForStyle(style: Pick<QrStyle, "logo" | "centerText">): ErrorC
  */
 export const MIN_CONTRAST = { modules: 3, eyeFrame: 3, eyeCenter: 2.5 } as const;
 
+/**
+ * HEY-52: the centre logo's size limits, as a fraction of the QR symbol's width (its modules, quiet zone excluded).
+ * The size is the logo box: the image sits centred in it at its own aspect ratio (inscribed in the circle on a circular
+ * backing). The area cleared of modules is that box plus 0.8 module on each side with a backing (0.5 without), and the
+ * scan check counts that whole cleared area. Design handoff: Logo size 10–46 %.
+ */
+export const CENTER_LOGO_SIZE = { min: 0.1, max: 0.46 } as const;
+
+/** The size a centre logo is drawn at: any saved value, kept within CENTER_LOGO_SIZE (older layouts are not rewritten). */
+export function centerLogoSize(size: number): number {
+  return Math.max(CENTER_LOGO_SIZE.min, Math.min(CENTER_LOGO_SIZE.max, Number.isFinite(size) ? size : CENTER_LOGO_SIZE.min));
+}
+
 export function renderQr(value: string, style: QrStyle): RenderedQr {
   const logo = style.logo ?? null;
   const centerText = style.centerText?.text ? style.centerText : null;
@@ -145,10 +158,12 @@ export function renderQr(value: string, style: QrStyle): RenderedQr {
     : logo
       ? {
           shape: logo.tile || logo.plate === "square" || logo.plate === "none" ? "square" : "circle",
-          size: Math.max(0.08, Math.min(0.46, logo.size)),
+          size: centerLogoSize(logo.size),
           halfW: 0,
           halfH: 0,
-          pad: logo.plate === "none" && !logo.tile ? 0.3 : 0.8,
+          // Cleared margin around the logo box, in modules. A module is cleared when its centre is inside; 0.5 or more
+          // means no drawn module reaches into the box (HEY-52: with 0.3, modules overlapped an unbacked logo by 0.2).
+          pad: logo.plate === "none" && !logo.tile ? 0.5 : 0.8,
         }
       : null;
 
@@ -183,9 +198,10 @@ export function renderQr(value: string, style: QrStyle): RenderedQr {
 
   let maxLogoSize = 0;
   if (exc && exc.shape !== "rect") {
-    for (let s = 0.46; s >= 0.079; s -= 0.02) {
-      if (recoverable(s)) {
-        maxLogoSize = Math.floor(s * 100) / 100;
+    // Whole percentages, largest first: the biggest logo (with its cleared area) the code can still recover from.
+    for (let pct = Math.round(CENTER_LOGO_SIZE.max * 100); pct >= Math.round(CENTER_LOGO_SIZE.min * 100); pct--) {
+      if (recoverable(pct / 100)) {
+        maxLogoSize = pct / 100;
         break;
       }
     }

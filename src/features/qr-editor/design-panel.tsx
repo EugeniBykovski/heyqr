@@ -1,6 +1,6 @@
 "use client";
 
-import { parseHexColor } from "@heyqr/qr-core";
+import { CENTER_LOGO_SIZE, centerLogoSize, parseHexColor } from "@heyqr/qr-core";
 import { CircleAlertIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -112,7 +112,10 @@ export function DesignPanel({
   onChange,
   showColorErrors,
   onColorValidity,
+  logoScanMax,
 }: {
+  /** The largest logo size that still scans for this design (scan check), shown beside the slider. */
+  logoScanMax?: number;
   design: EditorDesign;
   onChange: (patch: Partial<EditorDesign>) => void;
   /** Show every invalid colour field's error now (an Export was attempted). */
@@ -122,6 +125,9 @@ export function DesignPanel({
 }) {
   const t = useTranslations("editor");
   const [logoFeedback, setLogoFeedback] = useState<LogoFeedbackState>(null);
+  // Older layouts may hold a size outside the limits; it is drawn within them and only changes when edited.
+  const drawnLogoSize = centerLogoSize(design.logoSize);
+  const savedOverMax = design.logoSize > CENTER_LOGO_SIZE.max;
   const iconKeys = Object.keys(CENTER_ICONS) as CenterIcon[];
   const logoValue = design.logo.kind === "icon" ? design.logo.icon : design.logo.kind;
 
@@ -245,17 +251,31 @@ export function DesignPanel({
         <LogoFeedback feedback={logoFeedback} />
         {design.logo.kind !== "none" ? (
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="logo-size">{t("logoSize")}</Label>
+            {/* HEY-52: 10–46 % of the code's width (design handoff); the renderer draws any saved value within it. */}
+            <div className="flex items-baseline justify-between gap-3">
+              <Label htmlFor="logo-size">{t("logoSize")}</Label>
+              <span id="logo-size-value" className="text-caption text-muted-foreground tabular-nums">
+                {logoScanMax
+                  ? t("logoSizeValue", { size: Math.round(drawnLogoSize * 100), max: Math.round(logoScanMax * 100) })
+                  : `${Math.round(drawnLogoSize * 100)}%`}
+              </span>
+            </div>
             <input
               id="logo-size"
               type="range"
-              min={0.12}
-              max={0.36}
+              min={CENTER_LOGO_SIZE.min}
+              max={CENTER_LOGO_SIZE.max}
               step={0.01}
-              value={design.logoSize}
+              value={drawnLogoSize}
+              aria-describedby={`logo-size-value${savedOverMax ? " logo-size-legacy" : ""}`}
               onChange={(e) => onChange({ logoSize: Number(e.target.value) })}
               className="h-11 w-full accent-primary"
             />
+            {savedOverMax ? (
+              <p id="logo-size-legacy" className="text-caption text-muted-foreground">
+                {t("logoSizeLegacy", { saved: Math.round(design.logoSize * 100), max: Math.round(CENTER_LOGO_SIZE.max * 100) })}
+              </p>
+            ) : null}
           </div>
         ) : null}
         {design.logo.kind !== "none" ? (
