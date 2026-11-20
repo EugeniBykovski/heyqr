@@ -119,6 +119,11 @@ export interface EditorDesign {
   captionColor?: string;
   /** Caption type size (HEY-45): px for px layouts, pt for mm layouts. Unset = defaultCaptionSize (older layouts). */
   captionSize?: number;
+  /**
+   * HEY-59: the card canvas (Vertical / Horizontal card) as chosen in Size, independent of the code size. Unset (cards
+   * from before HEY-59, or never resized): the card keeps its design proportions from the code (CARD_RATIO).
+   */
+  cardSize?: { width: number; height: number };
   /** Design 1.8 Size. Unset (every draft before HEY-35) renders at LEGACY_SIZE, exactly as before. */
   size?: DesignSize;
   /** Design "Colors · Frame": the frame and card border colour. Unset = the module colour, as before. */
@@ -274,7 +279,7 @@ export function designToLayout(d: EditorDesign): Layout {
     d.preset === "caption"
       ? { width: size.width, height: size.height }
       : d.preset === "vertical" || d.preset === "horizontal"
-        ? { width: round(size.qr * CARD_RATIO[d.preset].width), height: round(size.qr * CARD_RATIO[d.preset].height) }
+        ? (d.cardSize ?? { width: round(size.qr * CARD_RATIO[d.preset].width), height: round(size.qr * CARD_RATIO[d.preset].height) })
         : { width: size.qr, height: size.qr };
   return {
     preset: d.preset,

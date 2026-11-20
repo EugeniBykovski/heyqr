@@ -59,6 +59,39 @@ const CASES: Case[] = [
       [{ dpi: 1200 }, [1205, 1205]],
     ],
   },
+  {
+    // HEY-59 / design 1.8: a 90 × 50 mm business card with a 35 mm code (quiet zone included). 300 dpi: 1062.99 ×
+    // 590.55 → 1063 × 591; 600 dpi: 2125.98 × 1181.10 → 2126 × 1181. The card's own canvas, set in Size.
+    name: "horizontal card · 90 × 50 mm, 35 mm code",
+    design: {
+      ...DEFAULT_DESIGN,
+      ...PALETTE,
+      preset: "horizontal",
+      caption: "View portfolio",
+      size: { unit: "mm", qr: 35, width: 43.3, height: 52.9 },
+      cardSize: { width: 90, height: 50 },
+    },
+    res: [
+      [{ dpi: 300 }, [1063, 591]],
+      [{ dpi: 600 }, [2126, 1181]],
+    ],
+  },
+  {
+    // HEY-59: a screen card with custom px dimensions.
+    name: "horizontal card · 1200 × 630 px, 420 px code",
+    design: {
+      ...DEFAULT_DESIGN,
+      ...PALETTE,
+      preset: "horizontal",
+      caption: "View portfolio",
+      size: { unit: "px", qr: 420, width: 512, height: 625 },
+      cardSize: { width: 1200, height: 630 },
+    },
+    res: [
+      [{ scale: 1 }, [1200, 630]],
+      [{ scale: 2 }, [2400, 1260]],
+    ],
+  },
 ];
 
 describe("PNG export resolution (HEY-37)", () => {
@@ -107,5 +140,29 @@ describe("PNG export resolution (HEY-37)", () => {
     expect(readPng(new Uint8Array((await renderExport(px, VALUE, "png", {})).body)).width).toBe(1024);
     const mm = designToLayout({ ...DEFAULT_DESIGN, preset: "qr", size: { unit: "mm", qr: 40, width: 40, height: 40 } });
     expect(readPng(new Uint8Array((await renderExport(mm, VALUE, "png", {})).body)).width).toBe(472);
+  });
+
+  it("HEY-59: the SVG keeps the physical size; a code too big for its card is fitted with its quiet zone; old cards keep their size", async () => {
+    const card: EditorDesign = {
+      ...DEFAULT_DESIGN,
+      preset: "horizontal",
+      caption: "View portfolio",
+      size: { unit: "mm", qr: 35, width: 43.3, height: 52.9 },
+      cardSize: { width: 90, height: 50 },
+    };
+    const svg = (await renderExport(designToLayout(card), VALUE, "svg", {})).body.toString();
+    expect(svg).toMatch(/width="90mm" height="50mm"/);
+    // The code and the canvas are independent: a larger code leaves the card at 90 × 50 mm and is drawn at the
+    // largest size that fits inside its edge (90 % of the height), still a whole code with its quiet zone.
+    const big = layoutGeometry(designToLayout({ ...card, size: { unit: "mm", qr: 60, width: 43.3, height: 52.9 } }));
+    expect([big.width, big.height, big.qr[2]]).toEqual([90, 50, 45]);
+    expect(big.qr[1]).toBeCloseTo(2.5);
+    const bigPng = (
+      await renderExport(designToLayout({ ...card, size: { unit: "mm", qr: 60, width: 43.3, height: 52.9 } }), VALUE, "png", { dpi: 300 })
+    ).body;
+    expect(await decodeImage(new Uint8Array(bigPng))).toBe(VALUE);
+    // A card saved before HEY-59 (no cardSize) keeps its design proportions from the code.
+    const old = layoutGeometry(designToLayout({ ...card, cardSize: undefined }));
+    expect([old.width, old.height, old.qr[2]]).toEqual([90, 50, 35]);
   });
 });

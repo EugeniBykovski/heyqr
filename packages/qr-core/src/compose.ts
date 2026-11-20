@@ -182,6 +182,9 @@ export function layoutGeometry(layout: Layout): LayoutGeometry {
     out.qr = [(W - q) / 2, qy, q];
     if (!inCode) out.caption = [W * 0.08, before ? hb : H - cb, W * 0.84, cb * 0.9];
   } else {
+    // HEY-59: the code fits inside the card's edge (at most 90 % of its height) and leaves the caption room (at most
+    // 60 % of its width). The design proportions (35 mm code on a 90 × 50 mm card) are well inside both.
+    q = Math.min(q, H * 0.9, W * 0.6);
     const pad = (H - q) / 2;
     const qx = before ? W - pad - q : pad;
     const cx = before ? pad * 1.2 : pad + q + pad * 0.8;

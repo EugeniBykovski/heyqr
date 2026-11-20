@@ -67,10 +67,11 @@ describe("Size panel (HEY-35)", () => {
     view.unmount();
     renderPanel({ ...DEFAULT_DESIGN, preset: "caption", caption: "Scan me" });
     fireEvent.click(screen.getByRole("button", { name: "Slide 1920×1080" }));
-    expect(latest.size).toEqual({ unit: "px", qr: 780, width: 1920, height: 1080 });
+    // HEY-59: a preset sets the canvas only; the chosen code size stays (it still fits).
+    expect(latest.size).toEqual({ unit: "px", qr: 512, width: 1920, height: 1080 });
     fireEvent.change(screen.getByLabelText("Height"), { target: { value: "1350" } });
     expect(latest.size?.height).toBe(1350);
-    expect(screen.getByText(/PNG export: 3840 × 2700 px/)).toBeInTheDocument();
+    expect(screen.getByText(/PNG 3840 × 2700 px/)).toBeInTheDocument();
   });
 
   it("an export attempt shows the error without a blur", () => {
@@ -90,9 +91,50 @@ describe("Size panel (HEY-35)", () => {
     expect(latest.size?.qr).toBe(25.5);
     expect(document.getElementById(qrField().getAttribute("aria-describedby") ?? "")?.textContent).toContain("10 to 200 mm");
     fireEvent.click(screen.getByRole("button", { name: "A6 105×148" }));
-    expect(latest.size).toEqual({ unit: "mm", qr: 76, width: 105, height: 148 });
-    expect(screen.getByText(/File: 105 × 148 mm · PNG at 300 dpi: 1240 × 1748 px/)).toBeInTheDocument();
+    expect(latest.size).toEqual({ unit: "mm", qr: 25.5, width: 105, height: 148 });
+    expect(screen.getByText(/PNG 1240 × 1748 px/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Screen · px" }));
     expect(latest.size?.unit).toBe("px");
+  });
+
+  it("HEY-59 cards: code size and canvas are independent, presets keep the code, a code too big is fitted and said", () => {
+    const card = {
+      ...DEFAULT_DESIGN,
+      preset: "horizontal" as const,
+      caption: "View portfolio",
+      size: { unit: "mm" as const, qr: 35, width: 43.3, height: 52.9 },
+    };
+    const view = renderPanel(card);
+    // The card's canvas is its design proportions until it is changed: 90 × 50 mm for a 35 mm code.
+    expect((screen.getByLabelText("Width") as HTMLInputElement).value).toBe("90");
+    expect((screen.getByLabelText("Height") as HTMLInputElement).value).toBe("50");
+    expect(screen.getByText(/PNG 1063 × 591 px/)).toBeInTheDocument();
+    // A new code size pins the canvas: the card stays 90 × 50 mm.
+    fireEvent.change(qrField(), { target: { value: "30" } });
+    expect([latest.size?.qr, latest.cardSize]).toEqual([30, { width: 90, height: 50 }]);
+    view.unmount();
+    // Width and height change the canvas only.
+    const view2 = renderPanel({ ...card, cardSize: { width: 90, height: 50 } });
+    fireEvent.change(screen.getByLabelText("Height"), { target: { value: "55" } });
+    expect([latest.size?.qr, latest.cardSize]).toEqual([35, { width: 90, height: 55 }]);
+    fireEvent.click(screen.getByRole("button", { name: "Sticker 50×62" }));
+    expect([latest.size?.qr, latest.cardSize]).toEqual([35, { width: 50, height: 62 }]);
+    view2.unmount();
+    // A code taller than the card is drawn at the largest size that fits, and the panel says so.
+    renderPanel({ ...card, size: { ...card.size, qr: 60 }, cardSize: { width: 90, height: 50 } });
+    expect(screen.getByRole("status").textContent).toContain("drawn at 45 mm");
+  });
+
+  it("HEY-59: switching units converts a card's own canvas with the code", () => {
+    renderPanel({
+      ...DEFAULT_DESIGN,
+      preset: "horizontal",
+      caption: "x",
+      size: { unit: "mm", qr: 35, width: 43.3, height: 52.9 },
+      cardSize: { width: 90, height: 50 },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Screen · px" }));
+    expect(latest.size?.unit).toBe("px");
+    expect(latest.cardSize).toEqual({ width: 1063, height: 591 });
   });
 });

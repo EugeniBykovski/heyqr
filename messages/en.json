@@ -771,15 +771,14 @@
     "colorInvalid": "Use a HEX colour like #1F4D3A: # and 6 characters from 0–9 and A–F.",
     "size": {
       "title": "Size",
-      "unitHint": "Screen · px: for screens, slides and the web. 1 unit = 1 pixel at 1×.",
+      "unitHint": "For screens, slides and the web. 1 unit = 1 pixel at 1×.",
       "qr": "QR code size",
       "qrSlider": "QR code size slider",
-      "qrNote": "Includes the quiet zone around the code.",
-      "clamped": "The layout limits the visible code to {shown} {unit}. Make the layout larger to fit it.",
+      "clamped": "This code doesn’t fit the layout: it is drawn at {shown} {unit}, the largest size that fits. Make the layout larger, or the code smaller.",
       "layout": "Layout size",
       "width": "Width",
       "height": "Height",
-      "locked": "With “QR only” and “Frame” the size follows the code. Pick “With caption” to set the layout size.",
+      "locked": "With “QR only” and “Frame” the layout follows the code. Pick “QR + caption” or a card to set its own size.",
       "presets": {
         "square": "Square 1080",
         "story": "Story 1080×1920",
@@ -788,14 +787,16 @@
         "a6": "A6 105×148",
         "sticker": "Sticker 50×62"
       },
-      "export": "PNG export: {width} × {height} {unit} (2×).",
       "invalid": "Enter a whole number from {min} to {max} {unit}.",
       "units": "Units",
       "unitMm": "Print · mm",
       "unitPx": "Screen · px",
-      "unitHintMm": "Print · mm: for print. The SVG has its real size in mm; PNG files are made at 300 dpi.",
+      "unitHintMm": "For print. Files are exported at 300, 600 or 1200 dpi.",
       "invalidMm": "Enter a number from {min} to {max} mm, with at most one decimal.",
-      "exportMm": "File: {width} × {height} mm · PNG at 300 dpi: {pxWidth} × {pxHeight} px."
+      "qrHint": "incl. quiet zone",
+      "reach": "Scans from up to about {cm} cm away (10 : 1 rule). Bigger code, longer reach.",
+      "viewNoteMm": "The canvas is scaled to fit your screen. Choose <b>Actual size</b> above the canvas to see it at print size. Export: <b>PNG {width} × {height} px</b>.",
+      "viewNotePx": "The canvas is scaled to fit your screen. Choose <b>Actual size</b> above the canvas to see it at 1×. Export: <b>PNG {width} × {height} px</b> (2×)."
     },
     "updatingPreview": "Updating preview…",
     "captionField": {
@@ -981,7 +982,8 @@
       "scaleLabel": "{pct}%",
       "openFull": "Open full-screen preview",
       "fullTitle": "Full-screen preview",
-      "done": "Done"
+      "done": "Done",
+      "scaledToFit": "Scaled to fit"
     },
     "scanChecking": "Checking scan",
     "darkenCorners": "Darken corner markers",

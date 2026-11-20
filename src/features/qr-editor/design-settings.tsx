@@ -55,6 +55,8 @@ interface GroupProps {
   /** The code's encoded value, for live thumbnails (frames). */
   value: string;
   logoScanMax?: number;
+  /** Modules per side of the current code (scan check), for the Size panel's scan distance. */
+  modules?: number;
   /** One-line confirmations (quick styles); announced politely. */
   onNotice?: (message: string) => void;
 }
@@ -113,6 +115,7 @@ export function DesignSettings({
               onChange={props.onChange}
               showErrors={Boolean(props.showFieldErrors)}
               onValidity={props.onFieldValidity}
+              modules={props.modules}
             />
           ) : null}
           {g === "pattern" ? <PatternGroup {...props} /> : null}
