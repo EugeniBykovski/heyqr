@@ -228,16 +228,41 @@ export const SURPRISE_COLORS = [
   ["#9A4A22", "#FFF6DA"],
 ] as const;
 
-/** A quick style as one patch: shapes and colours, with every colour role following the code colour again. */
-export function quickStylePatch({
-  pattern,
-  eyeFrame,
-  eyeBall,
-  fg,
-  bg,
-}: Pick<EditorDesign, "pattern" | "eyeFrame" | "eyeBall" | "fg" | "bg">): Partial<EditorDesign> {
+/** The settings a quick style owns (design applyStyle): everything else (content, layout, size, caption, logo) stays. */
+export type QuickStyleLook = Pick<EditorDesign, "pattern" | "eyeFrame" | "eyeBall" | "fg" | "bg">;
+
+/**
+ * A quick style as one patch (design applyStyle): the three shapes and the colours, with every colour role following
+ * the code colour again (corner frame and center, frame, caption) and the branded art tint cleared.
+ */
+export function quickStylePatch({ pattern, eyeFrame, eyeBall, fg, bg }: QuickStyleLook): Partial<EditorDesign> {
   // Only design settings: a preset's own fields (its id) never enter the draft.
-  return { pattern, eyeFrame, eyeBall, fg, bg, eye: undefined, eyeIn: undefined, frameColor: undefined, captionColor: undefined };
+  return {
+    pattern,
+    eyeFrame,
+    eyeBall,
+    fg,
+    bg,
+    eye: undefined,
+    eyeIn: undefined,
+    frameColor: undefined,
+    captionColor: undefined,
+    art: undefined,
+  };
+}
+
+/**
+ * Design "Surprise me": random shapes and a colour pair from SURPRISE_COLORS, always visibly different from the current
+ * look: a different module shape and a different colour pair (there is always another of each). `random` is
+ * injectable so tests are deterministic.
+ */
+export function surpriseStyle(current: Pick<EditorDesign, "pattern" | "fg" | "bg">, random: () => number = Math.random): QuickStyleLook {
+  const pick = <T>(list: readonly T[]): T => list[Math.min(list.length - 1, Math.floor(random() * list.length))] as T;
+  const same = (a: string, b: string) => a.toUpperCase() === b.toUpperCase();
+  const patterns = MODULE_SHAPES.filter((p) => p !== current.pattern);
+  const pairs = SURPRISE_COLORS.filter(([fg, bg]) => !(same(fg, current.fg) && same(bg, current.bg)));
+  const [fg, bg] = pick(pairs);
+  return { pattern: pick(patterns), eyeFrame: pick(EYE_FRAME_SHAPES), eyeBall: pick(EYE_BALL_SHAPES), fg, bg };
 }
 
 /** Design 1.15 frame colour presets: frame · code · background. */

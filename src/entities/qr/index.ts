@@ -18,6 +18,8 @@ export {
   hasCaptionBand,
   QUICK_STYLES,
   quickStylePatch,
+  surpriseStyle,
+  type QuickStyleLook,
   SURPRISE_COLORS,
   logoOnTop,
   MODULE_SHAPES,

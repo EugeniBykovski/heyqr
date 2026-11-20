@@ -11,6 +11,9 @@ const LIMIT = 100;
 
 type Snapshot = Partial<EditorDesign>;
 
+/** `step`: always a history step of its own, never merged with the changes before or after (quick styles, HEY-61). */
+export type ChangeOptions = { step?: boolean };
+
 const designPart = (d: EditorDesign): Snapshot => {
   const out: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(d)) if (!NOT_DESIGN.has(k)) out[k] = v;
@@ -26,7 +29,7 @@ export function patchBetween(from: Snapshot, to: Snapshot): Partial<EditorDesign
 
 /*
  * Design 1.12 Undo / Redo for the Design step. Every settings change is one step; a quick-style preset is one step
- * however many settings it sets; repeated changes to the same settings within HISTORY_MERGE_MS merge (typing, sliders).
+ * however many settings it sets, and never merges with a neighbour (two styles in a row are two steps); repeated changes to the same settings within HISTORY_MERGE_MS merge (typing, sliders).
  * Only design settings are recorded: content, mode and name stay as they are. Viewing preferences (stage background,
  * zoom) never enter the history. The editor state stays owned by its editor (draft or saved layout): Undo and Redo
  * apply patches through the same update path as every control.
@@ -36,16 +39,17 @@ export function useDesignHistory(design: EditorDesign, apply: (patch: Partial<Ed
   const last = useRef<{ keys: string; at: number } | null>(null);
 
   const change = useCallback(
-    (patch: Partial<EditorDesign>) => {
+    (patch: Partial<EditorDesign>, opts?: ChangeOptions) => {
       const keys = Object.keys(patch)
         .filter((k) => !NOT_DESIGN.has(k))
         .sort()
         .join(",");
       if (keys) {
         const now = Date.now();
-        const merge = last.current !== null && last.current.keys === keys && now - last.current.at < HISTORY_MERGE_MS;
+        const merge = !opts?.step && last.current !== null && last.current.keys === keys && now - last.current.at < HISTORY_MERGE_MS;
         if (!merge) setStacks((s) => ({ past: [...s.past, designPart(design)].slice(-LIMIT), future: [] }));
-        last.current = { keys, at: now };
+        // A step (a quick style) never merges with what comes next either: the next edit is its own step.
+        last.current = opts?.step ? null : { keys, at: now };
       }
       apply(patch);
     },

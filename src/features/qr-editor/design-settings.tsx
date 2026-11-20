@@ -1,6 +1,14 @@
 "use client";
 
-import { CENTER_LOGO_SIZE, CENTER_TEXT_MAX, centerLogoSize, centerTextLabel, layoutGeometry, type FrameStyle } from "@heyqr/qr-core";
+import {
+  CENTER_LOGO_SIZE,
+  CENTER_TEXT_MAX,
+  centerLogoSize,
+  centerTextLabel,
+  layoutGeometry,
+  moduleSwatch,
+  type FrameStyle,
+} from "@heyqr/qr-core";
 import { CircleAlertIcon, CircleSlashIcon, RotateCcwIcon, SearchIcon, ShuffleIcon, Trash2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Tabs as TabsPrimitive } from "radix-ui";
@@ -24,7 +32,7 @@ import {
   QrPreview,
   QUICK_STYLES,
   quickStylePatch,
-  SURPRISE_COLORS,
+  surpriseStyle,
   type CenterIcon,
   type EditorDesign,
   type EditorPreset,
@@ -42,13 +50,14 @@ import { ColorField } from "./design-panel";
 import { CaptionAlignPicker, CaptionFontPicker, CaptionWeightPicker } from "./frame-panel";
 import { LogoFeedback, LogoUploadTile, type LogoFeedbackState } from "./logo-upload";
 import { OptionGrid } from "./option-grid";
+import type { ChangeOptions } from "./use-design-history";
 import { ShapeThumb } from "./shape-thumb";
 import { SizePanel } from "./size-panel";
 
 export const DESIGN_GROUPS = ["layout", "frame", "size", "pattern", "colors", "logo", "caption"] as const;
 export type DesignGroup = (typeof DESIGN_GROUPS)[number] | "brand";
 
-type Change = (patch: Partial<EditorDesign>) => void;
+type Change = (patch: Partial<EditorDesign>, opts?: ChangeOptions) => void;
 interface GroupProps {
   design: EditorDesign;
   onChange: Change;
@@ -203,21 +212,24 @@ const PRESET_THUMBS: Record<Exclude<EditorPreset, "frame">, ReactNode> = {
   ),
 };
 
-const pick = <T,>(list: readonly T[]): T => list[Math.floor(Math.random() * list.length)] as T;
-
 function LayoutGroup({ design, onChange, onNotice }: GroupProps) {
   const t = useTranslations("editor");
   const tq = useTranslations("editor.quickStyles");
   const tl = useTranslations("editor.layoutGroup");
   const presets = ["qr", "caption", "vertical", "horizontal"] as const;
   const dims = (preset: EditorPreset) => {
-    const g = layoutGeometry(designToLayout({ ...design, preset }));
+    // A card's own canvas (HEY-59 cardSize) belongs to the layout it was set on; other layouts show their own size.
+    const g = layoutGeometry(designToLayout({ ...design, preset, cardSize: preset === design.preset ? design.cardSize : undefined }));
     const unit = design.size?.unit ?? "px";
     const n = (v: number) => (unit === "mm" ? Math.round(v * 10) / 10 : Math.round(v));
     return `${n(g.width)} × ${n(g.height)} ${unit}`;
   };
-  const choosePreset = (preset: EditorPreset) =>
-    onChange(preset !== "qr" && !design.caption.trim() ? { preset, caption: t("captionPlaceholder") } : { preset });
+  const choosePreset = (preset: EditorPreset) => {
+    // Switching layouts starts the card from its design proportions again (a horizontal card's 90 × 50 is not a
+    // vertical card's canvas); the QR + caption layout keeps its own width and height in `size`.
+    const patch: Partial<EditorDesign> = preset === design.preset ? { preset } : { preset, cardSize: undefined };
+    onChange(preset !== "qr" && !design.caption.trim() ? { ...patch, caption: t("captionPlaceholder") } : patch);
+  };
   const card = design.preset === "vertical" || design.preset === "horizontal";
   return (
     <>
@@ -227,12 +239,9 @@ function LayoutGroup({ design, onChange, onNotice }: GroupProps) {
           <Button
             type="button"
             size="sm"
-            variant="secondary"
+            variant="accent"
             onClick={() => {
-              const [fg, bg] = pick(SURPRISE_COLORS);
-              onChange(
-                quickStylePatch({ pattern: pick(MODULE_SHAPES), eyeFrame: pick(EYE_FRAME_SHAPES), eyeBall: pick(EYE_BALL_SHAPES), fg, bg }),
-              );
+              onChange(quickStylePatch(surpriseStyle(design)), { step: true });
               onNotice?.(tq("surprised"));
             }}
           >
@@ -241,6 +250,7 @@ function LayoutGroup({ design, onChange, onNotice }: GroupProps) {
           </Button>
         }
       >
+        {/* Design 1.12 stylechips: three columns of square swatches (the style's modules on its background), label below. */}
         <div role="group" aria-label={tq("title")} className="grid grid-cols-3 gap-2">
           {QUICK_STYLES.map((s) => (
             <button
@@ -248,13 +258,15 @@ function LayoutGroup({ design, onChange, onNotice }: GroupProps) {
               type="button"
               aria-label={tq("apply", { name: tq(`names.${s.id}`) })}
               onClick={() => {
-                onChange(quickStylePatch(s));
+                onChange(quickStylePatch(s), { step: true });
                 onNotice?.(tq("applied", { name: tq(`names.${s.id}`) }));
               }}
-              className="flex cursor-pointer flex-col gap-1.5 rounded-lg border border-border bg-surface p-1.5 pb-2 text-left transition-[border-color,box-shadow] duration-(--motion-fast) hover:border-border-hover hover:shadow-2"
+              className="flex cursor-pointer flex-col items-stretch gap-1.5 rounded-lg border border-border bg-surface p-1.5 pb-2 text-left transition-[border-color,box-shadow] duration-(--motion-fast) hover:border-border-hover hover:shadow-2"
             >
-              <span className="grid h-14 place-items-center overflow-hidden rounded-md" style={{ backgroundColor: s.bg, color: s.fg }}>
-                <ShapeThumb part={{ kind: "modules", shape: s.pattern }} className="size-10" />
+              <span className="grid aspect-square place-items-center rounded-sm p-2" style={{ backgroundColor: s.bg }}>
+                <svg viewBox="3.4 3.4 5.2 5.2" aria-hidden className="size-full">
+                  <path d={moduleSwatch(s.pattern)} fill={s.fg} />
+                </svg>
               </span>
               <span className="px-0.5 text-[0.75rem] font-semibold">{tq(`names.${s.id}`)}</span>
             </button>

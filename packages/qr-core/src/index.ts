@@ -16,8 +16,10 @@ export {
   centerTextLabel,
   eclForStyle,
   MIN_CONTRAST,
+  moduleSwatch,
   renderQr,
   renderQrSvg,
+  STYLE_SWATCH,
 } from "./render";
 export {
   brandHeader,

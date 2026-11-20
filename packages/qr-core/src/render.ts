@@ -1,5 +1,5 @@
 import { contrastRatio, luminance, mixColors } from "./color";
-import { encodeQr, type ErrorCorrectionLevel, type QrMatrix } from "./encode";
+import { encodeQr, type ErrorCorrectionLevel } from "./encode";
 import { circle, diamond, escapeXml, round3 as f, roundedRect as rr } from "./geometry";
 import type { EyeBallShape, EyeFrameShape, ModuleShape, QrStyle, RenderedQr, ScanIssue, ScanReport } from "./types";
 
@@ -7,8 +7,7 @@ const QUIET = 4;
 
 type Excavation = { shape: "circle" | "square" | "rect"; size: number; halfW: number; halfH: number; pad: number };
 
-function moduleShapes(m: QrMatrix, pattern: ModuleShape, on: (x: number, y: number) => boolean): string {
-  const n = m.size;
+function moduleShapes(n: number, pattern: ModuleShape, on: (x: number, y: number) => boolean): string {
   const q = QUIET;
   const out: string[] = [];
   const has = (x: number, y: number) => x >= 0 && y >= 0 && x < n && y < n && on(x, y);
@@ -117,6 +116,22 @@ function eyeBallPath(shape: EyeBallShape, x: number, y: number): string {
  * refuses covered finder/timing patterns, and checks color contrast.
  */
 /** Error correction for a style: H when a logo or text covers the center (it must be recoverable), M otherwise. */
+/** Design STYLES thumbnails (MINI): a 4 × 4 sample of modules, drawn with the renderer's own module shapes. */
+export const STYLE_SWATCH = [
+  [1, 1, 0, 1],
+  [0, 1, 1, 1],
+  [1, 1, 0, 0],
+  [1, 0, 1, 1],
+] as const;
+
+/**
+ * The path of a small module grid in one module shape, for style thumbnails. Coordinates are offset by the quiet zone
+ * like the code itself: the 4 × 4 swatch spans 4–8; view it with "3.4 3.4 5.2 5.2" (design: -0.6 -0.6 5.2 5.2).
+ */
+export function moduleSwatch(pattern: ModuleShape, grid: readonly (readonly number[])[] = STYLE_SWATCH): string {
+  return moduleShapes(grid.length, pattern, (x, y) => grid[y]?.[x] === 1);
+}
+
 export function eclForStyle(style: Pick<QrStyle, "logo" | "centerText">): ErrorCorrectionLevel {
   return style.logo || style.centerText?.text ? "H" : "M";
 }
@@ -289,8 +304,8 @@ export function renderQr(value: string, style: QrStyle): RenderedQr {
   // drawn by the eye shapes. The scan check and decoders rely on these fixed patterns.
   const on = (x: number, y: number) => m.modules[y][x] && !m.functionModules[y][x] && !inside(x, y, exc);
   const fixed = (x: number, y: number) => m.modules[y][x] && m.functionModules[y][x] && !eyeZone(x, y) && !inside(x, y, exc);
-  const data = moduleShapes(m, style.pattern, on);
-  const functionPatterns = moduleShapes(m, "square", fixed);
+  const data = moduleShapes(m.size, style.pattern, on);
+  const functionPatterns = moduleShapes(m.size, "square", fixed);
 
   let frames = "";
   let balls = "";
