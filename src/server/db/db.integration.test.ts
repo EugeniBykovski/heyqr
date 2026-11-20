@@ -12,6 +12,7 @@ import { designSettingsOf, readLayoutRecord } from "../../entities/qr/model/desi
 import { RESTORE_WINDOW_MS, restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, updateLayoutDesign } from "../qr/update-layout";
+import { activateTrialCode, startTrial, trialCode } from "../billing/trial";
 import { checkDatabase, EXPECTED_MIGRATIONS, REQUIRED_TABLES } from "./check";
 import { SEED_SCAN_DAYS, seedFixtures } from "./fixtures";
 import { runMigrations } from "./migrator";
@@ -638,6 +639,52 @@ describe.skipIf(!url)("edit one saved layout (HEY-45, real PostgreSQL)", () => {
       encoded,
     );
     expect((await rows(qrCodeId)).map((l) => l.name)).toEqual(["Portfolio card", "Table tent"]);
+  });
+
+  it("Starter trial: starts once, one live test Dynamic code with a real short link, owner only", async () => {
+    const now = new Date("2026-11-01T10:00:00Z");
+    await db.update(schema.user).set({ trialStartedAt: null, trialEndsAt: null }).where(eq(schema.user.id, owner.id));
+    expect(await startTrial(db, owner.id, true, now)).toEqual({ ok: false, error: "subscribed" });
+    expect(await startTrial(db, owner.id, false, now)).toEqual({ ok: true, endsAt: new Date("2026-11-08T10:00:00Z") });
+    expect(await startTrial(db, owner.id, false, now)).toEqual({ ok: false, error: "already_used" });
+
+    const make = async (model: "static" | "dynamic") => {
+      const saved = await saveQrWithLayouts(db, owner.id, {
+        name: "Trial test",
+        model,
+        content: { type: "website", url: "https://littlefern.cafe/menu" },
+        destination: model === "dynamic" ? "https://littlefern.cafe/menu" : undefined,
+        layouts: [{ name: "Card", layout: designToLayout(card), editor: designSettingsOf(card) }],
+      });
+      if (!saved.ok) throw new Error("save failed");
+      return saved.data.qrCodeId;
+    };
+    const first = await make("dynamic");
+    const second = await make("dynamic");
+    const stat = await make("static");
+    const day2 = new Date("2026-11-02T10:00:00Z");
+    expect(await activateTrialCode(db, owner.id, stat, () => "s1", day2)).toEqual({ ok: false, error: "not_dynamic" });
+    // Another account with its own trial still can't take this code.
+    await startTrial(db, other.id, false, now);
+    expect(await activateTrialCode(db, other.id, first, () => "s1", day2)).toEqual({ ok: false, error: "not_found" });
+    expect(await activateTrialCode(db, owner.id, first, () => "trial01", day2)).toEqual({ ok: true, shortCode: "trial01" });
+    const live = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, first) });
+    expect(live && [live.status, live.isTrial, live.shortCode]).toEqual(["active", true, "trial01"]);
+    expect(await activateTrialCode(db, owner.id, first, () => "again", day2)).toEqual({ ok: true, shortCode: "trial01" });
+    expect(await activateTrialCode(db, owner.id, second, () => "trial02", day2)).toEqual({ ok: false, error: "slot_taken" });
+    expect((await trialCode(db, owner.id))?.id).toBe(first);
+    // Deleting the test code frees the slot.
+    await db.update(schema.qrCode).set({ deletedAt: day2 }).where(eq(schema.qrCode.id, first));
+    expect(await activateTrialCode(db, owner.id, second, () => "trial02", day2)).toEqual({ ok: true, shortCode: "trial02" });
+    // After the trial no new code can use it.
+    expect(await activateTrialCode(db, owner.id, stat, () => "x", new Date("2026-11-09T10:00:00Z"))).toEqual({
+      ok: false,
+      error: "no_trial",
+    });
+    await db
+      .update(schema.user)
+      .set({ trialStartedAt: null, trialEndsAt: null })
+      .where(inArray(schema.user.id, [owner.id, other.id]));
   });
 
   it("refuses another account, a layout of another code, a deleted code and an invalid design", async () => {

@@ -6,7 +6,8 @@ import { BillingPortalButton } from "@/features/checkout";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
 import { requireUser } from "@/server/auth";
-import { activeSubscription } from "@/server/billing/entitlements";
+import { activeSubscription, userTrial } from "@/server/billing/entitlements";
+import { TrialBar } from "@/widgets/trial";
 import { db, schema } from "@/server/db";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -25,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function BillingPage({ params }: PageProps<"/[locale]/dashboard/billing">) {
   await resolveLocale(params);
   const [t, format, user] = await Promise.all([getTranslations("billing"), getFormatter(), requireUser()]);
-  const [subscription, purchases, [live]] = await Promise.all([
+  const [subscription, purchases, [live], phase] = await Promise.all([
     activeSubscription(user.id),
     db.query.purchase.findMany({
       where: eq(schema.purchase.userId, user.id),
@@ -43,6 +44,7 @@ export default async function BillingPage({ params }: PageProps<"/[locale]/dashb
           isNull(schema.qrCode.deletedAt),
         ),
       ),
+    userTrial(user.id),
   ]);
   const limit = subscription?.activeCodeLimit ?? env.DYNAMIC_ACTIVE_CODE_LIMIT;
   const used = live?.n ?? 0;
@@ -57,6 +59,7 @@ export default async function BillingPage({ params }: PageProps<"/[locale]/dashb
         </Button>
       </div>
 
+      <TrialBar phase={phase} />
       <Card>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <CardTitle>{t("plan")}</CardTitle>

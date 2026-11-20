@@ -3,7 +3,9 @@ import type { Metadata } from "next";
 import { getFormatter, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { env } from "@/env";
-import { CurrencyChoice } from "@/features/checkout";
+import { CurrencyChoice, StartTrialButton } from "@/features/checkout";
+import { getSession } from "@/server/auth";
+import { userTrial } from "@/server/billing/entitlements";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
 import { pricing } from "@/shared/config/pricing";
@@ -27,6 +29,16 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
   const format = await getFormatter();
   const money = (cents: number) => format.number(cents / 100, { style: "currency", currency: pricing.currency });
   const limit = env.DYNAMIC_ACTIVE_CODE_LIMIT;
+  // Design 4.8 / 9.1: the 7-day trial on the Dynamic plan, for accounts that haven't used it (guests sign in first).
+  const session = await getSession();
+  const phase = session ? await userTrial(session.user.id) : null;
+  const trialAction = !session ? (
+    <Button asChild size="lg" className="w-full md:w-auto">
+      <Link href="/sign-in?next=/dashboard/trial">{t("trial.action")}</Link>
+    </Button>
+  ) : phase?.state === "none" && phase.eligible ? (
+    <StartTrialButton variant="secondary" className="w-full md:w-auto" />
+  ) : null;
   const yes = (
     <span className="inline-flex items-center gap-1.5 text-success">
       <CheckIcon aria-hidden className="size-4" />
@@ -102,9 +114,15 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
             </div>
           }
           cta={
-            <Button asChild variant="primary" size="lg" className="w-full md:w-auto">
-              <Link href="/create?step=type">{t("dynamic.cta")}</Link>
-            </Button>
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-wrap gap-3">
+                <Button asChild variant="primary" size="lg" className="w-full md:w-auto">
+                  <Link href="/create?step=type">{t("dynamic.cta")}</Link>
+                </Button>
+                {trialAction}
+              </div>
+              {trialAction ? <span className="text-caption text-muted-foreground">{t("trial.note")}</span> : null}
+            </div>
           }
         />
       </section>

@@ -21,6 +21,9 @@ export const user = pgTable("user", {
   image: text("image"),
   locale: text("locale"),
   stripeCustomerId: text("stripe_customer_id").unique(),
+  /** Design 9.x Starter trial: set once when the trial starts (no card, no automatic charge). */
+  trialStartedAt: timestamp("trial_started_at", { withTimezone: true }),
+  trialEndsAt: timestamp("trial_ends_at", { withTimezone: true }),
   ...timestamps,
 });
 
@@ -97,6 +100,8 @@ export const qrCode = pgTable(
     purchasedAt: timestamp("purchased_at", { withTimezone: true }),
     /** Soft delete: hidden everywhere and the short link stops; cleared again by Undo. */
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
+    /** The trial's one test Dynamic code: its short link redirects while the trial runs or a plan is active. */
+    isTrial: boolean("is_trial").notNull().default(false),
     ...timestamps,
   },
   (t) => [index("qr_code_user_idx").on(t.userId, t.updatedAt)],

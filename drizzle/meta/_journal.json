@@ -15,6 +15,13 @@
       "when": 1795004242946,
       "tag": "0001_qr_code_soft_delete",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795163005446,
+      "tag": "0002_trial",
+      "breakpoints": true
     }
   ]
 }

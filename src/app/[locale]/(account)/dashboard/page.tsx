@@ -4,6 +4,8 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
 import { requireUser } from "@/server/auth";
+import { userTrial } from "@/server/billing/entitlements";
+import { TrialBar } from "@/widgets/trial";
 import { encodedValue } from "@/server/qr/export";
 import { listQrCodes } from "@/server/qr/repository";
 import { Button } from "@/shared/ui/button";
@@ -28,14 +30,19 @@ export default async function DashboardPage({ params, searchParams }: PageProps<
     requireUser(),
     searchParams,
   ]);
-  const codes = await listQrCodes(user.id);
+  const [codes, phase] = await Promise.all([listQrCodes(user.id), userTrial(user.id)]);
+  // Design 9.5: the trial's state and its one live test slot, apart from anything monthly.
+  // A trial test code after the trial (no plan) keeps its row but its redirect is paused: it shows as Paused.
+  const trialLive = phase.state === "active" || phase.state === "ending" || phase.state === "upgraded";
+  const live = (c: (typeof codes)[number]) => c.status === "active" && (!c.isTrial || trialLive);
+  const trialBar = <TrialBar phase={phase} showUsage={phase.state !== "expired"} slotUsed={codes.some((c) => c.isTrial && live(c))} />;
   const filter: Filter = FILTERS.find((f) => f === query.filter) ?? "all";
   const counts = {
     all: codes.length,
     static: codes.filter((c) => c.model === "static").length,
     dynamic: codes.filter((c) => c.model === "dynamic").length,
   };
-  const dynamicActive = codes.filter((c) => c.model === "dynamic" && c.status === "active").length;
+  const dynamicActive = codes.filter((c) => c.model === "dynamic" && live(c)).length;
   const visible = filter === "all" ? codes : codes.filter((c) => c.model === filter);
 
   const header = (
@@ -48,17 +55,20 @@ export default async function DashboardPage({ params, searchParams }: PageProps<
 
   if (codes.length === 0)
     return (
-      <div>
-        {header}
-        <div className="flex flex-col items-center gap-3.5 rounded-2xl border border-dashed border-input bg-surface px-5 py-12 text-center">
-          <span className="grid size-28 place-items-center rounded-xl bg-subtle text-muted-foreground">
-            <QrCodeIcon aria-hidden className="size-10" strokeWidth={1.5} />
-          </span>
-          <h2 className="text-h2">{t("empty.title")}</h2>
-          <p className="max-w-measure text-secondary-foreground">{t("empty.text")}</p>
-          <Button asChild variant="primary" size="lg">
-            <Link href="/create">{t("empty.cta")}</Link>
-          </Button>
+      <div className="flex flex-col gap-6">
+        {trialBar}
+        <div>
+          {header}
+          <div className="flex flex-col items-center gap-3.5 rounded-2xl border border-dashed border-input bg-surface px-5 py-12 text-center">
+            <span className="grid size-28 place-items-center rounded-xl bg-subtle text-muted-foreground">
+              <QrCodeIcon aria-hidden className="size-10" strokeWidth={1.5} />
+            </span>
+            <h2 className="text-h2">{t("empty.title")}</h2>
+            <p className="max-w-measure text-secondary-foreground">{t("empty.text")}</p>
+            <Button asChild variant="primary" size="lg">
+              <Link href="/create">{t("empty.cta")}</Link>
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -66,8 +76,9 @@ export default async function DashboardPage({ params, searchParams }: PageProps<
   const shortBase = env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "");
   const items: LibraryItem[] = visible.map((qr) => {
     const layout = qr.layouts[0];
-    const paid = qr.model === "dynamic" ? qr.status === "active" : qr.purchasedAt !== null;
-    const status: QrCardStatus = qr.status === "active" ? (qr.model === "static" ? "purchased" : "active") : qr.status;
+    const paid = qr.model === "dynamic" ? live(qr) : qr.purchasedAt !== null;
+    const status: QrCardStatus =
+      qr.status === "active" ? (qr.model === "static" ? "purchased" : live(qr) ? "active" : "paused") : qr.status;
     return {
       id: qr.id,
       name: qr.name,
@@ -95,26 +106,29 @@ export default async function DashboardPage({ params, searchParams }: PageProps<
   });
 
   return (
-    <QrLibraryManager
-      title={t("title")}
-      createLabel={t("new")}
-      sub={<p>{t("sub", { count: codes.length, dynamic: dynamicActive })}</p>}
-      total={codes.length}
-      items={items}
-      filters={
-        <SegmentedTrack role="group" aria-label={t("filterLabel")} className="mb-3.5 max-w-[23.75rem]">
-          {FILTERS.map((f) => (
-            <Link
-              key={f}
-              href={f === "all" ? "/dashboard" : `/dashboard?filter=${f}`}
-              aria-current={f === filter ? "page" : undefined}
-              className={segmentedOption}
-            >
-              {t(`filters.${f}`, { count: counts[f] })}
-            </Link>
-          ))}
-        </SegmentedTrack>
-      }
-    />
+    <>
+      {trialBar}
+      <QrLibraryManager
+        title={t("title")}
+        createLabel={t("new")}
+        sub={<p>{t("sub", { count: codes.length, dynamic: dynamicActive })}</p>}
+        total={codes.length}
+        items={items}
+        filters={
+          <SegmentedTrack role="group" aria-label={t("filterLabel")} className="mb-3.5 max-w-[23.75rem]">
+            {FILTERS.map((f) => (
+              <Link
+                key={f}
+                href={f === "all" ? "/dashboard" : `/dashboard?filter=${f}`}
+                aria-current={f === filter ? "page" : undefined}
+                className={segmentedOption}
+              >
+                {t(`filters.${f}`, { count: counts[f] })}
+              </Link>
+            ))}
+          </SegmentedTrack>
+        }
+      />
+    </>
   );
 }
