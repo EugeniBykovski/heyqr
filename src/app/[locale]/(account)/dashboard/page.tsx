@@ -11,6 +11,11 @@ import { listQrCodes } from "@/server/qr/repository";
 import { Button } from "@/shared/ui/button";
 import { segmentedOption, SegmentedTrack } from "@/shared/ui/segmented";
 import { env } from "@/env";
+import { accountUsage } from "@/server/billing/allowances";
+import { getCurrency } from "@/server/currency";
+import { db } from "@/server/db";
+import { priceSheet } from "@/shared/config/catalog";
+import { UsageTiles } from "@/widgets/usage";
 import { LibraryHeader, type LibraryItem, QrLibraryManager, type QrCardStatus } from "@/widgets/qr-library";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -30,7 +35,12 @@ export default async function DashboardPage({ params, searchParams }: PageProps<
     requireUser(),
     searchParams,
   ]);
-  const [codes, phase] = await Promise.all([listQrCodes(user.id), userTrial(user.id)]);
+  const [codes, phase, usage, currency] = await Promise.all([
+    listQrCodes(user.id),
+    userTrial(user.id),
+    accountUsage(db, user.id),
+    getCurrency(),
+  ]);
   // Design 9.5: the trial's state and its one live test slot, apart from anything monthly.
   // A trial test code after the trial (no plan) keeps its row but its redirect is paused: it shows as Paused.
   const trialLive = phase.state === "active" || phase.state === "ending" || phase.state === "upgraded";
@@ -95,6 +105,7 @@ export default async function DashboardPage({ params, searchParams }: PageProps<
       statusLabel: t(`status.${status}`),
       meta: t("updated", { date: format.dateTime(qr.updatedAt, { dateStyle: "medium" }) }),
       paid,
+      printPackLabel: qr.printPackAt ? t("printPack") : undefined,
       shortLink: qr.shortCode ? `${shortBase.replace(/^https?:\/\//, "")}/${qr.shortCode}` : undefined,
       labels: {
         open: t("open", { name: qr.name }),
@@ -107,7 +118,7 @@ export default async function DashboardPage({ params, searchParams }: PageProps<
 
   return (
     <>
-      {trialBar}
+      {usage.plan ? null : trialBar}
       <QrLibraryManager
         title={t("title")}
         createLabel={t("new")}
@@ -115,18 +126,29 @@ export default async function DashboardPage({ params, searchParams }: PageProps<
         total={codes.length}
         items={items}
         filters={
-          <SegmentedTrack role="group" aria-label={t("filterLabel")} className="mb-3.5 max-w-[23.75rem]">
-            {FILTERS.map((f) => (
-              <Link
-                key={f}
-                href={f === "all" ? "/dashboard" : `/dashboard?filter=${f}`}
-                aria-current={f === filter ? "page" : undefined}
-                className={segmentedOption}
-              >
-                {t(`filters.${f}`, { count: counts[f] })}
-              </Link>
-            ))}
-          </SegmentedTrack>
+          <>
+            {usage.plan ? (
+              <UsageTiles
+                usage={usage}
+                printPackCents={priceSheet(currency).printPack}
+                currency={currency}
+                credits="never"
+                className="mb-4 md:grid-cols-3 lg:max-w-200"
+              />
+            ) : null}
+            <SegmentedTrack role="group" aria-label={t("filterLabel")} className="mb-3.5 max-w-[23.75rem]">
+              {FILTERS.map((f) => (
+                <Link
+                  key={f}
+                  href={f === "all" ? "/dashboard" : `/dashboard?filter=${f}`}
+                  aria-current={f === filter ? "page" : undefined}
+                  className={segmentedOption}
+                >
+                  {t(`filters.${f}`, { count: counts[f] })}
+                </Link>
+              ))}
+            </SegmentedTrack>
+          </>
         }
       />
     </>

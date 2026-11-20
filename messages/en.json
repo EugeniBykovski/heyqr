@@ -1291,7 +1291,8 @@
         "empty": "Give the code a name.",
         "failed": "We couldn’t rename it. Your text is still here; try again."
       }
-    }
+    },
+    "printPack": "Print Pack"
   },
   "qr": {
     "back": "All codes",
@@ -1356,11 +1357,11 @@
     }
   },
   "billing": {
-    "title": "Billing",
+    "title": "Plan & billing",
     "plan": "Dynamic plan",
     "active": "Active until {date}",
     "cancels": "Cancels on {date}",
-    "none": "You don’t have a subscription. Static codes are paid once.",
+    "none": "No subscription. Static codes are paid once; Starter adds Dynamic codes and monthly unlocks.",
     "manage": "Manage subscription",
     "purchases": "Purchases",
     "noPurchases": "No purchases yet.",
@@ -1386,7 +1387,45 @@
     },
     "liveNoPlan": "{used} active · no plan",
     "printPackItem": "Print Pack",
-    "packItem": "Static Pack · {n} credits"
+    "packItem": "Static Pack · {n} credits",
+    "signedIn": "Signed in with Google as {email}.",
+    "current": "Current plan",
+    "planMonthly": "{plan} · monthly",
+    "noPlan": "No plan",
+    "plans": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "tiles": {
+      "dynamic": "Active Dynamic QR",
+      "live": "Live",
+      "dynamicNote": "Pause or delete a code to free a slot",
+      "unlocks": "Static unlocks",
+      "packs": "Included Print Packs",
+      "packsNote": "{resets} · then +{price}",
+      "credits": "Static credits",
+      "oneTime": "One-time",
+      "creditsNote": "Never expire · used after monthly unlocks"
+    },
+    "of": "of {limit}",
+    "left": "left",
+    "resets": "Resets {date}",
+    "price": "Price",
+    "perMonth": "{price} / month",
+    "renewsOn": "Renews",
+    "endsOn": "Ends",
+    "paymentStripe": "Kept by Stripe",
+    "upgrade": "Upgrade to Studio · {price}/month",
+    "choosePlan": "Choose a plan",
+    "oneTime": "One-time purchases",
+    "item": "Item",
+    "amount": "Amount",
+    "receipt": "Receipt",
+    "credits": "{n} static credits",
+    "items": {
+      "single": "Single QR",
+      "printPack": "Print Pack"
+    }
   },
   "legal": {
     "terms": {

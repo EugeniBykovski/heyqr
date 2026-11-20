@@ -29,6 +29,8 @@ export type LibraryItem = {
   modelLabel: string;
   status: QrCardStatus;
   statusLabel: string;
+  /** Design 9.6: the code's Print Pack is unlocked (badge label). */
+  printPackLabel?: string;
   meta: string;
   paid: boolean;
   /** Dynamic codes: the printed short link, named in the delete warning. */
