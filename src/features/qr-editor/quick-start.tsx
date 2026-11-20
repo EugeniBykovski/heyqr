@@ -2,12 +2,13 @@
 
 import { composeLayout, encodePayload, layoutCapacity, type QrContent } from "@heyqr/qr-core";
 import { ArrowRightIcon, CircleAlertIcon, InfoIcon, LockIcon } from "lucide-react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { env } from "@/env";
 import { DEFAULT_DESIGN, designToLayout, type EditorDesign, emptyContent, modeFor, QR_INKS, QrPreview } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
-import { pricing } from "@/shared/config/pricing";
+import { formatMoney } from "@/shared/config/catalog";
+import { usePrices } from "@/shared/lib/currency";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -49,7 +50,6 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
   const t = useTranslations("home.tool");
   const tTypes = useTranslations("contentTypes");
   const tEditor = useTranslations("editor");
-  const format = useFormatter();
   const router = useRouter();
   const [design, setDesign] = useState<EditorDesign>(() => ({ ...DEFAULT_DESIGN, preset: "caption", caption: t("captionDefault") }));
   /** What was typed on each tab during this visit, so switching away and back keeps it. */
@@ -84,7 +84,8 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
   const tooLong = capacity.ok ? null : capacity;
   const value = design.model === "dynamic" || valid || tooLong ? encoded : PLACEHOLDER_VALUE;
   const scan = useMemo(() => (tooLong ? null : composeLayout(layout, value).scan), [layout, value, tooLong]);
-  const price = format.number(pricing.staticCents / 100, { style: "currency", currency: pricing.currency });
+  const prices = usePrices();
+  const price = formatMoney(prices.cents.single, prices.currency);
 
   const patch = (p: Partial<EditorDesign>) => setDesign((d) => ({ ...d, ...p }));
   const setContent = (content: QrContent) => {

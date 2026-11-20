@@ -11,7 +11,7 @@ import {
   LockIcon,
   RotateCwIcon,
 } from "lucide-react";
-import { useFormatter, useLocale, useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import {
@@ -30,6 +30,7 @@ import { startPrintPackCheckout } from "@/server/actions/qr";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
+import { formatMoney, type Currency } from "@/shared/config/catalog-core";
 
 type Preview = {
   svg: string;
@@ -74,7 +75,7 @@ export function PrintPreview({
   name: string;
   layoutName: string;
   initial: PrintSettings;
-  price: { cents: number; currency: string };
+  price: { cents: number; currency: Currency };
   back: { href: string; label: string };
   designHref: string;
   checkout?: "success" | "cancelled";
@@ -84,7 +85,6 @@ export function PrintPreview({
   forSale: boolean;
 }) {
   const t = useTranslations("print");
-  const format = useFormatter();
   const locale = useLocale();
   const router = useRouter();
   const [settings, setSettings] = useState<PrintSettings>(initial);
@@ -98,7 +98,7 @@ export function PrintPreview({
   const [paying, startPaying] = useTransition();
   const request = useRef(0);
   const sizes = printSizes(layout, settings);
-  const amount = format.number(price.cents / 100, { style: "currency", currency: price.currency });
+  const amount = formatMoney(price.cents, price.currency);
   const confirming = checkout === "success" && preview !== null && !preview.unlocked;
 
   // Ask for the page of these settings; only the newest request may update the screen.

@@ -8,7 +8,7 @@ import { designToLayout, type EditorDesign } from "@/entities/qr";
 import { ExportSurface, settingsQuery, type ExportFormat } from "@/features/checkout";
 import { readDraft } from "@/features/qr-editor";
 import { Link } from "@/i18n/navigation";
-import { pricing } from "@/shared/config/pricing";
+import { usePrices } from "@/shared/lib/currency";
 import { Button } from "@/shared/ui/button";
 import { Skeleton } from "@/shared/ui/skeleton";
 
@@ -22,6 +22,7 @@ export function GuestExport({ initial }: { initial: { format?: ExportFormat; res
   const t = useTranslations("export");
   const tEditor = useTranslations("editor");
   const tTypes = useTranslations("contentTypes");
+  const prices = usePrices();
   const [draft, setDraft] = useState<EditorDesign | null | undefined>(undefined);
   // The draft lives in this browser only; it is read after mount so the server render matches.
   // eslint-disable-next-line react-hooks/set-state-in-effect -- reading browser-only storage after hydration
@@ -60,7 +61,7 @@ export function GuestExport({ initial }: { initial: { format?: ExportFormat; res
       layoutName={tEditor(`presets.${draft.preset}`)}
       backHref="/create?step=design"
       initial={initial}
-      price={{ cents: draft.model === "dynamic" ? pricing.dynamicMonthlyCents : pricing.staticCents, currency: pricing.currency }}
+      price={{ cents: (draft.model === "dynamic" ? prices.cents.starter : prices.cents.single) ?? 0, currency: prices.currency }}
       signInHref={(s) => `/sign-in?next=${encodeURIComponent(`/create?resume=1&${settingsQuery(s)}`)}`}
     />
   );

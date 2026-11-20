@@ -115,8 +115,8 @@ export default async function BillingPage({ params }: PageProps<"/[locale]/dashb
               <li key={p.id} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1.5 py-3">
                 <span className="flex min-w-0 flex-col">
                   <span className="truncate text-body font-medium">
-                    {p.qrCode.name}
-                    {p.item === "print_pack" ? ` · ${t("printPackItem")}` : null}
+                    {p.qrCode?.name ?? t("packItem", { n: p.item === "pack10" ? 10 : 3 })}
+                    {p.item === "print_pack" || p.item === "single_qr_print_pack" ? ` · ${t("printPackItem")}` : null}
                   </span>
                   <span className="text-caption text-muted-foreground">
                     {format.dateTime(p.paidAt ?? p.createdAt, { dateStyle: "medium" })}
@@ -127,7 +127,7 @@ export default async function BillingPage({ params }: PageProps<"/[locale]/dashb
                   <Badge variant={p.status === "paid" ? "success" : p.status === "failed" ? "danger" : "neutral"}>
                     {t(`statuses.${p.status}`)}
                   </Badge>
-                  {p.status === "paid" && !p.qrCode.deletedAt ? (
+                  {p.status === "paid" && p.qrCode && !p.qrCode.deletedAt ? (
                     <Button asChild size="sm" variant="ghost">
                       <Link href={`/dashboard/qr/${p.qrCodeId}`}>{t("open")}</Link>
                     </Button>

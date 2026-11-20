@@ -1,3 +1,4 @@
+import { formatMoney, priceSheet } from "@/shared/config/catalog";
 import { ArrowLeftIcon, CheckIcon, DownloadIcon, MinusIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { getFormatter, getTranslations } from "next-intl/server";
@@ -5,6 +6,7 @@ import { env } from "@/env";
 import { QrPreview } from "@/entities/qr";
 import { ActivatePlanButton, StartTrialButton } from "@/features/checkout";
 import { Link } from "@/i18n/navigation";
+import { getCurrency } from "@/server/currency";
 import { resolveLocale } from "@/i18n/server";
 import { requireUser } from "@/server/auth";
 import { TRIAL_DAYS, trialCode } from "@/server/billing/trial";
@@ -13,7 +15,6 @@ import { db } from "@/server/db";
 import { encodedValue } from "@/server/qr/export";
 import { samplePrint } from "@/server/print/sample";
 import { dailyScans } from "@/server/qr/repository";
-import { pricing } from "@/shared/config/pricing";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -35,7 +36,9 @@ export default async function TrialPage({ params }: PageProps<"/[locale]/dashboa
   const sample = samplePrint(env.NEXT_PUBLIC_APP_URL);
   const [t, format, user] = await Promise.all([getTranslations("trial"), getFormatter(), requireUser()]);
   const [phase, code] = await Promise.all([userTrial(user.id), trialCode(db, user.id)]);
-  const price = format.number(pricing.dynamicMonthlyCents / 100, { style: "currency", currency: pricing.currency });
+  const currency = await getCurrency();
+  const starterCents = priceSheet(currency).starter;
+  const price = formatMoney(starterCents, currency);
   const limit = env.DYNAMIC_ACTIVE_CODE_LIMIT;
   const back = (
     <Button asChild variant="ghost" size="sm" className="self-start">

@@ -2,9 +2,10 @@
 
 import type { QrContentType } from "@heyqr/qr-core";
 import { CheckIcon, InfoIcon } from "lucide-react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { QR_MODES, supportsMode, type QrMode } from "@/entities/qr";
-import { pricing } from "@/shared/config/pricing";
+import { formatMoney } from "@/shared/config/catalog";
+import { usePrices } from "@/shared/lib/currency";
 import { cn } from "@/shared/lib/utils";
 
 /*
@@ -14,9 +15,9 @@ import { cn } from "@/shared/lib/utils";
 export function ModeChoice({ type, value, onChange }: { type: QrContentType; value: QrMode; onChange: (mode: QrMode) => void }) {
   const t = useTranslations("editor.mode");
   const tTypes = useTranslations("contentTypes");
-  const format = useFormatter();
-  const money = (cents: number) => format.number(cents / 100, { style: "currency", currency: pricing.currency });
-  const price = { static: money(pricing.staticCents), dynamic: money(pricing.dynamicMonthlyCents) };
+  const prices = usePrices();
+  const money = (cents: number | null) => formatMoney(cents, prices.currency);
+  const price = { static: money(prices.cents.single), dynamic: money(prices.cents.starter) };
   const dynamicAvailable = supportsMode(type, "dynamic");
 
   return (

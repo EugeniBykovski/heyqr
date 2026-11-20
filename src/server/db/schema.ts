@@ -134,11 +134,12 @@ export const purchase = pgTable(
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
-    qrCodeId: text("qr_code_id")
-      .notNull()
-      .references(() => qrCode.id, { onDelete: "cascade" }),
-    /** What was bought: the static code itself, or its Print Pack add-on. */
-    item: text("item").$type<"single_qr" | "print_pack">().notNull().default("single_qr"),
+    /** The code it is for; empty for Static Packs (credits are the account's). */
+    qrCodeId: text("qr_code_id").references(() => qrCode.id, { onDelete: "cascade" }),
+    /** What was bought: a static code (with or without its Print Pack), a Print Pack add-on, or a Static Pack. */
+    item: text("item").$type<PurchaseItem>().notNull().default("single_qr"),
+    /** Design 7.3 / 7.4 itemized receipt: the lines charged, in this purchase's currency (minor units). */
+    lines: jsonb("lines").$type<PurchaseLine[]>(),
     stripeCheckoutSessionId: text("stripe_checkout_session_id").notNull().unique(),
     stripePaymentIntentId: text("stripe_payment_intent_id"),
     amountTotal: integer("amount_total").notNull(),
@@ -148,6 +149,57 @@ export const purchase = pgTable(
     ...timestamps,
   },
   (t) => [index("purchase_user_idx").on(t.userId)],
+);
+
+export type PurchaseItem = "single_qr" | "single_qr_print_pack" | "print_pack" | "pack3" | "pack10";
+export type PurchaseLine = { offer: "single" | "printPack" | "pack3" | "pack10"; amount: number };
+
+/**
+ * Design 4.8 Static Packs: the account's static credits. +n when a pack is paid, −1 when a credit unlocks a static code.
+ * The balance is the sum; a credit spend references the code it unlocked (one per code).
+ */
+export const creditLedger = pgTable(
+  "credit_ledger",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    delta: integer("delta").notNull(),
+    reason: text("reason").$type<"pack3" | "pack10" | "unlock">().notNull(),
+    purchaseId: text("purchase_id").references(() => purchase.id, { onDelete: "set null" }),
+    qrCodeId: text("qr_code_id").references(() => qrCode.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("credit_ledger_user_idx").on(t.userId),
+    uniqueIndex("credit_ledger_purchase_uq").on(t.purchaseId),
+    // One credit per code: a code can't be unlocked with credits twice.
+    uniqueIndex("credit_ledger_unlock_uq")
+      .on(t.qrCodeId)
+      .where(sql`${t.reason} = 'unlock'`),
+  ],
+);
+
+/**
+ * Design 4.8 monthly allowances of a plan: a static unlock or an included Print Pack, used in a billing period.
+ * Counted per period start, so allowances reset with the plan's renewal and unused ones don't roll over.
+ */
+export const allowanceUse = pgTable(
+  "allowance_use",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    kind: text("kind").$type<"static_unlock" | "print_pack">().notNull(),
+    qrCodeId: text("qr_code_id")
+      .notNull()
+      .references(() => qrCode.id, { onDelete: "cascade" }),
+    periodStart: timestamp("period_start", { withTimezone: true }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("allowance_use_user_idx").on(t.userId, t.kind, t.periodStart), uniqueIndex("allowance_use_code_uq").on(t.kind, t.qrCodeId)],
 );
 
 /** Dynamic plan subscription (mirrors Stripe; Stripe is the source of truth). */
@@ -162,6 +214,9 @@ export const subscription = pgTable(
     stripePriceId: text("stripe_price_id").notNull(),
     status: text("status").notNull(),
     activeCodeLimit: integer("active_code_limit").notNull(),
+    /** Design 4.8 plans: Starter or Studio (monthly allowances and Dynamic slots). */
+    plan: text("plan").$type<"starter" | "studio">().notNull().default("starter"),
+    currentPeriodStart: timestamp("current_period_start", { withTimezone: true }),
     currentPeriodEnd: timestamp("current_period_end", { withTimezone: true }),
     cancelAtPeriodEnd: boolean("cancel_at_period_end").notNull().default(false),
     ...timestamps,

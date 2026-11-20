@@ -24,6 +24,7 @@ import { Button } from "@/shared/ui/button";
 import { Segmented } from "@/shared/ui/segmented";
 import { Stage, StageBar, StageCanvas, StageFoot } from "@/shared/ui/stage";
 import { UseTrialButton } from "./trial-actions";
+import { formatMoney, type Currency } from "@/shared/config/catalog-core";
 
 export type ExportFormat = "png" | "svg";
 export type ExportSettings = { format: ExportFormat; resolution: number; transparent: boolean };
@@ -86,7 +87,7 @@ export type ExportSurfaceProps = {
   layouts?: { id: string; name: string; href: string; active: boolean }[];
   backHref: string;
   initial: { format?: ExportFormat; resolution?: number; transparent?: boolean };
-  price: { cents: number; currency: string };
+  price: { cents: number; currency: Currency };
   /** Banners from the URL: back from Google sign-in, back from checkout. */
   returnedFromSignIn?: boolean;
   checkout?: "success" | "cancelled";
@@ -144,7 +145,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
   const fileDims =
     settings.format === "png" ? `${pixels.width} × ${pixels.height} px` : print ? `${layoutDims} · vector` : `${layoutDims} · vector`;
   const fmt = settings.format.toUpperCase();
-  const amount = format.number(props.price.cents / 100, { style: "currency", currency: props.price.currency });
+  const amount = formatMoney(props.price.cents, props.price.currency);
   const readyUrl = useRef<string | null>(null);
 
   // Back from checkout before Stripe's webhook has granted the file: ask the server again, a few seconds apart.

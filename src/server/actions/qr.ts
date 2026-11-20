@@ -6,6 +6,10 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireUser } from "../auth";
 import { createCheckout, createPortalSession, createPrintPackCheckout } from "../billing/checkout";
+import { getCurrency } from "../currency";
+import { guard, type ActionResult } from "./result";
+
+export type { ActionResult } from "./result";
 import { db, schema } from "../db";
 import { restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { encodedValue } from "../qr/export";
@@ -14,9 +18,6 @@ import { addLayoutFrom, updateLayoutDesign } from "../qr/update-layout";
 import { newId, newShortCode } from "../db/ids";
 import { activateTrialCode, startTrial } from "../billing/trial";
 import { activeSubscription, canDownload, printPackForSale } from "../billing/entitlements";
-
-export type ActionResult<T = undefined> =
-  { ok: true; data: T } | { ok: false; error: "unauthorized" | "invalid" | "not_found" | "too_long" | "failed" };
 
 const draftSchema = z.object({
   qrCodeId: z.string().optional(),
@@ -39,25 +40,6 @@ const draftSchema = z.object({
 });
 
 export type DraftInput = z.infer<typeof draftSchema>;
-
-/** Error name and database error code only; no message text, query or parameters. */
-function describeError(error: unknown): string {
-  if (!(error instanceof Error)) return "unknown error";
-  const cause = error.cause as { code?: unknown } | undefined;
-  return typeof cause?.code === "string" ? `${error.name} (database code ${cause.code})` : error.name;
-}
-
-async function guard<T>(fn: () => Promise<ActionResult<T>>): Promise<ActionResult<T>> {
-  try {
-    return await fn();
-  } catch (error) {
-    if (error instanceof Error && error.name === "UnauthorizedError") return { ok: false, error: "unauthorized" };
-    // Never log the error itself: a failed query's message carries its parameters, which can include QR content
-    // such as a Wi-Fi password. Log only what identifies the failure.
-    console.error(`[action] failed: ${describeError(error)}`);
-    return { ok: false, error: "failed" };
-  }
-}
 
 /** Saves the editor state (the guest draft is saved after Google sign-in). */
 export async function saveDraft(input: DraftInput): Promise<ActionResult<{ qrCodeId: string; layoutIds: string[] }>> {
@@ -153,7 +135,7 @@ export async function startPrintPackCheckout(input: {
 }): Promise<ActionResult<{ url: string }>> {
   return guard(async () => {
     const user = await requireUser();
-    if (!printPackForSale()) return { ok: false, error: "invalid" };
+    if (!printPackForSale(await getCurrency())) return { ok: false, error: "not_offered" };
     const qr = await db.query.qrCode.findFirst({
       where: (q, { and, eq, isNull }) => and(eq(q.id, input.qrCodeId), eq(q.userId, user.id), isNull(q.deletedAt)),
     });
@@ -166,6 +148,7 @@ export async function startPrintPackCheckout(input: {
     if (!settings.success) return { ok: false, error: "invalid" };
     const url = await createPrintPackCheckout({
       user,
+      currency: await getCurrency(),
       qrCodeId: qr.id,
       layoutId: input.layoutId,
       settings: settings.data,
@@ -215,12 +198,18 @@ export async function startCheckout(input: {
   locale: string;
   resolution?: number;
   transparent?: boolean;
+  /** Design 7.2: add this code's Print Pack to the same order (mm layouts only; the server checks). */
+  printPack?: boolean;
+  plan?: "starter" | "studio";
 }): Promise<ActionResult<{ url: string }>> {
   return guard(async () => {
     const user = await requireUser();
     const resolution = z.number().int().min(1).max(1200).optional().safeParse(input.resolution);
     const url = await createCheckout({
       user,
+      currency: await getCurrency(),
+      printPack: input.printPack === true,
+      plan: input.plan === "studio" ? "studio" : "starter",
       qrCodeId: input.qrCodeId,
       layoutId: input.layoutId,
       format: input.format,

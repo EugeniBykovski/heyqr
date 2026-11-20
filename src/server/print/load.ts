@@ -1,4 +1,5 @@
 import "server-only";
+import { getCurrency } from "../currency";
 import type { Layout } from "@heyqr/qr-core";
 import { readPrintSettings, type PrintSettings } from "@/entities/qr";
 import { canDownload, canDownloadPrintPack, printPackForSale } from "../billing/entitlements";
@@ -54,7 +55,7 @@ export async function loadPrint(
       layoutName: record.name,
       entitled,
       unlocked,
-      forSale: printPackForSale(),
+      forSale: printPackForSale(await getCurrency()),
     },
   };
 }

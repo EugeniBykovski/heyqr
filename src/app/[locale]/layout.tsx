@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { DM_Sans, IBM_Plex_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { getCurrency } from "@/server/currency";
+import { CurrencyProvider } from "@/shared/lib/currency";
 import { CaptionFontFaces } from "@/entities/qr";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
@@ -38,7 +40,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const t = await getTranslations("nav");
+  const [t, currency] = await Promise.all([getTranslations("nav"), getCurrency()]);
 
   return (
     <html lang={locale} dir={RTL_LOCALES.includes(locale) ? "rtl" : "ltr"} className={`${dmSans.variable} ${plexMono.variable}`}>
@@ -52,11 +54,13 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         </a>
         <NextIntlClientProvider>
           <Providers>
-            <SiteHeader />
-            <main id="main" className="flex-1">
-              {children}
-            </main>
-            <SiteFooter />
+            <CurrencyProvider value={currency}>
+              <SiteHeader />
+              <main id="main" className="flex-1">
+                {children}
+              </main>
+              <SiteFooter />
+            </CurrencyProvider>
           </Providers>
         </NextIntlClientProvider>
       </body>

@@ -1311,7 +1311,8 @@
       "failed": "Failed"
     },
     "liveNoPlan": "{used} active · no plan",
-    "printPackItem": "Print Pack"
+    "printPackItem": "Print Pack",
+    "packItem": "Static Pack · {n} credits"
   },
   "legal": {
     "terms": {
@@ -1666,6 +1667,131 @@
       "preview": "Print Preview · {layout}",
       "defaults": "Default settings: 100% size, 3 mm bleed, crop marks. Change them in Print Preview.",
       "open": "Open Print Preview"
+    }
+  },
+  "plans": {
+    "title": "Pay once for a few codes, or plan for many.",
+    "lead": "Designing, previewing and the scan check are always free. You pay when you download.",
+    "currencyLabel": "Show prices in",
+    "localTitle": "Local prices in {currency}.",
+    "localText": "The whole site, checkout and receipts use these amounts. Taxes are added at checkout.",
+    "pendingTitle": "Some prices in {currency} aren’t set yet.",
+    "pendingText": "Offers without a {currency} price can’t be bought in {currency} for now. Nothing is converted from another currency.",
+    "unavailable": "Not available to buy in {currency} yet.",
+    "current": "Your current plan",
+    "manage": "Manage your plan",
+    "perMonth": "per month",
+    "live": "Active at once",
+    "monthly": "New each month",
+    "dynCodes": "<b>{n}</b> Dynamic QR codes",
+    "unlocks": "<b>{n}</b> static QR unlocks",
+    "packsIncl": "<b>{n}</b> Print Packs",
+    "once": {
+      "title": "One-time",
+      "sub": "No subscription. Codes you unlock stay yours."
+    },
+    "month": {
+      "title": "Monthly",
+      "sub": "For Dynamic QR codes and many static ones. Cancel anytime."
+    },
+    "free": {
+      "title": "Free",
+      "q": "Design and test a code before you spend anything.",
+      "a": "Live design and preview",
+      "b": "Scan check on every edit",
+      "c": "Up to 10 saved drafts when signed in",
+      "cta": "Start designing"
+    },
+    "single": {
+      "title": "Single QR",
+      "unit": "once",
+      "q": "One static QR with all its downloads.",
+      "a": "PNG and SVG downloads",
+      "b": "Every layout of that QR, downloaded again any time",
+      "c": "Optional Print Pack +{price}",
+      "cta": "Create a QR"
+    },
+    "packs": {
+      "title": "Static Packs",
+      "unit": "for {n} credits",
+      "credits": "{n} static credits",
+      "each": "{price} per QR",
+      "buy": "Buy {n} credits",
+      "note": "One credit unlocks one unique static QR, whenever you’re ready. Credits don’t expire."
+    },
+    "pp": {
+      "kicker": "Add-on for any QR",
+      "title": "Print Pack · +{price} per QR",
+      "text": "Off by default. Add it at checkout or later from the QR’s details. Studio includes {n} per month.",
+      "pdf": "Vector print PDF",
+      "pdfSub": "sRGB, 3 mm bleed and crop marks, at the exact size.",
+      "svg": "Editable SVG",
+      "svgSub": "For your own artwork, with sRGB and HEX colors.",
+      "spec": "Color and size sheet",
+      "specSub": "Finished size, QR size, quiet zone and color values."
+    },
+    "starter": {
+      "title": "Starter",
+      "badge": "7-day free trial",
+      "a": "Basic scan analytics: daily totals",
+      "b": "Change Dynamic destinations anytime",
+      "c": "Print Pack +{price} per QR",
+      "trial": "Start 7-day free trial",
+      "openTrial": "Open your trial",
+      "subscribe": "Subscribe now · {price}/month",
+      "note": "Trial: no card, no automatic charge."
+    },
+    "studio": {
+      "title": "Studio",
+      "badge": "For teams and print work",
+      "a": "Per-code scan analytics",
+      "b": "Change Dynamic destinations anytime",
+      "c": "Extra Print Packs +{price} per QR",
+      "cta": "Choose Studio"
+    },
+    "rules": {
+      "title": "How unlocks and limits work",
+      "1t": "One unlock, one unique QR",
+      "1d": "A static credit or monthly unlock opens one QR. All its layouts, PNG and SVG files and repeat downloads use that same unlock.",
+      "2t": "Monthly allowances reset",
+      "2d": "New static unlocks and included Print Packs refresh on your billing date. Unused ones don’t roll over.",
+      "3t": "Dynamic slots are live, not monthly",
+      "3d": "A slot is in use while the code redirects. Pause or delete a Dynamic code to free its slot right away.",
+      "4t": "Yours after you cancel",
+      "4d": "Static codes you unlocked stay downloadable. Dynamic short links stop redirecting when the paid period ends."
+    },
+    "cmp": {
+      "title": "Compare",
+      "what": "What you get",
+      "price": "Price",
+      "once": "{price} once",
+      "or": "{a} or {b}",
+      "mo": "{price}/mo",
+      "live": "Live design, preview and scan check",
+      "static": "Static QR with PNG and SVG",
+      "dynamic": "Active Dynamic QR codes",
+      "analytics": "Scan analytics",
+      "printPack": "Print Pack",
+      "repeat": "Repeat downloads",
+      "cancel": "After you cancel",
+      "incl": "Included",
+      "no": "Not included",
+      "oneQr": "1 QR",
+      "credits": "3 or 10 credits",
+      "newMonth": "{n} new a month",
+      "atOnce": "{n} at once",
+      "basic": "Basic",
+      "perCode": "Per code",
+      "ppStudio": "{n} a month, then +{price}",
+      "notSub": "Not a subscription",
+      "stay": "Static codes stay downloadable",
+      "foot": "Taxes are calculated at checkout. Website codes can be static or dynamic; Text, Wi-Fi and contact card codes are static."
+    },
+    "errors": {
+      "not_offered": "This can’t be bought in the selected currency yet. Nothing was charged.",
+      "price_mismatch": "The price changed since this page loaded. Nothing was charged; reload to see the current price.",
+      "unauthorized": "Sign in to continue.",
+      "failed": "We couldn’t open checkout. Nothing was charged; try again."
     }
   }
 }

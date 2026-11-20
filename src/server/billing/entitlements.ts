@@ -1,6 +1,7 @@
 import "server-only";
 import { and, eq, inArray } from "drizzle-orm";
-import { env } from "@/env";
+import type { Currency, Offer } from "@/shared/config/catalog";
+import { purchasable } from "./catalog";
 import { isConfigured } from "../config";
 import { db, schema } from "../db";
 import { trialCovers, trialPhase, type TrialPhase } from "./trial";
@@ -30,8 +31,11 @@ export async function canDownloadPrintPack(
   return qr.printPackAt !== null && (await canDownload(userId, qr));
 }
 
-/** Whether this deployment can sell the Print Pack (payments configured and a Print Pack price set). */
-export const printPackForSale = () => isConfigured("payments") && Boolean(env.STRIPE_PRICE_PRINT_PACK);
+/** Whether the Print Pack can be bought in this currency (payments configured, a price point and a Stripe Price). */
+export const printPackForSale = (currency: Currency) => isConfigured("payments") && purchasable(currency, "printPack");
+
+/** Whether an offer can be bought in this currency here (payments configured and the catalog has it). */
+export const forSale = (currency: Currency, offer: Offer) => isConfigured("payments") && purchasable(currency, offer);
 
 /**
  * The single rule for paid downloads. Static: the code was bought (any layout, any format).

@@ -1,3 +1,4 @@
+import { formatMoney, priceSheet } from "@/shared/config/catalog";
 import { layoutGeometry, type QrContent } from "@heyqr/qr-core";
 import {
   ArrowLeftIcon,
@@ -21,11 +22,11 @@ import { DestinationForm } from "@/features/qr-destination";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
 import { requireUser } from "@/server/auth";
+import { getCurrency } from "@/server/currency";
 import { canDownload, printPackForSale, userTrial } from "@/server/billing/entitlements";
 import { loadPrint } from "@/server/print/load";
 import { encodedValue } from "@/server/qr/export";
 import { dailyScans, getQrCode } from "@/server/qr/repository";
-import { pricing } from "@/shared/config/pricing";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Card, CardTitle } from "@/shared/ui/card";
@@ -73,7 +74,7 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
   const user = await requireUser();
   const qr = await getQrCode(user.id, id);
   if (!qr) notFound();
-  const [t, tl, tp, tTypes, tDash, format, entitled, scans, phase] = await Promise.all([
+  const [t, tl, tp, tTypes, tDash, , entitled, scans, phase] = await Promise.all([
     getTranslations("qr"),
     getTranslations("qr.details"),
     getTranslations("print"),
@@ -94,7 +95,7 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
 
   const printLayouts = qr.layouts.filter((l) => l.design.layout.unit === "mm");
   const printPackOpen = entitled && qr.printPackAt !== null;
-  const forSale = printPackForSale();
+  const forSale = printPackForSale(await getCurrency());
   const firstPrint = printLayouts[0];
   const printHref = (layoutId: string) => `/print?qr=${qr.id}&layout=${layoutId}&from=details`;
   const setupHref = (layoutId: string) => `/edit/${qr.id}?layout=${layoutId}&group=size&next=print`;
@@ -129,7 +130,9 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
     const r = (v: number) => Math.round(v * 10) / 10;
     return L.preset === "qr" ? tl("dimsSquare", { size: `${r(g.width)} ${L.unit}` }) : `${r(g.width)} × ${r(g.height)} ${L.unit}`;
   };
-  const amount = format.number(pricing.printPackCents / 100, { style: "currency", currency: pricing.currency });
+  const currency = await getCurrency();
+  const ppCents = priceSheet(currency).printPack;
+  const amount = formatMoney(ppCents, currency);
 
   return (
     <>

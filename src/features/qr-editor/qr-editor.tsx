@@ -3,7 +3,7 @@
 import { composeLayout, encodePayload, layoutCapacity, type QrContentType } from "@heyqr/qr-core";
 import { ArrowLeftIcon, ArrowRightIcon, LoaderCircleIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { Tabs as TabsPrimitive } from "radix-ui";
 import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -19,7 +19,8 @@ import {
 } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
 import { saveDraft } from "@/server/actions/qr";
-import { pricing } from "@/shared/config/pricing";
+import { formatMoney } from "@/shared/config/catalog";
+import { usePrices } from "@/shared/lib/currency";
 import { Button } from "@/shared/ui/button";
 import { BottomBarInfo } from "./bottom-bar";
 import { ContentStep } from "./content-step";
@@ -54,7 +55,6 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
   const t = useTranslations("editor");
   const tErrors = useTranslations("errors");
   const tTypes = useTranslations("contentTypes");
-  const format = useFormatter();
   const router = useRouter();
   const params = useSearchParams();
   const { design, setDesign, restored, unreadable, modeAdjusted } = useDraft();
@@ -97,10 +97,9 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
     () => (layoutCapacity(shownLayout, shownValue).ok ? composeLayout(shownLayout, shownValue).scan : null),
     [shownLayout, shownValue],
   );
-  const price = format.number((design.model === "dynamic" ? pricing.dynamicMonthlyCents : pricing.staticCents) / 100, {
-    style: "currency",
-    currency: pricing.currency,
-  });
+  const prices = usePrices();
+  const priceCents = design.model === "dynamic" ? prices.cents.starter : prices.cents.single;
+  const price = formatMoney(priceCents, prices.currency);
   const canDownload = complete && Boolean(scan?.ok) && !saving;
 
   /** Steps are URL state: pushState keeps browser Back working without a server round trip. */

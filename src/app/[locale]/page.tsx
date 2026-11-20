@@ -1,3 +1,4 @@
+import { formatMoney, PLANS, priceSheet } from "@/shared/config/catalog";
 import {
   ArrowRightIcon,
   FrameIcon,
@@ -11,13 +12,12 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Suspense, type ReactNode } from "react";
-import { getFormatter, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { CENTER_ICONS, FRAME_STYLES } from "@/entities/qr";
-import { env } from "@/env";
 import { HomeExamples, QuickStart, TypeChips } from "@/features/qr-editor";
 import { Link } from "@/i18n/navigation";
+import { getCurrency } from "@/server/currency";
 import { resolveLocale } from "@/i18n/server";
-import { pricing } from "@/shared/config/pricing";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -62,9 +62,11 @@ const section = "reveal py-12 lg:py-18";
 
 export default async function HomePage({ params }: PageProps<"/[locale]">) {
   await resolveLocale(params);
-  const [t, tNav, format, session] = await Promise.all([getTranslations("home"), getTranslations("nav"), getFormatter(), getSession()]);
-  const money = (cents: number) => format.number(cents / 100, { style: "currency", currency: pricing.currency });
-  const prices = { static: money(pricing.staticCents), dynamic: money(pricing.dynamicMonthlyCents), limit: env.DYNAMIC_ACTIVE_CODE_LIMIT };
+  const [t, tNav, session] = await Promise.all([getTranslations("home"), getTranslations("nav"), getSession()]);
+  const currency = await getCurrency();
+  const sheet = priceSheet(currency);
+  const money = (cents: number | null) => formatMoney(cents, currency);
+  const prices = { static: money(sheet.single), dynamic: money(sheet.starter), limit: PLANS.starter.dyn };
   const b = (chunks: ReactNode) => <b className="font-semibold">{chunks}</b>;
 
   return (

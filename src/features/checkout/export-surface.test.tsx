@@ -38,7 +38,7 @@ const base = {
   layoutName: "Business card",
   backHref: "/edit/q1?layout=l1",
   initial: {},
-  price: { cents: 499, currency: "USD" },
+  price: { cents: 499, currency: "USD" as const },
 };
 const signed = (p: Partial<ExportSurfaceProps> & { layout?: ExportSurfaceProps["layout"]; entitled?: boolean } = {}) =>
   render(

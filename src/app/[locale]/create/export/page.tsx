@@ -1,3 +1,4 @@
+import { priceSheet } from "@/shared/config/catalog";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -5,12 +6,12 @@ import { layoutCapacity } from "@heyqr/qr-core";
 import { ExportSurface, type ExportFormat } from "@/features/checkout";
 import { TooLongNotice } from "@/features/qr-editor";
 import { getSession } from "@/server/auth";
+import { getCurrency } from "@/server/currency";
 import { canDownload, userTrial } from "@/server/billing/entitlements";
 import { trialCode } from "@/server/billing/trial";
 import { db } from "@/server/db";
 import { encodedValue } from "@/server/qr/export";
 import { getQrCode, paidPurchase } from "@/server/qr/repository";
-import { pricing } from "@/shared/config/pricing";
 import { GuestExport } from "@/widgets/export-screen";
 import { resolveLocale } from "@/i18n/server";
 
@@ -80,6 +81,7 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
   const hrefFor = (id: string) =>
     `/create/export?${new URLSearchParams({ qr: qr.id, layout: id, ...Object.fromEntries(keep) }).toString()}`;
 
+  const currency = await getCurrency();
   return (
     <ExportSurface
       mode="signed"
@@ -97,7 +99,7 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
       layouts={qr.layouts.map((l) => ({ id: l.id, name: l.name, href: hrefFor(l.id), active: l.id === layout.id }))}
       backHref={`/edit/${qr.id}?layout=${layout.id}`}
       initial={initial}
-      price={{ cents: qr.model === "dynamic" ? pricing.dynamicMonthlyCents : pricing.staticCents, currency: pricing.currency }}
+      price={{ cents: priceSheet(currency)[qr.model === "dynamic" ? "starter" : "single"] ?? 0, currency }}
       print={
         layout.design.layout.unit === "mm"
           ? { kind: "preview", href: `/print?qr=${qr.id}&layout=${layout.id}&from=export` }
