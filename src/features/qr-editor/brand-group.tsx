@@ -14,6 +14,7 @@ import {
   extractPalette,
   LOGO_ACCEPT,
   QrPreview,
+  SAMPLE_LOGO,
   type BrandLook,
   type BrandRole,
   type EditorDesign,
@@ -24,10 +25,6 @@ import { Swatch } from "@/shared/ui/swatch";
 import { ColorField } from "./design-panel";
 import { intakeLogo } from "./logo-intake";
 
-/** Design 2.5 sample logo (Little Fern Coffee), so the branded flow can be tried without a file. */
-export const SAMPLE_LOGO = `data:image/svg+xml;base64,${btoa(
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M2 50a48 48 0 1 0 96 0a48 48 0 1 0-96 0z" fill="#1F4D3A"/><path d="M27 47h42v9c0 13-9.4 22-21 22s-21-9-21-22z" fill="#F7F1E6"/><path d="M69 50h4.5a8 8 0 0 1 0 16H68v-5h5.5a3 3 0 0 0 0-6H69z" fill="#F7F1E6"/><path d="M20 81h56a3.5 3.5 0 0 1 0 7H20a3.5 3.5 0 0 1 0-7z" fill="#F7F1E6"/><path d="M48 43c-7-6-8-16-1-27c8 10 8 20 1 27z" fill="#C8643B"/><path d="M47 31c-6 1-11-2-13-7c6-1 11 2 13 7z" fill="#8DB596"/></svg>',
-)}`;
 const SAMPLE_NAME = "little-fern-coffee.svg";
 
 /** Reads an image's pixels in the browser and returns its palette (design 2.6 "Reading colors from your image"). */
@@ -158,9 +155,9 @@ export function BrandGroup({
           </div>
         ) : hasImage && design.logo.kind === "image" ? (
           <div className="flex items-center gap-3 rounded-lg border border-border bg-surface p-3">
-            <span className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-md bg-subtle">
+            <span className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-md bg-subtle p-1">
               {/* eslint-disable-next-line @next/next/no-img-element -- a local data URL preview */}
-              <img src={design.logo.href} alt={t("preview")} className="max-h-full max-w-full object-contain" />
+              <img src={design.logo.href} alt={t("preview")} className="block size-full min-h-0 min-w-0 object-contain" />
             </span>
             <span className="flex min-w-0 grow flex-col">
               <span className="truncate text-label" title={design.brand?.name}>
@@ -196,7 +193,7 @@ export function BrandGroup({
             onDrop={onDrop}
             className={cn(
               "flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-border bg-surface px-4 py-6 text-center transition-colors duration-(--motion-fast)",
-              over && "border-violet-400 bg-violet-50",
+              over && "border-selected-border bg-selected",
               status === "error" && "border-danger",
             )}
           >
@@ -383,7 +380,7 @@ function LookCard({
       className="relative flex min-w-0 cursor-pointer flex-col gap-1.5 rounded-lg border border-border bg-surface p-2 text-left hover:border-border-hover aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]"
     >
       <span className="grid aspect-[4/3] place-items-center overflow-hidden rounded-md bg-subtle p-1.5">
-        <QrPreview layout={layout} value={value} label="" className="size-full [&_svg]:size-full" />
+        <QrPreview layout={layout} value={value} label="" className="size-full" />
       </span>
       <span className="text-[0.8125rem] font-semibold">{t(`${look}.title`)}</span>
       <span className="text-caption text-muted-foreground">{t(`${look}.desc`)}</span>

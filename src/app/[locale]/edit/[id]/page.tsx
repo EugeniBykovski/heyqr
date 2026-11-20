@@ -25,7 +25,12 @@ export default async function EditDesignPage({ params, searchParams }: PageProps
   const layoutParam = typeof query.layout === "string" ? query.layout : undefined;
   const session = await getSession();
   if (!session) {
-    const here = `/edit/${encodeURIComponent(id)}${layoutParam ? `?layout=${encodeURIComponent(layoutParam)}` : ""}`;
+    const keep = new URLSearchParams(
+      Object.entries({ layout: layoutParam, group: query.group, next: query.next }).flatMap(([k, v]) =>
+        typeof v === "string" ? [[k, v]] : [],
+      ),
+    ).toString();
+    const here = `/edit/${encodeURIComponent(id)}${keep ? `?${keep}` : ""}`;
     return redirect({ href: `/sign-in?next=${encodeURIComponent(here)}`, locale });
   }
   const found = await getLayoutForEdit(session.user.id, id, layoutParam);
@@ -41,6 +46,9 @@ export default async function EditDesignPage({ params, searchParams }: PageProps
       initialDesign={designFromSaved(qr, layout.design)}
       value={encodedValue(qr)}
       detailsHref={`/dashboard/qr/${qr.id}`}
+      // Design 8.x "Set up for print": ?group=size opens Size; with ?next=print a layout saved in mm opens Print Preview.
+      initialGroup={query.group === "size" ? "size" : undefined}
+      printHref={query.next === "print" ? `/print?qr=${qr.id}&layout=${layout.id}&from=details` : undefined}
     />
   );
 }

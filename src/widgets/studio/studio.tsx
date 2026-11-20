@@ -3,6 +3,8 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { QrPreview } from "@/entities/qr";
 import { env } from "@/env";
 import { Link } from "@/i18n/navigation";
+import { StartTrialButton } from "@/features/checkout";
+import { userTrial } from "@/server/billing/entitlements";
 import { encodedValue } from "@/server/qr/export";
 import { studioSummary } from "@/server/qr/repository";
 import { cn } from "@/shared/lib/utils";
@@ -17,7 +19,12 @@ const panel = "flex min-w-0 flex-col gap-4 rounded-xl border border-border bg-su
  * the three most recent codes and what the account includes. With no codes yet it invites the first one (6.2).
  */
 export async function Studio({ userId, name }: { userId: string; name: string }) {
-  const [t, format, data] = await Promise.all([getTranslations("home.studio"), getFormatter(), studioSummary(userId)]);
+  const [t, format, data, phase] = await Promise.all([
+    getTranslations("home.studio"),
+    getFormatter(),
+    studioSummary(userId),
+    userTrial(userId),
+  ]);
   const { codes, scans, scansByCode, filesReady, layoutsByCode } = data;
   const shortBase = env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "").replace(/^https?:\/\//, "");
   const isPaid = (c: (typeof codes)[number]) => (c.model === "dynamic" ? c.status === "active" : c.purchasedAt !== null);
@@ -71,6 +78,14 @@ export async function Studio({ userId, name }: { userId: string; name: string })
             </p>
           </div>
           <div className="flex flex-wrap gap-2.5">
+            {/* Design 9.x: the trial from the signed-in home, only when the server says this account can start one;
+                a running trial links back to its page. */}
+            {phase.state === "none" && phase.eligible ? <StartTrialButton size="md" variant="secondary" /> : null}
+            {phase.state === "active" || phase.state === "ending" ? (
+              <Button asChild>
+                <Link href="/dashboard/trial">{t("trial", { days: phase.daysLeft })}</Link>
+              </Button>
+            ) : null}
             <Button asChild>
               <Link href="/dashboard/billing">{t("billing")}</Link>
             </Button>

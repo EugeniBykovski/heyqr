@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { composeLayout, layoutGeometry, type Layout } from "@heyqr/qr-core";
+import { brandHeader, composeLayout, layoutGeometry, type Layout } from "@heyqr/qr-core";
 import { rasterizeSvg } from "@heyqr/qr-core/raster";
 import PDFDocument from "pdfkit";
 import SVGtoPDF from "svg-to-pdfkit";
@@ -112,7 +112,12 @@ export function printPage(layout: Layout, value: string, s: PrintSettings, key: 
   let logoInfo: PrintPage["logo"] = null;
   if (href) {
     const total = Number(composed.svg.match(/<svg x="[^"]*" y="[^"]*" width="[^"]*" height="[^"]*" viewBox="0 0 (\d+)/)?.[1] ?? 0);
-    const mm = logo?.href && total > 8 ? ((logo.size * (total - 8)) / total) * g.qr[2] * s.scale : g.qr[2] * 0.3 * s.scale;
+    const header = logo?.href ? null : brandHeader(layout, g);
+    // The brand card logo's longest side as drawn (its bounded box keeps the image's aspect ratio).
+    const mm =
+      logo?.href && total > 8
+        ? ((logo.size * (total - 8)) / total) * g.qr[2] * s.scale
+        : (header ? Math.max(header.logo[2], header.logo[3]) : g.qr[2] * 0.3) * s.scale;
     const px = rasterSize(href);
     const longest = px ? Math.max(px.width, px.height) : null;
     const ppi = longest ? effectivePpi(longest, mm) : null;

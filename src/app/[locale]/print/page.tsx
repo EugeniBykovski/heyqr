@@ -6,6 +6,7 @@ import { PrintPreview } from "@/features/print-preview";
 import { Link, redirect } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
 import { getSession } from "@/server/auth";
+import { canDownload, printPackForSale } from "@/server/billing/entitlements";
 import { getQrCode } from "@/server/qr/repository";
 import { pricing } from "@/shared/config/pricing";
 import { Button } from "@/shared/ui/button";
@@ -50,7 +51,7 @@ export default async function PrintPage({ params, searchParams }: PageProps<"/[l
         <p className="text-secondary-foreground">{t("notPrint.text")}</p>
         <div className="flex flex-wrap gap-3">
           <Button asChild variant="primary">
-            <Link href={designHref}>{t("notPrint.action")}</Link>
+            <Link href={`/edit/${qr.id}?layout=${layout.id}&group=size&next=print`}>{t("notPrint.action")}</Link>
           </Button>
           <Button asChild>
             <Link href={back.href}>{back.label}</Link>
@@ -74,6 +75,8 @@ export default async function PrintPage({ params, searchParams }: PageProps<"/[l
       designHref={designHref}
       checkout={checkout}
       stale={one(query.stale) === "1"}
+      entitled={await canDownload(session.user.id, qr)}
+      forSale={printPackForSale()}
     />
   );
 }

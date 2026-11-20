@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, CheckIcon, MinusIcon } from "lucide-react";
+import { ArrowLeftIcon, CheckIcon, DownloadIcon, MinusIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { env } from "@/env";
@@ -11,6 +11,7 @@ import { TRIAL_DAYS, trialCode } from "@/server/billing/trial";
 import { userTrial } from "@/server/billing/entitlements";
 import { db } from "@/server/db";
 import { encodedValue } from "@/server/qr/export";
+import { samplePrint } from "@/server/print/sample";
 import { dailyScans } from "@/server/qr/repository";
 import { pricing } from "@/shared/config/pricing";
 import { cn } from "@/shared/lib/utils";
@@ -27,10 +28,11 @@ export async function generateMetadata(): Promise<Metadata> {
  * Design 9.1–9.4 "Trial": the account's real trial, from the server's dates (active, ending, expired, upgraded), its
  * one test Dynamic QR with its real short link and scans, what the trial includes, and what happens when it ends.
  * Activating takes the Dynamic plan through Stripe Checkout for the same code, so the short link stays.
- * The design's Print Pack sample needs the print service, which this deployment doesn't have, so it isn't shown.
+ * While the trial runs, the Print Pack sample: the three print files of a fixed demo QR (never the user's test code).
  */
 export default async function TrialPage({ params }: PageProps<"/[locale]/dashboard/trial">) {
-  await resolveLocale(params);
+  const locale = await resolveLocale(params);
+  const sample = samplePrint(env.NEXT_PUBLIC_APP_URL);
   const [t, format, user] = await Promise.all([getTranslations("trial"), getFormatter(), requireUser()]);
   const [phase, code] = await Promise.all([userTrial(user.id), trialCode(db, user.id)]);
   const price = format.number(pricing.dynamicMonthlyCents / 100, { style: "currency", currency: pricing.currency });
@@ -117,8 +119,8 @@ export default async function TrialPage({ params }: PageProps<"/[locale]/dashboa
         <p className="text-secondary-foreground">{s("lead", { start: date(phase.startedAt), end })}</p>
       </header>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-start">
-        <div className="flex flex-col gap-5">
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-start">
+        <div className="flex min-w-0 flex-col gap-5">
           <section
             aria-labelledby="trial-status"
             className="flex flex-col gap-4 rounded-2xl bg-inverse p-6 text-inverse-foreground shadow-2 sm:p-7"
@@ -227,7 +229,7 @@ export default async function TrialPage({ params }: PageProps<"/[locale]/dashboa
           </Card>
         </div>
 
-        <div className="flex flex-col gap-5">
+        <div className="flex min-w-0 flex-col gap-5">
           <Card aria-labelledby="trial-included" className="gap-3">
             <h2 id="trial-included" className="text-h3">
               {state === "upgraded" ? t("included.kept") : t("included.title")}
@@ -245,6 +247,48 @@ export default async function TrialPage({ params }: PageProps<"/[locale]/dashboa
               </li>
             </ul>
           </Card>
+          {state === "active" || state === "ending" ? (
+            <Card aria-labelledby="trial-sample" className="gap-3">
+              <div className="flex items-center justify-between gap-2">
+                <h2 id="trial-sample" className="text-h3">
+                  {t("sample.title")}
+                </h2>
+                <Badge>{t("sample.badge")}</Badge>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="grid h-24 w-16 shrink-0 place-items-center rounded-md border border-border bg-white p-1">
+                  <QrPreview layout={sample.layout} value={sample.value} label={t("sample.demo")} className="size-full" />
+                </span>
+                <p className="text-caption text-secondary-foreground">{t("sample.text")}</p>
+              </div>
+              <ul className="flex flex-col gap-2">
+                {(
+                  [
+                    ["pdf", t("sample.pdf"), t("sample.pdfSub", { w: sample.page.sizes.page.width, h: sample.page.sizes.page.height })],
+                    [
+                      "svg",
+                      t("sample.svg"),
+                      t("sample.svgSub", { w: sample.page.sizes.finished.width, h: sample.page.sizes.finished.height }),
+                    ],
+                    ["spec", t("sample.spec"), t("sample.specSub")],
+                  ] as const
+                ).map(([file, label, sub]) => (
+                  <li key={file}>
+                    <a
+                      href={`/api/print/sample?file=${file}&locale=${locale}`}
+                      className="flex min-h-12 items-center gap-3 rounded-lg border border-border px-3 py-2 hover:border-border-hover"
+                    >
+                      <DownloadIcon aria-hidden className="size-4 shrink-0 text-muted-foreground" />
+                      <span className="flex min-w-0 flex-col">
+                        <b className="text-[0.875rem] font-semibold">{label}</b>
+                        <span className="truncate text-caption text-muted-foreground">{sub}</span>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          ) : null}
           <Card aria-labelledby="trial-end" className="gap-3">
             <h2 id="trial-end" className="text-h3">
               {s("endTitle", { end })}

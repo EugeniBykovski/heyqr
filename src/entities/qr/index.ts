@@ -87,6 +87,7 @@ export {
   brandColorsOf,
   brandLookPatch,
   brandNameFromFile,
+  SAMPLE_LOGO,
   brandRoles,
   extractPalette,
   type BrandColors,

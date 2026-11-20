@@ -12,7 +12,7 @@ import { Button } from "@/shared/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/shared/ui/dialog";
 import { Stage, StageBar, StageCanvas, StageFoot, type StageTone } from "@/shared/ui/stage";
 import { BottomBar } from "./bottom-bar";
-import { SAMPLE_LOGO } from "./brand-group";
+import { SAMPLE_LOGO } from "@/entities/qr";
 import { DesignCanvas } from "./design-canvas";
 import { DesignSettings, type DesignGroup } from "./design-settings";
 import { editorPanel, editorRoot, editorStage } from "./editor-layout";
@@ -62,6 +62,7 @@ export function DesignStep({
   offerChooser = false,
   stageTitle,
   panelHead,
+  initialGroup,
 }: {
   design: EditorDesign;
   onChange: (patch: Partial<EditorDesign>) => void;
@@ -83,12 +84,14 @@ export function DesignStep({
   stageTitle?: ReactNode;
   /** Shown above the settings, e.g. the layout name (Edit design). */
   panelHead?: ReactNode;
+  /** The settings group to open first, e.g. Size when coming from "Set up for print" (Edit design ?group=size). */
+  initialGroup?: DesignGroup;
 }) {
   const t = useTranslations("editor");
   const ts = useTranslations("editor.stage");
   const history = useDesignHistory(design, onChange);
   const view = useStageView();
-  const [group, setGroup] = useState<DesignGroup>(design.designMode === "branded" ? "brand" : "layout");
+  const [group, setGroup] = useState<DesignGroup>(initialGroup ?? (design.designMode === "branded" ? "brand" : "layout"));
   // Design 2.6 / 5.3: while an image is read, the last ready design stays and the canvas says what is happening.
   const [brandBusy, setBrandBusy] = useState(false);
   const tm = useTranslations("editor.designMode");
@@ -397,7 +400,7 @@ function ModeChooser({ design, value, onChoose }: { design: EditorDesign; value:
       className="flex cursor-pointer flex-col gap-4 rounded-2xl border border-border bg-surface p-4 text-left shadow-1 transition-[border-color,box-shadow] duration-(--motion-fast) hover:border-violet-300 hover:shadow-2 sm:p-5"
     >
       <span className="grid h-56 place-items-center rounded-xl bg-stage bg-[radial-gradient(var(--color-stage-dot)_1px,transparent_1.3px)] bg-size-[18px_18px] p-4 sm:h-64">
-        <QrPreview layout={layout} value={value} label="" className="size-full [&_svg]:size-full" />
+        <QrPreview layout={layout} value={value} label="" className="size-full" />
       </span>
       <span className="flex flex-col gap-1">
         <span className="flex flex-wrap items-center gap-2">

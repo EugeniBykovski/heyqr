@@ -13,6 +13,7 @@ import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 import { BottomBarInfo } from "./bottom-bar";
 import { useShownRender } from "./design-canvas";
+import type { DesignGroup } from "./design-settings";
 import { DesignStep } from "./design-step";
 import { editorTopBar, editorTopBarInner } from "./editor-layout";
 
@@ -30,6 +31,8 @@ export function LayoutEditor({
   initialDesign,
   value,
   detailsHref,
+  initialGroup,
+  printHref,
 }: {
   qrCodeId: string;
   layoutId: string;
@@ -40,6 +43,10 @@ export function LayoutEditor({
   /** What the printed code encodes: the payload of a static code, the short link of a dynamic one. */
   value: string;
   detailsHref: string;
+  /** Opened from "Set up for print": the Size group first (design 8.x "Print Pack needs a print layout in mm"). */
+  initialGroup?: DesignGroup;
+  /** Where a saved print (mm) layout goes when the editor was opened to set it up for print: its Print Preview. */
+  printHref?: string;
 }) {
   const t = useTranslations("editor");
   const tEdit = useTranslations("editor.edit");
@@ -101,7 +108,7 @@ export function LayoutEditor({
       }
       setSaved(submitted);
       toast.success(tEdit("saved"), { id: "layout-save" });
-      router.push(detailsHref);
+      router.push(printHref && submitted.size?.unit === "mm" ? printHref : detailsHref);
     });
   };
 
@@ -210,6 +217,7 @@ export function LayoutEditor({
         action={saveButton}
         bottomInfo={<BottomBarInfo title={layoutName} hint={tEdit("hint")} />}
         note={tEdit("note")}
+        initialGroup={initialGroup}
       />
     </div>
   );

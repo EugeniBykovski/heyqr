@@ -1,5 +1,5 @@
 import { CAPTION_FONTS, captionFontFamily, captionWeightFor } from "./caption-fonts";
-import { fitCaption, type CaptionLine } from "./caption-wrap";
+import { captionFaceFile, fitCaption, measureCaptionText, wrapCaptionLine, type CaptionLine } from "./caption-wrap";
 import { circle, escapeXml, round3 as f, roundedRect } from "./geometry";
 import { maxPayloadBytes, payloadBytes, type ErrorCorrectionLevel } from "./encode";
 import { eclForStyle, renderQr } from "./render";
@@ -197,6 +197,128 @@ export function layoutGeometry(layout: Layout): LayoutGeometry {
   return out;
 }
 
+/** Width ÷ height of an image from a data URL (PNG, JPEG, WebP header; SVG width/height or viewBox), or null. */
+export function imageAspect(href: string | undefined): number | null {
+  const m = href?.match(/^data:image\/([a-z+]+);base64,(.*)$/);
+  if (!m?.[2]) return null;
+  let bin: string;
+  try {
+    bin = atob(m[2].slice(0, m[1] === "svg+xml" ? 8192 : 65536));
+  } catch {
+    return null;
+  }
+  const byte = (i: number) => bin.charCodeAt(i) & 0xff;
+  const u16 = (i: number) => (byte(i) << 8) | byte(i + 1);
+  const u32 = (i: number) => byte(i) * 0x1000000 + ((byte(i + 1) << 16) | (byte(i + 2) << 8) | byte(i + 3));
+  const ratio = (w: number, h: number) => (w > 0 && h > 0 && Number.isFinite(w / h) ? w / h : null);
+  if (m[1] === "svg+xml") {
+    const tag = bin.match(/<svg\b[^>]*>/)?.[0] ?? "";
+    const num = (a: string) => Number.parseFloat(tag.match(new RegExp(`\\s${a}="\\s*([\\d.]+)(?:px)?\\s*"`))?.[1] ?? "");
+    const vb = tag.match(/viewBox="\s*[-\d.]+[\s,]+[-\d.]+[\s,]+([\d.]+)[\s,]+([\d.]+)\s*"/);
+    return ratio(num("width"), num("height")) ?? (vb ? ratio(Number(vb[1]), Number(vb[2])) : null);
+  }
+  if (bin.length > 24 && bin.startsWith("\x89PNG")) return ratio(u32(16), u32(20));
+  if (byte(0) === 0xff && byte(1) === 0xd8) {
+    let i = 2;
+    while (i + 9 < bin.length) {
+      if (byte(i) !== 0xff) return null;
+      const marker = byte(i + 1);
+      if (marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc) return ratio(u16(i + 7), u16(i + 5));
+      i += 2 + u16(i + 2);
+    }
+    return null;
+  }
+  if (bin.startsWith("RIFF") && bin.slice(8, 12) === "WEBP") {
+    const kind = bin.slice(12, 16);
+    const le24 = (i: number) => byte(i) | (byte(i + 1) << 8) | (byte(i + 2) << 16);
+    if (kind === "VP8X") return ratio(1 + le24(24), 1 + le24(27));
+    if (kind === "VP8 ") return ratio(((byte(27) << 8) | byte(26)) & 0x3fff, ((byte(29) << 8) | byte(28)) & 0x3fff);
+    if (kind === "VP8L") {
+      const bits = byte(21) | (byte(22) << 8) | (byte(23) << 16) | (byte(24) << 24);
+      return ratio((bits & 0x3fff) + 1, ((bits >>> 14) & 0x3fff) + 1);
+    }
+  }
+  return null;
+}
+
+export interface BrandHeader {
+  /** The logo's own box (x, y, width, height), its aspect ratio kept, inside the header band. */
+  logo: Box;
+  /** The brand name in the rest of the band: wrapped at most to two lines and sized to fit; null without a name. */
+  name: { x: number; y: number; fs: number; lines: string[]; family: string; weight: number } | null;
+}
+
+/**
+ * Design 2.8 "Brand card": the logo and name above the code. Both stay inside the header band (`g.top`): the logo gets
+ * a bounded box (at most the band's height, at most 40 % of its width with a name) with its own aspect ratio; the name
+ * is measured with the caption font's real advance widths and wrapped or reduced to the space beside the logo; the
+ * pair is centred in the band. Every output (editor preview, PNG, SVG, print PDF) draws this same geometry.
+ */
+export function brandHeader(layout: Layout, g: LayoutGeometry): BrandHeader | null {
+  if (!g.top || !layout.topLogoHref) return null;
+  const [bx, by, bw, bh] = g.top;
+  const aspect = Math.min(8, Math.max(1 / 8, layout.topLogoAspect ?? imageAspect(layout.topLogoHref) ?? 1));
+  const name = (layout.brandName ?? "").replace(/\s+/g, " ").trim();
+  const maxLogoW = name ? bw * 0.4 : bw;
+  const lw = Math.min(maxLogoW, bh * aspect);
+  const lh = lw / aspect;
+  if (!name) return { logo: [bx + (bw - lw) / 2, by + (bh - lh) / 2, lw, lh], name: null };
+  const gap = bh * 0.22;
+  const room = bw - lw - gap;
+  const font = layout.caption.font;
+  const weight = font ? captionWeightFor(font, 700) : 700;
+  const file = captionFaceFile(font, weight);
+  // The largest size up to 36 % of the band whose lines (whole words first, split only if a word can't fit) fit the
+  // room beside the logo in at most two lines, or in the band's height if more are needed. Every word is drawn.
+  const wrapAt = (fs: number, split: boolean) =>
+    wrapCaptionLine(name, room, (t) => measureCaptionText(t, file, fs), split).filter((l) => l !== "");
+  const fits = (fs: number, split: boolean, maxLines: number) => {
+    const lines = wrapAt(fs, split);
+    return (
+      lines.length <= maxLines &&
+      lines.length * fs * 1.18 <= bh + 1e-9 &&
+      lines.every((l) => measureCaptionText(l, file, fs) <= room + 1e-9)
+    );
+  };
+  const largest = (split: boolean, maxLines: number) => {
+    let lo = 0;
+    let hi = bh * 0.36;
+    if (fits(hi, split, maxLines)) return hi;
+    for (let i = 0; i < 28; i++) {
+      const mid = (lo + hi) / 2;
+      if (fits(mid, split, maxLines)) lo = mid;
+      else hi = mid;
+    }
+    return lo;
+  };
+  const floor = bh * 0.14;
+  const tries: [boolean, number][] = [
+    [false, 2],
+    [true, 2],
+    [false, 3],
+    [true, Number.POSITIVE_INFINITY],
+  ];
+  let fs = 0;
+  let split = true;
+  for (const [sp, max] of tries) {
+    const size = largest(sp, max);
+    if (size >= floor || max === Number.POSITIVE_INFINITY) {
+      fs = size;
+      split = sp;
+      break;
+    }
+  }
+  const lines = wrapAt(fs, split);
+  const textW = Math.min(room, Math.max(...lines.map((t) => measureCaptionText(t, file, fs))));
+  const x0 = bx + (bw - (lw + gap + textW)) / 2;
+  const blockH = fs * 1.18 * lines.length;
+  const family = font ? captionFontFamily(CAPTION_FONTS[font]) : layout.caption.fontFamily;
+  return {
+    logo: [x0, by + (bh - lh) / 2, lw, lh],
+    name: { x: x0 + lw + gap, y: by + (bh - blockH) / 2 + fs * 0.92, fs, lines, family, weight },
+  };
+}
+
 /** The caption band's base type size in layout units (px layouts: px; mm layouts: pt converted to mm). */
 const captionBase = (layout: Layout) => (layout.unit === "px" ? layout.caption.size : layout.caption.size * 0.3528);
 
@@ -358,10 +480,20 @@ export function composeLayout(layout: Layout, value: string, options: ComposeOpt
     svg += "</text>";
   }
 
-  if (g.top && layout.topLogoHref) {
-    svg += `<image href="${escapeXml(layout.topLogoHref)}" x="${f(g.top[0])}" y="${f(g.top[1])}" width="${f(g.top[3])}" height="${f(g.top[3])}"/>`;
-    if (layout.brandName) {
-      svg += `<text x="${f(g.top[0] + g.top[3] * 1.25)}" y="${f(g.top[1] + g.top[3] * 0.62)}" font-family="${escapeXml(cap.fontFamily)}" font-size="${f(g.top[3] * 0.32)}" font-weight="700" fill="${col.caption}">${escapeXml(layout.brandName)}</text>`;
+  const header = brandHeader(layout, g);
+  if (header && layout.topLogoHref) {
+    const [lx, ly, lw, lh] = header.logo;
+    svg += `<image href="${escapeXml(layout.topLogoHref)}" x="${f(lx)}" y="${f(ly)}" width="${f(lw)}" height="${f(lh)}" preserveAspectRatio="xMidYMid meet"/>`;
+    if (header.name) {
+      const n = header.name;
+      const textStyle = cap.font
+        ? ` style="font-feature-settings:normal;font-variant:normal;letter-spacing:normal;word-spacing:normal;font-synthesis:none"`
+        : "";
+      svg += `<text font-family="${escapeXml(n.family)}" font-weight="${n.weight}" fill="${col.caption}"${textStyle}>`;
+      n.lines.forEach((line, i) => {
+        svg += `<tspan x="${f(n.x)}" y="${f(n.y + i * n.fs * 1.18)}" font-size="${f(n.fs)}">${escapeXml(line)}</tspan>`;
+      });
+      svg += "</text>";
     }
   }
 
