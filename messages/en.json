@@ -1123,7 +1123,8 @@
     },
     "emptyTitle": "Nothing to download yet",
     "emptyText": "Design a QR code first. Your draft stays in this browser until you download it.",
-    "emptyAction": "Create a QR code"
+    "emptyAction": "Create a QR code",
+    "inspectPrint": "Inspect the print files first"
   },
   "dashboard": {
     "title": "My QR codes",
@@ -1255,7 +1256,8 @@
       "refunded": "Refunded",
       "failed": "Failed"
     },
-    "liveNoPlan": "{used} active · no plan"
+    "liveNoPlan": "{used} active · no plan",
+    "printPackItem": "Print Pack"
   },
   "legal": {
     "terms": {
@@ -1445,5 +1447,157 @@
     "useTrial": "Use your free trial · go live now",
     "useTrialHint": "Your one test Dynamic QR during the trial. No card needed.",
     "useTrialFailed": "We couldn’t use your trial for this code. You may already have a test code."
+  },
+  "print": {
+    "spec": {
+      "title": "Print specifications",
+      "finished": "Finished size",
+      "page": "PDF page (with bleed and marks)",
+      "bleed": "Bleed",
+      "marks": "Crop marks",
+      "qr": "QR size (with quiet zone)",
+      "profile": "Color profile",
+      "srgb": "sRGB · no conversion",
+      "logo": "Logo resolution",
+      "vector": "Vector, any size",
+      "colors": "Colors (HEX · sRGB)",
+      "key": "Render key",
+      "yes": "Yes",
+      "no": "No",
+      "role_modules": "Modules",
+      "role_corners": "Corner frames",
+      "role_centers": "Corner centers",
+      "role_background": "Background",
+      "role_frame": "Frame",
+      "role_caption": "Caption"
+    },
+    "title": "Print preview",
+    "leadLocked": "Check the exact PDF page and print specifications before you buy. The files will match what you see here.",
+    "leadUnlocked": "This is the PDF page your files are made from. Adjust a setting and download again at no extra cost.",
+    "locked": "Print Pack locked",
+    "unlocked": "Print Pack unlocked",
+    "back": {
+      "details": "Back to QR details",
+      "export": "Back to export"
+    },
+    "toDesign": "Back to design",
+    "canvas": "PDF page preview",
+    "zoom": "Zoom",
+    "fit": "Fit",
+    "z100": "100%",
+    "z200": "200%",
+    "guides": "Trim and safe area",
+    "approx": "Screen approximation of printed color",
+    "trimLabel": "Trim {size}",
+    "generating": "Generating the print preview…",
+    "pageLabel": "Print PDF page, {w} × {h} mm",
+    "error": {
+      "title": "We couldn’t generate the preview.",
+      "text": "Your layout and print settings are kept. This is usually temporary.",
+      "retry": "Try again"
+    },
+    "foot": {
+      "page": "PDF page {size}",
+      "count": "1 page",
+      "bleed": "Bleed {bleed} mm",
+      "noBleed": "No bleed",
+      "marks": "Crop marks",
+      "noMarks": "No crop marks"
+    },
+    "specTitle": "Print specifications",
+    "keys": {
+      "finished": "Finished size",
+      "finishedBleed": "+ {bleed} mm bleed on each side",
+      "finishedNoBleed": "No bleed",
+      "qr": "QR size",
+      "qrSmall": "Under 20 mm · may not scan everywhere",
+      "qrOk": "Scans from up to about {cm} cm",
+      "profile": "Color profile",
+      "profileSub": "RGB, no conversion",
+      "logo": "Logo resolution",
+      "logoVector": "Vector",
+      "logoNone": "No logo",
+      "logoLow": "Below 300 ppi at this size",
+      "logoOk": "300 ppi or more · prints sharp",
+      "logoVectorSub": "Sharp at any size",
+      "logoNoneSub": "Nothing to check"
+    },
+    "unlock": {
+      "title": "Unlock the Print Pack",
+      "text": "Get the print PDF, editable SVG and specifications for “{name}”, made with the settings below.",
+      "action": "Add Print Pack · +{price}",
+      "sub": "One-time for this QR. You come back to this screen with your settings.",
+      "notForSale": "The Print Pack can’t be bought here yet. You can still check the page and specifications.",
+      "needCode": "Unlock this QR first: the Print Pack is an add-on for a bought or live code.",
+      "buyCode": "Buy this QR",
+      "failed": "We couldn’t open checkout. Nothing was charged; try again.",
+      "cancelled": "Checkout cancelled. You weren’t charged; your settings are kept.",
+      "pending": "Confirming your payment…",
+      "pendingSub": "You stay here, with these settings."
+    },
+    "files": {
+      "title": "Print Pack unlocked",
+      "badge": "Ready to download",
+      "text": "Files use the settings below. Change one and download again at no extra cost.",
+      "pdf": "Download print PDF",
+      "pdfSub": "sRGB · page {w} × {h} mm",
+      "svg": "Download editable SVG",
+      "svgSub": "sRGB · HEX colors · {w} × {h} mm",
+      "spec": "Download print specifications",
+      "specSub": "PDF sheet · sizes and color values",
+      "stale": "The layout changed since this preview. Check the page again before you download."
+    },
+    "size": {
+      "title": "Finished size",
+      "custom": "Custom",
+      "width": "Width",
+      "height": "Height · keeps proportions",
+      "hint": "From 15 to 600 mm wide. The QR and caption scale with the layout."
+    },
+    "warn": {
+      "qrTitle": "The QR is {mm} mm wide",
+      "qrText": "Codes under 20 mm can fail on older phones. Make the layout bigger, or keep the code at least 20 mm.",
+      "logoTitle": "Your logo is {ppi} ppi at this size",
+      "logoText": "It may print soft. Upload a logo at least {px} px wide, or print at 100%.",
+      "upload": "Upload a higher-resolution logo",
+      "use100": "Use 100% size"
+    },
+    "profiles": {
+      "title": "Color profile for the print PDF",
+      "srgb": "sRGB · no conversion",
+      "srgbDesc": "For digital printers and most online print shops.",
+      "fogra39": "Coated FOGRA39",
+      "gracol": "GRACoL 2013",
+      "fogra29": "Uncoated FOGRA29",
+      "cmykDesc": "CMYK conversion isn’t available yet.",
+      "shop": "<b>Confirm with your print shop.</b> Ask which color profile they need. If they aren’t sure, send the PDF together with the specifications sheet."
+    },
+    "colors": {
+      "title": "Colors",
+      "legendHex": "<b>HEX · sRGB</b> editable SVG",
+      "legendCmyk": "<b>CMYK</b> only with a CMYK profile",
+      "none": "—",
+      "note": "Colors are exact sRGB values in both files. The screen shows an approximation of the printed color."
+    },
+    "tech": {
+      "title": "Technical settings",
+      "bleed": "Bleed",
+      "bleedDesc": "Background extends past the trim",
+      "marks": "Crop marks",
+      "k100": "Print black modules as 100% K",
+      "k100Hint": "Available with a CMYK profile."
+    },
+    "notPrint": {
+      "title": "This layout is for screens",
+      "text": "Print Pack needs a print layout measured in mm. Switch the unit in Design → Size to add one.",
+      "action": "Open the design"
+    },
+    "pack": {
+      "title": "Print Pack",
+      "add": "Add a Print Pack and give your printer everything in one download: a print PDF with bleed and crop marks, an editable SVG and a color and size sheet. Check the page first in Print Preview.",
+      "preview": "Print Preview · {layout}",
+      "defaults": "Default settings: 100% size, 3 mm bleed, crop marks. Change them in Print Preview.",
+      "open": "Open Print Preview"
+    }
   }
 }

@@ -101,6 +101,55 @@ export async function createCheckout({
   return checkoutUrl(session);
 }
 
+/**
+ * Design 8.2 "Unlock Print Pack": a one-time payment for this code's Print Pack. Returns to Print Preview with the same
+ * layout and print settings. The webhook grants it (qr_code.print_pack_at); the client never does.
+ */
+export async function createPrintPackCheckout({
+  user,
+  qrCodeId,
+  layoutId,
+  settings,
+  locale,
+}: {
+  user: CheckoutInput["user"];
+  qrCodeId: string;
+  layoutId: string;
+  settings: string;
+  locale: string;
+}): Promise<string> {
+  const price = env.STRIPE_PRICE_PRINT_PACK;
+  if (!price) throw new Error("Print Pack price is not configured");
+  const qr = await db.query.qrCode.findFirst({
+    where: and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, user.id), isNull(schema.qrCode.deletedAt)),
+  });
+  if (!qr) throw new Error("QR code not found");
+  const back = `${env.NEXT_PUBLIC_APP_URL}/${locale}/print?${new URLSearchParams({ qr: qrCodeId, layout: layoutId }).toString()}&${settings}`;
+  const customer = await customerFor(user);
+  const metadata = { userId: user.id, qrCodeId, layoutId, kind: "print_pack" };
+  const session = await stripe().checkout.sessions.create({
+    mode: "payment",
+    customer,
+    line_items: [{ price, quantity: 1 }],
+    success_url: `${back}&checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${back}&checkout=cancelled`,
+    metadata,
+    payment_intent_data: { metadata },
+    automatic_tax: { enabled: true },
+    customer_update: { address: "auto" },
+  });
+  await db.insert(schema.purchase).values({
+    id: newId(),
+    userId: user.id,
+    qrCodeId,
+    item: "print_pack",
+    stripeCheckoutSessionId: session.id,
+    amountTotal: session.amount_total ?? 0,
+    currency: session.currency ?? env.NEXT_PUBLIC_PRICE_CURRENCY.toLowerCase(),
+  });
+  return checkoutUrl(session);
+}
+
 /** Stripe customer portal for plan changes, cancellation and receipts. */
 export async function createPortalSession(stripeCustomerId: string, locale: string) {
   const portal = await stripe().billingPortal.sessions.create({
