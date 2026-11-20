@@ -26,7 +26,15 @@ export async function userTrial(userId: string, now = new Date()): Promise<Trial
 /** Design 8.x: the Print Pack files of a code: the code itself is unlocked and its Print Pack was bought. */
 export async function canDownloadPrintPack(
   userId: string,
-  qr: { userId: string; model: "static" | "dynamic"; purchasedAt: Date | null; isTrial?: boolean; printPackAt: Date | null },
+  qr: {
+    userId: string;
+    model: "static" | "dynamic";
+    purchasedAt: Date | null;
+    isTrial?: boolean;
+    status?: string;
+    shortCode?: string | null;
+    printPackAt: Date | null;
+  },
 ) {
   return qr.printPackAt !== null && (await canDownload(userId, qr));
 }
@@ -44,10 +52,18 @@ export const forSale = (currency: Currency, offer: Offer) => isConfigured("payme
  */
 export async function canDownload(
   userId: string,
-  qr: { userId: string; model: "static" | "dynamic"; purchasedAt: Date | null; isTrial?: boolean },
+  qr: {
+    userId: string;
+    model: "static" | "dynamic";
+    purchasedAt: Date | null;
+    isTrial?: boolean;
+    status?: string;
+    shortCode?: string | null;
+  },
 ) {
   if (qr.userId !== userId) return false;
   if (qr.model === "static") return qr.purchasedAt !== null;
-  if (await activeSubscription(userId)) return true;
+  // A Dynamic code's files carry its short link: only a live code (activated under the plan) can be downloaded.
+  if (qr.status === "active" && qr.shortCode && (await activeSubscription(userId))) return true;
   return qr.isTrial === true && trialCovers(await userTrial(userId), { isTrial: true });
 }

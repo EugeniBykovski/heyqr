@@ -6,6 +6,7 @@ export {
   fileNameFrom,
   settingsQuery,
   type ExportFormat,
+  type ExportOffer,
   type ExportSettings,
 } from "./export-surface";
 export { ActivatePlanButton, StartTrialButton, UseTrialButton } from "./trial-actions";

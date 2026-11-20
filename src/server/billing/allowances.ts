@@ -156,3 +156,40 @@ export async function grantPackCredits(db: Db, userId: string, purchaseId: strin
 
 /** Live Dynamic slots of a plan (design: Starter 5, Studio 25). */
 export const dynamicLimit = (plan: PlanId | null | undefined) => (plan ? PLANS[plan].dyn : 0);
+
+/**
+ * Design 7.7: a Dynamic code goes live under the plan when a live slot is free (Starter 5, Studio 25). It keeps its
+ * short link if it had one. Checked and applied in one transaction, so two codes can't take the last slot.
+ */
+export async function activateDynamicCode(
+  db: Db,
+  userId: string,
+  qrCodeId: string,
+  newShortCode: () => string,
+): Promise<{ ok: true; shortCode: string } | { ok: false; error: "not_found" | "not_dynamic" | "no_plan" | "limit" }> {
+  return db.transaction(async (tx) => {
+    await tx.select({ id: schema.user.id }).from(schema.user).where(eq(schema.user.id, userId)).for("update");
+    const qr = await tx.query.qrCode.findFirst({
+      where: and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)),
+    });
+    if (!qr) return { ok: false, error: "not_found" };
+    if (qr.model !== "dynamic") return { ok: false, error: "not_dynamic" };
+    if (qr.status === "active" && qr.shortCode && !qr.isTrial) return { ok: true, shortCode: qr.shortCode };
+    const usage = await accountUsage(tx as unknown as Db, userId);
+    if (!usage.plan) return { ok: false, error: "no_plan" };
+    if (usage.dynamic.used >= usage.dynamic.limit) return { ok: false, error: "limit" };
+    const shortCode = qr.shortCode ?? newShortCode();
+    await tx.update(schema.qrCode).set({ shortCode, status: "active", isTrial: false }).where(eq(schema.qrCode.id, qrCodeId));
+    return { ok: true, shortCode };
+  });
+}
+
+/** Design 7.7 "Make it a static QR instead": an unpaid Dynamic draft (never live) becomes a static code. */
+export async function convertToStatic(db: Db, userId: string, qrCodeId: string): Promise<{ ok: boolean }> {
+  const qr = await db.query.qrCode.findFirst({
+    where: and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)),
+  });
+  if (!qr || qr.model !== "dynamic" || qr.shortCode || qr.status === "active") return { ok: false };
+  await db.update(schema.qrCode).set({ model: "static", destination: null }).where(eq(schema.qrCode.id, qrCodeId));
+  return { ok: true };
+}

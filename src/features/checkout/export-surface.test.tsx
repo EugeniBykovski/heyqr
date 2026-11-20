@@ -9,6 +9,12 @@ import { ExportSurface, exportFileUrl, fileNameFrom, type ExportSurfaceProps } f
 
 const startCheckout = vi.fn();
 vi.mock("@/server/actions/qr", () => ({ startCheckout: (...a: unknown[]) => startCheckout(...a) }));
+vi.mock("@/server/actions/billing", () => ({
+  unlockWithAllowance: vi.fn(),
+  takeIncludedPrintPack: vi.fn(),
+  activateDynamic: vi.fn(),
+  makeStatic: vi.fn(),
+}));
 const refresh = vi.fn();
 vi.mock("@/i18n/navigation", () => ({
   useRouter: () => ({ refresh }),
@@ -144,6 +150,7 @@ describe("file states (design 3.7–3.10)", () => {
       locale: "en",
       resolution: 2,
       transparent: false,
+      printPack: false,
     });
   });
 });

@@ -13,7 +13,15 @@ import { RESTORE_WINDOW_MS, restoreQrCodes, softDeleteQrCodes } from "../qr/dele
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, updateLayoutDesign } from "../qr/update-layout";
 import { activateTrialCode, startTrial, trialCode } from "../billing/trial";
-import { accountUsage, applyPrintPackAllowance, creditBalance, grantPackCredits, unlockStatic } from "../billing/allowances";
+import {
+  accountUsage,
+  activateDynamicCode,
+  applyPrintPackAllowance,
+  convertToStatic,
+  creditBalance,
+  grantPackCredits,
+  unlockStatic,
+} from "../billing/allowances";
 import { checkDatabase, EXPECTED_MIGRATIONS, REQUIRED_TABLES } from "./check";
 import { SEED_SCAN_DAYS, seedFixtures } from "./fixtures";
 import { runMigrations } from "./migrator";
@@ -831,5 +839,31 @@ describe.skipIf(!url)("plans, credits and allowances (design 4.8, real PostgreSQ
     // Without an active plan there are no monthly unlocks.
     await db.update(schema.subscription).set({ status: "canceled" }).where(eq(schema.subscription.id, "plan-sub"));
     expect(await unlockStatic(db, owner.id, b, "plan")).toEqual({ ok: false, error: "no_allowance" });
+  });
+
+  it("Dynamic slots: a code goes live while a slot is free; a full plan refuses; an unpaid draft can become static", async () => {
+    await db.delete(schema.subscription).where(eq(schema.subscription.userId, owner.id));
+    const a = await make("dynamic");
+    expect(await activateDynamicCode(db, owner.id, a, () => "slotA01")).toEqual({ ok: false, error: "no_plan" });
+    await db.insert(schema.subscription).values({
+      id: "plan-sub2",
+      userId: owner.id,
+      stripeSubscriptionId: "sub_plan_test2",
+      stripePriceId: "price_x",
+      status: "active",
+      plan: "starter",
+      activeCodeLimit: 5,
+      currentPeriodStart: new Date("2026-11-01T00:00:00Z"),
+    });
+    expect(await activateDynamicCode(db, owner.id, a, () => "slotA01")).toEqual({ ok: true, shortCode: "slotA01" });
+    for (let i = 0; i < 4; i++) {
+      const id = await make("dynamic");
+      expect((await activateDynamicCode(db, owner.id, id, () => `slotB0${i}`)).ok).toBe(true);
+    }
+    const sixth = await make("dynamic");
+    expect(await activateDynamicCode(db, owner.id, sixth, () => "slotC01")).toEqual({ ok: false, error: "limit" });
+    expect(await convertToStatic(db, owner.id, sixth)).toEqual({ ok: true });
+    expect(await convertToStatic(db, owner.id, a)).toEqual({ ok: false }); // live codes keep their short link
+    expect((await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, sixth) }))?.model).toBe("static");
   });
 });

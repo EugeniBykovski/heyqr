@@ -59,7 +59,13 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<boolean> {
         if (qr)
           await db
             .update(schema.qrCode)
-            .set({ shortCode: qr.shortCode ?? newShortCode(), status: "active", ...(printPack === "1" ? { printPackAt: now } : {}) })
+            // The trial's test code becomes a regular code of the plan (design 9.4: same short link, takes a live slot).
+            .set({
+              shortCode: qr.shortCode ?? newShortCode(),
+              status: "active",
+              isTrial: false,
+              ...(printPack === "1" ? { printPackAt: now } : {}),
+            })
             .where(ownCode);
       }
       break;

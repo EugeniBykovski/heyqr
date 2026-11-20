@@ -4,11 +4,12 @@ import { cookies } from "next/headers";
 import { z } from "zod";
 import { CURRENCIES, CURRENCY_COOKIE } from "@/shared/config/catalog";
 import { requireUser } from "../auth";
-import { accountUsage, unlockStatic, applyPrintPackAllowance } from "../billing/allowances";
+import { accountUsage, activateDynamicCode, applyPrintPackAllowance, convertToStatic, unlockStatic } from "../billing/allowances";
 import { createPackCheckout, createPlanCheckout } from "../billing/checkout";
 import { trialCode } from "../billing/trial";
 import { getCurrency } from "../currency";
 import { db } from "../db";
+import { newShortCode } from "../db/ids";
 import { guard, type ActionResult } from "./result";
 
 /** Design 7.1 "Show prices in": stores the viewer's currency (independent of the language), for a year. */
@@ -89,6 +90,28 @@ export async function takeIncludedPrintPack(qrCodeId: string): Promise<ActionRes
     const result = await applyPrintPackAllowance(db, user.id, qrCodeId);
     if (!result.ok)
       return { ok: false, error: result.error === "no_allowance" ? "no_allowance" : result.error === "owned" ? "invalid" : "not_found" };
+    revalidatePath("/[locale]/dashboard", "layout");
+    return { ok: true, data: undefined };
+  });
+}
+
+/** Design 7.7: the plan has a free live slot: this Dynamic code goes live (short link) without another payment. */
+export async function activateDynamic(qrCodeId: string): Promise<ActionResult<{ shortCode: string }>> {
+  return guard(async () => {
+    const user = await requireUser();
+    const result = await activateDynamicCode(db, user.id, qrCodeId, newShortCode);
+    if (!result.ok) return { ok: false, error: result.error === "limit" ? "limit" : result.error === "no_plan" ? "invalid" : "not_found" };
+    revalidatePath("/[locale]/dashboard", "layout");
+    return { ok: true, data: { shortCode: result.shortCode } };
+  });
+}
+
+/** Design 7.7 "Make it a static QR instead". */
+export async function makeStatic(qrCodeId: string): Promise<ActionResult> {
+  return guard(async () => {
+    const user = await requireUser();
+    const result = await convertToStatic(db, user.id, qrCodeId);
+    if (!result.ok) return { ok: false, error: "invalid" };
     revalidatePath("/[locale]/dashboard", "layout");
     return { ok: true, data: undefined };
   });
