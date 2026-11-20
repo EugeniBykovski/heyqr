@@ -11,7 +11,7 @@ import { CURRENCIES, OFFERS, pricePoint, type Currency, type Offer } from "@/sha
 const priceId = z.string().startsWith("price_");
 
 export function stripePriceMap(raw: string | undefined = env.STRIPE_PRICES): Record<Currency, Partial<Record<Offer, string>>> {
-  const map: Record<Currency, Partial<Record<Offer, string>>> = { USD: {}, EUR: {}, PLN: {} };
+  const map: Record<Currency, Partial<Record<Offer, string>>> = { USD: {}, PLN: {} };
   let parsed: unknown = null;
   try {
     parsed = raw ? JSON.parse(raw) : null;

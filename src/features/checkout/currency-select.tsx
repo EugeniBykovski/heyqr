@@ -6,10 +6,10 @@ import { setCurrency } from "@/server/actions/billing";
 import { CURRENCIES, type Currency } from "@/shared/config/catalog";
 import { cn } from "@/shared/lib/utils";
 
-const SYMBOL: Record<Currency, string> = { USD: "$", EUR: "€", PLN: "zł" };
+const SYMBOL: Record<Currency, string> = { USD: "$", PLN: "zł" };
 
 /*
- * Design 4.8 / 7.1 "Show prices in" (USD / EUR / PLN): the viewer's currency, kept in a cookie so every page (Home,
+ * Design 4.8 / 7.1 "Show prices in" (USD / PLN): the viewer's currency, kept in a cookie so every page (Home,
  * Pricing, Export, Print Preview, checkout) renders and charges the same currency. Independent of the language.
  */
 export function CurrencySelect({ value, label }: { value: Currency; label: string }) {

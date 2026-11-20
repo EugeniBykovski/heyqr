@@ -16,7 +16,8 @@ export type ActionResult<T = undefined> =
         | "no_allowance"
         | "no_credits"
         | "limit"
-        | "last_layout";
+        | "last_layout"
+        | "draft_limit";
     };
 
 /** Error name and database error code only; no message text, query or parameters. */

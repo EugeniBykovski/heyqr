@@ -936,17 +936,20 @@
       "style": "Icon style",
       "plate": "On a plate",
       "tile": "Color tile",
-      "vectorNote": "Icons stay vector in SVG, so they are sharp at any size. They take the corner-center color.",
-      "remove": "No logo",
+      "vectorNote": "Icons stay vector in SVG and PDF, so they are sharp at any size. They take the corner-center color.",
+      "remove": "Remove logo",
       "backingHint": "A backing clears the dots behind your logo so it reads cleanly.",
       "position": "Position",
       "positions": {
-        "center": "Center of the code",
+        "center": "Center of code",
         "top": "Top of card"
       },
-      "positionHint": "“Top of card” works with the vertical and horizontal cards and an uploaded image.",
+      "positionHint": "“Top of card” works with the vertical and horizontal cards.",
       "brandName": "Name beside the logo",
-      "brandNameHint": "Optional. Shown next to the logo above the code."
+      "brandNameHint": "Optional. Shown next to the logo above the code.",
+      "uploadTitle": "Upload your logo",
+      "brandedUpload": "Upload an image first",
+      "imageSize": "Image size"
     },
     "captionGroup": {
       "position": "Position",
@@ -959,7 +962,8 @@
       "hiddenNote": "“{layout}” has no caption. Choose QR + caption or a card to show it.",
       "frameNote": "The frame’s text is set in Frame.",
       "toLayout": "Use QR + caption",
-      "color": "Caption color"
+      "color": "Caption color",
+      "insideShortened": "Inside the code there is room for {max} characters, so it shows “{shown}”. Shorten the caption, or place it below or above the code."
     },
     "stage": {
       "history": "History",
@@ -1207,7 +1211,8 @@
     },
     "catalog": {
       "not_offered": "This can’t be bought in the selected currency yet. Nothing was charged.",
-      "price_mismatch": "The price changed since this page loaded. Nothing was charged; reload to see the current price."
+      "price_mismatch": "The price changed since this page loaded. Nothing was charged; reload to see the current price.",
+      "unavailable": "Not available to buy in this currency yet. Switch currency on Pricing, or check again later. Nothing will be charged."
     },
     "unlockErrors": {
       "no_allowance": "No monthly unlocks left. Choose another option below.",
@@ -1523,7 +1528,8 @@
     "linkPaused": {
       "title": "This link is paused",
       "text": "The owner of this QR code has paused it. Nothing is wrong with your phone; try again later."
-    }
+    },
+    "draft_limit": "You have 10 saved drafts, the most an account keeps. Unlock or delete one in My QR codes to save a new code."
   },
   "common": {
     "close": "Close",

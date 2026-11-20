@@ -4,6 +4,7 @@ export {
   CARD_RATIO,
   CENTER_ICONS,
   defaultCaptionAlign,
+  defaultFrameTextColor,
   defaultLogoPlate,
   LOGO_PLATES,
   DEFAULT_DESIGN,

@@ -24,7 +24,7 @@ const card = "flex min-w-0 flex-col gap-4.5 rounded-2xl border border-border bg-
 /*
  * Design 4.8 / 7.1 Pricing. One-time: Free, Single QR, Static Packs (3 or 10 credits) and the Print Pack add-on;
  * Monthly: Starter (7-day free trial) and Studio; how unlocks and limits work; the comparison table. Prices come from
- * the catalog in the viewer's currency (USD / EUR / PLN) and are the amounts checkout charges; an offer without a price
+ * the catalog in the viewer's currency (USD / PLN) and are the amounts checkout charges; an offer without a price
  * in that currency says so instead of showing another currency or a conversion.
  */
 export default async function PricingPage({ params }: PageProps<"/[locale]/pricing">) {

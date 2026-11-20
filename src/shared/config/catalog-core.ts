@@ -1,8 +1,9 @@
 /*
- * Design 4.8 catalog constants that don't depend on configuration: the currencies (USD / EUR / PLN), offers, plans,
+ * Design 4.8 catalog constants that don't depend on configuration: the currencies (USD / PLN), offers, plans,
  * Static Pack sizes and how money is written. Safe to import anywhere (no environment access).
  */
-export const CURRENCIES = ["USD", "EUR", "PLN"] as const;
+/** Product decision (HEY-60): current prices and new purchases are in USD and PLN only. */
+export const CURRENCIES = ["USD", "PLN"] as const;
 export type Currency = (typeof CURRENCIES)[number];
 export const CURRENCY_COOKIE = "heyqr_currency";
 export const isCurrency = (v: unknown): v is Currency => typeof v === "string" && (CURRENCIES as readonly string[]).includes(v);
@@ -18,11 +19,14 @@ export const PLANS = {
 export type PlanId = keyof typeof PLANS;
 export const isPlanId = (v: unknown): v is PlanId => v === "starter" || v === "studio";
 
+/** Design Pricing · Free: "Up to 10 saved drafts when signed in". Saving an 11th new draft is refused on the server. */
+export const DRAFT_LIMIT = 10;
+
 /** Static Packs: credits per pack. One credit unlocks one static QR; credits don't expire. */
 export const PACK_CREDITS = { pack3: 3, pack10: 10 } as const;
 
-/** Design MONEY_LOCALE: each currency is written the way its market writes it ($4.99, €4.99, 19,99 zł). */
-const MONEY_LOCALE: Record<Currency, string> = { USD: "en-US", EUR: "en-IE", PLN: "pl-PL" };
+/** Design MONEY_LOCALE: each currency is written the way its market writes it ($4.99, 19,99 zł). */
+const MONEY_LOCALE: Record<Currency, string> = { USD: "en-US", PLN: "pl-PL" };
 
 /** A price in minor units, formatted for its currency; "—" when the offer has no price in that currency. */
 export function formatMoney(cents: number | null, currency: Currency): string {

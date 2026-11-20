@@ -124,6 +124,12 @@ export function printPage(layout: Layout, value: string, s: PrintSettings, key: 
     logoInfo = { raster: px !== null, px: longest, ppi, mm: Math.round(mm * 10) / 10 };
     if (ppi !== null && ppi < MIN_LOGO_PPI) warnings.push({ code: "logo_low_ppi", ppi, needPx: pixelsNeeded(mm) });
   }
+  // An icon from the library is vector: it is reported as a logo that is sharp at any size (design: "Vector").
+  if (!href && logo?.iconPath) {
+    const total = Number(composed.svg.match(/<svg x="[^"]*" y="[^"]*" width="[^"]*" height="[^"]*" viewBox="0 0 (\d+)/)?.[1] ?? 0);
+    const mm = total > 8 ? ((logo.size * (total - 8)) / total) * g.qr[2] * s.scale : g.qr[2] * logo.size * s.scale;
+    logoInfo = { raster: false, px: null, ppi: null, mm: Math.round(mm * 10) / 10 };
+  }
   if (sizes.qr < MIN_PRINT_QR_MM) warnings.push({ code: "qr_small", qrMm: sizes.qr });
   return {
     svg,

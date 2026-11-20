@@ -8,7 +8,17 @@ export {
   type QrMatrix,
   type ErrorCorrectionLevel,
 } from "./encode";
-export { ART_TINT_OPACITY, CENTER_LOGO_SIZE, centerLogoSize, eclForStyle, MIN_CONTRAST, renderQr, renderQrSvg } from "./render";
+export {
+  ART_TINT_OPACITY,
+  CENTER_LOGO_SIZE,
+  CENTER_TEXT_MAX,
+  centerLogoSize,
+  centerTextLabel,
+  eclForStyle,
+  MIN_CONTRAST,
+  renderQr,
+  renderQrSvg,
+} from "./render";
 export {
   brandHeader,
   composeLayout,

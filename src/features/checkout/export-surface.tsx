@@ -125,6 +125,11 @@ export type ExportOffer = {
   dynamic?: { used: number; limit: number };
   resets?: string;
   cents: { single: number | null; pack3: number | null; studio: number | null };
+  /**
+   * HEY-60: whether Single QR and Starter can be bought in this currency (a price point and its Stripe Price). An offer
+   * without one is shown as unavailable instead of a payment that the server would refuse. Absent: for sale.
+   */
+  forSale?: { single: boolean; starter: boolean };
   printPack: null | {
     owned: boolean;
     included: { left: number; limit: number } | null;
@@ -291,6 +296,8 @@ export function ExportSurface(props: ExportSurfaceProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entitled, props.checkout]);
 
+  // The paid path's own offer: Starter for a Dynamic code, Single QR for a static one.
+  const payForSale = !offer?.forSale || (props.model === "dynamic" ? offer.forSale.starter : offer.forSale.single);
   const pay = () =>
     props.mode === "signed" &&
     startPaying(async () => {
@@ -400,9 +407,17 @@ export function ExportSurface(props: ExportSurfaceProps) {
         <div className="flex flex-col gap-2">
           <UseTrialButton qrCodeId={props.qrCodeId} className="w-full" />
           <span className="text-center text-caption text-muted-foreground">{tTrial("useTrialHint")}</span>
-          <Button variant="secondary" size="md" className="w-full" disabled={paying} aria-busy={paying || undefined} onClick={pay}>
+          <Button
+            variant="secondary"
+            size="md"
+            className="w-full"
+            disabled={paying || !payForSale}
+            aria-busy={paying || undefined}
+            onClick={pay}
+          >
             {t("subscribe", { price: amount })}
           </Button>
+          {payForSale ? null : <span className="text-caption text-muted-foreground">{t("catalog.unavailable")}</span>}
         </div>
       );
     if (!entitled && (offer?.path === "unlock" || offer?.path === "credit"))
@@ -441,10 +456,20 @@ export function ExportSurface(props: ExportSurfaceProps) {
     if (!entitled && (offer?.path === "limitStatic" || offer?.path === "limitDyn")) return null;
     if (!entitled)
       return (
-        <Button variant="primary" size="lg" className="w-full" disabled={paying} aria-busy={paying || undefined} onClick={pay}>
-          {paying ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : <LockIcon aria-hidden />}
-          {props.model === "dynamic" ? t("subscribe", { price: amount }) : t("payTotal", { price: money(totalCents) })}
-        </Button>
+        <div className="flex flex-col gap-2">
+          <Button
+            variant="primary"
+            size="lg"
+            className="w-full"
+            disabled={paying || !payForSale}
+            aria-busy={paying || undefined}
+            onClick={pay}
+          >
+            {paying ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : <LockIcon aria-hidden />}
+            {props.model === "dynamic" ? t("subscribe", { price: amount }) : t("payTotal", { price: money(totalCents) })}
+          </Button>
+          {payForSale ? null : <span className="text-center text-caption text-muted-foreground">{t("catalog.unavailable")}</span>}
+        </div>
       );
     if (file.kind === "preparing")
       return (
@@ -835,7 +860,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
                     sub: t("limits.buyOnceSub"),
                     price: money(offer.cents.single),
                     onClick: pay,
-                    disabled: paying,
+                    disabled: paying || !(offer.forSale?.single ?? true),
                   },
                   { label: t("limits.credits"), sub: t("limits.creditsSub"), price: money(offer.cents.pack3), href: "/pricing#pr-once" },
                   {

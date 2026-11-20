@@ -54,7 +54,6 @@ variable names and the environment, never values. Database commands validate onl
 | `DYNAMIC_ACTIVE_CODE_LIMIT`                           | server | optional (10)                                             | optional (10)                               |
 | `NEXT_PUBLIC_APP_URL`                                 | public | `http://localhost:3000` or the dev domain                 | the production domain, `https://`           |
 | `NEXT_PUBLIC_SHORT_LINK_BASE`                         | public | `http://localhost:3000/r` or the dev domain `/r`          | the short domain, `https://`                |
-| `NEXT_PUBLIC_PRICE_*`                                 | public | match the test-mode prices                                | match the live prices                       |
 | `UPSTASH_REDIS_REST_URL` / `_TOKEN`                   | secret | not used yet                                              | not used yet                                |
 | `TEST_DATABASE_URL`, `DATABASE_TARGET=test`           | test   | tests and CI only                                         | never                                       |
 | `CONFIRM_PRODUCTION_MIGRATION`                        | script | never                                                     | `1` only for a production `db:migrate`      |
