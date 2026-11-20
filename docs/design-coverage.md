@@ -1,6 +1,6 @@
 # Design coverage: Claude Design → app
 
-Reference: Claude Design artifact `5ad84e52-9181-4f2c-a6f5-04e11a8a57c9`, revision **1795122922-cd26** (scope: frames 1.1–8.2).
+Reference: Claude Design artifact `5ad84e52-9181-4f2c-a6f5-04e11a8a57c9`, revision **1795122922-cd26** (scope: frames 1.1–9.7).
 Every "Key screens" frame renders the prototype at **390, 834 and 1440 px**; each width is recorded separately.
 
 Status: ✅ implemented and verified in the browser · 🟡 exists, needs alignment with the frame · ❌ not built ·
@@ -95,12 +95,18 @@ verification script result (named here).
 | 6.2 Home · new account      | `/` signed in, no codes | ✅  | ✅  | ✅   | Studio empty state with one action                                                                                                   |
 | 6.x Print Pack introduction | —                       | ⛔  | ⛔  | ⛔   | Print Pack is not offered by the backend; not published                                                                              |
 
-## 8 · Print Pack & Print Preview (scope ends at 8.2)
+## 8 · Print Pack & Print Preview
 
-| Frame                                    | Route | 390 | 834 | 1440 | Notes                                                                                     |
-| ---------------------------------------- | ----- | --- | --- | ---- | ----------------------------------------------------------------------------------------- |
-| 8.1 Print Preview · generating           | —     | ⛔  | ⛔  | ⛔   | Needs the print service (POST /api/print/preview, render keys, ICC conversion); not built |
-| 8.2 Print Preview · locked, logo warning | —     | ⛔  | ⛔  | ⛔   | Same dependency; ppi warning needs real print metadata                                    |
+| Frame                                    | Route                                | 390 | 834 | 1440 | Notes                                                                                                                                                        |
+| ---------------------------------------- | ------------------------------------ | --- | --- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 8.1 Print Preview · generating           | `/print?qr=&layout=`                 | ✅  | ✅  | ✅   | `POST /api/print/preview`; skeleton keeps the page's exact ratio; newer settings drop older answers; error with Try again                                    |
+| 8.2 Print Preview · locked, logo warning | `/print`                             | ✅  | ✅  | ✅   | Real logo ppi from the image header at the finished size; "Use 100% size"; QR under 20 mm warning; Add Print Pack only when `STRIPE_PRICE_PRINT_PACK` is set |
+| 8.3 Print Preview · pending              | `/print?checkout=success`            | ✅  | ✅  | ✅   | Back from Stripe before the webhook: "Confirming your payment…", rechecked every 3 s; unlocked only by the webhook                                           |
+| 8.4 Print Preview · Studio allowance     | —                                    | ⛔  | ⛔  | ⛔   | No Studio plan or included Print Packs                                                                                                                       |
+| 8.5 Print Preview · unlocked             | `/print`, `GET /api/print/files/:id` | ✅  | ✅  | ✅   | Print PDF (page + bleed + crop marks, vector, fonts embedded), editable SVG at finished size, specifications PDF; 402 locked, 409 stale render key           |
+| 8.6 QR details · add Print Pack          | `/dashboard/qr/:id`                  | ✅  | ✅  | ✅   | Print (mm) layouts only; screen layouts get the "needs mm" notice                                                                                            |
+| 8.7 QR details · Print Pack files        | `/dashboard/qr/:id`                  | ✅  | ✅  | ✅   | Repeat downloads at default settings; Open Print Preview                                                                                                     |
+| CMYK profiles, 100% K                    | `/print`                             | ✅  | ✅  | ✅   | Shown as unavailable: no ICC conversion in this deployment; files are sRGB with HEX values                                                                   |
 
 ## 9 · Trial & usage
 
@@ -117,15 +123,15 @@ verification script result (named here).
 
 ## Missing integrations and what they block
 
-| Capability (handoff)                                                      | Status in this deployment                            | Workflows affected                                                           |
-| ------------------------------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------- |
-| Print service: PDF page preview, print files, render keys, CMYK profiles  | Not implemented                                      | Print Preview 8.1–8.2, Print Pack files on Export / Details                  |
-| Print Pack entitlement (+price, Studio allowance)                         | Not implemented                                      | Export Print Pack switch (7.2–7.4), Home Print Pack section, Details 8.6–8.7 |
-| Plans Starter / Studio, monthly static unlocks, static credits, usage API | Not implemented (one Dynamic plan, one static price) | Pricing packs/plans, Export limits 7.5–7.7, Billing counters                 |
-| 7-day trial                                                               | Not implemented                                      | Home and Pricing trial actions (9.x out of scope)                            |
-| Multi-currency price points (GBP, PLN)                                    | One charged currency (env)                           | Pricing shows an explicit "charged in USD" notice                            |
-| Stripe Checkout (live)                                                    | Configured but not reachable from this environment   | Pay → checkout redirect; cancel/confirm states verified with URL states only |
-| Translations other than EN/RU                                             | Fallback to English                                  | Arabic layout is RTL but text is English (punctuation order in RTL)          |
+| Capability (handoff)                                                      | Status in this deployment                                          | Workflows affected                                                           |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| Print service: PDF page preview, print files, render keys, CMYK profiles  | Built, sRGB only (no ICC/CMYK conversion)                          | CMYK profiles and 100% K on Print Preview                                    |
+| Print Pack entitlement (+price, Studio allowance)                         | Per-code add-on via `STRIPE_PRICE_PRINT_PACK`; no Studio allowance | Export Print Pack switch (7.2–7.4), Home Print Pack section, 8.4             |
+| Plans Starter / Studio, monthly static unlocks, static credits, usage API | Not implemented (one Dynamic plan, one static price)               | Pricing packs/plans, Export limits 7.5–7.7, Billing counters                 |
+| 7-day trial                                                               | Not implemented                                                    | Home and Pricing trial actions (9.x out of scope)                            |
+| Multi-currency price points (GBP, PLN)                                    | One charged currency (env)                                         | Pricing shows an explicit "charged in USD" notice                            |
+| Stripe Checkout (live)                                                    | Configured but not reachable from this environment                 | Pay → checkout redirect; cancel/confirm states verified with URL states only |
+| Translations other than EN/RU                                             | Fallback to English                                                | Arabic layout is RTL but text is English (punctuation order in RTL)          |
 
 ## 5 · Loading
 

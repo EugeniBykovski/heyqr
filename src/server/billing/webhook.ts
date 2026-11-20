@@ -1,5 +1,5 @@
 import "server-only";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import type Stripe from "stripe";
 import { env } from "@/env";
 import { db, schema } from "../db";
@@ -15,9 +15,20 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<boolean> {
     case "checkout.session.completed":
     case "checkout.session.async_payment_succeeded": {
       const s = event.data.object;
-      const { userId, qrCodeId } = s.metadata ?? {};
+      const { userId, qrCodeId, kind } = s.metadata ?? {};
       if (!userId || !qrCodeId || s.payment_status !== "paid") break;
-      if (s.mode === "payment") {
+      if (s.mode === "payment" && kind === "print_pack") {
+        // Design 8.x: the Print Pack of an already unlocked code; the code itself doesn't change.
+        const now = new Date();
+        await db
+          .update(schema.purchase)
+          .set({ status: "paid", paidAt: now, stripePaymentIntentId: String(s.payment_intent ?? ""), amountTotal: s.amount_total ?? 0 })
+          .where(eq(schema.purchase.stripeCheckoutSessionId, s.id));
+        await db
+          .update(schema.qrCode)
+          .set({ printPackAt: now })
+          .where(and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId)));
+      } else if (s.mode === "payment") {
         const now = new Date();
         await db
           .update(schema.purchase)

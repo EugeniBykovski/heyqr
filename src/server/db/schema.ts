@@ -102,6 +102,8 @@ export const qrCode = pgTable(
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
     /** The trial's one test Dynamic code: its short link redirects while the trial runs or a plan is active. */
     isTrial: boolean("is_trial").notNull().default(false),
+    /** Design 8.x Print Pack: set when the Print Pack of this code is bought (print PDF, editable SVG, specifications). */
+    printPackAt: timestamp("print_pack_at", { withTimezone: true }),
     ...timestamps,
   },
   (t) => [index("qr_code_user_idx").on(t.userId, t.updatedAt)],
@@ -135,6 +137,8 @@ export const purchase = pgTable(
     qrCodeId: text("qr_code_id")
       .notNull()
       .references(() => qrCode.id, { onDelete: "cascade" }),
+    /** What was bought: the static code itself, or its Print Pack add-on. */
+    item: text("item").$type<"single_qr" | "print_pack">().notNull().default("single_qr"),
     stripeCheckoutSessionId: text("stripe_checkout_session_id").notNull().unique(),
     stripePaymentIntentId: text("stripe_payment_intent_id"),
     amountTotal: integer("amount_total").notNull(),

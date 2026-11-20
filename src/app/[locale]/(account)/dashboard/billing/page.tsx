@@ -114,7 +114,10 @@ export default async function BillingPage({ params }: PageProps<"/[locale]/dashb
             {purchases.map((p) => (
               <li key={p.id} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1.5 py-3">
                 <span className="flex min-w-0 flex-col">
-                  <span className="truncate text-body font-medium">{p.qrCode.name}</span>
+                  <span className="truncate text-body font-medium">
+                    {p.qrCode.name}
+                    {p.item === "print_pack" ? ` · ${t("printPackItem")}` : null}
+                  </span>
                   <span className="text-caption text-muted-foreground">
                     {format.dateTime(p.paidAt ?? p.createdAt, { dateStyle: "medium" })}
                   </span>

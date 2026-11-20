@@ -98,6 +98,7 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
       backHref={`/edit/${qr.id}?layout=${layout.id}`}
       initial={initial}
       price={{ cents: qr.model === "dynamic" ? pricing.dynamicMonthlyCents : pricing.staticCents, currency: pricing.currency }}
+      printHref={layout.design.layout.unit === "mm" ? `/print?qr=${qr.id}&layout=${layout.id}&from=export` : undefined}
       returnedFromSignIn={one(query.signedIn) === "1"}
       checkout={checkout}
       receipt={

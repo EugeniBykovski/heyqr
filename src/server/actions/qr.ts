@@ -5,7 +5,7 @@ import { and, eq, isNull } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireUser } from "../auth";
-import { createCheckout, createPortalSession } from "../billing/checkout";
+import { createCheckout, createPortalSession, createPrintPackCheckout } from "../billing/checkout";
 import { db, schema } from "../db";
 import { restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { encodedValue } from "../qr/export";
@@ -13,7 +13,7 @@ import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, updateLayoutDesign } from "../qr/update-layout";
 import { newId, newShortCode } from "../db/ids";
 import { activateTrialCode, startTrial } from "../billing/trial";
-import { activeSubscription } from "../billing/entitlements";
+import { activeSubscription, canDownload, printPackForSale } from "../billing/entitlements";
 
 export type ActionResult<T = undefined> =
   { ok: true; data: T } | { ok: false; error: "unauthorized" | "invalid" | "not_found" | "too_long" | "failed" };
@@ -141,6 +141,37 @@ export async function activateTrial(qrCodeId: string): Promise<ActionResult<{ sh
     if (!result.ok) return { ok: false, error: result.error === "not_found" ? "not_found" : "invalid" };
     revalidatePath("/[locale]/dashboard", "layout");
     return { ok: true, data: { shortCode: result.shortCode } };
+  });
+}
+
+/** Design 8.2: Stripe Checkout for this code's Print Pack (only when the code is unlocked and the add-on is for sale). */
+export async function startPrintPackCheckout(input: {
+  qrCodeId: string;
+  layoutId: string;
+  settings: string;
+  locale: string;
+}): Promise<ActionResult<{ url: string }>> {
+  return guard(async () => {
+    const user = await requireUser();
+    if (!printPackForSale()) return { ok: false, error: "invalid" };
+    const qr = await db.query.qrCode.findFirst({
+      where: (q, { and, eq, isNull }) => and(eq(q.id, input.qrCodeId), eq(q.userId, user.id), isNull(q.deletedAt)),
+    });
+    if (!qr || !(await canDownload(user.id, qr))) return { ok: false, error: "not_found" };
+    const settings = z
+      .string()
+      .max(200)
+      .regex(/^[\w=&.%-]*$/)
+      .safeParse(input.settings);
+    if (!settings.success) return { ok: false, error: "invalid" };
+    const url = await createPrintPackCheckout({
+      user,
+      qrCodeId: qr.id,
+      layoutId: input.layoutId,
+      settings: settings.data,
+      locale: input.locale,
+    });
+    return { ok: true, data: { url } };
   });
 }
 

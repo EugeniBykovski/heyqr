@@ -90,6 +90,8 @@ export type ExportSurfaceProps = {
   returnedFromSignIn?: boolean;
   checkout?: "success" | "cancelled";
   receipt?: { amountCents: number; currency: string; paidAt: string } | null;
+  /** Design 7.2 / 8.1: Print Preview of this layout (print layouts only). */
+  printHref?: string;
 } & (
   | {
       mode: "signed";
@@ -463,6 +465,12 @@ export function ExportSurface(props: ExportSurfaceProps) {
             />
             {t("transparent")}
           </label>
+
+          {props.printHref ? (
+            <Button asChild variant="link" size="sm" className="self-start">
+              <Link href={props.printHref}>{t("inspectPrint")}</Link>
+            </Button>
+          ) : null}
 
           <Banner tone="neutral" icon={<InfoIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-muted-foreground" />}>
             {t.rich("quality", { b: (c) => <b>{c}</b> })}
