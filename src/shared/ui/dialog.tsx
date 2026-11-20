@@ -2,7 +2,7 @@
 
 import { XIcon } from "lucide-react";
 import { Dialog as DialogPrimitive } from "radix-ui";
-import type { ComponentProps } from "react";
+import { useRef, type ComponentProps } from "react";
 import { cn } from "@/shared/lib/utils";
 
 export const Dialog = DialogPrimitive.Root;
@@ -17,8 +17,13 @@ export function DialogContent({
   className,
   children,
   closeLabel,
+  onOpenAutoFocus,
+  onCloseAutoFocus,
   ...props
 }: ComponentProps<typeof DialogPrimitive.Content> & { closeLabel: string }) {
+  // HEY-63: Radix returns focus only to a DialogTrigger. Dialogs opened from code (a confirmation after a button, a
+  // layout switch) would drop focus on the page body when they close; they return it to what had focus when they opened.
+  const returnTo = useRef<HTMLElement | null>(null);
   return (
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-overlay backdrop-blur-[2px] data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-fade" />
@@ -30,6 +35,18 @@ export function DialogContent({
           "sm:inset-x-auto sm:top-22 sm:bottom-auto sm:left-1/2 sm:max-h-[calc(100dvh-7.5rem)] sm:w-[min(100%-2rem,27.5rem)] sm:-translate-x-1/2 sm:rounded-2xl sm:pb-6 sm:before:hidden",
           className,
         )}
+        onOpenAutoFocus={(e) => {
+          returnTo.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+          onOpenAutoFocus?.(e);
+        }}
+        onCloseAutoFocus={(e) => {
+          onCloseAutoFocus?.(e);
+          const back = returnTo.current;
+          returnTo.current = null;
+          if (e.defaultPrevented || !back || back === document.body || !back.isConnected) return;
+          e.preventDefault();
+          back.focus();
+        }}
         {...props}
       >
         {children}

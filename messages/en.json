@@ -841,7 +841,9 @@
       "addFailed": "We couldn’t add the layout. Your edits are still here; try again.",
       "unsavedSwitch": "This layout has unsaved changes.",
       "discardSwitch": "Discard and switch",
-      "layoutName": "Layout name"
+      "layoutName": "Layout name",
+      "unsavedSwitchText": "Switch to “{name}” and discard the changes to this layout? Save first to keep them.",
+      "keepEditing": "Keep editing"
     },
     "captionStyle": {
       "align": "Align",
@@ -923,7 +925,8 @@
       "reset": "Reset to default",
       "note": "These colors style your QR only. HeyQR’s own buttons and menus keep their colors.",
       "frameHint": "Frames, card borders and the frame around a layout.",
-      "captionHint": "Captions under, above or in the code."
+      "captionHint": "Captions under, above or in the code.",
+      "picker": "{role} color picker"
     },
     "logoGroup": {
       "source": "Logo source",
@@ -1077,7 +1080,8 @@
     "patternHint": "8 shapes for the dots that hold your data",
     "eyeFrameHint": "Outer ring of the 3 corner markers",
     "eyeBallHint": "Inner dot of the 3 corner markers",
-    "finderNote": "Every shape keeps the finder proportions 1 : 1 : 3 : 1 : 1, so the scan check still passes."
+    "finderNote": "Every shape keeps the finder proportions 1 : 1 : 3 : 1 : 1, so the scan check still passes.",
+    "colorPicker": "{label} color picker"
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",

@@ -9,6 +9,7 @@ import { composeShared, designSettingsOf, designToLayout, type EditorDesign } fr
 import { Link, useRouter } from "@/i18n/navigation";
 import { addLayout, saveLayoutEdit } from "@/server/actions/qr";
 import { Button } from "@/shared/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/shared/ui/dialog";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 import { BottomBarInfo } from "./bottom-bar";
@@ -127,25 +128,30 @@ export function LayoutEditor({
       router.push(`/edit/${qrCodeId}?layout=${result.data.layoutId}`);
     });
 
-  /** Switching layouts never drops edits silently: with unsaved changes, it asks first. */
+  /**
+   * Switching layouts never drops edits silently: with unsaved changes, it asks first. HEY-63: in a confirmation dialog
+   * (focus inside, Escape keeps editing, focus back on the chip), not a toast whose action keyboard users can't reach.
+   */
+  const [switchTo, setSwitchTo] = useState<{ id: string; name: string } | null>(null);
+  const goTo = (id: string) => router.push(`/edit/${qrCodeId}?layout=${id}`);
   const openLayout = (id: string) => {
     if (id === layoutId) return;
-    const go = () => router.push(`/edit/${qrCodeId}?layout=${id}`);
-    if (!changed) return go();
-    toast(tEdit("unsavedSwitch"), { id: "layout-switch", action: { label: tEdit("discardSwitch"), onClick: go } });
+    if (!changed) return goTo(id);
+    setSwitchTo({ id, name: layouts.find((l) => l.id === id)?.name ?? "" });
   };
 
   const tabs = (
-    <div role="tablist" aria-label={tEdit("layouts")} className="flex min-w-0 grow [scrollbar-width:none] gap-1 overflow-x-auto">
+    // HEY-63: each chip opens another layout (a navigation, with the unsaved-changes check), not a tab panel on this
+    // page: a named group of buttons, the open layout marked as current. Every chip is its own Tab stop.
+    <div role="group" aria-label={tEdit("layouts")} className="flex min-w-0 grow [scrollbar-width:none] gap-1 overflow-x-auto">
       {(layouts.length ? layouts : [{ id: layoutId, name: layoutName }]).map((l) => (
         <button
           key={l.id}
           type="button"
-          role="tab"
-          aria-selected={l.id === layoutId}
+          aria-current={l.id === layoutId ? "true" : undefined}
           title={l.name}
           onClick={() => openLayout(l.id)}
-          className="inline-flex min-h-9 max-w-45 flex-none cursor-pointer items-center truncate rounded-full border border-border bg-surface px-3 text-[0.8125rem] font-semibold text-secondary-foreground aria-selected:border-violet-300 aria-selected:bg-violet-50 aria-selected:text-violet-800"
+          className="inline-flex min-h-9 max-w-45 flex-none cursor-pointer items-center truncate rounded-full border border-border bg-surface px-3 text-[0.8125rem] font-semibold text-secondary-foreground aria-[current=true]:border-violet-300 aria-[current=true]:bg-violet-50 aria-[current=true]:text-violet-800"
         >
           <span className="truncate">{l.id === layoutId ? name || l.name : l.name}</span>
         </button>
@@ -186,6 +192,20 @@ export function LayoutEditor({
 
   return (
     <div className="flex flex-col">
+      <Dialog open={switchTo !== null} onOpenChange={(open) => !open && setSwitchTo(null)}>
+        <DialogContent role="alertdialog" closeLabel={tEdit("keepEditing")}>
+          <DialogTitle>{tEdit("unsavedSwitch")}</DialogTitle>
+          <DialogDescription>{tEdit("unsavedSwitchText", { name: switchTo?.name ?? "" })}</DialogDescription>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="primary" onClick={() => switchTo && goTo(switchTo.id)}>
+              {tEdit("discardSwitch")}
+            </Button>
+            <Button variant="ghost" onClick={() => setSwitchTo(null)}>
+              {tEdit("keepEditing")}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
       <div className={editorTopBar}>
         <div className={editorTopBarInner}>
           <div className="flex min-w-0 flex-1">
