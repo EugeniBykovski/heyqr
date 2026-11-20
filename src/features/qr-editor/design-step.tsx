@@ -30,9 +30,10 @@ export function layoutDims(layout: Layout) {
   const n = (v: number) => (layout.unit === "mm" ? Math.round(v * 10) / 10 : Math.round(v));
   const file = pngPixelSize(layout);
   return {
-    layout: `${n(g.width)} × ${n(g.height)} ${layout.unit}`,
-    qr: `${n(g.qr[2])} ${layout.unit}`,
-    file: `${file.width} × ${file.height} px`,
+    // Design 1.8: "Layout 90 mm × 50 mm · QR 35 × 35 mm · File PNG 1063 × 591 px".
+    layout: `${n(g.width)} ${layout.unit} × ${n(g.height)} ${layout.unit}`,
+    qr: `${n(g.qr[2])} × ${n(g.qr[2])} ${layout.unit}`,
+    file: `PNG ${file.width} × ${file.height} px`,
     actual:
       layout.unit === "mm"
         ? { width: `${g.width * CSS_PX_PER_MM}px`, height: `${g.height * CSS_PX_PER_MM}px` }
@@ -187,7 +188,7 @@ export function DesignStep({
                   view.tone === "dark" ? "bg-white/12 text-ink-200" : "bg-surface/85 text-secondary-foreground",
                 )}
               >
-                {view.fit === "actual" ? ts("actual") : ts("fit")}
+                {view.fit === "actual" ? ts("actual") : ts("scaledToFit")}
               </span>
               <span className="pointer-events-auto flex items-center gap-2 lg:hidden">
                 {scan ? (
@@ -253,6 +254,7 @@ export function DesignStep({
           onFieldValidity={onFieldValidity}
           value={shown.value}
           logoScanMax={scan?.maxLogoSize}
+          modules={scan?.modules}
           onNotice={notice}
           onBrandBusy={setBrandBusy}
         />

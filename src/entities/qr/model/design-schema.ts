@@ -62,6 +62,8 @@ export const designSettingsSchema = z.object({
   captionColor: hex.optional(),
   // Optional: before HEY-45 the caption size followed the code size (defaultCaptionSize).
   captionSize: z.number().min(4).max(400).optional(),
+  // Optional (HEY-59): the card canvas chosen in Size; cards without it keep their proportions from the code.
+  cardSize: z.object({ width: z.number().positive().max(10000), height: z.number().positive().max(10000) }).optional(),
   // Optional: drafts and records from before HEY-35 have no size and render at LEGACY_SIZE.
   size: z
     .object({ unit: z.enum(["px", "mm"]), qr: z.number(), width: z.number(), height: z.number() })
@@ -213,6 +215,7 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     captionColor,
     logoPlate,
     size,
+    cardSize,
     frameColor,
     frameTextColor,
     captionPosition,
@@ -245,6 +248,7 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     ...(captionColor === undefined ? {} : { captionColor }),
     ...(logoPlate === undefined ? {} : { logoPlate }),
     ...(size === undefined ? {} : { size }),
+    ...(cardSize === undefined ? {} : { cardSize }),
     ...(frameColor === undefined ? {} : { frameColor }),
     ...(frameTextColor === undefined ? {} : { frameTextColor }),
     ...(captionPosition === undefined ? {} : { captionPosition }),
