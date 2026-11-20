@@ -102,6 +102,19 @@ verification script result (named here).
 | 8.1 Print Preview · generating           | —     | ⛔  | ⛔  | ⛔   | Needs the print service (POST /api/print/preview, render keys, ICC conversion); not built |
 | 8.2 Print Preview · locked, logo warning | —     | ⛔  | ⛔  | ⛔   | Same dependency; ppi warning needs real print metadata                                    |
 
+## 9 · Trial & usage
+
+| Frame                              | Route                              | 390 | 834 | 1440 | Notes                                                                                                                                                                  |
+| ---------------------------------- | ---------------------------------- | --- | --- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 9.1 Trial · active                 | `/dashboard/trial`                 | ✅  | ✅  | ✅   | Real 7-day trial (server dates, once per account, no card); test code with its short link, scans and 7-day chart; Activate = Dynamic plan via Stripe for the same code |
+| 9.2 Trial · ending                 | `/dashboard/trial`                 | ✅  | ✅  | ✅   | Last day; the design's "Remind me by email" is not offered (no scheduled reminders)                                                                                    |
+| 9.3 Trial · expired                | `/dashboard/trial`, `/r/<code>`    | ✅  | ✅  | ✅   | The test code's redirect goes to "This link is paused"; the code shows Paused; nothing deleted                                                                         |
+| 9.4 Trial · upgraded               | `/dashboard/trial`                 | ✅  | ✅  | ✅   | An active Dynamic plan after a trial; same short link redirects (checked with a subscription fixture)                                                                  |
+| 9.5 My QR codes · during the trial | `/dashboard`, `/dashboard/billing` | ✅  | ✅  | ✅   | Trial banner with days left; trial slot usage (live count)                                                                                                             |
+| 9.6 My QR codes · Studio usage     | —                                  | ⛔  | ⛔  | ⛔   | Studio plan, monthly unlocks and Print Packs are not offered                                                                                                           |
+| 9.7 Plan & billing · Studio        | —                                  | ⛔  | ⛔  | ⛔   | Same                                                                                                                                                                   |
+| Trial · Print Pack sample          | —                                  | ⛔  | ⛔  | ⛔   | Needs the print service                                                                                                                                                |
+
 ## Missing integrations and what they block
 
 | Capability (handoff)                                                      | Status in this deployment                            | Workflows affected                                                           |

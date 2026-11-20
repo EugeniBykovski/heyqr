@@ -11,7 +11,9 @@ import { restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { encodedValue } from "../qr/export";
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, updateLayoutDesign } from "../qr/update-layout";
-import { newId } from "../db/ids";
+import { newId, newShortCode } from "../db/ids";
+import { activateTrialCode, startTrial } from "../billing/trial";
+import { activeSubscription } from "../billing/entitlements";
 
 export type ActionResult<T = undefined> =
   { ok: true; data: T } | { ok: false; error: "unauthorized" | "invalid" | "not_found" | "too_long" | "failed" };
@@ -117,6 +119,28 @@ export async function addLayout(input: z.input<typeof addLayoutSchema>): Promise
       revalidatePath("/[locale]/dashboard/qr/[id]", "page");
     }
     return result;
+  });
+}
+
+/** Design 9.1: starts the 7-day Starter trial (no card, no automatic charge); once per account. */
+export async function startTrialAction(): Promise<ActionResult<{ endsAt: string }>> {
+  return guard(async () => {
+    const user = await requireUser();
+    const result = await startTrial(db, user.id, Boolean(await activeSubscription(user.id)));
+    if (!result.ok) return { ok: false, error: "invalid" };
+    revalidatePath("/[locale]/dashboard", "layout");
+    return { ok: true, data: { endsAt: result.endsAt.toISOString() } };
+  });
+}
+
+/** Design 9.1: uses the trial's one Dynamic slot for this code (its short link goes live). */
+export async function activateTrial(qrCodeId: string): Promise<ActionResult<{ shortCode: string }>> {
+  return guard(async () => {
+    const user = await requireUser();
+    const result = await activateTrialCode(db, user.id, qrCodeId, newShortCode);
+    if (!result.ok) return { ok: false, error: result.error === "not_found" ? "not_found" : "invalid" };
+    revalidatePath("/[locale]/dashboard", "layout");
+    return { ok: true, data: { shortCode: result.shortCode } };
   });
 }
 

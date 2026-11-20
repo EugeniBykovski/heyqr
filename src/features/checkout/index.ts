@@ -9,3 +9,4 @@ export {
   type ExportSettings,
 } from "./export-surface";
 export { CurrencyChoice } from "./currency-choice";
+export { ActivatePlanButton, StartTrialButton, UseTrialButton } from "./trial-actions";

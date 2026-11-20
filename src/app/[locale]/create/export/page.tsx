@@ -5,7 +5,9 @@ import { layoutCapacity } from "@heyqr/qr-core";
 import { ExportSurface, type ExportFormat } from "@/features/checkout";
 import { TooLongNotice } from "@/features/qr-editor";
 import { getSession } from "@/server/auth";
-import { canDownload } from "@/server/billing/entitlements";
+import { canDownload, userTrial } from "@/server/billing/entitlements";
+import { trialCode } from "@/server/billing/trial";
+import { db } from "@/server/db";
 import { encodedValue } from "@/server/qr/export";
 import { getQrCode, paidPurchase } from "@/server/qr/repository";
 import { pricing } from "@/shared/config/pricing";
@@ -47,12 +49,17 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
   const layout = qr?.layouts.find((l) => l.id === layoutId) ?? qr?.layouts[0];
   if (!qr || !layout) notFound();
 
-  const [t, tTypes, entitled, purchase] = await Promise.all([
+  const [t, tTypes, entitled, purchase, phase, testCode] = await Promise.all([
     getTranslations("export"),
     getTranslations("contentTypes"),
     canDownload(session.user.id, qr),
     paidPurchase(session.user.id, qr.id),
+    userTrial(session.user.id),
+    trialCode(db, session.user.id),
   ]);
+  // Design 9.1: a Dynamic code can take the trial's one test slot while the trial runs and the slot is free.
+  const canUseTrial =
+    qr.model === "dynamic" && (phase.state === "active" || phase.state === "ending") && (!testCode || testCode.id === qr.id);
   const checkout = query.checkout === "success" || query.checkout === "cancelled" ? query.checkout : undefined;
   const value = encodedValue(qr);
   // HEY-24: a code saved before the capacity check could hold more than a QR fits; never offer a broken file.
@@ -79,6 +86,7 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
       qrCodeId={qr.id}
       layoutId={layout.id}
       entitled={entitled}
+      canUseTrial={!entitled && canUseTrial}
       title={entitled ? t("title") : t("titleBuy")}
       heading={`${qr.name} · ${layout.name}`}
       layout={layout.design.layout}

@@ -22,6 +22,7 @@ import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Segmented } from "@/shared/ui/segmented";
 import { Stage, StageBar, StageCanvas, StageFoot } from "@/shared/ui/stage";
+import { UseTrialButton } from "./trial-actions";
 
 export type ExportFormat = "png" | "svg";
 export type ExportSettings = { format: ExportFormat; resolution: number; transparent: boolean };
@@ -90,7 +91,14 @@ export type ExportSurfaceProps = {
   checkout?: "success" | "cancelled";
   receipt?: { amountCents: number; currency: string; paidAt: string } | null;
 } & (
-  | { mode: "signed"; qrCodeId: string; layoutId: string; entitled: boolean }
+  | {
+      mode: "signed";
+      qrCodeId: string;
+      layoutId: string;
+      entitled: boolean;
+      /** Design 9.1: this Dynamic code can use the trial's free test slot now (server-decided). */
+      canUseTrial?: boolean;
+    }
   | { mode: "guest"; signInHref: (settings: ExportSettings) => string }
 );
 
@@ -107,6 +115,7 @@ export type ExportSurfaceProps = {
  */
 export function ExportSurface(props: ExportSurfaceProps) {
   const t = useTranslations("export");
+  const tTrial = useTranslations("trial");
   const format = useFormatter();
   const locale = useLocale();
   const router = useRouter();
@@ -225,6 +234,16 @@ export function ExportSurface(props: ExportSurfaceProps) {
           <LoaderCircleIcon aria-hidden className="animate-spin motion-reduce:animate-none" />
           {t("confirming")}
         </Button>
+      );
+    if (!entitled && props.mode === "signed" && props.canUseTrial)
+      return (
+        <div className="flex flex-col gap-2">
+          <UseTrialButton qrCodeId={props.qrCodeId} className="w-full" />
+          <span className="text-center text-caption text-muted-foreground">{tTrial("useTrialHint")}</span>
+          <Button variant="secondary" size="md" className="w-full" disabled={paying} aria-busy={paying || undefined} onClick={pay}>
+            {t("subscribe", { price: amount })}
+          </Button>
+        </div>
       );
     if (!entitled)
       return (
