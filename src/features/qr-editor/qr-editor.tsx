@@ -1,6 +1,6 @@
 "use client";
 
-import { composeLayout, encodePayload, layoutCapacity, type QrContentType } from "@heyqr/qr-core";
+import { encodePayload, layoutCapacity, type QrContentType } from "@heyqr/qr-core";
 import { ArrowLeftIcon, ArrowRightIcon, LoaderCircleIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -9,6 +9,7 @@ import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState, useT
 import { toast } from "sonner";
 import { env } from "@/env";
 import {
+  composeShared,
   DEFAULT_DESIGN,
   designSettingsOf,
   designToLayout,
@@ -94,7 +95,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
   // finished render while a newer one is built. React discards a deferred render that newer settings overtake.
   const { layout: shownLayout, value: shownValue, rebuilding } = useShownRender(layout, value);
   const scan = useMemo(
-    () => (layoutCapacity(shownLayout, shownValue).ok ? composeLayout(shownLayout, shownValue).scan : null),
+    () => (layoutCapacity(shownLayout, shownValue).ok ? composeShared(shownLayout, shownValue).scan : null),
     [shownLayout, shownValue],
   );
   const prices = usePrices();
@@ -148,7 +149,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
 
   const download = () => {
     // The scan check shown may still describe the previous settings; export only what passes now.
-    if (!complete || !composeLayout(layout, value).scan.ok) return;
+    if (!complete || !composeShared(layout, value).scan.ok) return;
     const firstInvalid = invalidColors[0];
     if (firstInvalid) {
       setShowColorErrors(true);

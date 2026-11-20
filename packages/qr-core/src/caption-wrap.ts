@@ -13,6 +13,7 @@
  *   (the same width and height margins as before: 94 % of the width, 86 % of the height). A caption that already fit on
  *   its lines keeps exactly the size and position it had.
  */
+import { lru } from "./memo";
 import { CAPTION_FONTS, captionWeightFor, LEGACY_CAPTION_FONT, type CaptionFontId } from "./caption-fonts";
 import { CAPTION_METRICS } from "./caption-metrics";
 
@@ -134,6 +135,21 @@ export const ONE_LINE_MIN = 0.75;
  * `base` whose wrapped lines fit 94 % of the width and 86 % of the height.
  */
 export function fitCaption(
+  caption: { text: string; font?: CaptionFontId; weight: number },
+  base: number,
+  width: number,
+  height: number,
+): { fs: number; lines: CaptionLine[] } {
+  // The fit searches sizes by measuring every line many times; identical inputs (the same caption while a colour,
+  // shape or the code changes) reuse the result (HEY-62).
+  return fits(JSON.stringify([caption.text, caption.font ?? null, caption.weight, base, width, height]), () =>
+    fitCaptionUncached(caption, base, width, height),
+  );
+}
+
+const fits = lru<{ fs: number; lines: CaptionLine[] }>(64);
+
+function fitCaptionUncached(
   caption: { text: string; font?: CaptionFontId; weight: number },
   base: number,
   width: number,

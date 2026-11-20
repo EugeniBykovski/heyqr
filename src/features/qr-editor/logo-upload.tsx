@@ -2,7 +2,7 @@
 
 import { CircleAlertIcon, ImagePlusIcon, LoaderCircleIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
-import { useRef, useState, type DragEvent } from "react";
+import { type DragEvent, useEffect, useRef, useState } from "react";
 import { LOGO_ACCEPT, LOGO_MAX_BYTES } from "@/entities/qr";
 import { cn } from "@/shared/lib/utils";
 import { intakeLogo, type LogoDecoder } from "./logo-intake";
@@ -31,6 +31,14 @@ export function LogoUploadTile({
   const [dragging, setDragging] = useState(false);
   const [reading, setReading] = useState(false);
   const attempt = useRef(0);
+  // HEY-62: a logo still being read when this picker goes away (another layout, another group) is dropped, so it can
+  // never land on whatever design is active by the time it finishes.
+  useEffect(
+    () => () => {
+      attempt.current++;
+    },
+    [],
+  );
 
   const take = async (file: File | undefined) => {
     if (!file) return;
