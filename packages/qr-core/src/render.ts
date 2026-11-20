@@ -150,6 +150,22 @@ const ART_PARTS = [
 /** The strongest tint over the background: colour rules check the code against this, not the plain background. */
 export const ART_TINT_OPACITY = 0.42;
 
+/** Design QR.dc build(): a caption inside the code holds at most 14 characters, so its letters stay legible. */
+export const CENTER_TEXT_MAX = 14;
+
+/**
+ * The text a caption shows inside the code: its first line, whole when it fits CENTER_TEXT_MAX characters, else cut at
+ * the last whole word that fits and marked with an ellipsis (a single long word is cut at the limit). Never a silent
+ * mid-word cut ("Little Fern Coffee" → "Little Fern…").
+ */
+export function centerTextLabel(text: string): { label: string; shortened: boolean } {
+  const line = (text.split("\n")[0] ?? "").trim();
+  if ([...line].length <= CENTER_TEXT_MAX) return { label: line, shortened: false };
+  const room = [...line].slice(0, CENTER_TEXT_MAX - 1).join("");
+  const cut = room.lastIndexOf(" ");
+  return { label: `${(cut > 0 ? room.slice(0, cut) : room).trimEnd()}…`, shortened: true };
+}
+
 export function renderQr(value: string, style: QrStyle): RenderedQr {
   const logo = style.logo ?? null;
   const centerText = style.centerText?.text ? style.centerText : null;
@@ -160,7 +176,7 @@ export function renderQr(value: string, style: QrStyle): RenderedQr {
   const c = q + n / 2;
   const { fg, eye, eyeIn, bg } = style.colors;
 
-  const textChars = centerText ? centerText.text.slice(0, 14) : "";
+  const textChars = centerText ? centerTextLabel(centerText.text).label : "";
   const textW = centerText ? Math.min(0.5, 0.12 + textChars.length * 0.034) : 0;
   const textH = 0.13;
   const exc: Excavation | null = centerText

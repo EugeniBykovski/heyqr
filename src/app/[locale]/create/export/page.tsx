@@ -7,7 +7,7 @@ import { ExportSurface, type ExportFormat, type ExportOffer } from "@/features/c
 import { TooLongNotice } from "@/features/qr-editor";
 import { getSession } from "@/server/auth";
 import { getCurrency } from "@/server/currency";
-import { canDownload, printPackForSale, userTrial } from "@/server/billing/entitlements";
+import { canDownload, forSale, printPackForSale, userTrial } from "@/server/billing/entitlements";
 import { accountUsage } from "@/server/billing/allowances";
 import { loadPrint } from "@/server/print/load";
 import { DEFAULT_PRINT_SETTINGS, printSettingsQuery } from "@/entities/qr";
@@ -142,6 +142,7 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
     dynamic: usage.plan ? { used: usage.dynamic.used, limit: usage.dynamic.limit } : undefined,
     resets: usage.plan?.periodEnd ? format.dateTime(usage.plan.periodEnd, { dateStyle: "medium" }) : undefined,
     cents: { single: sheet.single, pack3: sheet.pack3, studio: sheet.studio },
+    forSale: { single: forSale(currency, "single"), starter: forSale(currency, "starter") },
     printPack: isPrint
       ? {
           owned: qr.printPackAt !== null,

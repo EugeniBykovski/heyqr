@@ -16,7 +16,7 @@ export const segmentedOption = cn(
   "disabled:cursor-not-allowed disabled:opacity-40 [&_svg]:size-4",
 );
 
-export type SegmentedOption<T extends string> = { value: T; label: ReactNode; hint?: string };
+export type SegmentedOption<T extends string> = { value: T; label: ReactNode; hint?: string; disabled?: boolean };
 
 /** Single-choice group of native buttons with aria-pressed (design: all choices are buttons). */
 export function Segmented<T extends string>({
@@ -42,6 +42,7 @@ export function Segmented<T extends string>({
           type="button"
           aria-pressed={o.value === value}
           title={o.hint}
+          disabled={o.disabled}
           className={segmentedOption}
           onClick={() => onChange(o.value)}
         >

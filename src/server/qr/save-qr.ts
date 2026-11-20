@@ -1,8 +1,9 @@
 import { encodePayload, layoutCapacity, type QrContent } from "@heyqr/qr-core";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, count, eq, isNull, sql } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { createLayoutRecord } from "../../entities/qr/model/design-schema";
 import { supportsMode } from "../../entities/qr/model/modes";
+import { DRAFT_LIMIT } from "../../shared/config/catalog-core";
 import { newId } from "../db/ids";
 import * as schema from "../db/schema";
 
@@ -16,7 +17,8 @@ export type SaveQrInput = {
 };
 
 export type SaveQrResult =
-  { ok: true; data: { qrCodeId: string; layoutIds: string[] } } | { ok: false; error: "invalid" | "not_found" | "too_long" };
+  | { ok: true; data: { qrCodeId: string; layoutIds: string[] } }
+  | { ok: false; error: "invalid" | "not_found" | "too_long" | "draft_limit" };
 
 /**
  * Writes a QR code and replaces its design variants in one transaction, for its owner only.
@@ -45,6 +47,14 @@ export async function saveQrWithLayouts(db: NodePgDatabase<typeof schema>, userI
         .returning({ id: schema.qrCode.id });
       if (updated.length === 0) return { ok: false, error: "not_found" } as const;
     } else {
+      // Design Pricing · Free: up to DRAFT_LIMIT saved drafts (codes not yet unlocked or live). Saves of one account
+      // are serialized, so two at once can't both pass the count.
+      await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${`drafts:${userId}`}))`);
+      const [drafts] = await tx
+        .select({ n: count() })
+        .from(schema.qrCode)
+        .where(and(eq(schema.qrCode.userId, userId), eq(schema.qrCode.status, "draft"), isNull(schema.qrCode.deletedAt)));
+      if ((drafts?.n ?? 0) >= DRAFT_LIMIT) return { ok: false, error: "draft_limit" } as const;
       await tx.insert(schema.qrCode).values({
         id: qrCodeId,
         userId,

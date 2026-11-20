@@ -172,7 +172,11 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
       });
       if (!result.ok) {
         toast.error(
-          tErrors(result.error === "unauthorized" || result.error === "invalid" || result.error === "too_long" ? result.error : "generic"),
+          tErrors(
+            result.error === "unauthorized" || result.error === "invalid" || result.error === "too_long" || result.error === "draft_limit"
+              ? result.error
+              : "generic",
+          ),
         );
         return;
       }

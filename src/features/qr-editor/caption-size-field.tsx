@@ -68,7 +68,8 @@ export function CaptionSizeField({
   const layout = designToLayout(design);
   const drawn = captionFontSize(layout, layoutGeometry(layout));
   const drawnInUnit = unit === "px" ? drawn : drawn / MM_PER_PT;
-  const shrunk = valid && layout.caption.text && drawnInUnit < value - 0.05;
+  // Inside the code the caption has no band to fit (drawn = 0): no "drawn at" note then.
+  const shrunk = valid && layout.caption.text && drawn > 0 && drawnInUnit < value - 0.05;
 
   return (
     <div className="flex flex-col gap-1.5">

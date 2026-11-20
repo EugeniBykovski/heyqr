@@ -126,6 +126,9 @@ export function wrapCaption(
   return { lines, height, widest };
 }
 
+/** The smallest share of its chosen size a caption is shrunk to so that it keeps to one line per paragraph. */
+export const ONE_LINE_MIN = 0.75;
+
 /**
  * The size and lines a caption is drawn with in a band of `width` × `height` layout units: the largest title size up to
  * `base` whose wrapped lines fit 94 % of the width and 86 % of the height.
@@ -154,6 +157,23 @@ export function fitCaption(
     }
     return Math.max(lo, 1e-3);
   };
+  // HEY-60 / design capFont: a caption whose every line fits on one line at no less than ONE_LINE_MIN of its size is
+  // drawn that way, slightly smaller, instead of wrapping ("View portfolio" beside the business card's code). Longer
+  // captions wrap at a legible size as before.
+  const oneLine = (fs: number) => {
+    const w = wrapCaption(caption, fs, Number.POSITIVE_INFINITY, false);
+    return w.height <= maxHeight && w.widest <= maxWidth + 1e-9;
+  };
+  if (!oneLine(base)) {
+    let lo = 0;
+    let hi = base;
+    for (let i = 0; i < 30; i++) {
+      const mid = (lo + hi) / 2;
+      if (oneLine(mid)) lo = mid;
+      else hi = mid;
+    }
+    if (lo >= base * ONE_LINE_MIN) return { fs: lo, lines: wrapCaption(caption, lo, Number.POSITIVE_INFINITY, false).lines };
+  }
   // HEY-55: words stay whole. Splitting inside a token (between graphemes) is used only when keeping every word whole
   // would shrink the caption below WORD_SPLIT_RATIO of the size splitting allows: a genuinely unbroken token such as a
   // long name or code, not an ordinary word in a narrow column.

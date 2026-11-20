@@ -957,3 +957,46 @@ describe.skipIf(!url)("delete one layout (HEY-58, real PostgreSQL)", () => {
     expect(await names(d.qrCodeId)).toEqual(["Table tent"]);
   });
 });
+
+/* Design Pricing · Free "Up to 10 saved drafts when signed in" (HEY-60): the limit the page shows is the one enforced. */
+describe.skipIf(!url)("draft limit (HEY-60, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "drafts-owner", name: "Owner", email: "owner@drafts.test" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const save = (text: string, qrCodeId?: string) =>
+    saveQrWithLayouts(db, owner.id, { qrCodeId, name: text, model: "static", content: { type: "text", text }, layouts });
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 6 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("refuses an 11th new draft, also when saves race; editing, unlocking and deleting free the way", async () => {
+    // Eight in a row, then four at once: exactly two of the racing saves fit.
+    for (let i = 0; i < 8; i++) expect((await save(`d${i}`)).ok).toBe(true);
+    const race = await Promise.all([save("r1"), save("r2"), save("r3"), save("r4")]);
+    expect(race.filter((r) => r.ok)).toHaveLength(2);
+    expect(race.filter((r) => !r.ok && r.error === "draft_limit")).toHaveLength(2);
+    expect(await save("eleventh")).toEqual({ ok: false, error: "draft_limit" });
+
+    // Saving an existing draft again is never blocked.
+    const first = race.find((r) => r.ok);
+    if (!first?.ok) throw new Error("fixture");
+    expect((await save("edited", first.data.qrCodeId)).ok).toBe(true);
+
+    // An unlocked code is no longer a draft, so there is room again; so is a deleted one.
+    await db.update(schema.qrCode).set({ status: "active", purchasedAt: new Date() }).where(eq(schema.qrCode.id, first.data.qrCodeId));
+    expect((await save("after unlock")).ok).toBe(true);
+    expect(await save("full again")).toEqual({ ok: false, error: "draft_limit" });
+    const anyDraft = await db.query.qrCode.findFirst({ where: (q, { and, eq }) => and(eq(q.userId, owner.id), eq(q.status, "draft")) });
+    if (!anyDraft) throw new Error("fixture");
+    await softDeleteQrCodes(db, owner.id, [anyDraft.id]);
+    expect((await save("after delete")).ok).toBe(true);
+  });
+});

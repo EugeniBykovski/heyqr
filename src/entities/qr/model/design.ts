@@ -4,6 +4,7 @@ import {
   captionWeightFor,
   DEFAULT_CAPTION_FONT,
   DEFAULT_CAPTION_WEIGHT,
+  LABEL_ON_FRAME,
   type CaptionFontId,
   type CaptionWeight,
   type EyeBallShape,
@@ -165,6 +166,13 @@ export const LOGO_PLATES: readonly LogoPlate[] = ["none", "square", "circle"];
 /** The backing a logo has when none was chosen. */
 export const defaultLogoPlate = (logo: CenterLogo): LogoPlate => (logo.kind === "icon" ? "circle" : "square");
 export const CAPTION_ALIGNS: readonly CaptionAlign[] = ["left", "center", "right"];
+/**
+ * The frame label's colour when none was chosen: the background colour on frames whose label sits on the frame band,
+ * the frame colour on frames whose label sits on the background (Corners, Phone), so it is never drawn invisibly.
+ */
+export const defaultFrameTextColor = (d: Pick<EditorDesign, "frameStyle" | "frameColor" | "fg" | "bg">): string =>
+  LABEL_ON_FRAME[d.frameStyle] ? d.bg : (d.frameColor ?? d.fg);
+
 /** The alignment a caption has when none was chosen: left beside the code on the horizontal card, centred elsewhere. */
 export const defaultCaptionAlign = (preset: EditorPreset): CaptionAlign => (preset === "horizontal" ? "left" : "center");
 
@@ -294,8 +302,8 @@ export function designToLayout(d: EditorDesign): Layout {
       eyeIn: d.eyeIn ?? d.fg,
       bg: d.bg,
       frame: d.frameColor ?? d.fg,
-      // The frame label keeps its own styling (background colour on the frame); captions may have their own colour.
-      caption: d.preset === "frame" ? (d.frameTextColor ?? d.bg) : (d.captionColor ?? d.fg),
+      // The frame label keeps its own styling; captions may have their own colour.
+      caption: d.preset === "frame" ? (d.frameTextColor ?? defaultFrameTextColor(d)) : (d.captionColor ?? d.fg),
     },
     style: {
       pattern: d.pattern,

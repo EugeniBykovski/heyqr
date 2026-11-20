@@ -25,6 +25,7 @@ import { Button } from "@/shared/ui/button";
 import { Swatch } from "@/shared/ui/swatch";
 import { Field } from "@/shared/ui/field";
 import { Input } from "@/shared/ui/input";
+import { Segmented } from "@/shared/ui/segmented";
 import { CaptionField } from "./caption-field";
 import { CaptionSizeField } from "./caption-size-field";
 import { ColorField } from "./design-panel";
@@ -96,15 +97,65 @@ export function FramePanel({
  * Design "Caption → Font / Weight" (HEY-44): the caption fonts, each shown in its own face, and the weights that
  * font ships. Changing the font keeps the weight when the new font has it, otherwise the nearest one it ships.
  */
-export function CaptionFontPicker({ design, onChange }: { design: EditorDesign; onChange: (patch: Partial<EditorDesign>) => void }) {
-  const t = useTranslations("editor.captionFont");
+/** The caption's font, its shown weight and the weights that font ships (shared by the font and weight pickers). */
+function captionFontState(design: EditorDesign) {
   const font = design.captionFont ?? DEFAULT_CAPTION_FONT;
   const original = font === ORIGINAL_CAPTION_FONT;
-  const chosenWeight = design.captionWeight ?? DEFAULT_CAPTION_WEIGHT;
   // The original DM Sans of a layout saved before caption fonts ships 400 and 700 only (HEY-45).
   const weightFor = (f: typeof font, w: number) => (f === ORIGINAL_CAPTION_FONT ? (w >= 600 ? 700 : 400) : captionWeightFor(f, w));
-  const weight = weightFor(font, chosenWeight);
+  const weight = weightFor(font, design.captionWeight ?? DEFAULT_CAPTION_WEIGHT);
   const weights = (original ? [400, 700] : supportedWeights(font)).map(String);
+  return { font, original, weightFor, weight, weights };
+}
+
+/** Design 1.16 "Weight": a segmented control of the weights the chosen font ships, each label in its weight. */
+export function CaptionWeightPicker({ design, onChange }: { design: EditorDesign; onChange: (patch: Partial<EditorDesign>) => void }) {
+  const t = useTranslations("editor.captionFont");
+  const { font, weightFor, weight, weights } = captionFontState(design);
+  return (
+    <div className="flex min-w-0 flex-col gap-1.5">
+      <span className="text-label">{t("weight")}</span>
+      <Segmented
+        label={t("weight")}
+        value={String(weight)}
+        options={weights.map((w) => ({
+          value: w,
+          label: <span style={{ fontWeight: Number(w) }}>{t(`weights.${w as "400" | "500" | "700"}`)}</span>,
+        }))}
+        onChange={(w) => onChange({ captionWeight: weightFor(font, Number(w)) as 400 | 500 | 700 })}
+      />
+    </div>
+  );
+}
+
+/** Design 1.16 "Align": left, center or right within the caption band. */
+export function CaptionAlignPicker({ design, onChange }: { design: EditorDesign; onChange: (patch: Partial<EditorDesign>) => void }) {
+  const t = useTranslations("editor.captionStyle");
+  return (
+    <div className="flex min-w-0 flex-col gap-1.5">
+      <span className="text-label">{t("align")}</span>
+      <Segmented
+        label={t("align")}
+        value={design.captionAlign ?? defaultCaptionAlign(design.preset)}
+        options={CAPTION_ALIGNS.map((a) => ({ value: a, label: t(`aligns.${a}`) }))}
+        onChange={(captionAlign) => onChange({ captionAlign })}
+      />
+    </div>
+  );
+}
+
+export function CaptionFontPicker({
+  design,
+  onChange,
+  withWeight = true,
+}: {
+  design: EditorDesign;
+  onChange: (patch: Partial<EditorDesign>) => void;
+  /** False when the weight has its own control beside the size (design 1.16). */
+  withWeight?: boolean;
+}) {
+  const t = useTranslations("editor.captionFont");
+  const { font, original, weightFor, weight, weights } = captionFontState(design);
   const options: readonly (typeof font)[] = original ? [ORIGINAL_CAPTION_FONT, ...CAPTION_FONT_IDS] : CAPTION_FONT_IDS;
   return (
     <div className="flex flex-col gap-4">
@@ -129,14 +180,16 @@ export function CaptionFontPicker({ design, onChange }: { design: EditorDesign; 
         />
         <p className="text-caption text-muted-foreground">{t(original ? "originalHint" : "hint")}</p>
       </div>
-      <OptionGrid
-        label={t("weight")}
-        value={String(weight)}
-        options={weights}
-        columns="grid-cols-3"
-        onChange={(w) => onChange({ captionWeight: weightFor(font, Number(w)) as 400 | 500 | 700 })}
-        render={(w) => <span style={{ fontWeight: Number(w) }}>{t(`weights.${w as "400" | "500" | "700"}`)}</span>}
-      />
+      {withWeight ? (
+        <OptionGrid
+          label={t("weight")}
+          value={String(weight)}
+          options={weights}
+          columns="grid-cols-3"
+          onChange={(w) => onChange({ captionWeight: weightFor(font, Number(w)) as 400 | 500 | 700 })}
+          render={(w) => <span style={{ fontWeight: Number(w) }}>{t(`weights.${w as "400" | "500" | "700"}`)}</span>}
+        />
+      ) : null}
     </div>
   );
 }

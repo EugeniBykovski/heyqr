@@ -1,13 +1,14 @@
 "use client";
 
-import { CENTER_LOGO_SIZE, centerLogoSize, layoutGeometry, type FrameStyle } from "@heyqr/qr-core";
-import { RotateCcwIcon, ShuffleIcon, CircleSlashIcon, SearchIcon } from "lucide-react";
+import { CENTER_LOGO_SIZE, CENTER_TEXT_MAX, centerLogoSize, centerTextLabel, layoutGeometry, type FrameStyle } from "@heyqr/qr-core";
+import { CircleAlertIcon, CircleSlashIcon, RotateCcwIcon, SearchIcon, ShuffleIcon, Trash2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Tabs as TabsPrimitive } from "radix-ui";
 import { useMemo, useState, type ReactNode } from "react";
 import {
   CAPTION_POSITIONS,
   CENTER_ICONS,
+  defaultFrameTextColor,
   defaultLogoPlate,
   designToLayout,
   EYE_BALL_SHAPES,
@@ -31,13 +32,14 @@ import {
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
+import { Segmented } from "@/shared/ui/segmented";
 import { Label } from "@/shared/ui/label";
 import { Swatch } from "@/shared/ui/swatch";
 import { BrandGroup } from "./brand-group";
 import { CaptionField } from "./caption-field";
 import { CaptionSizeField } from "./caption-size-field";
 import { ColorField } from "./design-panel";
-import { CaptionFontPicker, CaptionStyleAlign } from "./frame-panel";
+import { CaptionAlignPicker, CaptionFontPicker, CaptionWeightPicker } from "./frame-panel";
 import { LogoFeedback, LogoUploadTile, type LogoFeedbackState } from "./logo-upload";
 import { OptionGrid } from "./option-grid";
 import { ShapeThumb } from "./shape-thumb";
@@ -75,6 +77,8 @@ export function DesignSettings({
   // Design 2.5: Branded design adds the Brand group first; every other group stays available to fine-tune.
   const groups: readonly DesignGroup[] = props.design.designMode === "branded" ? ["brand", ...DESIGN_GROUPS] : DESIGN_GROUPS;
   const active = groups.includes(group) ? group : "layout";
+  // The Colors group's selected role, so "Caption color" (1.16) can open Colors on the caption.
+  const [colorRole, setColorRole] = useState<ColorRole>("fg");
   return (
     <TabsPrimitive.Root value={active} onValueChange={(v) => onGroupChange(v as DesignGroup)} className="flex flex-col gap-5">
       <TabsPrimitive.List
@@ -119,9 +123,18 @@ export function DesignSettings({
             />
           ) : null}
           {g === "pattern" ? <PatternGroup {...props} /> : null}
-          {g === "colors" ? <ColorsGroup {...props} /> : null}
-          {g === "logo" ? <LogoGroup {...props} /> : null}
-          {g === "caption" ? <CaptionGroup {...props} onGroupChange={onGroupChange} /> : null}
+          {g === "colors" ? <ColorsGroup {...props} role={colorRole} onRole={setColorRole} /> : null}
+          {g === "logo" ? <LogoGroup {...props} onGroupChange={onGroupChange} /> : null}
+          {g === "caption" ? (
+            <CaptionGroup
+              {...props}
+              onGroupChange={onGroupChange}
+              onEditColor={() => {
+                setColorRole("caption");
+                onGroupChange("colors");
+              }}
+            />
+          ) : null}
         </TabsPrimitive.Content>
       ))}
     </TabsPrimitive.Root>
@@ -341,7 +354,7 @@ function FrameGroup({ design, onChange, value }: GroupProps) {
   ];
   const textColors = [{ hex: "#FFFFFF", name: tf("white") }, ...QR_INKS.map((i) => ({ hex: i.hex, name: tInks(i.name) }))];
   const frameColor = (design.frameColor ?? design.fg).toUpperCase();
-  const textColor = (design.frameTextColor ?? design.bg).toUpperCase();
+  const textColor = (design.frameTextColor ?? defaultFrameTextColor(design)).toUpperCase();
   return (
     <>
       <Section title={tf("title")} hint={tf("count", { count: FRAME_STYLES.length + 1 })}>
@@ -591,10 +604,16 @@ const roleEdited = (d: EditorDesign, role: ColorRole) =>
             ? d.frameColor !== undefined
             : d.captionColor !== undefined;
 
-function ColorsGroup({ design, onChange, showFieldErrors, onFieldValidity }: GroupProps) {
+function ColorsGroup({
+  design,
+  onChange,
+  showFieldErrors,
+  onFieldValidity,
+  role,
+  onRole: setRole,
+}: GroupProps & { role: ColorRole; onRole: (r: ColorRole) => void }) {
   const t = useTranslations("editor.colorsGroup");
   const tInks = useTranslations("home.tool.inks");
-  const [role, setRole] = useState<ColorRole>("fg");
   const roles: ColorRole[] = ["fg", "eye", "eyeIn", "bg", "frame", "caption"];
   const anyEdited = roles.some((r) => roleEdited(design, r));
   const current = roleColor(design, role).toUpperCase();
@@ -711,7 +730,7 @@ function ColorsGroup({ design, onChange, showFieldErrors, onFieldValidity }: Gro
 
 /* ---------- Logo (1.11) ---------- */
 
-function LogoGroup({ design, onChange, logoScanMax }: GroupProps) {
+function LogoGroup({ design, onChange, logoScanMax, onGroupChange }: GroupProps & { onGroupChange: (g: DesignGroup) => void }) {
   const t = useTranslations("editor");
   const tl = useTranslations("editor.logoGroup");
   const [source, setSource] = useState<"icons" | "upload">(design.logo.kind === "image" ? "upload" : "icons");
@@ -724,22 +743,26 @@ function LogoGroup({ design, onChange, logoScanMax }: GroupProps) {
   const drawn = centerLogoSize(design.logoSize);
   const card = design.preset === "vertical" || design.preset === "horizontal";
   const onTop = design.logoPosition === "top" && design.logo.kind === "image" && card;
+  const logoOn = design.logo.kind !== "none";
+  // Design 1.11 / 2.x: Branded design uses the image from the Brand group; the icon library and upload are Custom only.
+  const branded = design.designMode === "branded";
   return (
     <>
-      <div role="group" aria-label={tl("source")} className="flex rounded-full border border-border bg-subtle p-0.75">
-        {(["icons", "upload"] as const).map((s) => (
-          <button
-            key={s}
-            type="button"
-            aria-pressed={source === s}
-            onClick={() => setSource(s)}
-            className="min-h-9 flex-1 cursor-pointer rounded-full px-3 text-label text-secondary-foreground aria-pressed:bg-surface aria-pressed:text-foreground aria-pressed:shadow-segment"
-          >
-            {tl(s)}
-          </button>
-        ))}
-      </div>
-      {source === "icons" ? (
+      {branded ? null : (
+        <Segmented
+          label={tl("source")}
+          value={source}
+          options={(["icons", "upload"] as const).map((s) => ({ value: s, label: tl(s) }))}
+          onChange={setSource}
+        />
+      )}
+      {branded ? (
+        logoOn ? null : (
+          <Button type="button" variant="secondary" className="self-start" onClick={() => onGroupChange("brand")}>
+            {tl("brandedUpload")}
+          </Button>
+        )
+      ) : source === "icons" ? (
         <Section title={tl("icons")} hint={tl("count", { count: Object.keys(CENTER_ICONS).length })}>
           <div className="relative">
             <SearchIcon aria-hidden className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -752,15 +775,12 @@ function LogoGroup({ design, onChange, logoScanMax }: GroupProps) {
             />
           </div>
           <div role="group" aria-label={t("logo")} className="grid grid-cols-6 gap-1.5 @[26rem]/panel:grid-cols-8">
-            <IconButton selected={design.logo.kind === "none"} label={tl("remove")} onClick={() => onChange({ logo: { kind: "none" } })}>
-              <CircleSlashIcon aria-hidden className="size-5" strokeWidth={1.8} />
-            </IconButton>
             {icons.map((key) => (
               <IconButton
                 key={key}
                 selected={design.logo.kind === "icon" && design.logo.icon === key}
                 label={t(`icons.${key}`)}
-                onClick={() => onChange({ logo: { kind: "icon", icon: key } })}
+                onClick={() => onChange({ logo: { kind: "icon", icon: key }, logoPosition: "center" })}
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -776,24 +796,17 @@ function LogoGroup({ design, onChange, logoScanMax }: GroupProps) {
           </div>
           {icons.length === 0 ? <p className="text-caption text-muted-foreground">{tl("empty", { query: query.trim() })}</p> : null}
           {design.logo.kind === "icon" ? (
-            <div role="group" aria-label={tl("style")} className="flex w-fit rounded-full border border-border bg-subtle p-0.75">
-              {(["plate", "tile"] as const).map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  aria-pressed={(design.logoTile === true) === (s === "tile")}
-                  onClick={() => onChange({ logoTile: s === "tile" })}
-                  className="min-h-9 cursor-pointer rounded-full px-3 text-label text-secondary-foreground aria-pressed:bg-surface aria-pressed:text-foreground aria-pressed:shadow-segment"
-                >
-                  {tl(s)}
-                </button>
-              ))}
-            </div>
+            <Segmented
+              label={tl("style")}
+              value={design.logoTile === true ? "tile" : "plate"}
+              options={(["plate", "tile"] as const).map((s) => ({ value: s, label: tl(s) }))}
+              onChange={(s) => onChange({ logoTile: s === "tile" })}
+            />
           ) : null}
           <p className="text-caption text-muted-foreground">{tl("vectorNote")}</p>
         </Section>
       ) : (
-        <Section title={tl("upload")}>
+        <Section title={tl("uploadTitle")}>
           <div className="flex items-center gap-3">
             <div className="w-16 shrink-0">
               <LogoUploadTile
@@ -803,20 +816,15 @@ function LogoGroup({ design, onChange, logoScanMax }: GroupProps) {
                 onFeedback={setFeedback}
               />
             </div>
-            {design.logo.kind === "image" ? (
-              <Button type="button" size="sm" variant="ghost" onClick={() => onChange({ logo: { kind: "none" } })}>
-                {tl("remove")}
-              </Button>
-            ) : null}
           </div>
           <LogoFeedback feedback={feedback} />
         </Section>
       )}
-      {design.logo.kind !== "none" ? (
+      {logoOn ? (
         <>
           <div className="flex flex-col gap-1.5">
             <div className="flex items-baseline justify-between gap-3">
-              <Label htmlFor="logo-size">{t("logoSize")}</Label>
+              <Label htmlFor="logo-size">{branded ? tl("imageSize") : t("logoSize")}</Label>
               <span id="logo-size-value" className="text-caption text-muted-foreground tabular-nums">
                 {logoScanMax
                   ? t("logoSizeValue", { size: Math.round(drawn * 100), max: Math.round(logoScanMax * 100) })
@@ -842,46 +850,56 @@ function LogoGroup({ design, onChange, logoScanMax }: GroupProps) {
             ) : null}
           </div>
           {design.logoTile && design.logo.kind === "icon" ? null : (
-            <div className="flex flex-col gap-1.5">
-              <OptionGrid
+            <Section title={t("logoPlate.label")}>
+              <Segmented
                 label={t("logoPlate.label")}
                 value={design.logoPlate ?? defaultLogoPlate(design.logo)}
-                options={LOGO_PLATES}
-                columns="grid-cols-3"
+                options={LOGO_PLATES.map((o) => ({ value: o, label: t(`logoPlate.${o}`) }))}
                 onChange={(logoPlate) => onChange({ logoPlate })}
-                render={(o) => t(`logoPlate.${o}`)}
               />
               <p className="text-caption text-muted-foreground">{tl("backingHint")}</p>
-            </div>
+            </Section>
           )}
-          {design.logo.kind === "image" ? (
-            <div className="flex flex-col gap-1.5">
-              <OptionGrid
-                label={tl("position")}
-                value={onTop ? "top" : "center"}
-                options={card ? (["center", "top"] as const) : (["center"] as const)}
-                columns="grid-cols-2"
-                onChange={(logoPosition) => onChange({ logoPosition })}
-                render={(o) => tl(`positions.${o}`)}
-              />
-              <p className="text-caption text-muted-foreground">{tl("positionHint")}</p>
-              {onTop ? (
-                <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="brand-name">{tl("brandName")}</Label>
-                  <Input
-                    id="brand-name"
-                    value={design.brandName ?? ""}
-                    maxLength={40}
-                    aria-describedby="brand-name-hint"
-                    onChange={(e) => onChange({ brandName: e.target.value })}
-                  />
-                  <p id="brand-name-hint" className="text-caption text-muted-foreground">
-                    {tl("brandNameHint")}
-                  </p>
-                </div>
-              ) : null}
-            </div>
-          ) : null}
+          {/* Design 1.11: Position is always shown; "Top of card" needs a card layout and an uploaded image. */}
+          <Section title={tl("position")}>
+            <Segmented
+              label={tl("position")}
+              value={onTop ? "top" : "center"}
+              options={[
+                { value: "center" as const, label: tl("positions.center") },
+                { value: "top" as const, label: tl("positions.top"), disabled: !card || design.logo.kind !== "image" },
+              ]}
+              onChange={(logoPosition) => onChange({ logoPosition })}
+            />
+            {!card ? <p className="text-caption text-muted-foreground">{tl("positionHint")}</p> : null}
+            {onTop ? (
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="brand-name">{tl("brandName")}</Label>
+                <Input
+                  id="brand-name"
+                  value={design.brandName ?? ""}
+                  maxLength={40}
+                  aria-describedby="brand-name-hint"
+                  onChange={(e) => onChange({ brandName: e.target.value })}
+                />
+                <p id="brand-name-hint" className="text-caption text-muted-foreground">
+                  {tl("brandNameHint")}
+                </p>
+              </div>
+            ) : null}
+          </Section>
+          {branded ? null : (
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              className="self-start"
+              onClick={() => onChange({ logo: { kind: "none" }, logoPosition: "center" })}
+            >
+              <Trash2Icon aria-hidden />
+              {tl("remove")}
+            </Button>
+          )}
         </>
       ) : null}
     </>
@@ -918,7 +936,13 @@ function IconButton({
 
 /* ---------- Caption (1.16) ---------- */
 
-function CaptionGroup({ design, onChange, onFieldValidity, onGroupChange }: GroupProps & { onGroupChange: (g: DesignGroup) => void }) {
+function CaptionGroup({
+  design,
+  onChange,
+  onFieldValidity,
+  onGroupChange,
+  onEditColor,
+}: GroupProps & { onGroupChange: (g: DesignGroup) => void; onEditColor: () => void }) {
   const t = useTranslations("editor");
   const tc = useTranslations("editor.captionGroup");
   if (design.preset === "frame")
@@ -944,6 +968,8 @@ function CaptionGroup({ design, onChange, onFieldValidity, onGroupChange }: Grou
         </Button>
       </div>
     );
+  const inside = centerTextLabel(design.caption);
+  const captionColor = (design.captionColor ?? design.fg).toUpperCase();
   return (
     <>
       <CaptionField
@@ -953,20 +979,40 @@ function CaptionGroup({ design, onChange, onFieldValidity, onGroupChange }: Grou
         onAccept={(caption) => onChange({ caption })}
         onValidity={onFieldValidity}
       />
-      <CaptionFontPicker design={design} onChange={onChange} />
-      <CaptionSizeField design={design} onChange={onChange} onValidity={onFieldValidity} />
-      <div className="flex flex-col gap-1.5">
-        <OptionGrid
-          label={tc("position")}
-          value={design.captionPosition ?? "below"}
-          options={CAPTION_POSITIONS}
-          columns="grid-cols-3"
-          onChange={(captionPosition) => onChange({ captionPosition })}
-          render={(p) => tc(`positions.${p}`)}
-        />
-        {design.captionPosition === "inside" ? <p className="text-caption text-muted-foreground">{tc("insideHint")}</p> : null}
+      <CaptionFontPicker design={design} onChange={onChange} withWeight={false} />
+      {/* Design 1.16: Size beside Weight, Align beside Position, then the caption color row. */}
+      <div className="grid grid-cols-2 items-start gap-3">
+        <CaptionSizeField design={design} onChange={onChange} onValidity={onFieldValidity} />
+        <CaptionWeightPicker design={design} onChange={onChange} />
       </div>
-      <CaptionStyleAlign design={design} onChange={onChange} onValidity={onFieldValidity} />
+      <div className="grid grid-cols-2 items-start gap-3">
+        <CaptionAlignPicker design={design} onChange={onChange} />
+        <div className="flex min-w-0 flex-col gap-1.5">
+          <span className="text-label">{tc("position")}</span>
+          <Segmented
+            label={tc("position")}
+            value={design.captionPosition ?? "below"}
+            options={CAPTION_POSITIONS.map((p) => ({ value: p, label: tc(`positions.${p}`) }))}
+            onChange={(captionPosition) => onChange({ captionPosition })}
+          />
+        </div>
+      </div>
+      {design.captionPosition === "inside" ? <p className="-mt-3 text-caption text-muted-foreground">{tc("insideHint")}</p> : null}
+      {design.captionPosition === "inside" && inside.shortened ? (
+        <p role="status" className="-mt-3 flex items-start gap-1.5 text-caption font-medium text-warning">
+          <CircleAlertIcon aria-hidden className="mt-0.5 size-3.5 shrink-0" />
+          {tc("insideShortened", { max: CENTER_TEXT_MAX, shown: inside.label })}
+        </p>
+      ) : null}
+      <button
+        type="button"
+        onClick={onEditColor}
+        className="flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-md border border-border bg-surface px-2.5 py-1.5 text-left transition-[border-color] duration-(--motion-fast) hover:border-border-hover"
+      >
+        <span aria-hidden className="size-7 shrink-0 rounded-sm border border-border" style={{ backgroundColor: captionColor }} />
+        <span className="grow text-label">{tc("color")}</span>
+        <span className="font-mono text-caption text-muted-foreground">{captionColor}</span>
+      </button>
     </>
   );
 }
