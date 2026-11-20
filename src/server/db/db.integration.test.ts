@@ -11,7 +11,7 @@ import { DEFAULT_DESIGN, designToLayout } from "../../entities/qr/model/design";
 import { designSettingsOf, readLayoutRecord } from "../../entities/qr/model/design-schema";
 import { RESTORE_WINDOW_MS, restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
-import { addLayoutFrom, updateLayoutDesign } from "../qr/update-layout";
+import { addLayoutFrom, removeLayout, updateLayoutDesign } from "../qr/update-layout";
 import { activateTrialCode, startTrial, trialCode } from "../billing/trial";
 import {
   accountUsage,
@@ -865,5 +865,95 @@ describe.skipIf(!url)("plans, credits and allowances (design 4.8, real PostgreSQ
     expect(await convertToStatic(db, owner.id, sixth)).toEqual({ ok: true });
     expect(await convertToStatic(db, owner.id, a)).toEqual({ ok: false }); // live codes keep their short link
     expect((await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, sixth) }))?.model).toBe("static");
+  });
+});
+
+describe.skipIf(!url)("delete one layout (HEY-58, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "dl-owner", name: "Owner", email: "owner@dl.test" };
+  const other = { id: "dl-other", name: "Other", email: "other@dl.test" };
+  const card = { ...DEFAULT_DESIGN, preset: "caption" as const, caption: "Portfolio" };
+  const layout = (name: string) => ({ name, layout: designToLayout(card), editor: designSettingsOf(card) });
+  const make = async (userId: string, model: "static" | "dynamic", names: string[]) => {
+    const saved = await saveQrWithLayouts(db, userId, {
+      name: "Delete test",
+      model,
+      content: { type: "website", url: "https://anareyes.studio/portfolio" },
+      destination: model === "dynamic" ? "https://anareyes.studio/portfolio" : undefined,
+      layouts: names.map(layout),
+    });
+    if (!saved.ok) throw new Error("save failed");
+    return saved.data;
+  };
+  const names = async (qrCodeId: string) =>
+    (await db.query.qrLayout.findMany({ where: (l, { eq }) => eq(l.qrCodeId, qrCodeId), orderBy: (l, { asc }) => asc(l.sortOrder) })).map(
+      (l) => l.name,
+    );
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("deletes exactly the chosen layout; the code, its payment, Print Pack and sibling layouts stay", async () => {
+    const a = await make(owner.id, "static", ["Business card", "Layout 2", "Poster"]);
+    const now = new Date();
+    await db.update(schema.qrCode).set({ purchasedAt: now, printPackAt: now, status: "active" }).where(eq(schema.qrCode.id, a.qrCodeId));
+    const target = a.layoutIds[1] ?? "";
+    expect(await removeLayout(db, owner.id, { qrCodeId: a.qrCodeId, layoutId: target })).toEqual({ ok: true, data: { remaining: 2 } });
+    expect(await names(a.qrCodeId)).toEqual(["Business card", "Poster"]);
+    const qr = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, a.qrCodeId) });
+    expect([qr?.purchasedAt?.getTime(), qr?.printPackAt?.getTime(), qr?.status, qr?.deletedAt]).toEqual([
+      now.getTime(),
+      now.getTime(),
+      "active",
+      null,
+    ]);
+    // Already gone: the same request is a not-found, nothing else changes.
+    expect(await removeLayout(db, owner.id, { qrCodeId: a.qrCodeId, layoutId: target })).toEqual({ ok: false, error: "not_found" });
+    expect(await names(a.qrCodeId)).toEqual(["Business card", "Poster"]);
+  });
+
+  it("refuses another account's code and a layout of another code", async () => {
+    const a = await make(owner.id, "static", ["Business card", "Layout 2"]);
+    const b = await make(owner.id, "static", ["Card", "Poster"]);
+    expect(await removeLayout(db, other.id, { qrCodeId: a.qrCodeId, layoutId: a.layoutIds[1] ?? "" })).toEqual({
+      ok: false,
+      error: "not_found",
+    });
+    expect(await removeLayout(db, owner.id, { qrCodeId: a.qrCodeId, layoutId: b.layoutIds[1] ?? "" })).toEqual({
+      ok: false,
+      error: "not_found",
+    });
+    expect(await names(a.qrCodeId)).toEqual(["Business card", "Layout 2"]);
+    expect(await names(b.qrCodeId)).toEqual(["Card", "Poster"]);
+  });
+
+  it("keeps at least one layout, also when two deletes run at once", async () => {
+    const one = await make(owner.id, "static", ["Only"]);
+    expect(await removeLayout(db, owner.id, { qrCodeId: one.qrCodeId, layoutId: one.layoutIds[0] ?? "" })).toEqual({
+      ok: false,
+      error: "last_layout",
+    });
+    const two = await make(owner.id, "static", ["First", "Second"]);
+    const results = await Promise.all(two.layoutIds.map((layoutId) => removeLayout(db, owner.id, { qrCodeId: two.qrCodeId, layoutId })));
+    expect(results.filter((r) => r.ok)).toHaveLength(1);
+    expect(results.filter((r) => !r.ok)).toEqual([{ ok: false, error: "last_layout" }]);
+    expect(await names(two.qrCodeId)).toHaveLength(1);
+  });
+
+  it("a Dynamic code keeps its short link and destination", async () => {
+    const d = await make(owner.id, "dynamic", ["Table tent", "Layout 2"]);
+    await db.update(schema.qrCode).set({ shortCode: "dlkeep1", status: "active" }).where(eq(schema.qrCode.id, d.qrCodeId));
+    expect((await removeLayout(db, owner.id, { qrCodeId: d.qrCodeId, layoutId: d.layoutIds[1] ?? "" })).ok).toBe(true);
+    const qr = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, d.qrCodeId) });
+    expect([qr?.shortCode, qr?.destination, qr?.status]).toEqual(["dlkeep1", "https://anareyes.studio/portfolio", "active"]);
+    expect(await names(d.qrCodeId)).toEqual(["Table tent"]);
   });
 });

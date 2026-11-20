@@ -7,7 +7,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { env } from "@/env";
 import { DEFAULT_PRINT_SETTINGS, printSettingsQuery, QrPreview } from "@/entities/qr";
 import { CopyButton } from "@/features/copy-to-clipboard";
-import { DifferentContent, RenameTitle } from "@/features/qr-details";
+import { DeleteLayoutButton, DifferentContent, RenameTitle } from "@/features/qr-details";
 import { DestinationForm } from "@/features/qr-destination";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
@@ -338,6 +338,7 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
                           {entitled ? <DownloadIcon aria-hidden /> : <LockIcon aria-hidden />}
                         </Link>
                       </Button>
+                      <DeleteLayoutButton qrCodeId={qr.id} layoutId={layout.id} name={layout.name} canDelete={qr.layouts.length > 1} />
                     </div>
                     {mm ? null : (
                       <Link

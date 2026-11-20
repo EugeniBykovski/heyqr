@@ -15,7 +15,8 @@ export type ActionResult<T = undefined> =
         | "price_mismatch"
         | "no_allowance"
         | "no_credits"
-        | "limit";
+        | "limit"
+        | "last_layout";
     };
 
 /** Error name and database error code only; no message text, query or parameters. */

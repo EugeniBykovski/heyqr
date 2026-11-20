@@ -14,7 +14,7 @@ import { db, schema } from "../db";
 import { restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { encodedValue } from "../qr/export";
 import { saveQrWithLayouts } from "../qr/save-qr";
-import { addLayoutFrom, updateLayoutDesign } from "../qr/update-layout";
+import { addLayoutFrom, removeLayout, updateLayoutDesign } from "../qr/update-layout";
 import { newId, newShortCode } from "../db/ids";
 import { activateTrialCode, startTrial } from "../billing/trial";
 import { activeSubscription, canDownload, printPackForSale } from "../billing/entitlements";
@@ -96,6 +96,21 @@ export async function addLayout(input: z.input<typeof addLayoutSchema>): Promise
     const parsed = addLayoutSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "invalid" };
     const result = await addLayoutFrom(db, user.id, parsed.data, (qr) => encodedValue(qr), newId);
+    if (result.ok) {
+      revalidatePath("/[locale]/dashboard", "page");
+      revalidatePath("/[locale]/dashboard/qr/[id]", "page");
+    }
+    return result;
+  });
+}
+
+/** QR details "Delete layout": one layout of the owner's code; the code keeps at least one (server-enforced). */
+export async function deleteLayout(input: { qrCodeId: string; layoutId: string }): Promise<ActionResult<{ remaining: number }>> {
+  return guard(async () => {
+    const user = await requireUser();
+    const parsed = z.object({ qrCodeId: z.string().min(1).max(64), layoutId: z.string().min(1).max(64) }).safeParse(input);
+    if (!parsed.success) return { ok: false, error: "invalid" };
+    const result = await removeLayout(db, user.id, parsed.data);
     if (result.ok) {
       revalidatePath("/[locale]/dashboard", "page");
       revalidatePath("/[locale]/dashboard/qr/[id]", "page");

@@ -485,48 +485,45 @@ function SwatchRow({
 
 function PatternGroup({ design, onChange }: GroupProps) {
   const t = useTranslations("editor");
-  const thumb = "size-9 text-foreground";
+  const tile = (o: string, picture: ReactNode) => (
+    <>
+      <span className="grid h-14 place-items-center rounded-md bg-subtle">{picture}</span>
+      <span className="max-w-full truncate px-0.5">{t(`shapes.${o}` as "shapes.square")}</span>
+    </>
+  );
   return (
     <>
       <OptionGrid
         label={t("pattern")}
+        hint={t("patternHint")}
+        variant="tile"
         value={design.pattern}
         options={MODULE_SHAPES}
         columns="grid-cols-4"
         onChange={(pattern) => onChange({ pattern })}
-        render={(o) => (
-          <>
-            <ShapeThumb part={{ kind: "modules", shape: o }} className={thumb} />
-            <span className="max-w-full truncate">{t(`shapes.${o}`)}</span>
-          </>
-        )}
+        render={(o) => tile(o, <ShapeThumb part={{ kind: "modules", shape: o }} className="size-9 text-foreground" />)}
       />
       <OptionGrid
         label={t("eyeFrame")}
+        hint={t("eyeFrameHint")}
+        variant="tile"
         value={design.eyeFrame}
         options={EYE_FRAME_SHAPES}
-        columns="grid-cols-3 @[26rem]/panel:grid-cols-5"
+        columns="grid-cols-3"
         onChange={(eyeFrame) => onChange({ eyeFrame })}
-        render={(o) => (
-          <>
-            <ShapeThumb part={{ kind: "frame", shape: o }} className={thumb} />
-            <span className="max-w-full truncate">{t(`shapes.${o}`)}</span>
-          </>
-        )}
+        render={(o) => tile(o, <ShapeThumb part={{ kind: "frame", shape: o }} className="size-10" />)}
       />
       <OptionGrid
         label={t("eyeBall")}
+        hint={t("eyeBallHint")}
+        variant="tile"
         value={design.eyeBall}
         options={EYE_BALL_SHAPES}
-        columns="grid-cols-3 @[26rem]/panel:grid-cols-5"
+        columns="grid-cols-3"
         onChange={(eyeBall) => onChange({ eyeBall })}
-        render={(o) => (
-          <>
-            <ShapeThumb part={{ kind: "ball", shape: o }} className={thumb} />
-            <span className="max-w-full truncate">{t(`shapes.${o}`)}</span>
-          </>
-        )}
+        render={(o) => tile(o, <ShapeThumb part={{ kind: "ball", shape: o }} className="size-10" />)}
       />
+      <p className="text-caption text-muted-foreground">{t("finderNote")}</p>
     </>
   );
 }
