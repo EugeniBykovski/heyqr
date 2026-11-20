@@ -147,3 +147,25 @@ describe("text and logo fit (HEY-60)", () => {
     expect(designToLayout({ ...DEFAULT_DESIGN, preset: "frame", frameStyle: "bar", caption: "x" }).colors.caption).toBe(DEFAULT_DESIGN.bg);
   });
 });
+
+describe("Layout group (HEY-61)", () => {
+  it("a horizontal card's own canvas is not the vertical card's: the tile shows its own size, switching drops it", () => {
+    open({ ...card, cardSize: { width: 90, height: 50 } }, "layout");
+    expect(screen.getByRole("button", { name: /Vertical card/ }).textContent).toContain("47 × 72.6 mm");
+    expect(screen.getByRole("button", { name: /Horizontal card/ }).textContent).toContain("90 × 50 mm");
+    fireEvent.click(screen.getByRole("button", { name: /Vertical card/ }));
+    expect([latest.preset, latest.cardSize]).toEqual(["vertical", undefined]);
+  });
+
+  it("a quick style applies its look in one change and leaves the caption, logo and size as they are", () => {
+    open({ ...card, logo: { kind: "icon", icon: "coffee" }, cardSize: { width: 90, height: 50 } }, "layout");
+    fireEvent.click(screen.getByRole("button", { name: "Apply Gem style" }));
+    expect(latest).toMatchObject({ pattern: "diamond", eyeFrame: "leaf", eyeBall: "diamond", fg: "#4B2EE0", bg: "#F5F3FF" });
+    expect([latest.caption, latest.logo, latest.cardSize]).toEqual([
+      "Little Fern Coffee",
+      { kind: "icon", icon: "coffee" },
+      { width: 90, height: 50 },
+    ]);
+    expect(screen.getByRole("group", { name: "Quick styles" }).querySelectorAll("button")).toHaveLength(6);
+  });
+});
