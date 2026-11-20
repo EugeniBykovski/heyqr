@@ -78,7 +78,7 @@ function TypeSkeleton() {
           <Skeleton className="h-4 w-32 rounded-full" />
           <Skeleton className="h-3 w-44 rounded-full" />
         </div>
-        <Skeleton className="h-13 w-32 rounded-full" />
+        <Skeleton className="h-control-lg w-32 rounded-full" />
       </BottomBar>
     </div>
   );
@@ -123,7 +123,7 @@ function ContentSkeleton({ label }: { label: string }) {
             <Skeleton className="h-3 w-36 rounded-full" />
           </div>
           <span className="grow max-sm:hidden" />
-          <Skeleton className="h-13 w-44 rounded-full" />
+          <Skeleton className="h-control-lg w-44 rounded-full" />
         </BottomBar>
       </div>
       <div className={contentAside}>
@@ -210,7 +210,7 @@ export function EditorSkeleton({ design = false }: { design?: boolean }) {
           <Skeleton className="mb-3 h-3.5 w-40 rounded-full" />
           <div className="grid grid-cols-3 gap-2">
             {Array.from({ length: 9 }, (_, i) => (
-              <Skeleton key={i} className="h-15 rounded-lg" />
+              <Skeleton key={i} className="h-header rounded-lg" />
             ))}
           </div>
         </div>
