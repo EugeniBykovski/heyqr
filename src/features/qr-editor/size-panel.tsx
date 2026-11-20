@@ -200,7 +200,7 @@ export function SizePanel({
             step={SIZE_LIMITS[size.unit].step}
             value={Math.min(qrMax, Math.max(qrMin, size.qr))}
             onChange={(e) => setQr(Number(e.target.value))}
-            className="min-w-0 grow accent-primary"
+            className="h-11 min-w-0 grow touch-pan-y accent-primary"
           />
           <div className="w-32 shrink-0">
             <SizeField

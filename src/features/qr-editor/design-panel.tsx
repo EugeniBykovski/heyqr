@@ -35,9 +35,15 @@ export function ColorField({
   onChange,
   forceError,
   onValidity,
+  pickerLabel,
 }: {
   id: string;
   label: string;
+  /**
+   * HEY-63: the native colour picker's own accessible name, so it isn't announced like the HEX field beside it.
+   * Default: "{label} color picker".
+   */
+  pickerLabel?: string;
   value: string;
   onChange: (v: string) => void;
   forceError?: boolean;
@@ -72,7 +78,7 @@ export function ColorField({
       <div className="flex items-center gap-2">
         <input
           type="color"
-          aria-label={label}
+          aria-label={pickerLabel ?? t("colorPicker", { label })}
           value={value}
           onChange={(e) => edit(e.target.value)}
           className="size-11 shrink-0 cursor-pointer rounded-md border border-border bg-surface p-1"
@@ -268,7 +274,7 @@ export function DesignPanel({
               value={drawnLogoSize}
               aria-describedby={`logo-size-value${savedOverMax ? " logo-size-legacy" : ""}`}
               onChange={(e) => onChange({ logoSize: Number(e.target.value) })}
-              className="h-11 w-full accent-primary"
+              className="h-11 w-full touch-pan-y accent-primary"
             />
             {savedOverMax ? (
               <p id="logo-size-legacy" className="text-caption text-muted-foreground">

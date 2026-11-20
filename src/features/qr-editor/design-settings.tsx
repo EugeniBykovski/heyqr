@@ -109,7 +109,14 @@ export function DesignSettings({
         ))}
       </TabsPrimitive.List>
       {groups.map((g) => (
-        <TabsPrimitive.Content key={g} value={g} className="flex flex-col gap-6 outline-none">
+        <TabsPrimitive.Content
+          key={g}
+          value={g}
+          // HEY-63: every group starts with its own controls, so the panel itself is no extra Tab stop (it would be
+          // focused without a visible ring); Tab goes from the group tabs straight to the first control.
+          tabIndex={-1}
+          className="flex flex-col gap-6 outline-none"
+        >
           {g === "brand" ? (
             <BrandGroup
               design={props.design}
@@ -713,6 +720,7 @@ function ColorsGroup({
               key={role}
               id={COLOR_FIELD_ID[role]}
               label="HEX"
+              pickerLabel={t("picker", { role: t(`roles.${role}`) })}
               value={roleColor(design, role)}
               onChange={(hex) => onChange(ROLE_SET[role](hex))}
               forceError={showFieldErrors}
@@ -868,7 +876,7 @@ function LogoGroup({ design, onChange, logoScanMax, onGroupChange }: GroupProps 
               disabled={onTop}
               aria-describedby={`logo-size-value${design.logoSize > CENTER_LOGO_SIZE.max ? " logo-size-legacy" : ""}`}
               onChange={(e) => onChange({ logoSize: Number(e.target.value) })}
-              className="h-11 w-full accent-primary disabled:opacity-40"
+              className="h-11 w-full touch-pan-y accent-primary disabled:opacity-40"
             />
             {design.logoSize > CENTER_LOGO_SIZE.max ? (
               <p id="logo-size-legacy" className="text-caption text-muted-foreground">

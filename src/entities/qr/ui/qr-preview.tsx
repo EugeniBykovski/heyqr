@@ -48,8 +48,11 @@ export function QrPreview({
   // a tall card can't stretch a grid or flex cell it sits in.
   return (
     <div
-      role="img"
-      aria-label={label}
+      // HEY-63: an empty label means a decorative thumbnail (a style, frame or look card names itself): hidden, so the
+      // artwork's caption text isn't read into the card's accessible name.
+      role={label ? "img" : undefined}
+      aria-label={label || undefined}
+      aria-hidden={label ? undefined : true}
       data-scan-ok={scan.ok}
       style={{ aspectRatio: `${width} / ${height}` }}
       className={cn(
