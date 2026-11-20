@@ -1353,7 +1353,29 @@
         "repeat": "Repeat downloads are included. Files of “{layout}” at 100% size, 3 mm bleed, crop marks."
       },
       "layoutNoteDynamic": "Changing a design creates a new file to download. Codes you already printed keep working.",
-      "layoutNoteStatic": "Every layout is included in this purchase. Download any of them as PNG or SVG."
+      "layoutNoteStatic": "Every layout is included in this purchase. Download any of them as PNG or SVG.",
+      "rename": "Rename",
+      "renameFailed": "We couldn’t rename the code. Your text is still here; try again.",
+      "nameLabel": "QR code name",
+      "save": "Save",
+      "cancel": "Cancel",
+      "opens": "Opens",
+      "downloadAll": "Download all",
+      "layoutsCount": "{n, plural, one {# layout} other {# layouts}}",
+      "edit": "Edit",
+      "downloadLayout": "Download {name}",
+      "printPreview": "Print Preview of {name}",
+      "newLayoutCard": "New layout",
+      "copy": {
+        "action": "Use different content…",
+        "title": "Use different content",
+        "text": "A static code stores its content in its pattern, so different content is a new QR code: it is designed and bought on its own ({price}). This code and its files stay exactly as they are.",
+        "start": "Create a new QR code",
+        "keep": "Keep this code",
+        "close": "Close"
+      },
+      "ppUnlocked": "Unlocked",
+      "ppLocked": "Locked"
     }
   },
   "billing": {
