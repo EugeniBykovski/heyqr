@@ -12,7 +12,7 @@ import {
 import { CircleAlertIcon, CircleSlashIcon, RotateCcwIcon, SearchIcon, ShuffleIcon, Trash2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Tabs as TabsPrimitive } from "radix-ui";
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   CAPTION_POSITIONS,
   CENTER_ICONS,
@@ -748,6 +748,21 @@ function LogoGroup({ design, onChange, logoScanMax, onGroupChange }: GroupProps 
   const [source, setSource] = useState<"icons" | "upload">(design.logo.kind === "image" ? "upload" : "icons");
   const [query, setQuery] = useState("");
   const [feedback, setFeedback] = useState<LogoFeedbackState>(null);
+  // HEY-62: an upload is read asynchronously. If the logo changes meanwhile (Remove logo, Undo, another layout's
+  // design), the newer choice wins and the finished upload is dropped.
+  const latestLogo = useRef(design.logo);
+  useEffect(() => {
+    latestLogo.current = design.logo;
+  }, [design.logo]);
+  const readingFrom = useRef<EditorDesign["logo"] | null>(null);
+  const onUploadFeedback = (f: LogoFeedbackState) => {
+    if (f?.kind === "reading") readingFrom.current = latestLogo.current;
+    setFeedback(f);
+  };
+  const onUploadLogo = (href: string) => {
+    if (readingFrom.current !== latestLogo.current) return;
+    onChange({ logo: { kind: "image", href } });
+  };
   const icons = (Object.keys(CENTER_ICONS) as CenterIcon[]).filter((k) => {
     const q = query.trim().toLowerCase();
     return !q || k.includes(q) || t(`icons.${k}`).toLowerCase().includes(q);
@@ -824,8 +839,8 @@ function LogoGroup({ design, onChange, logoScanMax, onGroupChange }: GroupProps 
               <LogoUploadTile
                 selected={design.logo.kind === "image"}
                 label={t("logoUpload")}
-                onLogo={(href) => onChange({ logo: { kind: "image", href } })}
-                onFeedback={setFeedback}
+                onLogo={onUploadLogo}
+                onFeedback={onUploadFeedback}
               />
             </div>
           </div>

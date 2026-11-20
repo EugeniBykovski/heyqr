@@ -1,11 +1,11 @@
 "use client";
 
-import { composeLayout, layoutCapacity } from "@heyqr/qr-core";
+import { layoutCapacity } from "@heyqr/qr-core";
 import { ArrowLeftIcon, CheckIcon, LoaderCircleIcon, PlusIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { designSettingsOf, designToLayout, type EditorDesign } from "@/entities/qr";
+import { composeShared, designSettingsOf, designToLayout, type EditorDesign } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
 import { addLayout, saveLayoutEdit } from "@/server/actions/qr";
 import { Button } from "@/shared/ui/button";
@@ -64,7 +64,7 @@ export function LayoutEditor({
   const tooLong = capacity.ok ? null : capacity;
   const shown = useShownRender(layout, value);
   const scan = useMemo(
-    () => (layoutCapacity(shown.layout, shown.value).ok ? composeLayout(shown.layout, shown.value).scan : null),
+    () => (layoutCapacity(shown.layout, shown.value).ok ? composeShared(shown.layout, shown.value).scan : null),
     [shown.layout, shown.value],
   );
   const changed = design !== saved || name.trim() !== layoutName;
@@ -85,7 +85,7 @@ export function LayoutEditor({
       return;
     }
     // The scan check shown may still describe earlier settings; save only what passes now.
-    if (tooLong || !composeLayout(layout, value).scan.ok) return;
+    if (tooLong || !composeShared(layout, value).scan.ok) return;
     const submitted = design;
     startSaving(async () => {
       // A lost connection rejects the call instead of returning an error: treat it the same, keeping every edit.

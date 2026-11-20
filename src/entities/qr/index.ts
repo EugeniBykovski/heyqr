@@ -117,3 +117,4 @@ export {
   type PrintSettings,
   type PrintSizes,
 } from "./model/print";
+export { composeShared } from "./model/compose-cache";

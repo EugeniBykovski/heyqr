@@ -1,9 +1,13 @@
 import { contrastRatio, luminance, mixColors } from "./color";
-import { encodeQr, type ErrorCorrectionLevel } from "./encode";
+import { encodeQr, type ErrorCorrectionLevel, type QrMatrix } from "./encode";
+import { lru } from "./memo";
 import { circle, diamond, escapeXml, round3 as f, roundedRect as rr } from "./geometry";
 import type { EyeBallShape, EyeFrameShape, ModuleShape, QrStyle, RenderedQr, ScanIssue, ScanReport } from "./types";
 
 const QUIET = 4;
+
+/** Recently encoded matrices, by error correction level and value (HEY-62). */
+const matrices = lru<QrMatrix>(16);
 
 type Excavation = { shape: "circle" | "square" | "rect"; size: number; halfW: number; halfH: number; pad: number };
 
@@ -184,7 +188,9 @@ export function centerTextLabel(text: string): { label: string; shortened: boole
 export function renderQr(value: string, style: QrStyle): RenderedQr {
   const logo = style.logo ?? null;
   const centerText = style.centerText?.text ? style.centerText : null;
-  const m = encodeQr(value, eclForStyle(style));
+  // The matrix depends only on the value and error correction level: reused while other settings change (HEY-62).
+  const ecl = eclForStyle(style);
+  const m = matrices(`${ecl}\u0000${value}`, () => encodeQr(value, ecl));
   const n = m.size;
   const q = QUIET;
   const V = n + 2 * q;

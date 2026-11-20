@@ -1,4 +1,5 @@
-import { composeLayout, layoutCapacity, type Layout } from "@heyqr/qr-core";
+import { layoutCapacity, type Layout } from "@heyqr/qr-core";
+import { composeShared } from "../model/compose-cache";
 import { TextCursorInputIcon } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 
@@ -40,7 +41,7 @@ export function QrPreview({
         <TextCursorInputIcon aria-hidden className="size-1/4 max-h-12 max-w-12" strokeWidth={1.6} />
       </div>
     );
-  const { svg, width, height, scan } = composeLayout(layout, value, { transparent });
+  const { svg, width, height, scan } = composeShared(layout, value, { transparent });
   const sized = svg.replace(/\swidth="[^"]*"\s+height="[^"]*"/, ' width="100%" height="100%"');
   // The box keeps the layout's proportions and never grows past its container: with only a width it takes the
   // layout's height; with both (size-full) the drawing is contained in it (viewBox "meet"). The SVG is out of flow, so

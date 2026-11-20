@@ -1,11 +1,11 @@
 "use client";
 
-import { composeLayout, encodePayload, layoutCapacity, type QrContent } from "@heyqr/qr-core";
+import { encodePayload, layoutCapacity, type QrContent } from "@heyqr/qr-core";
 import { ArrowRightIcon, CircleAlertIcon, InfoIcon, LockIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { env } from "@/env";
-import { DEFAULT_DESIGN, designToLayout, type EditorDesign, emptyContent, modeFor, QR_INKS, QrPreview } from "@/entities/qr";
+import { composeShared, DEFAULT_DESIGN, designToLayout, type EditorDesign, emptyContent, modeFor, QR_INKS, QrPreview } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
 import { formatMoney } from "@/shared/config/catalog";
 import { usePrices } from "@/shared/lib/currency";
@@ -89,7 +89,7 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
   const capacity = useMemo(() => layoutCapacity(layout, encoded), [layout, encoded]);
   const tooLong = capacity.ok ? null : capacity;
   const value = design.model === "dynamic" || valid || tooLong ? encoded : PLACEHOLDER_VALUE;
-  const scan = useMemo(() => (tooLong ? null : composeLayout(layout, value).scan), [layout, value, tooLong]);
+  const scan = useMemo(() => (tooLong ? null : composeShared(layout, value).scan), [layout, value, tooLong]);
   const prices = usePrices();
   const price = formatMoney(prices.cents.single, prices.currency);
 
