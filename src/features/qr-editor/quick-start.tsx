@@ -51,7 +51,13 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
   const tTypes = useTranslations("contentTypes");
   const tEditor = useTranslations("editor");
   const router = useRouter();
-  const [design, setDesign] = useState<EditorDesign>(() => ({ ...DEFAULT_DESIGN, preset: "caption", caption: t("captionDefault") }));
+  // Design 1.1: the hero starts as the Business card layout (90 × 50 mm, code beside the caption).
+  const [design, setDesign] = useState<EditorDesign>(() => ({
+    ...DEFAULT_DESIGN,
+    preset: "horizontal",
+    caption: t("captionDefault"),
+    size: { unit: "mm", qr: 35, width: 90, height: 50 },
+  }));
   /** What was typed on each tab during this visit, so switching away and back keeps it. */
   const [byType, setByType] = useState<Record<QuickType, QrContent>>(() => ({
     website: emptyContent("website"),
@@ -150,7 +156,9 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
         >
           <Stage>
             <StageBar>
-              <span className="min-w-0 grow truncate px-1 text-label">{t("stageTitle", { type: tTypes(type) })}</span>
+              <span className="min-w-0 grow truncate px-1 text-label">
+                {design.preset === "horizontal" && type === "website" ? t("stageCard") : t("stageTitle", { type: tTypes(type) })}
+              </span>
               <Badge variant={tooLong ? "danger" : scan?.ok && valid ? "success" : "neutral"}>
                 {tooLong ? tEditor("tooLong.badge") : scan?.ok && valid ? t("scans") : t("livePreview")}
               </Badge>
@@ -256,7 +264,7 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
             id="home-caption"
             label={t("caption")}
             value={design.caption}
-            onAccept={(caption) => patch({ caption, preset: caption.trim() ? "caption" : "qr" })}
+            onAccept={(caption) => patch({ caption, preset: caption.trim() ? "horizontal" : "qr" })}
           />
         </div>
 

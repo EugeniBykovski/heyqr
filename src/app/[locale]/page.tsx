@@ -24,6 +24,7 @@ import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
 import { Container } from "@/shared/ui/container";
 import { HomeFooter } from "@/widgets/site-footer";
+import { PrintPackShowcase } from "@/widgets/print-pack";
 import { SampleWorkspace, Studio, StudioSkeleton } from "@/widgets/studio";
 import { getSession } from "@/server/auth";
 
@@ -92,6 +93,8 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       ) : (
         <SampleWorkspace />
       )}
+
+      <PrintPackShowcase cents={sheet.printPack} singleCents={sheet.single} currency={currency} />
 
       <section aria-label={t("how.label")} className="grid reveal gap-3 pb-8 md:grid-cols-3">
         {STEPS.map((step, i) => (

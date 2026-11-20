@@ -69,6 +69,7 @@ export function PrintPreview({
   entitled,
   forSale,
   included,
+  sample = false,
 }: {
   qrCodeId: string;
   layoutId: string;
@@ -87,6 +88,8 @@ export function PrintPreview({
   forSale: boolean;
   /** Design 8.4: Studio's included Print Packs this month (null without a plan that includes them). */
   included?: { left: number; limit: number; resets: string } | null;
+  /** Design 1.1: the public sample (demo QR): the page and specifications only; no purchase or files here. */
+  sample?: boolean;
 }) {
   const t = useTranslations("print");
   const locale = useLocale();
@@ -115,7 +118,7 @@ export function PrintPreview({
         const res = await fetch("/api/print/preview", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ layoutId, settings }),
+          body: JSON.stringify(sample ? { sample: true, settings } : { layoutId, settings }),
         });
         if (id !== request.current) return;
         if (!res.ok) throw new Error(String(res.status));
@@ -128,7 +131,7 @@ export function PrintPreview({
       }
     }, 250);
     return () => window.clearTimeout(timer);
-  }, [layoutId, settings, attempt]);
+  }, [layoutId, settings, attempt, sample]);
 
   // Back from checkout before Stripe's webhook has unlocked it: check again a few seconds apart.
   useEffect(() => {
@@ -372,7 +375,18 @@ export function PrintPreview({
             </dl>
           </section>
           <div className="flex flex-col">
-            {unlocked ? (
+            {sample ? (
+              <div className="flex flex-col gap-2.5 rounded-2xl border border-border bg-surface p-5">
+                <span className="text-label">{t("sample.title")}</span>
+                <p className="text-caption text-secondary-foreground">{t("sample.text")}</p>
+                <Button asChild variant="primary" size="lg">
+                  <Link href="/create">{t("sample.create")}</Link>
+                </Button>
+                <Button asChild variant="ghost">
+                  <Link href="/pricing#print-pack">{t("sample.pricing")}</Link>
+                </Button>
+              </div>
+            ) : unlocked ? (
               <div className="flex flex-col gap-2.5 rounded-xl border border-success/30 bg-success-soft p-4">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-label">{t("files.title")}</span>

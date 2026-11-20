@@ -71,7 +71,8 @@
       "livePreview": "Live preview",
       "realCode": "Real, scannable code",
       "previewLabel": "Preview of your QR code",
-      "otherType": "Your draft is a {type} code. Continue designing opens it in the editor."
+      "otherType": "Your draft is a {type} code. Continue designing opens it in the editor.",
+      "stageCard": "Business card · 90 mm × 50 mm"
     },
     "how": {
       "label": "How it works",
@@ -334,6 +335,31 @@
       "scans": "Scan analytics · last 14 days",
       "startTrial": "Start 7-day free trial",
       "trialNote": "Starter trial · no card · no automatic charge"
+    },
+    "printPack": {
+      "kicker": "Print Pack",
+      "title": "From your screen to the print shop.",
+      "lead": "Add a Print Pack to any QR and give your printer everything in one download: the exact size, the right colors and a file that stays sharp.",
+      "cardTag": "Business card · 90 × 50 mm",
+      "labelTag": "Packaging label · 50 × 62 mm",
+      "cardLabel": "Business card print layout",
+      "labelLabel": "Packaging label print layout",
+      "panelKicker": "Export · Print Pack",
+      "panelTitle": "Three files, ready to print",
+      "perQr": "per QR",
+      "files": {
+        "pdf": "Vector print PDF",
+        "pdfSub": "Sharp at any size, with 3 mm bleed and crop marks, in sRGB.",
+        "svg": "Editable SVG",
+        "svgSub": "Open it in Illustrator, Figma or Inkscape to place the QR on your own artwork.",
+        "spec": "Color and size specifications",
+        "specSub": "One page with the finished size, the QR size, the quiet zone and every color value."
+      },
+      "addNote": "Off until you turn it on at checkout. Add it for +{price}, or later from the QR’s details.",
+      "single": "Single QR",
+      "withPack": "With Print Pack",
+      "details": "See Print Pack details",
+      "preview": "Open Print Preview"
     }
   },
   "pricing": {
@@ -1827,6 +1853,16 @@
     "plan": {
       "starter": "Starter",
       "studio": "Studio"
+    },
+    "sample": {
+      "pageTitle": "Print Preview · sample",
+      "name": "Little Fern Coffee",
+      "layout": "Brand card sample",
+      "back": "Back to home",
+      "title": "This is a sample",
+      "text": "A demo QR shows exactly what a Print Pack contains. Make your own code, then check its print files here before you buy.",
+      "create": "Create your QR code",
+      "pricing": "See Print Pack details"
     }
   },
   "plans": {
