@@ -36,11 +36,49 @@ function art(part: Part) {
   return out;
 }
 
+/** The whole top-left finder with only one of its parts in ink (the frame or the center), for layering. */
+function finderPart(frame: EyeFrameShape, ball: EyeBallShape, ink: "frame" | "ball") {
+  const key = `finder:${frame}:${ball}:${ink}`;
+  const hit = cache.get(key);
+  if (hit) return hit;
+  const r = renderQr(SAMPLE, {
+    pattern: "square",
+    eyeFrame: frame,
+    eyeBall: ball,
+    colors: { fg: BG, eye: ink === "frame" ? INK : BG, eyeIn: ink === "ball" ? INK : BG, bg: BG },
+  });
+  const out = { viewBox: "3.4 3.4 7.2 7.2", inner: r.inner };
+  cache.set(key, out);
+  return out;
+}
+
 /*
  * Design 1.7: each Pattern option shows exactly which part it changes, drawn by qr-core from the supported renderer
- * values (no hand-drawn look-alikes). Decorative: the option's text label names it.
+ * values (no hand-drawn look-alikes). Modules: a crop of data modules. Corner frame / center: the whole finder, the
+ * part the option changes in the accent and the other part faint, so the finder's proportions stay visible.
+ * Decorative: the option's text label names it.
  */
 export const ShapeThumb = memo(function ShapeThumb({ part, className }: { part: Part; className?: string }) {
-  const { viewBox, inner } = art(part);
-  return <svg aria-hidden viewBox={viewBox} className={className} dangerouslySetInnerHTML={{ __html: inner }} />;
+  if (part.kind === "modules") {
+    const { viewBox, inner } = art(part);
+    return <svg aria-hidden viewBox={viewBox} className={className} dangerouslySetInnerHTML={{ __html: inner }} />;
+  }
+  const frame: EyeFrameShape = part.kind === "frame" ? part.shape : "rounded";
+  const ball: EyeBallShape = part.kind === "ball" ? part.shape : "rounded";
+  const active = finderPart(frame, ball, part.kind === "frame" ? "frame" : "ball");
+  const other = finderPart(frame, ball, part.kind === "frame" ? "ball" : "frame");
+  return (
+    <span aria-hidden className={`relative inline-block ${className ?? ""}`}>
+      <svg
+        viewBox={other.viewBox}
+        className="absolute inset-0 size-full text-border-strong/25"
+        dangerouslySetInnerHTML={{ __html: other.inner }}
+      />
+      <svg
+        viewBox={active.viewBox}
+        className="absolute inset-0 size-full text-accent-text"
+        dangerouslySetInnerHTML={{ __html: active.inner }}
+      />
+    </span>
+  );
 });

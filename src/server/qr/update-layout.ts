@@ -83,3 +83,34 @@ export async function addLayoutFrom(
     return { ok: true, data: { layoutId: id } } as const;
   });
 }
+
+export type DeleteLayoutResult = { ok: true; data: { remaining: number } } | { ok: false; error: "not_found" | "last_layout" };
+
+/**
+ * QR details "Delete layout": removes one named layout of the owner's code. The code, its content, payment, Print
+ * Pack, short link and destination, and every other layout stay as they are. A code keeps at least one layout: the
+ * code's row is locked first, so two deletes at once can't remove its last two layouts.
+ */
+export async function removeLayout(
+  db: NodePgDatabase<typeof schema>,
+  userId: string,
+  input: { qrCodeId: string; layoutId: string },
+): Promise<DeleteLayoutResult> {
+  return db.transaction(async (tx) => {
+    const [qr] = await tx
+      .select({ id: schema.qrCode.id })
+      .from(schema.qrCode)
+      .where(and(eq(schema.qrCode.id, input.qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)))
+      .for("update");
+    if (!qr) return { ok: false, error: "not_found" } as const;
+    const layouts = await tx.select({ id: schema.qrLayout.id }).from(schema.qrLayout).where(eq(schema.qrLayout.qrCodeId, qr.id));
+    if (!layouts.some((l) => l.id === input.layoutId)) return { ok: false, error: "not_found" } as const;
+    if (layouts.length <= 1) return { ok: false, error: "last_layout" } as const;
+    await tx.delete(schema.qrLayout).where(and(eq(schema.qrLayout.id, input.layoutId), eq(schema.qrLayout.qrCodeId, qr.id)));
+    await tx
+      .update(schema.qrCode)
+      .set({ updatedAt: sql`now()` })
+      .where(eq(schema.qrCode.id, qr.id));
+    return { ok: true, data: { remaining: layouts.length - 1 } } as const;
+  });
+}

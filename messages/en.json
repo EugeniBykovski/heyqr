@@ -531,12 +531,12 @@
       "square": "Square",
       "rounded": "Rounded",
       "dot": "Dots",
-      "diamond": "Diamonds",
+      "diamond": "Diamond",
       "leaf": "Leaf",
       "fluid": "Fluid",
       "vbars": "Vertical",
       "hbars": "Horizontal",
-      "cushion": "Cushion",
+      "cushion": "Soft",
       "circle": "Circle"
     },
     "frames": {
@@ -1067,7 +1067,11 @@
       "brandedTitle": "Branded design",
       "brandedBadge": "From your logo",
       "brandedText": "Upload your logo or an image. We pick up its colors and suggest three looks."
-    }
+    },
+    "patternHint": "8 shapes for the dots that hold your data",
+    "eyeFrameHint": "Outer ring of the 3 corner markers",
+    "eyeBallHint": "Inner dot of the 3 corner markers",
+    "finderNote": "Every shape keeps the finder proportions 1 : 1 : 3 : 1 : 1, so the scan check still passes."
   },
   "scan": {
     "invert": "Light code on a dark background. Many phone cameras can’t read inverted codes.",
@@ -1401,7 +1405,23 @@
         "close": "Close"
       },
       "ppUnlocked": "Unlocked",
-      "ppLocked": "Locked"
+      "ppLocked": "Locked",
+      "deleteLayout": {
+        "label": "Delete layout {name}",
+        "title": "Delete “{name}”?",
+        "text": "“{name}” is removed from your account, with its layout-specific downloads. This can’t be undone.",
+        "keeps": "The QR code, its content, short link, destination, purchase and Print Pack, and its other layouts stay as they are.",
+        "confirm": "Delete layout",
+        "cancel": "Cancel",
+        "close": "Close",
+        "done": "“{name}” deleted.",
+        "failed": "We couldn’t delete “{name}”. Nothing changed; try again.",
+        "retry": "Try again",
+        "lastTitle": "This is the only layout",
+        "lastText": "A QR code always keeps at least one layout, so “{name}” can’t be deleted. Add another layout first, or delete the whole code from My QR codes.",
+        "lastError": "A QR code keeps at least one layout, so this one stays.",
+        "ok": "OK"
+      }
     }
   },
   "billing": {
