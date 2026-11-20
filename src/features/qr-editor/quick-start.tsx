@@ -2,12 +2,13 @@
 
 import { composeLayout, encodePayload, layoutCapacity, type QrContent } from "@heyqr/qr-core";
 import { ArrowRightIcon, CircleAlertIcon, InfoIcon, LockIcon } from "lucide-react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { env } from "@/env";
 import { DEFAULT_DESIGN, designToLayout, type EditorDesign, emptyContent, modeFor, QR_INKS, QrPreview } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
-import { pricing } from "@/shared/config/pricing";
+import { formatMoney } from "@/shared/config/catalog";
+import { usePrices } from "@/shared/lib/currency";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -49,9 +50,14 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
   const t = useTranslations("home.tool");
   const tTypes = useTranslations("contentTypes");
   const tEditor = useTranslations("editor");
-  const format = useFormatter();
   const router = useRouter();
-  const [design, setDesign] = useState<EditorDesign>(() => ({ ...DEFAULT_DESIGN, preset: "caption", caption: t("captionDefault") }));
+  // Design 1.1: the hero starts as the Business card layout (90 × 50 mm, code beside the caption).
+  const [design, setDesign] = useState<EditorDesign>(() => ({
+    ...DEFAULT_DESIGN,
+    preset: "horizontal",
+    caption: t("captionDefault"),
+    size: { unit: "mm", qr: 35, width: 90, height: 50 },
+  }));
   /** What was typed on each tab during this visit, so switching away and back keeps it. */
   const [byType, setByType] = useState<Record<QuickType, QrContent>>(() => ({
     website: emptyContent("website"),
@@ -84,7 +90,8 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
   const tooLong = capacity.ok ? null : capacity;
   const value = design.model === "dynamic" || valid || tooLong ? encoded : PLACEHOLDER_VALUE;
   const scan = useMemo(() => (tooLong ? null : composeLayout(layout, value).scan), [layout, value, tooLong]);
-  const price = format.number(pricing.staticCents / 100, { style: "currency", currency: pricing.currency });
+  const prices = usePrices();
+  const price = formatMoney(prices.cents.single, prices.currency);
 
   const patch = (p: Partial<EditorDesign>) => setDesign((d) => ({ ...d, ...p }));
   const setContent = (content: QrContent) => {
@@ -149,7 +156,9 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
         >
           <Stage>
             <StageBar>
-              <span className="min-w-0 grow truncate px-1 text-label">{t("stageTitle", { type: tTypes(type) })}</span>
+              <span className="min-w-0 grow truncate px-1 text-label">
+                {design.preset === "horizontal" && type === "website" ? t("stageCard") : t("stageTitle", { type: tTypes(type) })}
+              </span>
               <Badge variant={tooLong ? "danger" : scan?.ok && valid ? "success" : "neutral"}>
                 {tooLong ? tEditor("tooLong.badge") : scan?.ok && valid ? t("scans") : t("livePreview")}
               </Badge>
@@ -255,7 +264,7 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
             id="home-caption"
             label={t("caption")}
             value={design.caption}
-            onAccept={(caption) => patch({ caption, preset: caption.trim() ? "caption" : "qr" })}
+            onAccept={(caption) => patch({ caption, preset: caption.trim() ? "horizontal" : "qr" })}
           />
         </div>
 

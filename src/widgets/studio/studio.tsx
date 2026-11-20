@@ -2,6 +2,7 @@ import { ArrowRightIcon, CheckIcon } from "lucide-react";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { QrPreview } from "@/entities/qr";
 import { env } from "@/env";
+import { PLANS } from "@/shared/config/catalog-core";
 import { Link } from "@/i18n/navigation";
 import { StartTrialButton } from "@/features/checkout";
 import { userTrial } from "@/server/billing/entitlements";
@@ -30,7 +31,7 @@ export async function Studio({ userId, name }: { userId: string; name: string })
   const isPaid = (c: (typeof codes)[number]) => (c.model === "dynamic" ? c.status === "active" : c.purchasedAt !== null);
   const paid = codes.filter(isPaid).length;
   const dynamicUsed = codes.filter((c) => c.model === "dynamic" && c.status === "active").length;
-  const limit = env.DYNAMIC_ACTIVE_CODE_LIMIT;
+  const limit = PLANS.starter.dyn;
   const total = scans.reduce((s, d) => s + d.count, 0);
   const prev = scans.slice(0, 7).reduce((s, d) => s + d.count, 0);
   const last = scans.slice(7).reduce((s, d) => s + d.count, 0);

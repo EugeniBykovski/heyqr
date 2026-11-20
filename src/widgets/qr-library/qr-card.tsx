@@ -27,6 +27,7 @@ export function QrCard({
   modelLabel,
   status,
   statusLabel,
+  printPackLabel,
   meta,
   paid,
   labels,
@@ -46,6 +47,7 @@ export function QrCard({
   modelLabel: string;
   status: QrCardStatus;
   statusLabel: string;
+  printPackLabel?: string;
   meta: string;
   paid: boolean;
   labels: {
@@ -162,6 +164,7 @@ export function QrCard({
           <Badge>{typeLabel}</Badge>
           <Badge variant={model === "dynamic" ? "accent" : "neutral"}>{modelLabel}</Badge>
           <Badge variant={STATUS_VARIANT[status]}>{statusLabel}</Badge>
+          {printPackLabel ? <Badge>{printPackLabel}</Badge> : null}
           <span className="text-caption text-muted-foreground">{meta}</span>
         </div>
       </div>

@@ -1,144 +1,175 @@
-import { and, count, desc, eq, isNull } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import type { Metadata } from "next";
 import { getFormatter, getTranslations } from "next-intl/server";
-import { env } from "@/env";
 import { BillingPortalButton } from "@/features/checkout";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
 import { requireUser } from "@/server/auth";
-import { activeSubscription, userTrial } from "@/server/billing/entitlements";
-import { TrialBar } from "@/widgets/trial";
+import { accountUsage } from "@/server/billing/allowances";
+import { userTrial } from "@/server/billing/entitlements";
+import { getCurrency } from "@/server/currency";
 import { db, schema } from "@/server/db";
+import { formatMoney, isCurrency, priceSheet } from "@/shared/config/catalog";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
-import { Card, CardTitle } from "@/shared/ui/card";
+import { TrialBar } from "@/widgets/trial";
+import { UsageTiles } from "@/widgets/usage";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("billing");
   return { title: t("title"), robots: { index: false } };
 }
 
+const card = "flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5 shadow-1 sm:p-6";
+
 /*
- * Design 4.9 "Plan & billing": current plan and status, live Dynamic usage against the plan's limit (a live count, not a
- * monthly allowance), renewal, the payment method and subscription in Stripe's portal, Compare plans, and one-time
- * purchases with their real amounts. Everything shown is the account's own data; Stripe stays the source of truth.
+ * Design 4.9 / 9.7 "Plan & billing": the current plan with its live usage (active Dynamic slots, this month's static
+ * unlocks and included Print Packs, static credits), price, renewal and payment method; Upgrade / Manage subscription in
+ * Stripe's portal, Compare plans; one-time purchases line by line, each with Stripe's receipt. Receipts keep the
+ * currency that was paid; everything is the account's own data and Stripe stays the source of truth.
  */
 export default async function BillingPage({ params }: PageProps<"/[locale]/dashboard/billing">) {
   await resolveLocale(params);
-  const [t, format, user] = await Promise.all([getTranslations("billing"), getFormatter(), requireUser()]);
-  const [subscription, purchases, [live], phase] = await Promise.all([
-    activeSubscription(user.id),
+  const [t, format, user, currency] = await Promise.all([getTranslations("billing"), getFormatter(), requireUser(), getCurrency()]);
+  const [usage, purchases, phase] = await Promise.all([
+    accountUsage(db, user.id),
     db.query.purchase.findMany({
       where: eq(schema.purchase.userId, user.id),
       orderBy: desc(schema.purchase.createdAt),
       with: { qrCode: true },
     }),
-    db
-      .select({ n: count() })
-      .from(schema.qrCode)
-      .where(
-        and(
-          eq(schema.qrCode.userId, user.id),
-          eq(schema.qrCode.model, "dynamic"),
-          eq(schema.qrCode.status, "active"),
-          isNull(schema.qrCode.deletedAt),
-        ),
-      ),
     userTrial(user.id),
   ]);
-  const limit = subscription?.activeCodeLimit ?? env.DYNAMIC_ACTIVE_CODE_LIMIT;
-  const used = live?.n ?? 0;
-  const status = !subscription ? "statusNone" : subscription.cancelAtPeriodEnd ? "statusCanceling" : "statusActive";
+  const plan = usage.plan;
+  const sheet = priceSheet(currency);
+  const date = (d: Date) => format.dateTime(d, { dateStyle: "medium" });
+  const status = !plan ? "statusNone" : plan.cancelAtPeriodEnd ? "statusCanceling" : "statusActive";
+
+  // Receipt lines: a Single QR with its Print Pack is two lines of one payment, as charged, in the currency paid.
+  const rows = purchases.flatMap((p) => {
+    const cur = p.currency.toUpperCase();
+    const money = (cents: number) =>
+      isCurrency(cur) ? formatMoney(cents, cur) : format.number(cents / 100, { style: "currency", currency: cur });
+    const name = p.qrCode?.name ?? "";
+    const fallback = p.item === "print_pack" ? "printPack" : p.item === "pack10" ? "pack10" : p.item === "pack3" ? "pack3" : "single";
+    const lines = p.lines?.length ? p.lines : [{ offer: fallback, amount: p.amountTotal }];
+    return lines.map((l, i) => ({
+      id: `${p.id}-${i}`,
+      purchaseId: p.id,
+      label:
+        l.offer === "pack3" || l.offer === "pack10"
+          ? t("credits", { n: l.offer === "pack10" ? 10 : 3 })
+          : `${t(l.offer === "printPack" ? "items.printPack" : "items.single")} · ${name}`,
+      date: date(p.paidAt ?? p.createdAt),
+      amount: money(l.amount),
+      status: p.status,
+    }));
+  });
 
   return (
-    <>
-      <div className="flex flex-wrap items-end justify-between gap-3">
+    <div className="mx-auto flex w-full max-w-190 flex-col gap-5">
+      <header className="flex flex-col gap-1.5">
         <h1 className="text-h1">{t("title")}</h1>
-        <Button asChild variant="secondary" size="sm">
-          <Link href="/pricing">{t("compare")}</Link>
-        </Button>
-      </div>
+        <p className="text-secondary-foreground">{t("signedIn", { email: user.email })}</p>
+      </header>
 
       <TrialBar phase={phase} />
-      <Card>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <CardTitle>{t("plan")}</CardTitle>
-          <Badge variant={subscription ? (subscription.cancelAtPeriodEnd ? "warning" : "success") : "neutral"}>{t(status)}</Badge>
-        </div>
-        {subscription ? (
-          <p className="text-body">
-            {subscription.currentPeriodEnd
-              ? t(subscription.cancelAtPeriodEnd ? "cancels" : "renews", {
-                  date: format.dateTime(subscription.currentPeriodEnd, { dateStyle: "long" }),
-                })
-              : subscription.status}
-          </p>
-        ) : (
-          <p className="text-body text-secondary-foreground">{t("none")}</p>
-        )}
-        <div className="rounded-lg border border-violet-200 bg-violet-50 p-3.5 shadow-[inset_3px_0_0_var(--color-violet-500)]">
-          <div className="flex items-baseline justify-between gap-3">
-            <span className="text-label">{t("liveDynamic")}</span>
-            <b className="tabular-nums">{subscription ? t("liveCount", { used, limit }) : t("liveNoPlan", { used })}</b>
-          </div>
-          {subscription ? (
-            <div
-              role="meter"
-              aria-label={t("liveDynamic")}
-              aria-valuemin={0}
-              aria-valuemax={subscription ? limit : 0}
-              aria-valuenow={used}
-              className="mt-2 h-1.5 overflow-hidden rounded-full bg-violet-100"
-            >
-              <span
-                className="block h-full rounded-full bg-violet-500"
-                style={{ width: `${subscription && limit ? Math.min(100, (used / limit) * 100) : 0}%` }}
-              />
-            </div>
-          ) : null}
-          <p className="mt-1.5 text-caption text-secondary-foreground">{t("liveHint")}</p>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-label">{t("payment")}</span>
-          <p className="text-caption text-secondary-foreground">{t("paymentManaged")}</p>
-        </div>
-        {user.stripeCustomerId ? <BillingPortalButton /> : null}
-      </Card>
 
-      <Card>
-        <CardTitle>{t("purchases")}</CardTitle>
-        {purchases.length === 0 ? (
-          <p className="text-body text-secondary-foreground">{t("noPurchases")}</p>
+      <section aria-labelledby="bill-plan" className={card}>
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex flex-col gap-0.5">
+            <span className="text-caption text-muted-foreground">{t("current")}</span>
+            <h2 id="bill-plan" className="text-h3">
+              {plan ? t("planMonthly", { plan: t(`plans.${plan.id}`) }) : t("noPlan")}
+            </h2>
+          </div>
+          <Badge variant={plan ? (plan.cancelAtPeriodEnd ? "warning" : "success") : "neutral"}>{t(status)}</Badge>
+        </div>
+        <UsageTiles usage={usage} printPackCents={sheet.printPack} currency={currency} />
+        {plan ? (
+          <dl className="flex flex-col gap-2 text-[0.875rem]">
+            <div className="flex justify-between gap-3">
+              <dt className="text-secondary-foreground">{t("price")}</dt>
+              <dd className="font-semibold tabular-nums">{t("perMonth", { price: formatMoney(sheet[plan.id], currency) })}</dd>
+            </div>
+            {plan.periodEnd ? (
+              <div className="flex justify-between gap-3">
+                <dt className="text-secondary-foreground">{plan.cancelAtPeriodEnd ? t("endsOn") : t("renewsOn")}</dt>
+                <dd className="font-semibold">{date(plan.periodEnd)}</dd>
+              </div>
+            ) : null}
+            <div className="flex justify-between gap-3">
+              <dt className="text-secondary-foreground">{t("payment")}</dt>
+              <dd className="text-right font-semibold">{t("paymentStripe")}</dd>
+            </div>
+          </dl>
         ) : (
-          <ul className="flex flex-col divide-y divide-border">
-            {purchases.map((p) => (
-              <li key={p.id} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1.5 py-3">
-                <span className="flex min-w-0 flex-col">
-                  <span className="truncate text-body font-medium">
-                    {p.qrCode.name}
-                    {p.item === "print_pack" ? ` · ${t("printPackItem")}` : null}
-                  </span>
-                  <span className="text-caption text-muted-foreground">
-                    {format.dateTime(p.paidAt ?? p.createdAt, { dateStyle: "medium" })}
-                  </span>
-                </span>
-                <span className="flex items-center gap-3 text-body tabular-nums">
-                  {format.number(p.amountTotal / 100, { style: "currency", currency: p.currency.toUpperCase() })}
-                  <Badge variant={p.status === "paid" ? "success" : p.status === "failed" ? "danger" : "neutral"}>
-                    {t(`statuses.${p.status}`)}
-                  </Badge>
-                  {p.status === "paid" && !p.qrCode.deletedAt ? (
-                    <Button asChild size="sm" variant="ghost">
-                      <Link href={`/dashboard/qr/${p.qrCodeId}`}>{t("open")}</Link>
-                    </Button>
-                  ) : null}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <p className="text-secondary-foreground">{t("none")}</p>
         )}
-        <p className="text-caption text-muted-foreground">{t("receiptNote")}</p>
-      </Card>
-    </>
+        <div className="flex flex-wrap gap-2.5">
+          {plan?.id === "starter" && user.stripeCustomerId ? (
+            <BillingPortalButton variant="primary" label={t("upgrade", { price: formatMoney(sheet.studio, currency) })} />
+          ) : null}
+          {!plan ? (
+            <Button asChild variant="primary">
+              <Link href="/pricing">{t("choosePlan")}</Link>
+            </Button>
+          ) : null}
+          {user.stripeCustomerId ? <BillingPortalButton /> : null}
+          <Button asChild>
+            <Link href="/pricing">{t("compare")}</Link>
+          </Button>
+        </div>
+      </section>
+
+      <section aria-labelledby="bill-purchases" className={card}>
+        <h2 id="bill-purchases" className="text-h3">
+          {t("oneTime")}
+        </h2>
+        {rows.length === 0 ? (
+          <p className="text-secondary-foreground">{t("noPurchases")}</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-120 border-collapse text-[0.875rem]">
+              <thead>
+                <tr className="text-left text-secondary-foreground">
+                  <th scope="col" className="border-b border-border px-2 py-2 font-semibold">
+                    {t("item")}
+                  </th>
+                  <th scope="col" className="border-b border-border px-2 py-2 font-semibold">
+                    {t("date")}
+                  </th>
+                  <th scope="col" className="border-b border-border px-2 py-2 font-semibold">
+                    {t("amount")}
+                  </th>
+                  <th scope="col" className="border-b border-border px-2 py-2">
+                    <span className="sr-only">{t("receipt")}</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((r) => (
+                  <tr key={r.id}>
+                    <td className="border-b border-border px-2 py-3.5">{r.label}</td>
+                    <td className="border-b border-border px-2 py-3.5">{r.date}</td>
+                    <td className="border-b border-border px-2 py-3.5 tabular-nums">{r.amount}</td>
+                    <td className="border-b border-border px-2 py-3.5 text-right">
+                      {r.status === "paid" ? (
+                        <a href={`/api/billing/receipt/${r.purchaseId}`} className="font-semibold underline underline-offset-3">
+                          {t("receipt")}
+                        </a>
+                      ) : (
+                        <Badge variant={r.status === "failed" ? "danger" : "neutral"}>{t(`statuses.${r.status}`)}</Badge>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <span className="text-caption text-muted-foreground">{t("receiptNote")}</span>
+      </section>
+    </div>
   );
 }

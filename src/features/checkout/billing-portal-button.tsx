@@ -7,13 +7,15 @@ import { toast } from "sonner";
 import { openBillingPortal } from "@/server/actions/qr";
 import { Button } from "@/shared/ui/button";
 
-export function BillingPortalButton() {
+/** Stripe's billing portal: plan changes (e.g. Starter → Studio), cancellation, payment method and invoices. */
+export function BillingPortalButton({ label, variant = "secondary" }: { label?: string; variant?: "primary" | "secondary" }) {
   const t = useTranslations("billing");
   const tErrors = useTranslations("errors");
   const locale = useLocale();
   const [pending, start] = useTransition();
   return (
     <Button
+      variant={variant}
       disabled={pending}
       onClick={() =>
         start(async () => {
@@ -23,8 +25,8 @@ export function BillingPortalButton() {
         })
       }
     >
-      {t("manage")}
-      <ExternalLinkIcon aria-hidden />
+      {label ?? t("manage")}
+      {label ? null : <ExternalLinkIcon aria-hidden />}
     </Button>
   );
 }

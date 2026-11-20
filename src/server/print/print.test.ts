@@ -9,7 +9,7 @@ import { DEFAULT_DESIGN, DEFAULT_PRINT_SETTINGS, designToLayout, printSizes, rea
 
 vi.mock("server-only", () => ({}));
 vi.mock("@/env", () => ({ env: { S3_PUBLIC_URL: undefined, NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr" } }));
-const { printPage, printPdf, printSpecPdf, rasterSize, renderKeyOf } = await import("./print");
+const { layoutPdf, printPage, printPdf, printSpecPdf, rasterSize, renderKeyOf } = await import("./print");
 
 /* Design 8.x Print Pack: the print page, the vector PDF and the specifications from one function. */
 const VALUE = "https://littlefern.coffee/menu";
@@ -130,4 +130,20 @@ describe("print files", () => {
     expect(pdf.toString("latin1").startsWith("%PDF-1.7")).toBe(true);
     expect(pdf.length).toBeGreaterThan(2000);
   });
+});
+
+describe("layout PDF export (format PDF)", () => {
+  it("is one vector page at the layout's own size: mm layouts in mm, screen layouts at 96 px per inch", async () => {
+    const mm = await layoutPdf(designToLayout(card), VALUE);
+    const box = (b: Buffer) =>
+      b
+        .toString("latin1")
+        .match(/\/MediaBox \[0 0 ([\d.]+) ([\d.]+)\]/)
+        ?.slice(1)
+        .map(Number);
+    expect(mm.scanOk).toBe(true);
+    expect(box(mm.body)?.[0]).toBeCloseTo(50 * MM_TO_PT, 1);
+    const px = await layoutPdf(designToLayout({ ...card, size: { unit: "px", qr: 512, width: 512, height: 640 } }), VALUE);
+    expect(box(px.body)?.map((v) => Math.round(v))).toEqual([384, 480]);
+  }, 60_000);
 });

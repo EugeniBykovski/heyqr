@@ -13,6 +13,15 @@ import { RESTORE_WINDOW_MS, restoreQrCodes, softDeleteQrCodes } from "../qr/dele
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, updateLayoutDesign } from "../qr/update-layout";
 import { activateTrialCode, startTrial, trialCode } from "../billing/trial";
+import {
+  accountUsage,
+  activateDynamicCode,
+  applyPrintPackAllowance,
+  convertToStatic,
+  creditBalance,
+  grantPackCredits,
+  unlockStatic,
+} from "../billing/allowances";
 import { checkDatabase, EXPECTED_MIGRATIONS, REQUIRED_TABLES } from "./check";
 import { SEED_SCAN_DAYS, seedFixtures } from "./fixtures";
 import { runMigrations } from "./migrator";
@@ -728,5 +737,133 @@ describe.skipIf(!url)("edit one saved layout (HEY-45, real PostgreSQL)", () => {
       error: "not_found",
     });
     expect((await rows(a.qrCodeId)).map((l) => l.design)).toEqual(before.map((l) => l.design));
+  });
+});
+
+describe.skipIf(!url)("plans, credits and allowances (design 4.8, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "plan-owner", name: "Owner", email: "owner@plan.test" };
+  const card = { ...DEFAULT_DESIGN, preset: "caption" as const, caption: "Menu" };
+  const make = async (model: "static" | "dynamic" = "static") => {
+    const saved = await saveQrWithLayouts(db, owner.id, {
+      name: "Plan test",
+      model,
+      content: { type: "website", url: "https://littlefern.cafe/menu" },
+      destination: model === "dynamic" ? "https://littlefern.cafe/menu" : undefined,
+      layouts: [{ name: "Card", layout: designToLayout(card), editor: designSettingsOf(card) }],
+    });
+    if (!saved.ok) throw new Error("save failed");
+    return saved.data.qrCodeId;
+  };
+  const purchased = async (id: string) => (await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, id) }))?.purchasedAt ?? null;
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("Static Pack credits: granted once per purchase, one credit per static code, never below zero", async () => {
+    const [p] = await db
+      .insert(schema.purchase)
+      .values({
+        id: "plan-p3",
+        userId: owner.id,
+        item: "pack3",
+        stripeCheckoutSessionId: "cs_plan_p3",
+        amountTotal: 1199,
+        currency: "usd",
+        status: "paid",
+      })
+      .returning();
+    if (!p) throw new Error("no purchase");
+    await grantPackCredits(db, owner.id, p.id, "pack3");
+    await grantPackCredits(db, owner.id, p.id, "pack3"); // webhook retry
+    expect(await creditBalance(db, owner.id)).toBe(3);
+    const a = await make();
+    expect(await unlockStatic(db, owner.id, a, "credit")).toEqual({ ok: true, via: "credit" });
+    expect(await purchased(a)).not.toBeNull();
+    expect(await unlockStatic(db, owner.id, a, "credit")).toEqual({ ok: false, error: "owned" });
+    expect(await creditBalance(db, owner.id)).toBe(2);
+    const dyn = await make("dynamic");
+    expect(await unlockStatic(db, owner.id, dyn, "credit")).toEqual({ ok: false, error: "not_static" });
+    // Two at once with two credits left, then one more: exactly two succeed.
+    const [b, c, d] = await Promise.all([make(), make(), make()]);
+    const results = await Promise.all([b, c, d].map((id) => unlockStatic(db, owner.id, id, "credit")));
+    expect(results.filter((r) => r.ok)).toHaveLength(2);
+    expect(results.filter((r) => !r.ok)).toEqual([{ ok: false, error: "no_credits" }]);
+    expect(await creditBalance(db, owner.id)).toBe(0);
+  });
+
+  it("a plan's monthly unlocks and included Print Packs: counted per billing period, limited by the plan", async () => {
+    const start = new Date("2026-11-01T00:00:00Z");
+    await db.insert(schema.subscription).values({
+      id: "plan-sub",
+      userId: owner.id,
+      stripeSubscriptionId: "sub_plan_test",
+      stripePriceId: "price_x",
+      status: "active",
+      plan: "studio",
+      activeCodeLimit: 25,
+      currentPeriodStart: start,
+      currentPeriodEnd: new Date("2026-12-01T00:00:00Z"),
+    });
+    const before = await accountUsage(db, owner.id);
+    expect([before.plan?.id, before.unlocks, before.packs, before.dynamic.limit]).toEqual([
+      "studio",
+      { used: 0, limit: 40 },
+      { used: 0, limit: 5 },
+      25,
+    ]);
+    const a = await make();
+    expect(await unlockStatic(db, owner.id, a, "plan")).toEqual({ ok: true, via: "plan" });
+    expect(await applyPrintPackAllowance(db, owner.id, a)).toEqual({ ok: true });
+    expect(await applyPrintPackAllowance(db, owner.id, a)).toEqual({ ok: false, error: "owned" });
+    const after = await accountUsage(db, owner.id);
+    expect([after.unlocks.used, after.packs.used]).toEqual([1, 1]);
+    // The next period starts fresh; the old use stays in its own period.
+    await db
+      .update(schema.subscription)
+      .set({ currentPeriodStart: new Date("2026-12-01T00:00:00Z") })
+      .where(eq(schema.subscription.id, "plan-sub"));
+    expect((await accountUsage(db, owner.id)).unlocks.used).toBe(0);
+    // Starter has no included Print Packs.
+    await db.update(schema.subscription).set({ plan: "starter" }).where(eq(schema.subscription.id, "plan-sub"));
+    const b = await make();
+    expect(await applyPrintPackAllowance(db, owner.id, b)).toEqual({ ok: false, error: "no_allowance" });
+    // Without an active plan there are no monthly unlocks.
+    await db.update(schema.subscription).set({ status: "canceled" }).where(eq(schema.subscription.id, "plan-sub"));
+    expect(await unlockStatic(db, owner.id, b, "plan")).toEqual({ ok: false, error: "no_allowance" });
+  });
+
+  it("Dynamic slots: a code goes live while a slot is free; a full plan refuses; an unpaid draft can become static", async () => {
+    await db.delete(schema.subscription).where(eq(schema.subscription.userId, owner.id));
+    const a = await make("dynamic");
+    expect(await activateDynamicCode(db, owner.id, a, () => "slotA01")).toEqual({ ok: false, error: "no_plan" });
+    await db.insert(schema.subscription).values({
+      id: "plan-sub2",
+      userId: owner.id,
+      stripeSubscriptionId: "sub_plan_test2",
+      stripePriceId: "price_x",
+      status: "active",
+      plan: "starter",
+      activeCodeLimit: 5,
+      currentPeriodStart: new Date("2026-11-01T00:00:00Z"),
+    });
+    expect(await activateDynamicCode(db, owner.id, a, () => "slotA01")).toEqual({ ok: true, shortCode: "slotA01" });
+    for (let i = 0; i < 4; i++) {
+      const id = await make("dynamic");
+      expect((await activateDynamicCode(db, owner.id, id, () => `slotB0${i}`)).ok).toBe(true);
+    }
+    const sixth = await make("dynamic");
+    expect(await activateDynamicCode(db, owner.id, sixth, () => "slotC01")).toEqual({ ok: false, error: "limit" });
+    expect(await convertToStatic(db, owner.id, sixth)).toEqual({ ok: true });
+    expect(await convertToStatic(db, owner.id, a)).toEqual({ ok: false }); // live codes keep their short link
+    expect((await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, sixth) }))?.model).toBe("static");
   });
 });

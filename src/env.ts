@@ -35,6 +35,9 @@ export const env = createEnv({
     STRIPE_PRICE_DYNAMIC_MONTHLY: z.string().startsWith("price_").optional(),
     // Optional add-on: without it the Print Pack can be previewed but not bought (the UI says so).
     STRIPE_PRICE_PRINT_PACK: z.string().startsWith("price_").optional(),
+    // Design 4.8 catalog: Stripe Price IDs per currency and offer, as JSON, e.g.
+    // {"EUR":{"single":"price_…","pack3":"price_…","starter":"price_…"}}. USD falls back to the STRIPE_PRICE_* above.
+    STRIPE_PRICES: z.string().optional(),
     DYNAMIC_ACTIVE_CODE_LIMIT: z.coerce.number().int().positive().default(10),
     RESEND_API_KEY: z.string().startsWith("re_").optional(),
     EMAIL_FROM: z.string().min(3).optional(),
@@ -53,6 +56,8 @@ export const env = createEnv({
     NEXT_PUBLIC_PRICE_STATIC_CENTS: z.coerce.number().int().nonnegative().default(499),
     NEXT_PUBLIC_PRICE_DYNAMIC_MONTHLY_CENTS: z.coerce.number().int().nonnegative().default(600),
     NEXT_PUBLIC_PRICE_PRINT_PACK_CENTS: z.coerce.number().int().nonnegative().default(299),
+    // Display price points per currency (minor units), as JSON; overrides the built-in launch points.
+    NEXT_PUBLIC_PRICE_POINTS: z.string().optional(),
     NEXT_PUBLIC_PRICE_CURRENCY: z.string().length(3).default("USD"),
   },
   experimental__runtimeEnv: {
@@ -61,6 +66,7 @@ export const env = createEnv({
     NEXT_PUBLIC_PRICE_STATIC_CENTS: process.env.NEXT_PUBLIC_PRICE_STATIC_CENTS,
     NEXT_PUBLIC_PRICE_DYNAMIC_MONTHLY_CENTS: process.env.NEXT_PUBLIC_PRICE_DYNAMIC_MONTHLY_CENTS,
     NEXT_PUBLIC_PRICE_PRINT_PACK_CENTS: process.env.NEXT_PUBLIC_PRICE_PRINT_PACK_CENTS,
+    NEXT_PUBLIC_PRICE_POINTS: process.env.NEXT_PUBLIC_PRICE_POINTS,
     NEXT_PUBLIC_PRICE_CURRENCY: process.env.NEXT_PUBLIC_PRICE_CURRENCY,
   },
   // Environment-dependent rules run on the server, where every variable is visible.

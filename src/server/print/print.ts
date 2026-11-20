@@ -60,7 +60,7 @@ export type PrintWarning = { code: "logo_low_ppi"; ppi: number; needPx: number }
 export interface PrintPage {
   svg: string;
   sizes: ReturnType<typeof printSizes>;
-  colors: { role: string; hex: string; srgb: string }[];
+  colors: { role: string; roles: string[]; hex: string; srgb: string }[];
   logo: { raster: boolean; px: number | null; ppi: number | null; mm: number } | null;
   warnings: PrintWarning[];
   renderKey: string;
@@ -221,10 +221,41 @@ export async function printSpecPdf(
         .font("body")
         .fontSize(10)
         .fillColor("#0D0D12")
-        .text(`${labels[`role_${c.role}`] ?? c.role}   ${c.hex}   sRGB ${c.srgb}`, x + 26, y);
+        .text(`${c.roles.map((r) => labels[`role_${r}`] ?? r).join(", ")}   ${c.hex}   sRGB ${c.srgb}`, x + 26, y, { width: 460 });
       y += 24;
     }
     y += 16;
     doc.font("body").fontSize(9).fillColor("#5F5F68").text(`${labels.key} ${page.renderKey}`, x, y);
   });
+}
+
+/**
+ * Design 3.x "PDF · Vector for print shops": the layout itself as a one-page vector PDF at its own size (mm layouts in
+ * mm, screen layouts at 96 px per inch), caption fonts embedded, sRGB. No bleed or crop marks (that's the Print Pack).
+ */
+export async function layoutPdf(
+  layout: Layout,
+  value: string,
+  options: { transparent?: boolean } = {},
+): Promise<{ body: Buffer; scanOk: boolean }> {
+  const composed = composeLayout(layout, value, { transparent: options.transparent });
+  const g = layoutGeometry(layout);
+  const toPt = layout.unit === "mm" ? MM_TO_PT : 0.75;
+  const W = g.width * toPt;
+  const H = g.height * toPt;
+  const faces = captionFontFaces(layout);
+  const body = await pdfBuffer([W, H], (doc) => {
+    SVGtoPDF(doc, pdfReadyImages(composed.svg), 0, 0, {
+      width: W,
+      height: H,
+      fontCallback: (family, bold) => {
+        const face =
+          faces.find((x) => family.includes(x.family) && (bold ? x.weight >= 600 : x.weight < 600)) ??
+          faces.find((x) => family.includes(x.family)) ??
+          faces[0];
+        return face?.file ?? "Helvetica";
+      },
+    });
+  });
+  return { body, scanOk: composed.scan.ok };
 }

@@ -2,8 +2,9 @@ import { layoutCapacity, QrCapacityError } from "@heyqr/qr-core";
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/server/auth";
+import { layoutPdf } from "@/server/print/print";
 import { canDownload } from "@/server/billing/entitlements";
-import { downloadFileName, encodedValue, ExportSizeError, renderExport } from "@/server/qr/export";
+import { downloadFileName, encodedValue, ExportSizeError, renderExport, withEmbeddedImages } from "@/server/qr/export";
 import { getLayoutWithQr } from "@/server/qr/repository";
 
 const query = z.object({
@@ -29,13 +30,23 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/api/export/[
   const record = await getLayoutWithQr(layoutId);
   if (!record || record.qrCode.userId !== session.user.id) return NextResponse.json({ error: "not_found" }, { status: 404 });
   if (!(await canDownload(session.user.id, record.qrCode))) return NextResponse.json({ error: "payment_required" }, { status: 402 });
-  if (format === "pdf") return NextResponse.json({ error: "not_implemented", ticket: "HEY-21" }, { status: 501 });
 
   const value = encodedValue(record.qrCode);
   // HEY-24: content that doesn't fit is a clear 422, never a 500 or a truncated code. Sizes only, no content.
   const capacity = layoutCapacity(record.design.layout, value);
   const tooLong = { error: "too_long", bytes: capacity.bytes, maxBytes: capacity.maxBytes } as const;
   if (!capacity.ok) return NextResponse.json(tooLong, { status: 422 });
+  if (format === "pdf") {
+    const pdf = await layoutPdf(await withEmbeddedImages(record.design.layout), value, { transparent: transparent === "1" });
+    if (!pdf.scanOk) return NextResponse.json({ error: "scan_check_failed" }, { status: 422 });
+    return new NextResponse(new Uint8Array(pdf.body), {
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": downloadFileName(record.name, "pdf").header,
+        "Cache-Control": "private, no-store",
+      },
+    });
+  }
   let file;
   try {
     file = await renderExport(record.design.layout, value, format, { dpi, scale, transparent: transparent === "1" });

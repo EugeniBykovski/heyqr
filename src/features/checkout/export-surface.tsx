@@ -4,28 +4,34 @@ import { composeLayout, layoutGeometry, PNG_DEFAULTS, PNG_DPIS, PNG_MAX_SIDE, PN
 import {
   ArrowLeftIcon,
   CheckCircle2Icon,
+  CheckIcon,
   CircleAlertIcon,
   DownloadIcon,
+  FileTextIcon,
   InfoIcon,
   LoaderCircleIcon,
   LockIcon,
   PrinterIcon,
   RotateCwIcon,
+  ShieldIcon,
+  TriangleAlertIcon,
 } from "lucide-react";
 import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState, useTransition, type ReactNode } from "react";
 import { toast } from "sonner";
 import { QrPreview } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
-import { startCheckout } from "@/server/actions/qr";
+import { activateDynamic, makeStatic, takeIncludedPrintPack, unlockWithAllowance } from "@/server/actions/billing";
+import { startCheckout, startPrintPackCheckout } from "@/server/actions/qr";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Segmented } from "@/shared/ui/segmented";
 import { Stage, StageBar, StageCanvas, StageFoot } from "@/shared/ui/stage";
 import { UseTrialButton } from "./trial-actions";
+import { formatMoney, type Currency } from "@/shared/config/catalog-core";
 
-export type ExportFormat = "png" | "svg";
+export type ExportFormat = "png" | "svg" | "pdf";
 export type ExportSettings = { format: ExportFormat; resolution: number; transparent: boolean };
 
 /** The resolutions the export allows for this layout: px layouts by scale, print layouts by DPI (HEY-37). */
@@ -85,12 +91,14 @@ export type ExportSurfaceProps = {
   /** Other named layouts of this code (design 3.11), each linking to its own export screen. */
   layouts?: { id: string; name: string; href: string; active: boolean }[];
   backHref: string;
-  initial: { format?: ExportFormat; resolution?: number; transparent?: boolean };
-  price: { cents: number; currency: string };
+  initial: { format?: ExportFormat; resolution?: number; transparent?: boolean; printPack?: boolean };
+  price: { cents: number; currency: Currency };
   /** Banners from the URL: back from Google sign-in, back from checkout. */
   returnedFromSignIn?: boolean;
   checkout?: "success" | "cancelled";
-  receipt?: { amountCents: number; currency: string; paidAt: string } | null;
+  receipt?: { amountCents: number; currency: string; paidAt: string; lines?: { offer: string; amount: number }[] | null } | null;
+  /** Signed in: the account's path for this code (design 7.2–7.7). */
+  offer?: ExportOffer;
   /** Design 7.2 / 8.1: Print Preview of a print (mm) layout, or setting a screen layout up for print (Edit design → Size). */
   print?: { kind: "preview" | "setup"; href: string };
 } & (
@@ -104,6 +112,28 @@ export type ExportSurfaceProps = {
     }
   | { mode: "guest"; signInHref: (settings: ExportSettings) => string }
 );
+
+/**
+ * Design 7.2–7.7: what this export costs, decided on the server from the account's plan, credits and slots. The
+ * panel shows its lines and action; the server checks again when the action runs.
+ */
+export type ExportOffer = {
+  path: "owned" | "buy" | "subscribe" | "activate" | "unlock" | "credit" | "limitStatic" | "limitDyn";
+  planName?: string;
+  unlocks?: { left: number; limit: number };
+  credits?: number;
+  dynamic?: { used: number; limit: number };
+  resets?: string;
+  cents: { single: number | null; pack3: number | null; studio: number | null };
+  printPack: null | {
+    owned: boolean;
+    included: { left: number; limit: number } | null;
+    cents: number | null;
+    forSale: boolean;
+    previewHref: string;
+    files: { file: string; label: string; meta: string; href: string }[];
+  };
+};
 
 /*
  * Design 3.1–3.11 "Export": one surface for guests and signed-in users. The stage shows the exact layout that will be
@@ -131,6 +161,14 @@ export function ExportSurface(props: ExportSurfaceProps) {
   }));
   const [file, setFile] = useState<FileState>({ kind: "idle" });
   const [paying, startPaying] = useTransition();
+  const offer = props.offer;
+  const pp = offer?.printPack ?? null;
+  // Design 7.2 Print Pack switch: off by default; on when coming back from checkout with it.
+  const [addPrint, setAddPrint] = useState(Boolean(props.initial.printPack) && Boolean(pp && !pp.owned));
+  const ppIncluded = Boolean(pp?.included && pp.included.left > 0);
+  const ppOn = addPrint && Boolean(pp && !pp.owned) && (ppIncluded || Boolean(pp?.forSale));
+  const cur = props.price.currency;
+  const money = (c: number | null) => formatMoney(c, cur);
   const entitled = props.mode === "signed" && props.entitled;
   const confirming = props.mode === "signed" && props.checkout === "success" && !props.entitled;
   const busy = file.kind === "preparing" || paying || confirming;
@@ -144,8 +182,53 @@ export function ExportSurface(props: ExportSurfaceProps) {
   const fileDims =
     settings.format === "png" ? `${pixels.width} × ${pixels.height} px` : print ? `${layoutDims} · vector` : `${layoutDims} · vector`;
   const fmt = settings.format.toUpperCase();
-  const amount = format.number(props.price.cents / 100, { style: "currency", currency: props.price.currency });
+  const amount = formatMoney(props.price.cents, props.price.currency);
   const readyUrl = useRef<string | null>(null);
+  // Design 7.3: the itemized order of this path (display only; the server prices the checkout itself).
+  const orderLines: { label: string; value: string; included?: boolean; cents?: number }[] = [];
+  if (offer && !entitled) {
+    if (offer.path === "buy")
+      orderLines.push({
+        label: t("lines.singleNamed", { name: props.heading.split(" · ")[0] ?? "" }),
+        value: money(offer.cents.single),
+        cents: offer.cents.single ?? 0,
+      });
+    if (offer.path === "unlock")
+      orderLines.push({
+        label: t("lines.unlock", { plan: offer.planName ?? "", left: offer.unlocks?.left ?? 0, limit: offer.unlocks?.limit ?? 0 }),
+        value: t("summary.includedShort"),
+        included: true,
+      });
+    if (offer.path === "credit")
+      orderLines.push({ label: t("lines.credit", { left: offer.credits ?? 0 }), value: t("summary.includedShort"), included: true });
+    if (offer.path === "activate")
+      orderLines.push({
+        label: t("lines.slot", { plan: offer.planName ?? "", used: offer.dynamic?.used ?? 0, limit: offer.dynamic?.limit ?? 0 }),
+        value: t("summary.includedShort"),
+        included: true,
+      });
+    if (offer.path === "subscribe") orderLines.push({ label: t("lines.starter"), value: t("perMonth", { price: amount }) });
+    if (ppOn && pp && offer.path !== "limitStatic" && offer.path !== "limitDyn")
+      orderLines.push(
+        ppIncluded && pp.included
+          ? {
+              label: t("lines.ppIncluded", { plan: offer.planName ?? "", left: pp.included.left, limit: pp.included.limit }),
+              value: t("summary.includedShort"),
+              included: true,
+            }
+          : { label: t("lines.pp"), value: money(pp.cents), cents: pp.cents ?? 0 },
+      );
+  }
+  // Guests (and codes without a server offer) see the code's own price.
+  if (!offer && !entitled && props.model === "static")
+    orderLines.push({
+      label: t("lines.singleNamed", { name: props.heading.split(" · ")[0] ?? "" }),
+      value: amount,
+      cents: props.price.cents,
+    });
+  if (!offer && !entitled && props.model === "dynamic")
+    orderLines.push({ label: t("lines.starter"), value: t("perMonth", { price: amount }) });
+  const totalCents = orderLines.reduce((sum, l) => sum + (l.cents ?? 0), 0);
 
   // Back from checkout before Stripe's webhook has granted the file: ask the server again, a few seconds apart.
   useEffect(() => {
@@ -192,6 +275,14 @@ export function ExportSurface(props: ExportSurfaceProps) {
 
   // Back from a paid checkout with the file granted: prepare the chosen file at once; one tap downloads it (3.7, 3.8).
   const autoPrepared = useRef(false);
+  // After an included unlock the page refreshes with the entitlement; the download starts as after checkout.
+  const wantDownload = useRef(false);
+  useEffect(() => {
+    if (!wantDownload.current || !entitled) return;
+    wantDownload.current = false;
+    void prepare();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entitled]);
   useEffect(() => {
     if (autoPrepared.current || !entitled || props.checkout !== "success") return;
     autoPrepared.current = true;
@@ -210,9 +301,75 @@ export function ExportSurface(props: ExportSurfaceProps) {
         locale,
         resolution: settings.format === "png" ? settings.resolution : undefined,
         transparent: settings.transparent,
+        // An included Print Pack is used from the plan, not paid at checkout.
+        printPack: ppOn && !ppIncluded,
       }).catch(() => ({ ok: false as const, error: "failed" }));
       if (result.ok) window.location.assign(result.data.url);
-      else toast.error(t("checkoutFailed"), { id: "checkout" });
+      else
+        toast.error(
+          result.error === "not_offered" || result.error === "price_mismatch" ? t(`catalog.${result.error}`) : t("checkoutFailed"),
+          { id: "checkout" },
+        );
+    });
+
+  /** Design 7.5: an included unlock or a static credit (and an included Print Pack), then the download. */
+  const unlockFree = (via: "plan" | "credit") =>
+    props.mode === "signed" &&
+    startPaying(async () => {
+      const result = await unlockWithAllowance({ qrCodeId: props.qrCodeId, via }).catch(() => ({
+        ok: false as const,
+        error: "failed" as const,
+      }));
+      if (!result.ok) {
+        toast.error(t(`unlockErrors.${result.error === "no_allowance" || result.error === "no_credits" ? result.error : "failed"}`), {
+          id: "unlock",
+        });
+        return;
+      }
+      if (ppOn && ppIncluded) await takeIncludedPrintPack(props.qrCodeId).catch(() => null);
+      autoPrepared.current = false;
+      wantDownload.current = true;
+      router.refresh();
+    });
+
+  const goLive = () =>
+    props.mode === "signed" &&
+    startPaying(async () => {
+      const result = await activateDynamic(props.qrCodeId).catch(() => ({ ok: false as const, error: "failed" as const }));
+      if (!result.ok) {
+        toast.error(t(`unlockErrors.${result.error === "limit" ? "limit" : "failed"}`), { id: "unlock" });
+        return;
+      }
+      wantDownload.current = true;
+      router.refresh();
+    });
+
+  /** Design 8.6 / 7.4: the Print Pack of an owned code: from the plan's allowance, or its own checkout. */
+  const addPrintPack = () =>
+    props.mode === "signed" &&
+    startPaying(async () => {
+      if (ppIncluded) {
+        const r = await takeIncludedPrintPack(props.qrCodeId).catch(() => ({ ok: false as const, error: "failed" as const }));
+        if (r.ok) router.refresh();
+        else toast.error(t("unlockErrors.failed"), { id: "pp" });
+        return;
+      }
+      const r = await startPrintPackCheckout({
+        qrCodeId: props.qrCodeId,
+        layoutId: props.layoutId,
+        settings: "scale=1&bleed=3&cropMarks=1&profile=srgb",
+        locale,
+      }).catch(() => ({ ok: false as const, error: "failed" as const }));
+      if (r.ok) window.location.assign(r.data.url);
+      else toast.error(t("checkoutFailed"), { id: "pp" });
+    });
+
+  const toStatic = () =>
+    props.mode === "signed" &&
+    startPaying(async () => {
+      const r = await makeStatic(props.qrCodeId).catch(() => ({ ok: false as const, error: "failed" as const }));
+      if (r.ok) router.refresh();
+      else toast.error(t("unlockErrors.failed"), { id: "static" });
     });
 
   const update = (patch: Partial<ExportSettings>) => {
@@ -248,11 +405,45 @@ export function ExportSurface(props: ExportSurfaceProps) {
           </Button>
         </div>
       );
+    if (!entitled && (offer?.path === "unlock" || offer?.path === "credit"))
+      return (
+        <div className="flex flex-col gap-2">
+          <Button
+            variant="primary"
+            size="lg"
+            className="w-full"
+            disabled={paying}
+            aria-busy={paying || undefined}
+            onClick={() => unlockFree(offer.path === "unlock" ? "plan" : "credit")}
+          >
+            {paying ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
+            {offer.path === "unlock" ? t("useUnlock") : t("useCredit")}
+          </Button>
+          <span className="text-caption text-muted-foreground">
+            {offer.path === "unlock"
+              ? t("unlockNote", { plan: offer.planName ?? "", left: Math.max(0, (offer.unlocks?.left ?? 1) - 1) })
+              : t("creditNote", { left: Math.max(0, (offer.credits ?? 1) - 1) })}
+          </span>
+        </div>
+      );
+    if (!entitled && offer?.path === "activate")
+      return (
+        <div className="flex flex-col gap-2">
+          <Button variant="primary" size="lg" className="w-full" disabled={paying} aria-busy={paying || undefined} onClick={goLive}>
+            {paying ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
+            {t("goLive")}
+          </Button>
+          <span className="text-caption text-muted-foreground">
+            {t("goLiveNote", { plan: offer.planName ?? "", used: (offer.dynamic?.used ?? 0) + 1, limit: offer.dynamic?.limit ?? 0 })}
+          </span>
+        </div>
+      );
+    if (!entitled && (offer?.path === "limitStatic" || offer?.path === "limitDyn")) return null;
     if (!entitled)
       return (
         <Button variant="primary" size="lg" className="w-full" disabled={paying} aria-busy={paying || undefined} onClick={pay}>
           {paying ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : <LockIcon aria-hidden />}
-          {props.model === "dynamic" ? t("subscribe", { price: amount }) : t("pay", { price: amount })}
+          {props.model === "dynamic" ? t("subscribe", { price: amount }) : t("payTotal", { price: money(totalCents) })}
         </Button>
       );
     if (file.kind === "preparing")
@@ -369,7 +560,15 @@ export function ExportSurface(props: ExportSurfaceProps) {
               {props.title}
             </h1>
             <p className="text-secondary-foreground">
-              {props.mode === "guest" ? t("subGuest") : entitled ? t("subEntitled") : t("subPay")}
+              {props.mode === "guest"
+                ? t("subGuest")
+                : entitled
+                  ? t("subEntitled")
+                  : offer?.path === "unlock"
+                    ? t("subUnlock", { plan: offer.planName ?? "" })
+                    : offer?.path === "credit"
+                      ? t("subCredit")
+                      : t("subPay")}
             </p>
           </header>
 
@@ -392,13 +591,13 @@ export function ExportSurface(props: ExportSurfaceProps) {
                   {format.dateTime(new Date(props.receipt.paidAt), { dateStyle: "medium" })}
                 </span>
               </div>
-              <Line
-                label={t("lines.single")}
-                value={format.number(props.receipt.amountCents / 100, {
-                  style: "currency",
-                  currency: props.receipt.currency.toUpperCase(),
-                })}
-              />
+              {(props.receipt.lines?.length ? props.receipt.lines : [{ offer: "single", amount: props.receipt.amountCents }]).map((l) => (
+                <Line
+                  key={l.offer}
+                  label={l.offer === "printPack" ? t("lines.pp") : t("lines.singleNamed", { name: props.heading.split(" · ")[0] ?? "" })}
+                  value={format.number(l.amount / 100, { style: "currency", currency: props.receipt?.currency.toUpperCase() ?? "USD" })}
+                />
+              ))}
               <Line
                 strong
                 label={t("receipt.paid")}
@@ -413,8 +612,8 @@ export function ExportSurface(props: ExportSurfaceProps) {
 
           <fieldset disabled={frozen} className="flex flex-col gap-2">
             <legend className="mb-2 text-[0.875rem] font-bold">{t("format")}</legend>
-            <div className="grid grid-cols-2 gap-2">
-              {(["png", "svg"] as const).map((f) => (
+            <div className="grid grid-cols-3 gap-2">
+              {(["png", "svg", "pdf"] as const).map((f) => (
                 <button
                   key={f}
                   type="button"
@@ -423,11 +622,19 @@ export function ExportSurface(props: ExportSurfaceProps) {
                   aria-describedby={`format-${f}-hint`}
                   onClick={() => update({ format: f })}
                   className={cn(
-                    "flex cursor-pointer flex-col items-start gap-0.5 rounded-lg border border-border bg-surface p-3.5 text-left disabled:cursor-not-allowed disabled:opacity-60",
+                    "relative flex cursor-pointer flex-col items-start gap-0.5 rounded-lg border border-border bg-surface p-3.5 text-left disabled:cursor-not-allowed disabled:opacity-60",
                     "aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]",
                   )}
                 >
                   <span className="text-h3">{t(f)}</span>
+                  {settings.format === f ? (
+                    <span
+                      aria-hidden
+                      className="absolute top-2 right-2 grid size-5 place-items-center rounded-full bg-primary text-primary-foreground"
+                    >
+                      <CheckIcon className="size-3.5" strokeWidth={3} />
+                    </span>
+                  ) : null}
                   <span id={`format-${f}-hint`} className="text-caption text-secondary-foreground">
                     {t(`${f}Hint`)}
                   </span>
@@ -467,22 +674,104 @@ export function ExportSurface(props: ExportSurfaceProps) {
             {t("transparent")}
           </label>
 
-          {props.print ? (
+          {pp && entitled && pp.owned ? (
+            <section aria-labelledby="export-pp" className="flex flex-col gap-2">
+              <div className="flex items-center justify-between gap-2">
+                <h3 id="export-pp" className="text-[0.875rem] font-bold">
+                  {t("ppTitle")}
+                </h3>
+                <Badge variant="success">{t("ppUnlocked")}</Badge>
+              </div>
+              <ul className="flex flex-col gap-2">
+                {pp.files.map((f) => (
+                  <li key={f.file} className="flex min-w-0 items-center gap-3 rounded-lg bg-subtle px-3 py-2.5">
+                    <span className="grid size-8 shrink-0 place-items-center rounded-md bg-surface">
+                      <FileTextIcon aria-hidden className="size-4" />
+                    </span>
+                    <span className="flex min-w-0 grow flex-col">
+                      <span className="text-label">{f.label}</span>
+                      <span className="truncate text-caption text-muted-foreground">{f.meta}</span>
+                    </span>
+                    <Button asChild size="sm">
+                      <a href={f.href}>
+                        <DownloadIcon aria-hidden />
+                        <span className="max-sm:sr-only">{t("ppDownload")}</span>
+                      </a>
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+              <Button asChild size="sm" className="self-start">
+                <Link href={pp.previewHref}>{t("inspectPrint")}</Link>
+              </Button>
+              <span className="text-caption text-muted-foreground">{t("ppRepeat")}</span>
+            </section>
+          ) : pp && offer?.path !== "limitStatic" && offer?.path !== "limitDyn" ? (
+            <section aria-labelledby="export-pp" className="flex flex-col gap-2">
+              <div className="flex items-center justify-between gap-2">
+                <h3 id="export-pp" className="text-[0.875rem] font-bold">
+                  {t("ppTitle")}
+                </h3>
+                <span className="rounded-full bg-subtle px-2 py-0.5 text-[0.6875rem] font-bold tracking-[0.06em] text-muted-foreground uppercase">
+                  {t("ppOptional")}
+                </span>
+              </div>
+              {entitled ? (
+                <div className="flex flex-col gap-2 rounded-lg border border-border p-3.5">
+                  <span className="text-caption text-secondary-foreground">{t("ppAddText")}</span>
+                  <Button size="sm" className="self-start" disabled={paying || (!ppIncluded && !pp.forSale)} onClick={addPrintPack}>
+                    {ppIncluded ? t("ppUseIncluded") : t("ppAdd", { price: money(pp.cents) })}
+                  </Button>
+                  {!ppIncluded && !pp.forSale ? <span className="text-caption text-muted-foreground">{t("ppNotForSale")}</span> : null}
+                </div>
+              ) : (
+                <label
+                  className={cn(
+                    "flex cursor-pointer items-center gap-3 rounded-lg border border-border p-3.5 has-checked:border-selected-border has-checked:bg-selected has-disabled:cursor-not-allowed has-disabled:opacity-60",
+                  )}
+                >
+                  <input
+                    type="checkbox"
+                    role="switch"
+                    className="peer sr-only"
+                    checked={ppOn}
+                    disabled={frozen || (!ppIncluded && !pp.forSale)}
+                    onChange={(e) => setAddPrint(e.target.checked)}
+                  />
+                  <span
+                    aria-hidden
+                    className="relative h-6 w-10 shrink-0 rounded-full bg-border-strong/30 transition-colors peer-checked:bg-primary after:absolute after:top-0.5 after:left-0.5 after:size-5 after:rounded-full after:bg-surface after:transition-transform peer-checked:after:translate-x-4 motion-reduce:after:transition-none"
+                  />
+                  <span className="flex min-w-0 grow flex-col">
+                    <b className="text-[0.875rem] font-semibold">{ppIncluded ? t("ppUseIncluded") : t("ppAddTitle")}</b>
+                    <span className="text-caption text-secondary-foreground">
+                      {ppIncluded && pp.included ? t("ppIncludedSub", { left: pp.included.left, limit: pp.included.limit }) : t("ppSub")}
+                    </span>
+                  </span>
+                  <b className="text-[0.9375rem] tabular-nums">{ppIncluded ? t("ppIncluded") : pp.forSale ? `+${money(pp.cents)}` : "—"}</b>
+                </label>
+              )}
+              {!entitled && !ppIncluded && !pp.forSale ? (
+                <span className="text-caption text-muted-foreground">{t("ppNotForSale")}</span>
+              ) : null}
+              <Link href={pp.previewHref} className="self-start text-[0.875rem] font-semibold underline underline-offset-3">
+                {t("inspectPrintFirst")}
+              </Link>
+            </section>
+          ) : props.print?.kind === "setup" ? (
             <div className="flex flex-col gap-2 rounded-lg border border-border bg-surface p-3">
               <span className="flex items-center gap-2 text-label">
                 <PrinterIcon aria-hidden className="size-4 text-muted-foreground" />
                 {t("printTitle")}
               </span>
-              <span className="text-caption text-secondary-foreground">
-                {props.print.kind === "preview" ? t("printPreviewText") : t("printSetupText")}
-              </span>
+              <span className="text-caption text-secondary-foreground">{t("printSetupText")}</span>
               <Button asChild size="sm" className="self-start">
-                <Link href={props.print.href}>{props.print.kind === "preview" ? t("inspectPrint") : t("printSetup")}</Link>
+                <Link href={props.print.href}>{t("printSetup")}</Link>
               </Button>
             </div>
           ) : null}
 
-          <Banner tone="neutral" icon={<InfoIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-muted-foreground" />}>
+          <Banner tone="neutral" icon={<ShieldIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-muted-foreground" />}>
             {t.rich("quality", { b: (c) => <b>{c}</b> })}
           </Banner>
 
@@ -491,18 +780,93 @@ export function ExportSurface(props: ExportSurfaceProps) {
             <Line label={t("summary.type")} value={`${props.typeLabel} · ${t(`model.${props.model}`)}`} />
             <Line label={t("summary.layout")} value={`${props.layoutName} · ${layoutDims}`} />
             <Line label={t("summary.file")} value={`${fmt} · ${fileDims}`} />
+            {!entitled && orderLines.length ? (
+              <div className="mt-1 flex flex-col gap-2 border-t border-border pt-3">
+                {orderLines.map((l) => (
+                  <Line key={l.label} label={l.label} value={l.value} tone={l.included ? "ok" : undefined} />
+                ))}
+              </div>
+            ) : null}
             {!entitled ? (
               <>
-                <Line
-                  label={props.model === "dynamic" ? t("lines.dynamic") : t("lines.single")}
-                  value={props.model === "dynamic" ? t("perMonth", { price: amount }) : amount}
-                />
-                <Line strong label={t("summary.total")} value={props.model === "dynamic" ? t("perMonth", { price: amount }) : amount} />
+                <div className="mt-1 border-t border-border pt-3">
+                  <Line
+                    strong
+                    label={t("summary.total")}
+                    value={
+                      props.model === "dynamic" && offer?.path !== "activate" && offer?.path !== "limitDyn"
+                        ? t("perMonth", { price: amount })
+                        : money(totalCents)
+                    }
+                  />
+                </div>
+                <ul className="flex flex-col gap-1.5 text-[0.875rem]">
+                  {(props.model === "dynamic" ? (["dyn1", "dyn2", "dyn3"] as const) : (["static1", "static2", "static3"] as const)).map(
+                    (k) => (
+                      <li key={k} className="flex items-start gap-2.5">
+                        <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-accent-text" />
+                        {t(`incl.${k}`, { limit: offer?.dynamic?.limit ?? 5 })}
+                      </li>
+                    ),
+                  )}
+                  {ppOn ? (
+                    <li className="flex items-start gap-2.5">
+                      <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-accent-text" />
+                      {t("incl.pp")}
+                    </li>
+                  ) : null}
+                </ul>
                 <span className="text-caption text-muted-foreground">{t("summary.tax")}</span>
               </>
             ) : props.receipt ? null : (
               <Line strong label={t("summary.total")} value={t("summary.included")} />
             )}
+            {!entitled && offer?.path === "limitStatic" ? (
+              <LimitPanel
+                title={t("limits.staticTitle", { limit: offer.unlocks?.limit ?? 0 })}
+                text={t("limits.staticText")}
+                used={offer.unlocks?.limit ?? 0}
+                limit={offer.unlocks?.limit ?? 0}
+                usedLabel={t("limits.staticUsed", { used: offer.unlocks?.limit ?? 0, limit: offer.unlocks?.limit ?? 0 })}
+                aside={offer.resets ? t("limits.resets", { date: offer.resets }) : ""}
+                options={[
+                  {
+                    label: t("limits.buyOnce"),
+                    sub: t("limits.buyOnceSub"),
+                    price: money(offer.cents.single),
+                    onClick: pay,
+                    disabled: paying,
+                  },
+                  { label: t("limits.credits"), sub: t("limits.creditsSub"), price: money(offer.cents.pack3), href: "/pricing#pr-once" },
+                  {
+                    label: t("limits.studio"),
+                    sub: t("limits.studioSub"),
+                    price: t("perMonthShort", { price: money(offer.cents.studio) }),
+                    href: "/dashboard/billing",
+                  },
+                ]}
+              />
+            ) : null}
+            {!entitled && offer?.path === "limitDyn" ? (
+              <LimitPanel
+                title={t("limits.dynTitle", { limit: offer.dynamic?.limit ?? 0 })}
+                text={t("limits.dynText")}
+                used={offer.dynamic?.used ?? 0}
+                limit={offer.dynamic?.limit ?? 0}
+                usedLabel={t("limits.dynUsed", { used: offer.dynamic?.used ?? 0, limit: offer.dynamic?.limit ?? 0 })}
+                aside={t("limits.live")}
+                options={[
+                  { label: t("limits.pause"), sub: t("limits.pauseSub"), href: "/dashboard?filter=dynamic" },
+                  {
+                    label: t("limits.studio"),
+                    sub: t("limits.studioDynSub"),
+                    price: t("perMonthShort", { price: money(offer.cents.studio) }),
+                    href: "/dashboard/billing",
+                  },
+                  { label: t("limits.toStatic"), sub: t("limits.toStaticSub"), onClick: toStatic, disabled: paying },
+                ]}
+              />
+            ) : null}
           </section>
 
           {action}
@@ -513,11 +877,86 @@ export function ExportSurface(props: ExportSurfaceProps) {
   );
 }
 
-function Line({ label, value, strong }: { label: string; value: string; strong?: boolean }) {
+function LimitPanel({
+  title,
+  text,
+  used,
+  limit,
+  usedLabel,
+  aside,
+  options,
+}: {
+  title: string;
+  text: string;
+  used: number;
+  limit: number;
+  usedLabel: string;
+  aside: string;
+  options: { label: string; sub: string; price?: string; href?: string; onClick?: () => void; disabled?: boolean }[];
+}) {
+  const box =
+    "flex min-h-14 w-full items-center gap-3 rounded-lg border border-border bg-surface px-3.5 py-2.5 text-left hover:border-border-hover first:border-selected-border first:shadow-[0_0_0_1px_var(--selected-border)]";
+  return (
+    <div role="status" className="mt-2 flex flex-col gap-3 rounded-xl border border-warning/30 bg-warning-soft p-4">
+      <div className="flex items-start gap-2.5">
+        <TriangleAlertIcon aria-hidden className="mt-0.5 size-4.5 shrink-0 text-warning" />
+        <span className="flex flex-col gap-0.5">
+          <b className="text-[0.9375rem] text-warning">{title}</b>
+          <span className="text-[0.875rem]">{text}</span>
+        </span>
+      </div>
+      <div aria-hidden className="h-2 overflow-hidden rounded-full bg-surface">
+        <span className="block h-full rounded-full bg-warning" style={{ width: `${limit ? Math.min(100, (used / limit) * 100) : 100}%` }} />
+      </div>
+      <div className="flex justify-between gap-2 text-caption">
+        <span>{usedLabel}</span>
+        <span>{aside}</span>
+      </div>
+      <div className="flex flex-col gap-2">
+        {options.map((o) =>
+          o.href ? (
+            <Link key={o.label} href={o.href} className={box}>
+              <span className="flex min-w-0 grow flex-col">
+                <b className="text-[0.875rem] font-semibold">{o.label}</b>
+                <span className="text-caption text-secondary-foreground">{o.sub}</span>
+              </span>
+              {o.price ? <b className="tabular-nums">{o.price}</b> : null}
+            </Link>
+          ) : (
+            <button
+              key={o.label}
+              type="button"
+              onClick={o.onClick}
+              disabled={o.disabled}
+              className={cn(box, "cursor-pointer disabled:cursor-wait")}
+            >
+              <span className="flex min-w-0 grow flex-col">
+                <b className="text-[0.875rem] font-semibold">{o.label}</b>
+                <span className="text-caption text-secondary-foreground">{o.sub}</span>
+              </span>
+              {o.price ? <b className="tabular-nums">{o.price}</b> : null}
+            </button>
+          ),
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Line({ label, value, strong, tone }: { label: string; value: string; strong?: boolean; tone?: "ok" }) {
   return (
     <div className={cn("flex items-baseline justify-between gap-4 text-[0.875rem]", strong ? "font-bold" : "text-secondary-foreground")}>
-      <span className="shrink-0">{label}</span>
-      <span className={cn("min-w-0 truncate text-right tabular-nums", !strong && "text-foreground")}>{value}</span>
+      <span className="min-w-0">{label}</span>
+      <span
+        className={cn(
+          "shrink-0 text-right tabular-nums",
+          !strong && "text-foreground",
+          tone === "ok" && "font-semibold text-success",
+          strong && "text-[1.75rem] leading-none",
+        )}
+      >
+        {value}
+      </span>
     </div>
   );
 }

@@ -1,31 +1,22 @@
+import { formatMoney, priceSheet } from "@/shared/config/catalog";
 import { layoutGeometry, type QrContent } from "@heyqr/qr-core";
-import {
-  ArrowLeftIcon,
-  CheckIcon,
-  DownloadIcon,
-  FileTextIcon,
-  LinkIcon,
-  LockIcon,
-  PencilIcon,
-  PlusIcon,
-  PrinterIcon,
-  RulerIcon,
-} from "lucide-react";
+import { ArrowLeftIcon, CheckIcon, DownloadIcon, FileTextIcon, LinkIcon, LockIcon, PlusIcon, PrinterIcon, RulerIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { env } from "@/env";
 import { DEFAULT_PRINT_SETTINGS, printSettingsQuery, QrPreview } from "@/entities/qr";
 import { CopyButton } from "@/features/copy-to-clipboard";
+import { DifferentContent, RenameTitle } from "@/features/qr-details";
 import { DestinationForm } from "@/features/qr-destination";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
 import { requireUser } from "@/server/auth";
+import { getCurrency } from "@/server/currency";
 import { canDownload, printPackForSale, userTrial } from "@/server/billing/entitlements";
 import { loadPrint } from "@/server/print/load";
 import { encodedValue } from "@/server/qr/export";
 import { dailyScans, getQrCode } from "@/server/qr/repository";
-import { pricing } from "@/shared/config/pricing";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Card, CardTitle } from "@/shared/ui/card";
@@ -73,7 +64,7 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
   const user = await requireUser();
   const qr = await getQrCode(user.id, id);
   if (!qr) notFound();
-  const [t, tl, tp, tTypes, tDash, format, entitled, scans, phase] = await Promise.all([
+  const [t, tl, tp, tTypes, tDash, , entitled, scans, phase] = await Promise.all([
     getTranslations("qr"),
     getTranslations("qr.details"),
     getTranslations("print"),
@@ -94,7 +85,7 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
 
   const printLayouts = qr.layouts.filter((l) => l.design.layout.unit === "mm");
   const printPackOpen = entitled && qr.printPackAt !== null;
-  const forSale = printPackForSale();
+  const forSale = printPackForSale(await getCurrency());
   const firstPrint = printLayouts[0];
   const printHref = (layoutId: string) => `/print?qr=${qr.id}&layout=${layoutId}&from=details`;
   const setupHref = (layoutId: string) => `/edit/${qr.id}?layout=${layoutId}&group=size&next=print`;
@@ -109,27 +100,29 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
           return [
             {
               file: "pdf",
-              label: tp("files.pdf"),
+              label: tp("files.pdfTitle"),
               meta: sizes ? tp("files.pdfSub", { w: sizes.page.width, h: sizes.page.height }) : "",
               href: q("pdf"),
             },
             {
               file: "svg",
-              label: tp("files.svg"),
+              label: tp("files.svgTitle"),
               meta: sizes ? tp("files.svgSub", { w: sizes.finished.width, h: sizes.finished.height }) : "",
               href: q("svg"),
             },
-            { file: "spec", label: tp("files.spec"), meta: tp("files.specSub"), href: q("spec") },
+            { file: "spec", label: tp("files.specTitle"), meta: tp("files.specSub"), href: q("spec") },
           ];
         })()
       : [];
   const dims = (l: (typeof qr.layouts)[number]) => {
     const L = l.design.layout;
     const g = layoutGeometry(L);
-    const r = (v: number) => Math.round(v * 10) / 10;
+    const r = (v: number) => (L.unit === "mm" ? Math.round(v * 10) / 10 : Math.round(v));
     return L.preset === "qr" ? tl("dimsSquare", { size: `${r(g.width)} ${L.unit}` }) : `${r(g.width)} × ${r(g.height)} ${L.unit}`;
   };
-  const amount = format.number(pricing.printPackCents / 100, { style: "currency", currency: pricing.currency });
+  const currency = await getCurrency();
+  const ppCents = priceSheet(currency).printPack;
+  const amount = formatMoney(ppCents, currency);
 
   return (
     <>
@@ -139,7 +132,7 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
           {tl("back")}
         </Link>
       </Button>
-      <header className="flex flex-wrap items-end justify-between gap-3">
+      <header>
         <div className="flex min-w-0 flex-col gap-2">
           <div className="flex flex-wrap gap-1.5">
             <Badge>{tTypes(qr.content.type)}</Badge>
@@ -148,19 +141,24 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
               {tDash(`status.${status}`)}
             </Badge>
           </div>
-          <h1 className="text-h1 break-words">{qr.name}</h1>
+          <RenameTitle
+            qrCodeId={qr.id}
+            name={qr.name}
+            actions={
+              qr.layouts[0] ? (
+                <Button asChild variant="primary">
+                  <Link href={`/edit/${qr.id}?layout=${qr.layouts[0].id}`}>
+                    <PlusIcon aria-hidden />
+                    {tl("newLayout")}
+                  </Link>
+                </Button>
+              ) : null
+            }
+          />
         </div>
-        {qr.layouts[0] ? (
-          <Button asChild variant="primary">
-            <Link href={`/edit/${qr.id}?layout=${qr.layouts[0].id}`}>
-              <PlusIcon aria-hidden />
-              {tl("newLayout")}
-            </Link>
-          </Button>
-        ) : null}
       </header>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:items-start">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start">
         <section className="flex min-w-0 flex-col gap-5">
           {qr.model === "dynamic" ? (
             <>
@@ -200,11 +198,16 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
                 <CardTitle>{tl("content")}</CardTitle>
                 <Badge>{tl("fixed")}</Badge>
               </div>
-              <div className="flex min-w-0 flex-col gap-0.5 rounded-lg bg-subtle px-3.5 py-3">
-                <span className="text-caption text-muted-foreground">{tTypes(qr.content.type)}</span>
-                <span className="text-body font-semibold break-all">{contentLine(qr.content)}</span>
+              <div className="flex min-w-0 flex-col gap-0.5 rounded-lg border border-border px-3.5 py-3">
+                <span className="text-caption text-muted-foreground">
+                  {qr.content.type === "website" ? tl("opens") : tTypes(qr.content.type)}
+                </span>
+                <span className="text-body font-semibold break-all">
+                  {qr.content.type === "website" ? qr.content.url : contentLine(qr.content)}
+                </span>
               </div>
               <p className="text-caption text-secondary-foreground">{tl("staticNote")}</p>
+              <DifferentContent price={formatMoney(priceSheet(currency).single, currency)} />
               {entitled ? (
                 <ul className="flex flex-col gap-1.5 text-[0.875rem]">
                   {[tl("incl.files"), tl("incl.layouts")].map((x) => (
@@ -223,7 +226,7 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
               <h2 id="print-pack" className="text-h3">
                 {tp("pack.title")}
               </h2>
-              <Badge variant={printPackOpen ? "success" : "neutral"}>{printPackOpen ? tp("unlocked") : tp("locked")}</Badge>
+              <Badge variant={printPackOpen ? "success" : "neutral"}>{printPackOpen ? tl("ppUnlocked") : tl("ppLocked")}</Badge>
             </div>
             {!firstPrint ? (
               <>
@@ -241,8 +244,10 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
               <>
                 <ul className="flex flex-col gap-2">
                   {printFiles.map((f) => (
-                    <li key={f.file} className="flex min-w-0 items-center gap-3 rounded-lg border border-border px-3 py-2">
-                      <FileTextIcon aria-hidden className="size-4 shrink-0 text-muted-foreground" />
+                    <li key={f.file} className="flex min-w-0 items-center gap-3 rounded-lg bg-subtle px-3 py-2.5">
+                      <span className="grid size-8 shrink-0 place-items-center rounded-md bg-surface">
+                        <FileTextIcon aria-hidden className="size-4" />
+                      </span>
                       <span className="flex min-w-0 grow flex-col">
                         <span className="text-label">{f.label}</span>
                         <span className="truncate text-caption text-muted-foreground">{f.meta}</span>
@@ -281,10 +286,21 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
         </section>
 
         <section aria-labelledby="layouts" className="flex min-w-0 flex-col gap-4">
-          <h2 id="layouts" className="text-h3">
-            {t("layouts")} <span className="font-normal text-muted-foreground">· {qr.layouts.length}</span>
-          </h2>
-          <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 id="layouts" className="text-h3">
+              {t("layouts")}{" "}
+              <span className="text-caption font-normal text-muted-foreground">· {tl("layoutsCount", { n: qr.layouts.length })}</span>
+            </h2>
+            {entitled ? (
+              <Button asChild size="sm">
+                <a href={`/api/export/all/${qr.id}?format=png`} download>
+                  <DownloadIcon aria-hidden />
+                  {tl("downloadAll")}
+                </a>
+              </Button>
+            ) : null}
+          </div>
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {qr.layouts.map((layout) => {
               const mm = layout.design.layout.unit === "mm";
               return (
@@ -301,42 +317,32 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
                         {dims(layout)} · {mm ? tl("print") : tl("screen")}
                       </span>
                     </div>
-                    <div className="mt-auto flex flex-wrap gap-2">
+                    <div className="mt-auto flex items-center gap-2">
                       <Button asChild size="sm" className="grow">
-                        <Link href={`/edit/${qr.id}?layout=${layout.id}`}>
-                          <PencilIcon aria-hidden />
-                          {t("editDesign")}
-                        </Link>
+                        <Link href={`/edit/${qr.id}?layout=${layout.id}`}>{tl("edit")}</Link>
                       </Button>
-                      {entitled ? (
-                        (["png", "svg"] as const).map((f) => (
-                          <Button key={f} asChild size="sm">
-                            <a href={`/api/export/${layout.id}?format=${f}`} download>
-                              <DownloadIcon aria-hidden />
-                              {f.toUpperCase()}
-                            </a>
-                          </Button>
-                        ))
-                      ) : (
-                        <Button asChild variant="primary" size="sm">
-                          <Link href={`/create/export?qr=${qr.id}&layout=${layout.id}`}>
-                            <LockIcon aria-hidden />
-                            {t("buy")}
+                      {mm ? (
+                        <Button asChild size="icon-sm" aria-label={tl("printPreview", { name: layout.name })}>
+                          <Link href={printHref(layout.id)}>
+                            <PrinterIcon aria-hidden />
                           </Link>
                         </Button>
-                      )}
-                    </div>
-                    {mm ? (
-                      <Button asChild size="sm" variant="secondary" className="w-full">
-                        <Link href={printHref(layout.id)}>
-                          <PrinterIcon aria-hidden />
-                          {tp("pack.open")}
+                      ) : null}
+                      <Button
+                        asChild
+                        size="icon-sm"
+                        variant={entitled ? "secondary" : "primary"}
+                        aria-label={entitled ? tl("downloadLayout", { name: layout.name }) : t("buy")}
+                      >
+                        <Link href={`/create/export?qr=${qr.id}&layout=${layout.id}`}>
+                          {entitled ? <DownloadIcon aria-hidden /> : <LockIcon aria-hidden />}
                         </Link>
                       </Button>
-                    ) : (
+                    </div>
+                    {mm ? null : (
                       <Link
                         href={setupHref(layout.id)}
-                        className="inline-flex min-h-9 items-center gap-1.5 self-start text-[0.8125rem] font-semibold text-foreground underline underline-offset-3"
+                        className="inline-flex min-h-8 items-center gap-1.5 self-start text-[0.8125rem] font-semibold text-foreground underline underline-offset-3"
                       >
                         <RulerIcon aria-hidden className="size-4" />
                         {tl("setupPrint")}
@@ -346,6 +352,17 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
                 </li>
               );
             })}
+            {qr.layouts[0] ? (
+              <li className="min-w-0">
+                <Link
+                  href={`/edit/${qr.id}?layout=${qr.layouts[0].id}`}
+                  className="flex h-full min-h-48 flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-border-strong/40 text-label hover:border-border-hover"
+                >
+                  <PlusIcon aria-hidden className="size-5" />
+                  {tl("newLayoutCard")}
+                </Link>
+              </li>
+            ) : null}
           </ul>
           <p className="text-caption text-muted-foreground">{qr.model === "dynamic" ? tl("layoutNoteDynamic") : tl("layoutNoteStatic")}</p>
         </section>
