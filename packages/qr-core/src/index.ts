@@ -10,7 +10,10 @@ export {
 } from "./encode";
 export { ART_TINT_OPACITY, CENTER_LOGO_SIZE, centerLogoSize, eclForStyle, MIN_CONTRAST, renderQr, renderQrSvg } from "./render";
 export {
+  brandHeader,
   composeLayout,
+  imageAspect,
+  type BrandHeader,
   layoutGeometry,
   frameGeometry,
   captionFontSize,

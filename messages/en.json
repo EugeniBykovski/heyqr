@@ -21,7 +21,8 @@
     "languageCount": "{count} languages",
     "languageSearch": "Search languages",
     "languages": "Languages",
-    "languageEmpty": "No language matches “{query}”."
+    "languageEmpty": "No language matches “{query}”.",
+    "trial": "Free trial"
   },
   "footer": {
     "terms": "Terms",
@@ -289,7 +290,8 @@
         "drafts": "Drafts saved to your account on every device",
         "billing": "Receipts, plan and payment method in Plan & billing"
       },
-      "loading": "Loading your studio"
+      "loading": "Loading your studio",
+      "trial": "Free trial · {days, plural, one {# day} other {# days}} left"
     },
     "workspace": {
       "kicker": "My QR codes",
@@ -329,7 +331,9 @@
           "meta": "Draft"
         }
       },
-      "scans": "Scan analytics · last 14 days"
+      "scans": "Scan analytics · last 14 days",
+      "startTrial": "Start 7-day free trial",
+      "trialNote": "Starter trial · no card · no automatic charge"
     }
   },
   "pricing": {
@@ -1124,7 +1128,11 @@
     "emptyTitle": "Nothing to download yet",
     "emptyText": "Design a QR code first. Your draft stays in this browser until you download it.",
     "emptyAction": "Create a QR code",
-    "inspectPrint": "Inspect the print files first"
+    "inspectPrint": "Open Print Preview",
+    "printTitle": "Print Pack",
+    "printPreviewText": "Check the exact print PDF, bleed, crop marks and color values of this layout before you print.",
+    "printSetupText": "Print Pack needs a print layout measured in mm. Switch this layout to Print · mm in Edit design → Size.",
+    "printSetup": "Set up for print"
   },
   "dashboard": {
     "title": "My QR codes",
@@ -1225,7 +1233,53 @@
     "buy": "Buy to download",
     "copy": "Copy",
     "copied": "Copied",
-    "editDesign": "Edit design"
+    "editDesign": "Edit design",
+    "dest": {
+      "title": "Destination",
+      "saved": "Saved",
+      "new": "New destination",
+      "hint": "Printed codes open the new address within a minute. The short link stays {short}.",
+      "save": "Save destination",
+      "cancel": "Cancel",
+      "goesTo": "Scans of {short} go to",
+      "previously": "Previously {url} · changed just now",
+      "change": "Change destination"
+    },
+    "scansCard": {
+      "title": "Scans · last 14 days",
+      "total": "Total",
+      "today": "Today",
+      "emptyTitle": "No scans yet",
+      "emptyText": "The first scan shows up here within a few minutes. Try scanning your printed code."
+    },
+    "details": {
+      "back": "My QR codes",
+      "newLayout": "New layout",
+      "permanent": "Permanent",
+      "shortNote": "This is what your printed code contains. It never changes, so printed codes keep working.",
+      "noShortLink": "This code goes live with a short link once it’s activated.",
+      "content": "Content",
+      "fixed": "Fixed in the code",
+      "staticNote": "A static code stores its content in the pattern itself, so printed copies always open this. Design changes are free and unlimited.",
+      "incl": {
+        "files": "PNG and SVG, downloaded as often as you like",
+        "layouts": "New layouts and design edits included"
+      },
+      "dimsSquare": "{size} square",
+      "print": "Print · mm",
+      "screen": "Screen · px",
+      "setupPrint": "Set up for print",
+      "pack": {
+        "needsMm": "Print Pack needs a print layout measured in mm. Set a layout up for print in Edit design → Size, then check it in Print Preview.",
+        "what": "Print PDF with bleed and crop marks, an editable SVG and a color and size sheet for this QR.",
+        "add": "Add Print Pack · +{price}",
+        "addSub": "Opens Print Preview, so you can check the PDF and specs before you pay.",
+        "notForSale": "Print Preview shows the exact page and specs. Buying the Print Pack isn’t available here yet.",
+        "repeat": "Repeat downloads are included. Files of “{layout}” at 100% size, 3 mm bleed, crop marks."
+      },
+      "layoutNoteDynamic": "Changing a design creates a new file to download. Codes you already printed keep working.",
+      "layoutNoteStatic": "Every layout is included in this purchase. Download any of them as PNG or SVG."
+    }
   },
   "billing": {
     "title": "Billing",
@@ -1446,7 +1500,19 @@
     },
     "useTrial": "Use your free trial · go live now",
     "useTrialHint": "Your one test Dynamic QR during the trial. No card needed.",
-    "useTrialFailed": "We couldn’t use your trial for this code. You may already have a test code."
+    "useTrialFailed": "We couldn’t use your trial for this code. You may already have a test code.",
+    "sample": {
+      "title": "Print Pack sample",
+      "badge": "Demo QR",
+      "demo": "Demo QR of the Print Pack sample",
+      "text": "See exactly what a Print Pack contains. The sample uses a demo QR that opens Hey QR, not your test code.",
+      "pdf": "Sample print PDF",
+      "pdfSub": "sRGB · page {w} × {h} mm with bleed and crop marks",
+      "svg": "Sample editable SVG",
+      "svgSub": "sRGB · HEX colors · {w} × {h} mm",
+      "spec": "Sample specifications",
+      "specSub": "PDF sheet · sizes and color values"
+    }
   },
   "print": {
     "spec": {
@@ -1520,7 +1586,9 @@
       "logoLow": "Below 300 ppi at this size",
       "logoOk": "300 ppi or more · prints sharp",
       "logoVectorSub": "Sharp at any size",
-      "logoNoneSub": "Nothing to check"
+      "logoNoneSub": "Nothing to check",
+      "logoChecking": "Checking…",
+      "logoCheckingSub": "Measured at this size"
     },
     "unlock": {
       "title": "Unlock the Print Pack",
@@ -1590,7 +1658,7 @@
     "notPrint": {
       "title": "This layout is for screens",
       "text": "Print Pack needs a print layout measured in mm. Switch the unit in Design → Size to add one.",
-      "action": "Open the design"
+      "action": "Set up for print"
     },
     "pack": {
       "title": "Print Pack",

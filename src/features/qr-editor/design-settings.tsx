@@ -448,7 +448,7 @@ function FrameThumb({ design, style, caption, value }: { design: EditorDesign; s
     () => designToLayout({ ...design, preset: "frame", frameStyle: style, caption, logo: { kind: "none" }, size: undefined }),
     [design, style, caption],
   );
-  return <QrPreview layout={layout} value={value} label="" className="size-full [&_svg]:size-full" />;
+  return <QrPreview layout={layout} value={value} label="" className="size-full" />;
 }
 
 function SwatchRow({

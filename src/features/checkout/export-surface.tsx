@@ -9,6 +9,7 @@ import {
   InfoIcon,
   LoaderCircleIcon,
   LockIcon,
+  PrinterIcon,
   RotateCwIcon,
 } from "lucide-react";
 import { useFormatter, useLocale, useTranslations } from "next-intl";
@@ -90,8 +91,8 @@ export type ExportSurfaceProps = {
   returnedFromSignIn?: boolean;
   checkout?: "success" | "cancelled";
   receipt?: { amountCents: number; currency: string; paidAt: string } | null;
-  /** Design 7.2 / 8.1: Print Preview of this layout (print layouts only). */
-  printHref?: string;
+  /** Design 7.2 / 8.1: Print Preview of a print (mm) layout, or setting a screen layout up for print (Edit design → Size). */
+  print?: { kind: "preview" | "setup"; href: string };
 } & (
   | {
       mode: "signed";
@@ -466,10 +467,19 @@ export function ExportSurface(props: ExportSurfaceProps) {
             {t("transparent")}
           </label>
 
-          {props.printHref ? (
-            <Button asChild variant="link" size="sm" className="self-start">
-              <Link href={props.printHref}>{t("inspectPrint")}</Link>
-            </Button>
+          {props.print ? (
+            <div className="flex flex-col gap-2 rounded-lg border border-border bg-surface p-3">
+              <span className="flex items-center gap-2 text-label">
+                <PrinterIcon aria-hidden className="size-4 text-muted-foreground" />
+                {t("printTitle")}
+              </span>
+              <span className="text-caption text-secondary-foreground">
+                {props.print.kind === "preview" ? t("printPreviewText") : t("printSetupText")}
+              </span>
+              <Button asChild size="sm" className="self-start">
+                <Link href={props.print.href}>{props.print.kind === "preview" ? t("inspectPrint") : t("printSetup")}</Link>
+              </Button>
+            </div>
           ) : null}
 
           <Banner tone="neutral" icon={<InfoIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-muted-foreground" />}>

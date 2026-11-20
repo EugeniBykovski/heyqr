@@ -64,6 +64,8 @@ export function PrintPreview({
   designHref,
   checkout,
   stale,
+  entitled,
+  forSale,
 }: {
   qrCodeId: string;
   layoutId: string;
@@ -77,6 +79,9 @@ export function PrintPreview({
   designHref: string;
   checkout?: "success" | "cancelled";
   stale?: boolean;
+  /** From the server when the page renders: the code itself is bought or live, and the add-on can be bought here. */
+  entitled: boolean;
+  forSale: boolean;
 }) {
   const t = useTranslations("print");
   const format = useFormatter();
@@ -176,14 +181,23 @@ export function PrintPreview({
     { k: t("keys.profile"), v: t("profiles.srgb"), sub: t("keys.profileSub"), warn: false },
     {
       k: t("keys.logo"),
-      v: preview?.logo ? (preview.logo.ppi !== null ? `${preview.logo.ppi} ppi` : t("keys.logoVector")) : t("keys.logoNone"),
-      sub: preview?.logo
-        ? preview.logo.ppi !== null
-          ? logoWarn
-            ? t("keys.logoLow")
-            : t("keys.logoOk")
-          : t("keys.logoVectorSub")
-        : t("keys.logoNoneSub"),
+      // Until the page of these settings is back, the resolution isn't known yet (never "No logo" for a logo).
+      v: !ready
+        ? t("keys.logoChecking")
+        : preview.logo
+          ? preview.logo.ppi !== null
+            ? `${preview.logo.ppi} ppi`
+            : t("keys.logoVector")
+          : t("keys.logoNone"),
+      sub: !ready
+        ? t("keys.logoCheckingSub")
+        : preview.logo
+          ? preview.logo.ppi !== null
+            ? logoWarn
+              ? t("keys.logoLow")
+              : t("keys.logoOk")
+            : t("keys.logoVectorSub")
+          : t("keys.logoNoneSub"),
       warn: Boolean(logoWarn),
     },
   ];
@@ -392,14 +406,14 @@ export function PrintPreview({
                   </Badge>
                 </div>
                 <p className="text-caption text-secondary-foreground">{t("unlock.text", { name })}</p>
-                {preview && !preview.entitled ? (
+                {!(preview?.entitled ?? entitled) ? (
                   <>
                     <p className="text-caption text-secondary-foreground">{t("unlock.needCode")}</p>
                     <Button asChild variant="primary" size="lg">
                       <Link href={`/create/export?qr=${qrCodeId}&layout=${layoutId}`}>{t("unlock.buyCode")}</Link>
                     </Button>
                   </>
-                ) : preview && !preview.forSale ? (
+                ) : !(preview?.forSale ?? forSale) ? (
                   <p className="text-caption font-medium text-secondary-foreground">{t("unlock.notForSale")}</p>
                 ) : (
                   <>

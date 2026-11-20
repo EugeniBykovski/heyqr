@@ -1,9 +1,10 @@
-import { CreditCardIcon, LayoutGridIcon } from "lucide-react";
+import { CreditCardIcon, LayoutGridIcon, TimerIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { SignOutItem } from "@/features/auth";
 import { LanguageSwitch } from "@/features/language-switch";
 import { Link } from "@/i18n/navigation";
 import { getSession } from "@/server/auth";
+import { userTrial } from "@/server/billing/entitlements";
 import { Button } from "@/shared/ui/button";
 import {
   DropdownMenu,
@@ -31,11 +32,15 @@ export async function SiteHeader() {
     .slice(0, 2)
     .join("")
     .toUpperCase();
+  // Design 9.x: once a trial has started, the account menu leads back to it (the server's trial state).
+  const phase = user ? await userTrial(user.id) : null;
+  const trialItem = phase && phase.state !== "none" && phase.state !== "upgraded";
   const items = [
     { href: "/pricing", label: t("pricing") },
     ...(user
       ? [
           { href: "/dashboard", label: t("myCodes") },
+          ...(trialItem ? [{ href: "/dashboard/trial", label: t("trial") }] : []),
           { href: "/dashboard/billing", label: t("billing") },
         ]
       : []),
@@ -69,6 +74,14 @@ export async function SiteHeader() {
                     {t("myCodes")}
                   </Link>
                 </DropdownMenuItem>
+                {trialItem ? (
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard/trial">
+                      <TimerIcon aria-hidden />
+                      {t("trial")}
+                    </Link>
+                  </DropdownMenuItem>
+                ) : null}
                 <DropdownMenuItem asChild>
                   <Link href="/dashboard/billing">
                     <CreditCardIcon aria-hidden />

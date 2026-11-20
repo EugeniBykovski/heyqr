@@ -1,5 +1,8 @@
 import "server-only";
 import {
+  captionWeightFor,
+  imageAspect,
+  type CaptionWeight,
   captionFaces,
   composeLayout,
   encodePayload,
@@ -22,8 +25,14 @@ export const CAPTION_FONT_DIR = path.join(process.cwd(), "public/caption-fonts")
 
 /** The caption's font faces (family, weight, file) for a layout: none when it shows no caption. */
 export function captionFontFaces(layout: Layout): { family: string; weight: number; file: string }[] {
-  if (!layout.caption.text || layout.preset === "qr") return [];
-  const { font, weights } = captionFaces(layout.caption);
+  // The brand card's name (design 2.8) is drawn bold in the caption's font, also when there is no caption.
+  const brand = Boolean(layout.topLogoHref && layout.brandName?.trim()) && layout.preset !== "qr";
+  if ((!layout.caption.text || layout.preset === "qr") && !brand) return [];
+  const { font, weights: lineWeights } = captionFaces(layout.caption);
+  const bold = (layout.caption.font ? captionWeightFor(layout.caption.font, 700) : 700) as CaptionWeight;
+  const weights = [
+    ...new Set([...(layout.caption.text && layout.preset !== "qr" ? lineWeights : []), ...(brand && font.faces[bold] ? [bold] : [])]),
+  ];
   return weights.flatMap((weight) => {
     const file = font.faces[weight];
     return file ? [{ family: font.family, weight, file: path.join(CAPTION_FONT_DIR, file) }] : [];
@@ -106,6 +115,8 @@ export async function withEmbeddedImages(layout: Layout): Promise<Layout> {
   const [logoHref, topLogoHref, artImage] = await Promise.all([embed(logo?.href), embed(layout.topLogoHref), embed(art?.image)]);
   return {
     ...layout,
+    // The aspect ratio the browser preview used (read from the stored href), so embedding never changes the card.
+    ...(layout.topLogoHref ? { topLogoAspect: layout.topLogoAspect ?? imageAspect(layout.topLogoHref) ?? 1 } : {}),
     topLogoHref,
     style: { ...layout.style, logo: logo ? { ...logo, href: logoHref } : logo, art: art ? { ...art, image: artImage } : art },
   };

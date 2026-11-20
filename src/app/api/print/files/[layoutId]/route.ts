@@ -1,12 +1,9 @@
-import path from "node:path";
 import { NextResponse, type NextRequest } from "next/server";
-import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import { routing } from "@/i18n/routing";
 import { getSession } from "@/server/auth";
 import { loadPrint } from "@/server/print/load";
-import { printPdf, printSpecPdf } from "@/server/print/print";
-import { CAPTION_FONT_DIR, downloadFileName, renderExport } from "@/server/qr/export";
+import { printFileResponse } from "@/server/print/files";
 
 const query = z.object({ file: z.enum(["pdf", "svg", "spec"]), key: z.string().min(8).max(64), locale: z.string().optional() });
 
@@ -46,56 +43,5 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/api/print/fi
       : NextResponse.json({ error: "revision_changed", renderKey: page.renderKey }, { status: 409 });
   if (!page.scanOk) return NextResponse.json({ error: "scan_check_failed" }, { status: 422 });
 
-  const base = `${name} ${layoutName} print`;
-  if (q.data.file === "pdf") return file(await printPdf(layout, page), "application/pdf", downloadFileName(base, "pdf").header);
-  if (q.data.file === "svg") {
-    // The editable SVG: the artwork at the finished size (no bleed or marks), sRGB with HEX colours, fonts embedded.
-    const scaled = (await renderExport(layout, value, "svg", {})).body
-      .toString()
-      .replace(
-        /^<svg ([^>]*?)width="[^"]*" height="[^"]*"/,
-        `<svg $1width="${page.sizes.finished.width}mm" height="${page.sizes.finished.height}mm"`,
-      );
-    const svg = scaled;
-    return file(Buffer.from(svg), "image/svg+xml", downloadFileName(`${name} ${layoutName} editable`, "svg").header);
-  }
-  const locale = routing.locales.find((l) => l === q.data.locale) ?? routing.defaultLocale;
-  const t = await getTranslations({ locale, namespace: "print.spec" });
-  const labels = Object.fromEntries(
-    [
-      "title",
-      "finished",
-      "page",
-      "bleed",
-      "marks",
-      "qr",
-      "profile",
-      "srgb",
-      "logo",
-      "vector",
-      "colors",
-      "key",
-      "yes",
-      "no",
-      ...page.colors.map((c) => `role_${c.role}`),
-    ].map((k) => [k, t(k as "title")]),
-  ) as Parameters<typeof printSpecPdf>[2];
-  const spec = await printSpecPdf(
-    page,
-    {
-      name,
-      layoutName,
-      settings,
-      fontFile: path.join(CAPTION_FONT_DIR, "HeyQROnest-Regular.ttf"),
-      boldFile: path.join(CAPTION_FONT_DIR, "HeyQROnest-Bold.ttf"),
-    },
-    labels,
-  );
-  return file(spec, "application/pdf", downloadFileName(`${name} ${layoutName} specifications`, "pdf").header);
-}
-
-function file(body: Buffer, type: string, disposition: string) {
-  return new NextResponse(new Uint8Array(body), {
-    headers: { "Content-Type": type, "Content-Disposition": disposition, "Cache-Control": "private, no-store" },
-  });
+  return printFileResponse(q.data.file, { layout, page, value, settings, name, layoutName, locale: q.data.locale });
 }

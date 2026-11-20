@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/export/[layoutId]": ["./public/caption-fonts/*.ttf"],
     "/api/print/files/[layoutId]": ["./public/caption-fonts/*.ttf"],
+    "/api/print/sample": ["./public/caption-fonts/*.ttf"],
   },
   images: {
     remotePatterns: [

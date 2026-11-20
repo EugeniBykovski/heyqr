@@ -115,5 +115,7 @@ export interface Layout {
   caption: LayoutCaption;
   /** Logo shown above the code on vertical/horizontal cards. */
   topLogoHref?: string;
+  /** Width ÷ height of the top logo; unset: read from a data URL, else square. */
+  topLogoAspect?: number;
   brandName?: string;
 }

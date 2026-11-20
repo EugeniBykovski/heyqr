@@ -37,8 +37,8 @@ const POINTS = ["layouts", "files", "edit", "scans"] as const;
 
 /*
  * Design 6.1 for guests: "Every QR code, in one place." with a clearly labelled sample workspace (fixed made-up codes and
- * scans, the same for every visitor; no private data and nothing cached per user), and sign-in / create actions. The
- * design's 7-day trial is not offered by this deployment, so it isn't shown. Signed-in visitors see their own Studio.
+ * scans, the same for every visitor; no private data and nothing cached per user), Start 7-day free trial (sign in, then
+ * the trial page), sign-in and create actions. Signed-in visitors see their own Studio.
  */
 export async function SampleWorkspace() {
   const t = await getTranslations("home.workspace");
@@ -64,16 +64,22 @@ export async function SampleWorkspace() {
           ))}
         </ul>
         <div className="flex flex-wrap gap-3 pt-1">
+          {/* Design 6.1 guest: the trial needs an account, so it signs in first and opens the trial page, where the
+              server says whether this account can still start one. */}
           <Button asChild variant="primary" size="lg">
+            <Link href="/sign-in?next=/dashboard/trial">{t("startTrial")}</Link>
+          </Button>
+          <Button asChild size="lg">
+            <Link href="/sign-in?next=/dashboard">{t("signIn")}</Link>
+          </Button>
+          <Button asChild variant="ghost" size="lg">
             <Link href="/create">
               {t("create")}
               <ArrowRightIcon aria-hidden />
             </Link>
           </Button>
-          <Button asChild size="lg">
-            <Link href="/sign-in?next=/dashboard">{t("signIn")}</Link>
-          </Button>
         </div>
+        <p className="text-caption text-muted-foreground">{t("trialNote")}</p>
       </div>
 
       <figure

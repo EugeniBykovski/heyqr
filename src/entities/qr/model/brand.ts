@@ -154,3 +154,8 @@ export function brandLookPatch(d: EditorDesign, look: BrandLook): Partial<Editor
       };
   }
 }
+
+/** Design 2.5 sample logo (Little Fern Coffee), so the branded flow can be tried without a file. */
+export const SAMPLE_LOGO = `data:image/svg+xml;base64,${btoa(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M2 50a48 48 0 1 0 96 0a48 48 0 1 0-96 0z" fill="#1F4D3A"/><path d="M27 47h42v9c0 13-9.4 22-21 22s-21-9-21-22z" fill="#F7F1E6"/><path d="M69 50h4.5a8 8 0 0 1 0 16H68v-5h5.5a3 3 0 0 0 0-6H69z" fill="#F7F1E6"/><path d="M20 81h56a3.5 3.5 0 0 1 0 7H20a3.5 3.5 0 0 1 0-7z" fill="#F7F1E6"/><path d="M48 43c-7-6-8-16-1-27c8 10 8 20 1 27z" fill="#C8643B"/><path d="M47 31c-6 1-11-2-13-7c6-1 11 2 13 7z" fill="#8DB596"/></svg>',
+)}`;
