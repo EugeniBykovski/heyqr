@@ -1,12 +1,14 @@
 import { priceSheet } from "@/shared/config/catalog";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getFormatter, getTranslations } from "next-intl/server";
 import { readPrintSettings } from "@/entities/qr";
 import { PrintPreview } from "@/features/print-preview";
 import { Link, redirect } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
 import { getSession } from "@/server/auth";
+import { accountUsage } from "@/server/billing/allowances";
+import { db } from "@/server/db";
 import { getCurrency } from "@/server/currency";
 import { canDownload, printPackForSale } from "@/server/billing/entitlements";
 import { getQrCode } from "@/server/qr/repository";
@@ -63,6 +65,7 @@ export default async function PrintPage({ params, searchParams }: PageProps<"/[l
 
   const checkout = query.checkout === "success" || query.checkout === "cancelled" ? query.checkout : undefined;
   const currency = await getCurrency();
+  const [usage, format] = await Promise.all([accountUsage(db, session.user.id), getFormatter()]);
   return (
     <PrintPreview
       key={`${qr.id}:${layout.id}`}
@@ -79,6 +82,15 @@ export default async function PrintPage({ params, searchParams }: PageProps<"/[l
       stale={one(query.stale) === "1"}
       entitled={await canDownload(session.user.id, qr)}
       forSale={printPackForSale(currency)}
+      included={
+        usage.packs.limit
+          ? {
+              left: Math.max(0, usage.packs.limit - usage.packs.used),
+              limit: usage.packs.limit,
+              resets: usage.plan?.periodEnd ? format.dateTime(usage.plan.periodEnd, { dateStyle: "medium" }) : "",
+            }
+          : null
+      }
     />
   );
 }

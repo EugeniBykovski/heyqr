@@ -1477,18 +1477,18 @@
         "big": "{days, plural, one {# day} other {# days}}",
         "bigSub": "left · ends {end}",
         "status": "No card on file, so nothing is charged when the trial ends. Your test code redirects for real until then.",
-        "main": "Activate Dynamic · {price}/month",
+        "main": "Activate Starter · {price}/month",
         "second": "Open My QR codes",
         "foot": "Activating keeps the same short link, so printed tests keep working.",
         "endTitle": "When the trial ends on {end}"
       },
       "ending": {
         "title": "Your trial ends soon",
-        "lead": "On {end} your test code stops redirecting. Activate the Dynamic plan to keep it live.",
+        "lead": "On {end} your test code stops redirecting. Activate Starter to keep it live.",
         "big": "{days, plural, one {# day} other {# days}}",
         "bigSub": "left · ends {end}",
         "status": "There’s no card on file, so nothing is charged automatically.",
-        "main": "Activate Dynamic · {price}/month",
+        "main": "Activate Starter · {price}/month",
         "second": "Open My QR codes",
         "foot": "Activating keeps the same short link, so printed tests keep working.",
         "endTitle": "What happens on {end}"
@@ -1498,14 +1498,14 @@
         "lead": "It ended on {end}. Your test code is paused; your design and scans are kept.",
         "big": "Ended",
         "bigSub": "{end}",
-        "status": "Your test code’s short link now shows a “link paused” page. Activate the Dynamic plan and it redirects to your destination again.",
-        "main": "Reactivate with Dynamic · {price}/month",
+        "status": "Your test code’s short link now shows a “link paused” page. Activate Starter and it redirects to your destination again.",
+        "main": "Reactivate with Starter · {price}/month",
         "second": "See all plans",
         "foot": "Nothing was charged. There was no card on file.",
         "endTitle": "How to turn it back on"
       },
       "upgraded": {
-        "title": "Your Dynamic plan is active",
+        "title": "Your Starter plan is active",
         "lead": "Your trial test code is now a regular Dynamic QR on your plan.",
         "big": "Dynamic",
         "bigSub": "plan active",
@@ -1527,10 +1527,10 @@
       },
       "wake": {
         "t": "Activate anytime to turn it back on",
-        "d": "Take the Dynamic plan and the same short link redirects again. Your design and scans stay in your account."
+        "d": "Take Starter and the same short link redirects again. Your design and scans stay in your account."
       },
       "choose": {
-        "t": "Choose the Dynamic plan",
+        "t": "Choose Starter",
         "d": "{price} per month. Cancel anytime."
       },
       "same": {
@@ -1595,14 +1595,14 @@
       },
       "ending": {
         "title": "Trial ends {end}.",
-        "text": "Activate the Dynamic plan to keep your test code redirecting."
+        "text": "Activate Starter to keep your test code redirecting."
       },
       "expired": {
         "title": "Trial ended on {end}.",
-        "text": "Your test code is paused. Activate the Dynamic plan to turn it back on."
+        "text": "Your test code is paused. Activate Starter to turn it back on."
       },
       "upgraded": {
-        "title": "Your Dynamic plan is active.",
+        "title": "Your Starter plan is active.",
         "text": "Your test code is now a regular Dynamic QR."
       },
       "open": "Trial details"
@@ -1682,7 +1682,8 @@
       "bleed": "Bleed {bleed} mm",
       "noBleed": "No bleed",
       "marks": "Crop marks",
-      "noMarks": "No crop marks"
+      "noMarks": "No crop marks",
+      "pageB": "PDF page <b>{size}</b>"
     },
     "specTitle": "Print specifications",
     "keys": {
@@ -1715,7 +1716,10 @@
       "failed": "We couldn’t open checkout. Nothing was charged; try again.",
       "cancelled": "Checkout cancelled. You weren’t charged; your settings are kept.",
       "pending": "Confirming your payment…",
-      "pendingSub": "You stay here, with these settings."
+      "pendingSub": "You stay here, with these settings.",
+      "useIncluded": "Use 1 included Print Pack",
+      "payInstead": "Pay {price} instead and keep your allowance",
+      "includedLeft": "{left} of {limit} included Print Packs left this month · resets {resets}"
     },
     "files": {
       "title": "Print Pack unlocked",
@@ -1770,7 +1774,21 @@
       "bleedDesc": "Background extends past the trim",
       "marks": "Crop marks",
       "k100": "Print black modules as 100% K",
-      "k100Hint": "Available with a CMYK profile."
+      "k100Hint": "Available with a CMYK profile.",
+      "pdf": "PDF standard",
+      "pdfV": "PDF 1.7, vector",
+      "text": "Text",
+      "textV": "Fonts embedded",
+      "logo": "Logo",
+      "logoRaster": "{px} px raster · {ppi} ppi at {mm} mm",
+      "logoVector": "Vector",
+      "quiet": "Quiet zone",
+      "quietV": "4 modules on every side",
+      "safe": "Safe area",
+      "safeV": "{mm} mm inside the trim",
+      "intent": "Output intent",
+      "intentV": "sRGB, no conversion",
+      "none": "None"
     },
     "notPrint": {
       "title": "This layout is for screens",

@@ -3,6 +3,7 @@ import { ArrowLeftIcon, CheckIcon, DownloadIcon, MinusIcon } from "lucide-react"
 import type { Metadata } from "next";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { env } from "@/env";
+import { PLANS } from "@/shared/config/catalog-core";
 import { QrPreview } from "@/entities/qr";
 import { ActivatePlanButton, StartTrialButton } from "@/features/checkout";
 import { Link } from "@/i18n/navigation";
@@ -39,7 +40,7 @@ export default async function TrialPage({ params }: PageProps<"/[locale]/dashboa
   const currency = await getCurrency();
   const starterCents = priceSheet(currency).starter;
   const price = formatMoney(starterCents, currency);
-  const limit = env.DYNAMIC_ACTIVE_CODE_LIMIT;
+  const limit = PLANS.starter.dyn;
   const back = (
     <Button asChild variant="ghost" size="sm" className="self-start">
       <Link href="/dashboard">

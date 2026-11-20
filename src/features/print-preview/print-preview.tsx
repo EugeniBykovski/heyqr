@@ -26,6 +26,7 @@ import {
   type PrintSettings,
 } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
+import { takeIncludedPrintPack } from "@/server/actions/billing";
 import { startPrintPackCheckout } from "@/server/actions/qr";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
@@ -35,7 +36,7 @@ import { formatMoney, type Currency } from "@/shared/config/catalog-core";
 type Preview = {
   svg: string;
   sizes: ReturnType<typeof printSizes>;
-  colors: { role: string; hex: string; srgb: string }[];
+  colors: { role: string; roles: string[]; hex: string; srgb: string }[];
   logo: { raster: boolean; px: number | null; ppi: number | null; mm: number } | null;
   warnings: ({ code: "logo_low_ppi"; ppi: number; needPx: number } | { code: "qr_small"; qrMm: number })[];
   renderKey: string;
@@ -67,6 +68,7 @@ export function PrintPreview({
   stale,
   entitled,
   forSale,
+  included,
 }: {
   qrCodeId: string;
   layoutId: string;
@@ -83,6 +85,8 @@ export function PrintPreview({
   /** From the server when the page renders: the code itself is bought or live, and the add-on can be bought here. */
   entitled: boolean;
   forSale: boolean;
+  /** Design 8.4: Studio's included Print Packs this month (null without a plan that includes them). */
+  included?: { left: number; limit: number; resets: string } | null;
 }) {
   const t = useTranslations("print");
   const locale = useLocale();
@@ -92,7 +96,7 @@ export function PrintPreview({
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [zoom, setZoom] = useState<Zoom>("fit");
   const [guides, setGuides] = useState(true);
-  const [tech, setTech] = useState(false);
+  const [tech, setTech] = useState(true);
   const [customWidth, setCustomWidth] = useState<string>("");
   const [attempt, setAttempt] = useState(0);
   const [paying, startPaying] = useTransition();
@@ -154,6 +158,18 @@ export function PrintPreview({
     width: pct(w, sizes.page.width),
     height: pct(h, sizes.page.height),
   });
+
+  /** Design 8.4: Studio's included Print Pack for this code, then the page reloads its unlocked state. */
+  const useIncluded = () =>
+    startPaying(async () => {
+      const result = await takeIncludedPrintPack(qrCodeId).catch(() => ({ ok: false as const, error: "failed" as const }));
+      if (!result.ok) {
+        toast.error(t("unlock.failed"), { id: "print-pack" });
+        return;
+      }
+      setAttempt((a) => a + 1);
+      router.refresh();
+    });
 
   const unlock = () =>
     startPaying(async () => {
@@ -323,29 +339,39 @@ export function PrintPreview({
               ) : null}
             </div>
           </div>
-          <div className="flex flex-wrap gap-x-4 gap-y-1 border-t border-border px-3 py-2.5 text-[0.8125rem] text-secondary-foreground">
-            <span>{t("foot.page", { size: `${sizes.page.width} × ${sizes.page.height} mm` })}</span>
-            <span>{t("foot.count")}</span>
-            <span>{settings.bleed ? t("foot.bleed", { bleed: settings.bleed }) : t("foot.noBleed")}</span>
-            <span>{settings.cropMarks ? t("foot.marks") : t("foot.noMarks")}</span>
+          <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 border-t border-border px-3 py-2.5 text-[0.8125rem] text-secondary-foreground">
+            <span>
+              {t.rich("foot.pageB", {
+                size: `${sizes.page.width} × ${sizes.page.height} mm`,
+                b: (c) => <b className="text-foreground">{c}</b>,
+              })}
+            </span>
+            <span>
+              {[
+                settings.bleed ? t("foot.bleed", { bleed: settings.bleed }) : t("foot.noBleed"),
+                settings.cropMarks ? t("foot.marks") : t("foot.noMarks"),
+                t("foot.count"),
+              ].join(" · ")}
+            </span>
           </div>
         </section>
 
         <aside aria-labelledby="print-spec" className="flex flex-col gap-5 lg:sticky lg:top-[calc(var(--spacing-header)+1rem)]">
-          <section className="flex flex-col gap-3 rounded-2xl border border-border bg-surface p-5">
+          <section className="flex flex-col gap-3">
             <h2 id="print-spec" className="text-h3">
               {t("specTitle")}
             </h2>
-            <dl className="grid grid-cols-2 gap-2">
+            <dl className="grid grid-cols-2 overflow-hidden rounded-xl border border-border bg-surface [&>div]:border-border [&>div:nth-child(even)]:border-l [&>div:nth-child(n+3)]:border-t">
               {specCells.map((c) => (
-                <div key={c.k} className={cn("flex flex-col gap-0.5 rounded-lg bg-subtle p-3", c.warn && "bg-warning-soft")}>
+                <div key={c.k} className={cn("flex flex-col gap-0.5 p-3.5", c.warn && "bg-warning-soft")}>
                   <dt className="text-caption text-muted-foreground">{c.k}</dt>
                   <dd className="text-label tabular-nums">{c.v}</dd>
                   <dd className={cn("text-caption", c.warn ? "text-warning" : "text-muted-foreground")}>{c.sub}</dd>
                 </div>
               ))}
             </dl>
-
+          </section>
+          <div className="flex flex-col">
             {unlocked ? (
               <div className="flex flex-col gap-2.5 rounded-xl border border-success/30 bg-success-soft p-4">
                 <div className="flex items-center justify-between gap-2">
@@ -397,7 +423,7 @@ export function PrintPreview({
                 <span className="text-caption text-muted-foreground">{t("unlock.pendingSub")}</span>
               </div>
             ) : (
-              <div className="flex flex-col gap-2.5 rounded-xl border border-border bg-subtle p-4">
+              <div className="flex flex-col gap-2.5 rounded-2xl border border-border bg-surface p-5">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-label">{t("unlock.title")}</span>
                   <Badge>
@@ -413,6 +439,21 @@ export function PrintPreview({
                       <Link href={`/create/export?qr=${qrCodeId}&layout=${layoutId}`}>{t("unlock.buyCode")}</Link>
                     </Button>
                   </>
+                ) : included && included.left > 0 ? (
+                  <>
+                    <Button variant="primary" size="lg" disabled={!ready || paying} aria-busy={paying || undefined} onClick={useIncluded}>
+                      {paying ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
+                      {t("unlock.useIncluded")}
+                    </Button>
+                    {(preview?.forSale ?? forSale) ? (
+                      <Button variant="ghost" disabled={!ready || paying} onClick={unlock}>
+                        {t("unlock.payInstead", { price: amount })}
+                      </Button>
+                    ) : null}
+                    <span className="text-caption text-muted-foreground">
+                      {t("unlock.includedLeft", { left: included.left, limit: included.limit, resets: included.resets })}
+                    </span>
+                  </>
                 ) : !(preview?.forSale ?? forSale) ? (
                   <p className="text-caption font-medium text-secondary-foreground">{t("unlock.notForSale")}</p>
                 ) : (
@@ -426,7 +467,7 @@ export function PrintPreview({
                 )}
               </div>
             )}
-          </section>
+          </div>
 
           <section aria-labelledby="print-size" className="flex flex-col gap-5 rounded-2xl border border-border bg-surface p-5">
             <div className="flex flex-col gap-2">
@@ -568,7 +609,14 @@ export function PrintPreview({
                       style={{ backgroundColor: c.hex }}
                     />
                     <span className="flex min-w-0 flex-col">
-                      <b className="text-[0.8125rem] font-semibold">{t(`spec.role_${c.role}` as "spec.role_modules")}</b>
+                      <b className="text-[0.8125rem] font-semibold">
+                        {c.roles
+                          .map((r, i) => {
+                            const name = t(`spec.role_${r}` as "spec.role_modules");
+                            return i ? name.toLowerCase() : name;
+                          })
+                          .join(", ")}
+                      </b>
                       <span className="flex flex-wrap gap-x-3 font-mono text-[0.75rem] text-secondary-foreground">
                         <span>HEX {c.hex}</span>
                         <span>sRGB {c.srgb}</span>
@@ -613,7 +661,7 @@ export function PrintPreview({
                           onClick={() => set({ bleed: b })}
                           className="min-h-8 flex-1 cursor-pointer rounded-full text-[0.8125rem] font-semibold text-secondary-foreground aria-pressed:bg-surface aria-pressed:text-foreground aria-pressed:shadow-segment"
                         >
-                          {b} mm
+                          {b ? `${b} mm` : t("tech.none")}
                         </button>
                       ))}
                     </div>
@@ -634,6 +682,30 @@ export function PrintPreview({
                   <span id="k100-hint" className="-mt-2 text-caption text-muted-foreground">
                     {t("tech.k100Hint")}
                   </span>
+                  <dl className="mt-1 flex flex-col gap-1.5 border-t border-border pt-3 text-[0.8125rem]">
+                    {(
+                      [
+                        [t("tech.pdf"), t("tech.pdfV")],
+                        [t("tech.text"), t("tech.textV")],
+                        [
+                          t("tech.logo"),
+                          preview?.logo
+                            ? preview.logo.ppi !== null
+                              ? t("tech.logoRaster", { px: preview.logo.px ?? 0, ppi: preview.logo.ppi, mm: preview.logo.mm })
+                              : t("tech.logoVector")
+                            : t("keys.logoNone"),
+                        ],
+                        [t("tech.quiet"), t("tech.quietV")],
+                        [t("tech.safe"), t("tech.safeV", { mm: Math.round(sizes.safe * 10) / 10 })],
+                        [t("tech.intent"), t("tech.intentV")],
+                      ] as const
+                    ).map(([k, v]) => (
+                      <div key={k} className="flex justify-between gap-3">
+                        <dt className="text-secondary-foreground">{k}</dt>
+                        <dd className="text-right font-semibold">{v}</dd>
+                      </div>
+                    ))}
+                  </dl>
                 </div>
               ) : null}
             </div>

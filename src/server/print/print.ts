@@ -60,7 +60,7 @@ export type PrintWarning = { code: "logo_low_ppi"; ppi: number; needPx: number }
 export interface PrintPage {
   svg: string;
   sizes: ReturnType<typeof printSizes>;
-  colors: { role: string; hex: string; srgb: string }[];
+  colors: { role: string; roles: string[]; hex: string; srgb: string }[];
   logo: { raster: boolean; px: number | null; ppi: number | null; mm: number } | null;
   warnings: PrintWarning[];
   renderKey: string;
@@ -221,7 +221,7 @@ export async function printSpecPdf(
         .font("body")
         .fontSize(10)
         .fillColor("#0D0D12")
-        .text(`${labels[`role_${c.role}`] ?? c.role}   ${c.hex}   sRGB ${c.srgb}`, x + 26, y);
+        .text(`${c.roles.map((r) => labels[`role_${r}`] ?? r).join(", ")}   ${c.hex}   sRGB ${c.srgb}`, x + 26, y, { width: 460 });
       y += 24;
     }
     y += 16;

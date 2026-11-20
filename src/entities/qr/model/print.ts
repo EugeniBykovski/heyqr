@@ -92,24 +92,24 @@ export const pixelsNeeded = (mm: number) => Math.ceil((mm / 25.4) * MIN_LOGO_PPI
 /** sRGB channels of a hex colour, as "R G B". */
 export const srgbOf = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(" ");
 
-/** A layout's colours as print roles (deduplicated: a role is listed once per distinct colour). */
-export function printColors(
-  layout: Layout,
-): { role: "modules" | "corners" | "centers" | "background" | "frame" | "caption"; hex: string }[] {
+export type PrintRole = "modules" | "corners" | "centers" | "background" | "frame" | "caption";
+
+/** A layout's colours for print: each distinct colour once, with every role that uses it (design 8.x "Colors"). */
+export function printColors(layout: Layout): { role: PrintRole; roles: PrintRole[]; hex: string }[] {
   const c = layout.colors;
-  const all = [
-    { role: "modules" as const, hex: c.fg },
-    { role: "corners" as const, hex: c.eye },
-    { role: "centers" as const, hex: c.eyeIn },
-    { role: "background" as const, hex: c.bg },
-    { role: "frame" as const, hex: c.frame },
-    { role: "caption" as const, hex: c.caption },
+  const all: { role: PrintRole; hex: string }[] = [
+    { role: "modules", hex: c.fg },
+    { role: "corners", hex: c.eye },
+    { role: "centers", hex: c.eyeIn },
+    { role: "caption", hex: c.caption },
+    { role: "frame", hex: c.frame },
+    { role: "background", hex: c.bg },
   ];
-  const seen = new Set<string>();
-  return all.filter((x) => {
-    const k = x.hex.toUpperCase();
-    if (seen.has(k)) return false;
-    seen.add(k);
-    return true;
-  });
+  const out: { role: PrintRole; roles: PrintRole[]; hex: string }[] = [];
+  for (const x of all) {
+    const same = out.find((o) => o.hex.toUpperCase() === x.hex.toUpperCase());
+    if (same) same.roles.push(x.role);
+    else out.push({ role: x.role, roles: [x.role], hex: x.hex });
+  }
+  return out;
 }

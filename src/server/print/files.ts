@@ -34,9 +34,9 @@ export async function printFileResponse(
   const locale = routing.locales.find((l) => l === input.locale) ?? routing.defaultLocale;
   const t = await getTranslations({ locale, namespace: "print.spec" });
   const keys = ["title", "finished", "page", "bleed", "marks", "qr", "profile", "srgb", "logo", "vector", "colors", "key", "yes", "no"];
-  const labels = Object.fromEntries([...keys, ...page.colors.map((c) => `role_${c.role}`)].map((k) => [k, t(k as "title")])) as Parameters<
-    typeof printSpecPdf
-  >[2];
+  const labels = Object.fromEntries(
+    [...keys, ...page.colors.flatMap((c) => c.roles.map((r) => `role_${r}`))].map((k) => [k, t(k as "title")]),
+  ) as Parameters<typeof printSpecPdf>[2];
   const spec = await printSpecPdf(
     page,
     {
