@@ -5,6 +5,7 @@ import { CalendarIcon, GlobeIcon, LockIcon, MailIcon, MapPinIcon, MessageSquareI
 import { useFormatter, useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { cn } from "@/shared/lib/utils";
+import { Badge } from "@/shared/ui/badge";
 import { Placeholder, Skeleton } from "@/shared/ui/skeleton";
 
 /*
@@ -26,6 +27,7 @@ export function ContentPreview({
   className?: string;
 }) {
   const t = useTranslations("editor.afterScanning");
+  const tTypes = useTranslations("contentTypes");
   const format = useFormatter();
   const c = content as Record<string, string | boolean | undefined>;
   const v = (k: string) => (loading ? "" : typeof c[k] === "string" ? (c[k] as string).trim() : "");
@@ -198,10 +200,14 @@ export function ContentPreview({
 
   return (
     <figure aria-label={t("label")} aria-busy={loading || undefined} className={cn("flex flex-col items-center gap-3", className)}>
+      {/* Design 1.3–1.5 "After scanning" with the content type, above the phone. */}
+      <figcaption className="flex w-full max-w-[23rem] items-center justify-between gap-2">
+        <span className="text-[0.8125rem] font-semibold text-secondary-foreground">{t("label")}</span>
+        <Badge>{tTypes(content.type)}</Badge>
+      </figcaption>
       <div aria-hidden={loading || undefined} className="aspect-[9/17] w-full max-w-[18.75rem] rounded-[2.5rem] bg-inverse p-2 shadow-2">
         <div className="flex h-full flex-col overflow-hidden rounded-[2rem] bg-surface">{body}</div>
       </div>
-      <figcaption className="text-center text-[0.75rem] text-muted-foreground">{t("caption")}</figcaption>
       {loading ? (
         <p role="status" className="sr-only">
           {t("loading")}
