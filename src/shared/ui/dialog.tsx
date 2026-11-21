@@ -17,10 +17,15 @@ export function DialogContent({
   className,
   children,
   closeLabel,
+  hideClose = false,
   onOpenAutoFocus,
   onCloseAutoFocus,
   ...props
-}: ComponentProps<typeof DialogPrimitive.Content> & { closeLabel: string }) {
+}: ComponentProps<typeof DialogPrimitive.Content> & {
+  closeLabel: string;
+  /** The dialog has its own close action (e.g. "Done" in a full-screen view): no corner × button. */
+  hideClose?: boolean;
+}) {
   // HEY-63: Radix returns focus only to a DialogTrigger. Dialogs opened from code (a confirmation after a button, a
   // layout switch) would drop focus on the page body when they close; they return it to what had focus when they opened.
   const returnTo = useRef<HTMLElement | null>(null);
@@ -50,12 +55,14 @@ export function DialogContent({
         {...props}
       >
         {children}
-        <DialogPrimitive.Close
-          className="absolute top-4 right-4 grid size-9 cursor-pointer place-items-center rounded-full text-muted-foreground transition-colors duration-(--motion-fast) hover:bg-subtle hover:text-foreground"
-          aria-label={closeLabel}
-        >
-          <XIcon className="size-4" aria-hidden />
-        </DialogPrimitive.Close>
+        {hideClose ? null : (
+          <DialogPrimitive.Close
+            className="absolute top-4 right-4 grid size-9 cursor-pointer place-items-center rounded-full text-muted-foreground transition-colors duration-(--motion-fast) hover:bg-subtle hover:text-foreground"
+            aria-label={closeLabel}
+          >
+            <XIcon className="size-4" aria-hidden />
+          </DialogPrimitive.Close>
+        )}
       </DialogPrimitive.Content>
     </DialogPrimitive.Portal>
   );

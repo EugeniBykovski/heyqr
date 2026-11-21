@@ -271,6 +271,8 @@ export function DesignStep({
         title={title}
         dims={dims}
         tone={view.tone}
+        fit={view.fit}
+        onFit={view.setFit}
         scan={scan}
         rebuilding={shown.rebuilding}
       >
@@ -333,6 +335,8 @@ function FullPreview({
   title,
   dims,
   tone,
+  fit,
+  onFit,
   scan,
   rebuilding,
   returnFocus,
@@ -345,34 +349,68 @@ function FullPreview({
   title: string;
   dims: ReturnType<typeof layoutDims>;
   tone: StageTone;
+  /** The editor's own Fit / Actual size: a viewing preference only, never an export setting. */
+  fit: "fit" | "actual";
+  onFit: (fit: "fit" | "actual") => void;
   scan: ScanReport | null;
   rebuilding: boolean;
   children: ReactNode;
 }) {
   const ts = useTranslations("editor.stage");
+  const tDims = useTranslations("editor.stage.dims");
   const tCommon = useTranslations("common");
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
+      {/*
+       * Design 1.10: a full-page view at every width (up to 900 px tall). Top bar: layout name, its size in the layout's
+       * unit and Done. The canvas fills the rest, with the editor's backdrop and zoom (Actual size scrolls inside the
+       * canvas, so a zoomed layout can be inspected on a phone). Footer: QR and file size, scan status. The file and
+       * every export option stay where they are: this view only shows the latest design, saved or not.
+       */}
       <DialogContent
         closeLabel={tCommon("close")}
+        hideClose
         onCloseAutoFocus={(e) => {
           e.preventDefault();
           returnFocus();
         }}
-        className="max-sm:h-[100dvh] max-sm:max-h-none max-sm:rounded-none max-sm:before:hidden sm:top-6 sm:w-[min(100%-2rem,56rem)]"
+        className="inset-0 h-svh max-h-none w-full max-w-none gap-0 overflow-hidden rounded-none bg-page p-0 pb-0 shadow-none before:hidden sm:inset-0 sm:top-0 sm:bottom-auto sm:left-0 sm:h-svh sm:max-h-none sm:w-full sm:translate-x-0 sm:rounded-none sm:pb-0"
       >
-        <DialogTitle className="text-h3">{ts("fullTitle")}</DialogTitle>
-        <DialogDescription className="truncate">{title}</DialogDescription>
-        <Stage tone={tone} className="min-h-0 grow">
-          <StageCanvas height="min(70dvh, 40rem)">{children}</StageCanvas>
-        </Stage>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <Dims dims={dims} />
-          {scan ? <ScanStatus report={scan} compact checking={rebuilding} /> : null}
+        <div className="flex h-[min(100svh,56.25rem)] flex-col">
+          <div className="flex items-center gap-2 border-b border-border bg-surface px-3 py-2">
+            <DialogTitle className="min-w-0 grow truncate text-label">{title}</DialogTitle>
+            <DialogDescription className="sr-only">{ts("fullTitle")}</DialogDescription>
+            <span className="shrink-0 text-caption text-secondary-foreground tabular-nums">{dims.layout}</span>
+            <Button type="button" variant="primary" size="sm" onClick={() => onOpenChange(false)}>
+              {ts("done")}
+            </Button>
+          </div>
+          <Stage tone={tone} className="min-h-0 grow rounded-none border-0">
+            {fit === "actual" ? (
+              <StageCanvas height="100%" actual={dims.actual} className="grow">
+                {children}
+              </StageCanvas>
+            ) : (
+              // Design .full .stage__art: Fit shows the layout at up to 520 px wide, centred on the canvas.
+              <div data-slot="stage-canvas" className="grid min-h-0 grow place-items-center overflow-auto p-4">
+                <div className="w-[min(100%,32.5rem)] drop-shadow-[0_14px_28px_rgb(13_13_18/0.14)]">{children}</div>
+              </div>
+            )}
+            <StageFoot>
+              <div className="flex flex-wrap gap-x-3.5 gap-y-1 text-[0.8125rem] text-secondary-foreground">
+                {(["qr", "file"] as const).map((k) => (
+                  <span key={k}>
+                    {tDims(k)} <b className="font-semibold text-foreground tabular-nums">{dims[k]}</b>
+                  </span>
+                ))}
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <Segmented label={ts("scale")} value={fit} options={["fit", "actual"] as const} render={(o) => ts(o)} onChange={onFit} />
+                {scan ? <ScanStatus report={scan} compact checking={rebuilding} /> : null}
+              </div>
+            </StageFoot>
+          </Stage>
         </div>
-        <Button type="button" variant="primary" onClick={() => onOpenChange(false)}>
-          {ts("done")}
-        </Button>
       </DialogContent>
     </Dialog>
   );
