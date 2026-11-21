@@ -1,6 +1,6 @@
 "use client";
 
-import { layoutGeometry, pngPixelSize, type Layout, type QrCapacity, type ScanReport } from "@heyqr/qr-core";
+import { contrastRatio, layoutGeometry, pngPixelSize, type Layout, type QrCapacity, type ScanReport } from "@heyqr/qr-core";
 import { Maximize2Icon, Redo2Icon, Undo2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useRef, useState, type ReactNode } from "react";
@@ -16,8 +16,9 @@ import { SAMPLE_LOGO } from "@/entities/qr";
 import { DesignCanvas } from "./design-canvas";
 import { DesignSettings, type DesignGroup } from "./design-settings";
 import { editorPanel, editorRoot, editorStage } from "./editor-layout";
-import { ScanCheckButton, ScanStatus, type ScanFix } from "./scan-status";
-import { useScanCheck, type ScanDecode } from "./use-scan-check";
+import { ScanCheckButton, ScanStatus, type ScanFix, type ScanGuidanceProps } from "./scan-status";
+import type { ScanDecode } from "./use-scan-check";
+import { useScanGuidance } from "./use-scan-guidance";
 import { TooLongNotice } from "./too-long-notice";
 import { useDesignHistory } from "./use-design-history";
 import { useStageView } from "./use-stage-view";
@@ -106,11 +107,44 @@ export function DesignStep({
     setGroup(mode === "branded" ? "brand" : "layout");
   };
   const [full, setFull] = useState(false);
-  const scanCheck = useScanCheck(latest.layout, latest.value);
+  const onLogoApplied = useCallback(
+    (from: number, to: number) => toast(t("scanCheck.logoApplied", { from, to }), { id: "design-notice" }),
+    [t],
+  );
+  // A fix removes the failure panel and its button: focus goes to the visible "Check scan", where the re-check of the
+  // fixed artwork is announced.
+  const onFixApplied = useCallback(
+    () =>
+      requestAnimationFrame(() =>
+        [...document.querySelectorAll<HTMLElement>("[data-scan-check]")].find((b) => b.offsetParent !== null)?.focus(),
+      ),
+    [],
+  );
+  const scanCheck = useScanGuidance({ latest, design, change: history.change, onLogoApplied, onFixApplied });
+  const openGroup = (g: DesignGroup, focusId?: string) => {
+    setGroup(g);
+    if (focusId) requestAnimationFrame(() => document.getElementById(focusId)?.focus());
+  };
+  const guidance: ScanGuidanceProps = {
+    evidence: { logoSize: design.logoSize, ratio: contrastRatio(design.fg, design.bg) },
+    onCause: (c) => (c === "text" ? openGroup("caption", "caption") : scanCheck.fixCause(c)),
+    onRetry: scanCheck.check,
+    onOpenLogo: () => openGroup("logo"),
+    logoSearch: scanCheck.logoSearch,
+  };
   const expandRef = useRef<HTMLButtonElement>(null);
   const dims = layoutDims(shown.layout);
   const notice = useCallback((message: string) => toast(message, { id: "design-notice" }), []);
-  const fix = (f: ScanFix) => history.change(f.kind === "reduceLogo" ? { logoSize: f.size } : { eye: design.fg, eyeIn: design.fg });
+  // The full failure explanation: in the settings panel below 1024 px, in the stage footer from 1024 px (design 1.9).
+  const failurePanel =
+    !tooLong &&
+    scan !== null &&
+    ((!scan.ok && !shown.rebuilding) ||
+      scanCheck.logoSearch !== null ||
+      scanCheck.decode?.kind === "unreadable" ||
+      scanCheck.decode?.kind === "error");
+  const panelDecode = scanCheck.decode?.kind === "checking" ? null : scanCheck.decode;
+  const fix = (f: ScanFix) => (f.kind === "reduceLogo" ? void scanCheck.reduceLogo() : scanCheck.fixCause("eyes"));
 
   const historyButtons = (
     <div
@@ -219,7 +253,15 @@ export function DesignStep({
             <Dims dims={dims} />
             {scan ? (
               <span className="flex flex-wrap items-center gap-2">
-                <ScanStatus report={scan} compact checking={shown.rebuilding} decode={scanCheck.decode} />
+                {/* Design 1.9 at desktop: the full explanation and its fixes sit in the stage footer. */}
+                {failurePanel ? (
+                  <span className="max-w-md max-lg:hidden">
+                    <ScanStatus report={scan} onFix={fix} decode={panelDecode} guidance={guidance} />
+                  </span>
+                ) : null}
+                <span className={cn("flex flex-wrap items-center gap-2", failurePanel && "lg:hidden")}>
+                  <ScanStatus report={scan} compact checking={shown.rebuilding} decode={scanCheck.decode} />
+                </span>
                 <ScanCheckButton decode={scanCheck.decode} onCheck={scanCheck.check} />
               </span>
             ) : (
@@ -253,9 +295,9 @@ export function DesignStep({
         </div>
         {tooLong ? (
           <TooLongNotice className="mb-5" capacity={tooLong} onEdit={onEditContent} />
-        ) : scan && ((!scan.ok && !shown.rebuilding) || scanCheck.decode?.kind === "unreadable" || scanCheck.decode?.kind === "error") ? (
-          <div className="mb-5">
-            <ScanStatus report={scan} onFix={fix} decode={scanCheck.decode?.kind === "checking" ? null : scanCheck.decode} />
+        ) : scan && failurePanel ? (
+          <div className="mb-5 lg:hidden">
+            <ScanStatus report={scan} onFix={fix} decode={panelDecode} guidance={guidance} />
           </div>
         ) : null}
         <DesignSettings
