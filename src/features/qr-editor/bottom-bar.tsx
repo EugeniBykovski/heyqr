@@ -26,7 +26,8 @@ export function BottomBarInfo({ title, hint, className }: { title: ReactNode; hi
   return (
     <div className={cn("flex min-w-0 flex-1 flex-col", className)}>
       <b className="truncate text-[0.9375rem]">{title}</b>
-      <span className="truncate text-[0.75rem] text-muted-foreground">{hint}</span>
+      {/* Design bbar__info: the hint wraps (two lines at most) instead of being cut off on phones. */}
+      <span className="line-clamp-2 text-[0.75rem] text-muted-foreground">{hint}</span>
     </div>
   );
 }

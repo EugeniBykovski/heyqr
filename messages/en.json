@@ -453,7 +453,7 @@
     "event": "Event"
   },
   "fields": {
-    "url": "Web address",
+    "url": "Website address",
     "text": "Text",
     "ssid": "Network name",
     "security": "Security",
@@ -696,7 +696,10 @@
       "continue": "Continue to design",
       "errorsOne": "Fix the highlighted field to continue. Everything else is saved.",
       "errorsMany": "Fix the {count} highlighted fields to continue. Everything else is saved.",
-      "back": "Back"
+      "back": "Back",
+      "urlHint": "This address is built into the code. To point printed codes elsewhere later, choose Dynamic on the previous step.",
+      "urlHintDynamic": "Your code will contain a permanent short link. This is where it sends people, and you can change it after printing.",
+      "nameHint": "Only you see this name."
     },
     "errors": {
       "urlEmpty": "Enter a web address, like yourname.com.",
@@ -1067,8 +1070,8 @@
     },
     "designMode": {
       "label": "Design mode",
-      "custom": "Custom",
-      "branded": "Branded",
+      "custom": "Custom design",
+      "branded": "Branded design",
       "chooseTitle": "How do you want to design it?",
       "chooseLead": "Both start from the same code. You can switch at any time without losing your content.",
       "customTitle": "Custom design",

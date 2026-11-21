@@ -93,3 +93,40 @@ export function isContentComplete(content: QrContent): boolean {
     (f) => !f.required || (typeof record[f.name] === "string" && (record[f.name] as string).trim() !== ""),
   );
 }
+
+/**
+ * Design displayName / cpSummary (HEY-64): how a code is called when it has no name of its own — the site's host for a
+ * website ("littlefern.cafe/menu" → "littlefern.cafe"), the first line of a text, the network, person, address or
+ * event. Null while the content is still empty (callers fall back to their generic placeholder).
+ */
+export function contentDisplayName(content: QrContent): string | null {
+  const clip = (s: string | undefined) => {
+    const v = (s ?? "").split("\n")[0]?.trim() ?? "";
+    return v ? (v.length > 40 ? `${v.slice(0, 39)}…` : v) : null;
+  };
+  switch (content.type) {
+    case "website": {
+      const host = content.url
+        .trim()
+        .replace(/^[a-z][a-z0-9+.-]*:\/\//i, "")
+        .split(/[/?#]/)[0]
+        ?.replace(/^www\./i, "");
+      return clip(host);
+    }
+    case "text":
+      return clip(content.text);
+    case "wifi":
+      return clip(content.ssid);
+    case "contact":
+      return clip([content.firstName, content.lastName].filter(Boolean).join(" ") || content.company || content.email);
+    case "email":
+      return clip(content.to);
+    case "phone":
+    case "sms":
+      return clip(content.number);
+    case "location":
+      return clip(content.name || content.address);
+    case "event":
+      return clip(content.title);
+  }
+}
