@@ -4,7 +4,7 @@ import type { QrCapacity, QrContent } from "@heyqr/qr-core";
 import { ChevronDownIcon, CircleAlertIcon, SmartphoneIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, type FormEvent } from "react";
-import type { QrMode } from "@/entities/qr";
+import { contentDisplayName, type QrMode } from "@/entities/qr";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
@@ -81,7 +81,9 @@ export function ContentStep({
             </span>
             <span className="flex min-w-0 grow flex-col">
               <span className="text-label">{t("afterScanning.label")}</span>
-              <span className="truncate text-caption text-muted-foreground">{t("afterScanning.toggleHint")}</span>
+              <span className="truncate text-caption text-muted-foreground">
+                {contentDisplayName(content) ?? t("afterScanning.toggleHint")}
+              </span>
             </span>
             <ChevronDownIcon
               aria-hidden
@@ -95,7 +97,14 @@ export function ContentStep({
           </div>
         </div>
 
-        <ContentForm content={content} onChange={onContentChange} errors={visibleErrors} />
+        <ContentForm
+          content={content}
+          onChange={onContentChange}
+          errors={visibleErrors}
+          hints={
+            content.type === "website" ? { url: t(mode === "dynamic" ? "contentStep.urlHintDynamic" : "contentStep.urlHint") } : undefined
+          }
+        />
 
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="qr-name">
@@ -106,9 +115,13 @@ export function ContentStep({
             id="qr-name"
             value={name}
             maxLength={80}
-            placeholder={t("namePlaceholder")}
+            placeholder={contentDisplayName(content) ?? t("namePlaceholder")}
+            aria-describedby="qr-name-hint"
             onChange={(e) => onNameChange(e.target.value)}
           />
+          <p id="qr-name-hint" className="text-caption text-muted-foreground">
+            {t("contentStep.nameHint")}
+          </p>
         </div>
 
         {tooLong ? <TooLongNotice id="content-too-long" capacity={tooLong} /> : null}

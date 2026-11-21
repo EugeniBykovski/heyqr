@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { env } from "@/env";
 import {
   composeShared,
+  contentDisplayName,
   DEFAULT_DESIGN,
   designSettingsOf,
   designToLayout,
@@ -162,7 +163,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
         router.push("/create/export");
         return;
       }
-      const name = design.name.trim() || t("namePlaceholder");
+      const name = design.name.trim() || contentDisplayName(design.content) || t("namePlaceholder");
       const destination = design.model === "dynamic" && design.content.type === "website" ? encodePayload(design.content) : undefined;
       const result = await saveDraft({
         name,
@@ -275,7 +276,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
           onChange={patch}
           // Design 2.4: a new design asks Custom or Branded first; a draft that already has design work goes straight on.
           offerChooser={design.designMode === undefined && isUntouchedDesign(design)}
-          title={design.name.trim() || t("namePlaceholder")}
+          title={design.name.trim() || contentDisplayName(design.content) || t("namePlaceholder")}
           shown={{ layout: shownLayout, value: shownValue, rebuilding }}
           scan={scan}
           tooLong={tooLong}

@@ -15,6 +15,9 @@ export const editorRoot = cn(
 
 export const editorStage = cn(
   "sticky top-header z-[12] bg-page px-3 py-2 sm:px-6 sm:py-3",
+  // HEY-64: below 1024 px the sticky preview lets go while a text field in the settings has focus (like the bottom
+  // bar), so with the on-screen keyboard open it can't cover the field and its error. Sliders keep it in view.
+  "max-lg:group-has-[input:not([type=range]):focus,textarea:focus,select:focus]/ed:static",
   "lg:order-1 lg:bg-transparent lg:px-6 lg:py-5 xl:px-10 xl:py-6 2xl:px-16 2xl:py-8",
 );
 

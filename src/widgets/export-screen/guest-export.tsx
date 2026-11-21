@@ -4,7 +4,7 @@ import { encodePayload } from "@heyqr/qr-core";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { env } from "@/env";
-import { designToLayout, type EditorDesign } from "@/entities/qr";
+import { contentDisplayName, designToLayout, type EditorDesign } from "@/entities/qr";
 import { ExportSurface, settingsQuery, type ExportFormat } from "@/features/checkout";
 import { readDraft } from "@/features/qr-editor";
 import { Link } from "@/i18n/navigation";
@@ -48,7 +48,7 @@ export function GuestExport({ initial }: { initial: { format?: ExportFormat; res
 
   const layout = designToLayout(draft);
   const value = draft.model === "dynamic" ? `${env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "")}/preview` : encodePayload(draft.content);
-  const name = draft.name.trim() || tEditor("namePlaceholder");
+  const name = draft.name.trim() || contentDisplayName(draft.content) || tEditor("namePlaceholder");
   return (
     <ExportSurface
       mode="guest"

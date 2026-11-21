@@ -19,10 +19,13 @@ export function ContentForm({
   onChange,
   errors,
   fields,
+  hints,
 }: {
   content: QrContent;
   onChange: (content: QrContent) => void;
   errors: ContentErrors;
+  /** Design 2.3: a hint under a field (e.g. what the website address means for a static or dynamic code). */
+  hints?: Partial<Record<string, string>>;
   /** Only these fields, in this order (e.g. the homepage quick builder); all of the type's fields when omitted. */
   fields?: readonly string[];
 }) {
@@ -78,7 +81,8 @@ export function ContentForm({
           const error = errors[field.name];
           const isWifiPassword = content.type === "wifi" && field.name === "password";
           if (isWifiPassword && openNetwork) return null;
-          const hintId = isWifiPassword ? `${id}-hint` : undefined;
+          const hint = isWifiPassword ? t("editor.wifiPasswordHint") : hints?.[field.name];
+          const hintId = hint ? `${id}-hint` : undefined;
           const describedBy = [error ? `${id}-error` : undefined, hintId].filter(Boolean).join(" ") || undefined;
           // Required for Wi-Fi: the password whenever the network is secured; security is a choice, never "optional".
           const required = field.required || isWifiPassword || field.kind === "security";
@@ -193,7 +197,7 @@ export function ContentForm({
               ) : null}
               {hintId ? (
                 <p id={hintId} className="text-caption text-muted-foreground">
-                  {t("editor.wifiPasswordHint")}
+                  {hint}
                 </p>
               ) : null}
               {error ? (
