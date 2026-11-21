@@ -2,18 +2,27 @@
 
 import type { Layout } from "@heyqr/qr-core";
 import { useCallback, useState } from "react";
-import { composeShared } from "@/entities/qr";
+import { composeShared, type EditorDesign } from "@/entities/qr";
+import { confirmCauses, type ScanCause } from "./scan-guidance";
 
 /** Where the browser loads the ZXing reader from (the app's own route, never a CDN). */
 export const READER_WASM_URL = "/api/scan/reader-wasm?v=3.1.7";
 
 export type ScanDecode =
-  { kind: "checking" } | { kind: "ok"; decoded: string } | { kind: "unreadable"; decoded: string | null } | { kind: "error" };
+  | { kind: "checking" }
+  | { kind: "ok"; decoded: string }
+  | {
+      kind: "unreadable";
+      decoded: string | null;
+      /** HEY-68: the causes a test render confirmed; "finding" while those renders run; absent without a design. */
+      causes?: ScanCause[] | "finding";
+    }
+  | { kind: "error" };
 
 /** Decodes a layout's artwork; tests replace it to control timing. */
 export type Decoder = (svg: string) => Promise<string | null>;
 
-const browserDecoder: Decoder = async (svg) => {
+export const browserDecoder: Decoder = async (svg) => {
   const { decodeSvgInBrowser } = await import("@heyqr/qr-core/verify-browser");
   return decodeSvgInBrowser(svg, { wasmUrl: READER_WASM_URL });
 };
@@ -41,7 +50,7 @@ function decodeOnce(layout: Layout, value: string, decoder: Decoder): Promise<st
  * Each result belongs to the layout object and value it checked: any edit, Undo / Redo or layout switch makes a new
  * layout object, so an older result (even one that finishes later) is never shown for the new artwork.
  */
-export function useScanCheck(layout: Layout, value: string, decoder: Decoder = browserDecoder) {
+export function useScanCheck(layout: Layout, value: string, decoder: Decoder = browserDecoder, design?: EditorDesign) {
   const [result, setResult] = useState<{ layout: Layout; value: string; decode: ScanDecode } | null>(null);
   const check = useCallback(() => {
     const target = { layout, value };
@@ -52,10 +61,19 @@ export function useScanCheck(layout: Layout, value: string, decoder: Decoder = b
         current && current.layout === target.layout && current.value === target.value ? { ...target, decode } : current,
       );
     decodeOnce(layout, value, decoder).then(
-      (decoded) => settle(decoded === value ? { kind: "ok", decoded } : { kind: "unreadable", decoded }),
+      (decoded) => {
+        if (decoded === value) return settle({ kind: "ok", decoded });
+        if (!design) return settle({ kind: "unreadable", decoded });
+        // HEY-68: confirm why, with test renders of this same design (each with one setting changed).
+        settle({ kind: "unreadable", decoded, causes: "finding" });
+        confirmCauses(design, value, decoder).then(
+          (causes) => settle({ kind: "unreadable", decoded, causes }),
+          () => settle({ kind: "unreadable", decoded, causes: [] }),
+        );
+      },
       () => settle({ kind: "error" }),
     );
-  }, [layout, value, decoder]);
+  }, [layout, value, decoder, design]);
   const current = result && result.layout === layout && result.value === value ? result.decode : null;
   return { decode: current, check };
 }

@@ -874,7 +874,6 @@
       "square": "Square",
       "circle": "Circle"
     },
-    "reduceLogo": "Reduce logo to {size}%",
     "logoSizeValue": "{size}% · up to {max}% scans",
     "logoSizeLegacy": "Saved at {saved}%; drawn at the {max}% maximum. Moving the slider saves a size within it.",
     "groups": {
@@ -1093,7 +1092,43 @@
       "unreadable": "A phone camera couldn’t read this layout. Raise the contrast, make the logo smaller or use simpler shapes, then check again.",
       "mismatch": "It read “{value}”, not your content. Check the content, then check again.",
       "errorTitle": "Scan check didn’t run",
-      "errorText": "The scan check couldn’t start. Your design is safe; try again."
+      "errorText": "The scan check couldn’t start. Your design is safe; try again.",
+      "finding": "Finding out why on this device…",
+      "multiTitle": "This layout may not scan · {count} fixes",
+      "confirmed": "Checked on this device: with only this changed, it scans.",
+      "general": "We couldn’t pin it to one setting. Raise the contrast, make the logo smaller or use simpler shapes, then check again.",
+      "logoSearching": "Trying smaller logo sizes on this device…",
+      "logoNone": "No smaller logo size scans with this layout, so your design is unchanged. Try a backing, a simpler logo or remove it in Logo.",
+      "openLogo": "Open Logo settings",
+      "logoApplied": "Logo reduced from {from}% to {to}%. Checking the new layout…",
+      "causes": {
+        "invert": {
+          "title": "Light code on a dark background",
+          "text": "Many phone cameras can’t read inverted codes. Keep the code darker than its background.",
+          "fix": "Swap colors"
+        },
+        "contrast": {
+          "title": "Not enough contrast",
+          "text": "The code and background are too close ({ratio}:1). Aim for at least 4:1.",
+          "fix": "Increase contrast"
+        },
+        "eyes": {
+          "title": "Corner markers are too light",
+          "text": "Scanners find the code by its three corner markers. Make them darker.",
+          "fix": "Darken corner markers"
+        },
+        "text": {
+          "title": "The text in the code is too long",
+          "text": "Keep text inside the code to about 8 characters so error correction can recover what it covers.",
+          "fix": "Shorten the text"
+        },
+        "logo": {
+          "title": "The logo hides too much of the code",
+          "text": "Error correction can recover up to {max}% logo width. Yours is {size}%.",
+          "critical": "It overlaps a corner marker or timing line.",
+          "fix": "Reduce logo size"
+        }
+      }
     }
   },
   "scan": {
