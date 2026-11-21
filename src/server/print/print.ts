@@ -160,12 +160,26 @@ async function pdfBuffer(size: [number, number], build: (doc: PDFKit.PDFDocument
   return done;
 }
 
-/** The print PDF: the page as vector, caption fonts embedded, sRGB. */
-export async function printPdf(layout: Layout, page: PrintPage): Promise<Buffer> {
+/**
+ * HEY-69: the page boxes print-shop software reads. TrimBox is the finished size (where the crop marks point), BleedBox
+ * the trim plus bleed; both centred on the page (room for the marks around them). PDF points, origin bottom left.
+ */
+export function printBoxes(sizes: PrintPage["sizes"], bleed: number): { trim: number[]; bleed: number[] } {
+  const box = (inset: number) =>
+    [inset, inset, sizes.page.width - inset, sizes.page.height - inset].map((mm) => Math.round(mm * MM_TO_PT * 1000) / 1000);
+  return { trim: box(sizes.trim.x), bleed: box(sizes.trim.x - bleed) };
+}
+
+/** The print PDF: the page as vector, caption fonts embedded, sRGB (untagged DeviceRGB), with TrimBox and BleedBox. */
+export async function printPdf(layout: Layout, page: PrintPage, bleed: number): Promise<Buffer> {
   const faces = captionFontFaces(layout);
   const W = page.sizes.page.width * MM_TO_PT;
   const H = page.sizes.page.height * MM_TO_PT;
+  const boxes = printBoxes(page.sizes, bleed);
   return pdfBuffer([W, H], (doc) => {
+    const pageDict = doc.page.dictionary.data as Record<string, unknown>;
+    pageDict.TrimBox = boxes.trim;
+    pageDict.BleedBox = boxes.bleed;
     SVGtoPDF(doc, pdfReadyImages(page.svg), 0, 0, {
       width: W,
       height: H,
