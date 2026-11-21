@@ -62,13 +62,20 @@ describe("print files", () => {
     const layout = designToLayout(card);
     const page = printPage(layout, VALUE, DEFAULT_PRINT_SETTINGS, key);
     expect(page.scanOk).toBe(true);
-    const pdf = await printPdf(layout, page);
+    const pdf = await printPdf(layout, page, DEFAULT_PRINT_SETTINGS.bleed);
     const text = pdf.toString("latin1");
     expect(text.startsWith("%PDF-1.7")).toBe(true);
     const box = text.match(/\/MediaBox \[0 0 ([\d.]+) ([\d.]+)\]/);
     expect(Number(box?.[1])).toBeCloseTo(68 * MM_TO_PT, 1);
     expect(Number(box?.[2])).toBeCloseTo(80 * MM_TO_PT, 1);
     expect(text).toContain("/FontFile2"); // the caption font is embedded
+    // HEY-69: TrimBox is the finished 50 × 62 mm inside 3 mm bleed and 6 mm for crop marks; BleedBox adds the bleed.
+    const pt = (v: string | undefined) => (v ?? "").split(" ").map((n) => Number(n) / MM_TO_PT);
+    const trim = pt(text.match(/\/TrimBox \[([\d. ]+)\]/)?.[1]);
+    const bleed = pt(text.match(/\/BleedBox \[([\d. ]+)\]/)?.[1]);
+    trim.forEach((v, i) => expect(v).toBeCloseTo([9, 9, 59, 71][i] ?? NaN, 2));
+    bleed.forEach((v, i) => expect(v).toBeCloseTo([6, 6, 62, 74][i] ?? NaN, 2));
+    expect([trim.length, bleed.length]).toEqual([4, 4]);
     // macOS renders PDFs with sips; elsewhere the page SVG (the same drawing) is decoded instead.
     const dir = mkdtempSync(path.join(tmpdir(), "heyqr-print-"));
     writeFileSync(path.join(dir, "p.pdf"), pdf);

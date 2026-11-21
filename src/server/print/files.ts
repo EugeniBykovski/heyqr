@@ -20,8 +20,14 @@ export async function printFileResponse(
   input: { layout: Layout; page: PrintPage; value: string; settings: PrintSettings; name: string; layoutName: string; locale?: string },
 ): Promise<NextResponse> {
   const { layout, page, value, settings, name, layoutName } = input;
+  // HEY-69: the finished size in every file name, so proofs at two sizes never overwrite each other.
+  const size = `${page.sizes.finished.width}x${page.sizes.finished.height}mm`;
   if (kind === "pdf")
-    return file(await printPdf(layout, page), "application/pdf", downloadFileName(`${name} ${layoutName} print`, "pdf").header);
+    return file(
+      await printPdf(layout, page, settings.bleed),
+      "application/pdf",
+      downloadFileName(`${name} ${layoutName} print ${size}`, "pdf").header,
+    );
   if (kind === "svg") {
     const svg = (await renderExport(layout, value, "svg", {})).body
       .toString()
@@ -29,7 +35,7 @@ export async function printFileResponse(
         /^<svg ([^>]*?)width="[^"]*" height="[^"]*"/,
         `<svg $1width="${page.sizes.finished.width}mm" height="${page.sizes.finished.height}mm"`,
       );
-    return file(Buffer.from(svg), "image/svg+xml", downloadFileName(`${name} ${layoutName} editable`, "svg").header);
+    return file(Buffer.from(svg), "image/svg+xml", downloadFileName(`${name} ${layoutName} editable ${size}`, "svg").header);
   }
   const locale = routing.locales.find((l) => l === input.locale) ?? routing.defaultLocale;
   const t = await getTranslations({ locale, namespace: "print.spec" });
@@ -48,7 +54,7 @@ export async function printFileResponse(
     },
     labels,
   );
-  return file(spec, "application/pdf", downloadFileName(`${name} ${layoutName} specifications`, "pdf").header);
+  return file(spec, "application/pdf", downloadFileName(`${name} ${layoutName} specifications ${size}`, "pdf").header);
 }
 
 function file(body: Buffer, type: string, disposition: string) {
