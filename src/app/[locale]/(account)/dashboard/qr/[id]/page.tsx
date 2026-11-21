@@ -317,8 +317,10 @@ export default async function QrDetailPage({ params }: PageProps<"/[locale]/dash
                         {dims(layout)} · {mm ? tl("print") : tl("screen")}
                       </span>
                     </div>
-                    <div className="mt-auto flex items-center gap-2">
-                      <Button asChild size="sm" className="grow">
+                    {/* HEY-65: on a narrow card (two per row at 390 px) the icon actions wrap under Edit instead of
+                        running past the card's edge. */}
+                    <div className="mt-auto flex flex-wrap items-center gap-2">
+                      <Button asChild size="sm" className="min-w-18 grow">
                         <Link href={`/edit/${qr.id}?layout=${layout.id}`}>{tl("edit")}</Link>
                       </Button>
                       {mm ? (
