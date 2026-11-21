@@ -10,7 +10,8 @@
     ".": "./src/index.ts",
     "./raster": "./src/raster.ts",
     "./verify": "./src/verify.ts",
-    "./node": "./src/node.ts"
+    "./node": "./src/node.ts",
+    "./verify-browser": "./src/verify-browser.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p ."

@@ -278,6 +278,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
           offerChooser={design.designMode === undefined && isUntouchedDesign(design)}
           title={design.name.trim() || contentDisplayName(design.content) || t("namePlaceholder")}
           shown={{ layout: shownLayout, value: shownValue, rebuilding }}
+          latest={{ layout, value }}
           scan={scan}
           tooLong={tooLong}
           onEditContent={() => goTo("content")}
