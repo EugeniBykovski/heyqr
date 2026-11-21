@@ -230,6 +230,7 @@ export function LayoutEditor({
         stageTitle={tabs}
         panelHead={nameField}
         shown={shown}
+        latest={{ layout, value }}
         scan={scan}
         tooLong={tooLong}
         showFieldErrors={showFieldErrors}

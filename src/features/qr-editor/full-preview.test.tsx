@@ -35,6 +35,7 @@ function Editor() {
         }}
         title="Business card"
         shown={{ layout, value: VALUE, rebuilding: false }}
+        latest={{ layout, value: VALUE }}
         scan={composeLayout(layout, VALUE).scan}
         tooLong={null}
         showFieldErrors={false}

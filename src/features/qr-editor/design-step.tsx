@@ -16,7 +16,8 @@ import { SAMPLE_LOGO } from "@/entities/qr";
 import { DesignCanvas } from "./design-canvas";
 import { DesignSettings, type DesignGroup } from "./design-settings";
 import { editorPanel, editorRoot, editorStage } from "./editor-layout";
-import { ScanStatus, type ScanFix } from "./scan-status";
+import { ScanCheckButton, ScanStatus, type ScanFix } from "./scan-status";
+import { useScanCheck, type ScanDecode } from "./use-scan-check";
 import { TooLongNotice } from "./too-long-notice";
 import { useDesignHistory } from "./use-design-history";
 import { useStageView } from "./use-stage-view";
@@ -52,6 +53,7 @@ export function DesignStep({
   onChange,
   title,
   shown,
+  latest,
   scan,
   tooLong,
   onEditContent,
@@ -70,6 +72,8 @@ export function DesignStep({
   title: string;
   /** What the canvas shows (useShownRender). */
   shown: { layout: Layout; value: string; rebuilding: boolean };
+  /** HEY-67: the latest settings (the canvas may still show an earlier render); the scan check decodes these. */
+  latest: { layout: Layout; value: string };
   scan: ScanReport | null;
   tooLong: QrCapacity | null;
   onEditContent?: () => void;
@@ -102,6 +106,7 @@ export function DesignStep({
     setGroup(mode === "branded" ? "brand" : "layout");
   };
   const [full, setFull] = useState(false);
+  const scanCheck = useScanCheck(latest.layout, latest.value);
   const expandRef = useRef<HTMLButtonElement>(null);
   const dims = layoutDims(shown.layout);
   const notice = useCallback((message: string) => toast(message, { id: "design-notice" }), []);
@@ -192,8 +197,9 @@ export function DesignStep({
               </span>
               <span className="pointer-events-auto flex items-center gap-2 lg:hidden">
                 {scan ? (
-                  <span className="sm:hidden">
-                    <ScanStatus report={scan} compact checking={shown.rebuilding} />
+                  <span className="flex items-center gap-2 sm:hidden">
+                    <ScanStatus report={scan} compact checking={shown.rebuilding} decode={scanCheck.decode} />
+                    <ScanCheckButton iconOnly decode={scanCheck.decode} onCheck={scanCheck.check} />
                   </span>
                 ) : null}
                 <Button
@@ -211,7 +217,14 @@ export function DesignStep({
           </div>
           <StageFoot className="max-sm:hidden">
             <Dims dims={dims} />
-            {scan ? <ScanStatus report={scan} compact checking={shown.rebuilding} /> : <Badge variant="danger">{t("tooLong.badge")}</Badge>}
+            {scan ? (
+              <span className="flex flex-wrap items-center gap-2">
+                <ScanStatus report={scan} compact checking={shown.rebuilding} decode={scanCheck.decode} />
+                <ScanCheckButton decode={scanCheck.decode} onCheck={scanCheck.check} />
+              </span>
+            ) : (
+              <Badge variant="danger">{t("tooLong.badge")}</Badge>
+            )}
             <span className="text-caption text-muted-foreground max-2xl:hidden">{note}</span>
             {action("md", "max-lg:hidden")}
           </StageFoot>
@@ -240,9 +253,9 @@ export function DesignStep({
         </div>
         {tooLong ? (
           <TooLongNotice className="mb-5" capacity={tooLong} onEdit={onEditContent} />
-        ) : scan && !scan.ok && !shown.rebuilding ? (
+        ) : scan && ((!scan.ok && !shown.rebuilding) || scanCheck.decode?.kind === "unreadable" || scanCheck.decode?.kind === "error") ? (
           <div className="mb-5">
-            <ScanStatus report={scan} onFix={fix} />
+            <ScanStatus report={scan} onFix={fix} decode={scanCheck.decode?.kind === "checking" ? null : scanCheck.decode} />
           </div>
         ) : null}
         <DesignSettings
@@ -275,6 +288,8 @@ export function DesignStep({
         onFit={view.setFit}
         scan={scan}
         rebuilding={shown.rebuilding}
+        decode={scanCheck.decode}
+        onCheck={scanCheck.check}
       >
         {canvas}
       </FullPreview>
@@ -339,6 +354,8 @@ function FullPreview({
   onFit,
   scan,
   rebuilding,
+  decode,
+  onCheck,
   returnFocus,
   children,
 }: {
@@ -354,6 +371,8 @@ function FullPreview({
   onFit: (fit: "fit" | "actual") => void;
   scan: ScanReport | null;
   rebuilding: boolean;
+  decode: ScanDecode | null;
+  onCheck: () => void;
   children: ReactNode;
 }) {
   const ts = useTranslations("editor.stage");
@@ -406,7 +425,12 @@ function FullPreview({
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <Segmented label={ts("scale")} value={fit} options={["fit", "actual"] as const} render={(o) => ts(o)} onChange={onFit} />
-                {scan ? <ScanStatus report={scan} compact checking={rebuilding} /> : null}
+                {scan ? (
+                  <>
+                    <ScanStatus report={scan} compact checking={rebuilding} decode={decode} />
+                    <ScanCheckButton decode={decode} onCheck={onCheck} />
+                  </>
+                ) : null}
               </div>
             </StageFoot>
           </Stage>
