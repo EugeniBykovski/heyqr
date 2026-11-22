@@ -1,8 +1,8 @@
 import "server-only";
-import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { LOGO_MAX_BYTES } from "@/entities/qr/model/logo";
-import { storageConfig } from "@/server/config";
+import { isConfigured, storageConfig } from "@/server/config";
+import type { LogoStore } from "@/server/qr/logo-assets";
 
 let client: S3Client | null = null;
 
@@ -18,16 +18,6 @@ export function s3(): S3Client {
   return client;
 }
 
-export const LOGO_TYPES = ["image/png", "image/jpeg", "image/svg+xml", "image/webp"] as const;
-/** Same limit as the editor (entities/qr/model/logo.ts, HEY-50). */
-export const MAX_LOGO_BYTES = LOGO_MAX_BYTES;
-
-/** Short-lived URL the browser uploads a logo to directly. */
-export async function presignUpload(key: string, contentType: string, byteSize: number) {
-  const command = new PutObjectCommand({ Bucket: storageConfig().S3_BUCKET, Key: key, ContentType: contentType, ContentLength: byteSize });
-  return getSignedUrl(s3(), command, { expiresIn: 300 });
-}
-
 export async function presignDownload(key: string, filename: string) {
   const command = new GetObjectCommand({
     Bucket: storageConfig().S3_BUCKET,
@@ -41,4 +31,25 @@ export async function putObject(key: string, body: Buffer | string, contentType:
   await s3().send(new PutObjectCommand({ Bucket: storageConfig().S3_BUCKET, Key: key, Body: body, ContentType: contentType }));
 }
 
-export const publicUrl = (key: string) => `${storageConfig().S3_PUBLIC_URL.replace(/\/$/, "")}/${key}`;
+export async function getObject(key: string): Promise<Uint8Array | null> {
+  try {
+    const res = await s3().send(new GetObjectCommand({ Bucket: storageConfig().S3_BUCKET, Key: key }));
+    return res.Body ? await res.Body.transformToByteArray() : null;
+  } catch (e) {
+    if (e instanceof Error && (e.name === "NoSuchKey" || e.name === "NotFound")) return null;
+    throw e;
+  }
+}
+
+export async function deleteObject(key: string) {
+  await s3().send(new DeleteObjectCommand({ Bucket: storageConfig().S3_BUCKET, Key: key }));
+}
+
+/**
+ * HEY-83: private logo storage (the bucket is never public; files are read only through their owner's layouts). Null
+ * in dev without storage credentials: uploaded logos then stay inline in the design, as before.
+ */
+export function logoStore(): LogoStore | null {
+  if (!isConfigured("storage")) return null;
+  return { put: (key, body, type) => putObject(key, Buffer.from(body), type), get: getObject, remove: deleteObject };
+}

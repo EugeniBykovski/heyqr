@@ -25,7 +25,7 @@ import { readPng } from "../../../packages/qr-core/test/png-reader";
 import { readTtf } from "../../../packages/qr-core/test/ttf-cmap";
 
 vi.mock("server-only", () => ({}));
-vi.mock("@/env", () => ({ env: { S3_PUBLIC_URL: undefined, NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr" } }));
+vi.mock("@/env", () => ({ env: { NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr" } }));
 const { renderExport, captionFontFaces, CAPTION_FONT_DIR } = await import("@/server/qr/export");
 
 const VALUE = "https://littlefern.cafe/menu?table=4";

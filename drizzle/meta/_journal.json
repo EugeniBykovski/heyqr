@@ -43,6 +43,13 @@
       "when": 1795348111607,
       "tag": "0005_guest_claim_key",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1795363933952,
+      "tag": "0006_private_logo_assets",
+      "breakpoints": true
     }
   ]
 }

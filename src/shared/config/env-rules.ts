@@ -11,7 +11,8 @@ export type EnvProblem = { variable: string; message: string };
 export const INTEGRATIONS = {
   payments: ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "STRIPE_PRICE_STATIC", "STRIPE_PRICE_DYNAMIC_MONTHLY"],
   email: ["RESEND_API_KEY", "EMAIL_FROM"],
-  storage: ["S3_REGION", "S3_BUCKET", "S3_ACCESS_KEY_ID", "S3_SECRET_ACCESS_KEY", "S3_PUBLIC_URL"],
+  // HEY-83: a private bucket; nothing is served from a public URL, so S3_PUBLIC_URL is not part of storage.
+  storage: ["S3_REGION", "S3_BUCKET", "S3_ACCESS_KEY_ID", "S3_SECRET_ACCESS_KEY"],
 } as const;
 export type Integration = keyof typeof INTEGRATIONS;
 
@@ -53,7 +54,7 @@ export function environmentProblems(appEnv: AppEnv, v: Values): EnvProblem[] {
   }
 
   if (appEnv === "production") {
-    for (const k of ["NEXT_PUBLIC_APP_URL", "NEXT_PUBLIC_SHORT_LINK_BASE", "BETTER_AUTH_URL", "S3_PUBLIC_URL"]) {
+    for (const k of ["NEXT_PUBLIC_APP_URL", "NEXT_PUBLIC_SHORT_LINK_BASE", "BETTER_AUTH_URL"]) {
       const url = v[k];
       if (present(url) && (!String(url).startsWith("https://") || isLocalUrl(String(url))))
         add(k, "must be a public https:// URL in production");

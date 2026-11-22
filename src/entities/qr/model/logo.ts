@@ -1,6 +1,6 @@
 /*
  * HEY-50: what a logo file may be. Design handoff: "Upload PNG, JPG, SVG or WebP up to 10 MB"; the same limit and types
- * as the storage upload route (server/storage/s3.ts MAX_LOGO_BYTES, LOGO_TYPES). The format is read from the file's
+ * the server applies when it stores a logo (HEY-83 server/qr/logo-assets.ts). The format is read from the file's
  * bytes, never from its name or the browser's MIME guess, so a renamed file is judged by what it is.
  */
 export const LOGO_MAX_BYTES = 10 * 1024 * 1024;

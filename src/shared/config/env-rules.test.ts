@@ -19,7 +19,6 @@ const storage = {
   S3_BUCKET: "heyqr",
   S3_ACCESS_KEY_ID: "id",
   S3_SECRET_ACCESS_KEY: "secret",
-  S3_PUBLIC_URL: "https://cdn.heyqr.app",
 };
 const vars = (problems: { variable: string }[]) => problems.map((p) => p.variable).sort();
 
@@ -30,15 +29,7 @@ describe("environmentProblems", () => {
 
   it("requires every integration in production and names the missing variables", () => {
     const problems = environmentProblems("production", { ...base, ...stripeLive });
-    expect(vars(problems)).toEqual([
-      "EMAIL_FROM",
-      "RESEND_API_KEY",
-      "S3_ACCESS_KEY_ID",
-      "S3_BUCKET",
-      "S3_PUBLIC_URL",
-      "S3_REGION",
-      "S3_SECRET_ACCESS_KEY",
-    ]);
+    expect(vars(problems)).toEqual(["EMAIL_FROM", "RESEND_API_KEY", "S3_ACCESS_KEY_ID", "S3_BUCKET", "S3_REGION", "S3_SECRET_ACCESS_KEY"]);
     expect(problems.every((p) => /required in production/.test((p as { message: string }).message))).toBe(true);
   });
 

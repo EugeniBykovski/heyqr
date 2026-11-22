@@ -97,16 +97,12 @@ export class ExportSizeError extends Error {
 }
 
 /**
- * Exported files must be self-contained (and resvg can't fetch URLs), so uploaded logos are
- * embedded as data URIs. Only our own bucket is fetched, never an arbitrary URL.
+ * Exported files must be self-contained (and resvg can't fetch URLs). HEY-83: stored logos arrive here already
+ * resolved from private storage as data URIs (server/qr/repository.ts); nothing is ever fetched from a URL, so any
+ * other href is left out of the file.
  */
 async function embed(href: string | undefined): Promise<string | undefined> {
-  if (!href || href.startsWith("data:")) return href;
-  if (!env.S3_PUBLIC_URL || !href.startsWith(env.S3_PUBLIC_URL)) return undefined;
-  const res = await fetch(href);
-  if (!res.ok) return undefined;
-  const type = res.headers.get("content-type") ?? "image/png";
-  return `data:${type};base64,${Buffer.from(await res.arrayBuffer()).toString("base64")}`;
+  return href?.startsWith("data:") ? href : undefined;
 }
 
 export async function withEmbeddedImages(layout: Layout): Promise<Layout> {

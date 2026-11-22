@@ -19,7 +19,7 @@ import messages from "../../../messages/en.json";
 import { FramePanel } from "./frame-panel";
 
 vi.mock("server-only", () => ({}));
-vi.mock("@/env", () => ({ env: { S3_PUBLIC_URL: undefined, NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr" } }));
+vi.mock("@/env", () => ({ env: { NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr" } }));
 const { renderExport } = await import("@/server/qr/export");
 
 afterEach(cleanup);

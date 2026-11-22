@@ -1,8 +1,15 @@
 import { layoutCapacity } from "@heyqr/qr-core";
 import { and, eq, isNull, sql } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
-import { createLayoutRecord } from "../../entities/qr/model/design-schema";
+import { createLayoutRecord, type LayoutRecordDesign } from "../../entities/qr/model/design-schema";
 import * as schema from "../db/schema";
+
+type Tx = Parameters<Parameters<NodePgDatabase<typeof schema>["transaction"]>[0]>[0];
+/**
+ * HEY-83: runs inside the write's transaction before a layout record is stored (the actions move uploaded logos into
+ * private storage here). Null refuses the record as invalid.
+ */
+export type PrepareRecord = (tx: Tx, record: LayoutRecordDesign) => Promise<LayoutRecordDesign | null>;
 
 export type UpdateLayoutInput = { qrCodeId: string; layoutId: string; layout: unknown; editor?: unknown; name?: string };
 export type UpdateLayoutResult =
@@ -20,9 +27,10 @@ export async function updateLayoutDesign(
   userId: string,
   input: UpdateLayoutInput,
   encodedFor: (qr: typeof schema.qrCode.$inferSelect) => string,
+  prepare?: PrepareRecord,
 ): Promise<UpdateLayoutResult> {
-  const design = createLayoutRecord(input.layout, input.editor);
-  if (!design) return { ok: false, error: "invalid" };
+  const checked = createLayoutRecord(input.layout, input.editor);
+  if (!checked) return { ok: false, error: "invalid" };
   return db.transaction(async (tx) => {
     const [qr] = await tx
       .select()
@@ -30,7 +38,9 @@ export async function updateLayoutDesign(
       .where(and(eq(schema.qrCode.id, input.qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)))
       .for("update");
     if (!qr) return { ok: false, error: "not_found" } as const;
-    if (!layoutCapacity(design.layout, encodedFor(qr)).ok) return { ok: false, error: "too_long" } as const;
+    if (!layoutCapacity(checked.layout, encodedFor(qr)).ok) return { ok: false, error: "too_long" } as const;
+    const design = prepare ? await prepare(tx, checked) : checked;
+    if (!design) return { ok: false, error: "invalid" } as const;
     const updated = await tx
       .update(schema.qrLayout)
       .set({ design, ...(input.name?.trim() ? { name: input.name.trim().slice(0, 60) } : {}), updatedAt: sql`now()` })
@@ -58,10 +68,11 @@ export async function addLayoutFrom(
   input: AddLayoutInput,
   encodedFor: (qr: typeof schema.qrCode.$inferSelect) => string,
   newId: () => string,
+  prepare?: PrepareRecord,
 ): Promise<AddLayoutResult> {
-  const design = createLayoutRecord(input.layout, input.editor);
+  const checked = createLayoutRecord(input.layout, input.editor);
   const name = input.name.trim().slice(0, 60);
-  if (!design || !name) return { ok: false, error: "invalid" };
+  if (!checked || !name) return { ok: false, error: "invalid" };
   return db.transaction(async (tx) => {
     const [qr] = await tx
       .select()
@@ -69,7 +80,9 @@ export async function addLayoutFrom(
       .where(and(eq(schema.qrCode.id, input.qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)))
       .for("update");
     if (!qr) return { ok: false, error: "not_found" } as const;
-    if (!layoutCapacity(design.layout, encodedFor(qr)).ok) return { ok: false, error: "too_long" } as const;
+    if (!layoutCapacity(checked.layout, encodedFor(qr)).ok) return { ok: false, error: "too_long" } as const;
+    const design = prepare ? await prepare(tx, checked) : checked;
+    if (!design) return { ok: false, error: "invalid" } as const;
     const [last] = await tx
       .select({ max: sql<number>`coalesce(max(${schema.qrLayout.sortOrder}), -1)` })
       .from(schema.qrLayout)
