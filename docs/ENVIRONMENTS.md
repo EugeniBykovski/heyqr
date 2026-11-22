@@ -47,7 +47,7 @@ variable names and the environment, never values. Database commands validate onl
 | `STRIPE_WEBHOOK_SECRET`                               | secret | with Stripe: CLI or dev endpoint secret                   | required: production endpoint secret        |
 | `STRIPE_PRICE_STATIC`, `STRIPE_PRICE_DYNAMIC_MONTHLY` | server | with Stripe: test-mode price IDs                          | required: live-mode price IDs               |
 | `RESEND_API_KEY`                                      | secret | optional, all-or-nothing; receipts are skipped without it | required                                    |
-| `EMAIL_FROM`                                          | server | with Resend: a dev sender                                 | required: verified production sender        |
+| `EMAIL_FROM`                                          | server | with Resend: `HeyQR <onboarding@resend.dev>` (own inbox)  | required: verified production sender        |
 | `S3_REGION`, `S3_BUCKET`, `S3_PUBLIC_URL`             | server | optional, all-or-nothing: local MinIO or a dev bucket     | required: production bucket, `https://` URL |
 | `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`            | secret | with storage                                              | required                                    |
 | `S3_ENDPOINT`                                         | server | MinIO / R2 endpoint; empty for AWS                        | R2 endpoint, or empty for AWS               |
