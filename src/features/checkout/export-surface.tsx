@@ -587,26 +587,16 @@ export function ExportSurface(props: ExportSurfaceProps) {
                 aria-label={t("layouts")}
                 className="flex [scrollbar-width:none] gap-1 overflow-x-auto border-b border-border bg-surface/88 px-2 py-1.5"
               >
-                {props.layouts.map((l) => {
-                  const chip =
-                    "inline-flex min-h-9 max-w-45 flex-none items-center truncate rounded-full border border-border bg-surface px-3 text-[0.8125rem] font-semibold text-secondary-foreground aria-[current=page]:border-violet-300 aria-[current=page]:bg-violet-50 aria-[current=page]:text-violet-800";
-                  // HEY-92: while frozen (confirming a payment, preparing a file, going to checkout) the layout stays
-                  // as it is. A link here would open the screen without the checkout return and offer Pay again.
-                  return frozen ? (
-                    <span
-                      key={l.id}
-                      aria-current={l.active ? "page" : undefined}
-                      aria-disabled="true"
-                      className={cn(chip, "cursor-not-allowed", !l.active && "opacity-60")}
-                    >
-                      {l.name}
-                    </span>
-                  ) : (
-                    <Link key={l.id} href={l.href} aria-current={l.active ? "page" : undefined} className={chip}>
-                      {l.name}
-                    </Link>
-                  );
-                })}
+                {props.layouts.map((l) => (
+                  <Link
+                    key={l.id}
+                    href={l.href}
+                    aria-current={l.active ? "page" : undefined}
+                    className="inline-flex min-h-9 max-w-45 flex-none items-center truncate rounded-full border border-border bg-surface px-3 text-[0.8125rem] font-semibold text-secondary-foreground aria-[current=page]:border-violet-300 aria-[current=page]:bg-violet-50 aria-[current=page]:text-violet-800"
+                  >
+                    {l.name}
+                  </Link>
+                ))}
               </nav>
             ) : null}
             <div className="relative">

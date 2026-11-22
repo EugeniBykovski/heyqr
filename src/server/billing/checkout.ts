@@ -8,7 +8,7 @@ import { db, schema } from "../db";
 import type { PurchaseItem, PurchaseLine } from "../db/schema";
 import { newId } from "../db/ids";
 import { priceMatches, stripePriceFor } from "./catalog";
-import { singleQrCheckout, type CheckoutPort } from "./single-order";
+import { awaitingFulfillment, singleQrCheckout, type CheckoutPort } from "./single-order";
 import { stripe } from "./stripe";
 
 async function customerFor(user: { id: string; email: string; name: string; stripeCustomerId?: string | null }) {
@@ -255,6 +255,22 @@ export async function createPrintPackCheckout(input: {
     metadata: { userId: input.user.id, qrCodeId: input.qrCodeId, layoutId: input.layoutId, kind: "print_pack", currency: input.currency },
     purchase: { qrCodeId: input.qrCodeId, item: "print_pack", lines: [line(input.currency, "printPack")], currency: input.currency },
   });
+}
+
+/**
+ * HEY-92: Export's check for a paid Single QR order still waiting for the webhook (see awaitingFulfillment). If Stripe
+ * can't be reached, the screen behaves as before: Pay is shown, and a second checkout is refused ("processing").
+ */
+export async function pendingPaidCheckout(userId: string, qrCodeId: string) {
+  return awaitingFulfillment(
+    db,
+    async (id) => {
+      const s = await stripe().checkout.sessions.retrieve(id);
+      return { status: s.status, payment_status: s.payment_status, success_url: s.success_url };
+    },
+    userId,
+    qrCodeId,
+  ).catch(() => null);
 }
 
 /** Stripe customer portal for plan changes, cancellation and receipts. */
