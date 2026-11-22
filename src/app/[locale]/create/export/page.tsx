@@ -17,6 +17,7 @@ import { db } from "@/server/db";
 import { encodedValue } from "@/server/qr/export";
 import { getQrCode, paidPurchase } from "@/server/qr/repository";
 import { GuestExport } from "@/widgets/export-screen";
+import { redirect } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -43,11 +44,19 @@ function settingsFrom(query: Record<string, string | string[] | undefined>) {
  * see it for a saved code and layout. Entitlement, prices and files stay on the server (canDownload, Stripe, /api/export).
  */
 export default async function ExportPage({ params, searchParams }: PageProps<"/[locale]/create/export">) {
-  await resolveLocale(params);
+  const locale = await resolveLocale(params);
   const query = await searchParams;
   const initial = settingsFrom(query);
   const session = await getSession();
-  if (!session) return <GuestExport initial={initial} signInNotice={signInError(query.error) ?? undefined} />;
+  if (!session) {
+    // HEY-78: a saved code's Export while signed out (the session ended): sign in again and come back to this exact
+    // screen (code, layout and file choices). Without a code it's the guest's own Export (3.1).
+    if (one(query.qr)) {
+      const keep = new URLSearchParams(Object.entries(query).flatMap(([k, v]) => (typeof v === "string" ? [[k, v]] : []))).toString();
+      return redirect({ href: `/sign-in?next=${encodeURIComponent(`/create/export?${keep}`)}`, locale });
+    }
+    return <GuestExport initial={initial} signInNotice={signInError(query.error) ?? undefined} />;
+  }
 
   const qrId = one(query.qr);
   const layoutId = one(query.layout);

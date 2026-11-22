@@ -173,17 +173,38 @@ export function ExportSurface(props: ExportSurfaceProps) {
     resolution: defaultResolution(layout, props.initial.resolution),
     transparent: props.initial.transparent === true,
   }));
-  // HEY-76: a guest's choices live in the address, so Back from Google, a refresh or a canceled sign-in reopens this
-  // screen with the same format, PNG size and transparency (the draft itself is in this browser's storage).
-  const guest = props.mode === "guest";
+  // HEY-76 / HEY-78: the file choices live in the address (next to the code and layout), so Back from Google, a refresh,
+  // a canceled sign-in or signing in again after the session ended reopens this screen with the same format, PNG size
+  // and transparency.
   useEffect(() => {
-    if (!guest) return;
     const url = new URL(window.location.href);
-    const next = new URLSearchParams(settingsQuery(settings));
-    if (url.searchParams.get("error")) next.set("error", url.searchParams.get("error") ?? "");
-    if (url.search.slice(1) === next.toString()) return;
-    window.history.replaceState(window.history.state, "", `${url.pathname}?${next.toString()}`);
-  }, [guest, settings]);
+    const chosen = new URLSearchParams(settingsQuery(settings));
+    for (const k of ["format", "res", "transparent"]) {
+      const v = chosen.get(k);
+      if (v) url.searchParams.set(k, v);
+      else url.searchParams.delete(k);
+    }
+    const next = `${url.pathname}?${url.searchParams.toString()}`;
+    if (next !== `${window.location.pathname}${window.location.search}`) window.history.replaceState(window.history.state, "", next);
+  }, [settings]);
+
+  /**
+   * HEY-78: the session ended while this screen was open. Nothing is retried blindly: the screen says so and offers
+   * Google sign-in, which returns here with the same code, layout and file choices.
+   */
+  const [sessionEnded, setSessionEnded] = useState(false);
+  const ended = (result: { ok: boolean; error?: string }) => {
+    if (result.ok || result.error !== "unauthorized") return false;
+    setSessionEnded(true);
+    return true;
+  };
+  const signInAgainHref = () => {
+    const prefix = `/${locale}`;
+    const path = window.location.pathname.startsWith(`${prefix}/`)
+      ? window.location.pathname.slice(prefix.length)
+      : window.location.pathname;
+    return `/sign-in?next=${encodeURIComponent(`${path}${window.location.search}`)}`;
+  };
   const [file, setFile] = useState<FileState>({ kind: "idle" });
   const [paying, startPaying] = useTransition();
   const offer = props.offer;
@@ -279,6 +300,11 @@ export function ExportSurface(props: ExportSurfaceProps) {
     setFile({ kind: "preparing" });
     try {
       const res = await fetch(exportFileUrl(props.layoutId, layout, settings), { credentials: "same-origin" });
+      if (res.status === 401) {
+        setSessionEnded(true);
+        setFile({ kind: "idle" });
+        return;
+      }
       if (!res.ok) {
         const body = (await res.json().catch(() => ({}))) as { error?: string };
         setFile({
@@ -332,7 +358,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
         printPack: ppOn && !ppIncluded,
       }).catch(() => ({ ok: false as const, error: "failed" }));
       if (result.ok) window.location.assign(result.data.url);
-      else
+      else if (!ended(result))
         toast.error(
           result.error === "not_offered" || result.error === "price_mismatch" ? t(`catalog.${result.error}`) : t("checkoutFailed"),
           { id: "checkout" },
@@ -348,6 +374,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
         error: "failed" as const,
       }));
       if (!result.ok) {
+        if (ended(result)) return;
         toast.error(t(`unlockErrors.${result.error === "no_allowance" || result.error === "no_credits" ? result.error : "failed"}`), {
           id: "unlock",
         });
@@ -364,6 +391,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
     startPaying(async () => {
       const result = await activateDynamic(props.qrCodeId).catch(() => ({ ok: false as const, error: "failed" as const }));
       if (!result.ok) {
+        if (ended(result)) return;
         toast.error(t(`unlockErrors.${result.error === "limit" ? "limit" : "failed"}`), { id: "unlock" });
         return;
       }
@@ -378,7 +406,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
       if (ppIncluded) {
         const r = await takeIncludedPrintPack(props.qrCodeId).catch(() => ({ ok: false as const, error: "failed" as const }));
         if (r.ok) router.refresh();
-        else toast.error(t("unlockErrors.failed"), { id: "pp" });
+        else if (!ended(r)) toast.error(t("unlockErrors.failed"), { id: "pp" });
         return;
       }
       const r = await startPrintPackCheckout({
@@ -388,7 +416,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
         locale,
       }).catch(() => ({ ok: false as const, error: "failed" as const }));
       if (r.ok) window.location.assign(r.data.url);
-      else toast.error(t("checkoutFailed"), { id: "pp" });
+      else if (!ended(r)) toast.error(t("checkoutFailed"), { id: "pp" });
     });
 
   const toStatic = () =>
@@ -396,7 +424,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
     startPaying(async () => {
       const r = await makeStatic(props.qrCodeId).catch(() => ({ ok: false as const, error: "failed" as const }));
       if (r.ok) router.refresh();
-      else toast.error(t("unlockErrors.failed"), { id: "static" });
+      else if (!ended(r)) toast.error(t("unlockErrors.failed"), { id: "static" });
     });
 
   const update = (patch: Partial<ExportSettings>) => {
@@ -612,6 +640,18 @@ export function ExportSurface(props: ExportSurfaceProps) {
           {props.mode === "guest" && props.signInNotice ? (
             <Banner tone={props.signInNotice === "canceled" ? "neutral" : "error"}>
               {t.rich(props.signInNotice === "canceled" ? "signInCanceled" : "signInIncomplete", { format: fmt, b: (c) => <b>{c}</b> })}
+            </Banner>
+          ) : null}
+          {sessionEnded ? (
+            <Banner tone="error">
+              {t.rich("sessionEnded", { b: (c) => <b>{c}</b> })}{" "}
+              <button
+                type="button"
+                className="cursor-pointer font-semibold underline underline-offset-2"
+                onClick={() => router.push(signInAgainHref())}
+              >
+                {t("signInAgain")}
+              </button>
             </Banner>
           ) : null}
           {props.returnedFromSignIn ? <Banner tone="info">{t.rich("returned", { format: fmt, b: (c) => <b>{c}</b> })}</Banner> : null}
