@@ -1,5 +1,6 @@
 "use client";
 
+import { DRAFT_LIMIT } from "@/shared/config/catalog-core";
 import { encodePayload, layoutCapacity, type QrContentType } from "@heyqr/qr-core";
 import { ArrowLeftIcon, ArrowRightIcon, LoaderCircleIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -176,13 +177,19 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
         // HEY-76: the layout keeps the name the guest saw on Export ("Vertical card"); the code keeps its own name.
         layouts: [{ name: t(`presets.${design.preset}`), layout, editor: designSettingsOf(design) }],
       }).catch(() => ({ ok: false as const, error: "generic" as const }));
+      if (!result.ok && result.error === "draft_limit") {
+        // HEY-80: the account's saved drafts are full. Nothing is lost: the design stays here (and in this browser) and
+        // the same Export saves it once a slot is free in My QR codes.
+        toast.error(tErrors("draft_limit", { limit: DRAFT_LIMIT }), {
+          id: "draft-limit",
+          duration: 12_000,
+          action: { label: t("openLibrary"), onClick: () => router.push("/dashboard") },
+        });
+        return;
+      }
       if (!result.ok) {
         toast.error(
-          tErrors(
-            result.error === "unauthorized" || result.error === "invalid" || result.error === "too_long" || result.error === "draft_limit"
-              ? result.error
-              : "generic",
-          ),
+          tErrors(result.error === "unauthorized" || result.error === "invalid" || result.error === "too_long" ? result.error : "generic"),
         );
         return;
       }

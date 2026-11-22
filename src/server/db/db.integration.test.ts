@@ -10,6 +10,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { DEFAULT_DESIGN, designToLayout } from "../../entities/qr/model/design";
 import { designSettingsOf, readLayoutRecord } from "../../entities/qr/model/design-schema";
 import { RESTORE_WINDOW_MS, restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
+import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, removeLayout, updateLayoutDesign } from "../qr/update-layout";
 import { activateTrialCode, startTrial, trialCode } from "../billing/trial";
@@ -27,6 +28,7 @@ import { SEED_SCAN_DAYS, seedFixtures } from "./fixtures";
 import { runMigrations } from "./migrator";
 import * as schema from "./schema";
 import { assertAllowed } from "./target";
+import { DRAFT_LIMIT } from "../../shared/config/catalog-core";
 
 const url = process.env.TEST_DATABASE_URL;
 
@@ -1058,5 +1060,74 @@ describe.skipIf(!url)("draft limit (HEY-60, real PostgreSQL)", () => {
     if (!anyDraft) throw new Error("fixture");
     await softDeleteQrCodes(db, owner.id, [anyDraft.id]);
     expect((await save("after delete")).ok).toBe(true);
+  });
+
+  it("with exactly one slot left, two new drafts at once: one is saved, one gets the limit (HEY-80)", async () => {
+    const other = { id: "drafts-one-slot", name: "One slot", email: "one-slot@drafts.test" };
+    await db.insert(schema.user).values(other).onConflictDoNothing();
+    try {
+      const saveAs = (text: string, claimKey?: string) =>
+        saveQrWithLayouts(db, other.id, { name: text, model: "static", content: { type: "text", text }, layouts, claimKey });
+      for (let i = 0; i < DRAFT_LIMIT - 1; i++) expect((await saveAs(`s${i}`)).ok).toBe(true);
+      const [a, b] = await Promise.all([saveAs("tab A"), saveAs("tab B")]);
+      expect([a, b].filter((r) => r.ok)).toHaveLength(1);
+      expect([a, b].filter((r) => !r.ok && r.error === "draft_limit")).toHaveLength(1);
+      const count = async () =>
+        Number(
+          (
+            await pool.query(`select count(*)::int as n from qr_code where user_id = $1 and status = 'draft' and deleted_at is null`, [
+              other.id,
+            ])
+          ).rows[0].n,
+        );
+      expect(await count()).toBe(DRAFT_LIMIT);
+      // A guest draft attached after sign-in (HEY-77) counts too, and is saved once a slot is freed.
+      expect(await saveAs("guest draft", "hey80claimkey00000001")).toEqual({ ok: false, error: "draft_limit" });
+      const oldest = await db.query.qrCode.findFirst({ where: (q, { and, eq }) => and(eq(q.userId, other.id), eq(q.name, "s0")) });
+      if (!oldest) throw new Error("fixture");
+      await softDeleteQrCodes(db, other.id, [oldest.id]);
+      expect((await saveAs("guest draft", "hey80claimkey00000001")).ok).toBe(true);
+      expect(await count()).toBe(DRAFT_LIMIT);
+    } finally {
+      await db.delete(schema.user).where(eq(schema.user.id, other.id));
+    }
+  });
+
+  it("rename changes only the owner's code name: content, short link, layouts and purchase stay (HEY-80)", async () => {
+    // Its own owner: the draft-limit test above leaves "owner" at the limit.
+    const renamer = { id: "drafts-renamer", name: "Renamer", email: "renamer@drafts.test" };
+    const stranger = { id: "drafts-stranger", name: "Stranger", email: "stranger@drafts.test" };
+    await db.insert(schema.user).values([renamer, stranger]).onConflictDoNothing();
+    try {
+      const saved = await saveQrWithLayouts(db, renamer.id, {
+        name: "Before",
+        model: "dynamic",
+        content: { type: "website", url: "https://littlefern.cafe/hey80" },
+        destination: "https://littlefern.cafe/hey80",
+        layouts: [{ name: "Poster", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }],
+      });
+      if (!saved.ok) throw new Error("fixture");
+      const id = saved.data.qrCodeId;
+      await db
+        .update(schema.qrCode)
+        .set({ status: "active", shortCode: "hey80lnk", purchasedAt: new Date() })
+        .where(eq(schema.qrCode.id, id));
+      const snapshot = async () =>
+        (
+          await pool.query(
+            `select q.name, q.content, q.short_code, q.destination, q.status, q.purchased_at is not null as bought,
+               (select string_agg(l.name || ':' || md5(l.design::text), ',' order by l.sort_order) from qr_layout l where l.qr_code_id = q.id) as layouts
+             from qr_code q where q.id = $1`,
+            [id],
+          )
+        ).rows[0];
+      const before = await snapshot();
+      expect(await renameQrCode(db, stranger.id, id, "Hijacked")).toEqual({ ok: false, error: "not_found" });
+      expect(await renameQrCode(db, renamer.id, id, "   ")).toEqual({ ok: false, error: "invalid" });
+      expect(await renameQrCode(db, renamer.id, id, "  After  ")).toEqual({ ok: true });
+      expect(await snapshot()).toEqual({ ...before, name: "After" });
+    } finally {
+      await db.delete(schema.user).where(inArray(schema.user.id, [renamer.id, stranger.id]));
+    }
   });
 });

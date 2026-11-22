@@ -9,7 +9,7 @@ import { accountUsage } from "@/server/billing/allowances";
 import { forSale, userTrial } from "@/server/billing/entitlements";
 import { getCurrency } from "@/server/currency";
 import { db } from "@/server/db";
-import { formatMoney, OFFERS, PACK_CREDITS, PLANS, priceSheet } from "@/shared/config/catalog";
+import { DRAFT_LIMIT, formatMoney, OFFERS, PACK_CREDITS, PLANS, priceSheet } from "@/shared/config/catalog";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -116,7 +116,7 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
               {(["a", "b", "c"] as const).map((k) => (
                 <li key={k} className="flex items-start gap-2.5">
                   <Check />
-                  {t(`free.${k}`)}
+                  {t(`free.${k}`, { limit: DRAFT_LIMIT })}
                 </li>
               ))}
             </ul>

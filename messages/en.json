@@ -491,6 +491,7 @@
     "date": "Date"
   },
   "editor": {
+    "openLibrary": "Open My QR codes",
     "title": "Create a QR code",
     "steps": {
       "content": "Content",
@@ -1602,7 +1603,7 @@
       "title": "This link is paused",
       "text": "The owner of this QR code has paused it. Nothing is wrong with your phone; try again later."
     },
-    "draft_limit": "You have 10 saved drafts, the most an account keeps. Unlock or delete one in My QR codes to save a new code."
+    "draft_limit": "You have {limit} saved drafts, the most an account keeps. Unlock or delete one in My QR codes, then save again: your design stays here."
   },
   "common": {
     "close": "Close",
@@ -1996,7 +1997,7 @@
       "q": "Design and test a code before you spend anything.",
       "a": "Live design and preview",
       "b": "Scan check on every edit",
-      "c": "Up to 10 saved drafts when signed in",
+      "c": "Up to {limit} saved drafts when signed in",
       "cta": "Start designing"
     },
     "single": {
