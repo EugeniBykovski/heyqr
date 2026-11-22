@@ -358,7 +358,11 @@ export function ExportSurface(props: ExportSurfaceProps) {
         printPack: ppOn && !ppIncluded,
       }).catch(() => ({ ok: false as const, error: "failed" }));
       if (result.ok) window.location.assign(result.data.url);
-      else if (!ended(result))
+      else if (result.error === "owned") {
+        // HEY-87: already unlocked elsewhere (another tab, a plan unlock): the screen turns into Download again.
+        toast.success(t("alreadyOwned"), { id: "checkout" });
+        router.refresh();
+      } else if (!ended(result))
         toast.error(
           result.error === "not_offered" || result.error === "price_mismatch" ? t(`catalog.${result.error}`) : t("checkoutFailed"),
           { id: "checkout" },
@@ -416,7 +420,10 @@ export function ExportSurface(props: ExportSurfaceProps) {
         locale,
       }).catch(() => ({ ok: false as const, error: "failed" as const }));
       if (r.ok) window.location.assign(r.data.url);
-      else if (!ended(r)) toast.error(t("checkoutFailed"), { id: "pp" });
+      else if (r.error === "owned") {
+        toast.success(t("alreadyOwned"), { id: "pp" });
+        router.refresh();
+      } else if (!ended(r)) toast.error(t("checkoutFailed"), { id: "pp" });
     });
 
   const toStatic = () =>

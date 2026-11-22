@@ -12,6 +12,7 @@ import { designSettingsOf, readLayoutRecord } from "../../entities/qr/model/desi
 import { RESTORE_WINDOW_MS, restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { cleanupLogos, referencedAssets, resolveLogos, storeLogos, type LogoStore } from "../qr/logo-assets";
 import { authorizedLogo, ownedLayout } from "../qr/file-access";
+import { fulfillCheckout } from "../billing/fulfillment";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, copyLayout, layoutRevision, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
@@ -1624,5 +1625,137 @@ describe.skipIf(!url)("concurrent layout saves (HEY-85, real PostgreSQL)", () =>
     const [r1, r2] = await Promise.all([save(l1, "Card again", await revisionOf(l1)), save(l2, "Poster again", await revisionOf(l2))]);
     expect(r1.ok && r2.ok).toBe(true);
     expect([await captionOf(l1), await captionOf(l2)]).toEqual(["Card again", "Poster again"]);
+  });
+});
+
+/* HEY-87: each grant source unlocks one static code once; repeat downloads and repeated deliveries never grant or charge again. */
+describe.skipIf(!url)("repeat-download entitlements (HEY-87, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "hey87-owner", name: "Owner", email: "owner@hey87.test" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const code = async (text: string) => {
+    const r = await saveQrWithLayouts(db, owner.id, { name: text, model: "static", content: { type: "text", text }, layouts });
+    if (!r.ok) throw new Error("fixture");
+    return r.data.qrCodeId;
+  };
+  const qrRow = async (id: string) =>
+    (await pool.query(`select purchased_at, print_pack_at, status from qr_code where id = $1`, [id])).rows[0] as {
+      purchased_at: Date | null;
+      print_pack_at: Date | null;
+      status: string;
+    };
+  const order = async (id: string, qrCodeId: string | null, item = "single_qr") =>
+    pool.query(
+      `insert into purchase (id, user_id, qr_code_id, item, stripe_checkout_session_id, amount_total, currency, status) values ($1, $2, $3, $4, $5, 499, 'usd', 'pending')`,
+      [id, owner.id, qrCodeId, item, `cs_test_${id}`],
+    );
+  const session = (id: string, metadata: Record<string, string>, payment_status: "paid" | "unpaid" = "paid") => ({
+    id: `cs_test_${id}`,
+    mode: "payment" as const,
+    payment_status,
+    payment_intent: `pi_${id}`,
+    amount_total: 499,
+    currency: "usd",
+    metadata: { userId: owner.id, ...metadata },
+  });
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.purchase).where(eq(schema.purchase.userId, owner.id));
+    await db?.delete(schema.creditLedger).where(eq(schema.creditLedger.userId, owner.id));
+    await db?.delete(schema.allowanceUse).where(eq(schema.allowanceUse.userId, owner.id));
+    await db?.delete(schema.subscription).where(eq(schema.subscription.userId, owner.id));
+    await db?.delete(schema.qrCode).where(eq(schema.qrCode.userId, owner.id));
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("a paid Single QR order unlocks its own code exactly once; redelivery and the async event change nothing", async () => {
+    const qr = await code("single");
+    const other = await code("single"); // same content, its own code
+    await order("o1", qr);
+    const receipts: string[] = [];
+    const onReceipt = async (r: { qrCodeId: string }) => void receipts.push(r.qrCodeId);
+    expect(await fulfillCheckout(db, session("o1", { qrCodeId: qr, layoutId: "x", kind: "code" }), () => "s", onReceipt)).toEqual({
+      granted: true,
+    });
+    const first = await qrRow(qr);
+    expect(first.purchased_at).not.toBeNull();
+    expect(first.status).toBe("active");
+    // Stripe redelivers, and sends async_payment_succeeded for the same session.
+    expect(await fulfillCheckout(db, session("o1", { qrCodeId: qr, kind: "code" }), () => "s", onReceipt)).toEqual({ granted: false });
+    expect(await fulfillCheckout(db, session("o1", { qrCodeId: qr, kind: "code" }), () => "s", onReceipt)).toEqual({ granted: false });
+    expect((await qrRow(qr)).purchased_at).toEqual(first.purchased_at);
+    expect(receipts).toEqual([qr]);
+    expect((await pool.query(`select count(*)::int as n from purchase where user_id = $1 and status = 'paid'`, [owner.id])).rows[0].n).toBe(
+      1,
+    );
+    // The same content in another code stays locked.
+    expect((await qrRow(other)).purchased_at).toBeNull();
+  });
+
+  it("an unpaid session, or an order of another code, grants nothing", async () => {
+    const qr = await code("unpaid");
+    await order("o2", qr);
+    expect(await fulfillCheckout(db, session("o2", { qrCodeId: qr, kind: "code" }, "unpaid"), () => "s")).toEqual({ granted: false });
+    expect((await qrRow(qr)).purchased_at).toBeNull();
+    // Metadata naming a different code than the order's own: no unlock of either.
+    const other = await code("other");
+    expect(await fulfillCheckout(db, session("o2", { qrCodeId: other, kind: "code" }), () => "s")).toEqual({ granted: false });
+    expect((await qrRow(qr)).purchased_at).toBeNull();
+    expect((await qrRow(other)).purchased_at).toBeNull();
+  });
+
+  it("a pack's credits and a Print Pack are granted once per order; the Print Pack stays a separate grant", async () => {
+    await order("o3", null, "pack3");
+    const pack = session("o3", { kind: "pack", pack: "pack3" });
+    expect((await fulfillCheckout(db, pack, () => "s")).granted).toBe(true);
+    expect((await fulfillCheckout(db, pack, () => "s")).granted).toBe(false);
+    expect(await creditBalance(db, owner.id)).toBe(3);
+    const qr = await code("print");
+    await db.update(schema.qrCode).set({ purchasedAt: new Date(), status: "active" }).where(eq(schema.qrCode.id, qr));
+    expect((await qrRow(qr)).print_pack_at).toBeNull(); // unlocked, no Print Pack yet
+    await order("o4", qr, "print_pack");
+    const pp = session("o4", { qrCodeId: qr, kind: "print_pack" });
+    expect((await fulfillCheckout(db, pp, () => "s")).granted).toBe(true);
+    const at = (await qrRow(qr)).print_pack_at;
+    expect(at).not.toBeNull();
+    expect((await fulfillCheckout(db, pp, () => "s")).granted).toBe(false);
+    expect((await qrRow(qr)).print_pack_at).toEqual(at);
+  });
+
+  it("a credit or a monthly unlock grants the same unlock once; asking again uses nothing; it outlives the plan", async () => {
+    const byCredit = await code("credit");
+    const balance = await creditBalance(db, owner.id);
+    expect(await unlockStatic(db, owner.id, byCredit, "credit")).toEqual({ ok: true, via: "credit" });
+    expect(await unlockStatic(db, owner.id, byCredit, "credit")).toEqual({ ok: false, error: "owned" });
+    expect(await creditBalance(db, owner.id)).toBe(balance - 1);
+
+    await db.insert(schema.subscription).values({
+      id: "hey87-sub",
+      userId: owner.id,
+      stripeSubscriptionId: "sub_hey87",
+      stripePriceId: "price_starter",
+      plan: "starter",
+      status: "active",
+      activeCodeLimit: 5,
+      currentPeriodStart: new Date(Date.now() - 86_400_000),
+      currentPeriodEnd: new Date(Date.now() + 29 * 86_400_000),
+    });
+    const byPlan = await code("plan");
+    expect(await unlockStatic(db, owner.id, byPlan, "plan")).toEqual({ ok: true, via: "plan" });
+    const usedAfter = (await accountUsage(db, owner.id)).unlocks.used;
+    expect(await unlockStatic(db, owner.id, byPlan, "plan")).toEqual({ ok: false, error: "owned" });
+    expect((await accountUsage(db, owner.id)).unlocks.used).toBe(usedAfter);
+    // The plan ends: what it unlocked stays unlocked; a new code now needs a new unlock.
+    await db.update(schema.subscription).set({ status: "canceled" }).where(eq(schema.subscription.id, "hey87-sub"));
+    expect((await qrRow(byPlan)).purchased_at).not.toBeNull();
+    const after = await code("after the plan");
+    expect(await unlockStatic(db, owner.id, after, "plan")).toEqual({ ok: false, error: "no_allowance" });
   });
 });

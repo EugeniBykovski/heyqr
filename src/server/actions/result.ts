@@ -19,7 +19,9 @@ export type ActionResult<T = undefined> =
         | "last_layout"
         | "draft_limit"
         // HEY-85: the layout was saved elsewhere (another tab or device) since this editor opened it.
-        | "conflict";
+        | "conflict"
+        // HEY-87: already unlocked (or the Print Pack already bought): nothing to pay, download again instead.
+        | "owned";
     };
 
 /** Error name and database error code only; no message text, query or parameters. */

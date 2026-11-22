@@ -17,7 +17,12 @@ vi.mock("../billing/checkout", () => ({
   createPortalSession: vi.fn(),
   CatalogError: class extends Error {},
 }));
-vi.mock("../billing/entitlements", () => ({ canDownload: async () => true, printPackForSale: () => true, activeSubscription: vi.fn() }));
+const canDownload = vi.fn(async () => true);
+vi.mock("../billing/entitlements", () => ({
+  canDownload: (...a: unknown[]) => canDownload(...(a as [])),
+  printPackForSale: () => true,
+  activeSubscription: vi.fn(),
+}));
 vi.mock("../storage/s3", () => ({ logoStore: () => null }));
 const { startCheckout, startPrintPackCheckout } = await import("./qr");
 
@@ -26,11 +31,18 @@ const record = (unit: "mm" | "px") => {
   const d = { ...DEFAULT_DESIGN, size: unit === "mm" ? { unit: "mm" as const, qr: 40, width: 40, height: 40 } : DEFAULT_DESIGN.size };
   return { schemaVersion: 1, layout: designToLayout(d), editor: designSettingsOf(d) };
 };
-const qr = (printPackAt: Date | null = null) => ({ id: "q1", userId: "u1", model: "static", printPackAt, purchasedAt: new Date() });
+const qr = (printPackAt: Date | null = null, purchasedAt: Date | null = new Date()) => ({
+  id: "q1",
+  userId: "u1",
+  model: "static",
+  printPackAt,
+  purchasedAt,
+});
 const checkout = { qrCodeId: "q1", layoutId: "l-other", format: "png" as const, locale: "en" };
 
 beforeEach(() => {
   owned.mockReset();
+  canDownload.mockReset().mockResolvedValue(true);
   createCheckout.mockClear();
   createPrintPackCheckout.mockClear();
 });
@@ -46,7 +58,8 @@ describe("checkout authorization (HEY-84)", () => {
   });
 
   it("the user's code and its own layout: the checkout starts", async () => {
-    owned.mockResolvedValue({ qr: qr(), layout: { id: "l1", design: record("mm") } });
+    owned.mockResolvedValue({ qr: qr(null, null), layout: { id: "l1", design: record("mm") } });
+    canDownload.mockResolvedValueOnce(false);
     expect(await startCheckout({ ...checkout, layoutId: "l1" })).toEqual({ ok: true, data: { url: "https://checkout.example/s" } });
     expect(await startPrintPackCheckout({ ...checkout, layoutId: "l1", settings: "scale=1" })).toEqual({
       ok: true,
@@ -56,9 +69,16 @@ describe("checkout authorization (HEY-84)", () => {
 
   it("a Print Pack is bought once per code, and only for a print (mm) layout", async () => {
     owned.mockResolvedValue({ qr: qr(new Date()), layout: { id: "l1", design: record("mm") } });
-    expect(await startPrintPackCheckout({ ...checkout, layoutId: "l1", settings: "scale=1" })).toEqual({ ok: false, error: "not_offered" });
+    expect(await startPrintPackCheckout({ ...checkout, layoutId: "l1", settings: "scale=1" })).toEqual({ ok: false, error: "owned" });
     owned.mockResolvedValue({ qr: qr(), layout: { id: "l1", design: record("px") } });
     expect(await startPrintPackCheckout({ ...checkout, layoutId: "l1", settings: "scale=1" })).toEqual({ ok: false, error: "invalid" });
     expect(createPrintPackCheckout).not.toHaveBeenCalled();
+  });
+
+  it("an already unlocked static code is never sold again: no order, no Checkout Session (HEY-87)", async () => {
+    owned.mockResolvedValue({ qr: qr(), layout: { id: "l1", design: record("mm") } });
+    canDownload.mockResolvedValueOnce(true);
+    expect(await startCheckout({ ...checkout, layoutId: "l1" })).toEqual({ ok: false, error: "owned" });
+    expect(createCheckout).not.toHaveBeenCalled();
   });
 });
