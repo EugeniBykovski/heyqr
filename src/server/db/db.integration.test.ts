@@ -14,7 +14,7 @@ import { cleanupLogos, referencedAssets, resolveLogos, storeLogos, type LogoStor
 import { authorizedLogo, ownedLayout } from "../qr/file-access";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
-import { addLayoutFrom, copyLayout, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
+import { addLayoutFrom, copyLayout, layoutRevision, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
 import { activateTrialCode, startTrial, trialCode } from "../billing/trial";
 import {
   accountUsage,
@@ -626,7 +626,7 @@ describe.skipIf(!url)("edit one saved layout (HEY-45, real PostgreSQL)", () => {
       { qrCodeId, layoutId: layoutIds[0] ?? "", layout: designToLayout(edited), editor: designSettingsOf(edited) },
       encoded,
     );
-    expect(result).toEqual({ ok: true, data: { qrCodeId, layoutId: layoutIds[0] } });
+    expect(result).toMatchObject({ ok: true, data: { qrCodeId, layoutId: layoutIds[0] } });
 
     const [cardAfter, stickerAfter] = await rows(qrCodeId);
     expect((await rows(qrCodeId)).map((l) => l.id)).toEqual(layoutIds); // no new layout, same ids and order
@@ -1540,5 +1540,89 @@ describe.skipIf(!url)("authorization of codes, layouts and files (HEY-84, real P
     expect(await softDeleteQrCodes(db, b.id, [ids.aQr])).toEqual([]);
     expect(puts).toEqual([]);
     expect(await snapshot()).toBe(before);
+  });
+});
+
+/* HEY-85: two tabs saving the same layout from the same version: one wins, the other is a conflict, nothing is lost. */
+describe.skipIf(!url)("concurrent layout saves (HEY-85, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "hey85-owner", name: "Owner", email: "owner@hey85.test" };
+  const puts: string[] = [];
+  const store: LogoStore = { put: async (key) => void puts.push(key), get: async () => null, remove: async () => undefined };
+  let n = 0;
+  const id = () => `hey85id${String(++n).padStart(6, "0")}`;
+  const SVG = `data:image/svg+xml;base64,${Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4"><rect width="4" height="4"/></svg>').toString("base64")}`;
+  const design = (caption: string, logo?: string) => {
+    const d = { ...DEFAULT_DESIGN, caption, logo: logo ? { kind: "image" as const, href: logo } : { kind: "none" as const } };
+    return { layout: designToLayout(d), editor: designSettingsOf(d) };
+  };
+  const revisionOf = async (layoutId: string) =>
+    (await db.select({ r: layoutRevision }).from(schema.qrLayout).where(eq(schema.qrLayout.id, layoutId)))[0]?.r ?? "";
+  const captionOf = async (layoutId: string) =>
+    (await pool.query(`select design->'editor'->>'caption' as c from qr_layout where id = $1`, [layoutId])).rows[0].c;
+  let qrCodeId = "";
+  let l1 = "";
+  let l2 = "";
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 6 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+    const saved = await saveQrWithLayouts(db, owner.id, {
+      name: "Two tabs",
+      model: "static",
+      content: { type: "text", text: "two tabs" },
+      layouts: [
+        { name: "Card", ...design("Original") },
+        { name: "Poster", ...design("Poster original") },
+      ],
+    });
+    if (!saved.ok) throw new Error("fixture");
+    qrCodeId = saved.data.qrCodeId;
+    [l1, l2] = [saved.data.layoutIds[0] ?? "", saved.data.layoutIds[1] ?? ""];
+  });
+  afterAll(async () => {
+    await db?.delete(schema.qrCode).where(eq(schema.qrCode.userId, owner.id));
+    await db?.delete(schema.asset).where(eq(schema.asset.userId, owner.id));
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  const save = (layoutId: string, caption: string, revision?: string, logo?: string) =>
+    updateLayoutDesign(
+      db,
+      owner.id,
+      { qrCodeId, layoutId, revision, ...design(caption, logo) },
+      () => "two tabs",
+      (tx, rec) => storeLogos(tx, store, owner.id, rec, id),
+    );
+
+  it("both tabs save from the same version at once: exactly one wins, the other is a conflict and stores nothing", async () => {
+    const opened = await revisionOf(l1);
+    puts.length = 0;
+    const [tabA, tabB] = await Promise.all([save(l1, "Tab A", opened), save(l1, "Tab B", opened, SVG)]);
+    const winners = [tabA, tabB].filter((r) => r.ok);
+    expect(winners).toHaveLength(1);
+    expect([tabA, tabB].filter((r) => !r.ok)).toEqual([{ ok: false, error: "conflict" }]);
+    const aWon = tabA.ok;
+    expect(await captionOf(l1)).toBe(aWon ? "Tab A" : "Tab B");
+    const won = aWon ? tabA : tabB;
+    expect(won.ok && won.data.revision).toBe(await revisionOf(l1));
+    // Tab B carried a new logo: stored only if B won.
+    expect(puts.length).toBe(aWon ? 0 : 1);
+  });
+
+  it("a save from an older version is a conflict; the newer save stays", async () => {
+    const opened = await revisionOf(l1);
+    expect((await save(l1, "Newer", opened)).ok).toBe(true);
+    expect(await save(l1, "Stale", opened)).toEqual({ ok: false, error: "conflict" });
+    expect(await captionOf(l1)).toBe("Newer");
+  });
+
+  it("two different layouts of the code saved at once both succeed", async () => {
+    const [r1, r2] = await Promise.all([save(l1, "Card again", await revisionOf(l1)), save(l2, "Poster again", await revisionOf(l2))]);
+    expect(r1.ok && r2.ok).toBe(true);
+    expect([await captionOf(l1), await captionOf(l2)]).toEqual(["Card again", "Poster again"]);
   });
 });

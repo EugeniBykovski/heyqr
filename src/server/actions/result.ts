@@ -17,7 +17,9 @@ export type ActionResult<T = undefined> =
         | "no_credits"
         | "limit"
         | "last_layout"
-        | "draft_limit";
+        | "draft_limit"
+        // HEY-85: the layout was saved elsewhere (another tab or device) since this editor opened it.
+        | "conflict";
     };
 
 /** Error name and database error code only; no message text, query or parameters. */

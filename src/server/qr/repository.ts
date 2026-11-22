@@ -4,6 +4,7 @@ import { pickLayoutForEdit, readLayoutRecord } from "@/entities/qr";
 import { db, schema } from "../db";
 import { logoStore } from "../storage/s3";
 import { resolveLogos } from "./logo-assets";
+import { layoutRevision } from "./update-layout";
 
 /**
  * Read boundary for qr_layout.design: legacy records are upgraded in memory, unreadable ones (malformed or from a
@@ -62,7 +63,10 @@ export async function getLayoutForEdit(userId: string, qrCodeId: string, layoutI
   const qr = await getQrCode(userId, qrCodeId);
   if (!qr) return null;
   const layout = pickLayoutForEdit(qr.layouts, layoutId);
-  return layout ? { qr, layout } : null;
+  if (!layout) return null;
+  // HEY-85: the version this editor opens, sent back with the save (a newer save in between is a conflict).
+  const [row] = await db.select({ revision: layoutRevision }).from(schema.qrLayout).where(eq(schema.qrLayout.id, layout.id));
+  return row ? { qr, layout, revision: row.revision } : null;
 }
 
 /** The paid purchase of a static code, for its receipt (amount as Stripe charged it, tax included). */

@@ -30,6 +30,7 @@ export function LayoutEditor({
   qrCodeId,
   layoutId,
   layoutName,
+  revision: openedRevision,
   layouts = [],
   initialDesign,
   value,
@@ -40,6 +41,8 @@ export function LayoutEditor({
   qrCodeId: string;
   layoutId: string;
   layoutName: string;
+  /** HEY-85: the saved version this editor opened; a save made from an older one is a conflict. */
+  revision: string;
   /** Every named layout of the code, in order (design "Layouts of this code" tabs). */
   layouts?: { id: string; name: string }[];
   initialDesign: EditorDesign;
@@ -60,6 +63,9 @@ export function LayoutEditor({
   const [name, setName] = useState(layoutName);
   const [adding, startAdding] = useTransition();
   const [saving, startSaving] = useTransition();
+  const [revision, setRevision] = useState(openedRevision);
+  /** HEY-85: the layout was saved elsewhere since this editor opened it; these edits are kept until the user chooses. */
+  const [conflict, setConflict] = useState(false);
   const patch = (p: Partial<EditorDesign>) => setDesign((d) => ({ ...d, ...p }));
 
   const layout = useMemo(() => designToLayout(design), [design]);
@@ -125,12 +131,19 @@ export function LayoutEditor({
         layoutId,
         layout,
         editor: designSettingsOf(submitted),
+        revision,
         ...(name.trim() && name.trim() !== layoutName ? { name: name.trim() } : {}),
       }).catch(() => ({ ok: false, error: "failed" }) as const);
       if (!result.ok && result.error === "unauthorized") {
         // The session ended: sign in again with Google and come back to this layout, where the held edits are restored.
         toast.error(tErrors("unauthorized"), { id: "layout-save" });
         router.push(`/sign-in?next=${encodeURIComponent(`/edit/${qrCodeId}?layout=${layoutId}`)}`);
+        return;
+      }
+      if (!result.ok && result.error === "conflict") {
+        // Another tab or device saved this layout first. Nothing was saved here and nothing is discarded: the edits stay
+        // (and stay held for recovery) until the user picks what to do.
+        setConflict(true);
         return;
       }
       if (!result.ok) {
@@ -145,6 +158,7 @@ export function LayoutEditor({
         return;
       }
       dropEdits(layoutId);
+      setRevision(result.data.revision);
       setSaved(submitted);
       toast.success(tEdit("saved"), { id: "layout-save" });
       router.push(printHref && submitted.size?.unit === "mm" ? printHref : detailsHref);
@@ -152,9 +166,14 @@ export function LayoutEditor({
   };
 
   /** Design "New layout from this one": the current edits become a new named layout; the others stay as they were. */
-  const newLayout = () =>
+  /**
+   * `fromConflict` (HEY-85): the edits that couldn't be saved over a newer version become their own layout, under the
+   * name typed here if any; once saved, they're no longer held for this layout.
+   */
+  const newLayout = (fromConflict = false) =>
     startAdding(async () => {
-      const next = tEdit("newName", { n: layouts.length + 1 });
+      const typed = name.trim();
+      const next = fromConflict && typed && typed !== layoutName ? typed.slice(0, 60) : tEdit("newName", { n: layouts.length + 1 });
       const result = await addLayout({ qrCodeId, name: next, layout, editor: designSettingsOf(design) }).catch(
         () => ({ ok: false, error: "failed" }) as const,
       );
@@ -162,6 +181,7 @@ export function LayoutEditor({
         toast.error(result.error === "too_long" ? tErrors("too_long") : tEdit("addFailed"), { id: "layout-add" });
         return;
       }
+      if (fromConflict) dropEdits(layoutId);
       toast.success(tEdit("added", { name: next }), { id: "layout-add" });
       router.push(`/edit/${qrCodeId}?layout=${result.data.layoutId}`);
     });
@@ -198,7 +218,7 @@ export function LayoutEditor({
         type="button"
         disabled={adding}
         aria-busy={adding || undefined}
-        onClick={newLayout}
+        onClick={() => newLayout()}
         className="inline-flex min-h-9 flex-none cursor-pointer items-center gap-1.5 rounded-full border border-dashed border-border px-3 text-[0.8125rem] font-semibold text-secondary-foreground hover:border-border-hover disabled:opacity-60"
       >
         {adding ? <LoaderCircleIcon aria-hidden className="size-3.5 animate-spin" /> : <PlusIcon aria-hidden className="size-3.5" />}
@@ -230,6 +250,36 @@ export function LayoutEditor({
 
   return (
     <div className="flex flex-col">
+      <Dialog open={conflict} onOpenChange={(open) => !open && setConflict(false)}>
+        <DialogContent role="alertdialog" closeLabel={tEdit("keepEditing")}>
+          <DialogTitle>{tEdit("conflictTitle")}</DialogTitle>
+          <DialogDescription>{tEdit("conflictText")}</DialogDescription>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <Button
+              variant="primary"
+              disabled={adding}
+              onClick={() => {
+                setConflict(false);
+                newLayout(true);
+              }}
+            >
+              {tEdit("conflictNewLayout")}
+            </Button>
+            <Button
+              onClick={() => {
+                // Only on this explicit choice are the edits here dropped, for the version saved elsewhere.
+                dropEdits(layoutId);
+                window.location.reload();
+              }}
+            >
+              {tEdit("conflictReload")}
+            </Button>
+            <Button variant="ghost" onClick={() => setConflict(false)}>
+              {tEdit("keepEditing")}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
       <Dialog open={switchTo !== null} onOpenChange={(open) => !open && setSwitchTo(null)}>
         <DialogContent role="alertdialog" closeLabel={tEdit("keepEditing")}>
           <DialogTitle>{tEdit("unsavedSwitch")}</DialogTitle>
