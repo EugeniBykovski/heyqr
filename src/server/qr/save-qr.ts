@@ -1,7 +1,8 @@
 import { encodePayload, layoutCapacity, type QrContent } from "@heyqr/qr-core";
 import { and, asc, count, eq, isNull, sql } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
-import { createLayoutRecord } from "../../entities/qr/model/design-schema";
+import { createLayoutRecord, type LayoutRecordDesign } from "../../entities/qr/model/design-schema";
+import type { PrepareRecord } from "./update-layout";
 import { supportsMode } from "../../entities/qr/model/modes";
 import { DRAFT_LIMIT } from "../../shared/config/catalog-core";
 import { newId } from "../db/ids";
@@ -31,7 +32,12 @@ export type SaveQrResult =
  * Every variant is stored as the versioned design record (schemaVersion 1: rendered layout + editor settings).
  * Plain module (no "server-only") so the PostgreSQL tests exercise the same write path as the saveDraft action.
  */
-export async function saveQrWithLayouts(db: NodePgDatabase<typeof schema>, userId: string, input: SaveQrInput): Promise<SaveQrResult> {
+export async function saveQrWithLayouts(
+  db: NodePgDatabase<typeof schema>,
+  userId: string,
+  input: SaveQrInput,
+  prepare?: PrepareRecord,
+): Promise<SaveQrResult> {
   // Only website codes can be dynamic: the short link redirects to a web address (entities/qr/model/modes.ts).
   if (!supportsMode(input.content.type, input.model)) return { ok: false, error: "invalid" };
   const designs = input.layouts.map((l) => createLayoutRecord(l.layout, l.editor));
@@ -44,6 +50,13 @@ export async function saveQrWithLayouts(db: NodePgDatabase<typeof schema>, userI
   }
 
   return db.transaction(async (tx) => {
+    // HEY-83: uploaded logos go to private storage first (a save refused below leaves them unreferenced for cleanup).
+    const stored: LayoutRecordDesign[] = [];
+    for (const d of designs) {
+      const p = d && (prepare ? await prepare(tx, d) : d);
+      if (!p) return { ok: false, error: "invalid" } as const;
+      stored.push(p);
+    }
     const qrCodeId = input.qrCodeId ?? newId();
     if (input.qrCodeId) {
       const updated = await tx
@@ -91,7 +104,7 @@ export async function saveQrWithLayouts(db: NodePgDatabase<typeof schema>, userI
       id: l.id ?? newId(),
       qrCodeId,
       name: l.name,
-      design: designs[i] as NonNullable<(typeof designs)[number]>,
+      design: stored[i] as LayoutRecordDesign,
       sortOrder: i,
     }));
     await tx.insert(schema.qrLayout).values(rows);

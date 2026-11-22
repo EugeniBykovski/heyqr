@@ -248,14 +248,30 @@ export const scanDaily = pgTable(
 );
 
 /** Uploaded logos and images (stored in S3). */
-export const asset = pgTable("asset", {
-  id: text("id").primaryKey(),
-  userId: text("user_id").references(() => user.id, { onDelete: "set null" }),
-  storageKey: text("storage_key").notNull().unique(),
-  contentType: text("content_type").notNull(),
-  byteSize: integer("byte_size").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-});
+/**
+ * HEY-83: an uploaded logo kept in private object storage (R2 / S3 / MinIO) under `storageKey`. Saved layouts refer to
+ * it as `asset:<id>`, never by URL; it is read only through its owner's saved layouts. `sha256` lets every layout of an
+ * account that uses the same file share one object; `lastUsedAt` is touched on every save that references it, and an
+ * asset that no saved layout references is removed by cleanup once it hasn't been used for a while.
+ */
+export const asset = pgTable(
+  "asset",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id").references(() => user.id, { onDelete: "set null" }),
+    storageKey: text("storage_key").notNull().unique(),
+    contentType: text("content_type").notNull(),
+    byteSize: integer("byte_size").notNull(),
+    sha256: text("sha256"),
+    lastUsedAt: timestamp("last_used_at", { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("asset_user_sha_uq")
+      .on(t.userId, t.sha256)
+      .where(sql`${t.sha256} is not null`),
+  ],
+);
 
 /** Cache of rendered export files, keyed by a hash of the design + format + size. */
 export const exportFile = pgTable(

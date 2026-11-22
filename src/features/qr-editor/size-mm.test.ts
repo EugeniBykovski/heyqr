@@ -16,7 +16,7 @@ import { createLayoutRecord, readDraftDesign, readLayoutRecord } from "@/entitie
 import { readPng } from "../../../packages/qr-core/test/png-reader";
 
 vi.mock("server-only", () => ({}));
-vi.mock("@/env", () => ({ env: { S3_PUBLIC_URL: undefined, NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr" } }));
+vi.mock("@/env", () => ({ env: { NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr" } }));
 // The shared export path behind GET /api/export/[layoutId] (after auth and entitlement checks).
 const { renderExport } = await import("@/server/qr/export");
 

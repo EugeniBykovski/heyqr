@@ -175,8 +175,13 @@ export function readLayoutRecord(raw: unknown): ReadResult<LayoutRecordDesign> {
   };
 }
 
-/** A logo the server stores: an uploaded file kept in our storage (URL) or an inline image that passes the logo rule. */
-const acceptableLogoHref = (href: string | undefined) => href === undefined || /^https?:\/\//.test(href) || checkLogoDataUrl(href).ok;
+/**
+ * A logo the server stores: an uploaded image that passes the logo rule (moved to private storage on save), or a
+ * reference to one already stored (HEY-83 `asset:<id>`, checked against the account by the save). Never a URL: logos
+ * aren't fetched from anywhere, public or not.
+ */
+const acceptableLogoHref = (href: string | undefined) =>
+  href === undefined || /^asset:[A-Za-z0-9_-]{6,64}$/.test(href) || checkLogoDataUrl(href).ok;
 
 /**
  * Builds the record the server writes for a variant; validates both parts first. New writes also apply the logo rule

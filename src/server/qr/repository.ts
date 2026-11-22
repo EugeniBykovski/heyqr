@@ -2,12 +2,14 @@ import "server-only";
 import { and, asc, desc, eq, gte, isNull, sql } from "drizzle-orm";
 import { pickLayoutForEdit, readLayoutRecord } from "@/entities/qr";
 import { db, schema } from "../db";
+import { logoStore } from "../storage/s3";
+import { resolveLogos } from "./logo-assets";
 
 /**
  * Read boundary for qr_layout.design: legacy records are upgraded in memory, unreadable ones (malformed or from a
  * newer schemaVersion) are left out and logged by id, never shown with a wrong design.
  */
-function readable<T extends { id: string; design: unknown }>(layouts: T[]): T[] {
+function readableOnly<T extends { id: string; design: unknown }>(layouts: T[]) {
   return layouts.flatMap((l) => {
     const read = readLayoutRecord(l.design);
     if (read.ok) return [{ ...l, design: read.value }];
@@ -18,13 +20,30 @@ function readable<T extends { id: string; design: unknown }>(layouts: T[]): T[] 
   });
 }
 
+/**
+ * HEY-83: the readable layouts of a code owned by `ownerId`, with their stored logos resolved from private storage for
+ * that owner only (a reference to anyone else's file is dropped). Every page and route reads layouts through here.
+ */
+export async function readable<T extends { id: string; design: unknown }>(ownerId: string, layouts: T[]) {
+  const ok = readableOnly(layouts);
+  const store = logoStore();
+  if (!store) return ok;
+  const designs = await resolveLogos(
+    db,
+    store,
+    ownerId,
+    ok.map((l) => l.design),
+  );
+  return ok.map((l, i) => ({ ...l, design: designs[i] ?? l.design }));
+}
+
 export async function listQrCodes(userId: string) {
   const codes = await db.query.qrCode.findMany({
     where: and(eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)),
     orderBy: desc(schema.qrCode.updatedAt),
     with: { layouts: { orderBy: asc(schema.qrLayout.sortOrder), limit: 1 } },
   });
-  return codes.map((qr) => ({ ...qr, layouts: readable(qr.layouts) }));
+  return Promise.all(codes.map(async (qr) => ({ ...qr, layouts: await readable(userId, qr.layouts) })));
 }
 
 export async function getQrCode(userId: string, id: string) {
@@ -32,7 +51,7 @@ export async function getQrCode(userId: string, id: string) {
     where: and(eq(schema.qrCode.id, id), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)),
     with: { layouts: { orderBy: asc(schema.qrLayout.sortOrder) } },
   });
-  return qr && { ...qr, layouts: readable(qr.layouts) };
+  return qr && { ...qr, layouts: await readable(userId, qr.layouts) };
 }
 
 /**
@@ -57,7 +76,7 @@ export async function paidPurchase(userId: string, qrCodeId: string) {
 export async function getLayoutWithQr(layoutId: string) {
   const record = await db.query.qrLayout.findFirst({ where: eq(schema.qrLayout.id, layoutId), with: { qrCode: true } });
   // A deleted code can't be exported, even by its owner.
-  return record && !record.qrCode.deletedAt ? readable([record])[0] : undefined;
+  return record && !record.qrCode.deletedAt ? (await readable(record.qrCode.userId, [record]))[0] : undefined;
 }
 
 /** Daily scans for the last `days` days, zero-filled, oldest first. */

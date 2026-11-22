@@ -35,29 +35,29 @@ Validated in `src/env.ts` (formats) and `src/shared/config/env-rules.ts` (rules 
 variable names and the environment, never values. Database commands validate only what they use
 (`src/server/db/target.ts`), so `pnpm db:migrate` doesn't need Stripe keys.
 
-| Variable                                              | Kind   | dev                                                       | production                                  |
-| ----------------------------------------------------- | ------ | --------------------------------------------------------- | ------------------------------------------- |
-| `APP_ENV`                                             | server | optional (`dev`)                                          | optional on Vercel (`production`)           |
-| `DATABASE_URL`                                        | secret | required: local Postgres or Neon dev branch (pooled)      | required: Neon production branch (pooled)   |
-| `DATABASE_URL_UNPOOLED`                               | secret | Neon dev branch (direct); optional locally                | Neon production branch (direct)             |
-| `BETTER_AUTH_SECRET`                                  | secret | required, its own value                                   | required, its own value                     |
-| `BETTER_AUTH_URL`                                     | server | required, same origin as `NEXT_PUBLIC_APP_URL`            | required, public `https://`                 |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`           | secret | required: dev OAuth client                                | required: production OAuth client           |
-| `STRIPE_SECRET_KEY`                                   | secret | optional, all-or-nothing, **`sk_test_…`**                 | required, **`sk_live_…`**                   |
-| `STRIPE_WEBHOOK_SECRET`                               | secret | with Stripe: CLI or dev endpoint secret                   | required: production endpoint secret        |
-| `STRIPE_PRICE_STATIC`, `STRIPE_PRICE_DYNAMIC_MONTHLY` | server | with Stripe: test-mode price IDs                          | required: live-mode price IDs               |
-| `RESEND_API_KEY`                                      | secret | optional, all-or-nothing; receipts are skipped without it | required                                    |
-| `EMAIL_FROM`                                          | server | with Resend: `HeyQR <onboarding@resend.dev>` (own inbox)  | required: verified production sender        |
-| `S3_REGION`, `S3_BUCKET`, `S3_PUBLIC_URL`             | server | optional, all-or-nothing: local MinIO or a dev bucket     | required: production bucket, `https://` URL |
-| `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`            | secret | with storage                                              | required                                    |
-| `S3_ENDPOINT`                                         | server | MinIO / R2 endpoint; empty for AWS                        | R2 endpoint, or empty for AWS               |
-| `DYNAMIC_ACTIVE_CODE_LIMIT`                           | server | optional (10)                                             | optional (10)                               |
-| `NEXT_PUBLIC_APP_URL`                                 | public | `http://localhost:3000` or the dev domain                 | the production domain, `https://`           |
-| `NEXT_PUBLIC_SHORT_LINK_BASE`                         | public | `http://localhost:3000/r` or the dev domain `/r`          | the short domain, `https://`                |
-| `UPSTASH_REDIS_REST_URL` / `_TOKEN`                   | secret | not used yet                                              | not used yet                                |
-| `TEST_DATABASE_URL`, `DATABASE_TARGET=test`           | test   | tests and CI only                                         | never                                       |
-| `CONFIRM_PRODUCTION_MIGRATION`                        | script | never                                                     | `1` only for a production `db:migrate`      |
-| `SKIP_ENV_VALIDATION`                                 | CI     | CI build without secrets only                             | never                                       |
+| Variable                                              | Kind   | dev                                                           | production                                |
+| ----------------------------------------------------- | ------ | ------------------------------------------------------------- | ----------------------------------------- |
+| `APP_ENV`                                             | server | optional (`dev`)                                              | optional on Vercel (`production`)         |
+| `DATABASE_URL`                                        | secret | required: local Postgres or Neon dev branch (pooled)          | required: Neon production branch (pooled) |
+| `DATABASE_URL_UNPOOLED`                               | secret | Neon dev branch (direct); optional locally                    | Neon production branch (direct)           |
+| `BETTER_AUTH_SECRET`                                  | secret | required, its own value                                       | required, its own value                   |
+| `BETTER_AUTH_URL`                                     | server | required, same origin as `NEXT_PUBLIC_APP_URL`                | required, public `https://`               |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`           | secret | required: dev OAuth client                                    | required: production OAuth client         |
+| `STRIPE_SECRET_KEY`                                   | secret | optional, all-or-nothing, **`sk_test_…`**                     | required, **`sk_live_…`**                 |
+| `STRIPE_WEBHOOK_SECRET`                               | secret | with Stripe: CLI or dev endpoint secret                       | required: production endpoint secret      |
+| `STRIPE_PRICE_STATIC`, `STRIPE_PRICE_DYNAMIC_MONTHLY` | server | with Stripe: test-mode price IDs                              | required: live-mode price IDs             |
+| `RESEND_API_KEY`                                      | secret | optional, all-or-nothing; receipts are skipped without it     | required                                  |
+| `EMAIL_FROM`                                          | server | with Resend: `HeyQR <onboarding@resend.dev>` (own inbox)      | required: verified production sender      |
+| `S3_REGION`, `S3_BUCKET`                              | server | optional, all-or-nothing: local MinIO or a private dev bucket | required: private production bucket       |
+| `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`            | secret | with storage                                                  | required                                  |
+| `S3_ENDPOINT`                                         | server | MinIO / R2 endpoint; empty for AWS                            | R2 endpoint, or empty for AWS             |
+| `DYNAMIC_ACTIVE_CODE_LIMIT`                           | server | optional (10)                                                 | optional (10)                             |
+| `NEXT_PUBLIC_APP_URL`                                 | public | `http://localhost:3000` or the dev domain                     | the production domain, `https://`         |
+| `NEXT_PUBLIC_SHORT_LINK_BASE`                         | public | `http://localhost:3000/r` or the dev domain `/r`              | the short domain, `https://`              |
+| `UPSTASH_REDIS_REST_URL` / `_TOKEN`                   | secret | not used yet                                                  | not used yet                              |
+| `TEST_DATABASE_URL`, `DATABASE_TARGET=test`           | test   | tests and CI only                                             | never                                     |
+| `CONFIRM_PRODUCTION_MIGRATION`                        | script | never                                                         | `1` only for a production `db:migrate`    |
+| `SKIP_ENV_VALIDATION`                                 | CI     | CI build without secrets only                                 | never                                     |
 
 **secret**: credential, server-only. **server**: server-only, not secret. **public**: `NEXT_PUBLIC_*`, visible to
 anyone.

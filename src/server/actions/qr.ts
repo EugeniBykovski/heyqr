@@ -13,12 +13,20 @@ export type { ActionResult } from "./result";
 import { db, schema } from "../db";
 import { restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { encodedValue } from "../qr/export";
+import { storeLogos } from "../qr/logo-assets";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
-import { addLayoutFrom, copyLayout, removeLayout, updateLayoutDesign } from "../qr/update-layout";
+import { addLayoutFrom, copyLayout, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
+import { logoStore } from "../storage/s3";
 import { newId, newShortCode } from "../db/ids";
 import { activateTrialCode, startTrial } from "../billing/trial";
 import { activeSubscription, canDownload, printPackForSale } from "../billing/entitlements";
+
+/** HEY-83: uploaded logos of a saved layout go to the account's private storage (inline in dev without storage). */
+function logosFor(userId: string): PrepareRecord | undefined {
+  const store = logoStore();
+  return store ? (tx, record) => storeLogos(tx, store, userId, record, newId) : undefined;
+}
 
 const draftSchema = z.object({
   qrCodeId: z.string().optional(),
@@ -53,7 +61,7 @@ export async function saveDraft(input: DraftInput): Promise<ActionResult<{ qrCod
     const user = await requireUser();
     const parsed = draftSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "invalid" };
-    const result = await saveQrWithLayouts(db, user.id, parsed.data);
+    const result = await saveQrWithLayouts(db, user.id, parsed.data, logosFor(user.id));
     if (result.ok) revalidatePath("/[locale]/dashboard", "page");
     return result;
   });
@@ -86,7 +94,7 @@ export async function saveLayoutEdit(
     const user = await requireUser();
     const parsed = layoutEditSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "invalid" };
-    const result = await updateLayoutDesign(db, user.id, parsed.data, (qr) => encodedValue(qr));
+    const result = await updateLayoutDesign(db, user.id, parsed.data, (qr) => encodedValue(qr), logosFor(user.id));
     if (result.ok) {
       revalidatePath("/[locale]/dashboard", "page");
       revalidatePath("/[locale]/dashboard/qr/[id]", "page");
@@ -101,7 +109,7 @@ export async function addLayout(input: z.input<typeof addLayoutSchema>): Promise
     const user = await requireUser();
     const parsed = addLayoutSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "invalid" };
-    const result = await addLayoutFrom(db, user.id, parsed.data, (qr) => encodedValue(qr), newId);
+    const result = await addLayoutFrom(db, user.id, parsed.data, (qr) => encodedValue(qr), newId, logosFor(user.id));
     if (result.ok) {
       revalidatePath("/[locale]/dashboard", "page");
       revalidatePath("/[locale]/dashboard/qr/[id]", "page");

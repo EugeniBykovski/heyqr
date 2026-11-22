@@ -81,7 +81,7 @@ export function migrationUrl(env: Env = process.env): string {
   return env.DATABASE_URL_UNPOOLED || runtimeUrl(env);
 }
 
-export type DbOperation = "migrate" | "seed" | "reset";
+export type DbOperation = "migrate" | "seed" | "reset" | "cleanup";
 
 /** Stops setup operations from touching the wrong database. Throws DatabaseConfigError with the reason. */
 export function assertAllowed(operation: DbOperation, target: DbTarget, url: string, env: Env = process.env): void {
@@ -91,6 +91,9 @@ export function assertAllowed(operation: DbOperation, target: DbTarget, url: str
   }
   if (operation === "migrate" && target === "production" && env.CONFIRM_PRODUCTION_MIGRATION !== "1") {
     throw new DatabaseConfigError(`Refusing to migrate the ${where} without CONFIRM_PRODUCTION_MIGRATION=1.`);
+  }
+  if (operation === "cleanup" && target === "production" && env.CONFIRM_PRODUCTION_CLEANUP !== "1") {
+    throw new DatabaseConfigError(`Refusing to clean up logo files of the ${where} without CONFIRM_PRODUCTION_CLEANUP=1.`);
   }
   if (operation === "reset" && (target !== "test" || !databaseName(url).endsWith("_test"))) {
     throw new DatabaseConfigError(`Refusing to reset the ${where}: resets run only on test databases whose name ends in "_test".`);

@@ -10,9 +10,10 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { DEFAULT_DESIGN, designToLayout } from "../../entities/qr/model/design";
 import { designSettingsOf, readLayoutRecord } from "../../entities/qr/model/design-schema";
 import { RESTORE_WINDOW_MS, restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
+import { cleanupLogos, referencedAssets, resolveLogos, storeLogos, type LogoStore } from "../qr/logo-assets";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
-import { addLayoutFrom, copyLayout, removeLayout, updateLayoutDesign } from "../qr/update-layout";
+import { addLayoutFrom, copyLayout, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
 import { activateTrialCode, startTrial, trialCode } from "../billing/trial";
 import {
   accountUsage,
@@ -1225,5 +1226,180 @@ describe.skipIf(!url)("copy a saved layout (HEY-82, real PostgreSQL)", () => {
       theirs.data.qrCodeId,
     ]);
     expect(rows[0].n).toBe(2);
+  });
+});
+
+/* HEY-83: uploaded logos in private storage, referenced by saved layouts and resolved for their owner only. */
+describe.skipIf(!url)("private logo storage (HEY-83, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const a = { id: "hey83-a", name: "A", email: "a@hey83.test" };
+  const b = { id: "hey83-b", name: "B", email: "b@hey83.test" };
+  const objects = new Map<string, Uint8Array>();
+  const store: LogoStore = {
+    put: async (key, body) => void objects.set(key, body),
+    get: async (key) => objects.get(key) ?? null,
+    remove: async (key) => void objects.delete(key),
+  };
+  let n = 0;
+  const id = () => `hey83asset${String(++n).padStart(4, "0")}`;
+  // 1×1 PNG and a small SVG: two different uploaded logos.
+  const PNG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+  const SVG = `data:image/svg+xml;base64,${Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#8C2F4B"/></svg>').toString("base64")}`;
+  const withLogo = (href: string, caption = "Logo card") => {
+    const d = { ...DEFAULT_DESIGN, preset: "horizontal" as const, caption, logo: { kind: "image" as const, href } };
+    return { layout: designToLayout(d), editor: designSettingsOf(d) };
+  };
+  const prepareFor =
+    (userId: string): PrepareRecord =>
+    (tx, rec) =>
+      storeLogos(tx, store, userId, rec, id);
+  const stored = async (layoutId: string) => (await pool.query(`select design from qr_layout where id = $1`, [layoutId])).rows[0].design;
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([a, b]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.qrCode).where(inArray(schema.qrCode.userId, [a.id, b.id]));
+    await db?.delete(schema.asset).where(inArray(schema.asset.userId, [a.id, b.id]));
+    await db?.delete(schema.user).where(inArray(schema.user.id, [a.id, b.id]));
+    await pool?.end();
+  });
+
+  it("stores an uploaded logo privately once, references it by id, and resolves it for the owner", async () => {
+    const saved = await saveQrWithLayouts(
+      db,
+      a.id,
+      {
+        name: "Logo code",
+        model: "static",
+        content: { type: "text", text: "hey83" },
+        layouts: [
+          { name: "Card", ...withLogo(PNG) },
+          { name: "Poster", ...withLogo(PNG, "Poster") },
+        ],
+      },
+      prepareFor(a.id),
+    );
+    if (!saved.ok) throw new Error(JSON.stringify(saved));
+    const [first, second] = saved.data.layoutIds;
+    const design = await stored(first ?? "");
+    expect(JSON.stringify(design)).not.toContain("data:image");
+    const [assetId] = referencedAssets(design);
+    expect(design.layout.style.logo.href).toBe(`asset:${assetId}`);
+    expect(design.editor.logo).toEqual({ kind: "image", href: `asset:${assetId}` });
+    // Both variants share the one file.
+    expect(referencedAssets(await stored(second ?? ""))).toEqual([assetId]);
+    const rows = (await pool.query(`select id, storage_key, content_type, byte_size from asset where user_id = $1`, [a.id])).rows;
+    expect(rows).toEqual([{ id: assetId, storage_key: `logos/${a.id}/${assetId}.png`, content_type: "image/png", byte_size: 70 }]);
+    expect(objects.has(`logos/${a.id}/${assetId}.png`)).toBe(true);
+    const [resolved] = await resolveLogos(db, store, a.id, [design]);
+    expect(resolved.layout.style.logo.href).toBe(PNG);
+    expect(resolved.editor.logo).toEqual({ kind: "image", href: PNG });
+  });
+
+  it("replacing the logo on a copy stores a new file and leaves the source's logo as it was", async () => {
+    const [code] = (await pool.query(`select id from qr_code where user_id = $1 and name = 'Logo code'`, [a.id])).rows;
+    const [src] = (await pool.query(`select id from qr_layout where qr_code_id = $1 order by sort_order limit 1`, [code.id])).rows;
+    const copy = await copyLayout(db, a.id, { qrCodeId: code.id, sourceLayoutId: src.id, name: "Copy" }, () => "hey83-copy");
+    expect(copy.ok).toBe(true);
+    const before = await stored(src.id);
+    const edited = await updateLayoutDesign(
+      db,
+      a.id,
+      { qrCodeId: code.id, layoutId: "hey83-copy", ...withLogo(SVG, "Copy") },
+      () => "hey83",
+      prepareFor(a.id),
+    );
+    expect(edited.ok).toBe(true);
+    expect(await stored(src.id)).toEqual(before);
+    const [srcAsset] = referencedAssets(before);
+    const [copyAsset] = referencedAssets(await stored("hey83-copy"));
+    expect(copyAsset).not.toBe(srcAsset);
+    const [resolvedSource] = await resolveLogos(db, store, a.id, [before]);
+    expect(resolvedSource.layout.style.logo.href).toBe(PNG);
+  });
+
+  it("another account can't use or read the file: its reference is refused on save and dropped on read", async () => {
+    const [{ id: assetId }] = (await pool.query(`select id from asset where user_id = $1 order by created_at limit 1`, [a.id])).rows;
+    const stolen = await saveQrWithLayouts(
+      db,
+      b.id,
+      {
+        name: "Theirs",
+        model: "static",
+        content: { type: "text", text: "hey83 b" },
+        layouts: [{ name: "Card", ...withLogo(`asset:${assetId}`) }],
+      },
+      prepareFor(b.id),
+    );
+    expect(stolen).toEqual({ ok: false, error: "invalid" });
+    const design = await stored(
+      (await pool.query(`select l.id from qr_layout l join qr_code q on q.id = l.qr_code_id where q.user_id = $1 limit 1`, [a.id])).rows[0]
+        .id,
+    );
+    const [asB] = await resolveLogos(db, store, b.id, [design]);
+    expect(asB.layout.style.logo?.href).toBeUndefined();
+    expect(asB.editor.logo).toEqual({ kind: "none" });
+  });
+
+  it("refuses an unsupported or oversized upload, and a logo URL", async () => {
+    const save = (href: string) =>
+      saveQrWithLayouts(
+        db,
+        b.id,
+        { name: "Bad", model: "static", content: { type: "text", text: "bad" }, layouts: [{ name: "Card", ...withLogo(href) }] },
+        prepareFor(b.id),
+      );
+    expect(await save("data:image/gif;base64,R0lGODlhAQABAAAAACw=")).toEqual({ ok: false, error: "invalid" });
+    expect(await save(`data:image/png;base64,${"A".repeat(14_000_000)}`)).toEqual({ ok: false, error: "invalid" });
+    expect(await save("https://cdn.example/logo.png")).toEqual({ ok: false, error: "invalid" });
+    // A PNG that is really an SVG (declared type doesn't match the bytes).
+    expect(await save(`data:image/png;base64,${SVG.split(",")[1]}`)).toEqual({ ok: false, error: "invalid" });
+  });
+
+  it("cleanup removes only expired files no layout refers to, keeps restorable ones, and skips a file a save holds", async () => {
+    const aged = async (assetId: string) =>
+      pool.query(`update asset set last_used_at = now() - interval '2 days' where id = $1`, [assetId]);
+    // An abandoned upload: stored by a save that was then refused.
+    const abandonedKey = `logos/${a.id}/hey83orphan.png`;
+    await store.put(abandonedKey, new Uint8Array([1]), "image/png");
+    await pool.query(
+      `insert into asset (id, user_id, storage_key, content_type, byte_size, sha256) values ('hey83orphan', $1, $2, 'image/png', 1, 'orphan')`,
+      [a.id, abandonedKey],
+    );
+    await aged("hey83orphan");
+    // A recent unreferenced upload stays (it may be about to be saved).
+    await pool.query(
+      `insert into asset (id, user_id, storage_key, content_type, byte_size, sha256) values ('hey83recent', $1, 'logos/x/recent.png', 'image/png', 1, 'recent')`,
+      [a.id],
+    );
+    // Files referenced by active layouts and by a soft-deleted (restorable) code are aged too.
+    for (const { id: assetId } of (
+      await pool.query(`select id from asset where user_id = $1 and sha256 not in ('orphan', 'recent')`, [a.id])
+    ).rows)
+      await aged(assetId);
+    const [{ id: codeId }] = (await pool.query(`select id from qr_code where user_id = $1 and name = 'Logo code'`, [a.id])).rows;
+    await softDeleteQrCodes(db, a.id, [codeId]);
+    // A save holding the orphan's row (as storeLogos does) makes cleanup skip it this time.
+    const held = await pool.connect();
+    await held.query("begin");
+    await held.query(`select id from asset where id = 'hey83orphan' for update`);
+    expect(await cleanupLogos(db, store)).toEqual([]);
+    await held.query("rollback");
+    held.release();
+    expect(await cleanupLogos(db, store)).toEqual([abandonedKey]);
+    expect(objects.has(abandonedKey)).toBe(false);
+    const left = (await pool.query(`select id from asset where user_id = $1 order by id`, [a.id])).rows.map((r) => r.id);
+    expect(left).toContain("hey83recent");
+    expect(left).not.toContain("hey83orphan");
+    expect(left.length).toBe(3);
+    // The restorable code still renders its logo.
+    const design = await stored(
+      (await pool.query(`select id from qr_layout where qr_code_id = $1 order by sort_order limit 1`, [codeId])).rows[0].id,
+    );
+    expect((await resolveLogos(db, store, a.id, [design]))[0].layout.style.logo.href).toBe(PNG);
   });
 });

@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { DEFAULT_DESIGN, DEFAULT_PRINT_SETTINGS, designToLayout, SAMPLE_LOGO, type EditorDesign } from "@/entities/qr";
 
 vi.mock("server-only", () => ({}));
-vi.mock("@/env", () => ({ env: { S3_PUBLIC_URL: undefined, NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr" } }));
+vi.mock("@/env", () => ({ env: { NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr" } }));
 const { renderExport, withEmbeddedImages } = await import("@/server/qr/export");
 const { printPage } = await import("@/server/print/print");
 

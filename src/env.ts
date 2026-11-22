@@ -46,7 +46,6 @@ export const env = createEnv({
     S3_ACCESS_KEY_ID: z.string().min(1).optional(),
     S3_SECRET_ACCESS_KEY: z.string().min(1).optional(),
     S3_ENDPOINT: optionalUrl,
-    S3_PUBLIC_URL: z.url().optional(),
     UPSTASH_REDIS_REST_URL: optionalUrl,
     UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
   },

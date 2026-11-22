@@ -10,6 +10,7 @@ import { Link } from "@/i18n/navigation";
 import { getCurrency } from "@/server/currency";
 import { resolveLocale } from "@/i18n/server";
 import { requireAccount } from "../../require-account";
+import { readable } from "@/server/qr/repository";
 import { TRIAL_DAYS, trialCode } from "@/server/billing/trial";
 import { userTrial } from "@/server/billing/entitlements";
 import { db } from "@/server/db";
@@ -72,7 +73,8 @@ export default async function TrialPage({ params, searchParams }: PageProps<"/[l
   const s = (key: string, values?: Record<string, string | number>) => t(`states.${state}.${key}` as "states.active.title", values ?? {});
   const daysLeft = state === "active" || state === "ending" ? phase.daysLeft : 0;
   const day = state === "active" || state === "ending" ? phase.day : TRIAL_DAYS + 1;
-  const layout = code?.layouts.sort((a, b) => a.sortOrder - b.sortOrder)[0];
+  // HEY-83: through the read boundary, so a stored logo renders (resolved for this account only).
+  const [layout] = code ? await readable(user.id, [...code.layouts].sort((a, b) => a.sortOrder - b.sortOrder).slice(0, 1)) : [];
   const scans = code ? (await dailyScans(code.id, 7)).map((d) => d.count) : [];
   const total = scans.reduce((a, b) => a + b, 0);
   const max = Math.max(1, ...scans);

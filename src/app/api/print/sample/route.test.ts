@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
 vi.mock("@/env", () => ({
-  env: { S3_PUBLIC_URL: undefined, NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr", NEXT_PUBLIC_APP_URL: "https://heyqr.app" },
+  env: { NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr", NEXT_PUBLIC_APP_URL: "https://heyqr.app" },
 }));
 vi.mock("next-intl/server", () => ({ getTranslations: async () => (k: string) => k }));
 const session = vi.fn();

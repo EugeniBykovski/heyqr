@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
 vi.mock("@/env", () => ({
-  env: { S3_PUBLIC_URL: undefined, NEXT_PUBLIC_APP_URL: "https://heyqr.app", NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr" },
+  env: { NEXT_PUBLIC_APP_URL: "https://heyqr.app", NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr" },
 }));
 vi.mock("@/server/config", () => ({ paymentsConfig: () => ({}) }));
 vi.mock("../db", () => ({ db: {}, schema: {} }));

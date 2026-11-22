@@ -149,3 +149,24 @@ Fixtures are never loaded into production.
 | Migration fails half-way                                                | Each migration runs in a transaction and is rolled back. Fix the SQL or the data, then rerun `pnpm db:migrate`.                |
 | `must be owner of …` during `pnpm test:db`                              | The test database must be owned by the role in `TEST_DATABASE_URL`: `alter database heyqr_test owner to heyqr;`.               |
 | `pnpm db:migrate` waits forever                                         | Another run holds the migration lock: let it finish, or check `select * from pg_locks where locktype = 'advisory';`.           |
+
+## Uploaded logos (HEY-83)
+
+Uploaded logos live in the private storage bucket (`S3_*`, Cloudflare R2 in hosted environments), one bucket per
+environment, never public. A saved layout refers to a logo as `asset:<id>` (table `asset`: owner, storage key, type,
+size, sha256, last use). The server reads a code's layouts through `server/qr/repository.ts`, which resolves those
+references for the code's owner only; nothing is served from a URL.
+
+- **Temporary**: stored by a save (an uploaded image is checked with the HEY-50 rule and stored once per account and
+  file) but not referenced by any saved layout yet, for example when the save was then refused.
+- **Attached**: referenced by at least one layout, including layouts of soft-deleted codes, which can still be restored.
+  Variants and copies that use the same file share one asset; replacing a logo on a copy stores a new one.
+- **Eligible for cleanup**: unreferenced and unused for 24 hours. `pnpm assets:cleanup` removes those rows under row
+  locks (a save in flight keeps its file and touches it), then their objects. Production needs
+  `CONFIRM_PRODUCTION_CLEANUP=1`.
+
+Older layouts that still hold an inline `data:` logo keep rendering unchanged; the next save of that layout moves the
+file to private storage. No logo was ever stored behind a public URL (the old presign route had no caller), so there
+are no public objects to migrate. To check a hosted environment before retiring any public access: open a saved layout
+with a logo, confirm its `qr_layout.design` holds `asset:<id>` and no `data:image`, that the editor, thumbnail and an
+export show the logo, and that an anonymous request to the object's key is refused.

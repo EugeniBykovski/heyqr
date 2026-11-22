@@ -8,7 +8,7 @@ import { describe, expect, it, vi } from "vitest";
 import { DEFAULT_DESIGN, DEFAULT_PRINT_SETTINGS, designToLayout, printSizes, readPrintSettings, type EditorDesign } from "@/entities/qr";
 
 vi.mock("server-only", () => ({}));
-vi.mock("@/env", () => ({ env: { S3_PUBLIC_URL: undefined, NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr" } }));
+vi.mock("@/env", () => ({ env: { NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr" } }));
 const { layoutPdf, printPage, printPdf, printSpecPdf, rasterSize, renderKeyOf } = await import("./print");
 
 /* Design 8.x Print Pack: the print page, the vector PDF and the specifications from one function. */
