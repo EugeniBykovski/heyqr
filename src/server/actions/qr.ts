@@ -13,6 +13,7 @@ export type { ActionResult } from "./result";
 import { db, schema } from "../db";
 import { restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { encodedValue } from "../qr/export";
+import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, removeLayout, updateLayoutDesign } from "../qr/update-layout";
 import { newId, newShortCode } from "../db/ids";
@@ -181,12 +182,9 @@ export async function startPrintPackCheckout(input: {
 export async function renameQr(qrCodeId: string, name: string): Promise<ActionResult> {
   return guard(async () => {
     const user = await requireUser();
-    const value = z.string().trim().min(1).max(80).safeParse(name);
-    if (!value.success) return { ok: false, error: "invalid" };
-    await db
-      .update(schema.qrCode)
-      .set({ name: value.data })
-      .where(and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, user.id), isNull(schema.qrCode.deletedAt)));
+    if (typeof name !== "string" || typeof qrCodeId !== "string") return { ok: false, error: "invalid" };
+    const result = await renameQrCode(db, user.id, qrCodeId, name);
+    if (!result.ok) return result;
     revalidatePath("/[locale]/dashboard", "layout");
     return { ok: true, data: undefined };
   });
