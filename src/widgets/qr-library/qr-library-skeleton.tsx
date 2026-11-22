@@ -1,7 +1,11 @@
 import { Skeleton, SkeletonText } from "@/shared/ui/skeleton";
 import { libraryActions, libraryList, libraryRow } from "./layout";
 
-/** Loading rows with the real cards' boxes: square thumbnail, title, two badges, two buttons. */
+/**
+ * Loading rows with the real cards' boxes (HEY-79, design 5.4): square thumbnail, title, type / model / status badges
+ * and the "Updated" note, then the row's actions in the same order and sizes: Delete, Rename (icon only on phones),
+ * Edit design and the main action, pushed right on cards like an unpaid code's.
+ */
 export function QrLibrarySkeleton({ label, rows = 4 }: { label: string; rows?: number }) {
   return (
     <ul aria-busy="true" aria-label={label} className={libraryList}>
@@ -20,8 +24,9 @@ export function QrLibrarySkeleton({ label, rows = 4 }: { label: string; rows?: n
           </div>
           <div className={libraryActions}>
             <Skeleton className="size-9 rounded-full" />
-            <Skeleton className="h-9 w-16 rounded-full" />
-            <Skeleton className="h-9 w-30 rounded-full" />
+            <Skeleton className="h-9 w-11.5 rounded-full sm:w-27" />
+            <Skeleton className="h-9 w-26 rounded-full" />
+            <Skeleton className="ml-auto h-9 w-40 rounded-full lg:ml-0" />
           </div>
         </li>
       ))}

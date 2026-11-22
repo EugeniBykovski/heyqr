@@ -121,6 +121,21 @@ export default async function DashboardPage({ params, searchParams }: PageProps<
         sub={<p>{t("sub", { count: codes.length, dynamic: dynamicActive })}</p>}
         total={codes.length}
         items={items}
+        // HEY-79: a filter with no matches is not an empty account: it says so and leads back to All.
+        noMatch={
+          filter === "all" ? undefined : (
+            <div
+              role="status"
+              className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-input bg-surface px-5 py-10 text-center"
+            >
+              <h2 className="text-h2">{t(`noMatch.${filter}`)}</h2>
+              <p className="max-w-measure text-secondary-foreground">{t("noMatch.text")}</p>
+              <Button asChild>
+                <Link href="/dashboard">{t("noMatch.all")}</Link>
+              </Button>
+            </div>
+          )
+        }
         filters={
           <>
             {usage.plan ? (

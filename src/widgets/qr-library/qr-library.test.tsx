@@ -2,10 +2,15 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { AnchorHTMLAttributes } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { NextIntlClientProvider } from "next-intl";
+import messages from "../../../messages/en.json";
 import { QrCard } from "./qr-card";
+import { QrLibraryManager } from "./qr-library-manager";
 import { QrLibrarySkeleton } from "./qr-library-skeleton";
 
+vi.mock("@/server/actions/qr", () => ({ deleteQrs: vi.fn(), renameQr: vi.fn(), restoreQrs: vi.fn() }));
 vi.mock("@/i18n/navigation", () => ({
+  useRouter: () => ({ refresh: vi.fn(), push: vi.fn() }),
   Link: ({ href, ...props }: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => <a href={href} {...props} />,
 }));
 
@@ -111,5 +116,64 @@ describe("QrLibrarySkeleton", () => {
     const list = screen.getByRole("list", { name: "Loading your QR codes" });
     expect(list).toHaveAttribute("aria-busy", "true");
     expect(list.querySelectorAll("li")).toHaveLength(3);
+  });
+});
+
+describe("QrCard · actions (HEY-79, design 4.2)", () => {
+  it("are Delete, Rename, Edit design, then the main action, all for this code", () => {
+    render(
+      <ul>
+        <QrCard
+          {...base}
+          status="draft"
+          statusLabel="Draft"
+          paid={false}
+          onDelete={() => {}}
+          onRename={async () => true}
+          labels={{
+            ...base.labels,
+            delete: "Delete Café menu",
+            rename: {
+              action: "Rename",
+              actionOne: "Rename Café menu",
+              label: "New name",
+              save: "Save",
+              cancel: "Cancel",
+              empty: "Enter a name",
+            },
+          }}
+        />
+      </ul>,
+    );
+    const actions = [...screen.getByRole("listitem").querySelectorAll("button, a")]
+      .map((a) => a.getAttribute("aria-label") ?? a.textContent)
+      .filter((n) => n !== "Open Café menu" && n !== "Café menu");
+    expect(actions).toEqual(["Delete Café menu", "Rename Café menu", "Edit design", "Buy & download"]);
+  });
+
+  it("the loading row has the same four action slots", () => {
+    render(<QrLibrarySkeleton label="Loading your QR codes" rows={1} />);
+    expect(screen.getByRole("listitem").lastElementChild?.children).toHaveLength(4);
+  });
+});
+
+describe("QrLibraryManager · filter with no matches (HEY-79)", () => {
+  it("shows the no-match message instead of an empty list", () => {
+    render(
+      <NextIntlClientProvider locale="en" messages={messages} timeZone="UTC">
+        <QrLibraryManager
+          title="My QR codes"
+          sub={null}
+          createLabel="Create QR code"
+          filters={null}
+          items={[]}
+          total={2}
+          noMatch={<p role="status">No dynamic QR codes</p>}
+        />
+      </NextIntlClientProvider>,
+    );
+    expect(screen.getByRole("status")).toHaveTextContent("No dynamic QR codes");
+    expect(screen.queryByRole("listitem")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Select" })).toBeNull();
   });
 });
