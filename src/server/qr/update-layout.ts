@@ -39,6 +39,12 @@ export async function updateLayoutDesign(
       .for("update");
     if (!qr) return { ok: false, error: "not_found" } as const;
     if (!layoutCapacity(checked.layout, encodedFor(qr)).ok) return { ok: false, error: "too_long" } as const;
+    // HEY-84: the layout must belong to this code before anything is stored.
+    const [own] = await tx
+      .select({ id: schema.qrLayout.id })
+      .from(schema.qrLayout)
+      .where(and(eq(schema.qrLayout.id, input.layoutId), eq(schema.qrLayout.qrCodeId, qr.id)));
+    if (!own) return { ok: false, error: "not_found" } as const;
     const design = prepare ? await prepare(tx, checked) : checked;
     if (!design) return { ok: false, error: "invalid" } as const;
     const updated = await tx

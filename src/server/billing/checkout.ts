@@ -110,8 +110,9 @@ export async function createCheckout(input: ExportBack & { user: User; currency:
     where: and(eq(schema.qrCode.id, input.qrCodeId), eq(schema.qrCode.userId, user.id), isNull(schema.qrCode.deletedAt)),
     with: { layouts: true },
   });
-  if (!qr) throw new Error("QR code not found");
-  const layout = qr.layouts.find((l) => l.id === input.layoutId);
+  const layout = qr?.layouts.find((l) => l.id === input.layoutId);
+  // The action checks the same; a code and layout that don't belong together never reach Stripe.
+  if (!qr || !layout) throw new Error("QR code not found");
   const printPack = Boolean(input.printPack) && layout?.design.layout.unit === "mm" && !qr.printPackAt;
   const back = exportReturnUrl({ ...input, printPack });
   const metadata: Record<string, string> = {

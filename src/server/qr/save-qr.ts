@@ -50,21 +50,15 @@ export async function saveQrWithLayouts(
   }
 
   return db.transaction(async (tx) => {
-    // HEY-83: uploaded logos go to private storage first (a save refused below leaves them unreferenced for cleanup).
-    const stored: LayoutRecordDesign[] = [];
-    for (const d of designs) {
-      const p = d && (prepare ? await prepare(tx, d) : d);
-      if (!p) return { ok: false, error: "invalid" } as const;
-      stored.push(p);
-    }
     const qrCodeId = input.qrCodeId ?? newId();
+    // 1. Checks first (HEY-84: a refused save stores nothing): the user's own code, or the claim and the draft limit.
     if (input.qrCodeId) {
-      const updated = await tx
-        .update(schema.qrCode)
-        .set({ name: input.name, content: input.content, destination: input.destination ?? null })
+      const [own] = await tx
+        .select({ id: schema.qrCode.id })
+        .from(schema.qrCode)
         .where(and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)))
-        .returning({ id: schema.qrCode.id });
-      if (updated.length === 0) return { ok: false, error: "not_found" } as const;
+        .for("update");
+      if (!own) return { ok: false, error: "not_found" } as const;
     } else {
       // Design Pricing · Free: up to DRAFT_LIMIT saved drafts (codes not yet unlocked or live). Saves of one account
       // are serialized, so two at once can't both pass the count.
@@ -88,6 +82,23 @@ export async function saveQrWithLayouts(
         .from(schema.qrCode)
         .where(and(eq(schema.qrCode.userId, userId), eq(schema.qrCode.status, "draft"), isNull(schema.qrCode.deletedAt)));
       if ((drafts?.n ?? 0) >= DRAFT_LIMIT) return { ok: false, error: "draft_limit" } as const;
+    }
+
+    // 2. HEY-83: uploaded logos into the account's private storage, before any row is written.
+    const stored: LayoutRecordDesign[] = [];
+    for (const d of designs) {
+      const p = d && (prepare ? await prepare(tx, d) : d);
+      if (!p) return { ok: false, error: "invalid" } as const;
+      stored.push(p);
+    }
+
+    // 3. Writes.
+    if (input.qrCodeId) {
+      await tx
+        .update(schema.qrCode)
+        .set({ name: input.name, content: input.content, destination: input.destination ?? null })
+        .where(eq(schema.qrCode.id, qrCodeId));
+    } else {
       await tx.insert(schema.qrCode).values({
         id: qrCodeId,
         userId,

@@ -13,6 +13,8 @@ export type { ActionResult } from "./result";
 import { db, schema } from "../db";
 import { restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { encodedValue } from "../qr/export";
+import { readLayoutRecord } from "../../entities/qr/model/design-schema";
+import { ownedLayout } from "../qr/file-access";
 import { storeLogos } from "../qr/logo-assets";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
@@ -186,10 +188,13 @@ export async function startPrintPackCheckout(input: {
   return guard(async () => {
     const user = await requireUser();
     if (!printPackForSale(await getCurrency())) return { ok: false, error: "not_offered" };
-    const qr = await db.query.qrCode.findFirst({
-      where: (q, { and, eq, isNull }) => and(eq(q.id, input.qrCodeId), eq(q.userId, user.id), isNull(q.deletedAt)),
-    });
-    if (!qr || !(await canDownload(user.id, qr))) return { ok: false, error: "not_found" };
+    // HEY-84: the user's unlocked code and one of its print (mm) layouts; a Print Pack is bought once per code.
+    const owned = await ownedLayout(db, user.id, input.qrCodeId, input.layoutId);
+    if (!owned || !(await canDownload(user.id, owned.qr))) return { ok: false, error: "not_found" };
+    const qr = owned.qr;
+    if (qr.printPackAt) return { ok: false, error: "not_offered" };
+    const read = readLayoutRecord(owned.layout.design);
+    if (!read.ok || read.value.layout.unit !== "mm") return { ok: false, error: "invalid" };
     const settings = z
       .string()
       .max(200)
@@ -251,6 +256,8 @@ export async function startCheckout(input: {
 }): Promise<ActionResult<{ url: string }>> {
   return guard(async () => {
     const user = await requireUser();
+    // HEY-84: the user's code and a layout of that code, before anything goes to Stripe (metadata, return URL).
+    if (!(await ownedLayout(db, user.id, input.qrCodeId, input.layoutId))) return { ok: false, error: "not_found" };
     const resolution = z.number().int().min(1).max(1200).optional().safeParse(input.resolution);
     const url = await createCheckout({
       user,
