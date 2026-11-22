@@ -45,11 +45,18 @@ export async function fulfillCheckout(
   }
   if (s.mode !== "payment") return { granted: false };
 
-  // The order this session created, paid now for the first time (null when it was already paid).
+  // HEY-88: the stored order is authoritative. It is found by the session attached to it; a session whose metadata
+  // names another order, account or code than that order's own is refused before anything is marked paid.
+  const order = await db.query.purchase.findFirst({ where: eq(schema.purchase.stripeCheckoutSessionId, s.id) });
+  if (!order || order.userId !== userId) return { granted: false };
+  if (s.metadata?.orderId !== undefined && s.metadata.orderId !== order.id) return { granted: false };
+  if (order.qrCodeId !== null && qrCodeId !== undefined && qrCodeId !== order.qrCodeId) return { granted: false };
+
+  // Paid now for the first time (null when it was already paid, or its session was replaced meanwhile).
   const [row] = await db
     .update(schema.purchase)
     .set({ status: "paid", paidAt: now, stripePaymentIntentId: String(s.payment_intent ?? ""), amountTotal: s.amount_total ?? 0 })
-    .where(and(eq(schema.purchase.stripeCheckoutSessionId, s.id), ne(schema.purchase.status, "paid")))
+    .where(and(eq(schema.purchase.id, order.id), eq(schema.purchase.stripeCheckoutSessionId, s.id), ne(schema.purchase.status, "paid")))
     .returning();
   if (!row) return { granted: false };
 
@@ -58,24 +65,32 @@ export async function fulfillCheckout(
     await grantPackCredits(db, userId, row.id, pack);
     return { granted: true };
   }
-  if (!ownCode || !qrCodeId || row.qrCodeId !== qrCodeId) return { granted: false };
-  if (kind === "print_pack") {
+  if (!row.qrCodeId) return { granted: false };
+  // The order's own code of the order's own account.
+  const orderCode = and(eq(schema.qrCode.id, row.qrCodeId), eq(schema.qrCode.userId, row.userId));
+  if (row.item === "print_pack") {
     // Design 8.x: the Print Pack of an already unlocked code; the code itself doesn't change.
     await db
       .update(schema.qrCode)
       .set({ printPackAt: sql`coalesce(${schema.qrCode.printPackAt}, now())` })
-      .where(ownCode);
+      .where(orderCode);
     return { granted: true };
   }
+  if (row.item !== "single_qr" && row.item !== "single_qr_print_pack") return { granted: false };
   // Single QR, with its Print Pack when it was on the order (design 7.3). An earlier unlock keeps its time.
   await db
     .update(schema.qrCode)
     .set({
       purchasedAt: sql`coalesce(${schema.qrCode.purchasedAt}, now())`,
       status: "active",
-      ...(printPack === "1" ? { printPackAt: sql`coalesce(${schema.qrCode.printPackAt}, now())` } : {}),
+      ...(row.item === "single_qr_print_pack" ? { printPackAt: sql`coalesce(${schema.qrCode.printPackAt}, now())` } : {}),
     })
-    .where(ownCode);
-  await receipt?.({ userId, qrCodeId, amountTotal: row.amountTotal ?? s.amount_total ?? 0, currency: s.currency ?? "usd" });
+    .where(orderCode);
+  await receipt?.({
+    userId: row.userId,
+    qrCodeId: row.qrCodeId,
+    amountTotal: row.amountTotal ?? s.amount_total ?? 0,
+    currency: s.currency ?? "usd",
+  });
   return { granted: true };
 }

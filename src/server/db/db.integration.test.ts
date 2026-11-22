@@ -13,6 +13,7 @@ import { RESTORE_WINDOW_MS, restoreQrCodes, softDeleteQrCodes } from "../qr/dele
 import { cleanupLogos, referencedAssets, resolveLogos, storeLogos, type LogoStore } from "../qr/logo-assets";
 import { authorizedLogo, ownedLayout } from "../qr/file-access";
 import { fulfillCheckout } from "../billing/fulfillment";
+import { singleQrCheckout, type CheckoutPort } from "../billing/single-order";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, copyLayout, layoutRevision, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
@@ -1757,5 +1758,214 @@ describe.skipIf(!url)("repeat-download entitlements (HEY-87, real PostgreSQL)", 
     expect((await qrRow(byPlan)).purchased_at).not.toBeNull();
     const after = await code("after the plan");
     expect(await unlockStatic(db, owner.id, after, "plan")).toEqual({ ok: false, error: "no_allowance" });
+  });
+});
+
+/* HEY-88: a Single QR order is the account's and the code's before Stripe is called, and the stored order decides fulfilment. */
+describe.skipIf(!url)("Single QR order binding (HEY-88, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "hey88-owner", name: "Owner", email: "owner@hey88.test" };
+  const other = { id: "hey88-other", name: "Other", email: "other@hey88.test" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const charge = { item: "single_qr" as const, lines: [{ offer: "single" as const, amount: 499 }], currency: "USD" };
+
+  /** Stripe stand-in: every session it made, with its state; `failNext` makes the next create throw. */
+  const stripe = () => {
+    const sessions = new Map<string, { orderId: string; status: "open" | "complete" | "expired" }>();
+    let n = 0;
+    const state = { failNext: false, creates: 0 };
+    const port: CheckoutPort = {
+      create: async ({ orderId }) => {
+        state.creates++;
+        if (state.failNext) {
+          state.failNext = false;
+          throw new Error("Stripe unavailable");
+        }
+        const id = `cs_test_hey88_${++n}_${Math.random().toString(36).slice(2, 8)}`;
+        sessions.set(id, { orderId, status: "open" });
+        return { id, url: `https://checkout.stripe.test/${id}`, amount_total: 499, currency: "usd" };
+      },
+      retrieve: async (id) => ({ status: sessions.get(id)?.status ?? null, url: `https://checkout.stripe.test/${id}` }),
+      expire: async (id) => {
+        const s = sessions.get(id);
+        if (!s || s.status !== "open") throw new Error("not open");
+        s.status = "expired";
+      },
+    };
+    return { port, sessions, state };
+  };
+  const code = async (userId: string, text: string) => {
+    const r = await saveQrWithLayouts(db, userId, { name: text, model: "static", content: { type: "text", text }, layouts });
+    if (!r.ok) throw new Error("fixture");
+    const layout = await db.query.qrLayout.findFirst({ where: eq(schema.qrLayout.qrCodeId, r.data.qrCodeId) });
+    return { qrCodeId: r.data.qrCodeId, layoutId: layout?.id ?? "" };
+  };
+  const ordersOf = async (qrCodeId: string) => db.query.purchase.findMany({ where: eq(schema.purchase.qrCodeId, qrCodeId) });
+  const unlocked = async (qrCodeId: string) =>
+    (await db.query.qrCode.findFirst({ where: eq(schema.qrCode.id, qrCodeId) }))?.purchasedAt !== null;
+  const paidEvent = (sessionId: string, metadata: Record<string, string>, payment_status: "paid" | "unpaid" = "paid") => ({
+    id: sessionId,
+    mode: "payment" as const,
+    payment_status,
+    payment_intent: `pi_${sessionId}`,
+    amount_total: 499,
+    currency: "usd",
+    metadata,
+  });
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 6 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    for (const u of [owner, other]) {
+      await db?.delete(schema.purchase).where(eq(schema.purchase.userId, u.id));
+      await db?.delete(schema.qrCode).where(eq(schema.qrCode.userId, u.id));
+      await db?.delete(schema.user).where(eq(schema.user.id, u.id));
+    }
+    await pool?.end();
+  });
+
+  it("binds one pending order to the account and the code before Stripe; payment fulfils that order and that code only", async () => {
+    const a = await code(owner.id, "bound");
+    const second = await code(owner.id, "bound"); // same account, same content, its own code
+    const { port, sessions } = stripe();
+    const r = await singleQrCheckout(db, port, { userId: owner.id, ...a, charge });
+    expect(r).toMatchObject({ ok: true, reused: false });
+    const [order] = await ordersOf(a.qrCodeId);
+    expect(order).toMatchObject({ userId: owner.id, qrCodeId: a.qrCodeId, status: "pending", item: "single_qr", amountTotal: 499 });
+    const sessionId = order?.stripeCheckoutSessionId ?? "";
+    expect(sessions.get(sessionId)).toEqual({ orderId: order?.id, status: "open" });
+
+    const meta = { userId: owner.id, qrCodeId: a.qrCodeId, orderId: order?.id ?? "", kind: "code" };
+    expect(await fulfillCheckout(db, paidEvent(sessionId, meta), () => "s")).toEqual({ granted: true });
+    const [paid] = await ordersOf(a.qrCodeId);
+    expect(paid).toMatchObject({
+      id: order?.id,
+      userId: owner.id,
+      qrCodeId: a.qrCodeId,
+      status: "paid",
+      stripeCheckoutSessionId: sessionId,
+    });
+    expect(await unlocked(a.qrCodeId)).toBe(true);
+    expect(await unlocked(second.qrCodeId)).toBe(false);
+    // Duplicate delivery: nothing changes.
+    expect(await fulfillCheckout(db, paidEvent(sessionId, meta), () => "s")).toEqual({ granted: false });
+    expect(await ordersOf(a.qrCodeId)).toHaveLength(1);
+    // Asking again for the unlocked code: no order, no session.
+    expect(await singleQrCheckout(db, port, { userId: owner.id, ...a, charge })).toEqual({ ok: false, error: "owned" });
+    expect(sessions.size).toBe(1);
+  });
+
+  it("refuses another account's code, a layout of another code and a deleted code: no order, no session", async () => {
+    const mine = await code(owner.id, "mine");
+    const theirs = await code(other.id, "theirs");
+    const { port, state } = stripe();
+    expect(await singleQrCheckout(db, port, { userId: owner.id, ...theirs, charge })).toEqual({ ok: false, error: "not_found" });
+    expect(await singleQrCheckout(db, port, { userId: owner.id, qrCodeId: mine.qrCodeId, layoutId: theirs.layoutId, charge })).toEqual({
+      ok: false,
+      error: "not_found",
+    });
+    await db.update(schema.qrCode).set({ deletedAt: new Date() }).where(eq(schema.qrCode.id, mine.qrCodeId));
+    expect(await singleQrCheckout(db, port, { userId: owner.id, ...mine, charge })).toEqual({ ok: false, error: "not_found" });
+    expect(state.creates).toBe(0);
+    expect(await ordersOf(mine.qrCodeId)).toHaveLength(0);
+    expect(await ordersOf(theirs.qrCodeId)).toHaveLength(0);
+  });
+
+  it("a failed session creation leaves the order pending; the retry reuses it and replaces only an open session", async () => {
+    const a = await code(owner.id, "retry");
+    const { port, sessions, state } = stripe();
+    state.failNext = true;
+    await expect(singleQrCheckout(db, port, { userId: owner.id, ...a, charge })).rejects.toThrow("Stripe unavailable");
+    const [failed] = await ordersOf(a.qrCodeId);
+    expect(failed).toMatchObject({ status: "pending", stripeCheckoutSessionId: null });
+
+    const retry = await singleQrCheckout(db, port, { userId: owner.id, ...a, charge });
+    expect(retry).toMatchObject({ ok: true, reused: true, orderId: failed?.id });
+    const first = (await ordersOf(a.qrCodeId))[0]?.stripeCheckoutSessionId ?? "";
+    // Back from Stripe without paying, then Pay again: the open session is expired, the same order gets a new one.
+    const again = await singleQrCheckout(db, port, { userId: owner.id, ...a, charge });
+    expect(again).toMatchObject({ ok: true, reused: true, orderId: failed?.id });
+    const rows = await ordersOf(a.qrCodeId);
+    expect(rows).toHaveLength(1);
+    expect(sessions.get(first)?.status).toBe("expired");
+    expect(sessions.get(rows[0]?.stripeCheckoutSessionId ?? "")?.status).toBe("open");
+    // The replaced session can no longer pay the order (its event matches no order).
+    expect(await fulfillCheckout(db, paidEvent(first, { userId: owner.id, qrCodeId: a.qrCodeId }), () => "s")).toEqual({ granted: false });
+    expect(await unlocked(a.qrCodeId)).toBe(false);
+  });
+
+  it("an attempt already paid is never charged again; unpaid or mismatched events leave the code locked", async () => {
+    const a = await code(owner.id, "processing");
+    const { port, sessions, state } = stripe();
+    await singleQrCheckout(db, port, { userId: owner.id, ...a, charge });
+    const [order] = await ordersOf(a.qrCodeId);
+    const sessionId = order?.stripeCheckoutSessionId ?? "";
+    const meta = { userId: owner.id, qrCodeId: a.qrCodeId, orderId: order?.id ?? "" };
+    // Unpaid (e.g. a delayed method) and events naming another order, account or code: no grant, still pending.
+    expect(await fulfillCheckout(db, paidEvent(sessionId, meta, "unpaid"), () => "s")).toEqual({ granted: false });
+    expect(await fulfillCheckout(db, paidEvent(sessionId, { ...meta, orderId: "another" }), () => "s")).toEqual({ granted: false });
+    expect(await fulfillCheckout(db, paidEvent(sessionId, { ...meta, userId: other.id }), () => "s")).toEqual({ granted: false });
+    const b = await code(owner.id, "other code");
+    expect(await fulfillCheckout(db, paidEvent(sessionId, { ...meta, qrCodeId: b.qrCodeId }), () => "s")).toEqual({ granted: false });
+    expect((await ordersOf(a.qrCodeId))[0]?.status).toBe("pending");
+    expect(await unlocked(a.qrCodeId)).toBe(false);
+    expect(await unlocked(b.qrCodeId)).toBe(false);
+    // The session completed at Stripe (webhook not processed yet): Pay again opens no second checkout.
+    const s = sessions.get(sessionId);
+    if (s) s.status = "complete";
+    const creates = state.creates;
+    expect(await singleQrCheckout(db, port, { userId: owner.id, ...a, charge })).toEqual({ ok: false, error: "processing" });
+    expect(state.creates).toBe(creates);
+  });
+
+  it("two checkouts of the same code at once share one order, and only one session is left payable", async () => {
+    const a = await code(owner.id, "double click");
+    const { port, sessions } = stripe();
+    const results = await Promise.all([
+      singleQrCheckout(db, port, { userId: owner.id, ...a, charge }),
+      singleQrCheckout(db, port, { userId: owner.id, ...a, charge }),
+    ]);
+    expect(results.every((r) => r.ok)).toBe(true);
+    const rows = await ordersOf(a.qrCodeId);
+    expect(rows).toHaveLength(1);
+    const open = [...sessions.entries()].filter(([, v]) => v.status === "open").map(([k]) => k);
+    expect(open).toEqual([rows[0]?.stripeCheckoutSessionId]);
+  });
+
+  it("keeps earlier order history: a legacy pending order with its session is reused, paid orders are untouched", async () => {
+    const a = await code(owner.id, "legacy");
+    const { port, sessions } = stripe();
+    sessions.set("cs_test_legacy_open", { orderId: "legacy", status: "open" });
+    await db.insert(schema.purchase).values([
+      {
+        id: "hey88-legacy-paid",
+        userId: owner.id,
+        qrCodeId: null,
+        item: "pack3",
+        stripeCheckoutSessionId: "cs_test_legacy_paid",
+        amountTotal: 999,
+        currency: "usd",
+        status: "paid",
+        paidAt: new Date(),
+      },
+      {
+        id: "hey88-legacy",
+        userId: owner.id,
+        qrCodeId: a.qrCodeId,
+        item: "single_qr",
+        stripeCheckoutSessionId: "cs_test_legacy_open",
+        amountTotal: 499,
+        currency: "usd",
+      },
+    ]);
+    const r = await singleQrCheckout(db, port, { userId: owner.id, ...a, charge });
+    expect(r).toMatchObject({ ok: true, reused: true, orderId: "hey88-legacy" });
+    expect(sessions.get("cs_test_legacy_open")?.status).toBe("expired");
+    const paid = await db.query.purchase.findFirst({ where: eq(schema.purchase.id, "hey88-legacy-paid") });
+    expect(paid).toMatchObject({ status: "paid", stripeCheckoutSessionId: "cs_test_legacy_paid", amountTotal: 999 });
   });
 });

@@ -1,0 +1,1 @@
+ALTER TABLE "purchase" ALTER COLUMN "stripe_checkout_session_id" DROP NOT NULL;

@@ -52,6 +52,20 @@ vi.mock("../db", () => ({
   },
 }));
 
+/* HEY-88: the Single QR order itself (create or reuse, attach) is covered against PostgreSQL; here, what it charges. */
+const orders: { charge: { item: string; currency: string; lines: unknown[] }; layoutId?: string }[] = [];
+vi.mock("./single-order", () => ({
+  singleQrCheckout: async (
+    _db: unknown,
+    port: { create: (i: { orderId: string; previous: string | null }) => Promise<{ url: string | null }> },
+    input: (typeof orders)[number],
+  ) => {
+    orders.push(input);
+    const s = await port.create({ orderId: "order_1", previous: null });
+    return { ok: true, url: s.url, orderId: "order_1", reused: false };
+  },
+}));
+
 const { createCheckout, CatalogError } = await import("./checkout");
 const user = { id: "u1", email: "ana@example.test", name: "Ana", stripeCustomerId: "cus_test" };
 const base = { user, qrCodeId: "q1", layoutId: "l1", format: "png" as const, locale: "en" };
@@ -67,6 +81,7 @@ describe("checkout (HEY-60)", () => {
       amount_total: p.line_items.reduce((s, l) => s + (PRICES[l.price]?.unit_amount ?? 0), 0),
     }));
     inserted.length = 0;
+    orders.length = 0;
     qr = { id: "q1", model: "static", printPackAt: null, layouts: [{ id: "l1", design: { layout: { unit: "mm" } } }] };
   });
 
@@ -78,22 +93,27 @@ describe("checkout (HEY-60)", () => {
       { price: "price_pln_single", quantity: 1 },
       { price: "price_pln_pp", quantity: 1 },
     ]);
-    expect(params.metadata).toMatchObject({ currency: "PLN", printPack: "1" });
-    expect(inserted[0]).toMatchObject({
-      item: "single_qr_print_pack",
-      currency: "pln",
-      amountTotal: 3198,
-      lines: [
-        { offer: "single", amount: 1999 },
-        { offer: "printPack", amount: 1199 },
-      ],
+    expect(params.metadata).toMatchObject({ currency: "PLN", printPack: "1", orderId: "order_1" });
+    expect(params.client_reference_id).toBe("order_1");
+    expect(create.mock.calls[0]?.[1]).toEqual({ idempotencyKey: expect.stringMatching(/^heyqr-order-order_1-first-[0-9a-f]{16}$/) });
+    expect(orders[0]).toMatchObject({
+      layoutId: "l1",
+      charge: {
+        item: "single_qr_print_pack",
+        currency: "PLN",
+        lines: [
+          { offer: "single", amount: 1999 },
+          { offer: "printPack", amount: 1199 },
+        ],
+      },
     });
+    expect(inserted).toEqual([]);
   });
 
   it("Print Pack off by default, USD: Single QR only; a px layout never adds a Print Pack", async () => {
     await createCheckout({ ...base, currency: "USD" });
     expect(create.mock.calls[0]?.[0].line_items).toEqual([{ price: "price_usd_single", quantity: 1 }]);
-    expect(inserted[0]).toMatchObject({ item: "single_qr", currency: "usd", amountTotal: 499 });
+    expect(orders[0]?.charge).toMatchObject({ item: "single_qr", currency: "USD", lines: [{ offer: "single", amount: 499 }] });
     qr.layouts = [{ id: "l1", design: { layout: { unit: "px" } } }];
     await createCheckout({ ...base, currency: "USD", printPack: true });
     expect(create.mock.calls[1]?.[0].line_items).toEqual([{ price: "price_usd_single", quantity: 1 }]);
@@ -116,5 +136,6 @@ describe("checkout (HEY-60)", () => {
     await expect(createCheckout({ ...base, currency: "PLN", plan: "studio" })).rejects.toMatchObject({ code: "not_offered" });
     expect(create).not.toHaveBeenCalled();
     expect(inserted).toEqual([]);
+    expect(orders).toEqual([]);
   });
 });

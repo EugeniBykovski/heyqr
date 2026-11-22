@@ -9,7 +9,7 @@ vi.mock("../db", () => ({ db: {}, schema: {} }));
 vi.mock("../currency", () => ({ getCurrency: async () => "USD" }));
 const owned = vi.fn();
 vi.mock("../qr/file-access", () => ({ ownedLayout: (...a: unknown[]) => owned(...a) }));
-const createCheckout = vi.fn(async () => "https://checkout.example/s");
+const createCheckout = vi.fn(async () => ({ url: "https://checkout.example/s" }));
 const createPrintPackCheckout = vi.fn(async () => "https://checkout.example/p");
 vi.mock("../billing/checkout", () => ({
   createCheckout: (...a: unknown[]) => createCheckout(...(a as [])),

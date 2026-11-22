@@ -1,11 +1,14 @@
 import "server-only";
+import { createHash } from "node:crypto";
 import { and, eq, isNull } from "drizzle-orm";
+import type Stripe from "stripe";
 import { env } from "@/env";
 import { pricePoint, type Currency, type Offer, type PlanId } from "@/shared/config/catalog";
 import { db, schema } from "../db";
 import type { PurchaseItem, PurchaseLine } from "../db/schema";
 import { newId } from "../db/ids";
 import { priceMatches, stripePriceFor } from "./catalog";
+import { singleQrCheckout, type CheckoutPort } from "./single-order";
 import { stripe } from "./stripe";
 
 async function customerFor(user: { id: string; email: string; name: string; stripeCustomerId?: string | null }) {
@@ -59,17 +62,16 @@ export function exportReturnUrl(input: ExportBack) {
   return `${env.NEXT_PUBLIC_APP_URL}/${input.locale}/create/export?${q.toString()}`;
 }
 
-async function session(input: {
-  user: User;
+type SessionInput = {
   mode: "payment" | "subscription";
   prices: string[];
   back: string;
   metadata: Record<string, string>;
-  purchase?: { qrCodeId: string | null; item: PurchaseItem; lines: PurchaseLine[]; currency: Currency };
-}): Promise<string> {
-  const customer = await customerFor(input.user);
+};
+
+function sessionParams(customer: string, input: SessionInput): Stripe.Checkout.SessionCreateParams {
   const join = input.back.includes("?") ? "&" : "?";
-  const created = await stripe().checkout.sessions.create({
+  return {
     mode: input.mode,
     customer,
     line_items: input.prices.map((price) => ({ price, quantity: 1 })),
@@ -82,7 +84,17 @@ async function session(input: {
     allow_promotion_codes: true,
     automatic_tax: { enabled: true },
     customer_update: { address: "auto" },
-  });
+  };
+}
+
+async function session(
+  input: SessionInput & {
+    user: User;
+    purchase?: { qrCodeId: string | null; item: PurchaseItem; lines: PurchaseLine[]; currency: Currency };
+  },
+): Promise<string> {
+  const customer = await customerFor(input.user);
+  const created = await stripe().checkout.sessions.create(sessionParams(customer, input));
   if (input.purchase)
     await db.insert(schema.purchase).values({
       id: newId(),
@@ -104,7 +116,32 @@ const line = (currency: Currency, offer: PurchaseLine["offer"]): PurchaseLine =>
  * (eligible mm layouts only). Dynamic: the plan (Starter by default), plus the Print Pack on the first invoice.
  * Returns to the same export screen and settings.
  */
-export async function createCheckout(input: ExportBack & { user: User; currency: Currency; plan?: PlanId }): Promise<string> {
+export type CodeCheckout = { url: string } | { error: "not_found" | "owned" | "processing" };
+
+/**
+ * HEY-88: Stripe for one Single QR order. The order id goes on the session (metadata, client_reference_id) and into
+ * the idempotency key with the attempt it replaces and the exact parameters, so a retried request gets the same
+ * session and a changed one (another file setting, the Print Pack) a new one.
+ */
+function stripeOrderPort(customer: string, input: SessionInput): CheckoutPort {
+  return {
+    create: ({ orderId, previous }) => {
+      const params = sessionParams(customer, { ...input, metadata: { ...input.metadata, orderId } });
+      const hash = createHash("sha256").update(JSON.stringify(params)).digest("hex").slice(0, 16);
+      return stripe().checkout.sessions.create(
+        { ...params, client_reference_id: orderId },
+        { idempotencyKey: `heyqr-order-${orderId}-${previous ?? "first"}-${hash}` },
+      );
+    },
+    retrieve: async (id) => {
+      const s = await stripe().checkout.sessions.retrieve(id);
+      return { status: s.status, url: s.url };
+    },
+    expire: (id) => stripe().checkout.sessions.expire(id),
+  };
+}
+
+export async function createCheckout(input: ExportBack & { user: User; currency: Currency; plan?: PlanId }): Promise<CodeCheckout> {
   const { user, currency } = input;
   const qr = await db.query.qrCode.findFirst({
     where: and(eq(schema.qrCode.id, input.qrCodeId), eq(schema.qrCode.userId, user.id), isNull(schema.qrCode.deletedAt)),
@@ -128,22 +165,21 @@ export async function createCheckout(input: ExportBack & { user: User; currency:
   if (qr.model === "dynamic") {
     const plan = input.plan ?? "starter";
     const prices = [await verifiedPrice(currency, plan), ...(printPack ? [await verifiedPrice(currency, "printPack")] : [])];
-    return session({ user, mode: "subscription", prices, back, metadata: { ...metadata, plan } });
+    return { url: await session({ user, mode: "subscription", prices, back, metadata: { ...metadata, plan } }) };
   }
   const prices = [await verifiedPrice(currency, "single"), ...(printPack ? [await verifiedPrice(currency, "printPack")] : [])];
-  return session({
-    user,
-    mode: "payment",
-    prices,
-    back,
-    metadata,
-    purchase: {
-      qrCodeId: qr.id,
+  const port = stripeOrderPort(await customerFor(user), { mode: "payment", prices, back, metadata });
+  const result = await singleQrCheckout(db, port, {
+    userId: user.id,
+    qrCodeId: qr.id,
+    layoutId: layout.id,
+    charge: {
       item: printPack ? "single_qr_print_pack" : "single_qr",
       lines: [line(currency, "single"), ...(printPack ? [line(currency, "printPack")] : [])],
       currency,
     },
   });
+  return result.ok ? { url: result.url } : { error: result.error };
 }
 
 /** Design 4.8 "Buy 3 credits" / 10: a Static Pack. Credits are added by the webhook once Stripe confirms payment. */

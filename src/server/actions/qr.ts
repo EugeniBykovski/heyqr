@@ -264,7 +264,7 @@ export async function startCheckout(input: {
     // HEY-87: a static code that is already unlocked is never sold again (no order, no Checkout Session).
     if (owned.qr.model === "static" && (await canDownload(user.id, owned.qr))) return { ok: false, error: "owned" };
     const resolution = z.number().int().min(1).max(1200).optional().safeParse(input.resolution);
-    const url = await createCheckout({
+    const checkout = await createCheckout({
       user,
       currency: await getCurrency(),
       printPack: input.printPack === true,
@@ -276,7 +276,9 @@ export async function startCheckout(input: {
       resolution: resolution.success ? resolution.data : undefined,
       transparent: input.transparent === true,
     });
-    return { ok: true, data: { url } };
+    // HEY-88: the code went away or was unlocked meanwhile, or its order's last session is being paid.
+    if ("error" in checkout) return { ok: false, error: checkout.error };
+    return { ok: true, data: { url: checkout.url } };
   });
 }
 

@@ -50,6 +50,13 @@
       "when": 1795363933952,
       "tag": "0006_private_logo_assets",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1795368466427,
+      "tag": "0007_order_before_session",
+      "breakpoints": true
     }
   ]
 }
