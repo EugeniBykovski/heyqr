@@ -160,6 +160,29 @@ describe("file states (design 3.7–3.10)", () => {
     vi.useRealTimers();
   });
 
+  it("confirming a payment keeps the layout: the other layouts aren't links and Pay doesn't come back (HEY-92)", () => {
+    vi.useFakeTimers();
+    const layouts = [
+      { id: "l1", name: "Business card", href: "/create/export?qr=q1&layout=l1&format=png", active: true },
+      { id: "l2", name: "Poster", href: "/create/export?qr=q1&layout=l2&format=png", active: false },
+    ];
+    signed({ entitled: false, checkout: "success", layouts, initial: { format: "png", resolution: 600, transparent: true } });
+    const nav = screen.getByRole("navigation", { name: messages.export.layouts });
+    expect(nav.querySelectorAll("a")).toHaveLength(0);
+    expect(screen.getByText("Poster")).toHaveAttribute("aria-disabled", "true");
+    expect(screen.getByText("Business card", { selector: "nav span" })).toHaveAttribute("aria-current", "page");
+    fireEvent.click(screen.getByText("Poster"));
+    expect(push).not.toHaveBeenCalled();
+    expect(screen.queryByRole("button", { name: /^Pay/ })).toBeNull();
+    expect(screen.getAllByText("Confirming your payment…").length).toBeGreaterThan(0);
+    expect(screen.getByLabelText("Transparent background")).toBeDisabled();
+    vi.useRealTimers();
+    cleanup();
+    // Not confirming: the same layouts are links again.
+    signed({ entitled: true, layouts });
+    expect(screen.getByRole("link", { name: "Poster" })).toHaveAttribute("href", layouts[1]?.href);
+  });
+
   it("not bought yet: Pay goes to Stripe Checkout with the chosen settings; cancelled says nothing was charged", async () => {
     startCheckout.mockResolvedValue({ ok: false, error: "failed" });
     signed({ entitled: false, checkout: "cancelled" });
