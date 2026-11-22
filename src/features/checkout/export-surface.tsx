@@ -110,7 +110,16 @@ export type ExportSurfaceProps = {
       /** Design 9.1: this Dynamic code can use the trial's free test slot now (server-decided). */
       canUseTrial?: boolean;
     }
-  | { mode: "guest"; signInHref: (settings: ExportSettings) => string }
+  | {
+      mode: "guest";
+      /**
+       * HEY-76: the guest's one action, Continue with Google, built for the current settings so Google sign-in returns
+       * to Export with them (and a cancel comes back here with them too).
+       */
+      signInAction: (settings: ExportSettings) => ReactNode;
+      /** Back here from Google without signing in: canceled, or the sign-in didn't finish. */
+      signInNotice?: "canceled" | "incomplete";
+    }
 );
 
 /**
@@ -164,6 +173,17 @@ export function ExportSurface(props: ExportSurfaceProps) {
     resolution: defaultResolution(layout, props.initial.resolution),
     transparent: props.initial.transparent === true,
   }));
+  // HEY-76: a guest's choices live in the address, so Back from Google, a refresh or a canceled sign-in reopens this
+  // screen with the same format, PNG size and transparency (the draft itself is in this browser's storage).
+  const guest = props.mode === "guest";
+  useEffect(() => {
+    if (!guest) return;
+    const url = new URL(window.location.href);
+    const next = new URLSearchParams(settingsQuery(settings));
+    if (url.searchParams.get("error")) next.set("error", url.searchParams.get("error") ?? "");
+    if (url.search.slice(1) === next.toString()) return;
+    window.history.replaceState(window.history.state, "", `${url.pathname}?${next.toString()}`);
+  }, [guest, settings]);
   const [file, setFile] = useState<FileState>({ kind: "idle" });
   const [paying, startPaying] = useTransition();
   const offer = props.offer;
@@ -386,15 +406,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
   };
 
   const action = (() => {
-    if (props.mode === "guest")
-      return (
-        <Button asChild variant="primary" size="lg" className="w-full">
-          <Link href={props.signInHref(settings)}>
-            <GoogleMark />
-            {t("continueGoogle")}
-          </Link>
-        </Button>
-      );
+    if (props.mode === "guest") return props.signInAction(settings);
     if (confirming)
       return (
         <Button variant="primary" size="lg" className="w-full" disabled aria-busy>
@@ -597,6 +609,11 @@ export function ExportSurface(props: ExportSurfaceProps) {
             </p>
           </header>
 
+          {props.mode === "guest" && props.signInNotice ? (
+            <Banner tone={props.signInNotice === "canceled" ? "neutral" : "error"}>
+              {t.rich(props.signInNotice === "canceled" ? "signInCanceled" : "signInIncomplete", { format: fmt, b: (c) => <b>{c}</b> })}
+            </Banner>
+          ) : null}
           {props.returnedFromSignIn ? <Banner tone="info">{t.rich("returned", { format: fmt, b: (c) => <b>{c}</b> })}</Banner> : null}
           {props.checkout === "cancelled" && !entitled ? (
             <Banner tone="neutral">{t.rich("cancelled", { b: (c) => <b>{c}</b> })}</Banner>
@@ -1002,16 +1019,5 @@ function Banner({ tone, icon, children }: { tone: "info" | "neutral" | "error" |
       {icon ?? <Icon aria-hidden className="mt-0.5 size-4 shrink-0" />}
       <span>{children}</span>
     </div>
-  );
-}
-
-function GoogleMark() {
-  return (
-    <svg aria-hidden viewBox="0 0 24 24" className="size-5">
-      <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.2-2.1 3.5-5.1 3.5-8.7z" />
-      <path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.9-3c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5H1.3v3.1A12 12 0 0 0 12 24z" />
-      <path fill="#FBBC05" d="M5.3 14.3a7.2 7.2 0 0 1 0-4.6V6.6h-4a12 12 0 0 0 0 10.8l4-3.1z" />
-      <path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.3 6.6l4 3.1c.9-2.9 3.6-4.9 6.7-4.9z" />
-    </svg>
   );
 }

@@ -156,23 +156,40 @@ describe("file states (design 3.7–3.10)", () => {
 });
 
 describe("guest export (design 3.1)", () => {
-  it("shows the total and Continue with Google, carrying the settings through sign-in", () => {
+  it("shows the total and one sign-in action, built for the current settings", () => {
+    const signInAction = vi.fn((s: { format: string; resolution: number; transparent: boolean }) => (
+      <button type="button">{`Continue with Google ${s.format} ${s.resolution} ${s.transparent ? "clear" : "solid"}`}</button>
+    ));
+    render(
+      <NextIntlClientProvider locale="en" messages={messages} timeZone="UTC">
+        <ExportSurface {...base} layout={pxLayout} mode="guest" signInAction={signInAction} />
+      </NextIntlClientProvider>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "4×" }));
+    expect(screen.getByRole("button", { name: "Continue with Google png 4 solid" })).toBeTruthy();
+    expect(screen.getAllByText("$4.99").length).toBeGreaterThan(0);
+    expect(screen.queryByRole("button", { name: /Download/ })).toBeNull();
+  });
+
+  it("back from a canceled Google sign-in: a notice, the same settings and the same button to retry (HEY-76)", () => {
     render(
       <NextIntlClientProvider locale="en" messages={messages} timeZone="UTC">
         <ExportSurface
           {...base}
           layout={pxLayout}
           mode="guest"
-          signInHref={(s) => `/sign-in?next=${encodeURIComponent(`/create?resume=1&format=${s.format}&res=${s.resolution}`)}`}
+          initial={{ format: "png", resolution: 4, transparent: true }}
+          signInNotice="canceled"
+          signInAction={(s) => <button type="button">{`Continue with Google ${s.format} ${s.resolution} ${String(s.transparent)}`}</button>}
         />
       </NextIntlClientProvider>,
     );
-    fireEvent.click(screen.getByRole("button", { name: "4×" }));
-    expect(screen.getByRole("link", { name: "Continue with Google" })).toHaveAttribute(
-      "href",
-      `/sign-in?next=${encodeURIComponent("/create?resume=1&format=png&res=4")}`,
-    );
-    expect(screen.getAllByText("$4.99").length).toBeGreaterThan(0);
-    expect(screen.queryByRole("button", { name: /Download/ })).toBeNull();
+    expect(
+      screen
+        .getAllByRole("status")
+        .map((e) => e.textContent)
+        .join(" "),
+    ).toMatch(/Google sign-in was canceled\. Your layout and PNG are still selected/);
+    expect(screen.getByRole("button", { name: "Continue with Google png 4 true" })).toBeTruthy();
   });
 });

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { GoogleSignInButton, safeReturnPath } from "@/features/auth";
+import { GoogleSignInButton, safeReturnPath, signInError } from "@/features/auth";
 import { CircleAlertIcon, InfoIcon } from "lucide-react";
 import { Link, redirect } from "@/i18n/navigation";
 import { getSession } from "@/server/auth";
@@ -14,14 +14,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("title"), robots: { index: false } };
 }
 
-/** Better Auth appends `error=<code>` to errorCallbackURL; only a plain code is read (never shown verbatim). */
-const authError = (error: string | string[] | undefined) =>
-  typeof error === "string" && /^[a-z_]{1,64}$/i.test(error) ? (error === "access_denied" ? "canceled" : "incomplete") : null;
-
 export default async function SignInPage({ params, searchParams }: PageProps<"/[locale]/sign-in">) {
   const locale = await resolveLocale(params);
   const query = await searchParams;
-  const error = authError(query.error);
+  const error = signInError(query.error);
   // HEY-73: Better Auth's fallback error URL carries only the error (e.g. cancelling again after Back to Google).
   // The guest's draft waits in the editor, so a retry resumes it there, like the Export sign-in does.
   const next = error && query.next === undefined ? "/create?resume=1" : safeReturnPath(query.next);

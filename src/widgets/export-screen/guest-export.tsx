@@ -1,10 +1,11 @@
 "use client";
 
 import { encodePayload } from "@heyqr/qr-core";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { env } from "@/env";
 import { contentDisplayName, designToLayout, type EditorDesign } from "@/entities/qr";
+import { GoogleSignInButton, type SignInError } from "@/features/auth";
 import { ExportSurface, settingsQuery, type ExportFormat } from "@/features/checkout";
 import { readDraft } from "@/features/qr-editor";
 import { Link } from "@/i18n/navigation";
@@ -14,11 +15,20 @@ import { Skeleton } from "@/shared/ui/skeleton";
 
 /*
  * Design 3.1 "Export · guest": the same export surface, built from this browser's draft. A guest sees the exact layout,
- * file and price, and one action: Continue with Google. The chosen format, PNG size and transparency travel through
- * sign-in (/create?resume=1&format=…), so the signed-in export screen opens with the same settings (3.3).
- * Nothing here is saved or charged: the draft is saved to the account only after sign-in.
+ * file and price, and one action: Continue with Google, which starts Google sign-in directly (3.2). The chosen format,
+ * PNG size and transparency travel with it: on success to /create?resume=1&format=…, where the draft is saved once and
+ * the signed-in export screen opens with the same settings (3.3); on a cancel back to this screen with the same settings
+ * and a notice, so the same button retries (HEY-76). Nothing here is saved or charged before sign-in.
  */
-export function GuestExport({ initial }: { initial: { format?: ExportFormat; resolution?: number; transparent?: boolean } }) {
+export function GuestExport({
+  initial,
+  signInNotice,
+}: {
+  initial: { format?: ExportFormat; resolution?: number; transparent?: boolean };
+  signInNotice?: SignInError;
+}) {
+  const locale = useLocale();
+  const local = (path: string) => (locale === "en" ? path : `/${locale}${path}`);
   const t = useTranslations("export");
   const tEditor = useTranslations("editor");
   const tTypes = useTranslations("contentTypes");
@@ -62,7 +72,14 @@ export function GuestExport({ initial }: { initial: { format?: ExportFormat; res
       backHref="/create?step=design"
       initial={initial}
       price={{ cents: (draft.model === "dynamic" ? prices.cents.starter : prices.cents.single) ?? 0, currency: prices.currency }}
-      signInHref={(s) => `/sign-in?next=${encodeURIComponent(`/create?resume=1&${settingsQuery(s)}`)}`}
+      signInNotice={signInNotice}
+      signInAction={(s) => (
+        <GoogleSignInButton
+          variant="primary"
+          callbackURL={local(`/create?resume=1&${settingsQuery(s)}`)}
+          errorCallbackURL={local(`/create/export?${settingsQuery(s)}`)}
+        />
+      )}
     />
   );
 }
