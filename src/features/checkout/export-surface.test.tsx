@@ -16,14 +16,16 @@ vi.mock("@/server/actions/billing", () => ({
   makeStatic: vi.fn(),
 }));
 const refresh = vi.fn();
+const push = vi.fn();
 vi.mock("@/i18n/navigation", () => ({
-  useRouter: () => ({ refresh }),
+  useRouter: () => ({ refresh, push }),
   Link: ({ href, ...props }: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => <a href={href} {...props} />,
 }));
 afterEach(cleanup);
 beforeEach(() => {
   startCheckout.mockReset();
   refresh.mockReset();
+  push.mockReset();
   vi.stubGlobal("URL", Object.assign(URL, { createObjectURL: vi.fn(() => "blob:file"), revokeObjectURL: vi.fn() }));
 });
 
@@ -126,6 +128,26 @@ describe("file states (design 3.7–3.10)", () => {
     expect(fetchMock.mock.calls.map((c) => c[0])).toEqual(["/api/export/l1?format=svg", "/api/export/l1?format=svg"]);
     expect(startCheckout).not.toHaveBeenCalled();
     expect(screen.getByRole("link", { name: "Download SVG" })).toHaveAttribute("download", "card.svg");
+  });
+
+  it("a session that ended: says so, keeps the settings in the address and signs in again back to this screen (HEY-78)", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ error: "unauthorized" }), { status: 401 })));
+    signed();
+    fireEvent.click(screen.getByRole("button", { name: "SVG" }));
+    await act(async () => fireEvent.click(screen.getByRole("button", { name: "Download SVG" })));
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Your session ended. Sign in again to continue: this layout and your file options are kept.",
+    );
+    expect(window.location.search).toContain("format=svg");
+    fireEvent.click(screen.getByRole("button", { name: "Sign in again" }));
+    expect(push).toHaveBeenCalledWith(`/sign-in?next=${encodeURIComponent(`${window.location.pathname}${window.location.search}`)}`);
+  });
+
+  it("checkout refused because the session ended shows the same sign-in path, not a payment error (HEY-78)", async () => {
+    startCheckout.mockResolvedValue({ ok: false, error: "unauthorized" });
+    signed({ entitled: false });
+    await act(async () => fireEvent.click(screen.getByRole("button", { name: /Pay/ })));
+    expect(screen.getByRole("alert")).toHaveTextContent("Your session ended.");
   });
 
   it("back from checkout before the webhook: confirming, controls frozen, the page re-checks", () => {
