@@ -1195,6 +1195,7 @@
     "returned": "Signed in with Google. Your layout and <b>{format}</b> are just as you left them.",
     "sessionEnded": "<b>Your session ended.</b> Sign in again to continue: this layout and your file options are kept.",
     "signInAgain": "Sign in again",
+    "alreadyOwned": "Already yours. Download it again any time, no new payment.",
     "signInCanceled": "Google sign-in was canceled. Your layout and <b>{format}</b> are still selected. Continue with Google to try again.",
     "signInIncomplete": "Google sign-in didn’t finish. Your layout and <b>{format}</b> are still selected. Continue with Google to try again.",
     "confirming": "Confirming your payment…",

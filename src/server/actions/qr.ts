@@ -194,7 +194,7 @@ export async function startPrintPackCheckout(input: {
     const owned = await ownedLayout(db, user.id, input.qrCodeId, input.layoutId);
     if (!owned || !(await canDownload(user.id, owned.qr))) return { ok: false, error: "not_found" };
     const qr = owned.qr;
-    if (qr.printPackAt) return { ok: false, error: "not_offered" };
+    if (qr.printPackAt) return { ok: false, error: "owned" };
     const read = readLayoutRecord(owned.layout.design);
     if (!read.ok || read.value.layout.unit !== "mm") return { ok: false, error: "invalid" };
     const settings = z
@@ -259,7 +259,10 @@ export async function startCheckout(input: {
   return guard(async () => {
     const user = await requireUser();
     // HEY-84: the user's code and a layout of that code, before anything goes to Stripe (metadata, return URL).
-    if (!(await ownedLayout(db, user.id, input.qrCodeId, input.layoutId))) return { ok: false, error: "not_found" };
+    const owned = await ownedLayout(db, user.id, input.qrCodeId, input.layoutId);
+    if (!owned) return { ok: false, error: "not_found" };
+    // HEY-87: a static code that is already unlocked is never sold again (no order, no Checkout Session).
+    if (owned.qr.model === "static" && (await canDownload(user.id, owned.qr))) return { ok: false, error: "owned" };
     const resolution = z.number().int().min(1).max(1200).optional().safeParse(input.resolution);
     const url = await createCheckout({
       user,

@@ -1,11 +1,12 @@
 import "server-only";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import type Stripe from "stripe";
 import { isPlanId } from "@/shared/config/catalog";
 import { db, schema } from "../db";
 import { newId, newShortCode } from "../db/ids";
 import { sendPurchaseReceipt } from "../email/send";
-import { dynamicLimit, grantPackCredits } from "./allowances";
+import { dynamicLimit } from "./allowances";
+import { fulfillCheckout } from "./fulfillment";
 import { planForPrice } from "./catalog";
 
 /** Applies one verified Stripe event. Returns false when the event was already processed. */
@@ -16,58 +17,11 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<boolean> {
   switch (event.type) {
     case "checkout.session.completed":
     case "checkout.session.async_payment_succeeded": {
-      const s = event.data.object;
-      const { userId, qrCodeId, kind, pack, printPack } = s.metadata ?? {};
-      if (!userId || s.payment_status !== "paid") break;
-      const now = new Date();
-      const paid = async () => {
-        const [row] = await db
-          .update(schema.purchase)
-          .set({ status: "paid", paidAt: now, stripePaymentIntentId: String(s.payment_intent ?? ""), amountTotal: s.amount_total ?? 0 })
-          .where(eq(schema.purchase.stripeCheckoutSessionId, s.id))
-          .returning();
-        return row;
-      };
-      const ownCode = qrCodeId ? and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId)) : undefined;
-      if (s.mode === "payment" && kind === "pack" && (pack === "pack3" || pack === "pack10")) {
-        // Design 4.8 Static Pack: its credits, once per purchase.
-        const row = await paid();
-        if (row) await grantPackCredits(db, userId, row.id, pack);
-      } else if (s.mode === "payment" && kind === "print_pack" && ownCode) {
-        // Design 8.x: the Print Pack of an already unlocked code; the code itself doesn't change.
-        await paid();
-        await db.update(schema.qrCode).set({ printPackAt: now }).where(ownCode);
-      } else if (s.mode === "payment" && ownCode && qrCodeId) {
-        // Single QR, with its Print Pack when it was on the order (design 7.3).
-        const row = await paid();
-        await db
-          .update(schema.qrCode)
-          .set({ purchasedAt: now, status: "active", ...(printPack === "1" ? { printPackAt: now } : {}) })
-          .where(ownCode);
+      // HEY-87: one grant per order, however often or in whichever order Stripe delivers these events.
+      await fulfillCheckout(db, event.data.object, newShortCode, async ({ userId, qrCodeId, amountTotal, currency }) => {
         const owner = await db.query.user.findFirst({ where: eq(schema.user.id, userId) });
-        if (owner)
-          await sendPurchaseReceipt({
-            to: owner.email,
-            name: owner.name,
-            qrCodeId,
-            amountTotal: row?.amountTotal ?? s.amount_total ?? 0,
-            currency: s.currency ?? "usd",
-          });
-      } else if (s.mode === "subscription" && ownCode) {
-        // A plan bought for a code (export or the trial's test code): the code goes live and keeps its short link.
-        const qr = await db.query.qrCode.findFirst({ where: ownCode });
-        if (qr)
-          await db
-            .update(schema.qrCode)
-            // The trial's test code becomes a regular code of the plan (design 9.4: same short link, takes a live slot).
-            .set({
-              shortCode: qr.shortCode ?? newShortCode(),
-              status: "active",
-              isTrial: false,
-              ...(printPack === "1" ? { printPackAt: now } : {}),
-            })
-            .where(ownCode);
-      }
+        if (owner) await sendPurchaseReceipt({ to: owner.email, name: owner.name, qrCodeId, amountTotal, currency });
+      });
       break;
     }
     case "customer.subscription.created":
