@@ -20,6 +20,7 @@ vi.mock("@/i18n/navigation", () => ({
 }));
 
 const { default: SignInPage } = await import("./page");
+const { safeReturnPath } = await import("@/features/auth/return-path");
 const NEXT = "/create?resume=1&format=png&res=300";
 
 async function open(query: Record<string, string>, locale = "en") {
@@ -98,5 +99,47 @@ describe("sign-in return paths (HEY-72)", () => {
     session = { user: { id: "u" } };
     await open({ next: NEXT });
     expect(redirect).toHaveBeenCalledWith({ href: NEXT, locale: "en" });
+  });
+});
+
+/* HEY-73: return destinations are limited to the app's own routes, including the signed-in redirect. */
+describe("sign-in return destinations (HEY-73)", () => {
+  it.each([
+    ["/create?resume=1&format=svg&transparent=1", "/create?resume=1&format=svg&transparent=1"],
+    ["/edit/abc?layout=l1", "/edit/abc?layout=l1"],
+    ["/print?qr=q&layout=l", "/print?qr=q&layout=l"],
+    ["/dashboard/trial", "/dashboard/trial"],
+    ["/pricing", "/pricing"],
+    ["/\\evil.example/x", "/dashboard"],
+    ["/\t/evil.example", "/dashboard"],
+    ["//evil.example", "/dashboard"],
+    ["https://evil.example/create", "/dashboard"],
+    ["/api/auth/sign-out", "/dashboard"],
+    ["/create/../api/auth/sign-out", "/dashboard"],
+    ["/creative", "/dashboard"],
+  ])("%s → %s", (next, expected) => {
+    expect(safeReturnPath(next)).toBe(expected);
+  });
+
+  it("a signed-in visitor is never redirected off the app", async () => {
+    session = { user: { id: "u" } };
+    redirect.mockClear();
+    await open({ next: "/\\evil.example/x" });
+    expect(redirect).toHaveBeenCalledWith({ href: "/dashboard", locale: "en" });
+  });
+});
+
+describe("OAuth errors without a return target (HEY-73)", () => {
+  it("a repeated cancel (state already used) offers the retry back into the draft", async () => {
+    await open({ error: "state_mismatch" });
+    expect(screen.getByRole("alert").textContent).toBe(messages.auth.incomplete.draft);
+    expect(screen.getByRole("link", { name: "Back to my design" })).toBeTruthy();
+    fireEvent.click(google());
+    expect(social).toHaveBeenCalledWith(
+      expect.objectContaining({
+        callbackURL: "/create?resume=1",
+        errorCallbackURL: `/sign-in?next=${encodeURIComponent("/create?resume=1")}`,
+      }),
+    );
   });
 });
