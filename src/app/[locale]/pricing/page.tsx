@@ -1,6 +1,5 @@
 import { CheckIcon, CircleDotIcon, InfoIcon, RotateCcwIcon } from "lucide-react";
 import type { Metadata } from "next";
-import { Bricolage_Grotesque } from "next/font/google";
 import { getTranslations } from "next-intl/server";
 import { CurrencySelect, PackPicker, PlanCheckoutButton, StartTrialButton } from "@/features/checkout";
 import { Link } from "@/i18n/navigation";
@@ -20,14 +19,6 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("plans");
   return { title: t("title") };
 }
-
-/*
- * HEY-72: Pricing display headings only (the headline and Compare). Bricolage Grotesque (SIL OFL 1.1), self-hosted by
- * next/font like DM Sans; loaded from this page so no other route downloads it. Optical sizing gives its bold, rounded
- * display cut at heading sizes. Everything else on the page stays in DM Sans.
- */
-const display = Bricolage_Grotesque({ subsets: ["latin", "latin-ext"], axes: ["opsz"], display: "swap" });
-const displayHeading = cn(display.className, "font-bold text-balance [font-optical-sizing:auto]");
 
 const card = "flex min-w-0 flex-col gap-4.5 rounded-2xl border border-border bg-surface p-6 shadow-1";
 
@@ -80,10 +71,8 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
 
   return (
     <main className="mx-auto w-full max-w-page px-4 pt-6 pb-8 sm:px-6 md:pt-10 md:pb-16 lg:px-8">
-      <header className="mb-6 flex max-w-190 flex-col gap-3">
-        <h1 className={cn(displayHeading, "text-[clamp(2.125rem,1.25rem+2.6vw,3.25rem)] leading-[1.04] tracking-[-0.022em]")}>
-          {t("title")}
-        </h1>
+      <header className="mb-6 flex max-w-190 flex-col gap-2">
+        <h1 className="text-h1">{t("title")}</h1>
         <p className="text-secondary-foreground">{t("lead")}</p>
       </header>
       <div className="mt-1 mb-6 flex flex-wrap items-center gap-x-4 gap-y-2.5">
@@ -291,7 +280,7 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
       </section>
 
       <section aria-labelledby="pr-cmp" className="mt-8 flex flex-col gap-4">
-        <h2 id="pr-cmp" className={cn(displayHeading, "text-[clamp(1.75rem,1.4rem+1.1vw,2.25rem)] leading-[1.08] tracking-[-0.015em]")}>
+        <h2 id="pr-cmp" className="text-h2">
           {t("cmp.title")}
         </h2>
         <PlanCompare
