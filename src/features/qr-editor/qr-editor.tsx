@@ -170,7 +170,8 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
         model: design.model,
         content: design.content,
         destination,
-        layouts: [{ name, layout, editor: designSettingsOf(design) }],
+        // HEY-76: the layout keeps the name the guest saw on Export ("Vertical card"); the code keeps its own name.
+        layouts: [{ name: t(`presets.${design.preset}`), layout, editor: designSettingsOf(design) }],
       });
       if (!result.ok) {
         toast.error(

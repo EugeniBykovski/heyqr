@@ -1,4 +1,5 @@
 import { priceSheet } from "@/shared/config/catalog";
+import { signInError } from "@/features/auth";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
@@ -46,7 +47,7 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
   const query = await searchParams;
   const initial = settingsFrom(query);
   const session = await getSession();
-  if (!session) return <GuestExport initial={initial} />;
+  if (!session) return <GuestExport initial={initial} signInNotice={signInError(query.error) ?? undefined} />;
 
   const qrId = one(query.qr);
   const layoutId = one(query.layout);

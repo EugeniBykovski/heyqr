@@ -30,7 +30,16 @@ function GoogleGlyph() {
  * Google is the only sign-in method. `callbackURL` brings the user back to where they were (e.g. the editor);
  * `errorCallbackURL` is where a canceled or failed Google sign-in returns (HEY-72: the sign-in page, not Better Auth's).
  */
-export function GoogleSignInButton({ callbackURL, errorCallbackURL }: { callbackURL: string; errorCallbackURL?: string }) {
+export function GoogleSignInButton({
+  callbackURL,
+  errorCallbackURL,
+  variant,
+}: {
+  callbackURL: string;
+  errorCallbackURL?: string;
+  /** Export's guest action is the primary button (design 3.1); the sign-in page uses the default. */
+  variant?: "primary";
+}) {
   const t = useTranslations("auth");
   const [pending, setPending] = useState(false);
   // Back from Google restores this page from the back/forward cache with the button still busy: make it usable again.
@@ -41,6 +50,7 @@ export function GoogleSignInButton({ callbackURL, errorCallbackURL }: { callback
   }, []);
   return (
     <Button
+      variant={variant}
       size="lg"
       className="w-full"
       disabled={pending}
