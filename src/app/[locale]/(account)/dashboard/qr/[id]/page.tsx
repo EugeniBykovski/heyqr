@@ -1,13 +1,13 @@
 import { formatMoney, priceSheet } from "@/shared/config/catalog";
 import { layoutGeometry, type QrContent } from "@heyqr/qr-core";
-import { ArrowLeftIcon, CheckIcon, DownloadIcon, FileTextIcon, LinkIcon, LockIcon, PlusIcon, PrinterIcon, RulerIcon } from "lucide-react";
+import { ArrowLeftIcon, CheckIcon, DownloadIcon, FileTextIcon, LinkIcon, LockIcon, PrinterIcon, RulerIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { env } from "@/env";
 import { DEFAULT_PRINT_SETTINGS, printSettingsQuery, QrPreview } from "@/entities/qr";
 import { CopyButton } from "@/features/copy-to-clipboard";
-import { DeleteLayoutButton, DifferentContent, RenameTitle } from "@/features/qr-details";
+import { DeleteLayoutButton, DifferentContent, NewLayoutButton, RenameTitle } from "@/features/qr-details";
 import { DestinationForm } from "@/features/qr-destination";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
@@ -148,12 +148,13 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
             name={qr.name}
             actions={
               qr.layouts[0] ? (
-                <Button asChild variant="primary">
-                  <Link href={`/edit/${qr.id}?layout=${qr.layouts[0].id}`}>
-                    <PlusIcon aria-hidden />
-                    {tl("newLayout")}
-                  </Link>
-                </Button>
+                <NewLayoutButton
+                  look="button"
+                  qrCodeId={qr.id}
+                  codeName={qr.name}
+                  sourceLayoutId={qr.layouts[0].id}
+                  nextNumber={qr.layouts.length + 1}
+                />
               ) : null
             }
           />
@@ -359,13 +360,13 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
             })}
             {qr.layouts[0] ? (
               <li className="min-w-0">
-                <Link
-                  href={`/edit/${qr.id}?layout=${qr.layouts[0].id}`}
-                  className="flex h-full min-h-48 flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-border-strong/40 text-label hover:border-border-hover"
-                >
-                  <PlusIcon aria-hidden className="size-5" />
-                  {tl("newLayoutCard")}
-                </Link>
+                <NewLayoutButton
+                  look="card"
+                  qrCodeId={qr.id}
+                  codeName={qr.name}
+                  sourceLayoutId={qr.layouts[0].id}
+                  nextNumber={qr.layouts.length + 1}
+                />
               </li>
             ) : null}
           </ul>

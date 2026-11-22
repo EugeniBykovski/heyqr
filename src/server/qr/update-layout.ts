@@ -84,6 +84,47 @@ export async function addLayoutFrom(
   });
 }
 
+/**
+ * HEY-82 QR details "New layout": a new named layout of the owner's code, copied from one of its saved layouts (design,
+ * size, caption, logo and settings) under a new id. The source and the code (content, payment, short link, draft
+ * status) are unchanged, so no draft slot is used. A source that isn't a layout of this code is "not_found".
+ */
+export async function copyLayout(
+  db: NodePgDatabase<typeof schema>,
+  userId: string,
+  input: { qrCodeId: string; sourceLayoutId: string; name: string },
+  newId: () => string,
+): Promise<AddLayoutResult> {
+  const name = input.name.trim().slice(0, 60);
+  if (!name) return { ok: false, error: "invalid" };
+  return db.transaction(async (tx) => {
+    const [qr] = await tx
+      .select({ id: schema.qrCode.id })
+      .from(schema.qrCode)
+      .where(and(eq(schema.qrCode.id, input.qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)))
+      .for("update");
+    if (!qr) return { ok: false, error: "not_found" } as const;
+    const [source] = await tx
+      .select({ design: schema.qrLayout.design })
+      .from(schema.qrLayout)
+      .where(and(eq(schema.qrLayout.id, input.sourceLayoutId), eq(schema.qrLayout.qrCodeId, qr.id)));
+    if (!source) return { ok: false, error: "not_found" } as const;
+    const [last] = await tx
+      .select({ max: sql<number>`coalesce(max(${schema.qrLayout.sortOrder}), -1)` })
+      .from(schema.qrLayout)
+      .where(eq(schema.qrLayout.qrCodeId, qr.id));
+    const id = newId();
+    // A deep copy of the stored record: the two layouts share nothing from here on.
+    const design = structuredClone(source.design);
+    await tx.insert(schema.qrLayout).values({ id, qrCodeId: qr.id, name, design, sortOrder: Number(last?.max ?? -1) + 1 });
+    await tx
+      .update(schema.qrCode)
+      .set({ updatedAt: sql`now()` })
+      .where(eq(schema.qrCode.id, qr.id));
+    return { ok: true, data: { layoutId: id } } as const;
+  });
+}
+
 export type DeleteLayoutResult = { ok: true; data: { remaining: number } } | { ok: false; error: "not_found" | "last_layout" };
 
 /**

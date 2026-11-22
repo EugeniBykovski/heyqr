@@ -12,7 +12,7 @@ import { designSettingsOf, readLayoutRecord } from "../../entities/qr/model/desi
 import { RESTORE_WINDOW_MS, restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
-import { addLayoutFrom, removeLayout, updateLayoutDesign } from "../qr/update-layout";
+import { addLayoutFrom, copyLayout, removeLayout, updateLayoutDesign } from "../qr/update-layout";
 import { activateTrialCode, startTrial, trialCode } from "../billing/trial";
 import {
   accountUsage,
@@ -1129,5 +1129,101 @@ describe.skipIf(!url)("draft limit (HEY-60, real PostgreSQL)", () => {
     } finally {
       await db.delete(schema.user).where(inArray(schema.user.id, [renamer.id, stranger.id]));
     }
+  });
+});
+
+/* HEY-82 QR details "New layout": a copy of a saved layout under the same code, independent from its source. */
+describe.skipIf(!url)("copy a saved layout (HEY-82, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "hey82-owner", name: "Owner", email: "owner@hey82.test" };
+  const other = { id: "hey82-other", name: "Other", email: "other@hey82.test" };
+  const card = {
+    ...DEFAULT_DESIGN,
+    preset: "horizontal" as const,
+    caption: "Call 555 0101",
+    logo: { kind: "icon" as const, icon: "coffee" as const },
+  };
+  let n = 0;
+  const id = () => `hey82-l${++n}`;
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 2 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("copies the source's design under a new id; editing the copy (logo removed) leaves the source and the code as they were", async () => {
+    const saved = await saveQrWithLayouts(db, owner.id, {
+      name: "Shop",
+      model: "static",
+      content: { type: "website", url: "https://shop.example/hey82" },
+      layouts: [{ name: "Business card", layout: designToLayout(card), editor: designSettingsOf(card) }],
+    });
+    if (!saved.ok) throw new Error("fixture");
+    const qrCodeId = saved.data.qrCodeId;
+    const sourceId = saved.data.layoutIds[0] ?? "";
+    await db.update(schema.qrCode).set({ status: "active", purchasedAt: new Date() }).where(eq(schema.qrCode.id, qrCodeId));
+    const row = async (layoutId: string) => (await pool.query(`select name, design from qr_layout where id = $1`, [layoutId])).rows[0];
+    const code = async () =>
+      (await pool.query(`select name, content, status, purchased_at is not null as bought from qr_code where id = $1`, [qrCodeId])).rows[0];
+    const sourceBefore = await row(sourceId);
+    const codeBefore = await code();
+    const drafts = async () =>
+      Number((await pool.query(`select count(*)::int as n from qr_code where user_id = $1 and status = 'draft'`, [owner.id])).rows[0].n);
+    const draftsBefore = await drafts();
+
+    const copy = await copyLayout(db, owner.id, { qrCodeId, sourceLayoutId: sourceId, name: "Layout 2" }, id);
+    expect(copy).toEqual({ ok: true, data: { layoutId: "hey82-l1" } });
+    expect(await row("hey82-l1")).toEqual({ name: "Layout 2", design: sourceBefore.design });
+
+    // Edit only the copy: another caption, a poster size and no logo.
+    const poster = { ...card, preset: "vertical" as const, caption: "Spring poster", logo: { kind: "none" as const } };
+    const edited = await updateLayoutDesign(
+      db,
+      owner.id,
+      { qrCodeId, layoutId: "hey82-l1", layout: designToLayout(poster), editor: designSettingsOf(poster), name: "Poster" },
+      () => "https://shop.example/hey82",
+    );
+    expect(edited.ok).toBe(true);
+    expect(await row(sourceId)).toEqual(sourceBefore);
+    expect((await row("hey82-l1")).design.editor).toMatchObject({ caption: "Spring poster", preset: "vertical", logo: { kind: "none" } });
+    expect(await code()).toEqual(codeBefore);
+    expect(await drafts()).toBe(draftsBefore);
+  });
+
+  it("refuses another account's code and a source layout of a different code", async () => {
+    const mine = await saveQrWithLayouts(db, owner.id, {
+      name: "Mine",
+      model: "static",
+      content: { type: "text", text: "hey82 mine" },
+      layouts: [{ name: "Card", layout: designToLayout(card), editor: designSettingsOf(card) }],
+    });
+    const theirs = await saveQrWithLayouts(db, other.id, {
+      name: "Theirs",
+      model: "static",
+      content: { type: "text", text: "hey82 theirs" },
+      layouts: [{ name: "Card", layout: designToLayout(card), editor: designSettingsOf(card) }],
+    });
+    if (!mine.ok || !theirs.ok) throw new Error("fixture");
+    const mineLayout = mine.data.layoutIds[0] ?? "";
+    const theirLayout = theirs.data.layoutIds[0] ?? "";
+    expect(await copyLayout(db, other.id, { qrCodeId: mine.data.qrCodeId, sourceLayoutId: mineLayout, name: "Stolen" }, id)).toEqual({
+      ok: false,
+      error: "not_found",
+    });
+    expect(await copyLayout(db, owner.id, { qrCodeId: mine.data.qrCodeId, sourceLayoutId: theirLayout, name: "Mixed" }, id)).toEqual({
+      ok: false,
+      error: "not_found",
+    });
+    const { rows } = await pool.query(`select count(*)::int as n from qr_layout where qr_code_id in ($1, $2)`, [
+      mine.data.qrCodeId,
+      theirs.data.qrCodeId,
+    ]);
+    expect(rows[0].n).toBe(2);
   });
 });
