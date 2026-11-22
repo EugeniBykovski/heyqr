@@ -11,9 +11,25 @@ type Tx = Parameters<Parameters<NodePgDatabase<typeof schema>["transaction"]>[0]
  */
 export type PrepareRecord = (tx: Tx, record: LayoutRecordDesign) => Promise<LayoutRecordDesign | null>;
 
-export type UpdateLayoutInput = { qrCodeId: string; layoutId: string; layout: unknown; editor?: unknown; name?: string };
+/**
+ * HEY-85: a saved layout's revision, the microseconds of its last save. The editor opens with it and sends it back, so a
+ * save made from an older version (another tab, another device) is a conflict instead of silently replacing the newer
+ * one.
+ */
+export const layoutRevision = sql<string>`(extract(epoch from ${schema.qrLayout.updatedAt}) * 1000000)::bigint::text`;
+
+export type UpdateLayoutInput = {
+  qrCodeId: string;
+  layoutId: string;
+  layout: unknown;
+  editor?: unknown;
+  name?: string;
+  /** The revision the editor opened (HEY-85). Without one the save isn't checked against newer saves. */
+  revision?: string;
+};
 export type UpdateLayoutResult =
-  { ok: true; data: { qrCodeId: string; layoutId: string } } | { ok: false; error: "invalid" | "not_found" | "too_long" };
+  | { ok: true; data: { qrCodeId: string; layoutId: string; revision: string } }
+  | { ok: false; error: "invalid" | "not_found" | "too_long" | "conflict" };
 
 /**
  * HEY-45 "Edit design": replaces one saved layout's design, for the code's owner only, while the code exists (not
@@ -39,25 +55,29 @@ export async function updateLayoutDesign(
       .for("update");
     if (!qr) return { ok: false, error: "not_found" } as const;
     if (!layoutCapacity(checked.layout, encodedFor(qr)).ok) return { ok: false, error: "too_long" } as const;
-    // HEY-84: the layout must belong to this code before anything is stored.
+    // HEY-84: the layout must belong to this code before anything is stored. HEY-85: locked, and still the version the
+    // editor opened; a newer save (the code's row lock serializes them) makes this one a conflict, with nothing stored.
     const [own] = await tx
-      .select({ id: schema.qrLayout.id })
+      .select({ id: schema.qrLayout.id, revision: layoutRevision })
       .from(schema.qrLayout)
-      .where(and(eq(schema.qrLayout.id, input.layoutId), eq(schema.qrLayout.qrCodeId, qr.id)));
+      .where(and(eq(schema.qrLayout.id, input.layoutId), eq(schema.qrLayout.qrCodeId, qr.id)))
+      .for("update");
     if (!own) return { ok: false, error: "not_found" } as const;
+    if (input.revision !== undefined && own.revision !== input.revision) return { ok: false, error: "conflict" } as const;
     const design = prepare ? await prepare(tx, checked) : checked;
     if (!design) return { ok: false, error: "invalid" } as const;
     const updated = await tx
       .update(schema.qrLayout)
       .set({ design, ...(input.name?.trim() ? { name: input.name.trim().slice(0, 60) } : {}), updatedAt: sql`now()` })
       .where(and(eq(schema.qrLayout.id, input.layoutId), eq(schema.qrLayout.qrCodeId, qr.id)))
-      .returning({ id: schema.qrLayout.id });
-    if (updated.length === 0) return { ok: false, error: "not_found" } as const;
+      .returning({ id: schema.qrLayout.id, revision: layoutRevision });
+    const [saved] = updated;
+    if (!saved) return { ok: false, error: "not_found" } as const;
     await tx
       .update(schema.qrCode)
       .set({ updatedAt: sql`now()` })
       .where(eq(schema.qrCode.id, qr.id));
-    return { ok: true, data: { qrCodeId: qr.id, layoutId: input.layoutId } } as const;
+    return { ok: true, data: { qrCodeId: qr.id, layoutId: input.layoutId, revision: saved.revision } } as const;
   });
 }
 

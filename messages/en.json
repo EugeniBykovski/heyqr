@@ -858,7 +858,11 @@
       "discardSwitch": "Discard and switch",
       "layoutName": "Layout name",
       "unsavedSwitchText": "Switch to “{name}” and discard the changes to this layout? Save first to keep them.",
-      "keepEditing": "Keep editing"
+      "keepEditing": "Keep editing",
+      "conflictTitle": "This layout was saved somewhere else",
+      "conflictText": "Another tab or device saved this layout after you opened it, so your changes weren’t saved. They’re still here: save them as a new layout, or reload the saved version (your changes here are then discarded).",
+      "conflictNewLayout": "Save my changes as a new layout",
+      "conflictReload": "Reload saved version"
     },
     "captionStyle": {
       "align": "Align",

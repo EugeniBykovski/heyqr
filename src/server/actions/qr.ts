@@ -76,6 +76,8 @@ const layoutEditSchema = z.object({
   layout: z.unknown(),
   editor: z.unknown(),
   name: z.string().max(60).optional(),
+  // HEY-85: the revision the editor opened; a newer save in the meantime makes this one a conflict.
+  revision: z.string().regex(/^\d{1,20}$/),
 });
 
 const addLayoutSchema = z.object({
@@ -91,7 +93,7 @@ const addLayoutSchema = z.object({
  */
 export async function saveLayoutEdit(
   input: z.input<typeof layoutEditSchema>,
-): Promise<ActionResult<{ qrCodeId: string; layoutId: string }>> {
+): Promise<ActionResult<{ qrCodeId: string; layoutId: string; revision: string }>> {
   return guard(async () => {
     const user = await requireUser();
     const parsed = layoutEditSchema.safeParse(input);
