@@ -11,7 +11,8 @@ import { DeleteLayoutButton, DifferentContent, RenameTitle } from "@/features/qr
 import { DestinationForm } from "@/features/qr-destination";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
-import { requireUser } from "@/server/auth";
+import { requireAccount } from "../../../require-account";
+import { getSession } from "@/server/auth";
 import { getCurrency } from "@/server/currency";
 import { canDownload, printPackForSale, userTrial } from "@/server/billing/entitlements";
 import { loadPrint } from "@/server/print/load";
@@ -24,8 +25,9 @@ import { ScansChart } from "@/widgets/scans-chart";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/dashboard/qr/[id]">): Promise<Metadata> {
   const { id } = await params;
-  const user = await requireUser();
-  const qr = await getQrCode(user.id, id);
+  // Guests are redirected to sign-in by the page; their metadata reveals nothing about the code.
+  const session = await getSession();
+  const qr = session ? await getQrCode(session.user.id, id) : null;
   return { title: qr?.name ?? "QR", robots: { index: false } };
 }
 
@@ -58,10 +60,10 @@ function contentLine(c: QrContent): string {
  * the add-on) or its files. Layouts: each with Edit, its downloads, and Print Preview for print (mm) layouts, or
  * "Set up for print" for screen layouts, which opens Edit design → Size and returns to Print Preview once saved in mm.
  */
-export default async function QrDetailPage({ params }: PageProps<"/[locale]/dashboard/qr/[id]">) {
-  await resolveLocale(params);
+export default async function QrDetailPage({ params, searchParams }: PageProps<"/[locale]/dashboard/qr/[id]">) {
+  const locale = await resolveLocale(params);
   const { id } = await params;
-  const user = await requireUser();
+  const user = await requireAccount(locale, `/dashboard/qr/${encodeURIComponent(id)}`, await searchParams);
   const qr = await getQrCode(user.id, id);
   if (!qr) notFound();
   const [t, tl, tp, tTypes, tDash, , entitled, scans, phase] = await Promise.all([

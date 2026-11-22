@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
-import { requireUser } from "@/server/auth";
+import { requireAccount } from "../require-account";
 import { userTrial } from "@/server/billing/entitlements";
 import { TrialBar } from "@/widgets/trial";
 import { encodedValue } from "@/server/qr/export";
@@ -27,14 +27,10 @@ const FILTERS = ["all", "static", "dynamic"] as const;
 type Filter = (typeof FILTERS)[number];
 
 export default async function DashboardPage({ params, searchParams }: PageProps<"/[locale]/dashboard">) {
-  await resolveLocale(params);
-  const [t, tTypes, format, user, query] = await Promise.all([
-    getTranslations("dashboard"),
-    getTranslations("contentTypes"),
-    getFormatter(),
-    requireUser(),
-    searchParams,
-  ]);
+  const locale = await resolveLocale(params);
+  const query = await searchParams;
+  const user = await requireAccount(locale, "/dashboard", query);
+  const [t, tTypes, format] = await Promise.all([getTranslations("dashboard"), getTranslations("contentTypes"), getFormatter()]);
   const [codes, phase, usage, currency] = await Promise.all([
     listQrCodes(user.id),
     userTrial(user.id),

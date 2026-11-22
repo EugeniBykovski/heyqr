@@ -4,7 +4,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { BillingPortalButton } from "@/features/checkout";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
-import { requireUser } from "@/server/auth";
+import { requireAccount } from "../../require-account";
 import { accountUsage } from "@/server/billing/allowances";
 import { userTrial } from "@/server/billing/entitlements";
 import { getCurrency } from "@/server/currency";
@@ -28,9 +28,10 @@ const card = "flex flex-col gap-4 rounded-2xl border border-border bg-surface p-
  * Stripe's portal, Compare plans; one-time purchases line by line, each with Stripe's receipt. Receipts keep the
  * currency that was paid; everything is the account's own data and Stripe stays the source of truth.
  */
-export default async function BillingPage({ params }: PageProps<"/[locale]/dashboard/billing">) {
-  await resolveLocale(params);
-  const [t, format, user, currency] = await Promise.all([getTranslations("billing"), getFormatter(), requireUser(), getCurrency()]);
+export default async function BillingPage({ params, searchParams }: PageProps<"/[locale]/dashboard/billing">) {
+  const locale = await resolveLocale(params);
+  const user = await requireAccount(locale, "/dashboard/billing", await searchParams);
+  const [t, format, currency] = await Promise.all([getTranslations("billing"), getFormatter(), getCurrency()]);
   const [usage, purchases, phase] = await Promise.all([
     accountUsage(db, user.id),
     db.query.purchase.findMany({

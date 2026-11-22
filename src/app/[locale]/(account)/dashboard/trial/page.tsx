@@ -9,7 +9,7 @@ import { ActivatePlanButton, StartTrialButton } from "@/features/checkout";
 import { Link } from "@/i18n/navigation";
 import { getCurrency } from "@/server/currency";
 import { resolveLocale } from "@/i18n/server";
-import { requireUser } from "@/server/auth";
+import { requireAccount } from "../../require-account";
 import { TRIAL_DAYS, trialCode } from "@/server/billing/trial";
 import { userTrial } from "@/server/billing/entitlements";
 import { db } from "@/server/db";
@@ -32,10 +32,11 @@ export async function generateMetadata(): Promise<Metadata> {
  * Activating takes the Dynamic plan through Stripe Checkout for the same code, so the short link stays.
  * While the trial runs, the Print Pack sample: the three print files of a fixed demo QR (never the user's test code).
  */
-export default async function TrialPage({ params }: PageProps<"/[locale]/dashboard/trial">) {
+export default async function TrialPage({ params, searchParams }: PageProps<"/[locale]/dashboard/trial">) {
   const locale = await resolveLocale(params);
+  const user = await requireAccount(locale, "/dashboard/trial", await searchParams);
   const sample = samplePrint(env.NEXT_PUBLIC_APP_URL);
-  const [t, format, user] = await Promise.all([getTranslations("trial"), getFormatter(), requireUser()]);
+  const [t, format] = await Promise.all([getTranslations("trial"), getFormatter()]);
   const [phase, code] = await Promise.all([userTrial(user.id), trialCode(db, user.id)]);
   const currency = await getCurrency();
   const starterCents = priceSheet(currency).starter;
