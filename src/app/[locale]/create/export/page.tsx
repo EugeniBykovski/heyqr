@@ -9,6 +9,7 @@ import { TooLongNotice } from "@/features/qr-editor";
 import { getSession } from "@/server/auth";
 import { getCurrency } from "@/server/currency";
 import { canDownload, forSale, printPackForSale, userTrial } from "@/server/billing/entitlements";
+import { pendingPaidCheckout } from "@/server/billing/checkout";
 import { accountUsage } from "@/server/billing/allowances";
 import { loadPrint } from "@/server/print/load";
 import { DEFAULT_PRINT_SETTINGS, pickLayoutForEdit, printSettingsQuery } from "@/entities/qr";
@@ -77,6 +78,21 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
   const canUseTrial =
     qr.model === "dynamic" && (phase.state === "active" || phase.state === "ending") && (!testCode || testCode.id === qr.id);
   const checkout = query.checkout === "success" || query.checkout === "cancelled" ? query.checkout : undefined;
+  // HEY-92: back on Export without the checkout return (from My QR codes, Print Preview, another layout, a new tab)
+  // while Stripe has the payment but the webhook hasn't granted it: the confirmation of the file that was paid for,
+  // never Pay again. Decided from the account's stored order and Stripe's session, not from the address.
+  if (qr.model === "static" && !entitled && checkout !== "success") {
+    const awaiting = await pendingPaidCheckout(session.user.id, qr.id);
+    if (awaiting) {
+      const original = awaiting.settings.get("layout");
+      const back = new URLSearchParams(awaiting.settings);
+      back.set("qr", qr.id);
+      back.set("layout", original && qr.layouts.some((l) => l.id === original) ? original : layout.id);
+      back.set("checkout", "success");
+      back.set("session_id", awaiting.sessionId);
+      return redirect({ href: `/create/export?${back.toString()}`, locale });
+    }
+  }
   const value = encodedValue(qr);
   // HEY-24: a code saved before the capacity check could hold more than a QR fits; never offer a broken file.
   const capacity = layoutCapacity(layout.design.layout, value);

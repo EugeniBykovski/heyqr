@@ -6,14 +6,14 @@
 import { and, eq, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { DEFAULT_DESIGN, designToLayout } from "../../entities/qr/model/design";
 import { designSettingsOf, readLayoutRecord } from "../../entities/qr/model/design-schema";
 import { RESTORE_WINDOW_MS, restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { cleanupLogos, referencedAssets, resolveLogos, storeLogos, type LogoStore } from "../qr/logo-assets";
 import { authorizedLogo, ownedLayout } from "../qr/file-access";
 import { fulfillCheckout } from "../billing/fulfillment";
-import { singleQrCheckout, type CheckoutPort } from "../billing/single-order";
+import { awaitingFulfillment, singleQrCheckout, type CheckoutPort, type SessionLookup } from "../billing/single-order";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, copyLayout, layoutRevision, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
@@ -1934,6 +1934,59 @@ describe.skipIf(!url)("Single QR order binding (HEY-88, real PostgreSQL)", () =>
     expect(rows).toHaveLength(1);
     const open = [...sessions.entries()].filter(([, v]) => v.status === "open").map(([k]) => k);
     expect(open).toEqual([rows[0]?.stripeCheckoutSessionId]);
+  });
+
+  it("a paid order still waiting for the webhook is found with its original settings; open, expired and unpaid ones are not (HEY-92)", async () => {
+    const a = await code(owner.id, "awaiting");
+    const { port } = stripe();
+    await singleQrCheckout(db, port, { userId: owner.id, ...a, charge });
+    const [order] = await ordersOf(a.qrCodeId);
+    const sessionId = order?.stripeCheckoutSessionId ?? "";
+    const back = `https://heyqr.test/en/create/export?qr=${a.qrCodeId}&layout=${a.layoutId}&format=png&res=600&transparent=1&printPack=1&checkout=success&session_id={CHECKOUT_SESSION_ID}`;
+    const lookups: string[] = [];
+    const as =
+      (status: string | null, payment_status: string, success_url: string | null = back): SessionLookup =>
+      async (id) => {
+        lookups.push(id);
+        return { status, payment_status, success_url };
+      };
+
+    const found = await awaitingFulfillment(db, as("complete", "paid"), owner.id, a.qrCodeId);
+    expect(found).toMatchObject({ orderId: order?.id, sessionId });
+    expect(Object.fromEntries(found?.settings ?? [])).toEqual({
+      layout: a.layoutId,
+      format: "png",
+      res: "600",
+      transparent: "1",
+      printPack: "1",
+    });
+    expect(lookups).toEqual([sessionId]);
+    // Cancelled (still open), expired, or complete without payment (a delayed method): nothing awaits, Pay stays retryable.
+    expect(await awaitingFulfillment(db, as("open", "unpaid"), owner.id, a.qrCodeId)).toBeNull();
+    expect(await awaitingFulfillment(db, as("expired", "unpaid"), owner.id, a.qrCodeId)).toBeNull();
+    expect(await awaitingFulfillment(db, as("complete", "unpaid"), owner.id, a.qrCodeId)).toBeNull();
+    // Another account never sees this order; Stripe isn't even asked.
+    const before = lookups.length;
+    expect(await awaitingFulfillment(db, as("complete", "paid"), other.id, a.qrCodeId)).toBeNull();
+    expect(lookups).toHaveLength(before);
+    // A return URL for another code carries no settings over.
+    const elsewhere = await awaitingFulfillment(db, as("complete", "paid", back.replace(a.qrCodeId, "another")), owner.id, a.qrCodeId);
+    expect(elsewhere?.settings.toString()).toBe("");
+    // Once the webhook has fulfilled it, nothing awaits.
+    expect(
+      await fulfillCheckout(db, paidEvent(sessionId, { userId: owner.id, qrCodeId: a.qrCodeId, orderId: order?.id ?? "" }), () => "s"),
+    ).toEqual({ granted: true });
+    expect(await awaitingFulfillment(db, as("complete", "paid"), owner.id, a.qrCodeId)).toBeNull();
+  });
+
+  it("a checkout that never got a session awaits nothing", async () => {
+    const a = await code(owner.id, "no session");
+    const { port, state } = stripe();
+    state.failNext = true;
+    await expect(singleQrCheckout(db, port, { userId: owner.id, ...a, charge })).rejects.toThrow();
+    const lookup = vi.fn<SessionLookup>();
+    expect(await awaitingFulfillment(db, lookup, owner.id, a.qrCodeId)).toBeNull();
+    expect(lookup).not.toHaveBeenCalled();
   });
 
   it("keeps earlier order history: a legacy pending order with its session is reused, paid orders are untouched", async () => {

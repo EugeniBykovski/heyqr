@@ -134,3 +134,44 @@ export async function singleQrCheckout(
   }
   return { ok: false, error: "processing" };
 }
+
+/** What Stripe says about a Checkout Session, for {@link awaitingFulfillment}. */
+export type SessionLookup = (sessionId: string) => Promise<{ status: string | null; payment_status: string; success_url: string | null }>;
+
+/**
+ * HEY-92: the code's Single QR order that Stripe has confirmed as paid but the webhook hasn't fulfilled yet, for this
+ * account. Found from the stored order (pending, the account's, this code, with its session) and that session as
+ * Stripe reports it (complete and paid); an open, expired or unpaid attempt is not awaiting anything (Pay stays
+ * retryable). Returns the Export settings the buyer paid with, from the session's own return URL, so the screen can
+ * confirm the original file even when the buyer comes back without the checkout return.
+ */
+export async function awaitingFulfillment(
+  db: Db,
+  lookup: SessionLookup,
+  userId: string,
+  qrCodeId: string,
+): Promise<{ orderId: string; sessionId: string; settings: URLSearchParams } | null> {
+  const [order] = await db
+    .select({ id: schema.purchase.id, sessionId: schema.purchase.stripeCheckoutSessionId })
+    .from(schema.purchase)
+    .where(
+      and(
+        eq(schema.purchase.userId, userId),
+        eq(schema.purchase.qrCodeId, qrCodeId),
+        eq(schema.purchase.status, "pending"),
+        inArray(schema.purchase.item, [...SINGLE_ITEMS]),
+      ),
+    )
+    .orderBy(desc(schema.purchase.createdAt))
+    .limit(1);
+  if (!order?.sessionId) return null;
+  const session = await lookup(order.sessionId);
+  if (session.status !== "complete" || session.payment_status !== "paid") return null;
+  const back = session.success_url ? new URL(session.success_url) : null;
+  const settings = new URLSearchParams();
+  // Only this code's own settings: the return URL is ours, but nothing outside these keys is carried over.
+  if (back?.searchParams.get("qr") === qrCodeId)
+    for (const k of ["layout", "format", "res", "transparent", "printPack"])
+      if (back.searchParams.get(k)) settings.set(k, back.searchParams.get(k) ?? "");
+  return { orderId: order.id, sessionId: order.sessionId, settings };
+}

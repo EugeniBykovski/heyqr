@@ -160,6 +160,21 @@ describe("file states (design 3.7–3.10)", () => {
     vi.useRealTimers();
   });
 
+  it("confirming a payment: navigation stays available, Pay stays hidden and the settings stay locked (HEY-92)", () => {
+    vi.useFakeTimers();
+    const layouts = [
+      { id: "l1", name: "Business card", href: "/create/export?qr=q1&layout=l1&format=png", active: true },
+      { id: "l2", name: "Poster", href: "/create/export?qr=q1&layout=l2&format=png", active: false },
+    ];
+    signed({ entitled: false, checkout: "success", layouts, initial: { format: "png", resolution: 600, transparent: true } });
+    // Leaving is allowed: coming back is confirmed by the server (the paid order), not by these links.
+    expect(screen.getByRole("link", { name: "Poster" })).toHaveAttribute("href", layouts[1]?.href);
+    expect(screen.queryByRole("button", { name: /^Pay/ })).toBeNull();
+    expect(screen.getAllByText("Confirming your payment…").length).toBeGreaterThan(0);
+    expect(screen.getByLabelText("Transparent background")).toBeDisabled();
+    vi.useRealTimers();
+  });
+
   it("not bought yet: Pay goes to Stripe Checkout with the chosen settings; cancelled says nothing was charged", async () => {
     startCheckout.mockResolvedValue({ ok: false, error: "failed" });
     signed({ entitled: false, checkout: "cancelled" });
