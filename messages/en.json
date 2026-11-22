@@ -1313,6 +1313,12 @@
     "subCredit": "This uses 1 of your static credits."
   },
   "dashboard": {
+    "noMatch": {
+      "static": "No static QR codes",
+      "dynamic": "No dynamic QR codes",
+      "text": "Your other codes are under All.",
+      "all": "Show all codes"
+    },
     "title": "My QR codes",
     "new": "Create QR code",
     "empty": {

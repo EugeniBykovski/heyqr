@@ -170,15 +170,16 @@ export function QrCard({
       </div>
       {select ? null : (
         <div className={libraryActions}>
+          {/* Design 4.2: Delete, Rename, Edit design, then the main action. */}
+          {onDelete ? (
+            <Button size="icon-sm" variant="ghost-danger" aria-label={labels.delete} title={labels.delete} onClick={onDelete}>
+              <Trash2Icon aria-hidden />
+            </Button>
+          ) : null}
           {onRename && r && !renaming ? (
             <Button ref={renameButton} size="sm" variant="ghost" aria-label={r.actionOne} title={r.actionOne} onClick={startRename}>
               <PencilIcon aria-hidden />
               <span className="max-sm:sr-only">{r.action}</span>
-            </Button>
-          ) : null}
-          {onDelete ? (
-            <Button size="icon-sm" variant="ghost-danger" aria-label={labels.delete} title={labels.delete} onClick={onDelete}>
-              <Trash2Icon aria-hidden />
             </Button>
           ) : null}
           <Button asChild size="sm">

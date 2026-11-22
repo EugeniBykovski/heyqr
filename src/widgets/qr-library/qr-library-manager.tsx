@@ -50,12 +50,15 @@ export function QrLibraryManager({
   sub,
   createLabel,
   filters,
+  noMatch,
   items,
   total,
 }: {
   title: string;
   sub: ReactNode;
   createLabel: string;
+  /** HEY-79: shown instead of the list when the current filter matches none of the account's codes. */
+  noMatch?: ReactNode;
   filters: ReactNode;
   items: LibraryItem[];
   /** Codes across all filters, for "2 of 5 selected". */
@@ -175,7 +178,8 @@ export function QrLibraryManager({
         </div>
       ) : null}
 
-      <ul aria-label={title} aria-busy={pending || undefined} className={libraryList}>
+      {visible.length === 0 && noMatch ? noMatch : null}
+      <ul aria-label={title} aria-busy={pending || undefined} className={cn(libraryList, visible.length === 0 && "hidden")}>
         {visible.map((item) => (
           <QrCard
             key={item.id}
