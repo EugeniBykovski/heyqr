@@ -13,6 +13,7 @@ import { formatMoney, OFFERS, PACK_CREDITS, PLANS, priceSheet } from "@/shared/c
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
+import { compareData, PlanCompare } from "@/widgets/plan-compare";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("plans");
@@ -66,37 +67,7 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
       </PlanCheckoutButton>
     );
 
-  const rows: [string, string, string, string, string, string][] = [
-    [
-      t("cmp.price"),
-      money(0),
-      t("cmp.once", { price: money(sheet.single) }),
-      t("cmp.or", { a: money(sheet.pack3), b: money(sheet.pack10) }),
-      t("cmp.mo", { price: money(sheet.starter) }),
-      t("cmp.mo", { price: money(sheet.studio) }),
-    ],
-    [t("cmp.live"), t("cmp.incl"), t("cmp.incl"), t("cmp.incl"), t("cmp.incl"), t("cmp.incl")],
-    [
-      t("cmp.static"),
-      t("cmp.no"),
-      t("cmp.oneQr"),
-      t("cmp.credits"),
-      t("cmp.newMonth", { n: PLANS.starter.unlocks }),
-      t("cmp.newMonth", { n: PLANS.studio.unlocks }),
-    ],
-    [
-      t("cmp.dynamic"),
-      t("cmp.no"),
-      t("cmp.no"),
-      t("cmp.no"),
-      t("cmp.atOnce", { n: PLANS.starter.dyn }),
-      t("cmp.atOnce", { n: PLANS.studio.dyn }),
-    ],
-    [t("cmp.analytics"), t("cmp.no"), t("cmp.no"), t("cmp.no"), t("cmp.basic"), t("cmp.perCode")],
-    [t("cmp.printPack"), t("cmp.no"), `+${pp}`, `+${pp}`, `+${pp}`, t("cmp.ppStudio", { n: PLANS.studio.packs, price: pp })],
-    [t("cmp.repeat"), t("cmp.no"), t("cmp.incl"), t("cmp.incl"), t("cmp.incl"), t("cmp.incl")],
-    [t("cmp.cancel"), t("cmp.no"), t("cmp.notSub"), t("cmp.notSub"), t("cmp.stay"), t("cmp.stay")],
-  ];
+  const compare = compareData(t, sheet, currency);
 
   return (
     <main className="mx-auto w-full max-w-page px-4 pt-6 pb-8 sm:px-6 md:pt-10 md:pb-16 lg:px-8">
@@ -312,46 +283,20 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
         <h2 id="pr-cmp" className="text-h2">
           {t("cmp.title")}
         </h2>
-        <div className="overflow-x-auto rounded-2xl border border-border bg-surface shadow-1" tabIndex={0} aria-labelledby="pr-cmp">
-          <table className="w-full min-w-180 border-collapse text-[0.875rem]">
-            <thead>
-              <tr>
-                {[t("cmp.what"), t("free.title"), t("single.title"), t("packs.title"), t("starter.title"), t("studio.title")].map(
-                  (h, i) => (
-                    <th
-                      key={h}
-                      scope="col"
-                      className={cn(
-                        "border-b border-border px-2.5 py-2 font-semibold text-secondary-foreground",
-                        i ? "text-center" : "text-left",
-                        i === 5 && "bg-accent",
-                      )}
-                    >
-                      {h}
-                    </th>
-                  ),
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r[0]}>
-                  {r.map((v, i) =>
-                    i === 0 ? (
-                      <th key={i} scope="row" className="border-b border-border px-2.5 py-3 text-left font-semibold">
-                        {v}
-                      </th>
-                    ) : (
-                      <td key={i} className={cn("border-b border-border px-2.5 py-3 text-center", i === 5 && "bg-accent")}>
-                        {v}
-                      </td>
-                    ),
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <PlanCompare
+          plans={compare.plans}
+          rows={compare.rows}
+          initialPair={["single", "starter"]}
+          labels={{
+            feature: t("cmp.what"),
+            region: t("cmp.region"),
+            more: t("cmp.more"),
+            pick: [t("cmp.pick1"), t("cmp.pick2")],
+            yes: t("cmp.yes"),
+            no: t("cmp.no"),
+            na: t("cmp.na"),
+          }}
+        />
         <p className="text-caption text-muted-foreground">{t("cmp.foot")}</p>
       </section>
     </main>
