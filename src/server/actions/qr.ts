@@ -15,7 +15,7 @@ import { restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { encodedValue } from "../qr/export";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
-import { addLayoutFrom, removeLayout, updateLayoutDesign } from "../qr/update-layout";
+import { addLayoutFrom, copyLayout, removeLayout, updateLayoutDesign } from "../qr/update-layout";
 import { newId, newShortCode } from "../db/ids";
 import { activateTrialCode, startTrial } from "../billing/trial";
 import { activeSubscription, canDownload, printPackForSale } from "../billing/entitlements";
@@ -102,6 +102,27 @@ export async function addLayout(input: z.input<typeof addLayoutSchema>): Promise
     const parsed = addLayoutSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "invalid" };
     const result = await addLayoutFrom(db, user.id, parsed.data, (qr) => encodedValue(qr), newId);
+    if (result.ok) {
+      revalidatePath("/[locale]/dashboard", "page");
+      revalidatePath("/[locale]/dashboard/qr/[id]", "page");
+    }
+    return result;
+  });
+}
+
+/** HEY-82 QR details "New layout": a copy of one of the owner's saved layouts, under the same code. */
+export async function duplicateLayout(input: {
+  qrCodeId: string;
+  sourceLayoutId: string;
+  name: string;
+}): Promise<ActionResult<{ layoutId: string }>> {
+  return guard(async () => {
+    const user = await requireUser();
+    const parsed = z
+      .object({ qrCodeId: z.string().min(1).max(64), sourceLayoutId: z.string().min(1).max(64), name: z.string().trim().min(1).max(60) })
+      .safeParse(input);
+    if (!parsed.success) return { ok: false, error: "invalid" };
+    const result = await copyLayout(db, user.id, parsed.data, newId);
     if (result.ok) {
       revalidatePath("/[locale]/dashboard", "page");
       revalidatePath("/[locale]/dashboard/qr/[id]", "page");

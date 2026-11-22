@@ -1477,6 +1477,8 @@
       "downloadLayout": "Download {name}",
       "printPreview": "Print Preview of {name}",
       "newLayoutCard": "New layout",
+      "layoutAdded": "“{name}” added to {code}. Your other layouts are unchanged.",
+      "layoutAddFailed": "We couldn’t add the layout. Try again.",
       "copy": {
         "action": "Use different content…",
         "title": "Use different content",
