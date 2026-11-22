@@ -11,7 +11,7 @@ import { getCurrency } from "@/server/currency";
 import { canDownload, forSale, printPackForSale, userTrial } from "@/server/billing/entitlements";
 import { accountUsage } from "@/server/billing/allowances";
 import { loadPrint } from "@/server/print/load";
-import { DEFAULT_PRINT_SETTINGS, printSettingsQuery } from "@/entities/qr";
+import { DEFAULT_PRINT_SETTINGS, pickLayoutForEdit, printSettingsQuery } from "@/entities/qr";
 import { trialCode } from "@/server/billing/trial";
 import { db } from "@/server/db";
 import { encodedValue } from "@/server/qr/export";
@@ -61,7 +61,8 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
   const qrId = one(query.qr);
   const layoutId = one(query.layout);
   const qr = qrId ? await getQrCode(session.user.id, qrId) : undefined;
-  const layout = qr?.layouts.find((l) => l.id === layoutId) ?? qr?.layouts[0];
+  // HEY-81: the exact layout asked for, never another design of the code; without one, the first (as in My QR codes).
+  const layout = qr ? pickLayoutForEdit(qr.layouts, layoutId) : undefined;
   if (!qr || !layout) notFound();
 
   const [t, tTypes, entitled, purchase, phase, testCode] = await Promise.all([

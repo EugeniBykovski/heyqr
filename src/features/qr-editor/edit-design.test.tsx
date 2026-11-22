@@ -2,6 +2,7 @@
 import { captionFontSize, composeLayout, layoutGeometry } from "@heyqr/qr-core";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
+import { readFileSync } from "node:fs";
 import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
@@ -34,6 +35,14 @@ describe("Edit design: which layout opens (HEY-45)", () => {
     expect(pickLayoutForEdit(layouts)?.id).toBe("l1");
     expect(pickLayoutForEdit(layouts, "someone-elses")).toBeUndefined();
     expect(pickLayoutForEdit([], undefined)).toBeUndefined();
+  });
+
+  it("Export and Print Preview resolve the exact layout too, never another design of the code (HEY-81)", () => {
+    for (const page of ["src/app/[locale]/create/export/page.tsx", "src/app/[locale]/print/page.tsx"]) {
+      const source = readFileSync(page, "utf8");
+      expect(source, page).toContain("pickLayoutForEdit(qr.layouts, layoutId)");
+      expect(source, page).not.toMatch(/\?\?\s*qr\?\.layouts\[0\]/);
+    }
   });
 });
 

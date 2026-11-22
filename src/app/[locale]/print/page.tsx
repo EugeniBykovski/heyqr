@@ -2,7 +2,7 @@ import { priceSheet } from "@/shared/config/catalog";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
-import { readPrintSettings } from "@/entities/qr";
+import { pickLayoutForEdit, readPrintSettings } from "@/entities/qr";
 import { PrintPreview } from "@/features/print-preview";
 import { Link, redirect } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
@@ -36,7 +36,8 @@ export default async function PrintPage({ params, searchParams }: PageProps<"/[l
     return redirect({ href: `/sign-in?next=${encodeURIComponent(here)}`, locale });
   }
   const qr = qrId ? await getQrCode(session.user.id, qrId) : undefined;
-  const layout = qr?.layouts.find((l) => l.id === layoutId) ?? qr?.layouts[0];
+  // HEY-81: the exact layout asked for, never another design of the code; without one, the first (as in My QR codes).
+  const layout = qr ? pickLayoutForEdit(qr.layouts, layoutId) : undefined;
   if (!qr || !layout) notFound();
   const t = await getTranslations("print");
   const from = one(query.from) === "export" ? "export" : "details";

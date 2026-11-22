@@ -75,7 +75,10 @@ function settingsFromLayout(layout: Layout): Partial<EditorDesign> {
   };
 }
 
-/** Edit design picks the requested layout, or without one the first by order (the one My QR codes shows). */
+/**
+ * Edit design, Export and Print Preview pick the requested layout, or without one the first by order (the one My QR
+ * codes shows). A requested layout that isn't this code's is undefined (the page 404s), never another design (HEY-81).
+ */
 export function pickLayoutForEdit<T extends { id: string }>(layouts: T[], layoutId?: string): T | undefined {
   return layoutId ? layouts.find((l) => l.id === layoutId) : layouts[0];
 }
