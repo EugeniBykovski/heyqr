@@ -2,7 +2,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_DESIGN } from "@/entities/qr";
-import { draftForType, useDraft, writeDraft } from "./use-draft";
+import { clearDraft, draftClaimKey, draftForType, useDraft, writeDraft } from "./use-draft";
 
 const KEY = "heyqr:draft:v1";
 
@@ -93,5 +93,25 @@ describe("useDraft", () => {
     });
     unmount();
     expect(localStorage.getItem(KEY)).toBe("{broken");
+  });
+});
+
+/* HEY-77: one random claim key per browser draft, until the draft is saved to an account. */
+describe("draft claim key", () => {
+  beforeEach(() => window.localStorage.clear());
+
+  it("is created once and stays the same for this draft (refresh, retry)", () => {
+    const key = draftClaimKey();
+    expect(key).toMatch(/^[A-Za-z0-9_-]{16,64}$/);
+    expect(draftClaimKey()).toBe(key);
+  });
+
+  it("is kept when a save fails and replaced only after the draft is cleared (saved)", () => {
+    writeDraft(DEFAULT_DESIGN);
+    const key = draftClaimKey();
+    expect(draftClaimKey()).toBe(key);
+    clearDraft();
+    expect(window.localStorage.getItem("heyqr:draft:v1")).toBeNull();
+    expect(draftClaimKey()).not.toBe(key);
   });
 });

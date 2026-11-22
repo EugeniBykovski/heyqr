@@ -104,9 +104,19 @@ export const qrCode = pgTable(
     isTrial: boolean("is_trial").notNull().default(false),
     /** Design 8.x Print Pack: set when the Print Pack of this code is bought (print PDF, editable SVG, specifications). */
     printPackAt: timestamp("print_pack_at", { withTimezone: true }),
+    /**
+     * HEY-77: the random key of the browser draft this code was saved from (kept in that browser until the save
+     * succeeds). Saving the same draft again for the same account returns this code instead of a duplicate.
+     */
+    guestClaimKey: text("guest_claim_key"),
     ...timestamps,
   },
-  (t) => [index("qr_code_user_idx").on(t.userId, t.updatedAt)],
+  (t) => [
+    index("qr_code_user_idx").on(t.userId, t.updatedAt),
+    uniqueIndex("qr_code_guest_claim_uq")
+      .on(t.userId, t.guestClaimKey)
+      .where(sql`${t.guestClaimKey} is not null and ${t.deletedAt} is null`),
+  ],
 );
 
 /** A named design of a QR code (Business card, Poster…). One QR has many layouts. */

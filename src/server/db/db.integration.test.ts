@@ -272,6 +272,66 @@ describe.skipIf(!url)("versioned design records (real PostgreSQL)", () => {
     expect((await pool.query(`select count(*)::int as n from qr_code where name = 'Broken'`)).rows[0].n).toBe(0);
   });
 
+  it("saving the same guest draft again returns the code already saved, with no duplicate (HEY-77)", async () => {
+    const draft = {
+      name: "Claimed menu",
+      model: "static" as const,
+      content: { type: "website" as const, url: "https://littlefern.cafe/hey77" },
+      layouts: [{ name: "Vertical card", layout: designToLayout(design), editor: designSettingsOf(design) }],
+      claimKey: "hey77claimkey0000000001",
+    };
+    const first = await saveQrWithLayouts(db, owner.id, draft);
+    // A refresh or a retry after a lost response, and two tabs at once, all resolve to that code.
+    const again = await saveQrWithLayouts(db, owner.id, draft);
+    const [tabA, tabB] = await Promise.all([saveQrWithLayouts(db, owner.id, draft), saveQrWithLayouts(db, owner.id, draft)]);
+    expect(first.ok).toBe(true);
+    for (const r of [again, tabA, tabB]) expect(r).toEqual(first);
+    const { rows } = await pool.query(
+      `select q.id, q.user_id, q.guest_claim_key, count(l.id)::int as layouts from qr_code q join qr_layout l on l.qr_code_id = q.id
+       where q.name = 'Claimed menu' group by q.id`,
+    );
+    expect(rows).toEqual([{ id: first.ok ? first.data.qrCodeId : "", user_id: owner.id, guest_claim_key: draft.claimKey, layouts: 1 }]);
+  });
+
+  it("a claim key never finds or changes another account's code (HEY-77)", async () => {
+    const other = { id: "hey77-other", name: "Other", email: "other@hey77.test" };
+    await db.insert(schema.user).values(other).onConflictDoNothing();
+    try {
+      const draft = {
+        name: "Ownership check",
+        model: "static" as const,
+        content: { type: "text" as const, text: "hey77" },
+        layouts: [{ name: "QR only", layout: designToLayout(design), editor: designSettingsOf(design) }],
+        claimKey: "hey77claimkey0000000002",
+      };
+      const mine = await saveQrWithLayouts(db, owner.id, draft);
+      // The same key from another account is that account's own new draft; the first code keeps its owner.
+      const theirs = await saveQrWithLayouts(db, other.id, { ...draft, name: "Their copy" });
+      expect(mine.ok && theirs.ok && mine.data.qrCodeId !== theirs.data.qrCodeId).toBe(true);
+      // Updating the first code by id from the other account is refused.
+      const hijack = await saveQrWithLayouts(db, other.id, { ...draft, qrCodeId: mine.ok ? mine.data.qrCodeId : "", name: "Hijacked" });
+      expect(hijack).toEqual({ ok: false, error: "not_found" });
+      const { rows } = await pool.query(`select name, user_id from qr_code where id = $1`, [mine.ok ? mine.data.qrCodeId : ""]);
+      expect(rows).toEqual([{ name: "Ownership check", user_id: owner.id }]);
+    } finally {
+      await db.delete(schema.user).where(eq(schema.user.id, other.id));
+    }
+  });
+
+  it("a deleted code frees its claim key: saving the draft again makes a new code (HEY-77)", async () => {
+    const draft = {
+      name: "Deleted then saved",
+      model: "static" as const,
+      content: { type: "text" as const, text: "hey77 deleted" },
+      layouts: [{ name: "QR only", layout: designToLayout(design), editor: designSettingsOf(design) }],
+      claimKey: "hey77claimkey0000000003",
+    };
+    const first = await saveQrWithLayouts(db, owner.id, draft);
+    await pool.query(`update qr_code set deleted_at = now() where id = $1`, [first.ok ? first.data.qrCodeId : ""]);
+    const second = await saveQrWithLayouts(db, owner.id, draft);
+    expect(second.ok && first.ok && second.data.qrCodeId !== first.data.qrCodeId).toBe(true);
+  });
+
   it("saves dynamic website codes and refuses dynamic codes of other types (HEY-13)", async () => {
     const layouts = [{ name: "Main", layout: designToLayout(design), editor: designSettingsOf(design) }];
     const dynamicSite = await saveQrWithLayouts(db, owner.id, {

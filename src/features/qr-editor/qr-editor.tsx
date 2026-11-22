@@ -32,7 +32,7 @@ import { DesignStep } from "./design-step";
 import { editorTopBar, editorTopBarInner } from "./editor-layout";
 import { EditorSteps } from "./editor-steps";
 import { TypeStep } from "./type-step";
-import { clearDraft, useDraft } from "./use-draft";
+import { clearDraft, draftClaimKey, useDraft } from "./use-draft";
 
 /** True while no design setting differs from the defaults (content, mode and name aside). */
 function isUntouchedDesign(d: EditorDesign): boolean {
@@ -165,14 +165,17 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
       }
       const name = design.name.trim() || contentDisplayName(design.content) || t("namePlaceholder");
       const destination = design.model === "dynamic" && design.content.type === "website" ? encodePayload(design.content) : undefined;
+      // HEY-77: the draft's claim key makes this save safe to repeat (refresh, retry, second tab): the account gets one
+      // code for this draft. A request that fails outright (network, lost response) keeps the draft for a retry.
       const result = await saveDraft({
         name,
         model: design.model,
         content: design.content,
         destination,
+        claimKey: draftClaimKey(),
         // HEY-76: the layout keeps the name the guest saw on Export ("Vertical card"); the code keeps its own name.
         layouts: [{ name: t(`presets.${design.preset}`), layout, editor: designSettingsOf(design) }],
-      });
+      }).catch(() => ({ ok: false as const, error: "generic" as const }));
       if (!result.ok) {
         toast.error(
           tErrors(

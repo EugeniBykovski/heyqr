@@ -1,5 +1,5 @@
 import { encodePayload, layoutCapacity, type QrContent } from "@heyqr/qr-core";
-import { and, count, eq, isNull, sql } from "drizzle-orm";
+import { and, asc, count, eq, isNull, sql } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { createLayoutRecord } from "../../entities/qr/model/design-schema";
 import { supportsMode } from "../../entities/qr/model/modes";
@@ -14,6 +14,12 @@ export type SaveQrInput = {
   content: QrContent;
   destination?: string;
   layouts: { id?: string; name: string; layout: unknown; editor?: unknown }[];
+  /**
+   * HEY-77: the browser draft's random key. A new code saved with it records it; saving again with the same key for
+   * the same account (a refresh, a retry after a lost response, a second tab) returns that code unchanged instead of a
+   * duplicate. Another account's code is never found or changed this way.
+   */
+  claimKey?: string;
 };
 
 export type SaveQrResult =
@@ -50,6 +56,20 @@ export async function saveQrWithLayouts(db: NodePgDatabase<typeof schema>, userI
       // Design Pricing · Free: up to DRAFT_LIMIT saved drafts (codes not yet unlocked or live). Saves of one account
       // are serialized, so two at once can't both pass the count.
       await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${`drafts:${userId}`}))`);
+      if (input.claimKey) {
+        const [claimed] = await tx
+          .select({ id: schema.qrCode.id })
+          .from(schema.qrCode)
+          .where(and(eq(schema.qrCode.userId, userId), eq(schema.qrCode.guestClaimKey, input.claimKey), isNull(schema.qrCode.deletedAt)));
+        if (claimed) {
+          const layouts = await tx
+            .select({ id: schema.qrLayout.id })
+            .from(schema.qrLayout)
+            .where(eq(schema.qrLayout.qrCodeId, claimed.id))
+            .orderBy(asc(schema.qrLayout.sortOrder));
+          return { ok: true, data: { qrCodeId: claimed.id, layoutIds: layouts.map((l) => l.id) } } as const;
+        }
+      }
       const [drafts] = await tx
         .select({ n: count() })
         .from(schema.qrCode)
@@ -62,6 +82,7 @@ export async function saveQrWithLayouts(db: NodePgDatabase<typeof schema>, userI
         model: input.model,
         content: input.content,
         destination: input.destination ?? null,
+        guestClaimKey: input.claimKey ?? null,
       });
     }
 
