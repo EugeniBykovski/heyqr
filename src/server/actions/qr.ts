@@ -21,6 +21,11 @@ import { activeSubscription, canDownload, printPackForSale } from "../billing/en
 
 const draftSchema = z.object({
   qrCodeId: z.string().optional(),
+  // HEY-77: the browser draft's random key (see saveQrWithLayouts). The owner always comes from the session.
+  claimKey: z
+    .string()
+    .regex(/^[A-Za-z0-9_-]{16,64}$/)
+    .optional(),
   name: z.string().trim().min(1).max(80),
   model: z.enum(["static", "dynamic"]),
   content: z.custom<QrContent>((v) => typeof v === "object" && v !== null && "type" in v),

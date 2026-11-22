@@ -1,0 +1,2 @@
+ALTER TABLE "qr_code" ADD COLUMN "guest_claim_key" text;--> statement-breakpoint
+CREATE UNIQUE INDEX "qr_code_guest_claim_uq" ON "qr_code" USING btree ("user_id","guest_claim_key") WHERE "qr_code"."guest_claim_key" is not null and "qr_code"."deleted_at" is null;

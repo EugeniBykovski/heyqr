@@ -8,6 +8,25 @@ import { DEFAULT_DESIGN, emptyContent, modeFor, readDraftDesign, serializeDraftD
 const KEY = "heyqr:draft:v1";
 /** Where an unreadable draft is kept, so starting fresh never destroys it. */
 const UNREADABLE_KEY = "heyqr:draft:unreadable";
+/**
+ * HEY-77: a random key for this browser draft, sent with its first save to an account. The server records it on the
+ * new code, so a refresh or retry after sign-in finds that code instead of saving a duplicate. Cleared with the draft
+ * once the save succeeds; kept (with the draft) when it fails.
+ */
+const CLAIM_KEY = "heyqr:draft:claim";
+
+/** This draft's claim key, created on first use; undefined when storage is unavailable (the save still works). */
+export function draftClaimKey(): string | undefined {
+  try {
+    const existing = window.localStorage.getItem(CLAIM_KEY);
+    if (existing && /^[A-Za-z0-9_-]{16,64}$/.test(existing)) return existing;
+    const key = crypto.randomUUID().replaceAll("-", "");
+    window.localStorage.setItem(CLAIM_KEY, key);
+    return key;
+  } catch {
+    return undefined;
+  }
+}
 
 export type DraftRead =
   | { status: "none" }
@@ -119,6 +138,7 @@ export function draftForType(type: QrContentType): EditorDesign {
 export function clearDraft() {
   try {
     window.localStorage.removeItem(KEY);
+    window.localStorage.removeItem(CLAIM_KEY);
   } catch {
     /* nothing to clear */
   }
