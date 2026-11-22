@@ -30,6 +30,10 @@ export const auth = betterAuth({
     },
   },
   session: { cookieCache: { enabled: true, maxAge: 5 * 60 } },
+  // HEY-73: an OAuth error without a per-flow errorCallbackURL (e.g. cancelling again after Back to Google, whose
+  // state was already used) lands on the sign-in page with a retry instead of Better Auth's generic error page.
+  // State validation itself is unchanged.
+  onAPIError: { errorURL: `${env.BETTER_AUTH_URL}/sign-in` },
   plugins: [nextCookies()],
 });
 
