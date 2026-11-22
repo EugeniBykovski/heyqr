@@ -11,6 +11,7 @@ import { DEFAULT_DESIGN, designToLayout } from "../../entities/qr/model/design";
 import { designSettingsOf, readLayoutRecord } from "../../entities/qr/model/design-schema";
 import { RESTORE_WINDOW_MS, restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { cleanupLogos, referencedAssets, resolveLogos, storeLogos, type LogoStore } from "../qr/logo-assets";
+import { authorizedLogo, ownedLayout } from "../qr/file-access";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, copyLayout, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
@@ -1401,5 +1402,143 @@ describe.skipIf(!url)("private logo storage (HEY-83, real PostgreSQL)", () => {
       (await pool.query(`select id from qr_layout where qr_code_id = $1 order by sort_order limit 1`, [codeId])).rows[0].id,
     );
     expect((await resolveLogos(db, store, a.id, [design]))[0].layout.style.logo.href).toBe(PNG);
+  });
+});
+
+/* HEY-84: every read and write of a code, its layouts and their files is the session user's own, as one chain. */
+describe.skipIf(!url)("authorization of codes, layouts and files (HEY-84, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const a = { id: "hey84-a", name: "A", email: "a@hey84.test" };
+  const b = { id: "hey84-b", name: "B", email: "b@hey84.test" };
+  const puts: string[] = [];
+  const objects = new Map<string, Uint8Array>();
+  const store: LogoStore = {
+    put: async (key, body) => void (puts.push(key), objects.set(key, body)),
+    get: async (key) => objects.get(key) ?? null,
+    remove: async (key) => void objects.delete(key),
+  };
+  let n = 0;
+  const id = () => `hey84id${String(++n).padStart(6, "0")}`;
+  const prep =
+    (userId: string): PrepareRecord =>
+    (tx, rec) =>
+      storeLogos(tx, store, userId, rec, id);
+  const PNG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+  const SVG = `data:image/svg+xml;base64,${Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4"><rect width="4" height="4"/></svg>').toString("base64")}`;
+  const design = (href?: string, caption = "Card") => {
+    const d = { ...DEFAULT_DESIGN, caption, logo: href ? { kind: "image" as const, href } : { kind: "none" as const } };
+    return { layout: designToLayout(d), editor: designSettingsOf(d) };
+  };
+  const ids = { aQr: "", aL1: "", aL2: "", aQr2: "", aQr2L: "", bQr: "", bL: "", aAsset: "", bAsset: "" };
+  const snapshot = async () =>
+    JSON.stringify(
+      (
+        await pool.query(
+          `select q.id, q.user_id, q.name, q.deleted_at is null as live, l.id as l, l.name as ln, md5(l.design::text) as d
+           from qr_code q left join qr_layout l on l.qr_code_id = q.id where q.user_id in ($1, $2) order by q.id, l.id`,
+          [a.id, b.id],
+        )
+      ).rows,
+    ) +
+    JSON.stringify(
+      (await pool.query(`select id, user_id, storage_key from asset where user_id in ($1, $2) order by id`, [a.id, b.id])).rows,
+    );
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([a, b]).onConflictDoNothing();
+    const save = async (userId: string, name: string, layouts: { name: string; layout: unknown; editor: unknown }[]) => {
+      const r = await saveQrWithLayouts(
+        db,
+        userId,
+        { name, model: "static", content: { type: "text", text: name }, layouts },
+        prep(userId),
+      );
+      if (!r.ok) throw new Error(JSON.stringify(r));
+      return r.data;
+    };
+    const aSaved = await save(a.id, "A code", [
+      { name: "Business card", ...design(PNG) },
+      { name: "Poster", ...design(undefined, "Poster") },
+    ]);
+    [ids.aQr, ids.aL1, ids.aL2] = [aSaved.qrCodeId, aSaved.layoutIds[0] ?? "", aSaved.layoutIds[1] ?? ""];
+    const aOther = await save(a.id, "A second code", [{ name: "Sticker", ...design() }]);
+    [ids.aQr2, ids.aQr2L] = [aOther.qrCodeId, aOther.layoutIds[0] ?? ""];
+    const bSaved = await save(b.id, "B code", [{ name: "Menu", ...design(SVG) }]);
+    [ids.bQr, ids.bL] = [bSaved.qrCodeId, bSaved.layoutIds[0] ?? ""];
+    ids.aAsset =
+      referencedAssets(await (await pool.query(`select design from qr_layout where id = $1`, [ids.aL1])).rows[0].design)[0] ?? "";
+    ids.bAsset = referencedAssets(await (await pool.query(`select design from qr_layout where id = $1`, [ids.bL])).rows[0].design)[0] ?? "";
+  });
+  afterAll(async () => {
+    await db?.delete(schema.qrCode).where(inArray(schema.qrCode.userId, [a.id, b.id]));
+    await db?.delete(schema.asset).where(inArray(schema.asset.userId, [a.id, b.id]));
+    await db?.delete(schema.user).where(inArray(schema.user.id, [a.id, b.id]));
+    await pool?.end();
+  });
+
+  it("reads: only the owner, and only a layout of that code and a file that layout uses", async () => {
+    expect((await ownedLayout(db, a.id, ids.aQr, ids.aL1))?.layout.name).toBe("Business card");
+    expect(await ownedLayout(db, b.id, ids.aQr, ids.aL1)).toBeNull(); // another account
+    expect(await ownedLayout(db, a.id, ids.aQr, ids.bL)).toBeNull(); // B's layout under A's code
+    expect(await ownedLayout(db, a.id, ids.aQr, ids.aQr2L)).toBeNull(); // A's layout of a different code
+    expect(await authorizedLogo(db, a.id, { qrCodeId: ids.aQr, layoutId: ids.aL1, assetId: ids.aAsset })).toMatchObject({
+      key: `logos/${a.id}/${ids.aAsset}.png`,
+    });
+    for (const [user, qrCodeId, layoutId, assetId] of [
+      [b.id, ids.aQr, ids.aL1, ids.aAsset], // another account asks for A's file
+      [a.id, ids.aQr, ids.aL2, ids.aAsset], // a layout of the code that doesn't use that file
+      [a.id, ids.aQr, ids.aL1, ids.bAsset], // B's file named on A's layout
+      [a.id, ids.aQr2, ids.aL1, ids.aAsset], // code and layout don't belong together
+      [b.id, ids.bQr, ids.bL, ids.aAsset], // B's own layout, A's file
+    ] as const)
+      expect(await authorizedLogo(db, user, { qrCodeId, layoutId, assetId })).toBeNull();
+    await softDeleteQrCodes(db, a.id, [ids.aQr2]);
+    expect(await ownedLayout(db, a.id, ids.aQr2, ids.aQr2L)).toBeNull(); // a deleted code
+  });
+
+  it("a save stores an uploaded logo once, though the layout keeps it in two places", async () => {
+    puts.length = 0;
+    const r = await saveQrWithLayouts(
+      db,
+      b.id,
+      { name: "One upload", model: "static", content: { type: "text", text: "once" }, layouts: [{ name: "Card", ...design(PNG) }] },
+      prep(b.id),
+    );
+    expect(r.ok).toBe(true);
+    expect(puts).toHaveLength(1);
+  });
+
+  it("denied writes change neither the database nor storage", async () => {
+    const before = await snapshot();
+    puts.length = 0;
+    const encoded = () => "x";
+    const refused = [
+      await updateLayoutDesign(db, b.id, { qrCodeId: ids.aQr, layoutId: ids.aL1, ...design(SVG, "Hijack") }, encoded, prep(b.id)),
+      await updateLayoutDesign(db, a.id, { qrCodeId: ids.aQr, layoutId: ids.bL, ...design(SVG, "Mixed") }, encoded, prep(a.id)),
+      await addLayoutFrom(db, b.id, { qrCodeId: ids.aQr, name: "Extra", ...design(SVG) }, encoded, id, prep(b.id)),
+      await copyLayout(db, b.id, { qrCodeId: ids.aQr, sourceLayoutId: ids.aL1, name: "Copy" }, id),
+      await copyLayout(db, a.id, { qrCodeId: ids.aQr, sourceLayoutId: ids.bL, name: "Copy" }, id),
+      await removeLayout(db, b.id, { qrCodeId: ids.aQr, layoutId: ids.aL2 }),
+      await renameQrCode(db, b.id, ids.aQr, "Hijacked"),
+      await saveQrWithLayouts(
+        db,
+        b.id,
+        {
+          qrCodeId: ids.aQr,
+          name: "Hijacked",
+          model: "static",
+          content: { type: "text", text: "x" },
+          layouts: [{ name: "X", ...design(SVG) }],
+        },
+        prep(b.id),
+      ),
+    ];
+    for (const r of refused) expect(r).toMatchObject({ ok: false, error: "not_found" });
+    expect(await softDeleteQrCodes(db, b.id, [ids.aQr])).toEqual([]);
+    expect(puts).toEqual([]);
+    expect(await snapshot()).toBe(before);
   });
 });

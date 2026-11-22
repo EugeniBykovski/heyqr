@@ -18,13 +18,19 @@ export function s3(): S3Client {
   return client;
 }
 
+/**
+ * HEY-84: how long a signed download link stays valid. It's a bearer link until then, so it is issued for one object
+ * at a time, only after the owner check, and never logged; asking again re-checks ownership and signs a new one.
+ */
+export const SIGNED_URL_TTL_SECONDS = 120;
+
 export async function presignDownload(key: string, filename: string) {
   const command = new GetObjectCommand({
     Bucket: storageConfig().S3_BUCKET,
     Key: key,
     ResponseContentDisposition: `attachment; filename="${filename}"`,
   });
-  return getSignedUrl(s3(), command, { expiresIn: 120 });
+  return getSignedUrl(s3(), command, { expiresIn: SIGNED_URL_TTL_SECONDS });
 }
 
 export async function putObject(key: string, body: Buffer | string, contentType: string) {

@@ -72,8 +72,17 @@ export const referencedAssets = (design: unknown) => [...new Set(images(design).
  * references. Null when an image breaks the logo rule, or refers to an asset that isn't this account's.
  */
 export async function storeLogos<T>(tx: Tx, store: LogoStore, userId: string, record: T, newId: () => string): Promise<T | null> {
-  const known = new Map<string, string>();
+  // One store per image per save: the same file appears in the rendered layout and the editor settings, and fields
+  // are mapped concurrently, so the in-flight result is shared (not just the finished one).
+  const known = new Map<string, Promise<string | null>>();
   let invalid = false;
+  const one = (s: string): Promise<string | null> => {
+    const check = checkLogoDataUrl(s);
+    if (!check.ok) return Promise.resolve(null);
+    const bytes = Buffer.from(s.slice(s.indexOf(",") + 1), "base64");
+    const sha256 = createHash("sha256").update(bytes).digest("hex");
+    return attach(tx, store, userId, { bytes, sha256, format: check.format }, newId).then(assetRef);
+  };
   const next = await mapImages(record, async (s) => {
     const ref = REF.exec(s);
     if (ref?.[1]) {
@@ -87,19 +96,14 @@ export async function storeLogos<T>(tx: Tx, store: LogoStore, userId: string, re
       return s;
     }
     if (!DATA_IMAGE.test(s)) return s;
-    const cached = known.get(s);
-    if (cached) return cached;
-    const check = checkLogoDataUrl(s);
-    if (!check.ok) {
-      invalid = true;
-      return s;
+    let pending = known.get(s);
+    if (!pending) {
+      pending = one(s);
+      known.set(s, pending);
     }
-    const bytes = Buffer.from(s.slice(s.indexOf(",") + 1), "base64");
-    const sha256 = createHash("sha256").update(bytes).digest("hex");
-    const id = await attach(tx, store, userId, { bytes, sha256, format: check.format }, newId);
-    const out = assetRef(id);
-    known.set(s, out);
-    return out;
+    const out = await pending;
+    if (!out) invalid = true;
+    return out ?? s;
   });
   return invalid ? null : (next as T);
 }
