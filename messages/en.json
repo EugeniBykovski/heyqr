@@ -439,7 +439,16 @@
     "lead": "Your design is saved to your account so you can download it after payment.",
     "google": "Continue with Google",
     "legal": "By continuing you agree to the Terms and Privacy Policy.",
-    "failed": "Sign-in failed. Please try again."
+    "failed": "Sign-in failed. Please try again.",
+    "canceled": {
+      "draft": "Google sign-in was canceled. Your design is still saved in this browser. Continue with Google to try again.",
+      "plain": "Google sign-in was canceled. Continue with Google to try again."
+    },
+    "incomplete": {
+      "draft": "Google sign-in didn't finish. Your design is still saved in this browser. Continue with Google to try again.",
+      "plain": "Google sign-in didn't finish. Continue with Google to try again."
+    },
+    "backToDesign": "Back to my design"
   },
   "contentTypes": {
     "website": "Website",

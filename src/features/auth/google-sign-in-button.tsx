@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { authClient } from "@/shared/lib/auth-client";
 import { Button } from "@/shared/ui/button";
@@ -26,10 +26,19 @@ function GoogleGlyph() {
   );
 }
 
-/** Google is the only sign-in method. `callbackURL` brings the user back to where they were (e.g. the editor). */
-export function GoogleSignInButton({ callbackURL }: { callbackURL: string }) {
+/**
+ * Google is the only sign-in method. `callbackURL` brings the user back to where they were (e.g. the editor);
+ * `errorCallbackURL` is where a canceled or failed Google sign-in returns (HEY-72: the sign-in page, not Better Auth's).
+ */
+export function GoogleSignInButton({ callbackURL, errorCallbackURL }: { callbackURL: string; errorCallbackURL?: string }) {
   const t = useTranslations("auth");
   const [pending, setPending] = useState(false);
+  // Back from Google restores this page from the back/forward cache with the button still busy: make it usable again.
+  useEffect(() => {
+    const onShow = (e: PageTransitionEvent) => e.persisted && setPending(false);
+    window.addEventListener("pageshow", onShow);
+    return () => window.removeEventListener("pageshow", onShow);
+  }, []);
   return (
     <Button
       size="lg"
@@ -37,7 +46,7 @@ export function GoogleSignInButton({ callbackURL }: { callbackURL: string }) {
       disabled={pending}
       onClick={async () => {
         setPending(true);
-        const { error } = await authClient.signIn.social({ provider: "google", callbackURL });
+        const { error } = await authClient.signIn.social({ provider: "google", callbackURL, errorCallbackURL });
         if (error) {
           setPending(false);
           toast.error(t("failed"));
