@@ -150,7 +150,11 @@ export const purchase = pgTable(
     item: text("item").$type<PurchaseItem>().notNull().default("single_qr"),
     /** Design 7.3 / 7.4 itemized receipt: the lines charged, in this purchase's currency (minor units). */
     lines: jsonb("lines").$type<PurchaseLine[]>(),
-    stripeCheckoutSessionId: text("stripe_checkout_session_id").notNull().unique(),
+    /**
+     * The Checkout Session of the order's current attempt. HEY-88: a Single QR order exists (pending) before Stripe is
+     * called, so it is empty until the first session is attached, and stays retryable if creating one fails.
+     */
+    stripeCheckoutSessionId: text("stripe_checkout_session_id").unique(),
     stripePaymentIntentId: text("stripe_payment_intent_id"),
     amountTotal: integer("amount_total").notNull(),
     currency: text("currency").notNull(),

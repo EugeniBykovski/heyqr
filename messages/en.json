@@ -1196,6 +1196,7 @@
     "sessionEnded": "<b>Your session ended.</b> Sign in again to continue: this layout and your file options are kept.",
     "signInAgain": "Sign in again",
     "alreadyOwned": "Already yours. Download it again any time, no new payment.",
+    "paymentProcessing": "This code’s payment is being confirmed. It unlocks in a moment, with no second charge.",
     "signInCanceled": "Google sign-in was canceled. Your layout and <b>{format}</b> are still selected. Continue with Google to try again.",
     "signInIncomplete": "Google sign-in didn’t finish. Your layout and <b>{format}</b> are still selected. Continue with Google to try again.",
     "confirming": "Confirming your payment…",

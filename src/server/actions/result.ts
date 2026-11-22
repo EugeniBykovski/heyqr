@@ -21,7 +21,9 @@ export type ActionResult<T = undefined> =
         // HEY-85: the layout was saved elsewhere (another tab or device) since this editor opened it.
         | "conflict"
         // HEY-87: already unlocked (or the Print Pack already bought): nothing to pay, download again instead.
-        | "owned";
+        | "owned"
+        // HEY-88: this code's order already has a completed Checkout (payment being confirmed); no second charge.
+        | "processing";
     };
 
 /** Error name and database error code only; no message text, query or parameters. */

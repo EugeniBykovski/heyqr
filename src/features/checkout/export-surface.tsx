@@ -358,7 +358,11 @@ export function ExportSurface(props: ExportSurfaceProps) {
         printPack: ppOn && !ppIncluded,
       }).catch(() => ({ ok: false as const, error: "failed" }));
       if (result.ok) window.location.assign(result.data.url);
-      else if (result.error === "owned") {
+      else if (result.error === "processing") {
+        // HEY-88: this code's checkout was already paid in another tab; no second charge, the unlock follows.
+        toast.info(t("paymentProcessing"), { id: "checkout" });
+        router.refresh();
+      } else if (result.error === "owned") {
         // HEY-87: already unlocked elsewhere (another tab, a plan unlock): the screen turns into Download again.
         toast.success(t("alreadyOwned"), { id: "checkout" });
         router.refresh();
