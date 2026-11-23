@@ -12,6 +12,9 @@ vi.mock("../db", () => ({
   schema: { user: { id: "id" }, webhookEvent: {}, subscription: {} },
 }));
 vi.mock("./catalog", () => ({ planForPrice: () => null }));
+vi.mock("./stripe", () => ({ stripe: () => ({}) }));
+const processRefundEvent = vi.fn();
+vi.mock("./refunds", () => ({ processRefundEvent: (...a: unknown[]) => processRefundEvent(...a) }));
 vi.mock("./allowances", () => ({ dynamicLimit: () => 0 }));
 
 const { handleStripeEvent } = await import("./webhook");
@@ -49,5 +52,39 @@ describe("checkout webhook receipt (HEY-97)", () => {
     processCheckoutEvent.mockRejectedValueOnce(new Error("connection reset"));
     await expect(handleStripeEvent(completed)).rejects.toThrow();
     expect(sendPurchaseReceipt).not.toHaveBeenCalled();
+  });
+
+  it("refund events go to the refund path once; a duplicate reports as such (HEY-100)", async () => {
+    const refund = {
+      id: "evt_r1",
+      type: "refund.updated",
+      data: {
+        object: {
+          id: "re_1",
+          status: "succeeded",
+          amount: 299,
+          currency: "usd",
+          payment_intent: "pi_1",
+          metadata: { heyqr_lines: "printPack" },
+        },
+      },
+    } as unknown as Stripe.Event;
+    processRefundEvent.mockResolvedValueOnce({ duplicate: false, outcome: "applied", lines: ["printPack"], creditsRemoved: 0 });
+    expect(await handleStripeEvent(refund)).toBe(true);
+    expect(processRefundEvent.mock.calls[0]?.[1]).toEqual({
+      id: "evt_r1",
+      type: "refund.updated",
+      refund: {
+        id: "re_1",
+        status: "succeeded",
+        amount: 299,
+        currency: "usd",
+        payment_intent: "pi_1",
+        metadata: { heyqr_lines: "printPack" },
+      },
+    });
+    processRefundEvent.mockResolvedValueOnce({ duplicate: true });
+    expect(await handleStripeEvent(refund)).toBe(false);
+    expect(processCheckoutEvent).not.toHaveBeenCalled();
   });
 });

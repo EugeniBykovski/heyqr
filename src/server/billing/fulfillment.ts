@@ -1,8 +1,9 @@
-import { and, eq, ne, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import type Stripe from "stripe";
 import * as schema from "../db/schema";
 import { grantPackCredits } from "./allowances";
+import { refundedOffers } from "./refunds";
 
 type Db = NodePgDatabase<typeof schema>;
 /** The database, or a transaction of it (fulfilment runs inside processCheckoutEvent's transaction). */
@@ -151,23 +152,21 @@ export async function fulfillCheckout(db: Db | Tx, s: PaidSession, newShortCode:
   if (!row.qrCodeId) return { granted: false };
   // The order's own code of the order's own account.
   const orderCode = and(eq(schema.qrCode.id, row.qrCodeId), eq(schema.qrCode.userId, row.userId));
-  if (row.item === "print_pack") {
-    // Design 8.x: the Print Pack of an already unlocked code; the code itself doesn't change.
+  // HEY-100: a line refunded before this payment event arrived is not granted (the order stays paid for the rest).
+  const refunded = await refundedOffers(db, row.id);
+  const base = (row.item === "single_qr" || row.item === "single_qr_print_pack") && !refunded.has("single");
+  const withPrintPack = (row.item === "print_pack" || row.item === "single_qr_print_pack") && !refunded.has("printPack");
+  // Single QR (design 7.3), its Print Pack when it was on the order, or a standalone Print Pack (design 8.x) on an
+  // unlocked code. Each keeps an earlier time; a standalone Print Pack never changes the code's unlock.
+  if (base || withPrintPack)
     await db
       .update(schema.qrCode)
-      .set({ printPackAt: sql`coalesce(${schema.qrCode.printPackAt}, now())` })
+      .set({
+        ...(base ? { purchasedAt: sql`coalesce(${schema.qrCode.purchasedAt}, now())`, status: "active" as const } : {}),
+        ...(withPrintPack ? { printPackAt: sql`coalesce(${schema.qrCode.printPackAt}, now())` } : {}),
+      })
       .where(orderCode);
-    return { granted: true };
-  }
-  // Single QR, with its Print Pack when it was on the order (design 7.3). An earlier unlock keeps its time.
-  await db
-    .update(schema.qrCode)
-    .set({
-      purchasedAt: sql`coalesce(${schema.qrCode.purchasedAt}, now())`,
-      status: "active",
-      ...(row.item === "single_qr_print_pack" ? { printPackAt: sql`coalesce(${schema.qrCode.printPackAt}, now())` } : {}),
-    })
-    .where(orderCode);
+  if (!base) return { granted: true };
   // The receipt goes out after the transaction commits (processCheckoutEvent's caller): an email failure never undoes a
   // purchase, and a rolled-back one never sends a receipt.
   return { granted: true, receipt: { userId: row.userId, qrCodeId: row.qrCodeId, amountTotal: row.amountTotal, currency: row.currency } };

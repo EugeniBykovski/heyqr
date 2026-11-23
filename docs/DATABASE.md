@@ -170,3 +170,31 @@ file to private storage. No logo was ever stored behind a public URL (the old pr
 are no public objects to migrate. To check a hosted environment before retiring any public access: open a saved layout
 with a logo, confirm its `qr_layout.design` holds `asset:<id>` and no `data:image`, that the editor, thumbnail and an
 export show the logo, and that an anonymous request to the object's key is refused.
+
+## Refunds and credits (HEY-100)
+
+A confirmed Stripe refund (`refund.created` / `refund.updated` with status `succeeded`) is applied once, in the same transaction as its webhook event (HEY-97). Each refund is stored in `refund` by its Stripe id, with the order lines it refunded and its outcome.
+
+**Resolving the order.** A refund is matched by its PaymentIntent to the paid order (`purchase.stripe_payment_intent_id`). If the payment event hasn't been processed yet, the order is found through Stripe's Checkout Session for that PaymentIntent, and the amount Stripe received.
+
+**Line allocation.** Refunds work on whole order lines, using the purchase-time lines (`purchase.lines`). Each line's paid share is the paid total split in proportion to the line amounts, with the last line taking the rounding.
+
+- **Full refund of what's left:** a refund equal to the paid share of every line not yet refunded refunds those lines. A Stripe Dashboard full refund works this way.
+- **Explicit partial refund:** refunding one line of a combined order needs metadata `heyqr_lines` on the refund, for example `printPack` or `single`, issued through the API. Its amount must equal those lines' paid share.
+- **Recorded for review:** anything else is stored with `outcome = 'review'` and a `reason`, and changes nothing. That includes a partial refund without an allocation, even when it equals the Print Pack's price, an amount that doesn't match the named lines, an unknown or already refunded line, another currency, or an unknown payment. Find these with `select * from refund where outcome = 'review'`.
+
+**What a refunded line revokes.** A grant is revoked only when no other paid, unrefunded purchase, credit or plan allowance grants it too.
+
+| Line               | Effect                                                                                                                                                                               |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `single`           | The code's base export (`qr_code.purchased_at`) is cleared and the code goes back to draft.                                                                                          |
+| `printPack`        | `qr_code.print_pack_at` is cleared; the base export stays. Print files also need the base export (`canDownloadPrintPack`), so a code whose base was refunded loses print access too. |
+| `pack3` / `pack10` | The pack's unused credits are removed with a `refund` ledger row. Codes already unlocked with its credits stay unlocked.                                                             |
+
+**Order status.** An order with every line refunded becomes `refunded`, and a later payment event can't grant it (`order_closed`). An order with only some lines refunded stays `paid`. A payment event that arrives after a partial refund grants only the lines that weren't refunded. Refunding the same line twice is recorded for review.
+
+**Credit attribution.** Credits are spent first in, first out: each unlock debit (−1) takes from the oldest pack that still has credits, in ledger order (`created_at`, then `id`), and a refund removal takes from its own pack. A pack's unused credits are its grant minus what was spent from it and anything already removed. Ledger rows from before this change are attributed the same way. Unlock debits never named a pack, so no backfill is needed.
+
+**Consistency.** Refunds lock the order and then the account; credit redemption locks the account. So a refund and the redemption of the pack's last credit are serialized, and exactly one of them gets that credit. The balance never goes below zero.
+
+**Paid files.** Export (`/api/export/[layoutId]`), Download all (`/api/export/all/[qrId]`) and the print files (`/api/print/files/[layoutId]`) check the entitlement on every request and stream the file directly. None of them issue signed links. The only signed links are the owner-only logo links (`/api/qr/…/logo/…`, HEY-84), which check ownership, not payment.
