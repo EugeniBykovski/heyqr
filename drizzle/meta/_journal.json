@@ -64,6 +64,13 @@
       "when": 1795426858320,
       "tag": "0008_refunds",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1795447783841,
+      "tag": "0009_short_code_permanent",
+      "breakpoints": true
     }
   ]
 }

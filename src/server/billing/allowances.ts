@@ -3,6 +3,7 @@ import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { PACK_CREDITS, PLANS, type PlanId } from "../../shared/config/catalog-core";
 import { newId } from "../db/ids";
 import * as schema from "../db/schema";
+import { assignShortCode } from "../qr/short-code";
 
 /*
  * Design 4.8 allowances: what an account can unlock without paying again.
@@ -179,8 +180,9 @@ export async function activateDynamicCode(
     const usage = await accountUsage(tx as unknown as Db, userId);
     if (!usage.plan) return { ok: false, error: "no_plan" };
     if (usage.dynamic.used >= usage.dynamic.limit) return { ok: false, error: "limit" };
-    const shortCode = qr.shortCode ?? newShortCode();
-    await tx.update(schema.qrCode).set({ shortCode, status: "active", isTrial: false }).where(eq(schema.qrCode.id, qrCodeId));
+    // HEY-117: assigned once, from NULL; a code that had a short link keeps it.
+    const shortCode = await assignShortCode(tx, qrCodeId, newShortCode);
+    await tx.update(schema.qrCode).set({ status: "active", isTrial: false }).where(eq(schema.qrCode.id, qrCodeId));
     return { ok: true, shortCode };
   });
 }

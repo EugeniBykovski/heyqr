@@ -150,6 +150,22 @@ Fixtures are never loaded into production.
 | `must be owner of …` during `pnpm test:db`                              | The test database must be owned by the role in `TEST_DATABASE_URL`: `alter database heyqr_test owner to heyqr;`.               |
 | `pnpm db:migrate` waits forever                                         | Another run holds the migration lock: let it finish, or check `select * from pg_locks where locktype = 'advisory';`.           |
 
+## Short links (HEY-117)
+
+A Dynamic code's short link is `qr_code.short_code` (unique), shown as `NEXT_PUBLIC_SHORT_LINK_BASE/<slug>` and served
+by `/r/[code]`. The printed code holds that URL, so a slug is permanent once issued.
+
+- **Assigned once, from NULL.** All three paths use `assignShortCode` (`server/qr/short-code.ts`) inside their own
+  transaction: trial activation, activation under a plan, and subscription Checkout fulfilment. The write is
+  conditional on `short_code IS NULL`. Concurrent first activations of one code, through any of the paths, all end with
+  the slug that was stored first.
+- **Collisions.** A candidate already held by another code fails the unique constraint inside a savepoint, and another
+  candidate is tried, at most `SHORT_CODE_ATTEMPTS` (5) times. After that the operation fails and its transaction rolls
+  back. For a webhook that includes the event claim, so Stripe's retry is processed again.
+- **Never changed.** Saves, destination changes, pausing and reactivation keep the slug. The trigger
+  `qr_code_short_code_permanent` (migration 0009) refuses any update that changes or clears an issued slug
+  (SQLSTATE 23000).
+
 ## Uploaded logos (HEY-83)
 
 Uploaded logos live in the private storage bucket (`S3_*`, Cloudflare R2 in hosted environments), one bucket per

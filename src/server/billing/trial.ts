@@ -1,6 +1,7 @@
 import { and, eq, isNull, ne } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "../db/schema";
+import { assignShortCode } from "../qr/short-code";
 
 /*
  * Design 9.x "Starter trial" (Handoff · Commerce §1): 7 days, no card and no automatic charge, one test Dynamic QR with a
@@ -95,8 +96,9 @@ export async function activateTrialCode(
         ),
       );
     if (other) return { ok: false, error: "slot_taken" } as const;
-    const shortCode = qr.shortCode ?? newShortCode();
-    await tx.update(schema.qrCode).set({ shortCode, status: "active", isTrial: true }).where(eq(schema.qrCode.id, qr.id));
+    // HEY-117: assigned once, from NULL; a code that had a short link keeps it.
+    const shortCode = await assignShortCode(tx, qr.id, newShortCode);
+    await tx.update(schema.qrCode).set({ status: "active", isTrial: true }).where(eq(schema.qrCode.id, qr.id));
     return { ok: true, shortCode } as const;
   });
 }

@@ -16,6 +16,7 @@ import { fulfillCheckout, processCheckoutEvent } from "../billing/fulfillment";
 import { processRefundEvent, unusedPackCredits, type PaymentLookup } from "../billing/refunds";
 import { awaitingFulfillment, singleQrCheckout, type CheckoutPort, type SessionLookup } from "../billing/single-order";
 import { renameQrCode } from "../qr/rename-qr";
+import { assignShortCode, SHORT_CODE_ATTEMPTS, ShortCodeExhaustedError } from "../qr/short-code";
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, copyLayout, layoutRevision, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
 import { activateTrialCode, startTrial, trialCode } from "../billing/trial";
@@ -2672,5 +2673,181 @@ describe.skipIf(!url)("refund entitlements (HEY-100, real PostgreSQL)", () => {
       expect([unlocked && unlock.ok && removed === 0, !unlocked && !unlock.ok && removed === 1].filter(Boolean)).toHaveLength(1);
       expect(await creditBalance(db, owner.id)).toBe(0);
     }
+  });
+});
+
+/* HEY-117 / QR-16.02: a code's short link is assigned once, atomically, and never changes afterwards. */
+describe.skipIf(!url)("permanent short links (HEY-117, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "slug-owner", name: "Owner", email: "owner@slug.test" };
+  const card = { ...DEFAULT_DESIGN, preset: "caption" as const, caption: "Menu" };
+  const layouts = [{ name: "Card", layout: designToLayout(card), editor: designSettingsOf(card) }];
+  const first = "https://menu.example.test/first";
+  const make = async (name: string) => {
+    const saved = await saveQrWithLayouts(db, owner.id, {
+      name,
+      model: "dynamic",
+      content: { type: "website", url: first },
+      destination: first,
+      layouts,
+    });
+    if (!saved.ok) throw new Error("save failed");
+    return saved.data.qrCodeId;
+  };
+  const qr = (id: string) => db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, id) });
+  const sequence = (...values: string[]) => {
+    const calls: string[] = [];
+    const next = () => {
+      const v = values[calls.length] ?? `${values[values.length - 1]}${calls.length}`;
+      calls.push(v);
+      return v;
+    };
+    return Object.assign(next, { calls });
+  };
+  const subscriptionEvent = (id: string, qrCodeId: string) => ({
+    id,
+    type: "checkout.session.completed",
+    session: {
+      id: `cs_${id}`,
+      mode: "subscription",
+      status: "complete",
+      payment_status: "paid",
+      payment_intent: null,
+      amount_subtotal: 900,
+      amount_total: 900,
+      total_details: null,
+      currency: "usd",
+      metadata: { userId: owner.id, qrCodeId },
+    } as unknown as Parameters<typeof processCheckoutEvent>[1]["session"],
+  });
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 8 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+    // A plan for activation under a plan, and a running trial for the trial path, on the same account.
+    await db.insert(schema.subscription).values({
+      id: "slug-sub",
+      userId: owner.id,
+      stripeSubscriptionId: "sub_slug_test",
+      stripePriceId: "price_x",
+      status: "active",
+      plan: "studio",
+      activeCodeLimit: 25,
+      currentPeriodStart: new Date(),
+    });
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("a forced collision retries with a fresh slug; the code that holds it keeps it", async () => {
+    const holder = await make("Holder");
+    expect(await activateDynamicCode(db, owner.id, holder, () => "taken01")).toEqual({ ok: true, shortCode: "taken01" });
+    const next = await make("Next");
+    const gen = sequence("taken01", "taken01", "fresh01");
+    expect(await activateDynamicCode(db, owner.id, next, gen)).toEqual({ ok: true, shortCode: "fresh01" });
+    expect(gen.calls).toEqual(["taken01", "taken01", "fresh01"]);
+    expect([(await qr(holder))?.shortCode, (await qr(next))?.shortCode, (await qr(next))?.status]).toEqual([
+      "taken01",
+      "fresh01",
+      "active",
+    ]);
+  });
+
+  it("gives up after a bounded number of attempts; the activation rolls back", async () => {
+    const stuck = await make("Stuck");
+    const gen = sequence("taken01");
+    await expect(activateDynamicCode(db, owner.id, stuck, () => gen() && "taken01")).rejects.toBeInstanceOf(ShortCodeExhaustedError);
+    expect(gen.calls).toHaveLength(SHORT_CODE_ATTEMPTS);
+    const row = await qr(stuck);
+    expect([row?.shortCode, row?.status]).toEqual([null, "draft"]);
+    // The subscription webhook rolls back the same way (event included), so Stripe's retry is processed again.
+    const event = subscriptionEvent("evt_slug_stuck", stuck);
+    await expect(processCheckoutEvent(db, event, () => "taken01")).rejects.toBeInstanceOf(ShortCodeExhaustedError);
+    expect(await db.query.webhookEvent.findFirst({ where: (w, { eq }) => eq(w.id, event.id) })).toBeUndefined();
+    expect(await processCheckoutEvent(db, event, () => "stuck01")).toEqual({ duplicate: false, result: { granted: true } });
+    expect((await qr(stuck))?.shortCode).toBe("stuck01");
+  });
+
+  it("first-time activation through trial, plan and subscription Checkout at once converges on one slug", async () => {
+    await db.update(schema.user).set({ trialStartedAt: null, trialEndsAt: null }).where(eq(schema.user.id, owner.id));
+    expect((await startTrial(db, owner.id, false)).ok).toBe(true);
+    for (let round = 0; round < 6; round++) {
+      // The trial has one test-code slot; free it for each round.
+      await db
+        .update(schema.qrCode)
+        .set({ deletedAt: new Date() })
+        .where(and(eq(schema.qrCode.userId, owner.id), eq(schema.qrCode.isTrial, true)));
+      const id = await make(`Race ${round}`);
+      const [trial, plan, webhook, again] = await Promise.all([
+        activateTrialCode(db, owner.id, id, () => `trl${round}aaa`),
+        activateDynamicCode(db, owner.id, id, () => `pln${round}bbb`),
+        processCheckoutEvent(db, subscriptionEvent(`evt_slug_race_${round}`, id), () => `sub${round}ccc`),
+        activateDynamicCode(db, owner.id, id, () => `pln${round}ddd`),
+      ]);
+      const stored = (await qr(id))?.shortCode;
+      expect(stored).toMatch(new RegExp(`^(trl${round}aaa|pln${round}bbb|sub${round}ccc|pln${round}ddd)$`));
+      for (const r of [trial, plan, again]) expect(r).toEqual({ ok: true, shortCode: stored });
+      expect(webhook).toEqual({ duplicate: false, result: { granted: true } });
+      expect((await qr(id))?.status).toBe("active");
+    }
+    await db.update(schema.user).set({ trialStartedAt: null, trialEndsAt: null }).where(eq(schema.user.id, owner.id));
+  });
+
+  it("concurrent assignments for one code all return the slug that was stored", async () => {
+    const id = await make("Same path");
+    const results = await Promise.all(Array.from({ length: 6 }, (_, i) => assignShortCode(db, id, () => `same0${i}x`)));
+    const stored = (await qr(id))?.shortCode;
+    expect(new Set(results)).toEqual(new Set([stored]));
+  });
+
+  it("keeps the issued slug across saves, destination changes and reactivation", async () => {
+    const id = await make("Keeps");
+    expect(await activateDynamicCode(db, owner.id, id, () => "keep001")).toEqual({ ok: true, shortCode: "keep001" });
+    // A save from the editor with a new destination.
+    const saved = await saveQrWithLayouts(db, owner.id, {
+      qrCodeId: id,
+      name: "Keeps (renamed)",
+      model: "dynamic",
+      content: { type: "website", url: first },
+      destination: "https://menu.example.test/second",
+      layouts,
+    });
+    expect(saved.ok).toBe(true);
+    // The destination editor (updateDestination) writes destination and previousDestination only.
+    await db
+      .update(schema.qrCode)
+      .set({ destination: "https://menu.example.test/third", previousDestination: "https://menu.example.test/second" })
+      .where(eq(schema.qrCode.id, id));
+    // Paused, then activated again under the plan, then the plan Checkout delivered for it.
+    await db.update(schema.qrCode).set({ status: "paused" }).where(eq(schema.qrCode.id, id));
+    expect(await activateDynamicCode(db, owner.id, id, () => "other01")).toEqual({ ok: true, shortCode: "keep001" });
+    expect(await processCheckoutEvent(db, subscriptionEvent("evt_slug_keep", id), () => "other02")).toMatchObject({ duplicate: false });
+    const row = await qr(id);
+    expect([row?.shortCode, row?.destination, row?.status]).toEqual(["keep001", "https://menu.example.test/third", "active"]);
+  });
+
+  it("the database refuses changing or clearing an issued slug; the first assignment from NULL is allowed", async () => {
+    const id = await make("Guarded");
+    await db.update(schema.qrCode).set({ shortCode: "guard01" }).where(eq(schema.qrCode.id, id));
+    const refused = async (shortCode: string | null) => {
+      const error = await db
+        .update(schema.qrCode)
+        .set({ shortCode })
+        .where(eq(schema.qrCode.id, id))
+        .then(
+          () => null,
+          (e: unknown) => e,
+        );
+      return (error as { cause?: { code?: string } } | null)?.cause?.code;
+    };
+    expect(await refused("guard02")).toBe("23000");
+    expect(await refused(null)).toBe("23000");
+    // Writing the same value, and updates that don't touch the slug, still work.
+    await db.update(schema.qrCode).set({ shortCode: "guard01", name: "Guarded 2" }).where(eq(schema.qrCode.id, id));
+    expect((await qr(id))?.shortCode).toBe("guard01");
   });
 });
