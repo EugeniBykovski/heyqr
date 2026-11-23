@@ -1,5 +1,5 @@
 import { parseWebsiteUrl, type WebsiteUrlProblem } from "@heyqr/qr-core";
-import { and, eq, isNull, sql } from "drizzle-orm";
+import { and, desc, eq, isNull, sql } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "../db/schema";
 
@@ -25,7 +25,8 @@ export type DestinationState = { destination: string; previousDestination: strin
 /**
  * Design 4.4–4.6 Change destination, for the owner's Dynamic code only. Only the destination, the previous one and the
  * change time change (HEY-123: the time is the database's, set in the same write); the short link (HEY-117) and
- * everything else stay. A refused address, or the address already stored, writes nothing and keeps the previous URL
+ * everything else stay. HEY-125: the change is also recorded in destination_change, in the same transaction and under
+ * the same row lock, with the same time, so the published destination, its last change and the history never diverge. A refused address, or the address already stored, writes nothing and keeps the previous URL
  * and time. Returns what is stored. Plain module (no "server-only") so the PostgreSQL tests exercise the same path as
  * the action.
  */
@@ -61,6 +62,40 @@ export async function changeDestination(
       .where(eq(schema.qrCode.id, qrCodeId))
       .returning(columns);
     if (!saved) return { ok: false, error: "not_found" } as const;
+    // now() is the transaction's start time: the entry's time equals destination_changed_at.
+    await tx.insert(schema.destinationChange).values({ qrCodeId, previousUrl: qr.destination, newUrl: parsed.url, changedAt: sql`now()` });
     return { ok: true, data: state(saved) } as const;
   });
+}
+
+/** HEY-125: one recorded destination change, as QR details shows it. */
+export type DestinationChangeEntry = { id: number; previousUrl: string | null; newUrl: string; changedAt: string };
+
+/** How many changes QR details lists (most recent first). */
+export const DESTINATION_HISTORY_LIMIT = 50;
+
+/**
+ * HEY-125: the owner's Dynamic code's recorded destination changes, most recent first (ties by insertion order). Another
+ * account, or a deleted code, gets an empty list. Changes from before the history existed aren't invented: only those
+ * recorded since are listed.
+ */
+export async function destinationHistory(
+  db: NodePgDatabase<typeof schema>,
+  userId: string,
+  qrCodeId: string,
+  limit: number = DESTINATION_HISTORY_LIMIT,
+): Promise<DestinationChangeEntry[]> {
+  const rows = await db
+    .select({
+      id: schema.destinationChange.id,
+      previousUrl: schema.destinationChange.previousUrl,
+      newUrl: schema.destinationChange.newUrl,
+      changedAt: schema.destinationChange.changedAt,
+    })
+    .from(schema.destinationChange)
+    .innerJoin(schema.qrCode, eq(schema.qrCode.id, schema.destinationChange.qrCodeId))
+    .where(and(eq(schema.destinationChange.qrCodeId, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)))
+    .orderBy(desc(schema.destinationChange.changedAt), desc(schema.destinationChange.id))
+    .limit(limit);
+  return rows.map((r) => ({ ...r, changedAt: r.changedAt.toISOString() }));
 }
