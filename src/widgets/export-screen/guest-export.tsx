@@ -4,6 +4,7 @@ import { encodePayload } from "@heyqr/qr-core";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { env } from "@/env";
+import { previewShortLink } from "@/shared/lib/short-link";
 import { contentDisplayName, designToLayout, type EditorDesign } from "@/entities/qr";
 import { GoogleSignInButton, type SignInError } from "@/features/auth";
 import { ExportSurface, settingsQuery, type ExportFormat } from "@/features/checkout";
@@ -60,7 +61,7 @@ export function GuestExport({
     );
 
   const layout = designToLayout(draft);
-  const value = draft.model === "dynamic" ? `${env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "")}/preview` : encodePayload(draft.content);
+  const value = draft.model === "dynamic" ? previewShortLink(env.NEXT_PUBLIC_SHORT_LINK_BASE) : encodePayload(draft.content);
   const name = draft.name.trim() || contentDisplayName(draft.content) || tEditor("namePlaceholder");
   return (
     <ExportSurface
@@ -71,6 +72,7 @@ export function GuestExport({
       layout={layout}
       value={value}
       model={draft.model}
+      shortLinkPreview={draft.model === "dynamic"}
       typeLabel={tTypes(draft.content.type)}
       layoutName={tEditor(`presets.${draft.preset}`)}
       backHref="/create?step=design"

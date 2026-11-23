@@ -9,6 +9,7 @@ import { Tabs as TabsPrimitive } from "radix-ui";
 import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { env } from "@/env";
+import { previewShortLink } from "@/shared/lib/short-link";
 import {
   composeShared,
   contentDisplayName,
@@ -45,7 +46,6 @@ function isUntouchedDesign(d: EditorDesign): boolean {
 }
 
 /** Placeholder encoded in dynamic previews: the real short code is assigned when the plan starts. */
-const DYNAMIC_PREVIEW_CODE = "preview";
 export const EDITOR_STEPS = ["type", "content", "design"] as const;
 export type EditorStep = (typeof EDITOR_STEPS)[number];
 const isStep = (v: string | null): v is EditorStep => EDITOR_STEPS.includes(v as EditorStep);
@@ -83,10 +83,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
   // What the printed code actually holds: the short link for dynamic codes, the serialized content (escaping,
   // vCard folding, UTF-8) for static ones. Capacity is checked on exactly this value with this layout's ECL (HEY-24).
   const encoded = useMemo(
-    () =>
-      design.model === "dynamic"
-        ? `${env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "")}/${DYNAMIC_PREVIEW_CODE}`
-        : encodePayload(design.content),
+    () => (design.model === "dynamic" ? previewShortLink(env.NEXT_PUBLIC_SHORT_LINK_BASE) : encodePayload(design.content)),
     [design.model, design.content],
   );
   const capacity = useMemo(() => layoutCapacity(layout, encoded), [layout, encoded]);

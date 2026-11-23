@@ -88,6 +88,8 @@ export type ExportSurfaceProps = {
   layout: Layout;
   value: string;
   model: "static" | "dynamic";
+  /** HEY-118: a Dynamic code before activation. The art shows the preview short link, marked as a preview. */
+  shortLinkPreview?: boolean;
   typeLabel: string;
   layoutName: string;
   /** Other named layouts of this code (design 3.11), each linking to its own export screen. */
@@ -602,6 +604,14 @@ export function ExportSurface(props: ExportSurfaceProps) {
             <div className="relative">
               <StageCanvas height="clamp(16rem, 52vw, 34rem)">
                 <QrPreview layout={layout} value={value} label={props.heading} transparent={settings.transparent} className="size-full" />
+                {props.shortLinkPreview ? (
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 grid -rotate-30 place-items-center text-h1 font-bold tracking-[0.3em] text-foreground/7 uppercase"
+                  >
+                    {t("shortLinkPreview.mark")}
+                  </span>
+                ) : null}
               </StageCanvas>
               {file.kind === "preparing" || confirming ? (
                 <span
@@ -625,6 +635,11 @@ export function ExportSurface(props: ExportSurfaceProps) {
               <Badge variant={scan.ok ? "success" : "warning"}>{scan.ok ? t("scanOk") : t("scanFail")}</Badge>
             </StageFoot>
           </Stage>
+          {props.shortLinkPreview ? (
+            <p data-slot="short-link-preview" className="mt-3 text-caption text-secondary-foreground">
+              {t("shortLinkPreview.note")}
+            </p>
+          ) : null}
         </section>
 
         <aside

@@ -16,7 +16,7 @@ import { loadPrint } from "@/server/print/load";
 import { DEFAULT_PRINT_SETTINGS, pickLayoutForEdit, printSettingsQuery } from "@/entities/qr";
 import { trialCode } from "@/server/billing/trial";
 import { db } from "@/server/db";
-import { encodedValue } from "@/server/qr/export";
+import { encodedValue, isShortLinkPreview } from "@/server/qr/export";
 import { getQrCode, paidPurchase } from "@/server/qr/repository";
 import { GuestExport } from "@/widgets/export-screen";
 import { redirect } from "@/i18n/navigation";
@@ -194,6 +194,7 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
       layout={layout.design.layout}
       value={value}
       model={qr.model}
+      shortLinkPreview={isShortLinkPreview(qr)}
       typeLabel={tTypes(qr.content.type)}
       layoutName={layout.name}
       layouts={qr.layouts.map((l) => ({ id: l.id, name: l.name, href: hrefFor(l.id), active: l.id === layout.id }))}

@@ -17,6 +17,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { rasterizeSvg } from "@heyqr/qr-core/raster";
 import { env } from "@/env";
+import { PREVIEW_SLUG, shortLinkUrl } from "@/shared/lib/short-link";
 
 export type ExportFormat = "png" | "svg";
 
@@ -78,10 +79,19 @@ export function downloadFileName(name: string, ext: string): { name: string; hea
   return { name: file, header: `attachment; filename="${ascii}.${ext}"; filename*=UTF-8''${encodeURIComponent(file)}` };
 }
 
+/**
+ * What the code holds. Static: its serialized content. Dynamic: its issued short link, never the destination itself.
+ * HEY-118: a Dynamic draft without a slug shows the same preview link as Create (isShortLinkPreview); its files can't
+ * be downloaded until activation issues the slug (canDownload).
+ */
 export function encodedValue(qr: { model: "static" | "dynamic"; content: QrContent; shortCode: string | null }) {
-  if (qr.model === "dynamic" && qr.shortCode) return `${env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "")}/${qr.shortCode}`;
+  if (qr.model === "dynamic") return shortLinkUrl(env.NEXT_PUBLIC_SHORT_LINK_BASE, qr.shortCode ?? PREVIEW_SLUG);
   return encodePayload(qr.content);
 }
+
+/** HEY-118: a Dynamic code shown before activation encodes the preview link, not a link a scan can follow. */
+export const isShortLinkPreview = (qr: { model: "static" | "dynamic"; shortCode: string | null }) =>
+  qr.model === "dynamic" && !qr.shortCode;
 
 /** PNG width for a layout: physical layouts at a DPI (default 300), screen layouts at a scale (default 2×). */
 export function pngWidth(layout: Layout, _width: number, opts: PngResolution) {
