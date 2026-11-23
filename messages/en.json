@@ -1167,6 +1167,10 @@
   },
   "export": {
     "title": "Download your code",
+    "shortLinkPreview": {
+      "mark": "Preview",
+      "note": "Preview with a sample short link. Your permanent short link is created when you activate this code, and every file you download contains it."
+    },
     "format": "Format",
     "png": "PNG",
     "pngHint": "Image up to 8K for web and documents.",

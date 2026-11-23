@@ -233,3 +233,20 @@ describe("guest export (design 3.1)", () => {
     expect(screen.getByRole("button", { name: "Continue with Google png 4 true" })).toBeTruthy();
   });
 });
+
+/* HEY-118: before activation a Dynamic code's art is the preview short link, marked as a preview. */
+describe("Dynamic short link preview (HEY-118)", () => {
+  it("marks the art as a preview and says the files carry the permanent short link", () => {
+    signed({ model: "dynamic", entitled: false, shortLinkPreview: true, value: "http://localhost:3000/r/preview" });
+    expect(screen.getByText(/Preview with a sample short link/)).toBeTruthy();
+    expect(document.querySelector('[data-slot="stage-canvas"]')?.textContent).toContain("Preview");
+  });
+
+  it("an activated Dynamic code and a Static code show no preview mark", () => {
+    signed({ model: "dynamic", value: "http://localhost:3000/r/NpuL2yb" });
+    expect(screen.queryByText(/Preview with a sample short link/)).toBeNull();
+    cleanup();
+    signed();
+    expect(document.querySelector('[data-slot="short-link-preview"]')).toBeNull();
+  });
+});
