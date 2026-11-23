@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { TypeLink } from "@/features/qr-editor";
 import { Link } from "@/i18n/navigation";
+import { supportEmail } from "@/server/support";
 import { Logo } from "@/shared/ui/logo";
 
 const FOOTER_TYPES = ["website", "wifi", "contact", "event"] as const;
@@ -10,6 +11,7 @@ const linkClass =
 /** Design "foot2": brand + Product / Make a code for / Company columns, then a hairline row with © and the small print. */
 export async function HomeFooter() {
   const [t, tNav] = await Promise.all([getTranslations("footer"), getTranslations("nav")]);
+  const support = supportEmail();
   return (
     <footer className="mt-6 flex flex-col gap-7 border-t border-border pt-12 pb-7">
       <div className="grid grid-cols-2 gap-x-6 gap-y-7 md:grid-cols-[1.6fr_repeat(3,minmax(0,1fr))]">
@@ -43,6 +45,12 @@ export async function HomeFooter() {
           <Link href="/terms" className={linkClass}>
             {t("terms")}
           </Link>
+          {/* HEY-109: the confirmed support contact, the same one Pricing and Export show; none until configured. */}
+          {support ? (
+            <a href={`mailto:${support}`} className={linkClass}>
+              {t("support")}
+            </a>
+          ) : null}
         </nav>
       </div>
       <div className="flex flex-wrap justify-between gap-x-5 gap-y-2 border-t border-border pt-5 text-caption text-muted-foreground">

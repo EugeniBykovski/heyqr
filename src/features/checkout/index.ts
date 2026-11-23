@@ -11,4 +11,5 @@ export {
 } from "./export-surface";
 export { ActivatePlanButton, StartTrialButton, UseTrialButton } from "./trial-actions";
 export { CurrencySelect } from "./currency-select";
+export { PaymentInfo } from "./payment-info";
 export { PackPicker, PlanCheckoutButton, type PackOption } from "./offer-actions";

@@ -21,6 +21,7 @@ import { useEffect, useRef, useState, useTransition, type ReactNode } from "reac
 import { toast } from "sonner";
 import { QrPreview } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
+import { PaymentInfo } from "./payment-info";
 import { activateDynamic, makeStatic, takeIncludedPrintPack, unlockWithAllowance } from "@/server/actions/billing";
 import { startCheckout, startPrintPackCheckout } from "@/server/actions/qr";
 import { cn } from "@/shared/lib/utils";
@@ -92,6 +93,8 @@ export type ExportSurfaceProps = {
   /** Other named layouts of this code (design 3.11), each linking to its own export screen. */
   layouts?: { id: string; name: string; href: string; active: boolean }[];
   backHref: string;
+  /** HEY-109: the confirmed support contact for the payment explanation; null until configured. */
+  support?: string | null;
   initial: { format?: ExportFormat; resolution?: number; transparent?: boolean; printPack?: boolean };
   price: { cents: number; currency: Currency };
   /** Banners from the URL: back from Google sign-in, back from checkout. */
@@ -961,6 +964,10 @@ export function ExportSurface(props: ExportSurfaceProps) {
 
           {action}
           <p className="text-center text-caption text-muted-foreground">{props.mode === "guest" ? t("guestNote") : t("secure")}</p>
+          {/* HEY-109: shown where the next step is a Single QR payment on Stripe (as a guest, or the Pay path). */}
+          {props.model === "static" && !entitled && !confirming && (props.mode === "guest" || offer?.path === "buy") ? (
+            <PaymentInfo compact price={amount} support={props.support ?? null} className="rounded-lg bg-subtle p-3.5" />
+          ) : null}
         </aside>
       </div>
     </main>

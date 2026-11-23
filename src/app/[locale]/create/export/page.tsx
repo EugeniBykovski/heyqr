@@ -10,6 +10,7 @@ import { getSession } from "@/server/auth";
 import { getCurrency } from "@/server/currency";
 import { canDownload, forSale, printPackForSale, userTrial } from "@/server/billing/entitlements";
 import { pendingPaidCheckout } from "@/server/billing/checkout";
+import { supportEmail } from "@/server/support";
 import { accountUsage } from "@/server/billing/allowances";
 import { loadPrint } from "@/server/print/load";
 import { DEFAULT_PRINT_SETTINGS, pickLayoutForEdit, printSettingsQuery } from "@/entities/qr";
@@ -56,7 +57,7 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
       const keep = new URLSearchParams(Object.entries(query).flatMap(([k, v]) => (typeof v === "string" ? [[k, v]] : []))).toString();
       return redirect({ href: `/sign-in?next=${encodeURIComponent(`/create/export?${keep}`)}`, locale });
     }
-    return <GuestExport initial={initial} signInNotice={signInError(query.error) ?? undefined} />;
+    return <GuestExport initial={initial} signInNotice={signInError(query.error) ?? undefined} support={supportEmail()} />;
   }
 
   const qrId = one(query.qr);
@@ -197,6 +198,7 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
       layoutName={layout.name}
       layouts={qr.layouts.map((l) => ({ id: l.id, name: l.name, href: hrefFor(l.id), active: l.id === layout.id }))}
       backHref={`/edit/${qr.id}?layout=${layout.id}`}
+      support={supportEmail()}
       initial={initial}
       price={{ cents: priceSheet(currency)[qr.model === "dynamic" ? "starter" : "single"] ?? 0, currency }}
       print={

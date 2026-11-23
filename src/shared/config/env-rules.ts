@@ -54,6 +54,8 @@ export function environmentProblems(appEnv: AppEnv, v: Values): EnvProblem[] {
   }
 
   if (appEnv === "production") {
+    // HEY-109: buyers are told where to get help before they pay; a release without a confirmed contact isn't ready.
+    if (!present(v.SUPPORT_EMAIL)) add("SUPPORT_EMAIL", "required in production (the support contact shown before payment)");
     for (const k of ["NEXT_PUBLIC_APP_URL", "NEXT_PUBLIC_SHORT_LINK_BASE", "BETTER_AUTH_URL"]) {
       const url = v[k];
       if (present(url) && (!String(url).startsWith("https://") || isLocalUrl(String(url))))

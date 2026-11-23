@@ -23,9 +23,12 @@ import { Skeleton } from "@/shared/ui/skeleton";
 export function GuestExport({
   initial,
   signInNotice,
+  support = null,
 }: {
   initial: { format?: ExportFormat; resolution?: number; transparent?: boolean };
   signInNotice?: SignInError;
+  /** HEY-109: the confirmed support contact, from the server. */
+  support?: string | null;
 }) {
   const locale = useLocale();
   const local = (path: string) => (locale === "en" ? path : `/${locale}${path}`);
@@ -62,6 +65,7 @@ export function GuestExport({
   return (
     <ExportSurface
       mode="guest"
+      support={support}
       title={t("titleGuest")}
       heading={name}
       layout={layout}

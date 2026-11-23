@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { supportEmail } from "@/server/support";
 import { HideOnHome } from "./hide-on-home";
 
 const linkClass = "rounded-xs underline-offset-3 transition-colors duration-(--motion-fast) hover:text-foreground hover:underline";
@@ -7,6 +8,7 @@ const linkClass = "rounded-xs underline-offset-3 transition-colors duration-(--m
 /** Design "foot": one hairline row in the page container: copyright, then Pricing / Privacy / Terms. Not on home (HomeFooter). */
 export async function SiteFooter() {
   const t = await getTranslations("footer");
+  const support = supportEmail();
   return (
     <HideOnHome>
       <footer className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-8">
@@ -22,6 +24,12 @@ export async function SiteFooter() {
             <Link href="/terms" className={linkClass}>
               {t("terms")}
             </Link>
+            {/* HEY-109: the confirmed support contact, the same one Pricing and Export show; none until configured. */}
+            {support ? (
+              <a href={`mailto:${support}`} className={linkClass}>
+                {t("support")}
+              </a>
+            ) : null}
           </nav>
         </div>
       </footer>
