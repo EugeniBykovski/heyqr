@@ -2798,6 +2798,42 @@ describe.skipIf(!url)("permanent short links (HEY-117, real PostgreSQL)", () => 
     await db.update(schema.user).set({ trialStartedAt: null, trialEndsAt: null }).where(eq(schema.user.id, owner.id));
   });
 
+  it("the subscription webhook waits for the account lock before it touches the code row (the CI deadlock)", async () => {
+    // The interleaving that deadlocked: an activation holds the account row (trial and plan activation lock it first)
+    // while the webhook for the same code runs. The webhook must queue on the account row, not take the code row first:
+    // then the activation can write the code row and commit, and the webhook converges on its slug.
+    const id = await make("Interleaving");
+    const holder = await pool.connect();
+    const watcher = await pool.connect();
+    let webhook: Promise<unknown> | undefined;
+    try {
+      const activation = drizzle(holder, { schema, casing: "snake_case" });
+      const stored = await activation.transaction(async (tx) => {
+        await tx.select({ id: schema.user.id }).from(schema.user).where(eq(schema.user.id, owner.id)).for("update");
+        webhook = processCheckoutEvent(db, subscriptionEvent("evt_slug_interleave", id), () => "subzzz9");
+        let waiting: string | undefined;
+        for (let i = 0; i < 200 && !waiting; i++) {
+          const r = await watcher.query(
+            "select query from pg_stat_activity where datname = current_database() and state = 'active' and wait_event_type = 'Lock'",
+          );
+          waiting = r.rows[0]?.query;
+          if (!waiting) await new Promise((done) => setTimeout(done, 10));
+        }
+        expect(waiting).toMatch(/from "user" where "user"\."id" = \$1 for update/);
+        // The code row is still free: the webhook hasn't written it.
+        expect((await watcher.query("select id from qr_code where id = $1 for update nowait", [id])).rowCount).toBe(1);
+        return assignShortCode(tx, id, () => "plnzzz9");
+      });
+      expect(await webhook).toEqual({ duplicate: false, result: { granted: true } });
+      const row = await qr(id);
+      expect([stored, row?.shortCode, row?.status, row?.isTrial]).toEqual(["plnzzz9", "plnzzz9", "active", false]);
+    } finally {
+      await webhook?.catch(() => undefined);
+      holder.release();
+      watcher.release();
+    }
+  });
+
   it("concurrent assignments for one code all return the slug that was stored", async () => {
     const id = await make("Same path");
     const results = await Promise.all(Array.from({ length: 6 }, (_, i) => assignShortCode(db, id, () => `same0${i}x`)));

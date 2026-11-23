@@ -104,6 +104,13 @@ export async function fulfillCheckout(db: Db | Tx, s: PaidSession, newShortCode:
     if (!userId || s.payment_status !== "paid") return { granted: false };
     const ownCode = qrCodeId ? and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId)) : undefined;
     if (!ownCode) return { granted: false };
+    // Lock order: the account row first, then the code row, as trial and plan activation do (activateTrialCode,
+    // activateDynamicCode). The code row is updated twice below (slug, then status); the second update touches a row
+    // version this transaction wrote, so PostgreSQL re-checks the qr_code.user_id foreign key and takes FOR KEY SHARE
+    // on the account row. Without this lock the webhook could hold the code row while waiting for the account row that
+    // an activation holds while waiting for the code row: a deadlock (40P01). Taking the account row here first makes
+    // the webhook queue behind the activation instead, and serializes it with the account's slot counting.
+    await db.select({ id: schema.user.id }).from(schema.user).where(eq(schema.user.id, userId)).for("update");
     // A plan bought for a code (export or the trial's test code): the code goes live and keeps its short link.
     const qr = await db.query.qrCode.findFirst({ where: ownCode });
     if (!qr) return { granted: false };
