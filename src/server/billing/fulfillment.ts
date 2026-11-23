@@ -7,26 +7,102 @@ import { grantPackCredits } from "./allowances";
 type Db = NodePgDatabase<typeof schema>;
 export type Receipt = { userId: string; qrCodeId: string; amountTotal: number; currency: string };
 
+/** The parts of a Checkout Session fulfilment reads (as delivered in checkout.session.* events). */
+export type PaidSession = Pick<
+  Stripe.Checkout.Session,
+  | "id"
+  | "mode"
+  | "status"
+  | "payment_status"
+  | "payment_intent"
+  | "amount_subtotal"
+  | "amount_total"
+  | "total_details"
+  | "currency"
+  | "metadata"
+>;
+
+/** Why a one-time Checkout was not fulfilled (logged by code, never with the payload). */
+export type NotFulfilled =
+  | "no_order"
+  | "already_paid"
+  | "order_closed"
+  | "owner_mismatch"
+  | "order_mismatch"
+  | "qr_mismatch"
+  | "not_paid"
+  | "missing_amounts"
+  | "currency_mismatch"
+  | "subtotal_mismatch"
+  | "total_mismatch";
+
+type Order = typeof schema.purchase.$inferSelect;
+
+/**
+ * HEY-96: whether this session pays this stored order, in minor units, before anything is marked paid.
+ * - The session is the one attached to the order (the caller found the order by it), for the order's account and,
+ *   where named, the order's own id and code; Stripe reports it complete and paid.
+ * - Same currency as the order; Stripe's item subtotal equals the order's purchase-time lines (a legacy order
+ *   without lines: its recorded amount, which was the session's item total when it was created).
+ * - The paid total follows from that subtotal with Stripe's own discount (promotion codes) and tax (automatic tax),
+ *   tax either on top (exclusive prices) or already inside the subtotal (inclusive), no shipping.
+ * The expected subtotal is never replaced by what was paid; the paid total is stored separately once verified.
+ */
+export function verifyCheckoutPayment(order: Order, s: PaidSession): { ok: true; paid: number } | { ok: false; reason: NotFulfilled } {
+  const fail = (reason: NotFulfilled) => ({ ok: false, reason }) as const;
+  const meta = s.metadata ?? {};
+  if (order.status === "paid") return fail("already_paid");
+  if (order.status !== "pending") return fail("order_closed");
+  if (meta.userId !== order.userId) return fail("owner_mismatch");
+  if (meta.orderId !== undefined && meta.orderId !== order.id) return fail("order_mismatch");
+  if (order.qrCodeId !== null ? meta.qrCodeId !== undefined && meta.qrCodeId !== order.qrCodeId : meta.qrCodeId !== undefined)
+    return fail("qr_mismatch");
+  if (s.status !== "complete" || s.payment_status !== "paid") return fail("not_paid");
+
+  const subtotal = s.amount_subtotal;
+  const total = s.amount_total;
+  const discount = s.total_details?.amount_discount ?? 0;
+  const tax = s.total_details?.amount_tax ?? 0;
+  const shipping = s.total_details?.amount_shipping ?? 0;
+  if (subtotal === null || total === null || !s.currency || !s.total_details) return fail("missing_amounts");
+  if (![subtotal, total, discount, tax, shipping].every((n) => Number.isInteger(n) && n >= 0)) return fail("missing_amounts");
+  if (s.currency.toLowerCase() !== order.currency.toLowerCase()) return fail("currency_mismatch");
+  const expected = order.lines?.length ? order.lines.reduce((sum, l) => sum + l.amount, 0) : order.amountTotal;
+  if (subtotal !== expected) return fail("subtotal_mismatch");
+  if (discount > subtotal || shipping !== 0) return fail("total_mismatch");
+  const exclusive = subtotal - discount + tax;
+  const inclusive = subtotal - discount;
+  if (total !== exclusive && !(tax <= inclusive && total === inclusive)) return fail("total_mismatch");
+  return { ok: true, paid: total };
+}
+
+const diagnose = (reason: NotFulfilled, orderId: string | null, sessionId: string) =>
+  // Codes and ids only: never the event, amounts of another order, metadata or customer data.
+  console.warn(`[billing] checkout not fulfilled: ${reason} order=${orderId ?? "-"} session=…${sessionId.slice(-6)}`);
+
 /**
  * HEY-87: fulfils one paid Checkout Session for the order it created, exactly once. The purchase row moves to "paid"
- * only from another state, and only that first transition grants anything: a Static Pack's credits, a code's Print
- * Pack, or a Single QR unlock (with its Print Pack when it was on the order). A repeated delivery, or the second of
+ * only from pending, and only that first transition grants anything: a Static Pack's credits, a code's Print Pack, or
+ * a Single QR unlock (with its Print Pack when it was on the order). A repeated delivery, or the second of
  * checkout.session.completed / async_payment_succeeded for the same session, finds the order already paid and changes
- * nothing (no second unlock time, no second receipt). An unpaid session grants nothing.
+ * nothing (no second unlock time, no second receipt).
+ * HEY-96: one-time payments are verified against the stored order first (verifyCheckoutPayment); on a mismatch the
+ * order and entitlements stay unchanged and the reason is logged. What is granted, and to which account and code,
+ * comes from the stored order only.
  * Plain module (no "server-only") so the PostgreSQL tests exercise the same fulfilment as the webhook.
  */
 export async function fulfillCheckout(
   db: Db,
-  s: Pick<Stripe.Checkout.Session, "id" | "mode" | "payment_status" | "payment_intent" | "amount_total" | "currency" | "metadata">,
+  s: PaidSession,
   newShortCode: () => string,
   receipt?: (r: Receipt) => Promise<unknown>,
-): Promise<{ granted: boolean }> {
-  const { userId, qrCodeId, kind, pack, printPack } = s.metadata ?? {};
-  if (!userId || s.payment_status !== "paid") return { granted: false };
+): Promise<{ granted: true } | { granted: false; reason?: NotFulfilled }> {
+  const { userId, qrCodeId, printPack } = s.metadata ?? {};
   const now = new Date();
-  const ownCode = qrCodeId ? and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId)) : undefined;
 
   if (s.mode === "subscription") {
+    if (!userId || s.payment_status !== "paid") return { granted: false };
+    const ownCode = qrCodeId ? and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId)) : undefined;
     if (!ownCode) return { granted: false };
     // A plan bought for a code (export or the trial's test code): the code goes live and keeps its short link.
     const qr = await db.query.qrCode.findFirst({ where: ownCode });
@@ -45,24 +121,31 @@ export async function fulfillCheckout(
   }
   if (s.mode !== "payment") return { granted: false };
 
-  // HEY-88: the stored order is authoritative. It is found by the session attached to it; a session whose metadata
-  // names another order, account or code than that order's own is refused before anything is marked paid.
+  // HEY-88: the stored order is authoritative, found by the session attached to it (a replaced session finds none).
   const order = await db.query.purchase.findFirst({ where: eq(schema.purchase.stripeCheckoutSessionId, s.id) });
-  if (!order || order.userId !== userId) return { granted: false };
-  if (s.metadata?.orderId !== undefined && s.metadata.orderId !== order.id) return { granted: false };
-  if (order.qrCodeId !== null && qrCodeId !== undefined && qrCodeId !== order.qrCodeId) return { granted: false };
+  if (!order) {
+    // An unpaid session for no order (e.g. a Checkout that was never ours) isn't worth a warning.
+    if (s.payment_status === "paid") diagnose("no_order", null, s.id);
+    return { granted: false, reason: "no_order" };
+  }
+  const verdict = verifyCheckoutPayment(order, s);
+  if (!verdict.ok) {
+    // A repeated delivery of a fulfilled order, or an unpaid attempt, is expected: no warning for those.
+    if (verdict.reason !== "already_paid" && verdict.reason !== "not_paid") diagnose(verdict.reason, order.id, s.id);
+    return { granted: false, reason: verdict.reason };
+  }
 
-  // Paid now for the first time (null when it was already paid, or its session was replaced meanwhile).
+  // Paid now for the first time (null when a concurrent delivery got there first, or the session was replaced).
   const [row] = await db
     .update(schema.purchase)
-    .set({ status: "paid", paidAt: now, stripePaymentIntentId: String(s.payment_intent ?? ""), amountTotal: s.amount_total ?? 0 })
-    .where(and(eq(schema.purchase.id, order.id), eq(schema.purchase.stripeCheckoutSessionId, s.id), ne(schema.purchase.status, "paid")))
+    .set({ status: "paid", paidAt: now, stripePaymentIntentId: String(s.payment_intent ?? ""), amountTotal: verdict.paid })
+    .where(and(eq(schema.purchase.id, order.id), eq(schema.purchase.stripeCheckoutSessionId, s.id), eq(schema.purchase.status, "pending")))
     .returning();
-  if (!row) return { granted: false };
+  if (!row) return { granted: false, reason: "already_paid" };
 
-  if (kind === "pack" && (pack === "pack3" || pack === "pack10")) {
-    // Design 4.8 Static Pack: its credits, once per purchase.
-    await grantPackCredits(db, userId, row.id, pack);
+  if (row.item === "pack3" || row.item === "pack10") {
+    // Design 4.8 Static Pack: its credits, once per purchase, to the order's account.
+    await grantPackCredits(db, row.userId, row.id, row.item);
     return { granted: true };
   }
   if (!row.qrCodeId) return { granted: false };
@@ -76,7 +159,6 @@ export async function fulfillCheckout(
       .where(orderCode);
     return { granted: true };
   }
-  if (row.item !== "single_qr" && row.item !== "single_qr_print_pack") return { granted: false };
   // Single QR, with its Print Pack when it was on the order (design 7.3). An earlier unlock keeps its time.
   await db
     .update(schema.qrCode)
@@ -86,11 +168,6 @@ export async function fulfillCheckout(
       ...(row.item === "single_qr_print_pack" ? { printPackAt: sql`coalesce(${schema.qrCode.printPackAt}, now())` } : {}),
     })
     .where(orderCode);
-  await receipt?.({
-    userId: row.userId,
-    qrCodeId: row.qrCodeId,
-    amountTotal: row.amountTotal ?? s.amount_total ?? 0,
-    currency: s.currency ?? "usd",
-  });
+  await receipt?.({ userId: row.userId, qrCodeId: row.qrCodeId, amountTotal: row.amountTotal, currency: row.currency });
   return { granted: true };
 }
