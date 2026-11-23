@@ -45,7 +45,8 @@ export async function saveQrWithLayouts(
   const designs = input.layouts.map((l) => createLayoutRecord(l.layout, l.editor));
   if (designs.some((d) => d === null)) return { ok: false, error: "invalid" };
   // HEY-119: a Dynamic code's destination passes the same check as Change destination (its website address when none
-  // is given); a refused one saves nothing. A static code has no destination.
+  // is given); a refused one saves nothing. A static code has no destination. HEY-124: it is written for a new code,
+  // or an existing Dynamic draft not yet published (no short link); see "Writes" below.
   let destination: string | null = null;
   if (input.model === "dynamic") {
     const parsed = parseDestination(input.destination ?? (input.content.type === "website" ? input.content.url : ""));
@@ -62,13 +63,16 @@ export async function saveQrWithLayouts(
   return db.transaction(async (tx) => {
     const qrCodeId = input.qrCodeId ?? newId();
     // 1. Checks first (HEY-84: a refused save stores nothing): the user's own code, or the claim and the draft limit.
+    // HEY-124: the stored code (model and short link), read under its row lock, decides whether the destination is written.
+    let existing: { model: "static" | "dynamic"; shortCode: string | null } | undefined;
     if (input.qrCodeId) {
       const [own] = await tx
-        .select({ id: schema.qrCode.id })
+        .select({ id: schema.qrCode.id, model: schema.qrCode.model, shortCode: schema.qrCode.shortCode })
         .from(schema.qrCode)
         .where(and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)))
         .for("update");
       if (!own) return { ok: false, error: "not_found" } as const;
+      existing = own;
     } else {
       // Design Pricing · Free: up to DRAFT_LIMIT saved drafts (codes not yet unlocked or live). Saves of one account
       // are serialized, so two at once can't both pass the count.
@@ -103,8 +107,16 @@ export async function saveQrWithLayouts(
     }
 
     // 3. Writes.
-    if (input.qrCodeId) {
-      await tx.update(schema.qrCode).set({ name: input.name, content: input.content, destination }).where(eq(schema.qrCode.id, qrCodeId));
+    if (existing) {
+      // HEY-124: saving the design of an existing code never publishes a URL. A published Dynamic code (it has a short
+      // link) keeps its destination, previous destination and change time: only Change destination (changeDestination)
+      // changes them, so a save from a tab opened before a change can't bring the old URL back. A Dynamic draft not
+      // yet published may still update its destination (nothing scans it yet); a static code never gets one.
+      const draftDestination = existing.model === "dynamic" && !existing.shortCode && input.model === "dynamic" ? { destination } : {};
+      await tx
+        .update(schema.qrCode)
+        .set({ name: input.name, content: input.content, ...draftDestination })
+        .where(eq(schema.qrCode.id, qrCodeId));
     } else {
       await tx.insert(schema.qrCode).values({
         id: qrCodeId,
