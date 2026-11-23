@@ -7,14 +7,20 @@ import { trialCovers, trialPhase } from "@/server/billing/trial";
 import { recordScan } from "@/server/qr/repository";
 
 /**
+ * HEY-120 / QR-16.05: every answer is a 302 that no browser, proxy or CDN may store. The same short link must follow a
+ * destination change (or a pause, or a reactivation) on the very next scan.
+ */
+const redirect = (to: string | URL) => NextResponse.redirect(to, { status: 302, headers: { "Cache-Control": "no-store" } });
+
+/**
  * Dynamic code redirect. The printed code always points here; the destination can change any time.
- * The scan is counted after the response is sent, so the redirect stays fast.
+ * The scan is counted after the response is sent, so the redirect stays fast. Only a redirect to the destination counts.
  */
 export async function GET(_request: NextRequest, ctx: RouteContext<"/r/[code]">) {
   const { code } = await ctx.params;
   const qr = await db.query.qrCode.findFirst({ where: eq(schema.qrCode.shortCode, code) });
   if (!qr || qr.deletedAt || qr.status !== "active" || !qr.destination)
-    return NextResponse.redirect(new URL("/link-unavailable", env.NEXT_PUBLIC_APP_URL), 302);
+    return redirect(new URL("/link-unavailable", env.NEXT_PUBLIC_APP_URL));
   // Design 9.3: the trial's test code redirects while the trial runs or a Dynamic plan is active; after that it is
   // paused (nothing deleted) until the plan is taken, which turns the same short link back on.
   if (qr.isTrial) {
@@ -26,13 +32,9 @@ export async function GET(_request: NextRequest, ctx: RouteContext<"/r/[code]">)
       { trialStartedAt: owner?.trialStartedAt ?? null, trialEndsAt: owner?.trialEndsAt ?? null },
       Boolean(subscription),
     );
-    if (!subscription && !trialCovers(phase, qr))
-      return NextResponse.redirect(new URL("/link-unavailable?reason=paused", env.NEXT_PUBLIC_APP_URL), {
-        status: 302,
-        headers: { "Cache-Control": "no-store" },
-      });
+    if (!subscription && !trialCovers(phase, qr)) return redirect(new URL("/link-unavailable?reason=paused", env.NEXT_PUBLIC_APP_URL));
   }
 
   after(() => recordScan(qr.id));
-  return NextResponse.redirect(qr.destination, { status: 302, headers: { "Cache-Control": "no-store" } });
+  return redirect(qr.destination);
 }
