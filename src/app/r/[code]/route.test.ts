@@ -80,7 +80,7 @@ describe("GET /r/:code", () => {
     findQr.mockResolvedValue(trial);
     findUser.mockResolvedValue(ended);
     subscription.mockResolvedValue(null);
-    expect(await open()).toEqual({ status: 302, location: `${unavailable}?reason=paused`, cache: "no-store" });
+    expect(await open()).toEqual({ status: 302, location: `${unavailable}?reason=inactive`, cache: "no-store" });
     expect(recordScan).not.toHaveBeenCalled();
 
     subscription.mockResolvedValue({ id: "sub" });
@@ -89,5 +89,37 @@ describe("GET /r/:code", () => {
     findUser.mockResolvedValue({ trialStartedAt: new Date(Date.now() - 86_400_000), trialEndsAt: new Date(Date.now() + 86_400_000) });
     expect(await open()).toEqual({ status: 302, location: live.destination, cache: "no-store" });
     expect(recordScan).toHaveBeenCalledTimes(2);
+  });
+
+  it("HEY-121: a trial code never started, or deleted, inactive or without a destination: the right fallback, no lookups leak", async () => {
+    findQr.mockResolvedValue({ ...live, isTrial: true });
+    findUser.mockResolvedValue({ trialStartedAt: null, trialEndsAt: null });
+    subscription.mockResolvedValue(null);
+    expect(await open()).toEqual({ status: 302, location: `${unavailable}?reason=inactive`, cache: "no-store" });
+    // The generic fallback comes first: a deleted or paused trial code isn't looked up further.
+    for (const qr of [
+      { ...live, isTrial: true, deletedAt: new Date() },
+      { ...live, isTrial: true, status: "paused" },
+    ]) {
+      findUser.mockClear();
+      findQr.mockResolvedValueOnce(qr);
+      expect(await open()).toEqual({ status: 302, location: unavailable, cache: "no-store" });
+      expect(findUser).not.toHaveBeenCalled();
+    }
+    expect(recordScan).not.toHaveBeenCalled();
+  });
+
+  it("HEY-121: the fallback names nothing about the code: no slug, destination or owner in its URL", async () => {
+    findQr.mockResolvedValueOnce({ ...live, status: "paused" });
+    const { location } = await open();
+    expect(location).toBe(unavailable);
+    for (const secret of ["AbCdEf2", "menu.example.test", "u1", "q1"]) expect(location).not.toContain(secret);
+  });
+
+  it("HEY-121: reactivating a paused code turns the same short link back on at the next request", async () => {
+    findQr.mockResolvedValueOnce({ ...live, status: "paused" }).mockResolvedValueOnce(live);
+    expect((await open()).location).toBe(unavailable);
+    expect(await open()).toEqual({ status: 302, location: live.destination, cache: "no-store" });
+    expect(recordScan).toHaveBeenCalledExactlyOnceWith("q1");
   });
 });
