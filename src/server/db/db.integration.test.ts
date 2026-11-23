@@ -2844,7 +2844,8 @@ describe.skipIf(!url)("permanent short links (HEY-117, real PostgreSQL)", () => 
   it("keeps the issued slug across saves, destination changes and reactivation", async () => {
     const id = await make("Keeps");
     expect(await activateDynamicCode(db, owner.id, id, () => "keep001")).toEqual({ ok: true, shortCode: "keep001" });
-    // A save from the editor with a new destination.
+    // A design save of the published code, even one carrying another address, keeps the slug and the destination
+    // (HEY-124: only Change destination publishes a URL).
     const saved = await saveQrWithLayouts(db, owner.id, {
       qrCodeId: id,
       name: "Keeps (renamed)",
@@ -2854,11 +2855,12 @@ describe.skipIf(!url)("permanent short links (HEY-117, real PostgreSQL)", () => 
       layouts,
     });
     expect(saved.ok).toBe(true);
-    // The destination editor (updateDestination) writes destination and previousDestination only.
-    await db
-      .update(schema.qrCode)
-      .set({ destination: "https://menu.example.test/third", previousDestination: "https://menu.example.test/second" })
-      .where(eq(schema.qrCode.id, id));
+    expect([(await qr(id))?.shortCode, (await qr(id))?.destination]).toEqual(["keep001", first]);
+    // The intentional change, through Change destination.
+    expect(await changeDestination(db, owner.id, id, "https://menu.example.test/third")).toMatchObject({
+      ok: true,
+      data: { destination: "https://menu.example.test/third", previousDestination: first },
+    });
     // Paused, then activated again under the plan, then the plan Checkout delivered for it.
     await db.update(schema.qrCode).set({ status: "paused" }).where(eq(schema.qrCode.id, id));
     expect(await activateDynamicCode(db, owner.id, id, () => "other01")).toEqual({ ok: true, shortCode: "keep001" });
@@ -3056,5 +3058,137 @@ describe.skipIf(!url)("destination change metadata (HEY-123, real PostgreSQL)", 
     });
     const next = await changeDestination(db, owner.id, id, "https://new.example.test/");
     expect(next.ok && next.data.changedAt !== null && next.data.previousDestination === "https://first.example.test/menu").toBe(true);
+  });
+});
+
+/* HEY-124 / QR-17.02: saving a design never publishes a URL; Change destination is the only way to publish one. */
+describe.skipIf(!url)("design saves keep the published destination (HEY-124, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "keepdest-owner", name: "Owner", email: "owner@keepdest.test" };
+  const original = "https://first.example.test/menu";
+  const card = (caption: string) => ({ ...DEFAULT_DESIGN, preset: "caption" as const, caption });
+  const layoutsOf = (caption: string, id?: string) => [
+    { id, name: "Card", layout: designToLayout(card(caption)), editor: designSettingsOf(card(caption)) },
+  ];
+  const create = async () => {
+    const saved = await saveQrWithLayouts(db, owner.id, {
+      name: "Menu",
+      model: "dynamic",
+      content: { type: "website", url: original },
+      destination: original,
+      layouts: layoutsOf("Scan me"),
+    });
+    if (!saved.ok) throw new Error("save failed");
+    return saved.data;
+  };
+  const row = (id: string) => db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, id) });
+  const caption = async (qrCodeId: string) =>
+    (await db.query.qrLayout.findMany({ where: (l, { eq }) => eq(l.qrCodeId, qrCodeId) })).map((l) => {
+      const read = readLayoutRecord(l.design);
+      return read.ok ? read.value.editor?.caption : read.reason;
+    });
+  const published = (r: Awaited<ReturnType<typeof row>>) => ({
+    shortCode: r?.shortCode,
+    destination: r?.destination,
+    previousDestination: r?.previousDestination,
+    changedAt: r?.destinationChangedAt?.toISOString() ?? null,
+  });
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("a new Dynamic code keeps its initial destination", async () => {
+    const { qrCodeId } = await create();
+    expect((await row(qrCodeId))?.destination).toBe(original);
+  });
+
+  it("a stale design save after another tab published a new URL keeps the new URL, its metadata and the slug", async () => {
+    const { qrCodeId, layoutIds } = await create();
+    await db.update(schema.qrCode).set({ shortCode: "keepd01", status: "active" }).where(eq(schema.qrCode.id, qrCodeId));
+    // Tab B publishes a new address.
+    const changed = await changeDestination(db, owner.id, qrCodeId, "http://second.example.test/menu?x=1#y");
+    if (!changed.ok) throw new Error("change failed");
+    const before = published(await row(qrCodeId));
+    expect(before).toEqual({ shortCode: "keepd01", ...changed.data });
+    // Tab A, opened before the change, saves a design edit carrying the old address.
+    const stale = await saveQrWithLayouts(db, owner.id, {
+      qrCodeId,
+      name: "Menu (edited)",
+      model: "dynamic",
+      content: { type: "website", url: original },
+      destination: original,
+      layouts: layoutsOf("Edited in tab A", layoutIds[0]),
+    });
+    expect(stale).toMatchObject({ ok: true, data: { qrCodeId, layoutIds } });
+    const after = await row(qrCodeId);
+    expect(published(after)).toEqual(before);
+    expect([after?.name, await caption(qrCodeId)]).toEqual(["Menu (edited)", ["Edited in tab A"]]);
+    // A save without any destination keeps it too.
+    expect(
+      (
+        await saveQrWithLayouts(db, owner.id, {
+          qrCodeId,
+          name: "Menu",
+          model: "dynamic",
+          content: { type: "website", url: original },
+          layouts: layoutsOf("Again", layoutIds[0]),
+        })
+      ).ok,
+    ).toBe(true);
+    expect(published(await row(qrCodeId))).toEqual(before);
+  });
+
+  it("publishing a URL leaves the saved layouts intact", async () => {
+    const { qrCodeId } = await create();
+    await db.update(schema.qrCode).set({ shortCode: "keepd02", status: "active" }).where(eq(schema.qrCode.id, qrCodeId));
+    const layoutsBefore = await db.query.qrLayout.findMany({ where: (l, { eq }) => eq(l.qrCodeId, qrCodeId) });
+    expect((await changeDestination(db, owner.id, qrCodeId, "https://third.example.test/")).ok).toBe(true);
+    expect(await db.query.qrLayout.findMany({ where: (l, { eq }) => eq(l.qrCodeId, qrCodeId) })).toEqual(layoutsBefore);
+  });
+
+  it("an unpublished Dynamic draft may still update its destination; a static code never gets one", async () => {
+    const { qrCodeId, layoutIds } = await create();
+    const resaved = await saveQrWithLayouts(db, owner.id, {
+      qrCodeId,
+      name: "Menu",
+      model: "dynamic",
+      content: { type: "website", url: "https://draft.example.test/menu" },
+      layouts: layoutsOf("Scan me", layoutIds[0]),
+    });
+    expect(resaved.ok).toBe(true);
+    expect([(await row(qrCodeId))?.destination, (await row(qrCodeId))?.destinationChangedAt]).toEqual([
+      "https://draft.example.test/menu",
+      null,
+    ]);
+    const stat = await saveQrWithLayouts(db, owner.id, {
+      name: "Static",
+      model: "static",
+      content: { type: "website", url: original },
+      layouts: layoutsOf("S"),
+    });
+    if (!stat.ok) throw new Error("save failed");
+    // Saved again as if it were dynamic: the stored model decides, and a static code keeps no destination.
+    expect(
+      (
+        await saveQrWithLayouts(db, owner.id, {
+          qrCodeId: stat.data.qrCodeId,
+          name: "Static",
+          model: "dynamic",
+          content: { type: "website", url: original },
+          destination: "https://sneaky.example.test/",
+          layouts: layoutsOf("S", stat.data.layoutIds[0]),
+        })
+      ).ok,
+    ).toBe(true);
+    const s = await row(stat.data.qrCodeId);
+    expect([s?.model, s?.destination]).toEqual(["static", null]);
   });
 });
