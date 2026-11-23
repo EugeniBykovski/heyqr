@@ -7,14 +7,16 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { env } from "@/env";
 import { DEFAULT_PRINT_SETTINGS, printSettingsQuery, QrPreview } from "@/entities/qr";
 import { CopyButton } from "@/features/copy-to-clipboard";
-import { DeleteLayoutButton, DifferentContent, NewLayoutButton, RenameTitle } from "@/features/qr-details";
+import { DeleteLayoutButton, DifferentContent, NewLayoutButton, RenameTitle, UseIncludedPrintPack } from "@/features/qr-details";
 import { DestinationForm } from "@/features/qr-destination";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
 import { requireAccount } from "../../../require-account";
 import { getSession } from "@/server/auth";
 import { getCurrency } from "@/server/currency";
+import { accountUsage } from "@/server/billing/allowances";
 import { canDownload, printPackForSale, userTrial } from "@/server/billing/entitlements";
+import { db } from "@/server/db";
 import { loadPrint } from "@/server/print/load";
 import { encodedValue } from "@/server/qr/export";
 import { dailyScans, getQrCode } from "@/server/qr/repository";
@@ -66,7 +68,7 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
   const user = await requireAccount(locale, `/dashboard/qr/${encodeURIComponent(id)}`, await searchParams);
   const qr = await getQrCode(user.id, id);
   if (!qr) notFound();
-  const [t, tl, tp, tTypes, tDash, , entitled, scans, phase] = await Promise.all([
+  const [t, tl, tp, tTypes, tDash, , entitled, scans, phase, usage] = await Promise.all([
     getTranslations("qr"),
     getTranslations("qr.details"),
     getTranslations("print"),
@@ -76,6 +78,7 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
     canDownload(user.id, qr),
     qr.model === "dynamic" ? dailyScans(qr.id) : Promise.resolve(null),
     userTrial(user.id),
+    accountUsage(db, user.id),
   ]);
   const value = encodedValue(qr);
   const shortLink = qr.shortCode ? `${env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "")}/${qr.shortCode}` : null;
@@ -88,6 +91,9 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
   const printLayouts = qr.layouts.filter((l) => l.design.layout.unit === "mm");
   const printPackOpen = entitled && qr.printPackAt !== null;
   const forSale = printPackForSale(await getCurrency());
+  // HEY-105 design 8.4: the plan's included Print Packs left this month (Studio), the same allowance Export uses.
+  const includedLeft = usage.packs.limit > 0 ? Math.max(0, usage.packs.limit - usage.packs.used) : 0;
+  const planName = usage.plan ? tp(`plan.${usage.plan.id}`) : "";
   const firstPrint = printLayouts[0];
   const printHref = (layoutId: string) => `/print?qr=${qr.id}&layout=${layoutId}&from=details`;
   const setupHref = (layoutId: string) => `/edit/${qr.id}?layout=${layoutId}&group=size&next=print`;
@@ -271,6 +277,17 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
                   <span className="text-caption text-muted-foreground">{tl("pack.repeat", { layout: firstPrint.name })}</span>
                 </div>
               </>
+            ) : entitled && includedLeft > 0 ? (
+              <>
+                <p className="text-caption text-secondary-foreground">{tl("pack.what")}</p>
+                <UseIncludedPrintPack qrCodeId={qr.id} />
+                <span className="text-caption text-muted-foreground">
+                  {tl("pack.includedSub", { left: includedLeft, limit: usage.packs.limit, plan: planName })}
+                </span>
+                <Link href={printHref(firstPrint.id)} className="self-start text-[0.875rem] font-semibold underline underline-offset-3">
+                  {tl("pack.inspect")}
+                </Link>
+              </>
             ) : (
               <>
                 <p className="text-caption text-secondary-foreground">{tl("pack.what")}</p>
@@ -333,16 +350,30 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
                           </Link>
                         </Button>
                       ) : null}
-                      <Button
-                        asChild
-                        size="icon-sm"
-                        variant={entitled ? "secondary" : "primary"}
-                        aria-label={entitled ? tl("downloadLayout", { name: layout.name }) : t("buy")}
-                      >
-                        <Link href={`/create/export?qr=${qr.id}&layout=${layout.id}`}>
-                          {entitled ? <DownloadIcon aria-hidden /> : <LockIcon aria-hidden />}
-                        </Link>
-                      </Button>
+                      {/* HEY-105 design 3.11: an unlocked code downloads each layout as PNG or SVG through Export, with
+                          the exact code, layout and format (Download again there; access is checked on each download). */}
+                      {entitled ? (
+                        (["png", "svg"] as const).map((f) => (
+                          <Button
+                            key={f}
+                            asChild
+                            size="sm"
+                            variant="secondary"
+                            aria-label={tl("downloadFormat", { format: f.toUpperCase(), name: layout.name })}
+                          >
+                            <Link href={`/create/export?qr=${qr.id}&layout=${layout.id}&format=${f}`}>
+                              <DownloadIcon aria-hidden />
+                              {f.toUpperCase()}
+                            </Link>
+                          </Button>
+                        ))
+                      ) : (
+                        <Button asChild size="icon-sm" variant="primary" aria-label={t("buy")}>
+                          <Link href={`/create/export?qr=${qr.id}&layout=${layout.id}`}>
+                            <LockIcon aria-hidden />
+                          </Link>
+                        </Button>
+                      )}
                       <DeleteLayoutButton qrCodeId={qr.id} layoutId={layout.id} name={layout.name} canDelete={qr.layouts.length > 1} />
                     </div>
                     {mm ? null : (
