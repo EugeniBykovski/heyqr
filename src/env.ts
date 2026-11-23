@@ -41,6 +41,11 @@ export const env = createEnv({
     DYNAMIC_ACTIVE_CODE_LIMIT: z.coerce.number().int().positive().default(10),
     RESEND_API_KEY: z.string().startsWith("re_").optional(),
     EMAIL_FROM: z.string().min(3).optional(),
+    /**
+     * HEY-109: the one support contact shown on Pricing, Export and in the footers (and Privacy / Terms once approved).
+     * Required in production; unset in dev, nothing is shown rather than a placeholder.
+     */
+    SUPPORT_EMAIL: z.preprocess((v) => (v === "" ? undefined : v), z.email().optional()),
     S3_REGION: z.string().min(1).optional(),
     S3_BUCKET: z.string().min(1).optional(),
     S3_ACCESS_KEY_ID: z.string().min(1).optional(),

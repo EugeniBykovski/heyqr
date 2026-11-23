@@ -13,7 +13,7 @@ const stripeLive = {
   STRIPE_PRICE_STATIC: "price_a",
   STRIPE_PRICE_DYNAMIC_MONTHLY: "price_b",
 };
-const email = { RESEND_API_KEY: "re_x", EMAIL_FROM: "Hey QR <hello@heyqr.app>" };
+const email = { RESEND_API_KEY: "re_x", EMAIL_FROM: "Hey QR <hello@heyqr.app>", SUPPORT_EMAIL: "support@example.test" };
 const storage = {
   S3_REGION: "eu-central-1",
   S3_BUCKET: "heyqr",
@@ -29,7 +29,15 @@ describe("environmentProblems", () => {
 
   it("requires every integration in production and names the missing variables", () => {
     const problems = environmentProblems("production", { ...base, ...stripeLive });
-    expect(vars(problems)).toEqual(["EMAIL_FROM", "RESEND_API_KEY", "S3_ACCESS_KEY_ID", "S3_BUCKET", "S3_REGION", "S3_SECRET_ACCESS_KEY"]);
+    expect(vars(problems)).toEqual([
+      "EMAIL_FROM",
+      "RESEND_API_KEY",
+      "S3_ACCESS_KEY_ID",
+      "S3_BUCKET",
+      "S3_REGION",
+      "S3_SECRET_ACCESS_KEY",
+      "SUPPORT_EMAIL",
+    ]);
     expect(problems.every((p) => /required in production/.test((p as { message: string }).message))).toBe(true);
   });
 
@@ -72,5 +80,13 @@ describe("environmentProblems", () => {
   it("never echoes values in messages", () => {
     const problems = environmentProblems("dev", { ...base, ...stripeLive });
     expect(JSON.stringify(problems)).not.toContain("sk_live_x");
+  });
+
+  it("requires the support contact in production, not in dev (HEY-109)", () => {
+    const { SUPPORT_EMAIL: _support, ...withoutSupport } = email;
+    expect(environmentProblems("production", { ...base, ...stripeLive, ...withoutSupport, ...storage })).toEqual([
+      { variable: "SUPPORT_EMAIL", message: "required in production (the support contact shown before payment)" },
+    ]);
+    expect(environmentProblems("dev", { ...base })).not.toContainEqual(expect.objectContaining({ variable: "SUPPORT_EMAIL" }));
   });
 });

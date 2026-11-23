@@ -1,7 +1,7 @@
 import { CheckIcon, CircleDotIcon, InfoIcon, RotateCcwIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { CurrencySelect, PackPicker, PlanCheckoutButton, StartTrialButton } from "@/features/checkout";
+import { CurrencySelect, PackPicker, PaymentInfo, PlanCheckoutButton, StartTrialButton } from "@/features/checkout";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
 import { getSession } from "@/server/auth";
@@ -9,6 +9,7 @@ import { accountUsage } from "@/server/billing/allowances";
 import { forSale, userTrial } from "@/server/billing/entitlements";
 import { getCurrency } from "@/server/currency";
 import { db } from "@/server/db";
+import { supportEmail } from "@/server/support";
 import { DRAFT_LIMIT, formatMoney, OFFERS, PACK_CREDITS, PLANS, priceSheet } from "@/shared/config/catalog";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
@@ -191,6 +192,9 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
           </div>
         </div>
       </section>
+
+      {/* HEY-109: before anyone goes to Stripe: one-time payment, where it happens, the receipt, help, Terms and Privacy. */}
+      <PaymentInfo price={money(sheet.single)} support={supportEmail()} className="mt-6 rounded-xl border border-border bg-surface p-5" />
 
       <section aria-labelledby="pr-month" className="mt-8 flex flex-col gap-4">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1.5">

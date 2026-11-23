@@ -24,9 +24,20 @@
     "languageEmpty": "No language matches “{query}”.",
     "trial": "Free trial"
   },
+  "payment": {
+    "title": "How payment works",
+    "oneTime": "Single QR is a one-time payment of {price} per code, plus any tax Stripe adds at checkout. It isn’t a subscription and nothing renews.",
+    "where": "You pay on Stripe’s secure checkout page. Hey QR never sees your card details.",
+    "receipt": "Your receipt is in your account under Billing, next to the purchase.",
+    "support": "Questions about a payment? Email <link>{email}</link>.",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "supportLink": "Support"
+  },
   "footer": {
     "terms": "Terms",
     "privacy": "Privacy",
+    "support": "Support",
     "rights": "© {year} Hey QR",
     "pricing": "Pricing",
     "label": "Footer",
