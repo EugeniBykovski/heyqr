@@ -1654,9 +1654,12 @@ describe.skipIf(!url)("repeat-download entitlements (HEY-87, real PostgreSQL)", 
   const session = (id: string, metadata: Record<string, string>, payment_status: "paid" | "unpaid" = "paid") => ({
     id: `cs_test_${id}`,
     mode: "payment" as const,
+    status: payment_status === "paid" ? ("complete" as const) : ("open" as const),
     payment_status,
     payment_intent: `pi_${id}`,
+    amount_subtotal: 499,
     amount_total: 499,
+    total_details: { amount_discount: 0, amount_shipping: 0, amount_tax: 0 },
     currency: "usd",
     metadata: { userId: owner.id, ...metadata },
   });
@@ -1689,8 +1692,12 @@ describe.skipIf(!url)("repeat-download entitlements (HEY-87, real PostgreSQL)", 
     expect(first.purchased_at).not.toBeNull();
     expect(first.status).toBe("active");
     // Stripe redelivers, and sends async_payment_succeeded for the same session.
-    expect(await fulfillCheckout(db, session("o1", { qrCodeId: qr, kind: "code" }), () => "s", onReceipt)).toEqual({ granted: false });
-    expect(await fulfillCheckout(db, session("o1", { qrCodeId: qr, kind: "code" }), () => "s", onReceipt)).toEqual({ granted: false });
+    expect(await fulfillCheckout(db, session("o1", { qrCodeId: qr, kind: "code" }), () => "s", onReceipt)).toMatchObject({
+      granted: false,
+    });
+    expect(await fulfillCheckout(db, session("o1", { qrCodeId: qr, kind: "code" }), () => "s", onReceipt)).toMatchObject({
+      granted: false,
+    });
     expect((await qrRow(qr)).purchased_at).toEqual(first.purchased_at);
     expect(receipts).toEqual([qr]);
     expect((await pool.query(`select count(*)::int as n from purchase where user_id = $1 and status = 'paid'`, [owner.id])).rows[0].n).toBe(
@@ -1703,11 +1710,11 @@ describe.skipIf(!url)("repeat-download entitlements (HEY-87, real PostgreSQL)", 
   it("an unpaid session, or an order of another code, grants nothing", async () => {
     const qr = await code("unpaid");
     await order("o2", qr);
-    expect(await fulfillCheckout(db, session("o2", { qrCodeId: qr, kind: "code" }, "unpaid"), () => "s")).toEqual({ granted: false });
+    expect(await fulfillCheckout(db, session("o2", { qrCodeId: qr, kind: "code" }, "unpaid"), () => "s")).toMatchObject({ granted: false });
     expect((await qrRow(qr)).purchased_at).toBeNull();
     // Metadata naming a different code than the order's own: no unlock of either.
     const other = await code("other");
-    expect(await fulfillCheckout(db, session("o2", { qrCodeId: other, kind: "code" }), () => "s")).toEqual({ granted: false });
+    expect(await fulfillCheckout(db, session("o2", { qrCodeId: other, kind: "code" }), () => "s")).toMatchObject({ granted: false });
     expect((await qrRow(qr)).purchased_at).toBeNull();
     expect((await qrRow(other)).purchased_at).toBeNull();
   });
@@ -1807,9 +1814,12 @@ describe.skipIf(!url)("Single QR order binding (HEY-88, real PostgreSQL)", () =>
   const paidEvent = (sessionId: string, metadata: Record<string, string>, payment_status: "paid" | "unpaid" = "paid") => ({
     id: sessionId,
     mode: "payment" as const,
+    status: payment_status === "paid" ? ("complete" as const) : ("open" as const),
     payment_status,
     payment_intent: `pi_${sessionId}`,
+    amount_subtotal: 499,
     amount_total: 499,
+    total_details: { amount_discount: 0, amount_shipping: 0, amount_tax: 0 },
     currency: "usd",
     metadata,
   });
@@ -1852,7 +1862,7 @@ describe.skipIf(!url)("Single QR order binding (HEY-88, real PostgreSQL)", () =>
     expect(await unlocked(a.qrCodeId)).toBe(true);
     expect(await unlocked(second.qrCodeId)).toBe(false);
     // Duplicate delivery: nothing changes.
-    expect(await fulfillCheckout(db, paidEvent(sessionId, meta), () => "s")).toEqual({ granted: false });
+    expect(await fulfillCheckout(db, paidEvent(sessionId, meta), () => "s")).toMatchObject({ granted: false });
     expect(await ordersOf(a.qrCodeId)).toHaveLength(1);
     // Asking again for the unlocked code: no order, no session.
     expect(await singleQrCheckout(db, port, { userId: owner.id, ...a, charge })).toEqual({ ok: false, error: "owned" });
@@ -1894,7 +1904,9 @@ describe.skipIf(!url)("Single QR order binding (HEY-88, real PostgreSQL)", () =>
     expect(sessions.get(first)?.status).toBe("expired");
     expect(sessions.get(rows[0]?.stripeCheckoutSessionId ?? "")?.status).toBe("open");
     // The replaced session can no longer pay the order (its event matches no order).
-    expect(await fulfillCheckout(db, paidEvent(first, { userId: owner.id, qrCodeId: a.qrCodeId }), () => "s")).toEqual({ granted: false });
+    expect(await fulfillCheckout(db, paidEvent(first, { userId: owner.id, qrCodeId: a.qrCodeId }), () => "s")).toMatchObject({
+      granted: false,
+    });
     expect(await unlocked(a.qrCodeId)).toBe(false);
   });
 
@@ -1906,11 +1918,11 @@ describe.skipIf(!url)("Single QR order binding (HEY-88, real PostgreSQL)", () =>
     const sessionId = order?.stripeCheckoutSessionId ?? "";
     const meta = { userId: owner.id, qrCodeId: a.qrCodeId, orderId: order?.id ?? "" };
     // Unpaid (e.g. a delayed method) and events naming another order, account or code: no grant, still pending.
-    expect(await fulfillCheckout(db, paidEvent(sessionId, meta, "unpaid"), () => "s")).toEqual({ granted: false });
-    expect(await fulfillCheckout(db, paidEvent(sessionId, { ...meta, orderId: "another" }), () => "s")).toEqual({ granted: false });
-    expect(await fulfillCheckout(db, paidEvent(sessionId, { ...meta, userId: other.id }), () => "s")).toEqual({ granted: false });
+    expect(await fulfillCheckout(db, paidEvent(sessionId, meta, "unpaid"), () => "s")).toMatchObject({ granted: false });
+    expect(await fulfillCheckout(db, paidEvent(sessionId, { ...meta, orderId: "another" }), () => "s")).toMatchObject({ granted: false });
+    expect(await fulfillCheckout(db, paidEvent(sessionId, { ...meta, userId: other.id }), () => "s")).toMatchObject({ granted: false });
     const b = await code(owner.id, "other code");
-    expect(await fulfillCheckout(db, paidEvent(sessionId, { ...meta, qrCodeId: b.qrCodeId }), () => "s")).toEqual({ granted: false });
+    expect(await fulfillCheckout(db, paidEvent(sessionId, { ...meta, qrCodeId: b.qrCodeId }), () => "s")).toMatchObject({ granted: false });
     expect((await ordersOf(a.qrCodeId))[0]?.status).toBe("pending");
     expect(await unlocked(a.qrCodeId)).toBe(false);
     expect(await unlocked(b.qrCodeId)).toBe(false);
@@ -1987,6 +1999,92 @@ describe.skipIf(!url)("Single QR order binding (HEY-88, real PostgreSQL)", () =>
     const lookup = vi.fn<SessionLookup>();
     expect(await awaitingFulfillment(db, lookup, owner.id, a.qrCodeId)).toBeNull();
     expect(lookup).not.toHaveBeenCalled();
+  });
+
+  it("HEY-96: a payment that doesn't match its stored order changes nothing; the matching one is paid once", async () => {
+    const a = await code(owner.id, "verified");
+    const other = await code(owner.id, "verified"); // same account, same content
+    const { port } = stripe();
+    const lines = [
+      { offer: "single" as const, amount: 499 },
+      { offer: "printPack" as const, amount: 299 },
+    ];
+    const both = { item: "single_qr_print_pack" as const, lines, currency: "USD" };
+    await singleQrCheckout(db, port, { userId: owner.id, ...a, charge: both });
+    const replaced = (await ordersOf(a.qrCodeId))[0]?.stripeCheckoutSessionId ?? "";
+    await singleQrCheckout(db, port, { userId: owner.id, ...a, charge: both }); // the retry replaces that session
+    const [order] = await ordersOf(a.qrCodeId);
+    const sessionId = order?.stripeCheckoutSessionId ?? "";
+    expect(sessionId).not.toBe(replaced);
+    const meta = { userId: owner.id, qrCodeId: a.qrCodeId, orderId: order?.id ?? "", kind: "code", printPack: "1" };
+    // Valid: the order's items (798), a promotion code (-100) and automatic tax on top (+56).
+    const valid = {
+      ...paidEvent(sessionId, meta),
+      amount_subtotal: 798,
+      amount_total: 754,
+      total_details: { amount_discount: 100, amount_shipping: 0, amount_tax: 56 },
+    };
+    const unchanged = async () => {
+      const row = await db.query.purchase.findFirst({ where: eq(schema.purchase.id, order?.id ?? "") });
+      expect(row).toMatchObject({ status: "pending", paidAt: null, stripePaymentIntentId: null, amountTotal: order?.amountTotal });
+      const codes = await db.query.qrCode.findMany({ where: inArray(schema.qrCode.id, [a.qrCodeId, other.qrCodeId]) });
+      expect(codes.map((c) => [c.purchasedAt, c.printPackAt])).toEqual([
+        [null, null],
+        [null, null],
+      ]);
+    };
+    const warnings: string[] = [];
+    const warn = vi.spyOn(console, "warn").mockImplementation((m: unknown) => void warnings.push(String(m)));
+    try {
+      const rejected: [string, object][] = [
+        [
+          "subtotal_mismatch",
+          { ...valid, amount_subtotal: 499, amount_total: 499, total_details: { amount_discount: 0, amount_shipping: 0, amount_tax: 0 } },
+        ],
+        ["total_mismatch", { ...valid, amount_total: 1 }],
+        ["currency_mismatch", { ...valid, currency: "pln" }],
+        ["missing_amounts", { ...valid, amount_subtotal: null }],
+        ["not_paid", { ...valid, status: "complete", payment_status: "unpaid" }],
+        ["not_paid", { ...valid, status: "expired", payment_status: "unpaid" }],
+        ["no_order", { ...valid, id: replaced }],
+        ["owner_mismatch", { ...valid, metadata: { ...meta, userId: other.qrCodeId } }],
+        ["qr_mismatch", { ...valid, metadata: { ...meta, qrCodeId: other.qrCodeId } }],
+        ["order_mismatch", { ...valid, metadata: { ...meta, orderId: "another" } }],
+      ];
+      for (const [reason, event] of rejected) {
+        expect(await fulfillCheckout(db, event as typeof valid, () => "s")).toEqual({ granted: false, reason });
+        await unchanged();
+      }
+      // Diagnostics: the reason and ids only, never the payload (metadata, amounts, payment intent).
+      expect(warnings.map((w) => w.split(" ")[4])).toEqual([
+        "subtotal_mismatch",
+        "total_mismatch",
+        "currency_mismatch",
+        "missing_amounts",
+        "no_order",
+        "owner_mismatch",
+        "qr_mismatch",
+        "order_mismatch",
+      ]);
+      for (const w of warnings) expect(w).not.toMatch(/pi_|metadata|amount_|@|printPack|754|798/);
+
+      expect(await fulfillCheckout(db, valid, () => "s")).toEqual({ granted: true });
+      const paid = await db.query.purchase.findFirst({ where: eq(schema.purchase.id, order?.id ?? "") });
+      // Paid as charged; the expected items stay as they were bought.
+      expect(paid).toMatchObject({ status: "paid", amountTotal: 754, stripeCheckoutSessionId: sessionId, lines });
+      const bought = await db.query.qrCode.findFirst({ where: eq(schema.qrCode.id, a.qrCodeId) });
+      expect(bought?.purchasedAt).not.toBeNull();
+      expect(bought?.printPackAt).not.toBeNull();
+      expect(await unlocked(other.qrCodeId)).toBe(false);
+      // Repeat delivery: nothing changes, nothing logged.
+      const count = warnings.length;
+      expect(await fulfillCheckout(db, valid, () => "s")).toEqual({ granted: false, reason: "already_paid" });
+      const again = await db.query.purchase.findFirst({ where: eq(schema.purchase.id, order?.id ?? "") });
+      expect(again?.paidAt).toEqual(paid?.paidAt);
+      expect(warnings).toHaveLength(count);
+    } finally {
+      warn.mockRestore();
+    }
   });
 
   it("keeps earlier order history: a legacy pending order with its session is reused, paid orders are untouched", async () => {
