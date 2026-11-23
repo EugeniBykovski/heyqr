@@ -7,6 +7,7 @@ import { supportsMode } from "../../entities/qr/model/modes";
 import { DRAFT_LIMIT } from "../../shared/config/catalog-core";
 import { newId } from "../db/ids";
 import * as schema from "../db/schema";
+import { parseDestination, type DestinationRefusal } from "./destination";
 
 export type SaveQrInput = {
   qrCodeId?: string;
@@ -25,7 +26,8 @@ export type SaveQrInput = {
 
 export type SaveQrResult =
   | { ok: true; data: { qrCodeId: string; layoutIds: string[] } }
-  | { ok: false; error: "invalid" | "not_found" | "too_long" | "draft_limit" };
+  | { ok: false; error: "invalid" | "not_found" | "too_long" | "draft_limit" }
+  | DestinationRefusal;
 
 /**
  * Writes a QR code and replaces its design variants in one transaction, for its owner only.
@@ -42,6 +44,14 @@ export async function saveQrWithLayouts(
   if (!supportsMode(input.content.type, input.model)) return { ok: false, error: "invalid" };
   const designs = input.layouts.map((l) => createLayoutRecord(l.layout, l.editor));
   if (designs.some((d) => d === null)) return { ok: false, error: "invalid" };
+  // HEY-119: a Dynamic code's destination passes the same check as Change destination (its website address when none
+  // is given); a refused one saves nothing. A static code has no destination.
+  let destination: string | null = null;
+  if (input.model === "dynamic") {
+    const parsed = parseDestination(input.destination ?? (input.content.type === "website" ? input.content.url : ""));
+    if (!parsed.ok) return parsed;
+    destination = parsed.url;
+  }
   // HEY-24: a static code must be encodable with every variant's layout (a center logo lowers the limit). Dynamic codes
   // encode only their short link, which always fits.
   if (input.model === "static") {
@@ -94,10 +104,7 @@ export async function saveQrWithLayouts(
 
     // 3. Writes.
     if (input.qrCodeId) {
-      await tx
-        .update(schema.qrCode)
-        .set({ name: input.name, content: input.content, destination: input.destination ?? null })
-        .where(eq(schema.qrCode.id, qrCodeId));
+      await tx.update(schema.qrCode).set({ name: input.name, content: input.content, destination }).where(eq(schema.qrCode.id, qrCodeId));
     } else {
       await tx.insert(schema.qrCode).values({
         id: qrCodeId,
@@ -105,7 +112,7 @@ export async function saveQrWithLayouts(
         name: input.name,
         model: input.model,
         content: input.content,
-        destination: input.destination ?? null,
+        destination,
         guestClaimKey: input.claimKey ?? null,
       });
     }

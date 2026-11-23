@@ -16,6 +16,7 @@ import { fulfillCheckout, processCheckoutEvent } from "../billing/fulfillment";
 import { processRefundEvent, unusedPackCredits, type PaymentLookup } from "../billing/refunds";
 import { awaitingFulfillment, singleQrCheckout, type CheckoutPort, type SessionLookup } from "../billing/single-order";
 import { renameQrCode } from "../qr/rename-qr";
+import { changeDestination } from "../qr/destination";
 import { assignShortCode, SHORT_CODE_ATTEMPTS, ShortCodeExhaustedError } from "../qr/short-code";
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, copyLayout, layoutRevision, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
@@ -2849,5 +2850,85 @@ describe.skipIf(!url)("permanent short links (HEY-117, real PostgreSQL)", () => 
     // Writing the same value, and updates that don't touch the slug, still work.
     await db.update(schema.qrCode).set({ shortCode: "guard01", name: "Guarded 2" }).where(eq(schema.qrCode.id, id));
     expect((await qr(id))?.shortCode).toBe("guard01");
+  });
+});
+
+/* HEY-119 / QR-16.04: one destination check on create and on Change destination; the slug never moves. */
+describe.skipIf(!url)("Dynamic destinations (HEY-119, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "dest-owner", name: "Owner", email: "owner@dest.test" };
+  const other = { id: "dest-other", name: "Other", email: "other@dest.test" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const save = (model: "static" | "dynamic", url: string, destination?: string) =>
+    saveQrWithLayouts(db, owner.id, { name: "Menu", model, content: { type: "website", url }, destination, layouts });
+  const qr = (id: string) => db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, id) });
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("create keeps http:// and https:// exactly, defaults a bare domain to https:// and refuses invalid ones", async () => {
+    const stored = async (r: Awaited<ReturnType<typeof save>>) => (r.ok ? (await qr(r.data.qrCodeId))?.destination : r);
+    expect(await stored(await save("dynamic", "http://menu.example.test/a?x=1#top", "http://menu.example.test/a?x=1#top"))).toBe(
+      "http://menu.example.test/a?x=1#top",
+    );
+    expect(await stored(await save("dynamic", "https://menu.example.test/b?y=2#z"))).toBe("https://menu.example.test/b?y=2#z");
+    expect(await stored(await save("dynamic", "menu.example.test/c"))).toBe("https://menu.example.test/c");
+    const before = await db.$count(schema.qrCode, eq(schema.qrCode.userId, owner.id));
+    for (const bad of ["ftp://files.example.test", "javascript:alert(1)", "not a url", "localhost"])
+      expect(await save("dynamic", "menu.example.test", bad)).toMatchObject({ ok: false, error: "invalid", field: "destination" });
+    expect(await save("dynamic", "nope")).toMatchObject({ ok: false, field: "destination", problem: "invalid" });
+    expect(await db.$count(schema.qrCode, eq(schema.qrCode.userId, owner.id))).toBe(before);
+    // A static code has no destination, whatever is sent.
+    expect(await stored(await save("static", "https://static.example.test", "https://elsewhere.example.test"))).toBeNull();
+  });
+
+  it("Change destination: https → http → https with query and fragment; a refused address changes nothing", async () => {
+    const saved = await save("dynamic", "https://menu.example.test/start");
+    if (!saved.ok) throw new Error("save failed");
+    const id = saved.data.qrCodeId;
+    await db.update(schema.qrCode).set({ shortCode: "dest001", status: "active" }).where(eq(schema.qrCode.id, id));
+
+    expect(await changeDestination(db, owner.id, id, "http://plain.example.test/menu?table=4&lang=en#drinks")).toEqual({
+      ok: true,
+      data: { destination: "http://plain.example.test/menu?table=4&lang=en#drinks" },
+    });
+    expect(await changeDestination(db, owner.id, id, "secure.example.test/menu?table=5#food")).toEqual({
+      ok: true,
+      data: { destination: "https://secure.example.test/menu?table=5#food" },
+    });
+    let row = await qr(id);
+    expect([row?.destination, row?.previousDestination, row?.shortCode]).toEqual([
+      "https://secure.example.test/menu?table=5#food",
+      "http://plain.example.test/menu?table=4&lang=en#drinks",
+      "dest001",
+    ]);
+
+    for (const bad of ["ftp://files.example.test", "javascript:alert(1)", "", "two words.example.test", 42])
+      expect(await changeDestination(db, owner.id, id, bad)).toMatchObject({ ok: false, error: "invalid", field: "destination" });
+    expect(await changeDestination(db, other.id, id, "https://other.example.test")).toEqual({ ok: false, error: "not_found" });
+    row = await qr(id);
+    expect([row?.destination, row?.previousDestination, row?.shortCode, row?.status]).toEqual([
+      "https://secure.example.test/menu?table=5#food",
+      "http://plain.example.test/menu?table=4&lang=en#drinks",
+      "dest001",
+      "active",
+    ]);
+  });
+
+  it("a static code has no destination to change", async () => {
+    const saved = await save("static", "https://static.example.test/x");
+    if (!saved.ok) throw new Error("save failed");
+    expect(await changeDestination(db, owner.id, saved.data.qrCodeId, "https://new.example.test")).toEqual({
+      ok: false,
+      error: "not_found",
+    });
   });
 });
