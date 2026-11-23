@@ -147,7 +147,8 @@ export async function applyPrintPackAllowance(
 }
 
 /** A paid Static Pack adds its credits once (the purchase id is unique in the ledger, so webhook retries are no-ops). */
-export async function grantPackCredits(db: Db, userId: string, purchaseId: string, pack: keyof typeof PACK_CREDITS) {
+/** Inside the fulfilment transaction (HEY-97): `db` may be that transaction. Once per purchase (unique purchase_id). */
+export async function grantPackCredits(db: Pick<Db, "insert">, userId: string, purchaseId: string, pack: keyof typeof PACK_CREDITS) {
   await db
     .insert(schema.creditLedger)
     .values({ id: newId(), userId, delta: PACK_CREDITS[pack], reason: pack, purchaseId })

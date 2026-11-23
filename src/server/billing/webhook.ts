@@ -6,24 +6,44 @@ import { db, schema } from "../db";
 import { newId, newShortCode } from "../db/ids";
 import { sendPurchaseReceipt } from "../email/send";
 import { dynamicLimit } from "./allowances";
-import { fulfillCheckout } from "./fulfillment";
+import { processCheckoutEvent } from "./fulfillment";
 import { planForPrice } from "./catalog";
+
+/** After the purchase committed: a failed email is logged, never undoes the purchase or fails the webhook. */
+async function sendReceipt({
+  userId,
+  qrCodeId,
+  amountTotal,
+  currency,
+}: {
+  userId: string;
+  qrCodeId: string;
+  amountTotal: number;
+  currency: string;
+}) {
+  try {
+    const owner = await db.query.user.findFirst({ where: eq(schema.user.id, userId) });
+    if (owner) await sendPurchaseReceipt({ to: owner.email, name: owner.name, qrCodeId, amountTotal, currency });
+  } catch (error) {
+    console.error(`[billing] receipt email failed: ${error instanceof Error ? error.name : "unknown"} qr=${qrCodeId}`);
+  }
+}
 
 /** Applies one verified Stripe event. Returns false when the event was already processed. */
 export async function handleStripeEvent(event: Stripe.Event): Promise<boolean> {
+  if (event.type === "checkout.session.completed" || event.type === "checkout.session.async_payment_succeeded") {
+    // HEY-87 / HEY-97: one grant per order, however often or in whichever order Stripe delivers these events; the
+    // event, the paid order and its grants commit together or not at all (then Stripe's retry applies them).
+    const done = await processCheckoutEvent(db, { id: event.id, type: event.type, session: event.data.object }, newShortCode);
+    if (done.duplicate) return false;
+    if (done.result.granted && done.result.receipt) await sendReceipt(done.result.receipt);
+    return true;
+  }
+
   const inserted = await db.insert(schema.webhookEvent).values({ id: event.id, type: event.type }).onConflictDoNothing().returning();
   if (inserted.length === 0) return false;
 
   switch (event.type) {
-    case "checkout.session.completed":
-    case "checkout.session.async_payment_succeeded": {
-      // HEY-87: one grant per order, however often or in whichever order Stripe delivers these events.
-      await fulfillCheckout(db, event.data.object, newShortCode, async ({ userId, qrCodeId, amountTotal, currency }) => {
-        const owner = await db.query.user.findFirst({ where: eq(schema.user.id, userId) });
-        if (owner) await sendPurchaseReceipt({ to: owner.email, name: owner.name, qrCodeId, amountTotal, currency });
-      });
-      break;
-    }
     case "customer.subscription.created":
     case "customer.subscription.updated":
     case "customer.subscription.deleted": {

@@ -5,7 +5,10 @@ import * as schema from "../db/schema";
 import { grantPackCredits } from "./allowances";
 
 type Db = NodePgDatabase<typeof schema>;
+/** The database, or a transaction of it (fulfilment runs inside processCheckoutEvent's transaction). */
+type Tx = Parameters<Parameters<Db["transaction"]>[0]>[0];
 export type Receipt = { userId: string; qrCodeId: string; amountTotal: number; currency: string };
+export type FulfillResult = { granted: true; receipt?: Receipt } | { granted: false; reason?: NotFulfilled };
 
 /** The parts of a Checkout Session fulfilment reads (as delivered in checkout.session.* events). */
 export type PaidSession = Pick<
@@ -91,12 +94,7 @@ const diagnose = (reason: NotFulfilled, orderId: string | null, sessionId: strin
  * comes from the stored order only.
  * Plain module (no "server-only") so the PostgreSQL tests exercise the same fulfilment as the webhook.
  */
-export async function fulfillCheckout(
-  db: Db,
-  s: PaidSession,
-  newShortCode: () => string,
-  receipt?: (r: Receipt) => Promise<unknown>,
-): Promise<{ granted: true } | { granted: false; reason?: NotFulfilled }> {
+export async function fulfillCheckout(db: Db | Tx, s: PaidSession, newShortCode: () => string): Promise<FulfillResult> {
   const { userId, qrCodeId, printPack } = s.metadata ?? {};
   const now = new Date();
 
@@ -122,7 +120,9 @@ export async function fulfillCheckout(
   if (s.mode !== "payment") return { granted: false };
 
   // HEY-88: the stored order is authoritative, found by the session attached to it (a replaced session finds none).
-  const order = await db.query.purchase.findFirst({ where: eq(schema.purchase.stripeCheckoutSessionId, s.id) });
+  // HEY-97: locked for the rest of the transaction, so a concurrent delivery for the same order waits and then finds it
+  // paid (one paid transition, one set of grants).
+  const [order] = await db.select().from(schema.purchase).where(eq(schema.purchase.stripeCheckoutSessionId, s.id)).for("update");
   if (!order) {
     // An unpaid session for no order (e.g. a Checkout that was never ours) isn't worth a warning.
     if (s.payment_status === "paid") diagnose("no_order", null, s.id);
@@ -168,6 +168,29 @@ export async function fulfillCheckout(
       ...(row.item === "single_qr_print_pack" ? { printPackAt: sql`coalesce(${schema.qrCode.printPackAt}, now())` } : {}),
     })
     .where(orderCode);
-  await receipt?.({ userId: row.userId, qrCodeId: row.qrCodeId, amountTotal: row.amountTotal, currency: row.currency });
-  return { granted: true };
+  // The receipt goes out after the transaction commits (processCheckoutEvent's caller): an email failure never undoes a
+  // purchase, and a rolled-back one never sends a receipt.
+  return { granted: true, receipt: { userId: row.userId, qrCodeId: row.qrCodeId, amountTotal: row.amountTotal, currency: row.currency } };
+}
+
+/**
+ * HEY-97: one Stripe checkout event, atomically. In one PostgreSQL transaction: claim the event (webhook_event), lock
+ * and verify the stored order, move it to paid and apply its grants. If any of it fails, everything rolls back,
+ * the event included, so Stripe's retry of the same event is processed again. A second delivery of the same event
+ * waits for the first and finds it claimed; a different event for the same session finds the order paid.
+ */
+export async function processCheckoutEvent(
+  db: Db,
+  event: { id: string; type: string; session: PaidSession },
+  newShortCode: () => string,
+): Promise<{ duplicate: true } | { duplicate: false; result: FulfillResult }> {
+  return db.transaction(async (tx) => {
+    const [claimed] = await tx
+      .insert(schema.webhookEvent)
+      .values({ id: event.id, type: event.type })
+      .onConflictDoNothing()
+      .returning({ id: schema.webhookEvent.id });
+    if (!claimed) return { duplicate: true } as const;
+    return { duplicate: false, result: await fulfillCheckout(tx, event.session, newShortCode) } as const;
+  });
 }
