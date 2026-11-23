@@ -103,5 +103,6 @@ describe("Contact card as vCard 3.0 (HEY-23)", () => {
       expect(parsed.version).toBe("3.0");
       expect(parsed.end).toBe("END:VCARD");
       expect(parsed).toMatchObject(expected);
-    });
+      // ZXing decodes are CPU-bound; these timed out at the 5 s default on a CI runner (b20007c).
+    }, 30_000);
 });

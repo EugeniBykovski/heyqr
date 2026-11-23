@@ -106,7 +106,8 @@ describe("QR capacity (HEY-24)", () => {
         expect(e.message).not.toContain("synthetic-pass-1");
         expect(logged.join("\n")).not.toContain("synthetic-pass-1");
         expect(logged).toEqual([]);
-      });
+        // About 1.5 s on a 12-core laptop; it timed out at the 5 s default on CI runners (c5f692e, 823e2ee, 24bc40f, 75f6f18).
+      }, 30_000);
     }
 
   it("a dynamic code encodes its short link, so long destinations never hit the limit", () => {

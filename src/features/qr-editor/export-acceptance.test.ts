@@ -9,6 +9,8 @@ vi.mock("server-only", () => ({}));
 vi.mock("@/env", () => ({ env: { NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr" } }));
 // The shared export function behind GET /api/export/[layoutId] (the HTTP route is exercised separately).
 const { renderExport } = await import("@/server/qr/export");
+// Each fixture renders and decodes every export (about 2 s on a 12-core laptop): room for a busy CI runner.
+vi.setConfig({ testTimeout: 30_000 });
 
 /*
  * HEY-39: the exported files match what was chosen in the editor and on the export page. Every expected size below is

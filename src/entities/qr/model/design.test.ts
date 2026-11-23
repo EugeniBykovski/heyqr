@@ -18,7 +18,8 @@ describe("designToLayout", () => {
       const out = composeLayout(designToLayout({ ...DEFAULT_DESIGN, pattern, logo: { kind: "icon", icon: "coffee" } }), url);
       expect(await decodeSvg(out.svg), pattern).toBe(url);
     }
-  });
+    // Several ZXing decodes in one test (about 2 s on a 12-core laptop): room for a busy CI runner, not the 5 s default.
+  }, 30_000);
 
   it("every frame keeps the caption and scans", async () => {
     for (const frameStyle of FRAME_STYLES) {
@@ -26,7 +27,8 @@ describe("designToLayout", () => {
       expect(out.svg).toContain("Scan me");
       expect(await decodeSvg(out.svg, 900), frameStyle).toBe(url);
     }
-  });
+    // Several ZXing decodes in one test (about 2 s on a 12-core laptop): room for a busy CI runner, not the 5 s default.
+  }, 30_000);
 });
 
 describe("content", () => {

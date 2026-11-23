@@ -62,12 +62,13 @@ describe("renderQr", () => {
     it(`styled ${pattern} modules still decode`, async () => {
       const svg = renderQrSvg(url, { ...base, pattern, eyeFrame: "rounded", eyeBall: "circle" });
       expect(await verifyScan(svg, url)).toBe(true);
-    });
+      // ZXing decodes are CPU-bound; these timed out at the 5 s default on a CI runner (b20007c).
+    }, 30_000);
 
   it("decodes with a centered icon on a plate", async () => {
     const svg = renderQrSvg(url, { ...base, pattern: "rounded", logo: { iconPath: "M12 2v20M2 12h20", size: 0.22, plate: "circle" } });
     expect(await decodeSvg(svg)).toBe(url);
-  });
+  }, 30_000);
 
   it("flags a logo that hides too much and suggests the safe size", () => {
     const report = renderQr(url, { ...base, logo: { iconPath: "M0 0", size: 0.46, plate: "square" } }).scan;
