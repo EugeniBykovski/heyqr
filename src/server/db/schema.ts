@@ -180,19 +180,49 @@ export const creditLedger = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
     delta: integer("delta").notNull(),
-    reason: text("reason").$type<"pack3" | "pack10" | "unlock">().notNull(),
+    /** pack3 / pack10: a pack's credits (+); unlock: one spent on a code (−1); refund: a refunded pack's unused credits (−). */
+    reason: text("reason").$type<"pack3" | "pack10" | "unlock" | "refund">().notNull(),
     purchaseId: text("purchase_id").references(() => purchase.id, { onDelete: "set null" }),
     qrCodeId: text("qr_code_id").references(() => qrCode.id, { onDelete: "set null" }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
     index("credit_ledger_user_idx").on(t.userId),
-    uniqueIndex("credit_ledger_purchase_uq").on(t.purchaseId),
+    // A pack's credits once per purchase, and its refund removal once (HEY-100).
+    uniqueIndex("credit_ledger_purchase_uq")
+      .on(t.purchaseId)
+      .where(sql`${t.reason} in ('pack3', 'pack10')`),
+    uniqueIndex("credit_ledger_refund_uq")
+      .on(t.purchaseId)
+      .where(sql`${t.reason} = 'refund'`),
     // One credit per code: a code can't be unlocked with credits twice.
     uniqueIndex("credit_ledger_unlock_uq")
       .on(t.qrCodeId)
       .where(sql`${t.reason} = 'unlock'`),
   ],
+);
+
+/**
+ * HEY-100: one Stripe refund (its id), applied once. `lines` are the order lines it refunds in full (by offer), from an
+ * explicit allocation or a full refund of what's left; `outcome` is applied (entitlements changed accordingly) or
+ * review (recorded, nothing changed: ambiguous or inconsistent, see `reason`).
+ */
+export const refund = pgTable(
+  "refund",
+  {
+    id: text("id").primaryKey(),
+    purchaseId: text("purchase_id").references(() => purchase.id, { onDelete: "set null" }),
+    userId: text("user_id").references(() => user.id, { onDelete: "set null" }),
+    stripePaymentIntentId: text("stripe_payment_intent_id"),
+    amount: integer("amount").notNull(),
+    currency: text("currency").notNull(),
+    lines: jsonb("lines").$type<PurchaseLine["offer"][]>(),
+    outcome: text("outcome").$type<"applied" | "review">().notNull(),
+    reason: text("reason"),
+    creditsRemoved: integer("credits_removed").notNull().default(0),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("refund_purchase_idx").on(t.purchaseId)],
 );
 
 /**

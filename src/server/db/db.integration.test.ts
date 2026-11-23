@@ -13,6 +13,7 @@ import { RESTORE_WINDOW_MS, restoreQrCodes, softDeleteQrCodes } from "../qr/dele
 import { cleanupLogos, referencedAssets, resolveLogos, storeLogos, type LogoStore } from "../qr/logo-assets";
 import { authorizedLogo, ownedLayout } from "../qr/file-access";
 import { fulfillCheckout, processCheckoutEvent } from "../billing/fulfillment";
+import { processRefundEvent, unusedPackCredits, type PaymentLookup } from "../billing/refunds";
 import { awaitingFulfillment, singleQrCheckout, type CheckoutPort, type SessionLookup } from "../billing/single-order";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
@@ -2353,5 +2354,323 @@ describe.skipIf(!url)("atomic one-time fulfilment (HEY-97, real PostgreSQL)", ()
     const bothAfter = await qr(q2);
     expect(bothAfter?.purchasedAt).not.toBeNull();
     expect(bothAfter?.printPackAt).toEqual(earlier);
+  });
+});
+
+/* HEY-100: confirmed Stripe refunds revoke what they paid for, once, line by line, from the stored order. */
+describe.skipIf(!url)("refund entitlements (HEY-100, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "hey100-owner", name: "Owner", email: "owner@hey100.test" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  let n = 0;
+  const uid = (p: string) => `hey100-${p}-${++n}-${Math.random().toString(36).slice(2, 7)}`;
+  const code = async (text: string) => {
+    const r = await saveQrWithLayouts(db, owner.id, { name: text, model: "static", content: { type: "text", text }, layouts });
+    if (!r.ok) throw new Error("fixture");
+    return r.data.qrCodeId;
+  };
+  const ITEMS = {
+    single_qr: [{ offer: "single", amount: 499 }],
+    single_qr_print_pack: [
+      { offer: "single", amount: 499 },
+      { offer: "printPack", amount: 299 },
+    ],
+    print_pack: [{ offer: "printPack", amount: 299 }],
+    pack3: [{ offer: "pack3", amount: 1199 }],
+    pack10: [{ offer: "pack10", amount: 2499 }],
+  } as const;
+  type Order = { id: string; sessionId: string; pi: string; amount: number; qrCodeId: string | null };
+  const order = async (item: keyof typeof ITEMS, qrCodeId: string | null): Promise<Order> => {
+    const id = uid("order");
+    const lines = ITEMS[item].map((l) => ({ ...l }));
+    const amount = lines.reduce((s, l) => s + l.amount, 0);
+    await db.insert(schema.purchase).values({
+      id,
+      userId: owner.id,
+      qrCodeId,
+      item,
+      lines,
+      stripeCheckoutSessionId: `cs_test_${id}`,
+      amountTotal: amount,
+      currency: "usd",
+    });
+    return { id, sessionId: `cs_test_${id}`, pi: `pi_${id}`, amount, qrCodeId };
+  };
+  const pay = (o: Order, type = "checkout.session.completed") =>
+    processCheckoutEvent(
+      db,
+      {
+        id: uid("evt"),
+        type,
+        session: {
+          id: o.sessionId,
+          mode: "payment",
+          status: "complete",
+          payment_status: "paid",
+          payment_intent: o.pi,
+          amount_subtotal: o.amount,
+          amount_total: o.amount,
+          total_details: { amount_discount: 0, amount_shipping: 0, amount_tax: 0 },
+          currency: "usd",
+          metadata: { userId: owner.id, orderId: o.id, ...(o.qrCodeId ? { qrCodeId: o.qrCodeId } : {}) },
+        },
+      },
+      () => "s",
+    );
+  const bought = async (item: keyof typeof ITEMS, qrCodeId: string | null) => {
+    const o = await order(item, qrCodeId);
+    expect(await pay(o)).toMatchObject({ duplicate: false, result: { granted: true } });
+    return o;
+  };
+  const noLookup: PaymentLookup = async () => {
+    throw new Error("not expected");
+  };
+  const refundEvent = (o: Order, amount: number, lines?: string, over: { id?: string; status?: string; eventId?: string } = {}) => ({
+    id: over.eventId ?? uid("evt"),
+    type: "refund.updated",
+    refund: {
+      id: over.id ?? uid("re"),
+      status: over.status ?? "succeeded",
+      amount,
+      currency: "usd",
+      payment_intent: o.pi,
+      metadata: (lines === undefined ? {} : { heyqr_lines: lines }) as Record<string, string>,
+    },
+  });
+  const qr = async (id: string) => db.query.qrCode.findFirst({ where: eq(schema.qrCode.id, id) });
+  const status = async (o: Order) => (await db.query.purchase.findFirst({ where: eq(schema.purchase.id, o.id) }))?.status;
+  const refundRow = async (id: string) => db.query.refund.findFirst({ where: eq(schema.refund.id, id) });
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 8 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await pool?.query(`delete from webhook_event where id like 'hey100-%'`);
+    await db?.delete(schema.refund).where(eq(schema.refund.userId, owner.id));
+    await pool?.query(`delete from refund where id like 'hey100-%'`);
+    await db?.delete(schema.creditLedger).where(eq(schema.creditLedger.userId, owner.id));
+    await db?.delete(schema.allowanceUse).where(eq(schema.allowanceUse.userId, owner.id));
+    await db?.delete(schema.purchase).where(eq(schema.purchase.userId, owner.id));
+    await db?.delete(schema.qrCode).where(eq(schema.qrCode.userId, owner.id));
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("Print Pack line of a combined order: revokes the Print Pack, keeps the base; applied once however it's delivered", async () => {
+    const q = await code("combined pp refund");
+    const o = await bought("single_qr_print_pack", q);
+    const before = await qr(q);
+    const e = refundEvent(o, 299, "printPack");
+    // The same event three times at once, then the same refund through another event (refund.created).
+    const results = await Promise.all([e, e, e].map((ev) => processRefundEvent(db, ev, noLookup)));
+    expect(results.filter((r) => !r.duplicate)).toEqual([
+      { duplicate: false, outcome: "applied", lines: ["printPack"], creditsRemoved: 0 },
+    ]);
+    expect(await processRefundEvent(db, { ...e, id: uid("evt"), type: "refund.created" }, noLookup)).toEqual({ duplicate: true });
+    const after = await qr(q);
+    expect(after?.printPackAt).toBeNull();
+    expect(after?.purchasedAt).toEqual(before?.purchasedAt);
+    expect(after?.status).toBe("active");
+    expect(await status(o)).toBe("paid");
+    // A late payment event (redelivery, or the async twin) can't bring the Print Pack back.
+    expect(await pay(o, "checkout.session.async_payment_succeeded")).toMatchObject({ result: { granted: false, reason: "already_paid" } });
+    expect((await qr(q))?.printPackAt).toBeNull();
+    // Refunding the same line again is recorded for review, not applied twice.
+    expect(await processRefundEvent(db, refundEvent(o, 299, "printPack"), noLookup)).toMatchObject({
+      outcome: "review",
+      reason: "line_already_refunded",
+    });
+  });
+
+  it("a partial refund is never guessed: without an explicit allocation, or with an inconsistent one, it's recorded for review", async () => {
+    const q = await code("ambiguous");
+    const o = await bought("single_qr_print_pack", q);
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      const cases: [ReturnType<typeof refundEvent>, string][] = [
+        [refundEvent(o, 299), "partial_unallocated"], // the Print Pack's price, but not allocated to it
+        [refundEvent(o, 250, "printPack"), "allocation_amount_mismatch"],
+        [refundEvent(o, 299, "pack3"), "unknown_line"],
+        [refundEvent(o, 299, ""), "unknown_line"],
+        [{ ...refundEvent(o, 798), refund: { ...refundEvent(o, 798).refund, currency: "pln" } }, "currency_mismatch"],
+      ];
+      for (const [ev, reason] of cases) {
+        expect(await processRefundEvent(db, ev, noLookup)).toEqual({ duplicate: false, outcome: "review", reason });
+        expect(await refundRow(ev.refund.id)).toMatchObject({
+          outcome: "review",
+          reason,
+          purchaseId: o.id,
+          lines: null,
+          creditsRemoved: 0,
+        });
+      }
+      const still = await qr(q);
+      expect(still?.purchasedAt).not.toBeNull();
+      expect(still?.printPackAt).not.toBeNull();
+      expect(await status(o)).toBe("paid");
+      expect(warn.mock.calls.map(([m]) => String(m).split(" ")[5])).toEqual([
+        "partial_unallocated",
+        "allocation_amount_mismatch",
+        "unknown_line",
+        "unknown_line",
+        "currency_mismatch",
+      ]);
+      for (const [m] of warn.mock.calls) expect(String(m)).not.toMatch(/heyqr_lines|metadata|pi_|@|299|798/);
+    } finally {
+      warn.mockRestore();
+    }
+    // A refund that isn't confirmed (pending) changes nothing and isn't even claimed.
+    const pending = refundEvent(o, 798, undefined, { status: "pending" });
+    expect(await processRefundEvent(db, pending, noLookup)).toEqual({ duplicate: false, outcome: "ignored", reason: "not_succeeded" });
+    expect(await refundRow(pending.refund.id)).toBeUndefined();
+    // A payment we don't know.
+    const unknown = { ...refundEvent(o, 100), refund: { ...refundEvent(o, 100).refund, payment_intent: "pi_unknown" } };
+    expect(await processRefundEvent(db, unknown, async () => ({ sessionId: null, amountPaid: null }))).toMatchObject({
+      outcome: "review",
+      reason: "unknown_order",
+    });
+  });
+
+  it("a full base refund revokes the base from that purchase only; other grants and other codes stay", async () => {
+    const q = await code("base refund");
+    const other = await code("unrelated");
+    const o = await bought("single_qr", q);
+    await bought("single_qr", other);
+    expect(await processRefundEvent(db, refundEvent(o, 499), noLookup)).toMatchObject({ outcome: "applied", lines: ["single"] });
+    expect(await qr(q)).toMatchObject({ purchasedAt: null, status: "draft" });
+    expect(await status(o)).toBe("refunded");
+    expect((await qr(other))?.purchasedAt).not.toBeNull();
+    // A late payment event for the refunded order: closed, nothing granted.
+    expect(await pay(o)).toMatchObject({ result: { granted: false, reason: "order_closed" } });
+    expect((await qr(q))?.purchasedAt).toBeNull();
+
+    // The same code also unlocked by a credit or a plan allowance: refunding the purchase keeps the unlock.
+    for (const source of ["credit", "allowance"] as const) {
+      const c = await code(`two sources ${source}`);
+      const paid = await bought("single_qr", c);
+      const ledgerId = uid("led");
+      if (source === "credit")
+        await db.insert(schema.creditLedger).values({ id: ledgerId, userId: owner.id, delta: -1, reason: "unlock", qrCodeId: c });
+      else
+        await db
+          .insert(schema.allowanceUse)
+          .values({ id: uid("al"), userId: owner.id, kind: "static_unlock", qrCodeId: c, periodStart: new Date() });
+      expect(await processRefundEvent(db, refundEvent(paid, 499), noLookup)).toMatchObject({ outcome: "applied" });
+      expect((await qr(c))?.purchasedAt).not.toBeNull();
+      // That debit had no pack behind it (a fixture): gone again so the credit tests start from zero.
+      await db.delete(schema.creditLedger).where(eq(schema.creditLedger.id, ledgerId));
+    }
+  });
+
+  it("combined orders: the base line alone keeps the Print Pack row but print access needs the base; a full refund revokes both", async () => {
+    const q = await code("base line only");
+    const o = await bought("single_qr_print_pack", q);
+    expect(await processRefundEvent(db, refundEvent(o, 499, "single"), noLookup)).toMatchObject({ outcome: "applied", lines: ["single"] });
+    const after = await qr(q);
+    // canDownloadPrintPack requires the base unlock (entitlements.ts), so the print files are refused now.
+    expect(after?.purchasedAt).toBeNull();
+    expect(after?.printPackAt).not.toBeNull();
+    expect(await status(o)).toBe("paid");
+    // The rest of the order (the Print Pack line) refunded next: the order is refunded.
+    expect(await processRefundEvent(db, refundEvent(o, 299), noLookup)).toMatchObject({ outcome: "applied", lines: ["printPack"] });
+    expect(await status(o)).toBe("refunded");
+    expect((await qr(q))?.printPackAt).toBeNull();
+
+    const q2 = await code("full combined");
+    const o2 = await bought("single_qr_print_pack", q2);
+    expect(await processRefundEvent(db, refundEvent(o2, 798), noLookup)).toMatchObject({
+      outcome: "applied",
+      lines: ["single", "printPack"],
+    });
+    expect(await qr(q2)).toMatchObject({ purchasedAt: null, printPackAt: null, status: "draft" });
+  });
+
+  it("a standalone Print Pack refunded in full: only the Print Pack goes; the base from its own purchase stays", async () => {
+    const q = await code("standalone pp");
+    await bought("single_qr", q);
+    const pp = await bought("print_pack", q);
+    const before = await qr(q);
+    expect(await processRefundEvent(db, refundEvent(pp, 299), noLookup)).toMatchObject({ outcome: "applied", lines: ["printPack"] });
+    const after = await qr(q);
+    expect(after?.printPackAt).toBeNull();
+    expect(after?.purchasedAt).toEqual(before?.purchasedAt);
+    expect(await status(pp)).toBe("refunded");
+  });
+
+  it("a refund that arrives before the payment event: the late payment grants only what wasn't refunded", async () => {
+    const q = await code("refund first, print pack");
+    const o = await order("single_qr_print_pack", q);
+    const lookup: PaymentLookup = async () => ({ sessionId: o.sessionId, amountPaid: 798 });
+    expect(await processRefundEvent(db, refundEvent(o, 299, "printPack"), lookup)).toMatchObject({
+      outcome: "applied",
+      lines: ["printPack"],
+    });
+    expect(await status(o)).toBe("pending");
+    expect(await pay(o)).toMatchObject({ result: { granted: true } });
+    const after = await qr(q);
+    expect(after?.purchasedAt).not.toBeNull();
+    expect(after?.printPackAt).toBeNull();
+    expect(await status(o)).toBe("paid");
+
+    const q2 = await code("refund first, full");
+    const o2 = await order("single_qr", q2);
+    expect(await processRefundEvent(db, refundEvent(o2, 499), async () => ({ sessionId: o2.sessionId, amountPaid: 499 }))).toMatchObject({
+      outcome: "applied",
+      lines: ["single"],
+    });
+    expect(await status(o2)).toBe("refunded");
+    expect(await pay(o2)).toMatchObject({ result: { granted: false, reason: "order_closed" } });
+    expect((await qr(q2))?.purchasedAt).toBeNull();
+  });
+
+  it("a refunded pack loses its unused credits (first in, first out); codes unlocked with its spent credits stay", async () => {
+    const balance = () => creditBalance(db, owner.id);
+    const start = await balance();
+    expect(start).toBe(0);
+    const pack = await bought("pack3", null);
+    const spent = await code("spent credit");
+    expect(await unlockStatic(db, owner.id, spent, "credit")).toMatchObject({ ok: true });
+    expect(await processRefundEvent(db, refundEvent(pack, 1199), noLookup)).toEqual({
+      duplicate: false,
+      outcome: "applied",
+      lines: ["pack3"],
+      creditsRemoved: 2,
+    });
+    expect(await balance()).toBe(0);
+    expect((await qr(spent))?.purchasedAt).not.toBeNull();
+    expect(await status(pack)).toBe("refunded");
+
+    // Two packs: spending takes the oldest first, so refunding the older one finds nothing unused.
+    const a = await bought("pack3", null);
+    const b = await bought("pack10", null);
+    for (let i = 0; i < 4; i++) expect((await unlockStatic(db, owner.id, await code(`fifo ${i}`), "credit")).ok).toBe(true);
+    expect(Object.fromEntries(await unusedPackCredits(db, owner.id))).toMatchObject({ [a.id]: 0, [b.id]: 9 });
+    expect(await processRefundEvent(db, refundEvent(a, 1199), noLookup)).toMatchObject({ outcome: "applied", creditsRemoved: 0 });
+    expect(await balance()).toBe(9);
+    expect(await processRefundEvent(db, refundEvent(b, 2499), noLookup)).toMatchObject({ outcome: "applied", creditsRemoved: 9 });
+    expect(await balance()).toBe(0);
+  });
+
+  it("a pack refund racing the redemption of its last credit: one of them wins, the balance never goes below zero", async () => {
+    for (let round = 0; round < 4; round++) {
+      expect(await creditBalance(db, owner.id)).toBe(0);
+      const pack = await bought("pack3", null);
+      for (let i = 0; i < 2; i++) expect((await unlockStatic(db, owner.id, await code(`race ${round} ${i}`), "credit")).ok).toBe(true);
+      expect(await creditBalance(db, owner.id)).toBe(1);
+      const last = await code(`race ${round} last`);
+      const [refund, unlock] = await Promise.all([
+        processRefundEvent(db, refundEvent(pack, 1199), noLookup),
+        unlockStatic(db, owner.id, last, "credit"),
+      ]);
+      expect(refund).toMatchObject({ outcome: "applied" });
+      const removed = refund.duplicate === false && refund.outcome === "applied" ? refund.creditsRemoved : -1;
+      const unlocked = (await qr(last))?.purchasedAt !== null;
+      // Either the redemption took the credit (nothing left to remove) or the refund removed it (redemption refused).
+      expect([unlocked && unlock.ok && removed === 0, !unlocked && !unlock.ok && removed === 1].filter(Boolean)).toHaveLength(1);
+      expect(await creditBalance(db, owner.id)).toBe(0);
+    }
   });
 });

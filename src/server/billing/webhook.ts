@@ -7,6 +7,8 @@ import { newId, newShortCode } from "../db/ids";
 import { sendPurchaseReceipt } from "../email/send";
 import { dynamicLimit } from "./allowances";
 import { processCheckoutEvent } from "./fulfillment";
+import { processRefundEvent } from "./refunds";
+import { stripe } from "./stripe";
 import { planForPrice } from "./catalog";
 
 /** After the purchase committed: a failed email is logged, never undoes the purchase or fails the webhook. */
@@ -38,6 +40,35 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<boolean> {
     if (done.duplicate) return false;
     if (done.result.granted && done.result.receipt) await sendReceipt(done.result.receipt);
     return true;
+  }
+
+  if (event.type === "refund.created" || event.type === "refund.updated") {
+    // HEY-100: a confirmed refund, applied once with its event (only succeeded refunds change anything).
+    const r = event.data.object;
+    const done = await processRefundEvent(
+      db,
+      {
+        id: event.id,
+        type: event.type,
+        refund: {
+          id: r.id,
+          status: r.status,
+          amount: r.amount,
+          currency: r.currency,
+          payment_intent: typeof r.payment_intent === "string" ? r.payment_intent : (r.payment_intent?.id ?? null),
+          metadata: r.metadata ?? null,
+        },
+      },
+      async (paymentIntentId) => {
+        // An order whose payment event hasn't been processed yet: its session and what Stripe received.
+        const [pi, sessions] = await Promise.all([
+          stripe().paymentIntents.retrieve(paymentIntentId),
+          stripe().checkout.sessions.list({ payment_intent: paymentIntentId, limit: 1 }),
+        ]);
+        return { sessionId: sessions.data[0]?.id ?? null, amountPaid: pi.amount_received ?? null };
+      },
+    );
+    return !done.duplicate;
   }
 
   const inserted = await db.insert(schema.webhookEvent).values({ id: event.id, type: event.type }).onConflictDoNothing().returning();
