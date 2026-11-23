@@ -1,5 +1,5 @@
 import "server-only";
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, GetObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { isConfigured, storageConfig } from "@/server/config";
 import type { LogoStore } from "@/server/qr/logo-assets";
@@ -33,8 +33,36 @@ export async function presignDownload(key: string, filename: string) {
   return getSignedUrl(s3(), command, { expiresIn: SIGNED_URL_TTL_SECONDS });
 }
 
-export async function putObject(key: string, body: Buffer | string, contentType: string) {
-  await s3().send(new PutObjectCommand({ Bucket: storageConfig().S3_BUCKET, Key: key, Body: body, ContentType: contentType }));
+export async function putObject(key: string, body: Buffer | string, contentType: string, contentDisposition?: string) {
+  await s3().send(
+    new PutObjectCommand({
+      Bucket: storageConfig().S3_BUCKET,
+      Key: key,
+      Body: body,
+      ContentType: contentType,
+      ContentDisposition: contentDisposition,
+    }),
+  );
+}
+
+/** Whether an object exists, with the download name it was stored with (HEY-102 paid files). */
+export async function headObject(key: string): Promise<{ contentDisposition: string | null } | null> {
+  try {
+    const res = await s3().send(new HeadObjectCommand({ Bucket: storageConfig().S3_BUCKET, Key: key }));
+    return { contentDisposition: res.ContentDisposition ?? null };
+  } catch (e) {
+    if (e instanceof Error && (e.name === "NotFound" || e.name === "NoSuchKey" || e.name === "404")) return null;
+    throw e;
+  }
+}
+
+/**
+ * HEY-102: a signed GET for one paid file, downloaded under its own name (the full Content-Disposition, UTF-8 names
+ * included). Same TTL as every signed link; issued only after the caller's owner and entitlement checks, never logged.
+ */
+export async function signedFileUrl(key: string, contentDisposition: string) {
+  const command = new GetObjectCommand({ Bucket: storageConfig().S3_BUCKET, Key: key, ResponseContentDisposition: contentDisposition });
+  return getSignedUrl(s3(), command, { expiresIn: SIGNED_URL_TTL_SECONDS });
 }
 
 export async function getObject(key: string): Promise<Uint8Array | null> {

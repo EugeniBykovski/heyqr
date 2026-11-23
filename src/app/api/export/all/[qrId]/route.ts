@@ -4,10 +4,11 @@ import { z } from "zod";
 import { getSession } from "@/server/auth";
 import { canDownload } from "@/server/billing/entitlements";
 import { downloadFileName, encodedValue, renderExport } from "@/server/qr/export";
+import { deliverPaidFile } from "@/server/qr/paid-delivery";
 import { getQrCode } from "@/server/qr/repository";
 import { zipFiles } from "@/server/qr/zip";
 
-const query = z.object({ format: z.enum(["png", "svg"]).default("png") });
+const query = z.object({ format: z.enum(["png", "svg"]).default("png"), prepare: z.enum(["1"]).optional() });
 
 /**
  * Design 4.3 "Download all": every layout of the owner's unlocked code in one ZIP, each at its default resolution
@@ -23,24 +24,49 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/api/export/a
   if (!qr) return NextResponse.json({ error: "not_found" }, { status: 404 });
   if (!(await canDownload(session.user.id, qr))) return NextResponse.json({ error: "payment_required" }, { status: 402 });
   const value = encodedValue(qr);
-  const files: { name: string; data: Uint8Array }[] = [];
-  const used = new Set<string>();
-  for (const layout of qr.layouts) {
-    const L = layout.design.layout;
-    if (!layoutCapacity(L, value).ok) continue;
-    const file = await renderExport(L, value, q.data.format, L.unit === "mm" ? { dpi: PNG_DEFAULTS.dpi } : { scale: PNG_DEFAULTS.scale });
-    if (!file.scan.ok) continue;
-    let name = downloadFileName(`${qr.name} ${layout.name}`, q.data.format).name;
-    for (let i = 2; used.has(name); i++) name = name.replace(/(\.[a-z]+)$/, `-${i}$1`);
-    used.add(name);
-    files.push({ name, data: new Uint8Array(file.body) });
-  }
-  if (!files.length) return NextResponse.json({ error: "nothing_to_download" }, { status: 422 });
-  return new NextResponse(new Uint8Array(zipFiles(files)), {
-    headers: {
-      "Content-Type": "application/zip",
-      "Content-Disposition": downloadFileName(`${qr.name} layouts`, "zip").header,
-      "Cache-Control": "private, no-store",
+  // HEY-102: one stored ZIP per set of saved layouts (ids and revisions) and format, delivered through a signed link.
+  return deliverPaidFile(
+    request,
+    {
+      userId: session.user.id,
+      qrCodeId: qr.id,
+      scope: "all",
+      revision: qr.layouts.reduce((latest, l) => (l.updatedAt > latest ? l.updatedAt : latest), new Date(0)).toISOString(),
+      kind: `all-${q.data.format}`,
+      ext: "zip",
+      facts: {
+        layouts: qr.layouts.map((l) => [l.id, l.updatedAt.toISOString(), l.name]),
+        design: qr.layouts.map((l) => l.design),
+        value,
+        name: qr.name,
+      },
     },
-  });
+    async () => {
+      const files: { name: string; data: Uint8Array }[] = [];
+      const used = new Set<string>();
+      for (const layout of qr.layouts) {
+        const L = layout.design.layout;
+        if (!layoutCapacity(L, value).ok) continue;
+        const file = await renderExport(
+          L,
+          value,
+          q.data.format,
+          L.unit === "mm" ? { dpi: PNG_DEFAULTS.dpi } : { scale: PNG_DEFAULTS.scale },
+        );
+        if (!file.scan.ok) continue;
+        let name = downloadFileName(`${qr.name} ${layout.name}`, q.data.format).name;
+        for (let i = 2; used.has(name); i++) name = name.replace(/(\.[a-z]+)$/, `-${i}$1`);
+        used.add(name);
+        files.push({ name, data: new Uint8Array(file.body) });
+      }
+      if (!files.length) return NextResponse.json({ error: "nothing_to_download" }, { status: 422 });
+      return new NextResponse(new Uint8Array(zipFiles(files)), {
+        headers: {
+          "Content-Type": "application/zip",
+          "Content-Disposition": downloadFileName(`${qr.name} layouts`, "zip").header,
+          "Cache-Control": "private, no-store",
+        },
+      });
+    },
+  );
 }
