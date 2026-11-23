@@ -12,7 +12,7 @@ import { designSettingsOf, readLayoutRecord } from "../../entities/qr/model/desi
 import { RESTORE_WINDOW_MS, restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { cleanupLogos, referencedAssets, resolveLogos, storeLogos, type LogoStore } from "../qr/logo-assets";
 import { authorizedLogo, ownedLayout } from "../qr/file-access";
-import { fulfillCheckout } from "../billing/fulfillment";
+import { fulfillCheckout, processCheckoutEvent } from "../billing/fulfillment";
 import { awaitingFulfillment, singleQrCheckout, type CheckoutPort, type SessionLookup } from "../billing/single-order";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
@@ -1684,20 +1684,18 @@ describe.skipIf(!url)("repeat-download entitlements (HEY-87, real PostgreSQL)", 
     const other = await code("single"); // same content, its own code
     await order("o1", qr);
     const receipts: string[] = [];
-    const onReceipt = async (r: { qrCodeId: string }) => void receipts.push(r.qrCodeId);
-    expect(await fulfillCheckout(db, session("o1", { qrCodeId: qr, layoutId: "x", kind: "code" }), () => "s", onReceipt)).toEqual({
-      granted: true,
-    });
+    const deliver = async (metadata: Record<string, string>) => {
+      const r = await fulfillCheckout(db, session("o1", metadata), () => "s");
+      if (r.granted && r.receipt) receipts.push(r.receipt.qrCodeId);
+      return r;
+    };
+    expect(await deliver({ qrCodeId: qr, layoutId: "x", kind: "code" })).toMatchObject({ granted: true });
     const first = await qrRow(qr);
     expect(first.purchased_at).not.toBeNull();
     expect(first.status).toBe("active");
     // Stripe redelivers, and sends async_payment_succeeded for the same session.
-    expect(await fulfillCheckout(db, session("o1", { qrCodeId: qr, kind: "code" }), () => "s", onReceipt)).toMatchObject({
-      granted: false,
-    });
-    expect(await fulfillCheckout(db, session("o1", { qrCodeId: qr, kind: "code" }), () => "s", onReceipt)).toMatchObject({
-      granted: false,
-    });
+    expect(await deliver({ qrCodeId: qr, kind: "code" })).toMatchObject({ granted: false });
+    expect(await deliver({ qrCodeId: qr, kind: "code" })).toMatchObject({ granted: false });
     expect((await qrRow(qr)).purchased_at).toEqual(first.purchased_at);
     expect(receipts).toEqual([qr]);
     expect((await pool.query(`select count(*)::int as n from purchase where user_id = $1 and status = 'paid'`, [owner.id])).rows[0].n).toBe(
@@ -1850,7 +1848,7 @@ describe.skipIf(!url)("Single QR order binding (HEY-88, real PostgreSQL)", () =>
     expect(sessions.get(sessionId)).toEqual({ orderId: order?.id, status: "open" });
 
     const meta = { userId: owner.id, qrCodeId: a.qrCodeId, orderId: order?.id ?? "", kind: "code" };
-    expect(await fulfillCheckout(db, paidEvent(sessionId, meta), () => "s")).toEqual({ granted: true });
+    expect(await fulfillCheckout(db, paidEvent(sessionId, meta), () => "s")).toMatchObject({ granted: true });
     const [paid] = await ordersOf(a.qrCodeId);
     expect(paid).toMatchObject({
       id: order?.id,
@@ -1987,7 +1985,7 @@ describe.skipIf(!url)("Single QR order binding (HEY-88, real PostgreSQL)", () =>
     // Once the webhook has fulfilled it, nothing awaits.
     expect(
       await fulfillCheckout(db, paidEvent(sessionId, { userId: owner.id, qrCodeId: a.qrCodeId, orderId: order?.id ?? "" }), () => "s"),
-    ).toEqual({ granted: true });
+    ).toMatchObject({ granted: true });
     expect(await awaitingFulfillment(db, as("complete", "paid"), owner.id, a.qrCodeId)).toBeNull();
   });
 
@@ -2068,7 +2066,7 @@ describe.skipIf(!url)("Single QR order binding (HEY-88, real PostgreSQL)", () =>
       ]);
       for (const w of warnings) expect(w).not.toMatch(/pi_|metadata|amount_|@|printPack|754|798/);
 
-      expect(await fulfillCheckout(db, valid, () => "s")).toEqual({ granted: true });
+      expect(await fulfillCheckout(db, valid, () => "s")).toMatchObject({ granted: true });
       const paid = await db.query.purchase.findFirst({ where: eq(schema.purchase.id, order?.id ?? "") });
       // Paid as charged; the expected items stay as they were bought.
       expect(paid).toMatchObject({ status: "paid", amountTotal: 754, stripeCheckoutSessionId: sessionId, lines });
@@ -2118,5 +2116,242 @@ describe.skipIf(!url)("Single QR order binding (HEY-88, real PostgreSQL)", () =>
     expect(sessions.get("cs_test_legacy_open")?.status).toBe("expired");
     const paid = await db.query.purchase.findFirst({ where: eq(schema.purchase.id, "hey88-legacy-paid") });
     expect(paid).toMatchObject({ status: "paid", stripeCheckoutSessionId: "cs_test_legacy_paid", amountTotal: 999 });
+  });
+});
+
+/* HEY-97: a checkout event, its paid order and the order's grants commit together or not at all. */
+describe.skipIf(!url)("atomic one-time fulfilment (HEY-97, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "hey97-owner", name: "Owner", email: "owner@hey97.test" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  let n = 0;
+  const uid = (p: string) => `hey97-${p}-${++n}-${Math.random().toString(36).slice(2, 7)}`;
+  const code = async (text: string) => {
+    const r = await saveQrWithLayouts(db, owner.id, { name: text, model: "static", content: { type: "text", text }, layouts });
+    if (!r.ok) throw new Error("fixture");
+    return r.data.qrCodeId;
+  };
+  type Line = { offer: "single" | "printPack" | "pack3" | "pack10"; amount: number };
+  const ITEMS = {
+    single_qr: [{ offer: "single", amount: 499 }],
+    single_qr_print_pack: [
+      { offer: "single", amount: 499 },
+      { offer: "printPack", amount: 299 },
+    ],
+    print_pack: [{ offer: "printPack", amount: 299 }],
+    pack3: [{ offer: "pack3", amount: 1199 }],
+    pack10: [{ offer: "pack10", amount: 2499 }],
+  } satisfies Record<string, Line[]>;
+  /** A pending order with its attached session, as checkout leaves it. */
+  const order = async (item: keyof typeof ITEMS, qrCodeId: string | null) => {
+    const id = uid("order");
+    const lines = ITEMS[item];
+    const amount = lines.reduce((s, l) => s + l.amount, 0);
+    await db.insert(schema.purchase).values({
+      id,
+      userId: owner.id,
+      qrCodeId,
+      item,
+      lines,
+      stripeCheckoutSessionId: `cs_test_${id}`,
+      amountTotal: amount,
+      currency: "usd",
+    });
+    return { id, sessionId: `cs_test_${id}`, amount, qrCodeId };
+  };
+  const event = (o: Awaited<ReturnType<typeof order>>, type = "checkout.session.completed", id = uid("evt")) => ({
+    id,
+    type,
+    session: {
+      id: o.sessionId,
+      mode: "payment" as const,
+      status: "complete" as const,
+      payment_status: "paid" as const,
+      payment_intent: `pi_${o.id}`,
+      amount_subtotal: o.amount,
+      amount_total: o.amount,
+      total_details: { amount_discount: 0, amount_shipping: 0, amount_tax: 0 },
+      currency: "usd",
+      metadata: { userId: owner.id, orderId: o.id, ...(o.qrCodeId ? { qrCodeId: o.qrCodeId } : {}) },
+    },
+  });
+  const row = async (orderId: string) => db.query.purchase.findFirst({ where: eq(schema.purchase.id, orderId) });
+  const qr = async (id: string) => db.query.qrCode.findFirst({ where: eq(schema.qrCode.id, id) });
+  const claimed = async (eventId: string) =>
+    (await pool.query(`select count(*)::int as n from webhook_event where id = $1`, [eventId])).rows[0].n;
+  /** A real database error inside the grant, after the order update (a trigger on the grant's own write). */
+  const failing = async (sql: string, run: () => Promise<unknown>) => {
+    await pool.query(
+      `create or replace function hey97_fail() returns trigger language plpgsql as $$ begin raise exception 'hey97 injected failure'; end $$`,
+    );
+    await pool.query(sql);
+    try {
+      await run();
+    } finally {
+      await pool.query(
+        `drop trigger if exists hey97_fail on qr_code; drop trigger if exists hey97_fail on credit_ledger; drop function if exists hey97_fail()`,
+      );
+    }
+  };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 8 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await pool?.query(`delete from webhook_event where id like 'hey97-%'`);
+    await db?.delete(schema.creditLedger).where(eq(schema.creditLedger.userId, owner.id));
+    await db?.delete(schema.purchase).where(eq(schema.purchase.userId, owner.id));
+    await db?.delete(schema.qrCode).where(eq(schema.qrCode.userId, owner.id));
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("a failure after the order update rolls back the order, the grants and the event; the retry grants once", async () => {
+    const q = await code("rollback");
+    const o = await order("single_qr_print_pack", q);
+    const e = event(o);
+    // The grant (the code's unlock) fails after the order was moved to paid in the same transaction.
+    await failing(
+      `create trigger hey97_fail before update on qr_code for each row when (new.id = '${q}') execute function hey97_fail()`,
+      async () => {
+        await expect(processCheckoutEvent(db, e, () => "s")).rejects.toThrow();
+      },
+    );
+    expect(await row(o.id)).toMatchObject({ status: "pending", paidAt: null, stripePaymentIntentId: null, amountTotal: o.amount });
+    expect(await qr(q)).toMatchObject({ purchasedAt: null, printPackAt: null, status: "draft" });
+    expect(await claimed(e.id)).toBe(0);
+
+    // Stripe retries the same event: one successful grant.
+    expect(await processCheckoutEvent(db, e, () => "s")).toMatchObject({
+      duplicate: false,
+      result: { granted: true, receipt: { qrCodeId: q } },
+    });
+    const paid = await row(o.id);
+    expect(paid).toMatchObject({ status: "paid", amountTotal: o.amount });
+    const unlocked = await qr(q);
+    expect(unlocked?.purchasedAt).not.toBeNull();
+    expect(unlocked?.printPackAt).not.toBeNull();
+    expect(await claimed(e.id)).toBe(1);
+    expect(await processCheckoutEvent(db, e, () => "s")).toEqual({ duplicate: true });
+    expect((await row(o.id))?.paidAt).toEqual(paid?.paidAt);
+  });
+
+  it("a pack whose credit write fails rolls back too; the retry credits it once", async () => {
+    const o = await order("pack3", null);
+    const e = event(o);
+    const before = await creditBalance(db, owner.id);
+    await failing(
+      `create trigger hey97_fail before insert on credit_ledger for each row when (new.purchase_id = '${o.id}') execute function hey97_fail()`,
+      async () => {
+        await expect(processCheckoutEvent(db, e, () => "s")).rejects.toThrow();
+      },
+    );
+    expect((await row(o.id))?.status).toBe("pending");
+    expect(await creditBalance(db, owner.id)).toBe(before);
+    expect(await claimed(e.id)).toBe(0);
+    expect(await processCheckoutEvent(db, e, () => "s")).toMatchObject({ duplicate: false, result: { granted: true } });
+    expect(await creditBalance(db, owner.id)).toBe(before + 3);
+  });
+
+  it("the same event at once, then two distinct completion events for one session: one paid transition, one set of grants", async () => {
+    const q = await code("concurrent");
+    const o = await order("single_qr", q);
+    const e = event(o);
+    const same = await Promise.all([1, 2, 3, 4].map(() => processCheckoutEvent(db, e, () => "s")));
+    expect(same.filter((r) => !r.duplicate)).toHaveLength(1);
+    expect(same.filter((r) => !r.duplicate && r.result.granted)).toHaveLength(1);
+    const paid = await row(o.id);
+    const unlockedAt = (await qr(q))?.purchasedAt;
+    expect(paid?.status).toBe("paid");
+    expect(unlockedAt).not.toBeNull();
+    // Stripe also sends async_payment_succeeded (another event id) for the same session: processed, nothing granted.
+    expect(await processCheckoutEvent(db, event(o, "checkout.session.async_payment_succeeded"), () => "s")).toEqual({
+      duplicate: false,
+      result: { granted: false, reason: "already_paid" },
+    });
+    expect((await row(o.id))?.paidAt).toEqual(paid?.paidAt);
+    expect((await qr(q))?.purchasedAt).toEqual(unlockedAt);
+
+    // Two distinct completion events for a fresh order, at the same moment.
+    const q2 = await code("concurrent distinct");
+    const o2 = await order("single_qr_print_pack", q2);
+    const both = await Promise.all(
+      [event(o2), event(o2, "checkout.session.async_payment_succeeded")].map((ev) => processCheckoutEvent(db, ev, () => "s")),
+    );
+    expect(both.every((r) => !r.duplicate)).toBe(true);
+    expect(both.filter((r) => !r.duplicate && r.result.granted)).toHaveLength(1);
+    expect(both.filter((r) => !r.duplicate && !r.result.granted && r.result.reason === "already_paid")).toHaveLength(1);
+    expect((await row(o2.id))?.status).toBe("paid");
+  });
+
+  it("credits: duplicate fulfilment of a pack credits it once", async () => {
+    const o = await order("pack10", null);
+    const before = await creditBalance(db, owner.id);
+    const e = event(o);
+    const results = await Promise.all(
+      [e, e, event(o), event(o, "checkout.session.async_payment_succeeded")].map((ev) => processCheckoutEvent(db, ev, () => "s")),
+    );
+    expect(results.filter((r) => !r.duplicate && r.result.granted)).toHaveLength(1);
+    expect(await creditBalance(db, owner.id)).toBe(before + 10);
+    const rows = await db.query.creditLedger.findMany({ where: eq(schema.creditLedger.purchaseId, o.id) });
+    expect(rows).toEqual([expect.objectContaining({ delta: 10, reason: "pack10" })]);
+  });
+
+  it("credits: two codes competing for the last credit make exactly one debit and one unlock", async () => {
+    // Spend down to exactly one credit.
+    let balance = await creditBalance(db, owner.id);
+    while (balance > 1) {
+      const spent = await unlockStatic(db, owner.id, await code(`spend ${balance}`), "credit");
+      expect(spent.ok).toBe(true);
+      balance = await creditBalance(db, owner.id);
+    }
+    if (balance < 1) {
+      const o = await order("pack3", null);
+      await processCheckoutEvent(db, event(o), () => "s");
+      for (let i = 0; i < 2; i++) await unlockStatic(db, owner.id, await code(`spend extra ${i}`), "credit");
+    }
+    expect(await creditBalance(db, owner.id)).toBe(1);
+    const [a, b] = [await code("last credit A"), await code("last credit B")];
+    const debitsBefore = (await db.query.creditLedger.findMany({ where: eq(schema.creditLedger.userId, owner.id) })).filter(
+      (r) => r.reason === "unlock",
+    ).length;
+    const results = await Promise.all([unlockStatic(db, owner.id, a, "credit"), unlockStatic(db, owner.id, b, "credit")]);
+    expect(results.filter((r) => r.ok)).toHaveLength(1);
+    expect(results.filter((r) => !r.ok && r.error === "no_credits")).toHaveLength(1);
+    const debits = (await db.query.creditLedger.findMany({ where: eq(schema.creditLedger.userId, owner.id) })).filter(
+      (r) => r.reason === "unlock",
+    );
+    expect(debits.length - debitsBefore).toBe(1);
+    const unlocked = [(await qr(a))?.purchasedAt, (await qr(b))?.purchasedAt].filter((d) => d !== null && d !== undefined);
+    expect(unlocked).toHaveLength(1);
+    expect(await creditBalance(db, owner.id)).toBe(0);
+  });
+
+  it("grants are independent: a standalone Print Pack keeps the base export; Single QR + Print Pack keeps an earlier Print Pack", async () => {
+    const q = await code("base then print pack");
+    const base = await order("single_qr", q);
+    await processCheckoutEvent(db, event(base), () => "s");
+    const unlocked = await qr(q);
+    expect(unlocked?.purchasedAt).not.toBeNull();
+    expect(unlocked?.printPackAt).toBeNull();
+    const pp = await order("print_pack", q);
+    expect(await processCheckoutEvent(db, event(pp), () => "s")).toEqual({ duplicate: false, result: { granted: true } });
+    const after = await qr(q);
+    expect(after?.printPackAt).not.toBeNull();
+    expect(after?.purchasedAt).toEqual(unlocked?.purchasedAt);
+    expect(after?.status).toBe("active");
+
+    // A code that already had its Print Pack (e.g. from a plan) keeps that time when Single QR + Print Pack is paid.
+    const q2 = await code("print pack first");
+    const earlier = new Date("2026-11-01T00:00:00Z");
+    await db.update(schema.qrCode).set({ printPackAt: earlier }).where(eq(schema.qrCode.id, q2));
+    const both = await order("single_qr_print_pack", q2);
+    await processCheckoutEvent(db, event(both), () => "s");
+    const bothAfter = await qr(q2);
+    expect(bothAfter?.purchasedAt).not.toBeNull();
+    expect(bothAfter?.printPackAt).toEqual(earlier);
   });
 });
