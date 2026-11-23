@@ -15,6 +15,9 @@ export type PrintContext = {
   settings: PrintSettings;
   name: string;
   layoutName: string;
+  /** HEY-102: the code it belongs to and the layout's saved revision (where its paid files are stored). */
+  qrCodeId: string;
+  revision: string;
   entitled: boolean;
   unlocked: boolean;
   forSale: boolean;
@@ -53,6 +56,8 @@ export async function loadPrint(
       settings,
       name: record.qrCode.name,
       layoutName: record.name,
+      qrCodeId: record.qrCode.id,
+      revision: record.updatedAt.toISOString(),
       entitled,
       unlocked,
       forSale: printPackForSale(await getCurrency()),

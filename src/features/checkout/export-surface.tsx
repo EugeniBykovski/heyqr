@@ -46,8 +46,9 @@ export function defaultResolution(layout: Layout, wanted?: number): number {
   return choices.includes(fallback) ? fallback : (choices[0] ?? fallback);
 }
 /** The only download URL: /api/export checks the entitlement and renders from the saved layout. */
-export function exportFileUrl(layoutId: string, layout: Layout, s: ExportSettings): string {
-  const q = new URLSearchParams({ format: s.format });
+export function exportFileUrl(layoutId: string, layout: Layout, s: ExportSettings, qrCodeId?: string): string {
+  // HEY-102: with the code's id the server also checks the pair (a layout of another code is refused).
+  const q = new URLSearchParams({ ...(qrCodeId ? { qr: qrCodeId } : {}), format: s.format });
   if (s.format === "png") q.set(layout.unit === "mm" ? "dpi" : "scale", String(s.resolution));
   if (s.transparent) q.set("transparent", "1");
   return `/api/export/${layoutId}?${q.toString()}`;
@@ -229,7 +230,6 @@ export function ExportSurface(props: ExportSurfaceProps) {
     settings.format === "png" ? `${pixels.width} × ${pixels.height} px` : print ? `${layoutDims} · vector` : `${layoutDims} · vector`;
   const fmt = settings.format.toUpperCase();
   const amount = formatMoney(props.price.cents, props.price.currency);
-  const readyUrl = useRef<string | null>(null);
   // Design 7.3: the itemized order of this path (display only; the server prices the checkout itself).
   const orderLines: { label: string; value: string; included?: boolean; cents?: number }[] = [];
   if (offer && !entitled) {
@@ -283,13 +283,6 @@ export function ExportSurface(props: ExportSurfaceProps) {
     return () => window.clearInterval(id);
   }, [confirming, router]);
 
-  useEffect(
-    () => () => {
-      if (readyUrl.current) URL.revokeObjectURL(readyUrl.current);
-    },
-    [],
-  );
-
   /*
    * Prepares the file with the current settings. The download itself is always the user's own click on a link to the
    * prepared file (design 3.8 "File ready"): a download started by script after the request finished is an "automatic
@@ -299,7 +292,10 @@ export function ExportSurface(props: ExportSurfaceProps) {
     if (props.mode !== "signed") return;
     setFile({ kind: "preparing" });
     try {
-      const res = await fetch(exportFileUrl(props.layoutId, layout, settings), { credentials: "same-origin" });
+      // HEY-102: the server checks access and makes sure the file is stored (no bytes here). The download is then the
+      // user's click on the file route itself, which rechecks access and hands over a fresh short-lived signed link.
+      const href = exportFileUrl(props.layoutId, layout, settings, props.qrCodeId);
+      const res = await fetch(`${href}&prepare=1`, { credentials: "same-origin" });
       if (res.status === 401) {
         setSessionEnded(true);
         setFile({ kind: "idle" });
@@ -314,11 +310,12 @@ export function ExportSurface(props: ExportSurfaceProps) {
         });
         return;
       }
-      const name = fileNameFrom(res.headers.get("Content-Disposition"), `qr-code.${settings.format}`);
-      const url = URL.createObjectURL(await res.blob());
-      if (readyUrl.current) URL.revokeObjectURL(readyUrl.current);
-      readyUrl.current = url;
-      setFile({ kind: "ready", url, name });
+      const type = res.headers.get("Content-Type") ?? "";
+      // Without private storage (local dev) the route answers with the file itself, as before.
+      const name = type.includes("application/json")
+        ? (((await res.json().catch(() => ({}))) as { name?: string }).name ?? `qr-code.${settings.format}`)
+        : fileNameFrom(res.headers.get("Content-Disposition"), `qr-code.${settings.format}`);
+      setFile({ kind: "ready", url: href, name });
     } catch {
       setFile({ kind: "error", reason: "failed" });
     }

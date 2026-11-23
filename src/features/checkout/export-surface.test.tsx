@@ -94,20 +94,20 @@ describe("file states (design 3.7–3.10)", () => {
     signed();
     fireEvent.click(screen.getByRole("button", { name: "4×" }));
     fireEvent.click(screen.getByRole("button", { name: "Download PNG" }));
-    expect(fetchMock).toHaveBeenCalledWith("/api/export/l1?format=png&scale=4", { credentials: "same-origin" });
+    // HEY-102: prepare checks access and stores the file; no bytes come to the page.
+    expect(fetchMock).toHaveBeenCalledWith("/api/export/l1?qr=q1&format=png&scale=4&prepare=1", { credentials: "same-origin" });
     expect(screen.getAllByText("Preparing your PNG…").length).toBeGreaterThan(0);
     // Settings are frozen while the file is prepared.
     expect(screen.getByRole("button", { name: "SVG" })).toBeDisabled();
-    await act(async () =>
-      finish(new Response(new Blob(["png"]), { headers: { "Content-Disposition": `attachment; filename="portfolio-card.png"` } })),
-    );
+    await act(async () => finish(Response.json({ ready: true, name: "portfolio-card.png" })));
     expect(screen.getByText("Your PNG is ready.")).toBeInTheDocument();
     const link = screen.getByRole("link", { name: "Download PNG" });
     expect(link).toHaveAttribute("download", "portfolio-card.png");
-    expect(link).toHaveAttribute("href", "blob:file");
+    // The click goes to the file route, which rechecks access and redirects to a fresh short-lived signed link.
+    expect(link).toHaveAttribute("href", "/api/export/l1?qr=q1&format=png&scale=4");
     fireEvent.click(link);
     expect(screen.getByText(/Downloaded portfolio-card.png/)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Download again" })).toHaveAttribute("href", "blob:file");
+    expect(screen.getByRole("link", { name: "Download again" })).toHaveAttribute("href", "/api/export/l1?qr=q1&format=png&scale=4");
     expect(fetchMock).toHaveBeenCalledTimes(1);
     // A different setting is a different file: back to Download.
     fireEvent.click(screen.getByRole("button", { name: "2×" }));
@@ -118,14 +118,17 @@ describe("file states (design 3.7–3.10)", () => {
     const fetchMock = vi
       .fn()
       .mockResolvedValueOnce(new Response(JSON.stringify({ error: "boom" }), { status: 500 }))
-      .mockResolvedValueOnce(new Response(new Blob(["svg"]), { headers: { "Content-Disposition": `attachment; filename="card.svg"` } }));
+      .mockResolvedValueOnce(Response.json({ ready: true, name: "card.svg" }));
     vi.stubGlobal("fetch", fetchMock);
     signed();
     fireEvent.click(screen.getByRole("button", { name: "SVG" }));
     await act(async () => fireEvent.click(screen.getByRole("button", { name: "Download SVG" })));
     expect(screen.getByRole("alert")).toHaveTextContent("We couldn’t prepare your SVG. Your payment and settings are safe.");
     await act(async () => fireEvent.click(screen.getByRole("button", { name: "Try again" })));
-    expect(fetchMock.mock.calls.map((c) => c[0])).toEqual(["/api/export/l1?format=svg", "/api/export/l1?format=svg"]);
+    expect(fetchMock.mock.calls.map((c) => c[0])).toEqual([
+      "/api/export/l1?qr=q1&format=svg&prepare=1",
+      "/api/export/l1?qr=q1&format=svg&prepare=1",
+    ]);
     expect(startCheckout).not.toHaveBeenCalled();
     expect(screen.getByRole("link", { name: "Download SVG" })).toHaveAttribute("download", "card.svg");
   });

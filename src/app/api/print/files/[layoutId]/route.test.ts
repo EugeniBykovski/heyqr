@@ -26,6 +26,8 @@ const ctx = (unlocked: boolean) => ({
     settings: DEFAULT_PRINT_SETTINGS,
     name: "Menu",
     layoutName: "Card",
+    qrCodeId: "q1",
+    revision: "r1",
     entitled: true,
     unlocked,
     forSale: true,
@@ -40,6 +42,13 @@ describe("GET /api/print/files/:layoutId", () => {
   beforeEach(() => {
     session.mockResolvedValue({ user: { id: "u1" } });
     load.mockResolvedValue(ctx(true));
+  });
+
+  it("a layout of another code than the one named: 404, no file (HEY-102)", async () => {
+    const res = await call(`file=pdf&key=${page.renderKey}&qr=q-other`);
+    expect(res.status).toBe(404);
+    expect(await res.json()).toEqual({ error: "not_found" });
+    expect((await call(`file=pdf&key=${page.renderKey}&qr=q1`)).status).toBe(200);
   });
 
   it("401 signed out, 404 not the owner's, 400 without a file", async () => {
