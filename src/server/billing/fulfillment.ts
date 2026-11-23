@@ -2,6 +2,7 @@ import { and, eq, sql } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import type Stripe from "stripe";
 import * as schema from "../db/schema";
+import { assignShortCode } from "../qr/short-code";
 import { grantPackCredits } from "./allowances";
 import { refundedOffers } from "./refunds";
 
@@ -106,11 +107,12 @@ export async function fulfillCheckout(db: Db | Tx, s: PaidSession, newShortCode:
     // A plan bought for a code (export or the trial's test code): the code goes live and keeps its short link.
     const qr = await db.query.qrCode.findFirst({ where: ownCode });
     if (!qr) return { granted: false };
+    // HEY-117: assigned once, from NULL, converging with a concurrent trial or plan activation of the same code.
+    await assignShortCode(db, qr.id, newShortCode);
     await db
       .update(schema.qrCode)
       // The trial's test code becomes a regular code of the plan (design 9.4: same short link, takes a live slot).
       .set({
-        shortCode: qr.shortCode ?? newShortCode(),
         status: "active",
         isTrial: false,
         ...(printPack === "1" ? { printPackAt: qr.printPackAt ?? now } : {}),
