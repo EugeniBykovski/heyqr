@@ -24,6 +24,9 @@ export type ActionResult<T = undefined> =
         | "owned"
         // HEY-88: this code's order already has a completed Checkout (payment being confirmed); no second charge.
         | "processing";
+      /** HEY-119: the field the error belongs to, and why (a destination: empty, spaces or invalid). */
+      field?: "destination";
+      problem?: "empty" | "spaces" | "invalid";
     };
 
 /** Error name and database error code only; no message text, query or parameters. */

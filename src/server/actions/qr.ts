@@ -1,7 +1,6 @@
 "use server";
 
 import type { QrContent } from "@heyqr/qr-core";
-import { and, eq, isNull } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireUser } from "../auth";
@@ -10,7 +9,7 @@ import { getCurrency } from "../currency";
 import { guard, type ActionResult } from "./result";
 
 export type { ActionResult } from "./result";
-import { db, schema } from "../db";
+import { db } from "../db";
 import { restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { encodedValue } from "../qr/export";
 import { readLayoutRecord } from "../../entities/qr/model/design-schema";
@@ -18,6 +17,7 @@ import { ownedLayout } from "../qr/file-access";
 import { storeLogos } from "../qr/logo-assets";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
+import { changeDestination } from "../qr/destination";
 import { addLayoutFrom, copyLayout, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
 import { logoStore } from "../storage/s3";
 import { newId, newShortCode } from "../db/ids";
@@ -40,7 +40,8 @@ const draftSchema = z.object({
   name: z.string().trim().min(1).max(80),
   model: z.enum(["static", "dynamic"]),
   content: z.custom<QrContent>((v) => typeof v === "object" && v !== null && "type" in v),
-  destination: z.url({ protocol: /^https?$/ }).optional(),
+  // HEY-119: checked by parseDestination in saveQrWithLayouts, the same check as Change destination.
+  destination: z.string().max(2048).optional(),
   layouts: z
     .array(
       z.object({
@@ -226,22 +227,17 @@ export async function renameQr(qrCodeId: string, name: string): Promise<ActionRe
   });
 }
 
-/** Dynamic codes: change where the printed code leads. The previous destination is kept for undo. */
-export async function updateDestination(qrCodeId: string, destination: string): Promise<ActionResult> {
+/**
+ * Dynamic codes: change where the printed code leads. The previous destination is kept for undo. HEY-119: the address
+ * is checked by parseDestination (the editor's parser); the result carries the URL stored, or the field error.
+ */
+export async function updateDestination(qrCodeId: string, destination: string): Promise<ActionResult<{ destination: string }>> {
   return guard(async () => {
     const user = await requireUser();
-    const url = z.url({ protocol: /^https?$/ }).safeParse(destination.trim());
-    if (!url.success) return { ok: false, error: "invalid" };
-    const qr = await db.query.qrCode.findFirst({
-      where: and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, user.id), isNull(schema.qrCode.deletedAt)),
-    });
-    if (!qr || qr.model !== "dynamic") return { ok: false, error: "not_found" };
-    await db
-      .update(schema.qrCode)
-      .set({ destination: url.data, previousDestination: qr.destination })
-      .where(eq(schema.qrCode.id, qrCodeId));
-    revalidatePath("/[locale]/dashboard/qr/[id]", "page");
-    return { ok: true, data: undefined };
+    if (typeof qrCodeId !== "string") return { ok: false, error: "invalid" };
+    const result = await changeDestination(db, user.id, qrCodeId, destination);
+    if (result.ok) revalidatePath("/[locale]/dashboard/qr/[id]", "page");
+    return result;
   });
 }
 
