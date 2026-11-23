@@ -2932,11 +2932,11 @@ describe.skipIf(!url)("Dynamic destinations (HEY-119, real PostgreSQL)", () => {
     const id = saved.data.qrCodeId;
     await db.update(schema.qrCode).set({ shortCode: "dest001", status: "active" }).where(eq(schema.qrCode.id, id));
 
-    expect(await changeDestination(db, owner.id, id, "http://plain.example.test/menu?table=4&lang=en#drinks")).toEqual({
+    expect(await changeDestination(db, owner.id, id, "http://plain.example.test/menu?table=4&lang=en#drinks")).toMatchObject({
       ok: true,
       data: { destination: "http://plain.example.test/menu?table=4&lang=en#drinks" },
     });
-    expect(await changeDestination(db, owner.id, id, "secure.example.test/menu?table=5#food")).toEqual({
+    expect(await changeDestination(db, owner.id, id, "secure.example.test/menu?table=5#food")).toMatchObject({
       ok: true,
       data: { destination: "https://secure.example.test/menu?table=5#food" },
     });
@@ -2966,5 +2966,95 @@ describe.skipIf(!url)("Dynamic destinations (HEY-119, real PostgreSQL)", () => {
       ok: false,
       error: "not_found",
     });
+  });
+});
+
+/* HEY-123 / QR-17.01: the most recent destination change (previous URL and server time) is stored and shown again. */
+describe.skipIf(!url)("destination change metadata (HEY-123, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "change-owner", name: "Owner", email: "owner@change.test" };
+  const other = { id: "change-other", name: "Other", email: "other@change.test" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const reload = async (id: string) => {
+    const row = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, id) });
+    return {
+      destination: row?.destination,
+      previousDestination: row?.previousDestination,
+      changedAt: row?.destinationChangedAt?.toISOString() ?? null,
+      shortCode: row?.shortCode,
+    };
+  };
+  const live = async (slug: string) => {
+    const saved = await saveQrWithLayouts(db, owner.id, {
+      name: "Menu",
+      model: "dynamic",
+      content: { type: "website", url: "https://first.example.test/menu" },
+      layouts,
+    });
+    if (!saved.ok) throw new Error("save failed");
+    await db.update(schema.qrCode).set({ shortCode: slug, status: "active" }).where(eq(schema.qrCode.id, saved.data.qrCodeId));
+    return saved.data.qrCodeId;
+  };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("an actual change stores the previous URL and the server's time together and returns them; a reload reads the same", async () => {
+    const id = await live("chg0001");
+    expect(await reload(id)).toEqual({
+      destination: "https://first.example.test/menu",
+      previousDestination: null,
+      changedAt: null,
+      shortCode: "chg0001",
+    });
+    const [{ now: before }] = (await pool.query("select now() as now")).rows as { now: Date }[];
+    const first = await changeDestination(db, owner.id, id, "https://second.example.test/menu?x=1#y");
+    if (!first.ok) throw new Error("change failed");
+    expect(first.data).toMatchObject({
+      destination: "https://second.example.test/menu?x=1#y",
+      previousDestination: "https://first.example.test/menu",
+    });
+    expect(new Date(first.data.changedAt ?? 0).getTime()).toBeGreaterThanOrEqual(before.getTime());
+    expect(await reload(id)).toEqual({ ...first.data, shortCode: "chg0001" });
+
+    // The next change keeps only the most recent one (full history is HEY-125).
+    const second = await changeDestination(db, owner.id, id, "http://third.example.test/");
+    if (!second.ok) throw new Error("change failed");
+    expect(second.data.previousDestination).toBe("https://second.example.test/menu?x=1#y");
+    expect(new Date(second.data.changedAt ?? 0).getTime()).toBeGreaterThanOrEqual(new Date(first.data.changedAt ?? 0).getTime());
+    expect(await reload(id)).toEqual({ ...second.data, shortCode: "chg0001" });
+  });
+
+  it("the same URL, invalid input and another account leave the previous URL and time intact", async () => {
+    const id = await live("chg0002");
+    const changed = await changeDestination(db, owner.id, id, "https://second.example.test/");
+    if (!changed.ok) throw new Error("change failed");
+    const stored = await reload(id);
+    // The same address (also typed as a bare domain): nothing written, the stored change returned as it was.
+    expect(await changeDestination(db, owner.id, id, "https://second.example.test/")).toEqual({ ok: true, data: changed.data });
+    expect(await changeDestination(db, owner.id, id, "second.example.test/")).toEqual({ ok: true, data: changed.data });
+    for (const bad of ["ftp://files.example.test", "not a url", ""])
+      expect(await changeDestination(db, owner.id, id, bad)).toMatchObject({ ok: false, error: "invalid", field: "destination" });
+    expect(await changeDestination(db, other.id, id, "https://other.example.test")).toEqual({ ok: false, error: "not_found" });
+    expect(await reload(id)).toEqual(stored);
+  });
+
+  it("an older row with a previous URL but no time keeps the URL; the next actual change records a time", async () => {
+    const id = await live("chg0003");
+    await db.update(schema.qrCode).set({ previousDestination: "https://legacy.example.test/" }).where(eq(schema.qrCode.id, id));
+    expect(await changeDestination(db, owner.id, id, "https://first.example.test/menu")).toEqual({
+      ok: true,
+      data: { destination: "https://first.example.test/menu", previousDestination: "https://legacy.example.test/", changedAt: null },
+    });
+    const next = await changeDestination(db, owner.id, id, "https://new.example.test/");
+    expect(next.ok && next.data.changedAt !== null && next.data.previousDestination === "https://first.example.test/menu").toBe(true);
   });
 });

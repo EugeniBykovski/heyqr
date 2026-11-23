@@ -17,7 +17,7 @@ import { ownedLayout } from "../qr/file-access";
 import { storeLogos } from "../qr/logo-assets";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
-import { changeDestination } from "../qr/destination";
+import { changeDestination, type DestinationState } from "../qr/destination";
 import { addLayoutFrom, copyLayout, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
 import { logoStore } from "../storage/s3";
 import { newId, newShortCode } from "../db/ids";
@@ -231,7 +231,7 @@ export async function renameQr(qrCodeId: string, name: string): Promise<ActionRe
  * Dynamic codes: change where the printed code leads. The previous destination is kept for undo. HEY-119: the address
  * is checked by parseDestination (the editor's parser); the result carries the URL stored, or the field error.
  */
-export async function updateDestination(qrCodeId: string, destination: string): Promise<ActionResult<{ destination: string }>> {
+export async function updateDestination(qrCodeId: string, destination: string): Promise<ActionResult<DestinationState>> {
   return guard(async () => {
     const user = await requireUser();
     if (typeof qrCodeId !== "string") return { ok: false, error: "invalid" };

@@ -95,7 +95,10 @@ export const qrCode = pgTable(
     shortCode: text("short_code").unique(),
     /** Dynamic codes only: where the short link redirects; editable after printing. */
     destination: text("destination"),
+    /** The destination before the most recent change (HEY-123; full history is HEY-125). */
     previousDestination: text("previous_destination"),
+    /** HEY-123: when the destination last changed, set by the server in the same write. Null for older rows. */
+    destinationChangedAt: timestamp("destination_changed_at", { withTimezone: true }),
     /** Set when a static code is bought. Every layout and format is then included. */
     purchasedAt: timestamp("purchased_at", { withTimezone: true }),
     /** Soft delete: hidden everywhere and the short link stops; cleared again by Undo. */

@@ -1,0 +1,1 @@
+ALTER TABLE "qr_code" ADD COLUMN "destination_changed_at" timestamp with time zone;
