@@ -1449,7 +1449,8 @@
       "save": "Save destination",
       "cancel": "Cancel",
       "goesTo": "Scans of {short} go to",
-      "previously": "Previously {url} · changed just now",
+      "previously": "Previously {url}",
+      "changedAt": "changed",
       "change": "Change destination"
     },
     "scansCard": {

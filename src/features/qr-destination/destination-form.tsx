@@ -2,7 +2,7 @@
 
 import { parseWebsiteUrl } from "@heyqr/qr-core";
 import { CheckIcon, PencilIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { updateDestination } from "@/server/actions/qr";
@@ -28,12 +28,28 @@ export function splitScheme(url: string): { scheme: Scheme | null; rest: string 
  * address sets the scheme; a bare domain keeps the one shown. The server checks it with the editor's parser and the
  * view shows the URL it stored; a refused address shows the field error and changes nothing.
  */
-export function DestinationForm({ qrCodeId, destination, shortLink }: { qrCodeId: string; destination: string; shortLink: string }) {
+export function DestinationForm({
+  qrCodeId,
+  destination,
+  shortLink,
+  previous: storedPrevious = null,
+  changedAt: storedChangedAt = null,
+}: {
+  qrCodeId: string;
+  destination: string;
+  shortLink: string;
+  /** HEY-123: the most recent change as stored (previous URL, ISO time). Older rows may have no time. */
+  previous?: string | null;
+  changedAt?: string | null;
+}) {
   const t = useTranslations("qr.dest");
   const tErrors = useTranslations("errors");
   const tUrl = useTranslations("editor.errors");
+  const locale = useLocale();
   const [current, setCurrent] = useState(destination);
-  const [previous, setPrevious] = useState<string | null>(null);
+  const [previous, setPrevious] = useState<string | null>(storedPrevious);
+  const [changedAt, setChangedAt] = useState<string | null>(storedChangedAt);
+  const [saved, setSaved] = useState(false);
   const [editing, setEditing] = useState(false);
   const [scheme, setScheme] = useState<Scheme>(splitScheme(destination).scheme ?? "https");
   const [value, setValue] = useState(splitScheme(destination).rest);
@@ -64,9 +80,12 @@ export function DestinationForm({ qrCodeId, destination, shortLink }: { qrCodeId
       }
       const result = await updateDestination(qrCodeId, next).catch(() => ({ ok: false, error: "failed" }) as const);
       if (result.ok) {
+        // What the server stored: the same address keeps the earlier change as it was.
         setProblem(null);
-        if (result.data.destination !== current) setPrevious(current);
         setCurrent(result.data.destination);
+        setPrevious(result.data.previousDestination);
+        setChangedAt(result.data.changedAt);
+        setSaved(true);
         setEditing(false);
       } else if (result.error === "invalid") setProblem("problem" in result && result.problem ? result.problem : "invalid");
       else toast.error(tErrors("generic"));
@@ -76,7 +95,7 @@ export function DestinationForm({ qrCodeId, destination, shortLink }: { qrCodeId
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-h3">{t("title")}</h2>
-        {previous !== null && !editing ? (
+        {saved && !editing ? (
           <Badge variant="success">
             <CheckIcon aria-hidden />
             {t("saved")}
@@ -143,7 +162,18 @@ export function DestinationForm({ qrCodeId, destination, shortLink }: { qrCodeId
               {current}
             </span>
             {previous !== null ? (
-              <span className="text-caption break-all text-muted-foreground">{t("previously", { url: previous })}</span>
+              <span data-slot="destination-previous" className="text-caption break-all text-muted-foreground">
+                {t("previously", { url: previous })}
+                {changedAt ? (
+                  <>
+                    {" · "}
+                    {t("changedAt")} {/* The viewer's own time zone: rendered in the browser, so the server's text may differ. */}
+                    <time dateTime={changedAt} suppressHydrationWarning>
+                      {new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(changedAt))}
+                    </time>
+                  </>
+                ) : null}
+              </span>
             ) : null}
           </div>
           <Button type="button" className="self-start" onClick={open}>

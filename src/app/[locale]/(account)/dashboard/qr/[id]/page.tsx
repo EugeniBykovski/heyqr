@@ -191,7 +191,13 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
                 {shortLink ? (
                   <>
                     <hr className="border-border" />
-                    <DestinationForm qrCodeId={qr.id} destination={qr.destination ?? ""} shortLink={shortShown} />
+                    <DestinationForm
+                      qrCodeId={qr.id}
+                      destination={qr.destination ?? ""}
+                      shortLink={shortShown}
+                      previous={qr.previousDestination}
+                      changedAt={qr.destinationChangedAt?.toISOString() ?? null}
+                    />
                   </>
                 ) : null}
               </Card>
