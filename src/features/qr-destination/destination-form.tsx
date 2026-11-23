@@ -10,6 +10,7 @@ import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Field } from "@/shared/ui/field";
 import { Input } from "@/shared/ui/input";
+import { LocalTime } from "@/shared/ui/local-time";
 
 type Scheme = "https" | "http";
 type Problem = "empty" | "spaces" | "invalid";
@@ -167,10 +168,7 @@ export function DestinationForm({
                 {changedAt ? (
                   <>
                     {" · "}
-                    {t("changedAt")} {/* The viewer's own time zone: rendered in the browser, so the server's text may differ. */}
-                    <time dateTime={changedAt} suppressHydrationWarning>
-                      {new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(changedAt))}
-                    </time>
+                    {t("changedAt")} <LocalTime iso={changedAt} locale={locale} />
                   </>
                 ) : null}
               </span>

@@ -16,7 +16,7 @@ import { fulfillCheckout, processCheckoutEvent } from "../billing/fulfillment";
 import { processRefundEvent, unusedPackCredits, type PaymentLookup } from "../billing/refunds";
 import { awaitingFulfillment, singleQrCheckout, type CheckoutPort, type SessionLookup } from "../billing/single-order";
 import { renameQrCode } from "../qr/rename-qr";
-import { changeDestination } from "../qr/destination";
+import { changeDestination, destinationHistory } from "../qr/destination";
 import { assignShortCode, SHORT_CODE_ATTEMPTS, ShortCodeExhaustedError } from "../qr/short-code";
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, copyLayout, layoutRevision, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
@@ -3190,5 +3190,123 @@ describe.skipIf(!url)("design saves keep the published destination (HEY-124, rea
     ).toBe(true);
     const s = await row(stat.data.qrCodeId);
     expect([s?.model, s?.destination]).toEqual(["static", null]);
+  });
+});
+
+/* HEY-125 / QR-17.03: every actual destination change is recorded with the change itself; only the owner reads it. */
+describe.skipIf(!url)("destination change history (HEY-125, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "hist-owner", name: "Owner", email: "owner@hist.test" };
+  const other = { id: "hist-other", name: "Other", email: "other@hist.test" };
+  const A = "https://a.example.test/menu";
+  const B = "http://b.example.test/menu?x=1#y";
+  const C = "https://c.example.test/";
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const live = async (slug: string) => {
+    const saved = await saveQrWithLayouts(db, owner.id, { name: "Menu", model: "dynamic", content: { type: "website", url: A }, layouts });
+    if (!saved.ok) throw new Error("save failed");
+    await db.update(schema.qrCode).set({ shortCode: slug, status: "active" }).where(eq(schema.qrCode.id, saved.data.qrCodeId));
+    return saved.data;
+  };
+  const rows = (qrCodeId: string) => db.$count(schema.destinationChange, eq(schema.destinationChange.qrCodeId, qrCodeId));
+  const code = (id: string) => db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, id) });
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("A → B → C records two changes, newest first, with the change's own time; saving C again and invalid input add none", async () => {
+    const { qrCodeId } = await live("hist001");
+    // Creating the code with A is not a change.
+    expect(await rows(qrCodeId)).toBe(0);
+    const toB = await changeDestination(db, owner.id, qrCodeId, B);
+    const toC = await changeDestination(db, owner.id, qrCodeId, C);
+    if (!toB.ok || !toC.ok) throw new Error("change failed");
+    const history = await destinationHistory(db, owner.id, qrCodeId);
+    expect(history.map((h) => [h.previousUrl, h.newUrl, h.changedAt])).toEqual([
+      [B, C, toC.data.changedAt],
+      [A, B, toB.data.changedAt],
+    ]);
+    expect(history[0]?.id).toBeGreaterThan(history[1]?.id ?? Infinity);
+    // The last change shown since HEY-123 is the newest entry.
+    const row = await code(qrCodeId);
+    expect([row?.destination, row?.previousDestination, row?.destinationChangedAt?.toISOString()]).toEqual([C, B, history[0]?.changedAt]);
+
+    expect(await changeDestination(db, owner.id, qrCodeId, C)).toEqual({ ok: true, data: toC.data });
+    expect(await changeDestination(db, owner.id, qrCodeId, "c.example.test/")).toEqual({ ok: true, data: toC.data });
+    for (const bad of ["ftp://files.example.test", "not a url", ""])
+      expect((await changeDestination(db, owner.id, qrCodeId, bad)).ok).toBe(false);
+    expect(await destinationHistory(db, owner.id, qrCodeId)).toEqual(history);
+  });
+
+  it("a failed history write rolls back the publication and the history together", async () => {
+    const { qrCodeId } = await live("hist002");
+    expect((await changeDestination(db, owner.id, qrCodeId, B)).ok).toBe(true);
+    const before = await code(qrCodeId);
+    const historyBefore = await destinationHistory(db, owner.id, qrCodeId);
+    // Make the history insert itself fail, after the destination row was updated in the same transaction.
+    await pool.query(`
+      create or replace function hey125_refuse() returns trigger language plpgsql as $$
+      begin raise exception 'history write refused (test)'; end $$;
+      create trigger hey125_refuse before insert on destination_change for each row execute function hey125_refuse();
+    `);
+    try {
+      await expect(changeDestination(db, owner.id, qrCodeId, C)).rejects.toThrow();
+    } finally {
+      await pool.query("drop trigger hey125_refuse on destination_change; drop function hey125_refuse();");
+    }
+    const after = await code(qrCodeId);
+    expect([after?.destination, after?.previousDestination, after?.destinationChangedAt, after?.shortCode]).toEqual([
+      before?.destination,
+      before?.previousDestination,
+      before?.destinationChangedAt,
+      "hist002",
+    ]);
+    expect(await destinationHistory(db, owner.id, qrCodeId)).toEqual(historyBefore);
+    // With the write possible again, the same change succeeds once.
+    expect((await changeDestination(db, owner.id, qrCodeId, C)).ok).toBe(true);
+    expect(await rows(qrCodeId)).toBe(historyBefore.length + 1);
+  });
+
+  it("only the owner reads the history; a deleted code has none to show", async () => {
+    const { qrCodeId } = await live("hist003");
+    expect((await changeDestination(db, owner.id, qrCodeId, B)).ok).toBe(true);
+    expect(await destinationHistory(db, owner.id, qrCodeId)).toHaveLength(1);
+    expect(await destinationHistory(db, other.id, qrCodeId)).toEqual([]);
+    await softDeleteQrCodes(db, owner.id, [qrCodeId]);
+    expect(await destinationHistory(db, owner.id, qrCodeId)).toEqual([]);
+  });
+
+  it("saving a design records no destination change", async () => {
+    const { qrCodeId, layoutIds } = await live("hist004");
+    const saved = await saveQrWithLayouts(db, owner.id, {
+      qrCodeId,
+      name: "Menu (edited)",
+      model: "dynamic",
+      content: { type: "website", url: A },
+      destination: "https://stale.example.test/",
+      layouts: [{ id: layoutIds[0], ...layouts[0] }],
+    });
+    expect(saved.ok).toBe(true);
+    expect([(await code(qrCodeId))?.destination, await rows(qrCodeId)]).toEqual([A, 0]);
+  });
+
+  it("changes that share a timestamp keep a stable order (newest insert first)", async () => {
+    const { qrCodeId } = await live("hist005");
+    const at = new Date("2026-11-23T12:00:00Z");
+    await db.insert(schema.destinationChange).values([
+      { qrCodeId, previousUrl: A, newUrl: B, changedAt: at },
+      { qrCodeId, previousUrl: B, newUrl: C, changedAt: at },
+    ]);
+    const first = await destinationHistory(db, owner.id, qrCodeId);
+    expect(first.map((h) => h.newUrl)).toEqual([C, B]);
+    expect(await destinationHistory(db, owner.id, qrCodeId)).toEqual(first);
   });
 });

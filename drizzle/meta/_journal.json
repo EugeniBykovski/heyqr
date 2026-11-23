@@ -78,6 +78,13 @@
       "when": 1795458621391,
       "tag": "0010_destination_changed_at",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1795464162974,
+      "tag": "0011_destination_change",
+      "breakpoints": true
     }
   ]
 }

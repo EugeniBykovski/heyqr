@@ -1451,6 +1451,11 @@
       "goesTo": "Scans of {short} go to",
       "previously": "Previously {url}",
       "changedAt": "changed",
+      "history": {
+        "title": "Change history",
+        "to": "Changed to",
+        "from": "from {url}"
+      },
       "change": "Change destination"
     },
     "scansCard": {

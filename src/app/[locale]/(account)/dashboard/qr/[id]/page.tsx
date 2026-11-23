@@ -8,7 +8,8 @@ import { env } from "@/env";
 import { DEFAULT_PRINT_SETTINGS, printSettingsQuery, QrPreview } from "@/entities/qr";
 import { CopyButton } from "@/features/copy-to-clipboard";
 import { DeleteLayoutButton, DifferentContent, NewLayoutButton, RenameTitle, UseIncludedPrintPack } from "@/features/qr-details";
-import { DestinationForm } from "@/features/qr-destination";
+import { DestinationForm, DestinationHistory } from "@/features/qr-destination";
+import { destinationHistory } from "@/server/qr/destination";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
 import { requireAccount } from "../../../require-account";
@@ -80,6 +81,8 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
     userTrial(user.id),
     accountUsage(db, user.id),
   ]);
+  // HEY-125: the owner's recorded destination changes (the code was loaded for this owner above).
+  const history = qr.model === "dynamic" ? await destinationHistory(db, user.id, qr.id) : [];
   const value = encodedValue(qr);
   const shortLink = qr.shortCode ? `${env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "")}/${qr.shortCode}` : null;
   const shortShown = shortLink?.replace(/^https?:\/\//, "") ?? "";
@@ -198,6 +201,7 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
                       previous={qr.previousDestination}
                       changedAt={qr.destinationChangedAt?.toISOString() ?? null}
                     />
+                    <DestinationHistory entries={history} />
                   </>
                 ) : null}
               </Card>

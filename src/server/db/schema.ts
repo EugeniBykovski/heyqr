@@ -1,5 +1,18 @@
 import { relations, sql } from "drizzle-orm";
-import { boolean, date, index, integer, jsonb, pgEnum, pgTable, primaryKey, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import {
+  bigint,
+  boolean,
+  date,
+  index,
+  integer,
+  jsonb,
+  pgEnum,
+  pgTable,
+  primaryKey,
+  text,
+  timestamp,
+  uniqueIndex,
+} from "drizzle-orm/pg-core";
 import type { QrContent } from "@heyqr/qr-core";
 import type { LayoutRecordDesign } from "../../entities/qr/model/design-schema";
 
@@ -137,6 +150,27 @@ export const qrLayout = pgTable(
     ...timestamps,
   },
   (t) => [index("qr_layout_qr_idx").on(t.qrCodeId, t.sortOrder)],
+);
+
+/**
+ * HEY-125: one row per actual destination change of a Dynamic code, written by changeDestination in the same transaction
+ * (and with the same server time) as the change itself. The first destination, set when the code is created, has no
+ * row; neither has a save of the same address. Older changes made before this table existed have no rows: only their
+ * last change is known (qr_code.previous_destination / destination_changed_at, HEY-123).
+ */
+export const destinationChange = pgTable(
+  "destination_change",
+  {
+    /** Increasing: orders changes that share a timestamp. */
+    id: bigint("id", { mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
+    qrCodeId: text("qr_code_id")
+      .notNull()
+      .references(() => qrCode.id, { onDelete: "cascade" }),
+    previousUrl: text("previous_url"),
+    newUrl: text("new_url").notNull(),
+    changedAt: timestamp("changed_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("destination_change_qr_idx").on(t.qrCodeId, t.changedAt.desc(), t.id.desc())],
 );
 
 /** One-time purchase of a static code. */
