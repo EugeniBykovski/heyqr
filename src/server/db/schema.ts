@@ -205,6 +205,10 @@ export const apiKey = pgTable(
     /** `sha256:<hex>` of the key's secret part. Never the key itself. */
     secretHash: text("secret_hash").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    /** HEY-154: when the owner revoked the key (set once); a revoked key never authenticates again. */
+    revokedAt: timestamp("revoked_at", { withTimezone: true }),
+    /** HEY-154: the last successful authentication with the key (failed and revoked attempts don't touch it). */
+    lastUsedAt: timestamp("last_used_at", { withTimezone: true }),
   },
   (t) => [index("api_key_user_idx").on(t.userId, t.createdAt)],
 );

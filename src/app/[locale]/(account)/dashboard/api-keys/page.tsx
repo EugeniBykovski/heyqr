@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getFormatter, getTranslations } from "next-intl/server";
-import { CreateApiKey } from "@/features/api-keys";
+import { CreateApiKey, RevokeApiKey } from "@/features/api-keys";
+import { Badge } from "@/shared/ui/badge";
 import { resolveLocale } from "@/i18n/server";
 import { listApiKeys } from "@/server/api-keys/keys";
 import { db } from "@/server/db";
@@ -15,12 +16,14 @@ const card = "flex flex-col gap-4 rounded-2xl border border-border bg-surface p-
 
 /*
  * HEY-153 / QR-21.01: the account's API keys. Each key belongs to this account only. The page lists safe metadata
- * (prefix, creation date); a new key's full value is shown once by CreateApiKey and never rendered here.
+ * (prefix, creation date); a new key's full value is shown once by CreateApiKey and never rendered here. HEY-154: each
+ * key's state (active, last used, or revoked and when) and Revoke with confirmation.
  */
 export default async function ApiKeysPage({ params, searchParams }: PageProps<"/[locale]/dashboard/api-keys">) {
   const locale = await resolveLocale(params);
   const user = await requireAccount(locale, "/dashboard/api-keys", await searchParams);
   const [t, format, keys] = await Promise.all([getTranslations("apiKeys"), getFormatter(), listApiKeys(db, user.id)]);
+  const date = (iso: string) => format.dateTime(new Date(iso), { dateStyle: "medium", timeStyle: "short" });
   return (
     <div className="mx-auto flex w-full max-w-190 flex-col gap-5">
       <header className="flex flex-col gap-1.5">
@@ -37,11 +40,33 @@ export default async function ApiKeysPage({ params, searchParams }: PageProps<"/
         ) : (
           <ul data-slot="api-key-list" className="flex flex-col divide-y divide-border">
             {keys.map((k) => (
-              <li key={k.id} className="flex flex-wrap items-center justify-between gap-2 py-3">
-                <code className="font-mono text-[0.875rem]">{k.prefix}…</code>
-                <span className="text-caption text-muted-foreground">
-                  {t("created", { date: format.dateTime(new Date(k.createdAt), { dateStyle: "medium" }) })}
+              <li
+                key={k.id}
+                data-key-state={k.revokedAt ? "revoked" : "active"}
+                className="flex flex-wrap items-center justify-between gap-3 py-3"
+              >
+                <span className="flex min-w-0 flex-col gap-0.5">
+                  <span className="flex flex-wrap items-center gap-2">
+                    <code
+                      className={k.revokedAt ? "font-mono text-[0.875rem] text-muted-foreground line-through" : "font-mono text-[0.875rem]"}
+                    >
+                      {k.prefix}…
+                    </code>
+                    <Badge variant={k.revokedAt ? "neutral" : "success"}>{k.revokedAt ? t("revoked") : t("active")}</Badge>
+                  </span>
+                  <span className="text-caption text-muted-foreground">
+                    {[
+                      t("created", { date: date(k.createdAt) }),
+                      k.revokedAt
+                        ? t("revokedOn", { date: date(k.revokedAt) })
+                        : k.lastUsedAt
+                          ? t("lastUsed", { date: date(k.lastUsedAt) })
+                          : t("neverUsed"),
+                    ].join(" · ")}
+                  </span>
                 </span>
+                {/* HEY-154: a revoked key stays listed, without actions. */}
+                {k.revokedAt ? null : <RevokeApiKey keyId={k.id} prefix={k.prefix} />}
               </li>
             ))}
           </ul>

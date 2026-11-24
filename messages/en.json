@@ -2199,6 +2199,22 @@
     "done": "Done",
     "none": "No API keys yet.",
     "created": "Created {date}",
-    "failed": "We couldn’t create a key. Nothing was saved; try again."
+    "failed": "We couldn’t create a key. Nothing was saved; try again.",
+    "active": "Active",
+    "revoked": "Revoked",
+    "revokedOn": "Revoked {date}",
+    "lastUsed": "Last used {date}",
+    "neverUsed": "Never used",
+    "revoke": {
+      "action": "Revoke",
+      "label": "Revoke {prefix}",
+      "title": "Revoke {prefix}?",
+      "text": "Tools using this key stop working right away. Your other keys keep working. This can’t be undone.",
+      "confirm": "Revoke key",
+      "cancel": "Cancel",
+      "done": "{prefix} is revoked.",
+      "failed": "We couldn’t revoke the key. Nothing changed; try again.",
+      "close": "Close"
+    }
   }
 }
