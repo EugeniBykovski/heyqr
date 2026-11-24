@@ -5,7 +5,7 @@ const subscription = vi.fn();
 vi.mock("../db", () => ({
   db: {
     query: {
-      subscription: { findFirst: () => subscription() },
+      subscription: { findFirst: () => subscription(), findMany: async () => (await subscription()) ?? [] },
       user: { findFirst: async () => ({ trialStartedAt: null, trialEndsAt: null }) },
     },
   },
@@ -42,5 +42,34 @@ describe("download entitlement (HEY-87)", () => {
     expect(await canDownloadPrintPack("u1", code({ printPackAt: new Date() }))).toBe(true);
     expect(await canDownloadPrintPack("u1", code({ purchasedAt: null, printPackAt: new Date() }))).toBe(false);
     expect(await canDownloadPrintPack("u2", code({ printPackAt: new Date() }))).toBe(false);
+  });
+});
+
+/* HEY-142: a Dynamic code's files carry its short link: downloadable only while its owner has paid access. */
+describe("Dynamic downloads at the paid period's end (HEY-142)", () => {
+  const live = { userId: "u1", model: "dynamic" as const, purchasedAt: null, status: "active", shortCode: "AbCdEf2", isTrial: false };
+  const cutoff = new Date(Date.now() + 60_000);
+  const sub = (over: Record<string, unknown> = {}) => ({
+    status: "active",
+    cancelAtPeriodEnd: false,
+    cancelAt: null,
+    currentPeriodEnd: cutoff,
+    ...over,
+  });
+
+  it("with paid access: yes; a cancellation scheduled for later still allows it", async () => {
+    subscription.mockResolvedValue([sub()]);
+    expect(await canDownload("u1", live)).toBe(true);
+    subscription.mockResolvedValue([sub({ cancelAtPeriodEnd: true, cancelAt: cutoff })]);
+    expect(await canDownload("u1", live)).toBe(true);
+  });
+
+  it("past the scheduled cutoff (even before the final webhook), or with no plan: refused; a paused code too", async () => {
+    subscription.mockResolvedValue([sub({ cancelAtPeriodEnd: true, cancelAt: new Date(Date.now() - 1) })]);
+    expect(await canDownload("u1", live)).toBe(false);
+    subscription.mockResolvedValue([]);
+    expect(await canDownload("u1", live)).toBe(false);
+    subscription.mockResolvedValue([sub()]);
+    expect(await canDownload("u1", { ...live, status: "paused" })).toBe(false);
   });
 });
