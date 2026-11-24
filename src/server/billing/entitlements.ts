@@ -4,16 +4,21 @@ import type { Currency, Offer } from "@/shared/config/catalog";
 import { purchasable } from "./catalog";
 import { isConfigured } from "../config";
 import { db, schema } from "../db";
-import { PLAN_STATUSES } from "./allowances";
+import { hasPlanAccess, PLAN_STATUSES } from "./allowances";
 import { trialCovers, trialPhase, type TrialPhase } from "./trial";
 
 /** The same statuses that count as the plan everywhere else (allowances.ts). */
 const ACTIVE_SUBSCRIPTION = PLAN_STATUSES;
 
-export async function activeSubscription(userId: string) {
-  return db.query.subscription.findFirst({
+/**
+ * The account's subscription that gives paid access now (HEY-142: hasPlanAccess, the same rule as slots and
+ * allowances), or undefined. Downloads, the trial's upgraded state and the public short link read it.
+ */
+export async function activeSubscription(userId: string, now: Date = new Date()) {
+  const subs = await db.query.subscription.findMany({
     where: and(eq(schema.subscription.userId, userId), inArray(schema.subscription.status, ACTIVE_SUBSCRIPTION)),
   });
+  return subs.find((s) => hasPlanAccess(s, now));
 }
 
 /** The account's Starter trial (design 9.x), from its dates and whether a Dynamic plan is active. */

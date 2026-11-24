@@ -22,6 +22,24 @@ type Db = NodePgDatabase<typeof schema>;
 export const PLAN_STATUSES = ["active", "trialing", "past_due"];
 const ACTIVE = PLAN_STATUSES;
 
+/** The subscription fields that decide paid access at a moment in time. */
+export type AccessFields = { status: string; cancelAtPeriodEnd: boolean; cancelAt: Date | null; currentPeriodEnd: Date | null };
+
+/**
+ * HEY-142: the one rule for paid access (published in HEY-138, docs/LINK_AVAILABILITY.md), at time `now`:
+ * - Stripe's status counts as the plan (PLAN_STATUSES: past_due keeps it while a failed renewal is retried);
+ * - a scheduled cancellation keeps it through the paid period and ends it at its cutoff (Stripe's cancel_at, else the
+ *   period end), even before Stripe's final cancellation event has arrived (a delayed webhook can't extend access);
+ * - a renewing subscription (no cancellation scheduled) keeps it past its period end: Stripe renews it, and a failed
+ *   renewal becomes past_due (still the plan) or unpaid/canceled (no plan) through the webhook.
+ */
+export function hasPlanAccess(sub: AccessFields, now: Date = new Date()): boolean {
+  if (!PLAN_STATUSES.includes(sub.status)) return false;
+  if (!sub.cancelAtPeriodEnd) return true;
+  const cutoff = sub.cancelAt ?? sub.currentPeriodEnd;
+  return !cutoff || now < cutoff;
+}
+
 /** `endsAt`: when a scheduled cancellation takes effect (Stripe's cancel_at, else the period end); null if none. */
 export type Plan = {
   id: PlanId;
@@ -33,10 +51,12 @@ export type Plan = {
   overdue: boolean;
 };
 
-export async function currentPlan(db: Db, userId: string): Promise<Plan | null> {
-  const sub = await db.query.subscription.findFirst({
+export async function currentPlan(db: Db, userId: string, now: Date = new Date()): Promise<Plan | null> {
+  const subs = await db.query.subscription.findMany({
     where: and(eq(schema.subscription.userId, userId), inArray(schema.subscription.status, ACTIVE)),
   });
+  // HEY-142: a subscription past its scheduled cutoff is no plan, whatever its stored status still says.
+  const sub = subs.find((s) => hasPlanAccess(s, now));
   if (!sub) return null;
   return {
     id: sub.plan,
@@ -94,8 +114,8 @@ export type Usage = {
 };
 
 /** Design 4.9 / 9.6: the account's credits, this period's allowances and its live Dynamic slots. */
-export async function accountUsage(db: Db, userId: string): Promise<Usage> {
-  const plan = await currentPlan(db, userId);
+export async function accountUsage(db: Db, userId: string, now: Date = new Date()): Promise<Usage> {
+  const plan = await currentPlan(db, userId, now);
   const def = plan ? PLANS[plan.id] : null;
   const [credits, unlocksUsed, packsUsed, [live]] = await Promise.all([
     creditBalance(db, userId),

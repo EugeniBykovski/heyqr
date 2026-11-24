@@ -30,7 +30,9 @@ import {
   accountUsage,
   activateDynamicCode,
   applyPrintPackAllowance,
+  hasPlanAccess,
   overdueSubscription,
+  type AccessFields,
   convertToStatic,
   creditBalance,
   grantPackCredits,
@@ -5065,5 +5067,119 @@ describe.skipIf(!url)("failed renewal and recovery (HEY-141, real PostgreSQL)", 
     expect((await db.query.subscription.findMany({ where: (t, { eq }) => eq(t.userId, owner.id) })).length).toBe(1);
     // Codes as they were: the live code keeps its slug, the pause and the deletion stay, the static unlock stays.
     expect(await codes()).toEqual(before);
+  });
+});
+
+/*
+ * HEY-142 / QR-19.05: paid access ends at the published cutoff (hasPlanAccess): a scheduled cancellation's cancel_at,
+ * else its period end, even before Stripe's final event arrives. A renewing subscription keeps access past its period
+ * end; past_due keeps it (HEY-138); recovery restores it. Codes and static unlocks are never touched.
+ */
+describe.skipIf(!url)("access at the paid period's end (HEY-142, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "cutoff-owner", name: "Owner", email: "owner@cutoff.test", stripeCustomerId: "cus_cutoff_owner" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const cutoff = new Date("2026-12-24T10:00:00Z");
+  const set = (values: Partial<typeof schema.subscription.$inferInsert>) =>
+    db.update(schema.subscription).set(values).where(eq(schema.subscription.stripeSubscriptionId, "sub_cutoff"));
+  const plan = async (now: Date) => (await accountUsage(db, owner.id, now)).plan?.id ?? null;
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 2 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+    await db.insert(schema.subscription).values({
+      id: "cutoff-sub",
+      userId: owner.id,
+      stripeSubscriptionId: "sub_cutoff",
+      stripePriceId: "price_starter",
+      status: "active",
+      plan: "starter",
+      activeCodeLimit: 5,
+      currentPeriodStart: new Date("2026-11-24T10:00:00Z"),
+      currentPeriodEnd: cutoff,
+    });
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("the rule: before the cutoff yes, at it no; renewing past the period end yes; past_due yes, unpaid no", () => {
+    const at = (ms: number) => new Date(cutoff.getTime() + ms);
+    const sub = (over: Partial<AccessFields>): AccessFields => ({
+      status: "active",
+      cancelAtPeriodEnd: false,
+      cancelAt: null,
+      currentPeriodEnd: cutoff,
+      ...over,
+    });
+    expect(hasPlanAccess(sub({ cancelAtPeriodEnd: true, cancelAt: cutoff }), at(-1))).toBe(true);
+    expect(hasPlanAccess(sub({ cancelAtPeriodEnd: true, cancelAt: cutoff }), at(0))).toBe(false);
+    // cancel_at_period_end without a cancel_at: the period end is the cutoff.
+    expect([hasPlanAccess(sub({ cancelAtPeriodEnd: true }), at(-1)), hasPlanAccess(sub({ cancelAtPeriodEnd: true }), at(0))]).toEqual([
+      true,
+      false,
+    ]);
+    // Renewing: the period end passing (before the renewal event arrives) doesn't end access.
+    expect(hasPlanAccess(sub({}), at(3_600_000))).toBe(true);
+    expect([hasPlanAccess(sub({ status: "past_due" }), at(0)), hasPlanAccess(sub({ status: "unpaid" }), at(-1))]).toEqual([true, false]);
+  });
+
+  it("a scheduled cancellation: the plan up to the cutoff, none from it, even while the final webhook is delayed", async () => {
+    await set({ status: "active", cancelAtPeriodEnd: true, cancelAt: cutoff });
+    expect([await plan(new Date(cutoff.getTime() - 1)), await plan(cutoff)]).toEqual(["starter", null]);
+    // The final event arrives: canceled. Still none.
+    await set({ status: "canceled" });
+    expect(await plan(new Date(cutoff.getTime() - 1))).toBeNull();
+  });
+
+  it("past the cutoff: no new activation; codes keep their slug, destination, pause and deletion; static unlocks stay", async () => {
+    await set({ status: "active", cancelAtPeriodEnd: false, cancelAt: null });
+    const make = async (name: string, model: "dynamic" | "static" = "dynamic") => {
+      const saved = await saveQrWithLayouts(db, owner.id, {
+        name,
+        model,
+        content: { type: "website", url: "https://menu.example.test/" },
+        layouts,
+      });
+      if (!saved.ok) throw new Error("save failed");
+      return saved.data.qrCodeId;
+    };
+    const [live, paused, gone, draft, card] = [
+      await make("A live"),
+      await make("B paused"),
+      await make("C deleted"),
+      await make("D draft"),
+      await make("E card", "static"),
+    ];
+    for (const [id, slug] of [
+      [live, "cutlive"],
+      [paused, "cutpaus"],
+      [gone, "cutgone"],
+    ] as const)
+      expect((await activateDynamicCode(db, owner.id, id, () => slug)).ok).toBe(true);
+    await pauseDynamicCode(db, owner.id, paused);
+    await softDeleteQrCodes(db, owner.id, [gone]);
+    expect((await unlockStatic(db, owner.id, card, "plan")).ok).toBe(true);
+    const snapshot = async () =>
+      (await db.query.qrCode.findMany({ where: (q, { eq }) => eq(q.userId, owner.id), orderBy: (q, { asc }) => asc(q.name) })).map((q) => [
+        q.name,
+        q.status,
+        q.shortCode,
+        q.destination,
+        Boolean(q.deletedAt),
+        Boolean(q.purchasedAt),
+      ]);
+    const before = await snapshot();
+    // The cutoff passes (a cancellation scheduled for one second ago; the final webhook not yet in).
+    await set({ cancelAtPeriodEnd: true, cancelAt: new Date(Date.now() - 1000) });
+    expect(await activateDynamicCode(db, owner.id, draft, () => "cutdraf")).toEqual({ ok: false, error: "no_plan" });
+    expect(await resumeDynamicCode(db, owner.id, paused)).toEqual({ ok: false, error: "no_plan" });
+    expect(await snapshot()).toEqual(before);
+    // Recovery (the owner takes the plan again / the subscription is active again): the same codes, as they were.
+    await set({ status: "active", cancelAtPeriodEnd: false, cancelAt: null });
+    expect([(await accountUsage(db, owner.id)).plan?.id, await snapshot()]).toEqual(["starter", before]);
   });
 });

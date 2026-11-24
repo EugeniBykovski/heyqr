@@ -44,6 +44,8 @@ describe("GET /r/:code", () => {
     findQr.mockReset();
     findUser.mockReset();
     subscription.mockReset();
+    // HEY-142: the owner has paid access unless a test says otherwise.
+    subscription.mockResolvedValue({ id: "sub" });
     recordScan.mockReset();
     afterQueue.length = 0;
   });
@@ -121,5 +123,33 @@ describe("GET /r/:code", () => {
     expect((await open()).location).toBe(unavailable);
     expect(await open()).toEqual({ status: 302, location: live.destination, cache: "no-store" });
     expect(recordScan).toHaveBeenCalledExactlyOnceWith("q1");
+  });
+
+  it("HEY-142: a live Dynamic code of an owner without paid access goes to the neutral inactive page, no scan", async () => {
+    findQr.mockResolvedValue(live);
+    subscription.mockResolvedValue(undefined);
+    const { location, status, cache } = await open();
+    expect({ status, location, cache }).toEqual({ status: 302, location: `${unavailable}?reason=inactive`, cache: "no-store" });
+    for (const secret of ["AbCdEf2", "menu.example.test", "u1", "q1"]) expect(location).not.toContain(secret);
+    expect(recordScan).not.toHaveBeenCalled();
+  });
+
+  it("HEY-142: after recovery the same printed code redirects to its current destination again", async () => {
+    findQr.mockResolvedValue({ ...live, destination: "https://menu.example.test/new" });
+    subscription.mockResolvedValueOnce(undefined).mockResolvedValueOnce({ id: "sub" });
+    expect((await open()).location).toBe(`${unavailable}?reason=inactive`);
+    expect(await open()).toEqual({ status: 302, location: "https://menu.example.test/new", cache: "no-store" });
+    expect(recordScan).toHaveBeenCalledExactlyOnceWith("q1");
+  });
+
+  it("HEY-142: a paused or deleted code stays unavailable whatever the plan says", async () => {
+    for (const qr of [
+      { ...live, status: "paused" },
+      { ...live, deletedAt: new Date() },
+    ]) {
+      findQr.mockResolvedValueOnce(qr);
+      expect((await open()).location).toBe(unavailable);
+    }
+    expect(recordScan).not.toHaveBeenCalled();
   });
 });
