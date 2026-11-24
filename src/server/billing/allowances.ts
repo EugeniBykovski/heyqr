@@ -22,7 +22,8 @@ type Db = NodePgDatabase<typeof schema>;
 export const PLAN_STATUSES = ["active", "trialing", "past_due"];
 const ACTIVE = PLAN_STATUSES;
 
-export type Plan = { id: PlanId; periodStart: Date; periodEnd: Date | null; cancelAtPeriodEnd: boolean };
+/** `endsAt`: when a scheduled cancellation takes effect (Stripe's cancel_at, else the period end); null if none. */
+export type Plan = { id: PlanId; periodStart: Date; periodEnd: Date | null; cancelAtPeriodEnd: boolean; endsAt: Date | null };
 
 export async function currentPlan(db: Db, userId: string): Promise<Plan | null> {
   const sub = await db.query.subscription.findFirst({
@@ -36,6 +37,7 @@ export async function currentPlan(db: Db, userId: string): Promise<Plan | null> 
       sub.currentPeriodStart ?? (sub.currentPeriodEnd ? new Date(sub.currentPeriodEnd.getTime() - 30 * 86_400_000) : sub.createdAt),
     periodEnd: sub.currentPeriodEnd,
     cancelAtPeriodEnd: sub.cancelAtPeriodEnd,
+    endsAt: sub.cancelAtPeriodEnd ? (sub.cancelAt ?? sub.currentPeriodEnd) : null,
   };
 }
 

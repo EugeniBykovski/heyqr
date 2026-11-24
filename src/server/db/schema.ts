@@ -314,7 +314,10 @@ export const subscription = pgTable(
     plan: text("plan").$type<"starter" | "studio">().notNull().default("starter"),
     currentPeriodStart: timestamp("current_period_start", { withTimezone: true }),
     currentPeriodEnd: timestamp("current_period_end", { withTimezone: true }),
+    /** A cancellation is scheduled: Stripe's cancel_at_period_end, or a set cancel_at (what the Portal now sets). */
     cancelAtPeriodEnd: boolean("cancel_at_period_end").notNull().default(false),
+    /** HEY-139: when a scheduled cancellation takes effect (Stripe's cancel_at), if Stripe gave one. */
+    cancelAt: timestamp("cancel_at", { withTimezone: true }),
     ...timestamps,
   },
   (t) => [index("subscription_user_idx").on(t.userId)],

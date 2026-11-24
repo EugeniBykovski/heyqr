@@ -10,9 +10,10 @@ import { accountForCustomer, customerIdOf } from "./customer";
 type Db = NodePgDatabase<typeof schema>;
 
 /** The parts of a Stripe Subscription a lifecycle event writes (customer.subscription.created/updated/deleted). */
-export type SubscriptionEvent = Pick<Stripe.Subscription, "id" | "customer" | "status" | "cancel_at_period_end" | "metadata"> & {
-  items: { data: Pick<Stripe.SubscriptionItem, "price" | "current_period_start" | "current_period_end">[] };
-};
+export type SubscriptionEvent = Pick<Stripe.Subscription, "id" | "customer" | "status" | "cancel_at_period_end" | "metadata"> &
+  Partial<Pick<Stripe.Subscription, "cancel_at">> & {
+    items: { data: Pick<Stripe.SubscriptionItem, "price" | "current_period_start" | "current_period_end">[] };
+  };
 
 export type SubscriptionOutcome =
   | { applied: true; userId: string; status: string }
@@ -85,7 +86,9 @@ export async function applySubscriptionEvent(
       activeCodeLimit: dynamicLimit(plan),
       currentPeriodStart: item?.current_period_start ? new Date(item.current_period_start * 1000) : null,
       currentPeriodEnd: item?.current_period_end ? new Date(item.current_period_end * 1000) : null,
-      cancelAtPeriodEnd: state.cancel_at_period_end,
+      // HEY-139: Stripe's Customer Portal schedules a cancellation with cancel_at (cancel_at_period_end stays false).
+      cancelAtPeriodEnd: state.cancel_at_period_end || Boolean(state.cancel_at),
+      cancelAt: state.cancel_at ? new Date(state.cancel_at * 1000) : null,
     };
     await tx
       .insert(schema.subscription)

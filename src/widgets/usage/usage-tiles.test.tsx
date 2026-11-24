@@ -22,8 +22,14 @@ const usage = (over: Partial<Usage> & { plan?: Usage["plan"] }): Usage => ({
   dynamic: { used: 0, limit: 0 },
   ...over,
 });
-const starter = (cancelAtPeriodEnd = false) => ({ id: "starter" as const, periodStart, periodEnd, cancelAtPeriodEnd });
-const studio = { id: "studio" as const, periodStart, periodEnd, cancelAtPeriodEnd: false };
+const starter = (cancelAtPeriodEnd = false) => ({
+  id: "starter" as const,
+  periodStart,
+  periodEnd,
+  cancelAtPeriodEnd,
+  endsAt: cancelAtPeriodEnd ? periodEnd : null,
+});
+const studio = { id: "studio" as const, periodStart, periodEnd, cancelAtPeriodEnd: false, endsAt: null };
 const show = async (u: Usage, credits: "always" | "never" | "auto" = "auto") =>
   render(<>{await UsageTiles({ usage: u, printPackCents: 299, currency: "USD", credits })}</>);
 const tile = (slot: string) => document.querySelector(`[data-slot="usage-${slot}"]`)?.textContent?.replace(/\s+/g, " ").trim() ?? null;
@@ -65,5 +71,11 @@ describe("UsageTiles (HEY-136)", () => {
     cleanup();
     await show(usage({ plan: starter(), dynamic: { used: 0, limit: 5 }, unlocks: { used: 0, limit: 10 } }), "always");
     expect(tile("credits")).toContain("0 left");
+  });
+
+  it("HEY-139: a cancellation set for another date (Stripe's cancel_at) shows that date", async () => {
+    const endsAt = new Date("2026-12-10T00:00:00Z");
+    await show(usage({ plan: { ...starter(true), endsAt }, dynamic: { used: 1, limit: 5 }, unlocks: { used: 0, limit: 10 } }));
+    expect(tile("unlocks")).toContain("Plan ends Dec 10, 2026 · no reset");
   });
 });

@@ -28,7 +28,8 @@ export async function UsageTiles({
   const [t, format] = await Promise.all([getTranslations("billing"), getFormatter()]);
   const plan = usage.plan;
   const month = plan ? format.dateTime(plan.periodStart, { month: "long" }) : "";
-  const end = plan?.periodEnd ? format.dateTime(plan.periodEnd, { dateStyle: "medium" }) : "";
+  const until = plan?.cancelAtPeriodEnd ? plan.endsAt : plan?.periodEnd;
+  const end = until ? format.dateTime(until, { dateStyle: "medium" }) : "";
   const resets = !end ? "" : plan?.cancelAtPeriodEnd ? t("tiles.noReset", { date: end }) : t("resets", { date: end });
   const left = (used: number, limit: number) => Math.max(0, limit - used);
   const tiles: {

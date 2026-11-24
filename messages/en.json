@@ -1631,7 +1631,14 @@
     "items": {
       "single": "Single QR",
       "printPack": "Print Pack"
-    }
+    },
+    "portal": {
+      "noCustomer": "There’s no billing account yet. It’s created with your first payment.",
+      "unavailable": "That isn’t available for your plan right now.",
+      "failed": "We couldn’t open Stripe. Nothing changed; try again."
+    },
+    "updatePayment": "Update payment method",
+    "card": "{brand} •••• {last4}"
   },
   "legal": {
     "terms": {

@@ -4908,3 +4908,45 @@ describe.skipIf(!url)("plan access by subscription status (HEY-138, real Postgre
     expect([qr?.model, qr?.purchasedAt instanceof Date, (await accountUsage(db, owner.id)).plan]).toEqual(["static", true, null]);
   });
 });
+
+/* HEY-139: the Customer Portal schedules a cancellation with cancel_at; the plan keeps going until then. */
+describe.skipIf(!url)("Portal-scheduled cancellation (HEY-139, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "portal-owner", name: "Owner", email: "owner@portal.test", stripeCustomerId: "cus_portal_owner" };
+  const periodEnd = 1_797_600_000;
+  const sub = (over: Partial<SubscriptionEvent>): SubscriptionEvent =>
+    ({
+      id: "sub_portal",
+      customer: owner.stripeCustomerId,
+      status: "active",
+      cancel_at_period_end: false,
+      cancel_at: null,
+      metadata: { userId: owner.id },
+      items: { data: [{ price: { id: "price_starter" }, current_period_start: 1_795_000_000, current_period_end: periodEnd }] },
+      ...over,
+    }) as unknown as SubscriptionEvent;
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 2 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("cancel_at without cancel_at_period_end counts as scheduled, ends then, and keeps the plan until it does", async () => {
+    await deliverSubscription(db, sub({}));
+    expect((await accountUsage(db, owner.id)).plan).toMatchObject({ cancelAtPeriodEnd: false, endsAt: null });
+    await deliverSubscription(db, sub({ cancel_at: periodEnd }));
+    const row = await db.query.subscription.findFirst({ where: (t, { eq }) => eq(t.stripeSubscriptionId, "sub_portal") });
+    expect([row?.status, row?.cancelAtPeriodEnd, row?.cancelAt?.getTime()]).toEqual(["active", true, periodEnd * 1000]);
+    const usage = await accountUsage(db, owner.id);
+    expect([usage.plan?.id, usage.plan?.endsAt?.getTime(), usage.dynamic.limit]).toEqual(["starter", periodEnd * 1000, 5]);
+    // Undoing the cancellation in the Portal clears both.
+    await deliverSubscription(db, sub({ cancel_at: null }));
+    expect((await accountUsage(db, owner.id)).plan).toMatchObject({ cancelAtPeriodEnd: false, endsAt: null });
+  });
+});

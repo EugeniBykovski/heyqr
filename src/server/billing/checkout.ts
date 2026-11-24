@@ -278,12 +278,3 @@ export async function pendingPaidCheckout(userId: string, qrCodeId: string) {
     qrCodeId,
   ).catch(() => null);
 }
-
-/** Stripe customer portal for plan changes, cancellation and receipts. */
-export async function createPortalSession(stripeCustomerId: string, locale: string) {
-  const portal = await stripe().billingPortal.sessions.create({
-    customer: stripeCustomerId,
-    return_url: `${env.NEXT_PUBLIC_APP_URL}/${locale}/dashboard/billing`,
-  });
-  return portal.url;
-}

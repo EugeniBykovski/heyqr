@@ -4,7 +4,9 @@ import type { QrContent } from "@heyqr/qr-core";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireUser } from "../auth";
-import { createCheckout, createPortalSession, createPrintPackCheckout } from "../billing/checkout";
+import { createCheckout, createPrintPackCheckout } from "../billing/checkout";
+import { createPortalSession, isPortalIntent, portalFeatures } from "../billing/portal";
+import { currentPlan } from "../billing/allowances";
 import { getCurrency } from "../currency";
 import { guard, type ActionResult } from "./result";
 
@@ -286,13 +288,27 @@ export async function startCheckout(input: {
   });
 }
 
-export async function openBillingPortal(locale: string): Promise<ActionResult<{ url: string }>> {
+/**
+ * HEY-139: Stripe's Customer Portal for the signed-in account's stored Customer: its home ("manage"), the payment
+ * method update ("payment") or the switch to Studio ("upgrade"), each only when the Portal configuration allows it and
+ * the account's state fits. The return URL is built on the server. No Customer yet: "not_found"; Stripe failing: "failed".
+ */
+export async function openBillingPortal(locale: string, intent: unknown = "manage"): Promise<ActionResult<{ url: string }>> {
   return guard(async () => {
     const user = await requireUser();
+    if (typeof locale !== "string" || !isPortalIntent(intent)) return { ok: false, error: "invalid" };
     // HEY-132: the account's stored Customer (the same one its Checkouts use), read from the database.
     const customer = await storedCustomer(db, user.id);
     if (!customer) return { ok: false, error: "not_found" };
-    return { ok: true, data: { url: await createPortalSession(customer, locale) } };
+    let subscriptionId: string | null = null;
+    if (intent !== "manage") {
+      const [features, plan, subscription] = await Promise.all([portalFeatures(), currentPlan(db, user.id), activeSubscription(user.id)]);
+      const allowed =
+        intent === "payment" ? features.paymentMethodUpdate && Boolean(subscription) : features.upgrade && plan?.id === "starter";
+      if (!allowed || !subscription) return { ok: false, error: "invalid" };
+      subscriptionId = subscription.stripeSubscriptionId;
+    }
+    return { ok: true, data: { url: await createPortalSession(customer, locale, intent, subscriptionId) } };
   });
 }
 
