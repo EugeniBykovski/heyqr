@@ -13,11 +13,15 @@ export class ShortCodeExhaustedError extends Error {
   override name = "ShortCodeExhaustedError";
 }
 
-/** The unique constraint on qr_code.short_code (another code already holds the candidate). */
+/**
+ * The candidate was issued before: another code holds it (qr_code.short_code is unique), or HEY-126's registry has it
+ * reserved because some code was given it once, including codes deleted since and codes of deleted accounts.
+ */
+const TAKEN = new Set(["qr_code_short_code_unique", "short_code_reservation_pkey"]);
 function isSlugTaken(error: unknown): boolean {
   for (let e: unknown = error; e instanceof Error; e = e.cause) {
     const pg = e as { code?: unknown; constraint?: unknown };
-    if (pg.code === "23505" && pg.constraint === "qr_code_short_code_unique") return true;
+    if (pg.code === "23505" && typeof pg.constraint === "string" && TAKEN.has(pg.constraint)) return true;
   }
   return false;
 }
@@ -28,8 +32,11 @@ function isSlugTaken(error: unknown): boolean {
  * - **Concurrent first assignments for the same code** (trial, plan activation, subscription fulfilment) converge.
  *   The write is conditional on `short_code IS NULL`, so the second waits on the row, finds it set and returns the
  *   first one's slug.
- * - **A candidate another code holds:** each try runs in its own savepoint. A unique violation rolls back only
- *   that try, and another candidate is tried, up to `attempts`.
+ * - **A candidate issued before** (held by another code, or reserved in short_code_reservation after its code or
+ *   account was deleted, HEY-126): each try runs in its own savepoint. A unique violation rolls back only that try,
+ *   and another candidate is tried, up to `attempts`.
+ * - **Reservation:** PostgreSQL reserves the slug in the same UPDATE that assigns it (migration 0012), so a slug is
+ *   reserved exactly when it is issued, and a rolled-back activation reserves nothing.
  *
  * Call it inside the operation's transaction, so the slug commits together with the activation.
  */

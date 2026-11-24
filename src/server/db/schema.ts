@@ -173,6 +173,16 @@ export const destinationChange = pgTable(
   (t) => [index("destination_change_qr_idx").on(t.qrCodeId, t.changedAt.desc(), t.id.desc())],
 );
 
+/**
+ * HEY-126: every short link ever issued, so a slug never goes to another code, even after its code or account is gone.
+ * Only the slug is kept (no reference to the code, account or destination), so the reservation outlives both.
+ * Written only by PostgreSQL (migration 0012): a trigger on qr_code reserves the slug in the same statement that inserts
+ * a code with one or assigns one for the first time. Append-only: updates, deletes and truncation are refused.
+ */
+export const shortCodeReservation = pgTable("short_code_reservation", {
+  shortCode: text("short_code").primaryKey(),
+});
+
 /** One-time purchase of a static code. */
 export const purchase = pgTable(
   "purchase",
