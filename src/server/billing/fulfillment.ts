@@ -1,10 +1,11 @@
-import { and, eq, sql } from "drizzle-orm";
+import { and, count, eq, isNull, ne, sql } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import type Stripe from "stripe";
 import * as schema from "../db/schema";
 import { assignShortCode } from "../qr/short-code";
 import { accountForCustomer, customerIdOf } from "./customer";
-import { grantPackCredits } from "./allowances";
+import { isPlanId } from "../../shared/config/catalog-core";
+import { currentPlan, dynamicLimit, grantPackCredits } from "./allowances";
 import { refundedOffers } from "./refunds";
 
 type Db = NodePgDatabase<typeof schema>;
@@ -46,7 +47,9 @@ export type NotFulfilled =
   // HEY-132: a subscription Checkout whose Customer isn't the account's stored one (or names another account).
   | "no_customer"
   | "unknown_customer"
-  | "account_mismatch";
+  | "account_mismatch"
+  // HEY-133: the plan was bought, but every live slot of it is taken: the Checkout's code isn't activated.
+  | "slot_full";
 
 type Order = typeof schema.purchase.$inferSelect;
 
@@ -116,7 +119,10 @@ export async function fulfillCheckout(db: Db | Tx, s: PaidSession, newShortCode:
       return { granted: false, reason: account.reason };
     }
     const userId = account.userId;
-    const ownCode = qrCodeId ? and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId)) : undefined;
+    // HEY-133: only the account's own code that still exists can be restored or activated by the plan's Checkout.
+    const ownCode = qrCodeId
+      ? and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt))
+      : undefined;
     if (!ownCode) return { granted: false };
     // Lock order: the account row first, then the code row, as trial and plan activation do (activateTrialCode,
     // activateDynamicCode). The code row is updated twice below (slug, then status); the second update touches a row
@@ -127,7 +133,33 @@ export async function fulfillCheckout(db: Db | Tx, s: PaidSession, newShortCode:
     await db.select({ id: schema.user.id }).from(schema.user).where(eq(schema.user.id, userId)).for("update");
     // A plan bought for a code (export or the trial's test code): the code goes live and keeps its short link.
     const qr = await db.query.qrCode.findFirst({ where: ownCode });
-    if (!qr) return { granted: false };
+    if (!qr || qr.model !== "dynamic") return { granted: false };
+    // HEY-133: going live takes a slot of the plan bought (the session's plan, set by the server: the subscription row
+    // may arrive after this event). A code already live under the plan, or paused by its owner, takes none here.
+    const goesLive = qr.status !== "paused" && !(qr.status === "active" && !qr.isTrial);
+    if (goesLive) {
+      // A session without a plan (older Checkouts) counts against the account's current plan.
+      const plan = isPlanId(s.metadata?.plan)
+        ? s.metadata.plan
+        : ((await currentPlan(db as Parameters<typeof currentPlan>[0], userId))?.id ?? "starter");
+      const [live] = await db
+        .select({ n: count() })
+        .from(schema.qrCode)
+        .where(
+          and(
+            eq(schema.qrCode.userId, userId),
+            eq(schema.qrCode.model, "dynamic"),
+            eq(schema.qrCode.status, "active"),
+            eq(schema.qrCode.isTrial, false),
+            isNull(schema.qrCode.deletedAt),
+            ne(schema.qrCode.id, qr.id),
+          ),
+        );
+      if (Number(live?.n ?? 0) >= dynamicLimit(plan)) {
+        diagnose("slot_full", null, s.id);
+        return { granted: false, reason: "slot_full" };
+      }
+    }
     // HEY-117: assigned once, from NULL, converging with a concurrent trial or plan activation of the same code.
     await assignShortCode(db, qr.id, newShortCode);
     await db

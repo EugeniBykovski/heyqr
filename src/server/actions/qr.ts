@@ -280,7 +280,8 @@ export async function startCheckout(input: {
       transparent: input.transparent === true,
     });
     // HEY-88: the code went away or was unlocked meanwhile, or its order's last session is being paid.
-    if ("error" in checkout) return { ok: false, error: checkout.error };
+    // HEY-133: an account with a plan activates Dynamic codes under it instead of a second subscription.
+    if ("error" in checkout) return { ok: false, error: checkout.error === "has_plan" ? "invalid" : checkout.error };
     return { ok: true, data: { url: checkout.url } };
   });
 }

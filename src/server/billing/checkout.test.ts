@@ -54,6 +54,9 @@ vi.mock("../db", () => ({
 
 /* HEY-132: the account's Customer binding is covered against PostgreSQL; here, every session uses the bound one. */
 vi.mock("./customer", () => ({ bindStripeCustomer: async () => "cus_test" }));
+/* HEY-133: the account's current plan (none unless a test sets one). */
+let currentPlan: { id: "starter" | "studio" } | null = null;
+vi.mock("./allowances", () => ({ currentPlan: async () => currentPlan }));
 
 /* HEY-88: the Single QR order itself (create or reuse, attach) is covered against PostgreSQL; here, what it charges. */
 const orders: { charge: { item: string; currency: string; lines: unknown[] }; layoutId?: string }[] = [];
@@ -85,6 +88,7 @@ describe("checkout (HEY-60)", () => {
     }));
     inserted.length = 0;
     orders.length = 0;
+    currentPlan = null;
     qr = { id: "q1", model: "static", printPackAt: null, layouts: [{ id: "l1", design: { layout: { unit: "mm" } } }] };
   });
 
@@ -140,5 +144,18 @@ describe("checkout (HEY-60)", () => {
     expect(create).not.toHaveBeenCalled();
     expect(inserted).toEqual([]);
     expect(orders).toEqual([]);
+  });
+
+  it("HEY-133: Studio is the monthly Studio Price; an account with a plan gets no second subscription Checkout", async () => {
+    qr.model = "dynamic";
+    await createCheckout({ ...base, currency: "USD", plan: "studio" }).catch(() => undefined);
+    // No USD Studio Price in this stub catalog: refused before Stripe, like any offer without a Price.
+    expect(create).not.toHaveBeenCalled();
+    currentPlan = { id: "starter" };
+    expect(await createCheckout({ ...base, currency: "PLN" })).toEqual({ error: "has_plan" });
+    expect(create).not.toHaveBeenCalled();
+    // A static code is still sold as before.
+    qr.model = "static";
+    expect(await createCheckout({ ...base, currency: "USD" })).toMatchObject({ url: expect.any(String) });
   });
 });

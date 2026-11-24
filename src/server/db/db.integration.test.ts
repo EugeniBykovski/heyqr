@@ -22,7 +22,7 @@ import { changeDestination, destinationHistory } from "../qr/destination";
 import { assignShortCode, SHORT_CODE_ATTEMPTS, ShortCodeExhaustedError } from "../qr/short-code";
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, copyLayout, layoutRevision, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
-import { activateTrialCode, startTrial, trialCode } from "../billing/trial";
+import { activateTrialCode, startTrial, trialCode, trialCovers, trialPhase } from "../billing/trial";
 import { pauseDynamicCode, resumeDynamicCode } from "../billing/pause";
 import { bindStripeCustomer, customerIdempotencyKey, storedCustomer, type CustomerCreate } from "../billing/customer";
 import { applySubscriptionEvent, type SubscriptionEvent } from "../billing/subscriptions";
@@ -4117,5 +4117,204 @@ describe.skipIf(!url)("Stripe Customer binding (HEY-132, real PostgreSQL)", () =
     } finally {
       warn.mockRestore();
     }
+  });
+});
+
+/*
+ * HEY-133 / QR-18.03: subscription Checkout. The plan's slots come from the webhook; the Checkout's code (the trial's
+ * test code on an upgrade) goes live with its ID and short link only for its own account and within the plan's slots.
+ */
+describe.skipIf(!url)("subscription Checkout (HEY-133, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const starter = { id: "sc-starter", name: "Starter", email: "starter@sc.test", stripeCustomerId: "cus_sc_starter" };
+  const studio = { id: "sc-studio", name: "Studio", email: "studio@sc.test", stripeCustomerId: "cus_sc_studio" };
+  const upgrader = { id: "sc-upgrader", name: "Upgrader", email: "upgrader@sc.test", stripeCustomerId: "cus_sc_upgrader" };
+  const stranger = { id: "sc-stranger", name: "Stranger", email: "stranger@sc.test", stripeCustomerId: "cus_sc_stranger" };
+  const accounts = [starter, studio, upgrader, stranger];
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const A = "https://a.example.test/";
+  const B = "https://b.example.test/";
+  const make = async (userId: string, name: string) => {
+    const saved = await saveQrWithLayouts(db, userId, { name, model: "dynamic", content: { type: "website", url: A }, layouts });
+    if (!saved.ok) throw new Error("save failed");
+    return saved.data.qrCodeId;
+  };
+  const subscribe = (
+    account: { id: string; stripeCustomerId: string },
+    plan: "starter" | "studio",
+    status: "active" | "canceled" = "active",
+  ) =>
+    applySubscriptionEvent(
+      db,
+      {
+        id: `sub_${account.id}`,
+        customer: account.stripeCustomerId,
+        status,
+        cancel_at_period_end: false,
+        metadata: { userId: account.id, plan },
+        items: { data: [{ price: { id: `price_${plan}` }, current_period_start: 1_795_000_000, current_period_end: 1_797_600_000 }] },
+      } as unknown as SubscriptionEvent,
+      () => null,
+    );
+  const paid = (
+    account: { id: string; stripeCustomerId: string },
+    qrCodeId: string,
+    eventId: string,
+    plan = "starter",
+    type = "checkout.session.completed",
+  ) => ({
+    id: eventId,
+    type,
+    session: {
+      id: `cs_${account.id}`,
+      mode: "subscription",
+      status: "complete",
+      payment_status: "paid",
+      payment_intent: null,
+      amount_subtotal: 900,
+      amount_total: 900,
+      total_details: null,
+      currency: "usd",
+      customer: account.stripeCustomerId,
+      metadata: { userId: account.id, qrCodeId, plan, kind: "code" },
+    } as unknown as Parameters<typeof processCheckoutEvent>[1]["session"],
+  });
+  const code = (id: string) => db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, id) });
+  const codes = async (userId: string) => (await db.query.qrCode.findMany({ where: (q, { eq }) => eq(q.userId, userId) })).length;
+  /** What /r/<slug> answers (src/app/r/[code]/route.ts), for a code that isn't the trial's. */
+  const shortLink = async (slug: string) => {
+    const qr = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.shortCode, slug) });
+    return !qr || qr.deletedAt || qr.status !== "active" || !qr.destination || qr.isTrial ? "unavailable" : qr.destination;
+  };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 8 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(accounts).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(
+      inArray(
+        schema.user.id,
+        accounts.map((a) => a.id),
+      ),
+    );
+    await pool?.end();
+  });
+
+  it("Starter: 5 live Dynamic codes after the webhook, the 6th refused; no plan before it", async () => {
+    const ids = [];
+    for (let i = 0; i < 6; i++) ids.push(await make(starter.id, `S${i}`));
+    expect(await activateDynamicCode(db, starter.id, ids[0] as string, () => "scst000")).toEqual({ ok: false, error: "no_plan" });
+    expect(await subscribe(starter, "starter")).toEqual({ applied: true, userId: starter.id });
+    for (let i = 0; i < 5; i++) expect((await activateDynamicCode(db, starter.id, ids[i] as string, () => `scst00${i}`)).ok).toBe(true);
+    expect(await activateDynamicCode(db, starter.id, ids[5] as string, () => "scst005")).toEqual({ ok: false, error: "limit" });
+    expect((await accountUsage(db, starter.id)).dynamic).toEqual({ used: 5, limit: 5 });
+  });
+
+  it("Studio: 25 live Dynamic codes, the 26th refused", async () => {
+    expect(await subscribe(studio, "studio")).toEqual({ applied: true, userId: studio.id });
+    const ids = [];
+    for (let i = 0; i < 26; i++) {
+      // Drafts are capped; each code goes live before the next is saved.
+      const id = await make(studio.id, `P${i}`);
+      ids.push(id);
+      const r = await activateDynamicCode(db, studio.id, id, () => `scpr${String(i).padStart(3, "0")}`);
+      expect(r.ok).toBe(i < 25);
+      if (i === 25) expect(r).toEqual({ ok: false, error: "limit" });
+    }
+    expect((await accountUsage(db, studio.id)).dynamic).toEqual({ used: 25, limit: 25 });
+  });
+
+  it("expired trial → plan: the trial code goes live again with its ID and short link, to the current destination", async () => {
+    const day1 = new Date(Date.now() - 10 * 86_400_000);
+    expect((await startTrial(db, upgrader.id, false, day1)).ok).toBe(true);
+    const id = await make(upgrader.id, "Trial menu");
+    expect(await activateTrialCode(db, upgrader.id, id, () => "scup001", day1)).toEqual({ ok: true, shortCode: "scup001" });
+    // After the trial: the owner changes the destination; the link stays inactive until the plan is bought.
+    expect((await changeFresh(db, upgrader.id, id, B)).ok).toBe(true);
+    const owner = await db.query.user.findFirst({ where: (u, { eq }) => eq(u.id, upgrader.id) });
+    expect(owner && trialCovers(trialPhase(owner, false), { isTrial: true })).toBe(false);
+    const before = await codes(upgrader.id);
+    // Paid: the webhook (subscription Checkout of that code) and the subscription itself.
+    expect(await processCheckoutEvent(db, paid(upgrader, id, "evt_sc_up"), () => "scupXXX")).toEqual({
+      duplicate: false,
+      result: { granted: true },
+    });
+    expect(await subscribe(upgrader, "starter")).toEqual({ applied: true, userId: upgrader.id });
+    const row = await code(id);
+    expect([row?.id, row?.shortCode, row?.status, row?.isTrial, row?.destination]).toEqual([id, "scup001", "active", false, B]);
+    expect(await shortLink("scup001")).toBe(B);
+    expect([await codes(upgrader.id), (await accountUsage(db, upgrader.id)).dynamic]).toEqual([before, { used: 1, limit: 5 }]);
+  });
+
+  it("redelivery grants nothing more: the same event is a duplicate; the other completion event changes nothing", async () => {
+    const id = (await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.shortCode, "scup001") }))?.id as string;
+    const snapshot = async () => ({
+      row: await code(id),
+      codes: await codes(upgrader.id),
+      subs: (await db.query.subscription.findMany({ where: (t, { eq }) => eq(t.userId, upgrader.id) })).length,
+      usage: (await accountUsage(db, upgrader.id)).dynamic,
+    });
+    const before = await snapshot();
+    expect(await processCheckoutEvent(db, paid(upgrader, id, "evt_sc_up"), () => "scupYYY")).toEqual({ duplicate: true });
+    expect(
+      (
+        await processCheckoutEvent(
+          db,
+          paid(upgrader, id, "evt_sc_up_async", "starter", "checkout.session.async_payment_succeeded"),
+          () => "scupZZZ",
+        )
+      ).duplicate,
+    ).toBe(false);
+    expect(await subscribe(upgrader, "starter")).toEqual({ applied: true, userId: upgrader.id });
+    const after = await snapshot();
+    expect({ ...after, row: { ...after.row, updatedAt: null } }).toEqual({ ...before, row: { ...before.row, updatedAt: null } });
+  });
+
+  it("another account's QR ID, or a deleted code, is never restored by a Checkout", async () => {
+    const theirs = await make(stranger.id, "Not yours");
+    await db
+      .update(schema.qrCode)
+      .set({ isTrial: true, shortCode: "scfor01", status: "active", destination: A })
+      .where(eq(schema.qrCode.id, theirs));
+    // Paid with the upgrader's own Customer, naming the stranger's code.
+    expect(await processCheckoutEvent(db, paid(upgrader, theirs, "evt_sc_foreign"), () => "scfor99")).toEqual({
+      duplicate: false,
+      result: { granted: false },
+    });
+    const row = await code(theirs);
+    expect([row?.userId, row?.isTrial, row?.shortCode]).toEqual([stranger.id, true, "scfor01"]);
+    // A code its owner deleted stays deleted and isn't activated.
+    const gone = await make(upgrader.id, "Deleted");
+    await softDeleteQrCodes(db, upgrader.id, [gone]);
+    expect(await processCheckoutEvent(db, paid(upgrader, gone, "evt_sc_gone"), () => "scgone1")).toEqual({
+      duplicate: false,
+      result: { granted: false },
+    });
+    expect([(await code(gone))?.status, (await code(gone))?.shortCode]).toEqual(["draft", null]);
+  });
+
+  it("a plan Checkout's code doesn't go live beyond the purchased plan's slots", async () => {
+    // Five codes left live by an earlier plan that ended, then Starter bought again for a sixth.
+    expect(await subscribe(starter, "starter", "canceled")).toMatchObject({ applied: true });
+    const sixth = await make(starter.id, "Sixth");
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      expect(await processCheckoutEvent(db, paid(starter, sixth, "evt_sc_full"), () => "scfull1")).toEqual({
+        duplicate: false,
+        result: { granted: false, reason: "slot_full" },
+      });
+    } finally {
+      warn.mockRestore();
+    }
+    expect([(await code(sixth))?.status, (await code(sixth))?.shortCode]).toEqual(["draft", null]);
+    // Studio has room for it.
+    expect(await processCheckoutEvent(db, paid(starter, sixth, "evt_sc_room", "studio"), () => "scroom1")).toEqual({
+      duplicate: false,
+      result: { granted: true },
+    });
+    expect((await code(sixth))?.shortCode).toBe("scroom1");
   });
 });
