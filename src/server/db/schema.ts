@@ -188,6 +188,27 @@ export const shortCodeReservation = pgTable("short_code_reservation", {
   shortCode: text("short_code").primaryKey(),
 });
 
+/**
+ * HEY-153: an account's API key. Only a one-way verifier is stored (SHA-256 of the key's secret part) with the public
+ * lookup id shown as its prefix; the full key exists only in the response that created it. Verification and
+ * revocation build on this record (HEY-154). Deleting the account deletes its keys.
+ */
+export const apiKey = pgTable(
+  "api_key",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    /** The public part of the key (`hqk_<lookupId>_…`): shown as its prefix, and how a presented key is found. */
+    lookupId: text("lookup_id").notNull().unique(),
+    /** `sha256:<hex>` of the key's secret part. Never the key itself. */
+    secretHash: text("secret_hash").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("api_key_user_idx").on(t.userId, t.createdAt)],
+);
+
 /** One-time purchase of a static code. */
 export const purchase = pgTable(
   "purchase",
