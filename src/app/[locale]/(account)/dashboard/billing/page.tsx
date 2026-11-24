@@ -6,7 +6,9 @@ import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
 import { requireAccount } from "../../require-account";
 import { accountUsage } from "@/server/billing/allowances";
-import { userTrial } from "@/server/billing/entitlements";
+import { activeSubscription, userTrial } from "@/server/billing/entitlements";
+import { paymentSummary, portalFeatures } from "@/server/billing/portal";
+import { storedCustomer } from "@/server/billing/customer";
 import { trialCode } from "@/server/billing/trial";
 import { getCurrency } from "@/server/currency";
 import { db, schema } from "@/server/db";
@@ -33,7 +35,7 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
   const locale = await resolveLocale(params);
   const user = await requireAccount(locale, "/dashboard/billing", await searchParams);
   const [t, format, currency] = await Promise.all([getTranslations("billing"), getFormatter(), getCurrency()]);
-  const [usage, purchases, phase, test] = await Promise.all([
+  const [usage, purchases, phase, test, customer, subscription, features] = await Promise.all([
     accountUsage(db, user.id),
     db.query.purchase.findMany({
       where: eq(schema.purchase.userId, user.id),
@@ -42,7 +44,22 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
     }),
     userTrial(user.id),
     trialCode(db, user.id),
+    // HEY-139: the stored Customer from the database (not the session's copy), and what the Portal allows.
+    storedCustomer(db, user.id),
+    activeSubscription(user.id),
+    portalFeatures(),
   ]);
+  const payment = customer && subscription ? await paymentSummary(customer, subscription.stripeSubscriptionId) : null;
+  const brand = (b: string) =>
+    ({
+      visa: "Visa",
+      mastercard: "Mastercard",
+      amex: "American Express",
+      discover: "Discover",
+      jcb: "JCB",
+      unionpay: "UnionPay",
+      diners: "Diners Club",
+    })[b] ?? b.charAt(0).toUpperCase() + b.slice(1);
   // HEY-136: the trial's one slot, apart from the paid quota (the same rule as My QR codes: live while the trial runs).
   const trialLive = phase.state === "active" || phase.state === "ending";
   const trialSlotUsed = Boolean(test && test.status === "active" && trialLive);
@@ -99,30 +116,41 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
               <dt className="text-secondary-foreground">{t("price")}</dt>
               <dd className="font-semibold tabular-nums">{t("perMonth", { price: formatMoney(sheet[plan.id], currency) })}</dd>
             </div>
-            {plan.periodEnd ? (
+            {/* HEY-139: the renewal date, or when a scheduled cancellation takes effect (Stripe's cancel_at). */}
+            {(plan.cancelAtPeriodEnd ? plan.endsAt : plan.periodEnd) ? (
               <div className="flex justify-between gap-3">
                 <dt className="text-secondary-foreground">{plan.cancelAtPeriodEnd ? t("endsOn") : t("renewsOn")}</dt>
-                <dd className="font-semibold">{date(plan.periodEnd)}</dd>
+                <dd data-slot="plan-date" className="font-semibold">
+                  {date((plan.cancelAtPeriodEnd ? plan.endsAt : plan.periodEnd) ?? new Date())}
+                </dd>
               </div>
             ) : null}
             <div className="flex justify-between gap-3">
               <dt className="text-secondary-foreground">{t("payment")}</dt>
-              <dd className="text-right font-semibold">{t("paymentStripe")}</dd>
+              <dd data-slot="payment-method" className="text-right font-semibold">
+                {payment?.kind === "card"
+                  ? t("card", { brand: brand(payment.brand), last4: payment.last4 })
+                  : payment
+                    ? brand(payment.type.replace(/_/g, " "))
+                    : t("paymentStripe")}
+              </dd>
             </div>
           </dl>
         ) : (
           <p className="text-secondary-foreground">{t("none")}</p>
         )}
         <div className="flex flex-wrap gap-2.5">
-          {plan?.id === "starter" && user.stripeCustomerId ? (
-            <BillingPortalButton variant="primary" label={t("upgrade", { price: formatMoney(sheet.studio, currency) })} />
+          {/* HEY-139: only actions the account's state and the Portal configuration allow. */}
+          {plan?.id === "starter" && customer && features.upgrade && !plan.cancelAtPeriodEnd ? (
+            <BillingPortalButton intent="upgrade" variant="primary" label={t("upgrade", { price: formatMoney(sheet.studio, currency) })} />
           ) : null}
           {!plan ? (
             <Button asChild variant="primary">
               <Link href="/pricing">{t("choosePlan")}</Link>
             </Button>
           ) : null}
-          {user.stripeCustomerId ? <BillingPortalButton /> : null}
+          {customer && plan ? <BillingPortalButton /> : null}
+          {customer && plan && features.paymentMethodUpdate ? <BillingPortalButton intent="payment" label={t("updatePayment")} /> : null}
           <Button asChild>
             <Link href="/pricing">{t("compare")}</Link>
           </Button>

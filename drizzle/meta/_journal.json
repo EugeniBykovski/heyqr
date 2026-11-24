@@ -99,6 +99,13 @@
       "when": 1795511772261,
       "tag": "0013_destination_revision",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1795527106313,
+      "tag": "0014_subscription_cancel_at",
+      "breakpoints": true
     }
   ]
 }
