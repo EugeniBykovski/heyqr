@@ -8,6 +8,7 @@ import { db, schema } from "../db";
 import type { PurchaseItem, PurchaseLine } from "../db/schema";
 import { newId } from "../db/ids";
 import { priceMatches, stripePriceFor } from "./catalog";
+import { currentPlan } from "./allowances";
 import { bindStripeCustomer } from "./customer";
 import { awaitingFulfillment, singleQrCheckout, type CheckoutPort } from "./single-order";
 import { stripe } from "./stripe";
@@ -118,7 +119,7 @@ const line = (currency: Currency, offer: PurchaseLine["offer"]): PurchaseLine =>
  * (eligible mm layouts only). Dynamic: the plan (Starter by default), plus the Print Pack on the first invoice.
  * Returns to the same export screen and settings.
  */
-export type CodeCheckout = { url: string } | { error: "not_found" | "owned" | "processing" };
+export type CodeCheckout = { url: string } | { error: "not_found" | "owned" | "processing" | "has_plan" };
 
 /**
  * HEY-88: Stripe for one Single QR order. The order id goes on the session (metadata, client_reference_id) and into
@@ -165,6 +166,9 @@ export async function createCheckout(input: ExportBack & { user: User; currency:
   };
 
   if (qr.model === "dynamic") {
+    // HEY-133: one plan per account. With a plan the code is activated under it (or the plan changed in the Portal),
+    // never sold a second subscription.
+    if (await currentPlan(db, user.id)) return { error: "has_plan" };
     const plan = input.plan ?? "starter";
     const prices = [await verifiedPrice(currency, plan), ...(printPack ? [await verifiedPrice(currency, "printPack")] : [])];
     return { url: await session({ user, mode: "subscription", prices, back, metadata: { ...metadata, plan } }) };
