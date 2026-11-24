@@ -1608,7 +1608,10 @@
       "packsNote": "{resets} · then +{price}",
       "credits": "Static credits",
       "oneTime": "One-time",
-      "creditsNote": "Never expire · used after monthly unlocks"
+      "creditsNote": "Never expire · used after monthly unlocks",
+      "available": "{n} available",
+      "leftMonth": "{n} left this month",
+      "noReset": "Plan ends {date} · no reset"
     },
     "of": "of {limit}",
     "left": "left",
@@ -1809,7 +1812,8 @@
         "title": "Your Starter plan is active.",
         "text": "Your test code is now a regular Dynamic QR."
       },
-      "open": "Trial details"
+      "open": "Trial details",
+      "activate": "Activate Starter…"
     },
     "usage": {
       "title": "Trial Dynamic slot",

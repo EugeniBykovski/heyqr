@@ -7,6 +7,7 @@ import { resolveLocale } from "@/i18n/server";
 import { requireAccount } from "../../require-account";
 import { accountUsage } from "@/server/billing/allowances";
 import { userTrial } from "@/server/billing/entitlements";
+import { trialCode } from "@/server/billing/trial";
 import { getCurrency } from "@/server/currency";
 import { db, schema } from "@/server/db";
 import { formatMoney, isCurrency, priceSheet } from "@/shared/config/catalog";
@@ -32,7 +33,7 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
   const locale = await resolveLocale(params);
   const user = await requireAccount(locale, "/dashboard/billing", await searchParams);
   const [t, format, currency] = await Promise.all([getTranslations("billing"), getFormatter(), getCurrency()]);
-  const [usage, purchases, phase] = await Promise.all([
+  const [usage, purchases, phase, test] = await Promise.all([
     accountUsage(db, user.id),
     db.query.purchase.findMany({
       where: eq(schema.purchase.userId, user.id),
@@ -40,7 +41,11 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
       with: { qrCode: true },
     }),
     userTrial(user.id),
+    trialCode(db, user.id),
   ]);
+  // HEY-136: the trial's one slot, apart from the paid quota (the same rule as My QR codes: live while the trial runs).
+  const trialLive = phase.state === "active" || phase.state === "ending";
+  const trialSlotUsed = Boolean(test && test.status === "active" && trialLive);
   const plan = usage.plan;
   const sheet = priceSheet(currency);
   const date = (d: Date) => format.dateTime(d, { dateStyle: "medium" });
@@ -74,7 +79,7 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
         <p className="text-secondary-foreground">{t("signedIn", { email: user.email })}</p>
       </header>
 
-      <TrialBar phase={phase} />
+      <TrialBar phase={phase} showUsage={trialLive} slotUsed={trialSlotUsed} />
 
       <section aria-labelledby="bill-plan" className={card}>
         <div className="flex items-start justify-between gap-3">
@@ -86,7 +91,8 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
           </div>
           <Badge variant={plan ? (plan.cancelAtPeriodEnd ? "warning" : "success") : "neutral"}>{t(status)}</Badge>
         </div>
-        <UsageTiles usage={usage} printPackCents={sheet.printPack} currency={currency} />
+        {/* HEY-136: the credit balance is always shown here, 0 included. */}
+        <UsageTiles usage={usage} printPackCents={sheet.printPack} currency={currency} credits="always" />
         {plan ? (
           <dl className="flex flex-col gap-2 text-[0.875rem]">
             <div className="flex justify-between gap-3">
