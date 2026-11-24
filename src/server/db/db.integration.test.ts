@@ -5480,7 +5480,13 @@ describe.skipIf(!url)("subscription transitions and out-of-order delivery (HEY-1
       processCheckoutEvent(db, completed, () => "ordbuy2"),
     ]);
     expect(both.filter((r) => r.duplicate)).toHaveLength(1);
-    expect((await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, draft.data.qrCodeId) }))?.shortCode).toBe("ordbuy1");
+    // Either delivery may claim the event first: the code gets the winner's slug, the other delivery changes nothing.
+    const winner = both.findIndex((r) => !r.duplicate) === 0 ? "ordbuy1" : "ordbuy2";
+    const slug = async () => (await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, draft.data.qrCodeId) }))?.shortCode;
+    expect(await slug()).toBe(winner);
+    // A third delivery later is a duplicate too, and the slug stays.
+    expect(await processCheckoutEvent(db, completed, () => "ordbuy3")).toEqual({ duplicate: true });
+    expect(await slug()).toBe(winner);
     expect((await accountUsage(db, owner.id)).dynamic.used).toBe(2);
   });
 });
