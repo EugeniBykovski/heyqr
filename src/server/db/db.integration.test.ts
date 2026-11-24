@@ -27,6 +27,7 @@ import { pauseDynamicCode, resumeDynamicCode } from "../billing/pause";
 import { bindStripeCustomer, customerIdempotencyKey, storedCustomer, type CustomerCreate } from "../billing/customer";
 import { applySubscriptionEvent, type SubscriptionEvent } from "../billing/subscriptions";
 import { canDownloadCode, resolveShortLink } from "../billing/access";
+import { incrementScan } from "../qr/scans";
 import {
   accountUsage,
   activateDynamicCode,
@@ -5481,5 +5482,89 @@ describe.skipIf(!url)("subscription transitions and out-of-order delivery (HEY-1
     expect(both.filter((r) => r.duplicate)).toHaveLength(1);
     expect((await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, draft.data.qrCodeId) }))?.shortCode).toBe("ordbuy1");
     expect((await accountUsage(db, owner.id)).dynamic.used).toBe(2);
+  });
+});
+
+/*
+ * HEY-145 / QR-20.01: the scan counter, as the short-link route uses it (resolveShortLink, then incrementScan for a
+ * redirect only). Concurrent scans don't lose increments; unavailable codes count nothing.
+ */
+describe.skipIf(!url)("scan counting (HEY-145, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "scan-owner", name: "Owner", email: "owner@scan.test" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const codes = { live: "", paused: "" };
+  const count = async (id: string, day: string) =>
+    Number(
+      (await pool.query("select coalesce(sum(count), 0)::int as n from scan_daily where qr_code_id = $1 and day = $2", [id, day])).rows[0]
+        .n,
+    );
+  /** One anonymous request, decided and counted the way /r/[code] does. */
+  const scan = async (slug: string, day: string) => {
+    const answer = await resolveShortLink(db, slug);
+    if (answer.kind === "redirect") await incrementScan(db, answer.qrCodeId, day);
+    return answer;
+  };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 10 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+    await db.insert(schema.subscription).values({
+      id: "scan-sub",
+      userId: owner.id,
+      stripeSubscriptionId: "sub_scan",
+      stripePriceId: "price_starter",
+      status: "active",
+      plan: "starter",
+      activeCodeLimit: 5,
+      currentPeriodStart: new Date(),
+    });
+    for (const k of ["live", "paused"] as const) {
+      const saved = await saveQrWithLayouts(db, owner.id, {
+        name: k,
+        model: "dynamic",
+        content: { type: "website", url: "https://a.example.test/" },
+        layouts,
+      });
+      if (!saved.ok) throw new Error("save failed");
+      codes[k] = saved.data.qrCodeId;
+      expect((await activateDynamicCode(db, owner.id, codes[k], () => `scan${k.slice(0, 3)}1`)).ok).toBe(true);
+    }
+    await pauseDynamicCode(db, owner.id, codes.paused);
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("40 concurrent scans of a code, starting with the day's first: exactly 40, one row", async () => {
+    const day = "2026-11-01";
+    const answers = await Promise.all(Array.from({ length: 40 }, () => scan("scanliv1", day)));
+    expect(answers.every((a) => a.kind === "redirect")).toBe(true);
+    expect(await count(codes.live, day)).toBe(40);
+    expect(
+      Number(
+        (await pool.query("select count(*)::int as n from scan_daily where qr_code_id = $1 and day = $2", [codes.live, day])).rows[0].n,
+      ),
+    ).toBe(1);
+    // More the same day, then the next day on its own row.
+    await Promise.all(Array.from({ length: 10 }, () => scan("scanliv1", day)));
+    await scan("scanliv1", "2026-11-02");
+    expect([await count(codes.live, day), await count(codes.live, "2026-11-02")]).toEqual([50, 1]);
+  });
+
+  it("unavailable codes count nothing: paused, unknown, and a live code whose owner lost paid access", async () => {
+    const day = "2026-11-03";
+    expect((await scan("scanpau1", day)).kind).toBe("unavailable");
+    expect((await scan("nosuchcode", day)).kind).toBe("unavailable");
+    await db.update(schema.subscription).set({ status: "canceled" }).where(eq(schema.subscription.stripeSubscriptionId, "sub_scan"));
+    try {
+      expect(await scan("scanliv1", day)).toEqual({ kind: "unavailable", inactive: true });
+    } finally {
+      await db.update(schema.subscription).set({ status: "active" }).where(eq(schema.subscription.stripeSubscriptionId, "sub_scan"));
+    }
+    expect([await count(codes.live, day), await count(codes.paused, day)]).toEqual([0, 0]);
   });
 });

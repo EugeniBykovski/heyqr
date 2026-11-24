@@ -22,9 +22,12 @@ const paid = [{ status: "active", cancelAtPeriodEnd: false, cancelAt: null, curr
 const recordScan = vi.fn();
 vi.mock("@/server/qr/repository", () => ({ recordScan: (...a: unknown[]) => recordScan(...a) }));
 const afterQueue: (() => unknown)[] = [];
+/** HEY-145: "queue" runs after() work once the test asks; "start" begins it at once without waiting, like the platform. */
+const afterMode = { value: "queue" as "queue" | "start" };
+const started: Promise<unknown>[] = [];
 vi.mock("next/server", async (original) => ({
   ...(await original<typeof import("next/server")>()),
-  after: (fn: () => unknown) => afterQueue.push(fn),
+  after: (fn: () => unknown) => (afterMode.value === "start" ? void started.push(Promise.resolve(fn())) : afterQueue.push(fn)),
 }));
 
 const { GET } = await import("./route");
@@ -54,8 +57,10 @@ describe("GET /r/:code", () => {
     subscription.mockReset();
     // HEY-142: the owner has paid access unless a test says otherwise.
     subscription.mockResolvedValue(paid);
-    recordScan.mockReset();
+    recordScan.mockReset().mockResolvedValue(undefined);
     afterQueue.length = 0;
+    afterMode.value = "queue";
+    started.length = 0;
   });
 
   it("an active code: 302 to its exact current destination, no-store, one scan recorded", async () => {
@@ -159,5 +164,44 @@ describe("GET /r/:code", () => {
       expect((await open()).location).toBe(unavailable);
     }
     expect(recordScan).not.toHaveBeenCalled();
+  });
+
+  it("HEY-145: the 302 is sent while the scan write is still pending; the write then completes once", async () => {
+    afterMode.value = "start";
+    findQr.mockResolvedValue(live);
+    let finish = () => {};
+    let done = false;
+    recordScan.mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          finish = () => {
+            done = true;
+            resolve();
+          };
+        }),
+    );
+    const res = await GET(new NextRequest("http://localhost:3000/r/AbCdEf2"), { params: Promise.resolve({ code: "AbCdEf2" }) });
+    // The response exists and the write has started, but it hasn't finished.
+    expect([res.status, res.headers.get("location"), res.headers.get("cache-control")]).toEqual([302, live.destination, "no-store"]);
+    expect([recordScan.mock.calls, done]).toEqual([[["q1"]], false]);
+    finish();
+    await Promise.all(started);
+    expect(done).toBe(true);
+    expect(recordScan).toHaveBeenCalledTimes(1);
+  });
+
+  it("HEY-145: a failed scan write leaves the redirect as it was and is logged without details", async () => {
+    afterMode.value = "start";
+    findQr.mockResolvedValue(live);
+    recordScan.mockRejectedValue(Object.assign(new Error("insert into scan_daily … q1"), { name: "DatabaseError" }));
+    const error = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    try {
+      const res = await GET(new NextRequest("http://localhost:3000/r/AbCdEf2"), { params: Promise.resolve({ code: "AbCdEf2" }) });
+      expect([res.status, res.headers.get("location"), res.headers.get("cache-control")]).toEqual([302, live.destination, "no-store"]);
+      await Promise.all(started); // the background work settles without throwing
+      expect(error).toHaveBeenCalledExactlyOnceWith("[scan] not recorded: DatabaseError");
+    } finally {
+      error.mockRestore();
+    }
   });
 });
