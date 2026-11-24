@@ -36,7 +36,8 @@ function describeError(error: unknown): string {
   return typeof cause?.code === "string" ? `${error.name} (database code ${cause.code})` : error.name;
 }
 
-export async function guard<T>(fn: () => Promise<ActionResult<T>>): Promise<ActionResult<T>> {
+/** `E`: an action-specific result besides ActionResult (e.g. HEY-128's destination conflict). */
+export async function guard<T, E = never>(fn: () => Promise<ActionResult<T> | E>): Promise<ActionResult<T> | E> {
   try {
     return await fn();
   } catch (error) {

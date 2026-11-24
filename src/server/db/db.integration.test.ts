@@ -42,6 +42,15 @@ import { DRAFT_LIMIT } from "../../shared/config/catalog-core";
 
 const url = process.env.TEST_DATABASE_URL;
 
+/**
+ * Change destination as a tab that has just opened the code: from its current destination revision (HEY-128). Read
+ * without the owner check, so another account's attempt still reaches changeDestination's own ownership check.
+ */
+async function changeFresh(db: ReturnType<typeof drizzle<typeof schema>>, userId: string, qrCodeId: string, raw: unknown) {
+  const row = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, qrCodeId), columns: { destinationRevision: true } });
+  return changeDestination(db, userId, qrCodeId, raw, row?.destinationRevision ?? 0);
+}
+
 describe.skipIf(!url)("database (real PostgreSQL)", () => {
   let pool: Pool;
   const count = async (table: string) => Number((await pool.query(`select count(*)::int as n from ${table}`)).rows[0].n);
@@ -2860,7 +2869,7 @@ describe.skipIf(!url)("permanent short links (HEY-117, real PostgreSQL)", () => 
     expect(saved.ok).toBe(true);
     expect([(await qr(id))?.shortCode, (await qr(id))?.destination]).toEqual(["keep001", first]);
     // The intentional change, through Change destination.
-    expect(await changeDestination(db, owner.id, id, "https://menu.example.test/third")).toMatchObject({
+    expect(await changeFresh(db, owner.id, id, "https://menu.example.test/third")).toMatchObject({
       ok: true,
       data: { destination: "https://menu.example.test/third", previousDestination: first },
     });
@@ -2937,11 +2946,11 @@ describe.skipIf(!url)("Dynamic destinations (HEY-119, real PostgreSQL)", () => {
     const id = saved.data.qrCodeId;
     await db.update(schema.qrCode).set({ shortCode: "dest001", status: "active" }).where(eq(schema.qrCode.id, id));
 
-    expect(await changeDestination(db, owner.id, id, "http://plain.example.test/menu?table=4&lang=en#drinks")).toMatchObject({
+    expect(await changeFresh(db, owner.id, id, "http://plain.example.test/menu?table=4&lang=en#drinks")).toMatchObject({
       ok: true,
       data: { destination: "http://plain.example.test/menu?table=4&lang=en#drinks" },
     });
-    expect(await changeDestination(db, owner.id, id, "secure.example.test/menu?table=5#food")).toMatchObject({
+    expect(await changeFresh(db, owner.id, id, "secure.example.test/menu?table=5#food")).toMatchObject({
       ok: true,
       data: { destination: "https://secure.example.test/menu?table=5#food" },
     });
@@ -2953,8 +2962,8 @@ describe.skipIf(!url)("Dynamic destinations (HEY-119, real PostgreSQL)", () => {
     ]);
 
     for (const bad of ["ftp://files.example.test", "javascript:alert(1)", "", "two words.example.test", 42])
-      expect(await changeDestination(db, owner.id, id, bad)).toMatchObject({ ok: false, error: "invalid", field: "destination" });
-    expect(await changeDestination(db, other.id, id, "https://other.example.test")).toEqual({ ok: false, error: "not_found" });
+      expect(await changeFresh(db, owner.id, id, bad)).toMatchObject({ ok: false, error: "invalid", field: "destination" });
+    expect(await changeFresh(db, other.id, id, "https://other.example.test")).toEqual({ ok: false, error: "not_found" });
     row = await qr(id);
     expect([row?.destination, row?.previousDestination, row?.shortCode, row?.status]).toEqual([
       "https://secure.example.test/menu?table=5#food",
@@ -2967,7 +2976,7 @@ describe.skipIf(!url)("Dynamic destinations (HEY-119, real PostgreSQL)", () => {
   it("a static code has no destination to change", async () => {
     const saved = await save("static", "https://static.example.test/x");
     if (!saved.ok) throw new Error("save failed");
-    expect(await changeDestination(db, owner.id, saved.data.qrCodeId, "https://new.example.test")).toEqual({
+    expect(await changeFresh(db, owner.id, saved.data.qrCodeId, "https://new.example.test")).toEqual({
       ok: false,
       error: "not_found",
     });
@@ -2987,6 +2996,7 @@ describe.skipIf(!url)("destination change metadata (HEY-123, real PostgreSQL)", 
       destination: row?.destination,
       previousDestination: row?.previousDestination,
       changedAt: row?.destinationChangedAt?.toISOString() ?? null,
+      revision: row?.destinationRevision,
       shortCode: row?.shortCode,
     };
   };
@@ -3018,10 +3028,11 @@ describe.skipIf(!url)("destination change metadata (HEY-123, real PostgreSQL)", 
       destination: "https://first.example.test/menu",
       previousDestination: null,
       changedAt: null,
+      revision: 0,
       shortCode: "chg0001",
     });
     const [{ now: before }] = (await pool.query("select now() as now")).rows as { now: Date }[];
-    const first = await changeDestination(db, owner.id, id, "https://second.example.test/menu?x=1#y");
+    const first = await changeFresh(db, owner.id, id, "https://second.example.test/menu?x=1#y");
     if (!first.ok) throw new Error("change failed");
     expect(first.data).toMatchObject({
       destination: "https://second.example.test/menu?x=1#y",
@@ -3031,7 +3042,7 @@ describe.skipIf(!url)("destination change metadata (HEY-123, real PostgreSQL)", 
     expect(await reload(id)).toEqual({ ...first.data, shortCode: "chg0001" });
 
     // The next change keeps only the most recent one (full history is HEY-125).
-    const second = await changeDestination(db, owner.id, id, "http://third.example.test/");
+    const second = await changeFresh(db, owner.id, id, "http://third.example.test/");
     if (!second.ok) throw new Error("change failed");
     expect(second.data.previousDestination).toBe("https://second.example.test/menu?x=1#y");
     expect(new Date(second.data.changedAt ?? 0).getTime()).toBeGreaterThanOrEqual(new Date(first.data.changedAt ?? 0).getTime());
@@ -3040,26 +3051,31 @@ describe.skipIf(!url)("destination change metadata (HEY-123, real PostgreSQL)", 
 
   it("the same URL, invalid input and another account leave the previous URL and time intact", async () => {
     const id = await live("chg0002");
-    const changed = await changeDestination(db, owner.id, id, "https://second.example.test/");
+    const changed = await changeFresh(db, owner.id, id, "https://second.example.test/");
     if (!changed.ok) throw new Error("change failed");
     const stored = await reload(id);
     // The same address (also typed as a bare domain): nothing written, the stored change returned as it was.
-    expect(await changeDestination(db, owner.id, id, "https://second.example.test/")).toEqual({ ok: true, data: changed.data });
-    expect(await changeDestination(db, owner.id, id, "second.example.test/")).toEqual({ ok: true, data: changed.data });
+    expect(await changeFresh(db, owner.id, id, "https://second.example.test/")).toEqual({ ok: true, data: changed.data });
+    expect(await changeFresh(db, owner.id, id, "second.example.test/")).toEqual({ ok: true, data: changed.data });
     for (const bad of ["ftp://files.example.test", "not a url", ""])
-      expect(await changeDestination(db, owner.id, id, bad)).toMatchObject({ ok: false, error: "invalid", field: "destination" });
-    expect(await changeDestination(db, other.id, id, "https://other.example.test")).toEqual({ ok: false, error: "not_found" });
+      expect(await changeFresh(db, owner.id, id, bad)).toMatchObject({ ok: false, error: "invalid", field: "destination" });
+    expect(await changeFresh(db, other.id, id, "https://other.example.test")).toEqual({ ok: false, error: "not_found" });
     expect(await reload(id)).toEqual(stored);
   });
 
   it("an older row with a previous URL but no time keeps the URL; the next actual change records a time", async () => {
     const id = await live("chg0003");
     await db.update(schema.qrCode).set({ previousDestination: "https://legacy.example.test/" }).where(eq(schema.qrCode.id, id));
-    expect(await changeDestination(db, owner.id, id, "https://first.example.test/menu")).toEqual({
+    expect(await changeFresh(db, owner.id, id, "https://first.example.test/menu")).toEqual({
       ok: true,
-      data: { destination: "https://first.example.test/menu", previousDestination: "https://legacy.example.test/", changedAt: null },
+      data: {
+        destination: "https://first.example.test/menu",
+        previousDestination: "https://legacy.example.test/",
+        changedAt: null,
+        revision: 0,
+      },
     });
-    const next = await changeDestination(db, owner.id, id, "https://new.example.test/");
+    const next = await changeFresh(db, owner.id, id, "https://new.example.test/");
     expect(next.ok && next.data.changedAt !== null && next.data.previousDestination === "https://first.example.test/menu").toBe(true);
   });
 });
@@ -3096,6 +3112,7 @@ describe.skipIf(!url)("design saves keep the published destination (HEY-124, rea
     destination: r?.destination,
     previousDestination: r?.previousDestination,
     changedAt: r?.destinationChangedAt?.toISOString() ?? null,
+    revision: r?.destinationRevision,
   });
 
   beforeAll(async () => {
@@ -3117,7 +3134,7 @@ describe.skipIf(!url)("design saves keep the published destination (HEY-124, rea
     const { qrCodeId, layoutIds } = await create();
     await db.update(schema.qrCode).set({ shortCode: "keepd01", status: "active" }).where(eq(schema.qrCode.id, qrCodeId));
     // Tab B publishes a new address.
-    const changed = await changeDestination(db, owner.id, qrCodeId, "http://second.example.test/menu?x=1#y");
+    const changed = await changeFresh(db, owner.id, qrCodeId, "http://second.example.test/menu?x=1#y");
     if (!changed.ok) throw new Error("change failed");
     const before = published(await row(qrCodeId));
     expect(before).toEqual({ shortCode: "keepd01", ...changed.data });
@@ -3153,7 +3170,7 @@ describe.skipIf(!url)("design saves keep the published destination (HEY-124, rea
     const { qrCodeId } = await create();
     await db.update(schema.qrCode).set({ shortCode: "keepd02", status: "active" }).where(eq(schema.qrCode.id, qrCodeId));
     const layoutsBefore = await db.query.qrLayout.findMany({ where: (l, { eq }) => eq(l.qrCodeId, qrCodeId) });
-    expect((await changeDestination(db, owner.id, qrCodeId, "https://third.example.test/")).ok).toBe(true);
+    expect((await changeFresh(db, owner.id, qrCodeId, "https://third.example.test/")).ok).toBe(true);
     expect(await db.query.qrLayout.findMany({ where: (l, { eq }) => eq(l.qrCodeId, qrCodeId) })).toEqual(layoutsBefore);
   });
 
@@ -3229,8 +3246,8 @@ describe.skipIf(!url)("destination change history (HEY-125, real PostgreSQL)", (
     const { qrCodeId } = await live("hist001");
     // Creating the code with A is not a change.
     expect(await rows(qrCodeId)).toBe(0);
-    const toB = await changeDestination(db, owner.id, qrCodeId, B);
-    const toC = await changeDestination(db, owner.id, qrCodeId, C);
+    const toB = await changeFresh(db, owner.id, qrCodeId, B);
+    const toC = await changeFresh(db, owner.id, qrCodeId, C);
     if (!toB.ok || !toC.ok) throw new Error("change failed");
     const history = await destinationHistory(db, owner.id, qrCodeId);
     expect(history.map((h) => [h.previousUrl, h.newUrl, h.changedAt])).toEqual([
@@ -3242,16 +3259,16 @@ describe.skipIf(!url)("destination change history (HEY-125, real PostgreSQL)", (
     const row = await code(qrCodeId);
     expect([row?.destination, row?.previousDestination, row?.destinationChangedAt?.toISOString()]).toEqual([C, B, history[0]?.changedAt]);
 
-    expect(await changeDestination(db, owner.id, qrCodeId, C)).toEqual({ ok: true, data: toC.data });
-    expect(await changeDestination(db, owner.id, qrCodeId, "c.example.test/")).toEqual({ ok: true, data: toC.data });
+    expect(await changeFresh(db, owner.id, qrCodeId, C)).toEqual({ ok: true, data: toC.data });
+    expect(await changeFresh(db, owner.id, qrCodeId, "c.example.test/")).toEqual({ ok: true, data: toC.data });
     for (const bad of ["ftp://files.example.test", "not a url", ""])
-      expect((await changeDestination(db, owner.id, qrCodeId, bad)).ok).toBe(false);
+      expect((await changeFresh(db, owner.id, qrCodeId, bad)).ok).toBe(false);
     expect(await destinationHistory(db, owner.id, qrCodeId)).toEqual(history);
   });
 
   it("a failed history write rolls back the publication and the history together", async () => {
     const { qrCodeId } = await live("hist002");
-    expect((await changeDestination(db, owner.id, qrCodeId, B)).ok).toBe(true);
+    expect((await changeFresh(db, owner.id, qrCodeId, B)).ok).toBe(true);
     const before = await code(qrCodeId);
     const historyBefore = await destinationHistory(db, owner.id, qrCodeId);
     // Make the history insert itself fail, after the destination row was updated in the same transaction.
@@ -3261,7 +3278,7 @@ describe.skipIf(!url)("destination change history (HEY-125, real PostgreSQL)", (
       create trigger hey125_refuse before insert on destination_change for each row execute function hey125_refuse();
     `);
     try {
-      await expect(changeDestination(db, owner.id, qrCodeId, C)).rejects.toThrow();
+      await expect(changeFresh(db, owner.id, qrCodeId, C)).rejects.toThrow();
     } finally {
       await pool.query("drop trigger hey125_refuse on destination_change; drop function hey125_refuse();");
     }
@@ -3274,13 +3291,13 @@ describe.skipIf(!url)("destination change history (HEY-125, real PostgreSQL)", (
     ]);
     expect(await destinationHistory(db, owner.id, qrCodeId)).toEqual(historyBefore);
     // With the write possible again, the same change succeeds once.
-    expect((await changeDestination(db, owner.id, qrCodeId, C)).ok).toBe(true);
+    expect((await changeFresh(db, owner.id, qrCodeId, C)).ok).toBe(true);
     expect(await rows(qrCodeId)).toBe(historyBefore.length + 1);
   });
 
   it("only the owner reads the history; a deleted code has none to show", async () => {
     const { qrCodeId } = await live("hist003");
-    expect((await changeDestination(db, owner.id, qrCodeId, B)).ok).toBe(true);
+    expect((await changeFresh(db, owner.id, qrCodeId, B)).ok).toBe(true);
     expect(await destinationHistory(db, owner.id, qrCodeId)).toHaveLength(1);
     expect(await destinationHistory(db, other.id, qrCodeId)).toEqual([]);
     await softDeleteQrCodes(db, owner.id, [qrCodeId]);
@@ -3506,7 +3523,7 @@ describe.skipIf(!url)("short link registry (HEY-126, real PostgreSQL)", () => {
     expect(await restoreQrCodes(db, owner.id, [id])).toEqual([id]);
     expect(await shortLink("undo001")).toBe(A);
     expect(await activateDynamicCode(db, owner.id, id, () => "undo003")).toEqual({ ok: true, shortCode: "undo001" });
-    expect(await changeDestination(db, owner.id, id, B)).toMatchObject({ ok: true, data: { destination: B } });
+    expect(await changeFresh(db, owner.id, id, B)).toMatchObject({ ok: true, data: { destination: B } });
     expect((await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, id) }))?.shortCode).toBe("undo001");
     expect(await shortLink("undo001")).toBe(B);
     expect(await reserved("undo003")).toEqual([]);
@@ -3643,7 +3660,7 @@ describe.skipIf(!url)("pause and resume (HEY-127, real PostgreSQL)", () => {
     // Pausing again changes nothing.
     expect(await pauseDynamicCode(db, owner.id, id)).toEqual({ ok: true });
 
-    expect(await changeDestination(db, owner.id, id, B)).toMatchObject({ ok: true, data: { destination: B, previousDestination: A } });
+    expect(await changeFresh(db, owner.id, id, B)).toMatchObject({ ok: true, data: { destination: B, previousDestination: A } });
     expect([(await code(id))?.status, await shortLink("pz00001")]).toEqual(["paused", "unavailable"]);
 
     expect(await resumeDynamicCode(db, owner.id, id)).toEqual({ ok: true, shortCode: "pz00001" });
@@ -3786,5 +3803,122 @@ describe.skipIf(!url)("pause and resume (HEY-127, real PostgreSQL)", () => {
     expect([row?.status, row?.shortCode, await shortLink("pzhook1"), await slotsUsed()]).toEqual(["paused", "pzhook1", "unavailable", 0]);
     expect(await resumeDynamicCode(db, owner.id, id)).toEqual({ ok: true, shortCode: "pzhook1" });
     await clearSlots();
+  });
+});
+
+/*
+ * HEY-128 / QR-17.06: concurrent Change destination edits. Each save names the destination revision its edit was opened
+ * with; under the row lock, an older one is a conflict that writes nothing and returns the latest state.
+ */
+describe.skipIf(!url)("destination revisions (HEY-128, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "rev-owner", name: "Owner", email: "owner@rev.test" };
+  const other = { id: "rev-other", name: "Other", email: "other@rev.test" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const A = "https://a.example.test/";
+  const B = "https://b.example.test/";
+  const C = "https://c.example.test/";
+  const live = async (slug: string) => {
+    const saved = await saveQrWithLayouts(db, owner.id, {
+      name: `Menu ${slug}`,
+      model: "dynamic",
+      content: { type: "website", url: A },
+      layouts,
+    });
+    if (!saved.ok) throw new Error("save failed");
+    await db.update(schema.qrCode).set({ shortCode: slug, status: "active" }).where(eq(schema.qrCode.id, saved.data.qrCodeId));
+    return saved.data;
+  };
+  /** Everything a conflict or a no-op must leave as it was. */
+  const snapshot = async (qrCodeId: string) => {
+    const r = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, qrCodeId) });
+    return {
+      destination: r?.destination,
+      previousDestination: r?.previousDestination,
+      changedAt: r?.destinationChangedAt?.toISOString() ?? null,
+      revision: r?.destinationRevision,
+      shortCode: r?.shortCode,
+      history: await destinationHistory(db, owner.id, qrCodeId),
+    };
+  };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 8 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("existing codes start at revision 0 (the migration's default); each actual change advances it by one", async () => {
+    await pool.query(
+      `insert into qr_code (id, user_id, name, content, model, status, destination) values ('rev-legacy', $1, 'Legacy', '{}', 'dynamic', 'active', $2)`,
+      [owner.id, A],
+    );
+    expect((await snapshot("rev-legacy")).revision).toBe(0);
+    expect(await changeDestination(db, owner.id, "rev-legacy", B, 0)).toMatchObject({ ok: true, data: { destination: B, revision: 1 } });
+    expect(await changeDestination(db, owner.id, "rev-legacy", C, 1)).toMatchObject({ ok: true, data: { destination: C, revision: 2 } });
+  });
+
+  it("two saves from the same revision at once: one change, one conflict with the winner's state, one history entry", async () => {
+    for (let round = 0; round < 5; round++) {
+      const { qrCodeId } = await live(`revrc0${round}`);
+      const results = await Promise.all([changeDestination(db, owner.id, qrCodeId, B, 0), changeDestination(db, owner.id, qrCodeId, C, 0)]);
+      const won = results.filter((r) => r.ok);
+      const lost = results.filter((r) => !r.ok);
+      expect([won.length, lost.length]).toEqual([1, 1]);
+      const after = await snapshot(qrCodeId);
+      const winner = won[0]?.ok ? won[0].data : undefined;
+      expect(lost[0]).toEqual({ ok: false, error: "conflict", latest: winner });
+      expect([after.destination, after.revision, after.history.length]).toEqual([winner?.destination, 1, 1]);
+      expect(after.history[0]).toMatchObject({ previousUrl: A, newUrl: winner?.destination });
+    }
+  });
+
+  it("A → B → A: a tab opened at the first A stays stale, even for the URL that matches again", async () => {
+    const { qrCodeId } = await live("revaba1");
+    expect((await changeDestination(db, owner.id, qrCodeId, B, 0)).ok).toBe(true);
+    expect(await changeDestination(db, owner.id, qrCodeId, A, 1)).toMatchObject({ ok: true, data: { destination: A, revision: 2 } });
+    const before = await snapshot(qrCodeId);
+    expect(before.history.map((h) => h.newUrl)).toEqual([A, B]);
+    // The stale tab still holds revision 0: neither C nor the same A goes through.
+    for (const typed of [C, A, "a.example.test/"]) {
+      const latest = { destination: A, previousDestination: B, changedAt: before.changedAt, revision: 2 };
+      expect(await changeDestination(db, owner.id, qrCodeId, typed, 0)).toEqual({ ok: false, error: "conflict", latest });
+    }
+    expect(await snapshot(qrCodeId)).toEqual(before);
+    // After loading the latest revision, the explicit save goes through.
+    expect(await changeDestination(db, owner.id, qrCodeId, C, 2)).toMatchObject({ ok: true, data: { destination: C, revision: 3 } });
+    expect((await snapshot(qrCodeId)).history.map((h) => h.newUrl)).toEqual([C, A, B]);
+  });
+
+  it("a no-op (same URL), invalid input and another account leave revision, metadata and history as they were", async () => {
+    const { qrCodeId } = await live("revnop1");
+    expect((await changeDestination(db, owner.id, qrCodeId, B, 0)).ok).toBe(true);
+    const before = await snapshot(qrCodeId);
+    expect(await changeDestination(db, owner.id, qrCodeId, B, 1)).toMatchObject({ ok: true, data: { destination: B, revision: 1 } });
+    expect(await changeDestination(db, owner.id, qrCodeId, "not a url", 1)).toMatchObject({ ok: false, error: "invalid" });
+    // Ownership is checked first: another account learns nothing about the latest state, with any revision.
+    for (const revision of [0, 1])
+      expect(await changeDestination(db, other.id, qrCodeId, C, revision)).toEqual({ ok: false, error: "not_found" });
+    expect(await snapshot(qrCodeId)).toEqual(before);
+  });
+
+  it("saving a design doesn't advance the destination revision; a tab opened before it still saves", async () => {
+    const { qrCodeId, layoutIds } = await live("revdsg1");
+    const saved = await saveQrWithLayouts(db, owner.id, {
+      qrCodeId,
+      name: "Menu (edited)",
+      model: "dynamic",
+      content: { type: "website", url: A },
+      destination: A,
+      layouts: [{ id: layoutIds[0], ...layouts[0], editor: { ...designSettingsOf(DEFAULT_DESIGN), fg: "#1F5C45" } }],
+    });
+    expect(saved.ok).toBe(true);
+    expect((await snapshot(qrCodeId)).revision).toBe(0);
+    expect(await changeDestination(db, owner.id, qrCodeId, B, 0)).toMatchObject({ ok: true, data: { destination: B, revision: 1 } });
   });
 });

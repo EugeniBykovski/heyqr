@@ -112,6 +112,11 @@ export const qrCode = pgTable(
     previousDestination: text("previous_destination"),
     /** HEY-123: when the destination last changed, set by the server in the same write. Null for older rows. */
     destinationChangedAt: timestamp("destination_changed_at", { withTimezone: true }),
+    /**
+     * HEY-128: the destination's own revision, advanced by each actual destination change (never by design saves or
+     * other edits). Change destination sends the revision it opened with; a save from an older one is a conflict.
+     */
+    destinationRevision: integer("destination_revision").notNull().default(0),
     /** Set when a static code is bought. Every layout and format is then included. */
     purchasedAt: timestamp("purchased_at", { withTimezone: true }),
     /** Soft delete: hidden everywhere and the short link stops; cleared again by Undo. */

@@ -17,7 +17,7 @@ import { ownedLayout } from "../qr/file-access";
 import { storeLogos } from "../qr/logo-assets";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
-import { changeDestination, type DestinationState } from "../qr/destination";
+import { changeDestination, isRevision, type DestinationConflict, type DestinationState } from "../qr/destination";
 import { addLayoutFrom, copyLayout, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
 import { logoStore } from "../storage/s3";
 import { newId, newShortCode } from "../db/ids";
@@ -230,12 +230,18 @@ export async function renameQr(qrCodeId: string, name: string): Promise<ActionRe
 /**
  * Dynamic codes: change where the printed code leads. The previous destination is kept for undo. HEY-119: the address
  * is checked by parseDestination (the editor's parser); the result carries the URL stored, or the field error.
+ * HEY-128: a save from an older destination revision is a conflict carrying the latest published state.
  */
-export async function updateDestination(qrCodeId: string, destination: string): Promise<ActionResult<DestinationState>> {
-  return guard(async () => {
+export async function updateDestination(
+  qrCodeId: string,
+  destination: string,
+  revision: number,
+): Promise<ActionResult<DestinationState> | DestinationConflict> {
+  return guard<DestinationState, DestinationConflict>(async () => {
     const user = await requireUser();
-    if (typeof qrCodeId !== "string") return { ok: false, error: "invalid" };
-    const result = await changeDestination(db, user.id, qrCodeId, destination);
+    // HEY-128: every save names the destination revision its edit was opened with.
+    if (typeof qrCodeId !== "string" || !isRevision(revision)) return { ok: false, error: "invalid" };
+    const result = await changeDestination(db, user.id, qrCodeId, destination, revision);
     if (result.ok) revalidatePath("/[locale]/dashboard/qr/[id]", "page");
     return result;
   });
