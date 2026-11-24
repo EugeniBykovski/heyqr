@@ -147,7 +147,7 @@ export async function fulfillCheckout(db: Db | Tx, s: PaidSession, newShortCode:
       }
     }
     // A plan bought for a code (export or the trial's test code): the code goes live and keeps its short link.
-    const qr = await db.query.qrCode.findFirst({ where: ownCode });
+    const [qr] = await db.select().from(schema.qrCode).where(ownCode).for("update");
     if (!qr || qr.model !== "dynamic") return { granted: false };
     // HEY-133: going live takes a slot of the plan bought (the session's plan, set by the server: the subscription row
     // may arrive after this event). A code already live under the plan, or paused by its owner, takes none here.

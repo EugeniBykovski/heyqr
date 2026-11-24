@@ -104,9 +104,12 @@ export async function unlockStatic(
   return db.transaction(async (tx) => {
     // Serialise this account's unlocks (allowances and credits are per account).
     await tx.select({ id: schema.user.id }).from(schema.user).where(eq(schema.user.id, userId)).for("update");
-    const qr = await tx.query.qrCode.findFirst({
-      where: and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)),
-    });
+    // HEY-135: account row, then the code row (the order every path that consumes a quota or writes the code uses).
+    const [qr] = await tx
+      .select()
+      .from(schema.qrCode)
+      .where(and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)))
+      .for("update");
     if (!qr) return { ok: false, error: "not_found" };
     if (qr.model !== "static") return { ok: false, error: "not_static" };
     if (qr.purchasedAt) return { ok: false, error: "owned" };
@@ -133,9 +136,12 @@ export async function applyPrintPackAllowance(
 ): Promise<{ ok: true } | { ok: false; error: "not_found" | "owned" | "no_allowance" }> {
   return db.transaction(async (tx) => {
     await tx.select({ id: schema.user.id }).from(schema.user).where(eq(schema.user.id, userId)).for("update");
-    const qr = await tx.query.qrCode.findFirst({
-      where: and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)),
-    });
+    // HEY-135: account row, then the code row (the order every path that consumes a quota or writes the code uses).
+    const [qr] = await tx
+      .select()
+      .from(schema.qrCode)
+      .where(and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)))
+      .for("update");
     if (!qr) return { ok: false, error: "not_found" };
     if (qr.printPackAt) return { ok: false, error: "owned" };
     const plan = await currentPlan(tx as unknown as Db, userId);
@@ -171,9 +177,12 @@ export async function activateDynamicCode(
 ): Promise<{ ok: true; shortCode: string } | { ok: false; error: "not_found" | "not_dynamic" | "no_plan" | "limit" }> {
   return db.transaction(async (tx) => {
     await tx.select({ id: schema.user.id }).from(schema.user).where(eq(schema.user.id, userId)).for("update");
-    const qr = await tx.query.qrCode.findFirst({
-      where: and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)),
-    });
+    // HEY-135: account row, then the code row (the order every path that consumes a quota or writes the code uses).
+    const [qr] = await tx
+      .select()
+      .from(schema.qrCode)
+      .where(and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)))
+      .for("update");
     if (!qr) return { ok: false, error: "not_found" };
     if (qr.model !== "dynamic") return { ok: false, error: "not_dynamic" };
     if (qr.status === "active" && qr.shortCode && !qr.isTrial) return { ok: true, shortCode: qr.shortCode };
