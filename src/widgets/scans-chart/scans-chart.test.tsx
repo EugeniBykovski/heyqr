@@ -35,4 +35,31 @@ describe("ScansChart (HEY-147)", () => {
     // The period's total and today's count.
     expect(document.body.textContent).toContain("5");
   });
+
+  it("HEY-148: Total is the sum of the days shown, Today is the last day", async () => {
+    render(
+      await ScansChart({
+        days: [
+          { day: "2026-11-30", count: 4 },
+          { day: "2026-12-01", count: 0 },
+          { day: "2026-12-02", count: 2 },
+        ],
+      }),
+    );
+    const stats = [...document.querySelectorAll("figcaption b")].map((b) => b.textContent);
+    expect(stats).toEqual(["6", "2"]);
+  });
+
+  it("HEY-148: before the first scan, the designed empty state; with only earlier scans, a period-specific one", async () => {
+    const zeros = [
+      { day: "2026-12-01", count: 0 },
+      { day: "2026-12-02", count: 0 },
+    ];
+    render(await ScansChart({ days: zeros }));
+    expect(document.querySelector("[data-slot=scans-empty]")?.textContent).toBe(en.qr.scansCard.emptyTitle);
+    cleanup();
+    render(await ScansChart({ days: zeros, earlierScans: true }));
+    expect(document.querySelector("[data-slot=scans-empty]")?.textContent).toBe(en.qr.scansCard.periodEmptyTitle);
+    expect([...document.querySelectorAll("figcaption b")].map((b) => b.textContent)).toEqual(["0", "0"]);
+  });
 });

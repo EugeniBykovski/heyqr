@@ -27,7 +27,7 @@ import { canDownload, printPackForSale, userTrial } from "@/server/billing/entit
 import { db } from "@/server/db";
 import { loadPrint } from "@/server/print/load";
 import { encodedValue } from "@/server/qr/export";
-import { dailyScans, getQrCode } from "@/server/qr/repository";
+import { dailyScans, everScanned, getQrCode } from "@/server/qr/repository";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Card, CardTitle } from "@/shared/ui/card";
@@ -90,6 +90,8 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
   ]);
   // HEY-125: the owner's recorded destination changes (the code was loaded for this owner above).
   const history = qr.model === "dynamic" ? await destinationHistory(db, user.id, qr.id) : [];
+  // HEY-148: no scans in the period, but earlier ones: the chart says "none in this period", not "no scans yet".
+  const earlierScans = scans !== null && scans.every((d) => d.count === 0) ? await everScanned(user.id, qr.id) : false;
   const value = encodedValue(qr);
   const shortLink = qr.shortCode ? `${env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "")}/${qr.shortCode}` : null;
   const shortShown = shortLink?.replace(/^https?:\/\//, "") ?? "";
@@ -218,7 +220,7 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
               </Card>
               {scans ? (
                 <Card>
-                  <ScansChart days={scans} />
+                  <ScansChart days={scans} earlierScans={earlierScans} />
                 </Card>
               ) : null}
             </>

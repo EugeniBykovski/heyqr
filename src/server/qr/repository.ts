@@ -1,10 +1,10 @@
 import "server-only";
-import { and, asc, desc, eq, gte, isNull, sql } from "drizzle-orm";
+import { and, asc, desc, eq, isNull, sql } from "drizzle-orm";
 import { pickLayoutForEdit, readLayoutRecord } from "@/entities/qr";
 import { db, schema } from "../db";
 import { logoStore } from "../storage/s3";
 import { resolveLogos } from "./logo-assets";
-import { incrementScan, scansByDay } from "./scans";
+import { hasScans, incrementScan, ownerScanSummary, scansByDay } from "./scans";
 import { layoutRevision } from "./update-layout";
 
 /**
@@ -88,6 +88,9 @@ export async function getLayoutWithQr(layoutId: string) {
 /** HEY-146: one of the owner's codes, its scans per day (scans.ts scansByDay); another account's code reads as zeros. */
 export const dailyScans = (userId: string, qrCodeId: string, days = 14) => scansByDay(db, userId, qrCodeId, days);
 
+/** HEY-148: whether the owner's code was ever scanned (scans.ts hasScans). */
+export const everScanned = (userId: string, qrCodeId: string) => hasScans(db, userId, qrCodeId);
+
 /** One scan of a code on the app's database (scans.ts incrementScan). */
 export async function recordScan(qrCodeId: string) {
   await incrementScan(db, qrCodeId);
@@ -98,27 +101,11 @@ export async function recordScan(qrCodeId: string) {
  * `days` days (zero-filled, oldest first), 14-day scans per code, and how many paid layouts can be downloaded.
  */
 export async function studioSummary(userId: string, days = 14) {
-  const since = new Date(Date.now() - (days - 1) * 86_400_000).toISOString().slice(0, 10);
-  const today = new Date().toISOString().slice(0, 10);
   const owned = and(eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt));
-  const [codes, perDay, perCode, [files], layoutCounts] = await Promise.all([
+  // HEY-148: scans under the same UTC-day convention as QR details (scans.ts ownerScanSummary).
+  const [codes, { scans, scansByCode }, [files], layoutCounts] = await Promise.all([
     listQrCodes(userId),
-    db
-      .select({ day: schema.scanDaily.day, count: sql<number>`sum(${schema.scanDaily.count})::int` })
-      .from(schema.scanDaily)
-      .innerJoin(schema.qrCode, eq(schema.qrCode.id, schema.scanDaily.qrCodeId))
-      .where(and(owned, gte(schema.scanDaily.day, since)))
-      .groupBy(schema.scanDaily.day),
-    db
-      .select({
-        qrCodeId: schema.scanDaily.qrCodeId,
-        count: sql<number>`sum(${schema.scanDaily.count})::int`,
-        today: sql<number>`sum(case when ${schema.scanDaily.day} = ${today} then ${schema.scanDaily.count} else 0 end)::int`,
-      })
-      .from(schema.scanDaily)
-      .innerJoin(schema.qrCode, eq(schema.qrCode.id, schema.scanDaily.qrCodeId))
-      .where(and(owned, gte(schema.scanDaily.day, since)))
-      .groupBy(schema.scanDaily.qrCodeId),
+    ownerScanSummary(db, userId, days),
     db
       .select({ count: sql<number>`count(*)::int` })
       .from(schema.qrLayout)
@@ -136,15 +123,10 @@ export async function studioSummary(userId: string, days = 14) {
       .where(owned)
       .groupBy(schema.qrLayout.qrCodeId),
   ]);
-  const byDay = new Map(perDay.map((r) => [r.day, r.count]));
-  const scans = Array.from({ length: days }, (_, i) => {
-    const day = new Date(Date.now() - (days - 1 - i) * 86_400_000).toISOString().slice(0, 10);
-    return { day, count: byDay.get(day) ?? 0 };
-  });
   return {
     codes,
     scans,
-    scansByCode: new Map(perCode.map((r) => [r.qrCodeId, { total: r.count, today: r.today }])),
+    scansByCode,
     filesReady: files?.count ?? 0,
     layoutsByCode: new Map(layoutCounts.map((r) => [r.qrCodeId, r.count])),
   };

@@ -27,7 +27,7 @@ import { pauseDynamicCode, resumeDynamicCode } from "../billing/pause";
 import { bindStripeCustomer, customerIdempotencyKey, storedCustomer, type CustomerCreate } from "../billing/customer";
 import { applySubscriptionEvent, type SubscriptionEvent } from "../billing/subscriptions";
 import { canDownloadCode, resolveShortLink } from "../billing/access";
-import { incrementScan, scansByDay, utcDay } from "../qr/scans";
+import { hasScans, incrementScan, ownerScanSummary, scansByDay, utcDay } from "../qr/scans";
 import {
   accountUsage,
   activateDynamicCode,
@@ -5685,5 +5685,89 @@ describe.skipIf(!url)("daily scan counts per QR (HEY-147, real PostgreSQL)", () 
       ["2026-11-30", 2],
       ["2026-12-01", 4],
     ]);
+  });
+});
+
+/* HEY-148 / QR-20.04: the period shown on QR details and the home summary (HEY-198) read the same counts the same way. */
+describe.skipIf(!url)("scan period on QR details and the home summary (HEY-148, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "period-owner", name: "Owner", email: "owner@period.test" };
+  const other = { id: "period-other", name: "Other", email: "other@period.test" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const codes = { busy: "", old: "", fresh: "", gone: "" };
+  // "Now" is 10:00 UTC on Dec 14: the 14-day window is Dec 1 – Dec 14.
+  const now = new Date("2026-12-14T10:00:00Z");
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+    for (const k of ["busy", "old", "fresh", "gone"] as const) {
+      const saved = await saveQrWithLayouts(db, owner.id, {
+        name: k,
+        model: "dynamic",
+        content: { type: "website", url: "https://a.example.test/" },
+        layouts,
+      });
+      if (!saved.ok) throw new Error("save failed");
+      codes[k] = saved.data.qrCodeId;
+    }
+    const counts: [string, string, number][] = [
+      [codes.busy, "2026-11-30", 7], // outside the window (the day before it)
+      [codes.busy, "2026-12-01", 2], // the window's first day
+      [codes.busy, "2026-12-07", 1],
+      [codes.busy, "2026-12-14", 3], // today
+      [codes.old, "2026-11-10", 5], // only earlier scans
+      [codes.gone, "2026-12-14", 9], // a code deleted later
+    ];
+    for (const [id, day, n] of counts)
+      await pool.query("insert into scan_daily (qr_code_id, day, count) values ($1, $2, $3)", [id, day, n]);
+    await softDeleteQrCodes(db, owner.id, [codes.gone]);
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("QR details: 14 days ending today, oldest first, zeros kept; Total = their sum; Today = the last day", async () => {
+    const days = await scansByDay(db, owner.id, codes.busy, 14, now);
+    expect([days[0], days[6], days[13], days.length]).toEqual([
+      { day: "2026-12-01", count: 2 },
+      { day: "2026-12-07", count: 1 },
+      { day: "2026-12-14", count: 3 },
+      14,
+    ]);
+    expect(days.filter((d) => d.count === 0)).toHaveLength(11);
+    expect([days.reduce((s, d) => s + d.count, 0), days.at(-1)?.count]).toEqual([6, 3]); // the 7 on Nov 30 is outside
+  });
+
+  it("the empty states: never scanned vs. scanned only before the period; owner-only", async () => {
+    expect((await scansByDay(db, owner.id, codes.old, 14, now)).every((d) => d.count === 0)).toBe(true);
+    expect([await hasScans(db, owner.id, codes.old), await hasScans(db, owner.id, codes.fresh)]).toEqual([true, false]);
+    expect(await hasScans(db, other.id, codes.old)).toBe(false);
+  });
+
+  it("the home summary: the same window and today, the same per-code totals; deleted codes left out", async () => {
+    const summary = await ownerScanSummary(db, owner.id, 14, now);
+    expect([summary.scans[0], summary.scans.at(-1), summary.scans.reduce((s, d) => s + d.count, 0)]).toEqual([
+      { day: "2026-12-01", count: 2 },
+      { day: "2026-12-14", count: 3 },
+      6,
+    ]);
+    expect(summary.scansByCode.get(codes.busy)).toEqual({ total: 6, today: 3 });
+    expect([summary.scansByCode.has(codes.old), summary.scansByCode.has(codes.gone)]).toEqual([false, false]);
+    // The same as QR details, day by day.
+    expect(summary.scans).toEqual(await scansByDay(db, owner.id, codes.busy, 14, now));
+    const others = await ownerScanSummary(db, other.id, 14, now);
+    expect([others.scans.every((d) => d.count === 0), others.scansByCode.size]).toEqual([true, 0]);
+  });
+
+  it("a destination change keeps the history; the next scan adds to today", async () => {
+    await db.update(schema.qrCode).set({ shortCode: "per0001", status: "active" }).where(eq(schema.qrCode.id, codes.busy));
+    expect((await changeFresh(db, owner.id, codes.busy, "https://b.example.test/")).ok).toBe(true);
+    await incrementScan(db, codes.busy, "2026-12-14");
+    const days = await scansByDay(db, owner.id, codes.busy, 14, now);
+    expect([days[0]?.count, days.at(-1)?.count, days.reduce((s, d) => s + d.count, 0)]).toEqual([2, 4, 7]);
   });
 });
