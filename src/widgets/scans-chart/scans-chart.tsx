@@ -6,7 +6,11 @@ import { cn } from "@/shared/lib/utils";
  * last day labelled, and the empty state before the first scan. Plain HTML bars: readable without JS and by screen
  * readers (table fallback). Counts come from the server's scan events.
  */
-export async function ScansChart({ days }: { days: { day: string; count: number }[] }) {
+/**
+ * `earlierScans`: the code was scanned before this period (HEY-148). With no scans in the period, the empty state then
+ * says so instead of "no scans yet".
+ */
+export async function ScansChart({ days, earlierScans = false }: { days: { day: string; count: number }[]; earlierScans?: boolean }) {
   const t = await getTranslations("qr.scansCard");
   const format = await getFormatter();
   const max = Math.max(1, ...days.map((d) => d.count));
@@ -35,8 +39,10 @@ export async function ScansChart({ days }: { days: { day: string; count: number 
       {total === 0 ? (
         <div className="grid h-32 place-items-center rounded-lg border border-dashed border-border px-4 text-center">
           <span className="flex flex-col gap-0.5">
-            <span className="text-label">{t("emptyTitle")}</span>
-            <span className="text-caption text-muted-foreground">{t("emptyText")}</span>
+            <span data-slot="scans-empty" className="text-label">
+              {earlierScans ? t("periodEmptyTitle") : t("emptyTitle")}
+            </span>
+            <span className="text-caption text-muted-foreground">{earlierScans ? t("periodEmptyText") : t("emptyText")}</span>
           </span>
         </div>
       ) : (

@@ -1469,7 +1469,9 @@
       "total": "Total",
       "today": "Today",
       "emptyTitle": "No scans yet",
-      "emptyText": "The first scan shows up here within a few minutes. Try scanning your printed code."
+      "emptyText": "The first scan shows up here within a few minutes. Try scanning your printed code.",
+      "periodEmptyTitle": "No scans in the last 14 days",
+      "periodEmptyText": "Earlier scans are kept. New scans show up here within a few minutes."
     },
     "details": {
       "back": "My QR codes",
