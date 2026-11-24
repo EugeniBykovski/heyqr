@@ -17,6 +17,12 @@ export const PLANS = {
   studio: { id: "studio", dyn: 25, unlocks: 40, packs: 5 },
 } as const;
 export type PlanId = keyof typeof PLANS;
+
+/**
+ * HEY-135: monthly scans per code above which a plan's usage is worth a look (monitoring only). They never limit,
+ * pause or slow a redirect: a valid code keeps redirecting at and above them.
+ */
+export const SCAN_MONITOR_THRESHOLDS: Record<PlanId, number> = { starter: 10_000, studio: 100_000 };
 export const isPlanId = (v: unknown): v is PlanId => v === "starter" || v === "studio";
 
 /** Design Pricing · Free: "Up to 10 saved drafts when signed in". Saving an 11th new draft is refused on the server. */

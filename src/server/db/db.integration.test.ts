@@ -40,7 +40,8 @@ import { SEED_SCAN_DAYS, seedFixtures } from "./fixtures";
 import { runMigrations } from "./migrator";
 import * as schema from "./schema";
 import { assertAllowed } from "./target";
-import { DRAFT_LIMIT } from "../../shared/config/catalog-core";
+import { DRAFT_LIMIT, PLANS, SCAN_MONITOR_THRESHOLDS } from "../../shared/config/catalog-core";
+import { newId } from "./ids";
 
 const url = process.env.TEST_DATABASE_URL;
 
@@ -4549,6 +4550,298 @@ describe.skipIf(!url)("subscription status sync (HEY-134, real PostgreSQL)", () 
       ]);
     } finally {
       warn.mockRestore();
+    }
+  });
+});
+
+/*
+ * HEY-135 / QR-18.05: every quota is checked and consumed inside its activation transaction, under the account lock
+ * (account row first, then the code row), so concurrent requests for different codes can't both take the last one.
+ * Each race below holds the account lock in a separate session until both requests are queued on it.
+ */
+describe.skipIf(!url)("quota checks inside activation transactions (HEY-135, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const starter = { id: "quota-starter", name: "Starter", email: "starter@quota.test", stripeCustomerId: "cus_quota_starter" };
+  const studio = { id: "quota-studio", name: "Studio", email: "studio@quota.test", stripeCustomerId: "cus_quota_studio" };
+  const periodStart = new Date(Date.now() - 86_400_000);
+  let codeSeq = 0;
+  /** A code inserted directly (fixtures beyond the draft limit), Dynamic or static. */
+  const insertCode = async (userId: string, over: Partial<typeof schema.qrCode.$inferInsert> = {}) => {
+    const id = `quota-code-${++codeSeq}`;
+    await db.insert(schema.qrCode).values({
+      id,
+      userId,
+      name: id,
+      content: { type: "website", url: "https://a.example.test/" },
+      model: "dynamic",
+      destination: "https://a.example.test/",
+      ...over,
+    });
+    return id;
+  };
+  let slugSeq = 0;
+  /** A unique slug per fixture (an issued slug is reserved for good, HEY-126). */
+  const slug = () => `qt${String(++slugSeq).padStart(5, "0")}`;
+  const liveDynamic = async (userId: string, n: number) => {
+    for (let i = 0; i < n; i++) await insertCode(userId, { status: "active", shortCode: slug() });
+  };
+  const code = (id: string) => db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, id) });
+  const slots = async (userId: string) => (await accountUsage(db, userId)).dynamic;
+  const uses = async (userId: string, kind: "static_unlock" | "print_pack") =>
+    Number((await pool.query("select count(*)::int as n from allowance_use where user_id = $1 and kind = $2", [userId, kind])).rows[0].n);
+  /** Clears the account's codes and allowance rows between tests (every test starts from its own state). */
+  const reset = async (userId: string) => {
+    await pool.query("delete from allowance_use where user_id = $1", [userId]);
+    await pool.query("delete from credit_ledger where user_id = $1", [userId]);
+    await pool.query("update qr_code set deleted_at = now() where user_id = $1 and deleted_at is null", [userId]);
+  };
+  /** Runs the requests concurrently: all are queued on the account lock before any of them can proceed. */
+  const race = async <T extends unknown[]>(userId: string, requests: { [K in keyof T]: () => Promise<T[K]> }) => {
+    const holder = await pool.connect();
+    const watcher = await pool.connect();
+    try {
+      await holder.query("begin");
+      await holder.query(`select id from "user" where id = $1 for update`, [userId]);
+      const running = (requests as (() => Promise<unknown>)[]).map((run) => run());
+      for (let i = 0; i < 300; i++) {
+        const { rows } = await watcher.query(
+          "select count(*)::int as n from pg_stat_activity where datname = current_database() and wait_event_type = 'Lock' and state = 'active'",
+        );
+        if (rows[0].n >= requests.length) break;
+        await new Promise((done) => setTimeout(done, 10));
+      }
+      await holder.query("commit");
+      return (await Promise.all(running)) as T;
+    } finally {
+      holder.release();
+      watcher.release();
+    }
+  };
+  const subscriptionPaid = (account: typeof starter, qrCodeId: string, eventId: string) => ({
+    id: eventId,
+    type: "checkout.session.completed",
+    session: {
+      id: `cs_${eventId}`,
+      mode: "subscription",
+      status: "complete",
+      payment_status: "paid",
+      payment_intent: null,
+      amount_subtotal: 900,
+      amount_total: 900,
+      total_details: null,
+      currency: "usd",
+      customer: account.stripeCustomerId,
+      metadata: { userId: account.id, qrCodeId, plan: "starter" },
+    } as unknown as Parameters<typeof processCheckoutEvent>[1]["session"],
+  });
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 10 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([starter, studio]).onConflictDoNothing();
+    await db.insert(schema.subscription).values(
+      (
+        [
+          [starter, "starter"],
+          [studio, "studio"],
+        ] as const
+      ).map(([u, plan]) => ({
+        id: `${u.id}-sub`,
+        userId: u.id,
+        stripeSubscriptionId: `sub_${u.id}`,
+        stripePriceId: `price_${plan}`,
+        status: "active" as const,
+        plan,
+        activeCodeLimit: PLANS[plan].dyn,
+        currentPeriodStart: periodStart,
+      })),
+    );
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [starter.id, studio.id]));
+    await pool?.end();
+  });
+
+  it("slots count live Dynamic codes only: not drafts, paused, deleted or trial codes, nor static unlocks or Print Packs", async () => {
+    await reset(starter.id);
+    await liveDynamic(starter.id, 2);
+    await insertCode(starter.id); // a draft
+    await insertCode(starter.id, { status: "paused", shortCode: slug() });
+    await insertCode(starter.id, { status: "active", shortCode: slug(), deletedAt: new Date() });
+    await insertCode(starter.id, { status: "active", shortCode: slug(), isTrial: true });
+    const unlocked = await insertCode(starter.id, { model: "static", status: "active", purchasedAt: new Date(), destination: null });
+    await db
+      .insert(schema.allowanceUse)
+      .values({ id: newId(), userId: starter.id, kind: "static_unlock", qrCodeId: unlocked, periodStart });
+    expect(await slots(starter.id)).toEqual({ used: 2, limit: 5 });
+    expect((await accountUsage(db, studio.id)).dynamic.limit).toBe(25);
+  });
+
+  it("one slot left, two activations of different codes at once: one goes live, the other is unchanged", async () => {
+    await reset(starter.id);
+    await liveDynamic(starter.id, 4);
+    const [x, y] = [await insertCode(starter.id), await insertCode(starter.id)];
+    const results = await race(starter.id, [
+      () => activateDynamicCode(db, starter.id, x, () => "qwin0x1"),
+      () => activateDynamicCode(db, starter.id, y, () => "qwin0y1"),
+    ]);
+    expect(results.filter((r) => r.ok)).toHaveLength(1);
+    expect(results.filter((r) => !r.ok)).toEqual([{ ok: false, error: "limit" }]);
+    const [won, lost] = results[0]?.ok ? [x, y] : [y, x];
+    const loser = await code(lost);
+    expect([loser?.status, loser?.shortCode]).toEqual(["draft", null]);
+    expect(await slots(starter.id)).toEqual({ used: 5, limit: 5 });
+    // Repeating the winner's activation keeps its short link and takes no slot.
+    const issued = (await code(won))?.shortCode;
+    expect(await activateDynamicCode(db, starter.id, won, () => "qrepeat")).toEqual({ ok: true, shortCode: issued });
+    expect(await slots(starter.id)).toEqual({ used: 5, limit: 5 });
+  });
+
+  it("cross-path: Resume of a paused code against an activation, for the last slot", async () => {
+    await reset(starter.id);
+    await liveDynamic(starter.id, 4);
+    const pausedSlug = slug();
+    const paused = await insertCode(starter.id, { status: "paused", shortCode: pausedSlug });
+    const draft = await insertCode(starter.id);
+    const [resumed, activated] = await race(starter.id, [
+      () => resumeDynamicCode(db, starter.id, paused),
+      () => activateDynamicCode(db, starter.id, draft, () => "qdraft2"),
+    ]);
+    expect([resumed?.ok, activated?.ok].filter(Boolean)).toHaveLength(1);
+    const [p, d] = [await code(paused), await code(draft)];
+    if (resumed?.ok) expect([p?.status, d?.status, d?.shortCode]).toEqual(["active", "draft", null]);
+    else expect([p?.status, p?.shortCode, d?.status]).toEqual(["paused", pausedSlug, "active"]);
+    expect(await slots(starter.id)).toEqual({ used: 5, limit: 5 });
+  });
+
+  it("two Resumes for the last slot at once, over several rounds without a lock held for them: one each time", async () => {
+    for (let round = 0; round < 10; round++) {
+      await reset(starter.id);
+      await liveDynamic(starter.id, 4);
+      const [x, y] = [
+        await insertCode(starter.id, { status: "paused", shortCode: slug() }),
+        await insertCode(starter.id, { status: "paused", shortCode: slug() }),
+      ];
+      const results = await Promise.all([resumeDynamicCode(db, starter.id, x), resumeDynamicCode(db, starter.id, y)]);
+      expect(results.filter((r) => r.ok)).toHaveLength(1);
+      expect([(await code(x))?.status, (await code(y))?.status].sort()).toEqual(["active", "paused"]);
+      expect(await slots(starter.id)).toEqual({ used: 5, limit: 5 });
+    }
+  });
+
+  it("cross-path: subscription Checkout fulfillment against an activation, for the last slot", async () => {
+    await reset(starter.id);
+    await liveDynamic(starter.id, 4);
+    const [bought, draft] = [await insertCode(starter.id), await insertCode(starter.id)];
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      const [paid, activated] = await race(starter.id, [
+        () => processCheckoutEvent(db, subscriptionPaid(starter, bought, "evt_quota_paid"), () => "qpaid03"),
+        () => activateDynamicCode(db, starter.id, draft, () => "qdraft3"),
+      ]);
+      const paidWon = paid && "result" in paid && paid.result.granted;
+      expect([Boolean(paidWon), Boolean(activated && "ok" in activated && activated.ok)].filter(Boolean)).toHaveLength(1);
+      const [b, d] = [await code(bought), await code(draft)];
+      if (paidWon) expect([b?.status, d?.status, d?.shortCode]).toEqual(["active", "draft", null]);
+      else
+        expect([b?.status, b?.shortCode, d?.status, paid]).toEqual([
+          "draft",
+          null,
+          "active",
+          { duplicate: false, result: { granted: false, reason: "slot_full" } },
+        ]);
+    } finally {
+      warn.mockRestore();
+    }
+    expect(await slots(starter.id)).toEqual({ used: 5, limit: 5 });
+  });
+
+  it("one monthly static unlock left, two codes at once: one unlocked, one deduction; Dynamic slots untouched", async () => {
+    await reset(starter.id);
+    await liveDynamic(starter.id, 3);
+    for (let i = 0; i < PLANS.starter.unlocks - 1; i++) {
+      const used = await insertCode(starter.id, { model: "static", status: "active", purchasedAt: new Date(), destination: null });
+      await db.insert(schema.allowanceUse).values({ id: newId(), userId: starter.id, kind: "static_unlock", qrCodeId: used, periodStart });
+    }
+    const before = await slots(starter.id);
+    const [a, b] = [
+      await insertCode(starter.id, { model: "static", destination: null }),
+      await insertCode(starter.id, { model: "static", destination: null }),
+    ];
+    const results = await race(starter.id, [() => unlockStatic(db, starter.id, a, "plan"), () => unlockStatic(db, starter.id, b, "plan")]);
+    expect(results.filter((r) => r.ok)).toHaveLength(1);
+    expect(results.filter((r) => !r.ok)).toEqual([{ ok: false, error: "no_allowance" }]);
+    const purchased = [(await code(a))?.purchasedAt, (await code(b))?.purchasedAt].filter(Boolean);
+    expect([purchased.length, await uses(starter.id, "static_unlock"), await slots(starter.id)]).toEqual([
+      1,
+      PLANS.starter.unlocks,
+      before,
+    ]);
+    // The same with the last static credit: one unlock, one −1 in the ledger, balance 0.
+    await db.insert(schema.creditLedger).values({ id: newId(), userId: starter.id, delta: 1, reason: "pack3" });
+    const [c, d] = [
+      await insertCode(starter.id, { model: "static", destination: null }),
+      await insertCode(starter.id, { model: "static", destination: null }),
+    ];
+    const credit = await race(starter.id, [
+      () => unlockStatic(db, starter.id, c, "credit"),
+      () => unlockStatic(db, starter.id, d, "credit"),
+    ]);
+    expect(credit.filter((r) => r.ok)).toHaveLength(1);
+    const spent = Number(
+      (await pool.query("select count(*)::int as n from credit_ledger where user_id = $1 and reason = 'unlock'", [starter.id])).rows[0].n,
+    );
+    expect([
+      spent,
+      await creditBalance(db, starter.id),
+      [(await code(c))?.purchasedAt, (await code(d))?.purchasedAt].filter(Boolean).length,
+    ]).toEqual([1, 0, 1]);
+    expect(await slots(starter.id)).toEqual(before);
+  });
+
+  it("one included Print Pack left (Studio), two codes at once: one granted, one deduction; Dynamic slots untouched", async () => {
+    await reset(studio.id);
+    await liveDynamic(studio.id, 2);
+    for (let i = 0; i < PLANS.studio.packs - 1; i++) {
+      const used = await insertCode(studio.id, {
+        status: "active",
+        shortCode: slug(),
+        printPackAt: new Date(),
+      });
+      await db.insert(schema.allowanceUse).values({ id: newId(), userId: studio.id, kind: "print_pack", qrCodeId: used, periodStart });
+    }
+    const [a, b] = [
+      await insertCode(studio.id, { status: "active", shortCode: slug() }),
+      await insertCode(studio.id, { status: "active", shortCode: slug() }),
+    ];
+    const before = await slots(studio.id);
+    const results = await race(studio.id, [
+      () => applyPrintPackAllowance(db, studio.id, a),
+      () => applyPrintPackAllowance(db, studio.id, b),
+    ]);
+    expect(results.filter((r) => r.ok)).toHaveLength(1);
+    expect(results.filter((r) => !r.ok)).toEqual([{ ok: false, error: "no_allowance" }]);
+    const granted = [(await code(a))?.printPackAt, (await code(b))?.printPackAt].filter(Boolean);
+    expect([granted.length, await uses(studio.id, "print_pack"), await slots(studio.id)]).toEqual([1, PLANS.studio.packs, before]);
+  });
+
+  it("scan monitoring thresholds are 10,000 (Starter) and 100,000 (Studio); a code at or above them still redirects", async () => {
+    expect(SCAN_MONITOR_THRESHOLDS).toEqual({ starter: 10_000, studio: 100_000 });
+    for (const [account, plan] of [
+      [starter, "starter"],
+      [studio, "studio"],
+    ] as const) {
+      const id = await insertCode(account.id, { status: "active", shortCode: `qscan${plan}` });
+      const today = new Date().toISOString().slice(0, 10);
+      const yesterday = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10);
+      await db.insert(schema.scanDaily).values([
+        { qrCodeId: id, day: yesterday, count: SCAN_MONITOR_THRESHOLDS[plan] },
+        { qrCodeId: id, day: today, count: 1 },
+      ]);
+      // What /r/<slug> reads: the code itself; scans never decide the redirect.
+      const qr = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.shortCode, `qscan${plan}`) });
+      expect([qr?.status, qr?.deletedAt, qr?.destination]).toEqual(["active", null, "https://a.example.test/"]);
     }
   });
 });
