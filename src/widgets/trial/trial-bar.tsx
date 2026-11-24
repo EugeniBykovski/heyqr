@@ -7,6 +7,8 @@ import { Button } from "@/shared/ui/button";
 /*
  * Design 9.5 "My QR codes · during the trial" (also on Plan & billing): the trial's state with days left, and its one
  * live test slot, shown apart from anything monthly. Renders nothing when the account has never started a trial.
+ * HEY-136: the action fits the state. While the trial runs: its details. When it is ending or has ended: Activate
+ * Starter, which opens the trial page; the paid Checkout starts only from that page's own button.
  */
 export async function TrialBar({ phase, slotUsed, showUsage = false }: { phase: TrialPhase; slotUsed?: boolean; showUsage?: boolean }) {
   if (phase.state === "none") return null;
@@ -29,8 +31,8 @@ export async function TrialBar({ phase, slotUsed, showUsage = false }: { phase: 
         <span>
           <b className="font-semibold">{t(`bar.${phase.state}.title`, { days, end })}</b> {t(`bar.${phase.state}.text`, { end })}
         </span>
-        <Button asChild size="sm" variant="secondary">
-          <Link href="/dashboard/trial">{t("bar.open")}</Link>
+        <Button asChild size="sm" variant={phase.state === "expired" || phase.state === "ending" ? "primary" : "secondary"}>
+          <Link href="/dashboard/trial">{phase.state === "expired" || phase.state === "ending" ? t("bar.activate") : t("bar.open")}</Link>
         </Button>
       </div>
       {showUsage && phase.state !== "upgraded" ? (

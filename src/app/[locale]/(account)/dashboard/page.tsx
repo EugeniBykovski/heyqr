@@ -138,13 +138,13 @@ export default async function DashboardPage({ params, searchParams }: PageProps<
         }
         filters={
           <>
-            {usage.plan ? (
+            {/* HEY-136: the paid quota (slots used and available, this month's allowances) and purchased credits. */}
+            {usage.plan || usage.credits > 0 ? (
               <UsageTiles
                 usage={usage}
                 printPackCents={priceSheet(currency).printPack}
                 currency={currency}
-                credits="never"
-                className="mb-4 md:grid-cols-3 lg:max-w-200"
+                className="mb-4 sm:grid-cols-2 lg:max-w-240 lg:grid-cols-4"
               />
             ) : null}
             <SegmentedTrack role="group" aria-label={t("filterLabel")} className="mb-3.5 max-w-[23.75rem]">
