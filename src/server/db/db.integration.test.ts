@@ -3,7 +3,7 @@
  * Runs when TEST_DATABASE_URL points at a database whose name ends in "_test" (CI, `pnpm test:db`); skipped otherwise.
  * The test drops and recreates that database's schema, so it never runs against anything else.
  */
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, isNull } from "drizzle-orm";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { drizzle } from "drizzle-orm/node-postgres";
@@ -23,6 +23,7 @@ import { assignShortCode, SHORT_CODE_ATTEMPTS, ShortCodeExhaustedError } from ".
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, copyLayout, layoutRevision, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
 import { activateTrialCode, startTrial, trialCode } from "../billing/trial";
+import { pauseDynamicCode, resumeDynamicCode } from "../billing/pause";
 import {
   accountUsage,
   activateDynamicCode,
@@ -3563,5 +3564,227 @@ describe.skipIf(!url)("short link registry (HEY-126, real PostgreSQL)", () => {
     ])
       await expect(pool.query(sql)).rejects.toMatchObject({ code: "23000" });
     expect(await reserved("gone001")).toEqual([{ short_code: "gone001" }]);
+  });
+});
+
+/*
+ * HEY-127 / QR-17.05: the owner pauses and resumes a Dynamic code. Pause frees a plan slot and keeps everything;
+ * Resume turns the same slug back on, to the current destination, under the plan or trial rules and a free slot.
+ */
+describe.skipIf(!url)("pause and resume (HEY-127, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "pause-owner", name: "Owner", email: "owner@pause.test" };
+  const other = { id: "pause-other", name: "Other", email: "other@pause.test" };
+  const tester = { id: "pause-trial", name: "Trial", email: "trial@pause.test" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const A = "https://menu.example.test/a";
+  const B = "https://menu.example.test/b";
+  const STARTER_SLOTS = 5;
+  const make = async (name: string, userId = owner.id) => {
+    const saved = await saveQrWithLayouts(db, userId, {
+      name,
+      model: "dynamic",
+      content: { type: "website", url: A },
+      destination: A,
+      layouts,
+    });
+    if (!saved.ok) throw new Error("save failed");
+    return saved.data.qrCodeId;
+  };
+  const live = async (slug: string, userId = owner.id) => {
+    const id = await make(`Code ${slug}`, userId);
+    expect(await activateDynamicCode(db, userId, id, () => slug)).toEqual({ ok: true, shortCode: slug });
+    return id;
+  };
+  const code = (id: string) => db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, id), with: { layouts: true } });
+  /** What /r/<slug> answers (src/app/r/[code]/route.ts: the same lookup and checks, for non-trial codes). */
+  const shortLink = async (slug: string) => {
+    const qr = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.shortCode, slug) });
+    return !qr || qr.deletedAt || qr.status !== "active" || !qr.destination ? "unavailable" : qr.destination;
+  };
+  const slotsUsed = async (userId = owner.id) => (await accountUsage(db, userId)).dynamic.used;
+  /** Frees the owner's slots for the next test: every live code of the owner is deleted. */
+  const clearSlots = () =>
+    db
+      .update(schema.qrCode)
+      .set({ deletedAt: new Date() })
+      .where(and(eq(schema.qrCode.userId, owner.id), isNull(schema.qrCode.deletedAt)));
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 8 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other, tester]).onConflictDoNothing();
+    await db.insert(schema.subscription).values(
+      [owner, other].map((u) => ({
+        id: `${u.id}-sub`,
+        userId: u.id,
+        stripeSubscriptionId: `sub_${u.id}`,
+        stripePriceId: "price_x",
+        status: "active" as const,
+        plan: "starter" as const,
+        activeCodeLimit: STARTER_SLOTS,
+        currentPeriodStart: new Date(),
+      })),
+    );
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id, tester.id]));
+    await pool?.end();
+  });
+
+  it("pause stops the link and frees the slot; a destination change while paused stays dark; resume opens it on the same slug", async () => {
+    const id = await live("pz00001");
+    const before = await code(id);
+    expect([await shortLink("pz00001"), await slotsUsed()]).toEqual([A, 1]);
+
+    expect(await pauseDynamicCode(db, owner.id, id)).toEqual({ ok: true });
+    expect([(await code(id))?.status, await shortLink("pz00001"), await slotsUsed()]).toEqual(["paused", "unavailable", 0]);
+    // Pausing again changes nothing.
+    expect(await pauseDynamicCode(db, owner.id, id)).toEqual({ ok: true });
+
+    expect(await changeDestination(db, owner.id, id, B)).toMatchObject({ ok: true, data: { destination: B, previousDestination: A } });
+    expect([(await code(id))?.status, await shortLink("pz00001")]).toEqual(["paused", "unavailable"]);
+
+    expect(await resumeDynamicCode(db, owner.id, id)).toEqual({ ok: true, shortCode: "pz00001" });
+    const after = await code(id);
+    expect([after?.status, after?.shortCode, after?.destination, await shortLink("pz00001"), await slotsUsed()]).toEqual([
+      "active",
+      "pz00001",
+      B,
+      B,
+      1,
+    ]);
+    // Layouts, the destination history and the slug's reservation are kept.
+    expect(after?.layouts.map((l) => [l.id, l.design])).toEqual(before?.layouts.map((l) => [l.id, l.design]));
+    expect((await destinationHistory(db, owner.id, id)).map((h) => [h.previousUrl, h.newUrl])).toEqual([[A, B]]);
+    expect((await pool.query("select 1 from short_code_reservation where short_code = 'pz00001'")).rowCount).toBe(1);
+    // Resuming a live code changes nothing.
+    expect(await resumeDynamicCode(db, owner.id, id)).toEqual({ ok: true, shortCode: "pz00001" });
+    await clearSlots();
+  });
+
+  it("with every slot taken, resume is refused and the code stays paused; a freed slot lets it resume", async () => {
+    const ids = [];
+    for (let i = 0; i < STARTER_SLOTS; i++) ids.push(await live(`pzfull${i}`));
+    const [first, second] = ids as [string, string];
+    expect(await pauseDynamicCode(db, owner.id, first)).toEqual({ ok: true });
+    // The freed slot is taken by another code.
+    await live("pzfull9");
+    expect(await slotsUsed()).toBe(STARTER_SLOTS);
+    expect(await resumeDynamicCode(db, owner.id, first)).toEqual({ ok: false, error: "limit" });
+    expect([(await code(first))?.status, await shortLink("pzfull0")]).toEqual(["paused", "unavailable"]);
+    // Pausing another code frees one: now it resumes.
+    expect(await pauseDynamicCode(db, owner.id, second)).toEqual({ ok: true });
+    expect(await resumeDynamicCode(db, owner.id, first)).toEqual({ ok: true, shortCode: "pzfull0" });
+    expect([await slotsUsed(), await shortLink("pzfull0"), await shortLink("pzfull1")]).toEqual([STARTER_SLOTS, A, "unavailable"]);
+    await clearSlots();
+  });
+
+  it("three paused codes resuming at once for the last free slot: exactly one goes live", async () => {
+    const ids = [];
+    for (let i = 0; i < STARTER_SLOTS; i++) ids.push(await live(`pzrace${i}`));
+    const [x, y] = ids as [string, string];
+    await pauseDynamicCode(db, owner.id, x);
+    await pauseDynamicCode(db, owner.id, y);
+    expect(await slotsUsed()).toBe(STARTER_SLOTS - 2);
+    // One slot left: take it with a third resume racing the other two.
+    const z = ids[2] as string;
+    await pauseDynamicCode(db, owner.id, z);
+    await live("pzrace9");
+    await live("pzrace8");
+    expect(await slotsUsed()).toBe(STARTER_SLOTS - 1);
+    const results = await Promise.all([
+      resumeDynamicCode(db, owner.id, x),
+      resumeDynamicCode(db, owner.id, y),
+      resumeDynamicCode(db, owner.id, z),
+    ]);
+    expect(results.filter((r) => r.ok)).toHaveLength(1);
+    expect(results.filter((r) => !r.ok)).toEqual([
+      { ok: false, error: "limit" },
+      { ok: false, error: "limit" },
+    ]);
+    expect(await slotsUsed()).toBe(STARTER_SLOTS);
+    await clearSlots();
+  });
+
+  it("only the owner can pause or resume; another account changes nothing", async () => {
+    const id = await live("pzown01");
+    expect(await pauseDynamicCode(db, other.id, id)).toEqual({ ok: false, error: "not_found" });
+    expect([(await code(id))?.status, await shortLink("pzown01")]).toEqual(["active", A]);
+    await pauseDynamicCode(db, owner.id, id);
+    expect(await resumeDynamicCode(db, other.id, id)).toEqual({ ok: false, error: "not_found" });
+    expect([(await code(id))?.status, await slotsUsed(other.id)]).toEqual(["paused", 0]);
+    await clearSlots();
+  });
+
+  it("refuses invalid transitions: a draft, a static code, a deleted code, or resume without a plan", async () => {
+    const draft = await make("Draft");
+    expect(await pauseDynamicCode(db, owner.id, draft)).toEqual({ ok: false, error: "not_live" });
+    expect(await resumeDynamicCode(db, owner.id, draft)).toEqual({ ok: false, error: "not_paused" });
+    expect((await code(draft))?.status).toBe("draft");
+
+    const savedStatic = await saveQrWithLayouts(db, owner.id, {
+      name: "Static",
+      model: "static",
+      content: { type: "website", url: A },
+      layouts,
+    });
+    if (!savedStatic.ok) throw new Error("save failed");
+    expect(await pauseDynamicCode(db, owner.id, savedStatic.data.qrCodeId)).toEqual({ ok: false, error: "not_dynamic" });
+
+    const gone = await live("pzgone1");
+    await softDeleteQrCodes(db, owner.id, [gone]);
+    expect(await pauseDynamicCode(db, owner.id, gone)).toEqual({ ok: false, error: "not_found" });
+
+    const id = await live("pzplan1");
+    await pauseDynamicCode(db, owner.id, id);
+    await db.update(schema.subscription).set({ status: "canceled" }).where(eq(schema.subscription.userId, owner.id));
+    try {
+      expect(await resumeDynamicCode(db, owner.id, id)).toEqual({ ok: false, error: "no_plan" });
+      expect([(await code(id))?.status, await shortLink("pzplan1")]).toEqual(["paused", "unavailable"]);
+    } finally {
+      await db.update(schema.subscription).set({ status: "active" }).where(eq(schema.subscription.userId, owner.id));
+    }
+    await clearSlots();
+  });
+
+  it("the trial's test code pauses and resumes while the trial runs; after it, resume needs the plan", async () => {
+    const day1 = new Date();
+    expect((await startTrial(db, tester.id, false, day1)).ok).toBe(true);
+    const id = await make("Trial code", tester.id);
+    expect(await activateTrialCode(db, tester.id, id, () => "pztrl01", day1)).toEqual({ ok: true, shortCode: "pztrl01" });
+    expect(await pauseDynamicCode(db, tester.id, id)).toEqual({ ok: true });
+    expect(await resumeDynamicCode(db, tester.id, id, day1)).toEqual({ ok: true, shortCode: "pztrl01" });
+    expect(await pauseDynamicCode(db, tester.id, id)).toEqual({ ok: true });
+    const ended = new Date(day1.getTime() + 8 * 86_400_000);
+    expect(await resumeDynamicCode(db, tester.id, id, ended)).toEqual({ ok: false, error: "no_plan" });
+    expect((await code(id))?.status).toBe("paused");
+  });
+
+  it("a delayed subscription Checkout event for a paused code keeps it paused", async () => {
+    const id = await live("pzhook1");
+    await pauseDynamicCode(db, owner.id, id);
+    const event = {
+      id: "evt_pause_delayed",
+      type: "checkout.session.completed",
+      session: {
+        id: "cs_pause_delayed",
+        mode: "subscription",
+        status: "complete",
+        payment_status: "paid",
+        payment_intent: null,
+        amount_subtotal: 900,
+        amount_total: 900,
+        total_details: null,
+        currency: "usd",
+        metadata: { userId: owner.id, qrCodeId: id },
+      } as unknown as Parameters<typeof processCheckoutEvent>[1]["session"],
+    };
+    expect(await processCheckoutEvent(db, event, () => "pzhook9")).toEqual({ duplicate: false, result: { granted: true } });
+    const row = await code(id);
+    expect([row?.status, row?.shortCode, await shortLink("pzhook1"), await slotsUsed()]).toEqual(["paused", "pzhook1", "unavailable", 0]);
+    expect(await resumeDynamicCode(db, owner.id, id)).toEqual({ ok: true, shortCode: "pzhook1" });
+    await clearSlots();
   });
 });

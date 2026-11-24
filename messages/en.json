@@ -1538,6 +1538,18 @@
         "lastText": "A QR code always keeps at least one layout, so “{name}” can’t be deleted. Add another layout first, or delete the whole code from My QR codes.",
         "lastError": "A QR code keeps at least one layout, so this one stays.",
         "ok": "OK"
+      },
+      "pause": {
+        "pause": "Pause",
+        "resume": "Resume",
+        "pausedTitle": "Short link paused",
+        "pausedText": "People who scan this code see an unavailable page. The short link, destination and layouts are kept. You can change the destination now; it opens once you resume.",
+        "liveText": "Pausing stops the redirect right away. On a plan, it also frees this code’s live slot.",
+        "paused": "Paused. The short link now shows an unavailable page.",
+        "resumed": "Resumed. The short link redirects to your destination again.",
+        "limit": "All live Dynamic slots on your plan are in use. Pause or delete another Dynamic code, then resume this one.",
+        "noPlan": "Resuming this code needs an active Dynamic plan.",
+        "failed": "We couldn’t change the code’s status. Nothing was changed; try again."
       }
     }
   },

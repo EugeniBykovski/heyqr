@@ -119,8 +119,9 @@ export async function fulfillCheckout(db: Db | Tx, s: PaidSession, newShortCode:
     await db
       .update(schema.qrCode)
       // The trial's test code becomes a regular code of the plan (design 9.4: same short link, takes a live slot).
+      // HEY-127: a code its owner paused stays paused (a delayed Checkout event never resumes it); Resume turns it on.
       .set({
-        status: "active",
+        status: qr.status === "paused" ? "paused" : "active",
         isTrial: false,
         ...(printPack === "1" ? { printPackAt: qr.printPackAt ?? now } : {}),
       })

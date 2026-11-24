@@ -7,7 +7,14 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { env } from "@/env";
 import { DEFAULT_PRINT_SETTINGS, printSettingsQuery, QrPreview } from "@/entities/qr";
 import { CopyButton } from "@/features/copy-to-clipboard";
-import { DeleteLayoutButton, DifferentContent, NewLayoutButton, RenameTitle, UseIncludedPrintPack } from "@/features/qr-details";
+import {
+  DeleteLayoutButton,
+  DifferentContent,
+  NewLayoutButton,
+  PauseResume,
+  RenameTitle,
+  UseIncludedPrintPack,
+} from "@/features/qr-details";
 import { DestinationForm, DestinationHistory } from "@/features/qr-destination";
 import { destinationHistory } from "@/server/qr/destination";
 import { Link } from "@/i18n/navigation";
@@ -187,6 +194,9 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
                       <CopyButton value={shortLink} label={t("copy")} copiedLabel={t("copied")} />
                     </div>
                     <p className="text-caption text-muted-foreground">{tl("shortNote")}</p>
+                    {/* HEY-127: Pause a live code, Resume a paused one (a trial code after its trial has neither: the
+                        plan turns it back on). */}
+                    {live || qr.status === "paused" ? <PauseResume qrCodeId={qr.id} paused={qr.status === "paused"} /> : null}
                   </div>
                 ) : (
                   <p className="text-secondary-foreground">{tl("noShortLink")}</p>

@@ -6,6 +6,7 @@ import { CURRENCIES, CURRENCY_COOKIE } from "@/shared/config/catalog";
 import { requireUser } from "../auth";
 import { accountUsage, activateDynamicCode, applyPrintPackAllowance, convertToStatic, unlockStatic } from "../billing/allowances";
 import { createPackCheckout, createPlanCheckout } from "../billing/checkout";
+import { pauseDynamicCode, resumeDynamicCode } from "../billing/pause";
 import { trialCode } from "../billing/trial";
 import { getCurrency } from "../currency";
 import { db } from "../db";
@@ -101,6 +102,41 @@ export async function activateDynamic(qrCodeId: string): Promise<ActionResult<{ 
     const user = await requireUser();
     const result = await activateDynamicCode(db, user.id, qrCodeId, newShortCode);
     if (!result.ok) return { ok: false, error: result.error === "limit" ? "limit" : result.error === "no_plan" ? "invalid" : "not_found" };
+    revalidatePath("/[locale]/dashboard", "layout");
+    return { ok: true, data: { shortCode: result.shortCode } };
+  });
+}
+
+/** HEY-127: the owner pauses a live Dynamic code (its short link shows the unavailable page; a plan slot frees up). */
+export async function pauseDynamic(qrCodeId: string): Promise<ActionResult> {
+  return guard(async () => {
+    const user = await requireUser();
+    if (typeof qrCodeId !== "string") return { ok: false, error: "invalid" };
+    const result = await pauseDynamicCode(db, user.id, qrCodeId);
+    if (!result.ok) return { ok: false, error: result.error === "not_found" ? "not_found" : "invalid" };
+    revalidatePath("/[locale]/dashboard", "layout");
+    return { ok: true, data: undefined };
+  });
+}
+
+/** HEY-127: Resume: the same short link redirects again to the current destination, if the plan or trial allows it. */
+export async function resumeDynamic(qrCodeId: string): Promise<ActionResult<{ shortCode: string }>> {
+  return guard(async () => {
+    const user = await requireUser();
+    if (typeof qrCodeId !== "string") return { ok: false, error: "invalid" };
+    const result = await resumeDynamicCode(db, user.id, qrCodeId);
+    if (!result.ok)
+      return {
+        ok: false,
+        error:
+          result.error === "limit"
+            ? "limit"
+            : result.error === "no_plan"
+              ? "no_allowance"
+              : result.error === "not_found"
+                ? "not_found"
+                : "invalid",
+      };
     revalidatePath("/[locale]/dashboard", "layout");
     return { ok: true, data: { shortCode: result.shortCode } };
   });
