@@ -4,9 +4,11 @@ import type { Currency, Offer } from "@/shared/config/catalog";
 import { purchasable } from "./catalog";
 import { isConfigured } from "../config";
 import { db, schema } from "../db";
+import { PLAN_STATUSES } from "./allowances";
 import { trialCovers, trialPhase, type TrialPhase } from "./trial";
 
-const ACTIVE_SUBSCRIPTION = ["active", "trialing", "past_due"];
+/** The same statuses that count as the plan everywhere else (allowances.ts). */
+const ACTIVE_SUBSCRIPTION = PLAN_STATUSES;
 
 export async function activeSubscription(userId: string) {
   return db.query.subscription.findFirst({

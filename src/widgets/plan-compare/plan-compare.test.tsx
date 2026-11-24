@@ -83,7 +83,7 @@ describe("Pricing compare data (HEY-72)", () => {
       Array(2).fill({
         kind: "text",
         text: "Static codes stay downloadable",
-        note: "Dynamic links stop redirecting when the paid period ends",
+        note: "No Dynamic downloads or activations after the paid period",
       }),
     );
     expect(cells("printPack")?.[4]).toEqual({

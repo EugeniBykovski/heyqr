@@ -270,8 +270,9 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
         <h2 id="pr-rules" className="text-h2">
           {t("rules.title")}
         </h2>
-        <div className="grid gap-3 md:grid-cols-2 min-[80rem]:grid-cols-4">
-          {([1, 2, 3, 4] as const).map((n) => (
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3 min-[80rem]:grid-cols-5">
+          {/* HEY-138: rule 5 is the failed-renewal rule, next to rule 4 (after you cancel). */}
+          {([1, 2, 3, 4, 5] as const).map((n) => (
             <div key={n} className="flex flex-col gap-2 rounded-lg border border-border bg-surface p-4.5">
               <span className="grid size-7.5 place-items-center rounded-full bg-accent text-[0.8125rem] font-bold text-accent-foreground">
                 {n}

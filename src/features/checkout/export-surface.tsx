@@ -169,6 +169,7 @@ export type ExportOffer = {
 export function ExportSurface(props: ExportSurfaceProps) {
   const t = useTranslations("export");
   const tTrial = useTranslations("trial");
+  const tPlans = useTranslations("plans");
   const format = useFormatter();
   const locale = useLocale();
   const router = useRouter();
@@ -470,6 +471,10 @@ export function ExportSurface(props: ExportSurfaceProps) {
           >
             {t("subscribe", { price: amount })}
           </Button>
+          {/* HEY-138: the plan's cancellation and failed-renewal rules, before the paid Checkout. */}
+          <span data-slot="plan-terms" className="text-caption text-muted-foreground">
+            {tPlans("terms")}
+          </span>
           {payForSale ? null : <span className="text-caption text-muted-foreground">{t("catalog.unavailable")}</span>}
         </div>
       );
@@ -521,6 +526,11 @@ export function ExportSurface(props: ExportSurfaceProps) {
             {paying ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : <LockIcon aria-hidden />}
             {props.model === "dynamic" ? t("subscribe", { price: amount }) : t("payTotal", { price: money(totalCents) })}
           </Button>
+          {props.model === "dynamic" ? (
+            <span data-slot="plan-terms" className="text-center text-caption text-muted-foreground">
+              {tPlans("terms")}
+            </span>
+          ) : null}
           {payForSale ? null : <span className="text-center text-caption text-muted-foreground">{t("catalog.unavailable")}</span>}
         </div>
       );
