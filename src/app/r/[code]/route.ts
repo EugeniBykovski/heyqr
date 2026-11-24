@@ -1,9 +1,7 @@
-import { eq } from "drizzle-orm";
 import { after, NextResponse, type NextRequest } from "next/server";
 import { env } from "@/env";
-import { db, schema } from "@/server/db";
-import { activeSubscription } from "@/server/billing/entitlements";
-import { trialCovers, trialPhase } from "@/server/billing/trial";
+import { db } from "@/server/db";
+import { resolveShortLink } from "@/server/billing/access";
 import { recordScan } from "@/server/qr/repository";
 
 /**
@@ -18,26 +16,10 @@ const redirect = (to: string | URL) => NextResponse.redirect(to, { status: 302, 
  */
 export async function GET(_request: NextRequest, ctx: RouteContext<"/r/[code]">) {
   const { code } = await ctx.params;
-  const qr = await db.query.qrCode.findFirst({ where: eq(schema.qrCode.shortCode, code) });
-  if (!qr || qr.deletedAt || qr.status !== "active" || !qr.destination)
-    return redirect(new URL("/link-unavailable", env.NEXT_PUBLIC_APP_URL));
-  // Design 9.3: the trial's test code redirects while the trial runs or a Dynamic plan is active; after that it is
-  // inactive (nothing deleted) until the plan is taken, which turns the same short link back on. HEY-121: the scanner
-  // gets a neutral "not available right now"; the reason never names the trial, the plan or the owner.
-  // HEY-142: a Dynamic code redirects while its owner has paid access (the same rule as downloads and slots: Stripe's
-  // status, and a scheduled cancellation's cutoff). After the cutoff, or once a failed renewal is no longer recovered,
-  // its printed code gets the same neutral "not active right now" page; the code itself (slug, destination, design) is
-  // untouched, so recovery turns the same printed code back on.
-  const subscription = await activeSubscription(qr.userId);
-  if (qr.isTrial) {
-    const owner = await db.query.user.findFirst({ where: eq(schema.user.id, qr.userId) });
-    const phase = trialPhase(
-      { trialStartedAt: owner?.trialStartedAt ?? null, trialEndsAt: owner?.trialEndsAt ?? null },
-      Boolean(subscription),
-    );
-    if (!subscription && !trialCovers(phase, qr)) return redirect(new URL("/link-unavailable?reason=inactive", env.NEXT_PUBLIC_APP_URL));
-  } else if (!subscription) return redirect(new URL("/link-unavailable?reason=inactive", env.NEXT_PUBLIC_APP_URL));
-
-  after(() => recordScan(qr.id));
-  return redirect(qr.destination);
+  // HEY-143: the decision (trial, paid access at the cutoff, paused/deleted) is resolveShortLink, shared with the tests.
+  const answer = await resolveShortLink(db, code);
+  if (answer.kind === "unavailable")
+    return redirect(new URL(answer.inactive ? "/link-unavailable?reason=inactive" : "/link-unavailable", env.NEXT_PUBLIC_APP_URL));
+  after(() => recordScan(answer.qrCodeId));
+  return redirect(answer.to);
 }
