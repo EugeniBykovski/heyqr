@@ -1456,7 +1456,13 @@
         "to": "Changed to",
         "from": "from {url}"
       },
-      "change": "Change destination"
+      "change": "Change destination",
+      "conflict": {
+        "title": "This destination was changed elsewhere",
+        "text": "It now goes to {url}. Your edit below hasn’t been saved.",
+        "load": "Load latest version",
+        "loaded": "Latest version loaded: {url}. Review your edit, then save to replace it."
+      }
     },
     "scansCard": {
       "title": "Scans · last 14 days",

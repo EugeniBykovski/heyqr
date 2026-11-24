@@ -11,10 +11,10 @@ vi.mock("sonner", () => ({ toast: { error: vi.fn() } }));
 afterEach(cleanup);
 beforeEach(() => updateDestination.mockReset());
 
-const view = (destination: string, stored: { previous?: string | null; changedAt?: string | null } = {}) =>
+const view = (destination: string, stored: { previous?: string | null; changedAt?: string | null; revision?: number } = {}) =>
   render(
     <NextIntlClientProvider locale="en" messages={messages} timeZone="UTC">
-      <DestinationForm qrCodeId="q1" destination={destination} shortLink="localhost:3000/r/AbCdEf2" {...stored} />
+      <DestinationForm qrCodeId="q1" destination={destination} shortLink="localhost:3000/r/AbCdEf2" revision={3} {...stored} />
     </NextIntlClientProvider>,
   );
 const field = () => screen.getByLabelText("New destination") as HTMLInputElement;
@@ -57,10 +57,11 @@ describe("DestinationForm (HEY-119)", () => {
         destination: "https://new.example.test/menu?table=4#drinks",
         previousDestination: "http://old.example.test/menu",
         changedAt: "2026-11-23T18:30:00.000Z",
+        revision: 4,
       },
     });
     await submit();
-    expect(updateDestination).toHaveBeenCalledWith("q1", "https://new.example.test/menu?table=4#drinks");
+    expect(updateDestination).toHaveBeenCalledWith("q1", "https://new.example.test/menu?table=4#drinks", 3);
     expect(current()).toBe("https://new.example.test/menu?table=4#drinks");
     expect(previous()).toBe(`Previously http://old.example.test/menu · changed ${when(T)}`);
     expect(document.querySelector("time")?.getAttribute("datetime")).toBe(T);
@@ -76,10 +77,12 @@ describe("DestinationForm (HEY-119)", () => {
         destination: "http://old.example.test/menu",
         previousDestination: "https://new.example.test/menu?table=4#drinks",
         changedAt: T2,
+        revision: 5,
       },
     });
     await submit();
-    expect(updateDestination).toHaveBeenLastCalledWith("q1", "http://old.example.test/menu");
+    // HEY-128: the second edit starts from the revision the first save returned.
+    expect(updateDestination).toHaveBeenLastCalledWith("q1", "http://old.example.test/menu", 4);
     expect(current()).toBe("http://old.example.test/menu");
   });
 
@@ -89,10 +92,10 @@ describe("DestinationForm (HEY-119)", () => {
     fireEvent.change(field(), { target: { value: "bare.example.test/p" } });
     updateDestination.mockResolvedValue({
       ok: true,
-      data: { destination: "https://bare.example.test/p", previousDestination: "https://old.example.test", changedAt: T },
+      data: { destination: "https://bare.example.test/p", previousDestination: "https://old.example.test", changedAt: T, revision: 4 },
     });
     await submit();
-    expect(updateDestination).toHaveBeenCalledWith("q1", "https://bare.example.test/p");
+    expect(updateDestination).toHaveBeenCalledWith("q1", "https://bare.example.test/p", 3);
   });
 
   it("invalid input shows the field error and keeps the current destination; nothing is sent", async () => {
@@ -140,7 +143,12 @@ describe("DestinationForm (HEY-119)", () => {
     fireEvent.click(screen.getByRole("button", { name: "Change destination" }));
     updateDestination.mockResolvedValue({
       ok: true,
-      data: { destination: "https://new.example.test/menu", previousDestination: "http://old.example.test/menu", changedAt: T },
+      data: {
+        destination: "https://new.example.test/menu",
+        previousDestination: "http://old.example.test/menu",
+        changedAt: T,
+        revision: 3,
+      },
     });
     await submit();
     expect([current(), previous()]).toEqual(["https://new.example.test/menu", before]);
@@ -158,5 +166,59 @@ describe("DestinationForm (HEY-119)", () => {
     fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
     expect(updateDestination).not.toHaveBeenCalled();
     expect([current(), previous()]).toEqual(["https://new.example.test/menu", before]);
+  });
+});
+
+/* HEY-128: a save from a stale destination revision is a conflict; the typed address stays until the owner reloads. */
+describe("DestinationForm conflicts (HEY-128)", () => {
+  const A = "https://a.example.test/";
+  const B = "https://b.example.test/";
+  const C = "https://c.example.test/";
+  const latest = { destination: B, previousDestination: A, changedAt: T, revision: 4 };
+  const conflict = () => document.querySelector('[data-slot="destination-conflict"]');
+  const saveButton = () => screen.getByRole("button", { name: "Save destination" }) as HTMLButtonElement;
+  const staleSave = async () => {
+    view(A, { revision: 3 });
+    fireEvent.click(screen.getByRole("button", { name: "Change destination" }));
+    fireEvent.change(field(), { target: { value: C } });
+    updateDestination.mockResolvedValueOnce({ ok: false, error: "conflict", latest });
+    await submit();
+  };
+
+  it("shows the published URL, keeps the typed address and doesn't save until the latest version is loaded", async () => {
+    await staleSave();
+    expect(updateDestination).toHaveBeenCalledExactlyOnceWith("q1", C, 3);
+    expect(conflict()?.getAttribute("role")).toBe("alert");
+    expect(conflict()?.textContent).toContain(messages.qr.dest.conflict.title);
+    expect(conflict()?.textContent).toContain(`It now goes to ${B}.`);
+    expect(field().value).toBe("c.example.test/");
+    // No automatic retry, and Save stays off until the owner loads the latest version.
+    expect(saveButton().disabled).toBe(true);
+    expect(updateDestination).toHaveBeenCalledTimes(1);
+  });
+
+  it("Load latest version: the edit is based on the latest revision; saving C again sends it explicitly", async () => {
+    await staleSave();
+    fireEvent.click(screen.getByRole("button", { name: messages.qr.dest.conflict.load }));
+    expect(conflict()).toBeNull();
+    expect(screen.getByRole("status").textContent).toContain(B);
+    expect([field().value, saveButton().disabled]).toEqual(["c.example.test/", false]);
+    updateDestination.mockResolvedValueOnce({ ok: true, data: { destination: C, previousDestination: B, changedAt: T2, revision: 5 } });
+    await submit();
+    expect(updateDestination).toHaveBeenLastCalledWith("q1", C, 4);
+    expect(current()).toBe(C);
+    expect(previous()).toBe(`Previously ${B} · changed ${when(T2)}`);
+  });
+
+  it("Cancel after a conflict shows what is published now, and the next edit starts from it", async () => {
+    await staleSave();
+    fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+    expect(current()).toBe(B);
+    fireEvent.click(screen.getByRole("button", { name: "Change destination" }));
+    expect([field().value, conflict()]).toEqual(["b.example.test/", null]);
+    fireEvent.change(field(), { target: { value: C } });
+    updateDestination.mockResolvedValueOnce({ ok: true, data: { destination: C, previousDestination: B, changedAt: T2, revision: 5 } });
+    await submit();
+    expect(updateDestination).toHaveBeenLastCalledWith("q1", C, 4);
   });
 });

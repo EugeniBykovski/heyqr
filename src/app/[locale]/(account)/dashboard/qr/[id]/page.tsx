@@ -210,6 +210,7 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
                       shortLink={shortShown}
                       previous={qr.previousDestination}
                       changedAt={qr.destinationChangedAt?.toISOString() ?? null}
+                      revision={qr.destinationRevision}
                     />
                     <DestinationHistory entries={history} />
                   </>
