@@ -1,34 +1,19 @@
 import "server-only";
-import { and, eq, inArray } from "drizzle-orm";
 import type { Currency, Offer } from "@/shared/config/catalog";
 import { purchasable } from "./catalog";
 import { isConfigured } from "../config";
-import { db, schema } from "../db";
-import { hasPlanAccess, PLAN_STATUSES } from "./allowances";
-import { trialCovers, trialPhase, type TrialPhase } from "./trial";
-
-/** The same statuses that count as the plan everywhere else (allowances.ts). */
-const ACTIVE_SUBSCRIPTION = PLAN_STATUSES;
+import { db } from "../db";
+import { accessSubscription, canDownloadCode, trialFor, type DownloadableCode } from "./access";
+import type { TrialPhase } from "./trial";
 
 /**
  * The account's subscription that gives paid access now (HEY-142: hasPlanAccess, the same rule as slots and
- * allowances), or undefined. Downloads, the trial's upgraded state and the public short link read it.
+ * allowances), or undefined. HEY-143: the decision lives in access.ts, on the app's database here.
  */
-export async function activeSubscription(userId: string, now: Date = new Date()) {
-  const subs = await db.query.subscription.findMany({
-    where: and(eq(schema.subscription.userId, userId), inArray(schema.subscription.status, ACTIVE_SUBSCRIPTION)),
-  });
-  return subs.find((s) => hasPlanAccess(s, now));
-}
+export const activeSubscription = (userId: string, now: Date = new Date()) => accessSubscription(db, userId, now);
 
 /** The account's Starter trial (design 9.x), from its dates and whether a Dynamic plan is active. */
-export async function userTrial(userId: string, now = new Date()): Promise<TrialPhase> {
-  const [owner, subscription] = await Promise.all([
-    db.query.user.findFirst({ where: eq(schema.user.id, userId) }),
-    activeSubscription(userId),
-  ]);
-  return trialPhase({ trialStartedAt: owner?.trialStartedAt ?? null, trialEndsAt: owner?.trialEndsAt ?? null }, Boolean(subscription), now);
-}
+export const userTrial = (userId: string, now: Date = new Date()): Promise<TrialPhase> => trialFor(db, userId, now);
 
 /** Design 8.x: the Print Pack files of a code: the code itself is unlocked and its Print Pack was bought. */
 export async function canDownloadPrintPack(
@@ -52,25 +37,5 @@ export const printPackForSale = (currency: Currency) => isConfigured("payments")
 /** Whether an offer can be bought in this currency here (payments configured and the catalog has it). */
 export const forSale = (currency: Currency, offer: Offer) => isConfigured("payments") && purchasable(currency, offer);
 
-/**
- * The single rule for paid downloads. Static: the code was bought (any layout, any format).
- * Dynamic: the owner has an active Dynamic plan, or it is the trial's test code while the trial runs. Never decided on
- * the client.
- */
-export async function canDownload(
-  userId: string,
-  qr: {
-    userId: string;
-    model: "static" | "dynamic";
-    purchasedAt: Date | null;
-    isTrial?: boolean;
-    status?: string;
-    shortCode?: string | null;
-  },
-) {
-  if (qr.userId !== userId) return false;
-  if (qr.model === "static") return qr.purchasedAt !== null;
-  // A Dynamic code's files carry its short link: only a live code (activated under the plan) can be downloaded.
-  if (qr.status === "active" && qr.shortCode && (await activeSubscription(userId))) return true;
-  return qr.isTrial === true && trialCovers(await userTrial(userId), { isTrial: true });
-}
+/** The single rule for paid downloads (access.ts canDownloadCode), on the app's database. */
+export const canDownload = (userId: string, qr: DownloadableCode) => canDownloadCode(db, userId, qr);

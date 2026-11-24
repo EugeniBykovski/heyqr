@@ -26,10 +26,12 @@ import { activateTrialCode, startTrial, trialCode, trialCovers, trialPhase } fro
 import { pauseDynamicCode, resumeDynamicCode } from "../billing/pause";
 import { bindStripeCustomer, customerIdempotencyKey, storedCustomer, type CustomerCreate } from "../billing/customer";
 import { applySubscriptionEvent, type SubscriptionEvent } from "../billing/subscriptions";
+import { canDownloadCode, resolveShortLink } from "../billing/access";
 import {
   accountUsage,
   activateDynamicCode,
   applyPrintPackAllowance,
+  currentPlan,
   hasPlanAccess,
   overdueSubscription,
   type AccessFields,
@@ -5181,5 +5183,303 @@ describe.skipIf(!url)("access at the paid period's end (HEY-142, real PostgreSQL
     // Recovery (the owner takes the plan again / the subscription is active again): the same codes, as they were.
     await set({ status: "active", cancelAtPeriodEnd: false, cancelAt: null });
     expect([(await accountUsage(db, owner.id)).plan?.id, await snapshot()]).toEqual(["starter", before]);
+  });
+});
+
+/*
+ * HEY-143 / QR-19.06: subscription transitions and out-of-order delivery, through the webhook's own functions
+ * (applySubscriptionEvent, processCheckoutEvent) and the entry points' own decisions (currentPlan for Plan & billing,
+ * canDownloadCode, resolveShortLink), against HEY-138's policy. Stripe's current state is set per step; events are
+ * delivered in a controlled order, including late copies of earlier events.
+ */
+describe.skipIf(!url)("subscription transitions and out-of-order delivery (HEY-143, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "order-owner", name: "Owner", email: "owner@order.test", stripeCustomerId: "cus_order_owner" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const P1 = 1_797_600_000; // the first period end
+  const P2 = 1_800_278_400; // the renewed period end, a month later
+  const d1 = new Date(P1 * 1000).toISOString().slice(0, 10);
+  const d2 = new Date(P2 * 1000).toISOString().slice(0, 10);
+  const stripeNow = new Map<string, SubscriptionEvent>();
+  const sub = (id: string, status: string, periodEnd: number, over: Partial<SubscriptionEvent> = {}): SubscriptionEvent =>
+    ({
+      id,
+      customer: owner.stripeCustomerId,
+      status,
+      cancel_at_period_end: false,
+      cancel_at: null,
+      metadata: { userId: owner.id, plan: "starter" },
+      items: { data: [{ price: { id: "price_starter" }, current_period_start: periodEnd - 2_678_400, current_period_end: periodEnd }] },
+      ...over,
+    }) as unknown as SubscriptionEvent;
+  /** Stripe moves to `state`; its event is delivered later (or never) by `deliver`. */
+  const stripe = (state: SubscriptionEvent) => void stripeNow.set(state.id, state);
+  const deliver = (eventId: string, payload: SubscriptionEvent) =>
+    applySubscriptionEvent(
+      db,
+      { id: eventId, type: "customer.subscription.updated", subscription: payload },
+      {
+        planForPrice: () => null,
+        current: async (id) => {
+          const s = stripeNow.get(id);
+          if (!s) throw new Error("unknown subscription");
+          return s;
+        },
+      },
+    );
+  const codes = { live: "", paused: "", deleted: "" };
+  const slugs = { live: "ordlive", paused: "ordpaus", deleted: "orddele" };
+  /** Everything an owner and a scanner would see. */
+  const observe = async (subscriptionId = "sub_order_1") => {
+    const row = await db.query.subscription.findFirst({ where: (t, { eq }) => eq(t.stripeSubscriptionId, subscriptionId) });
+    const plan = await currentPlan(db, owner.id);
+    const live = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, codes.live) });
+    const link = async (slug: string) => {
+      const a = await resolveShortLink(db, slug);
+      return a.kind === "redirect" ? a.to : a.inactive ? "inactive" : "unavailable";
+    };
+    return {
+      stored: `${row?.status} ${row?.currentPeriodEnd?.toISOString().slice(0, 10)}${row?.cancelAtPeriodEnd ? " scheduled" : ""}`,
+      billing: plan
+        ? `${plan.id}${plan.overdue ? " overdue" : ""} ${plan.cancelAtPeriodEnd ? `ends ${plan.endsAt?.toISOString().slice(0, 10)}` : `renews ${plan.periodEnd?.toISOString().slice(0, 10)}`}`
+        : "no plan",
+      download: live ? await canDownloadCode(db, owner.id, live) : null,
+      link: await link(slugs.live),
+      paused: await link(slugs.paused),
+      deleted: await link(slugs.deleted),
+    };
+  };
+  const D1 = "https://menu.example.test/one";
+  const D2 = "https://menu.example.test/two";
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 8 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+    stripe(sub("sub_order_1", "active", P1));
+    await deliver("evt_o_create", sub("sub_order_1", "active", P1));
+    for (const k of ["live", "paused", "deleted"] as const) {
+      const saved = await saveQrWithLayouts(db, owner.id, {
+        name: k,
+        model: "dynamic",
+        content: { type: "website", url: D1 },
+        destination: D1,
+        layouts,
+      });
+      if (!saved.ok) throw new Error("save failed");
+      codes[k] = saved.data.qrCodeId;
+      expect((await activateDynamicCode(db, owner.id, codes[k], () => slugs[k])).ok).toBe(true);
+    }
+    await pauseDynamicCode(db, owner.id, codes.paused);
+    await softDeleteQrCodes(db, owner.id, [codes.deleted]);
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("1. renewal succeeds; a late copy of the old period's event keeps the renewed period", async () => {
+    expect(await observe()).toEqual({
+      stored: `active ${d1}`,
+      billing: `starter renews ${d1}`,
+      download: true,
+      link: D1,
+      paused: "unavailable",
+      deleted: "unavailable",
+    });
+    stripe(sub("sub_order_1", "active", P2));
+    await deliver("evt_o_renewed", sub("sub_order_1", "active", P2));
+    await deliver("evt_o_old_period", sub("sub_order_1", "active", P1)); // delayed
+    expect(await observe()).toMatchObject({ stored: `active ${d2}`, billing: `starter renews ${d2}`, download: true, link: D1 });
+  });
+
+  it("1. renewal fails, goes unpaid, then recovers; late failure events leave it active with the recovered period", async () => {
+    stripe(sub("sub_order_1", "past_due", P2));
+    await deliver("evt_o_failed", sub("sub_order_1", "past_due", P2));
+    // HEY-138: past_due keeps access.
+    expect(await observe()).toMatchObject({
+      stored: `past_due ${d2}`,
+      billing: `starter overdue renews ${d2}`,
+      download: true,
+      link: D1,
+    });
+    stripe(sub("sub_order_1", "unpaid", P2));
+    await deliver("evt_o_unpaid", sub("sub_order_1", "unpaid", P2));
+    expect(await observe()).toMatchObject({
+      stored: `unpaid ${d2}`,
+      billing: "no plan",
+      download: false,
+      link: "inactive",
+      paused: "unavailable",
+      deleted: "unavailable",
+    });
+    // While access is off, the owner points the printed code somewhere else.
+    expect((await changeFresh(db, owner.id, codes.live, D2)).ok).toBe(true);
+    stripe(sub("sub_order_1", "active", P2));
+    await deliver("evt_o_recovered", sub("sub_order_1", "active", P2));
+    for (const [id, payload] of [
+      ["evt_o_failed_late", "past_due"],
+      ["evt_o_unpaid_late", "unpaid"],
+    ] as const)
+      await deliver(id, sub("sub_order_1", payload, P2)); // delayed
+    expect(await observe()).toEqual({
+      stored: `active ${d2}`,
+      billing: `starter renews ${d2}`,
+      download: true,
+      link: D2,
+      paused: "unavailable",
+      deleted: "unavailable",
+    });
+  });
+
+  it("2. cancellation scheduled, then withdrawn; a late scheduling event leaves the renewal date", async () => {
+    stripe(sub("sub_order_1", "active", P2, { cancel_at: P2 }));
+    await deliver("evt_o_scheduled", sub("sub_order_1", "active", P2, { cancel_at: P2 }));
+    expect(await observe()).toMatchObject({
+      stored: `active ${d2} scheduled`,
+      billing: `starter ends ${d2}`,
+      download: true,
+      link: D2,
+    });
+    stripe(sub("sub_order_1", "active", P2));
+    await deliver("evt_o_withdrawn", sub("sub_order_1", "active", P2));
+    await deliver("evt_o_scheduled_late", sub("sub_order_1", "active", P2, { cancel_at: P2, cancel_at_period_end: true })); // delayed
+    expect(await observe()).toMatchObject({ stored: `active ${d2}`, billing: `starter renews ${d2}`, download: true, link: D2 });
+  });
+
+  it("3. the subscription ends; a late active update or Checkout completion doesn't bring access back", async () => {
+    stripe(sub("sub_order_1", "canceled", P2));
+    await deliver("evt_o_ended", sub("sub_order_1", "canceled", P2));
+    expect(await observe()).toEqual({
+      stored: `canceled ${d2}`,
+      billing: "no plan",
+      download: false,
+      link: "inactive",
+      paused: "unavailable",
+      deleted: "unavailable",
+    });
+    await deliver("evt_o_active_late", sub("sub_order_1", "active", P2)); // delayed
+    const draft = await saveQrWithLayouts(db, owner.id, {
+      name: "draft",
+      model: "dynamic",
+      content: { type: "website", url: D1 },
+      layouts,
+    });
+    if (!draft.ok) throw new Error("save failed");
+    const late = {
+      id: "evt_o_checkout_late",
+      type: "checkout.session.completed",
+      session: {
+        id: "cs_order_late",
+        mode: "subscription",
+        status: "complete",
+        payment_status: "paid",
+        payment_intent: null,
+        amount_subtotal: 900,
+        amount_total: 900,
+        total_details: null,
+        currency: "usd",
+        customer: owner.stripeCustomerId,
+        subscription: "sub_order_1",
+        metadata: { userId: owner.id, qrCodeId: draft.data.qrCodeId, plan: "starter" },
+      } as unknown as Parameters<typeof processCheckoutEvent>[1]["session"],
+    };
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      expect(await processCheckoutEvent(db, late, () => "ordlate")).toEqual({
+        duplicate: false,
+        result: { granted: false, reason: "subscription_ended" },
+      });
+    } finally {
+      warn.mockRestore();
+    }
+    expect((await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, draft.data.qrCodeId) }))?.shortCode).toBeNull();
+    expect(await observe()).toEqual({
+      stored: `canceled ${d2}`,
+      billing: "no plan",
+      download: false,
+      link: "inactive",
+      paused: "unavailable",
+      deleted: "unavailable",
+    });
+  });
+
+  it("3. a new subscription after the old one ended: a late event for the old one leaves the new plan and access", async () => {
+    stripe(sub("sub_order_2", "active", P2));
+    await deliver("evt_o2_create", sub("sub_order_2", "active", P2));
+    expect(await observe("sub_order_2")).toMatchObject({
+      stored: `active ${d2}`,
+      billing: `starter renews ${d2}`,
+      download: true,
+      link: D2,
+    });
+    await deliver("evt_o_old_active_late", sub("sub_order_1", "active", P1)); // the old subscription, delayed
+    await deliver("evt_o_old_ended_late", sub("sub_order_1", "canceled", P2)); // and its end, delayed again
+    expect(await observe("sub_order_1")).toMatchObject({ stored: `canceled ${d2}` });
+    expect(await observe("sub_order_2")).toEqual({
+      stored: `active ${d2}`,
+      billing: `starter renews ${d2}`,
+      download: true,
+      link: D2,
+      paused: "unavailable",
+      deleted: "unavailable",
+    });
+  });
+
+  it("4. duplicates and overlapping distinct events (same timestamp) converge, with no repeated side effects", async () => {
+    stripe(sub("sub_order_2", "past_due", P2));
+    const same = sub("sub_order_2", "past_due", P2);
+    // The same event four times at once, and two distinct events with the same timestamp at once.
+    const dupes = await Promise.all(Array.from({ length: 4 }, () => deliver("evt_o2_dup", same)));
+    expect(dupes.filter((r) => !r.duplicate)).toHaveLength(1);
+    stripe(sub("sub_order_2", "active", P2));
+    const distinct = await Promise.all([
+      deliver("evt_o2_t_a", sub("sub_order_2", "past_due", P2)),
+      deliver("evt_o2_t_b", sub("sub_order_2", "active", P2)),
+    ]);
+    expect(distinct.every((r) => !r.duplicate)).toBe(true);
+    expect((await db.query.subscription.findMany({ where: (t, { eq }) => eq(t.userId, owner.id) })).length).toBe(2);
+    expect(await observe("sub_order_2")).toEqual({
+      stored: `active ${d2}`,
+      billing: `starter renews ${d2}`,
+      download: true,
+      link: D2,
+      paused: "unavailable",
+      deleted: "unavailable",
+    });
+    // A Checkout completion delivered twice grants once: the second is a duplicate and the slug stays.
+    const draft = await saveQrWithLayouts(db, owner.id, {
+      name: "bought",
+      model: "dynamic",
+      content: { type: "website", url: D1 },
+      layouts,
+    });
+    if (!draft.ok) throw new Error("save failed");
+    const completed = {
+      id: "evt_o2_checkout",
+      type: "checkout.session.completed",
+      session: {
+        id: "cs_order_2",
+        mode: "subscription",
+        status: "complete",
+        payment_status: "paid",
+        payment_intent: null,
+        amount_subtotal: 900,
+        amount_total: 900,
+        total_details: null,
+        currency: "usd",
+        customer: owner.stripeCustomerId,
+        subscription: "sub_order_2",
+        metadata: { userId: owner.id, qrCodeId: draft.data.qrCodeId, plan: "starter" },
+      } as unknown as Parameters<typeof processCheckoutEvent>[1]["session"],
+    };
+    const both = await Promise.all([
+      processCheckoutEvent(db, completed, () => "ordbuy1"),
+      processCheckoutEvent(db, completed, () => "ordbuy2"),
+    ]);
+    expect(both.filter((r) => r.duplicate)).toHaveLength(1);
+    expect((await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, draft.data.qrCodeId) }))?.shortCode).toBe("ordbuy1");
+    expect((await accountUsage(db, owner.id)).dynamic.used).toBe(2);
   });
 });

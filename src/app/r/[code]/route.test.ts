@@ -6,11 +6,19 @@ vi.mock("@/env", () => ({ env: { NEXT_PUBLIC_APP_URL: "http://localhost:3000" } 
 const findQr = vi.fn();
 const findUser = vi.fn();
 vi.mock("@/server/db", () => ({
-  db: { query: { qrCode: { findFirst: (...a: unknown[]) => findQr(...a) }, user: { findFirst: (...a: unknown[]) => findUser(...a) } } },
+  db: {
+    query: {
+      qrCode: { findFirst: (...a: unknown[]) => findQr(...a) },
+      user: { findFirst: (...a: unknown[]) => findUser(...a) },
+      // HEY-143: the owner's subscription rows; the real access rule (access.ts) decides from them.
+      subscription: { findMany: async () => (await subscription()) ?? [] },
+    },
+  },
   schema: { qrCode: { shortCode: "short_code" }, user: { id: "id" } },
 }));
 const subscription = vi.fn();
-vi.mock("@/server/billing/entitlements", () => ({ activeSubscription: (...a: unknown[]) => subscription(...a) }));
+/** One paid subscription row (active, nothing scheduled). */
+const paid = [{ status: "active", cancelAtPeriodEnd: false, cancelAt: null, currentPeriodEnd: null }];
 const recordScan = vi.fn();
 vi.mock("@/server/qr/repository", () => ({ recordScan: (...a: unknown[]) => recordScan(...a) }));
 const afterQueue: (() => unknown)[] = [];
@@ -45,7 +53,7 @@ describe("GET /r/:code", () => {
     findUser.mockReset();
     subscription.mockReset();
     // HEY-142: the owner has paid access unless a test says otherwise.
-    subscription.mockResolvedValue({ id: "sub" });
+    subscription.mockResolvedValue(paid);
     recordScan.mockReset();
     afterQueue.length = 0;
   });
@@ -81,13 +89,13 @@ describe("GET /r/:code", () => {
     const ended = { trialStartedAt: new Date("2026-01-01T00:00:00Z"), trialEndsAt: new Date("2026-01-08T00:00:00Z") };
     findQr.mockResolvedValue(trial);
     findUser.mockResolvedValue(ended);
-    subscription.mockResolvedValue(null);
+    subscription.mockResolvedValue([]);
     expect(await open()).toEqual({ status: 302, location: `${unavailable}?reason=inactive`, cache: "no-store" });
     expect(recordScan).not.toHaveBeenCalled();
 
-    subscription.mockResolvedValue({ id: "sub" });
+    subscription.mockResolvedValue(paid);
     expect(await open()).toEqual({ status: 302, location: live.destination, cache: "no-store" });
-    subscription.mockResolvedValue(null);
+    subscription.mockResolvedValue([]);
     findUser.mockResolvedValue({ trialStartedAt: new Date(Date.now() - 86_400_000), trialEndsAt: new Date(Date.now() + 86_400_000) });
     expect(await open()).toEqual({ status: 302, location: live.destination, cache: "no-store" });
     expect(recordScan).toHaveBeenCalledTimes(2);
@@ -96,7 +104,7 @@ describe("GET /r/:code", () => {
   it("HEY-121: a trial code never started, or deleted, inactive or without a destination: the right fallback, no lookups leak", async () => {
     findQr.mockResolvedValue({ ...live, isTrial: true });
     findUser.mockResolvedValue({ trialStartedAt: null, trialEndsAt: null });
-    subscription.mockResolvedValue(null);
+    subscription.mockResolvedValue([]);
     expect(await open()).toEqual({ status: 302, location: `${unavailable}?reason=inactive`, cache: "no-store" });
     // The generic fallback comes first: a deleted or paused trial code isn't looked up further.
     for (const qr of [
@@ -127,7 +135,7 @@ describe("GET /r/:code", () => {
 
   it("HEY-142: a live Dynamic code of an owner without paid access goes to the neutral inactive page, no scan", async () => {
     findQr.mockResolvedValue(live);
-    subscription.mockResolvedValue(undefined);
+    subscription.mockResolvedValue([]);
     const { location, status, cache } = await open();
     expect({ status, location, cache }).toEqual({ status: 302, location: `${unavailable}?reason=inactive`, cache: "no-store" });
     for (const secret of ["AbCdEf2", "menu.example.test", "u1", "q1"]) expect(location).not.toContain(secret);
@@ -136,7 +144,7 @@ describe("GET /r/:code", () => {
 
   it("HEY-142: after recovery the same printed code redirects to its current destination again", async () => {
     findQr.mockResolvedValue({ ...live, destination: "https://menu.example.test/new" });
-    subscription.mockResolvedValueOnce(undefined).mockResolvedValueOnce({ id: "sub" });
+    subscription.mockResolvedValueOnce([]).mockResolvedValueOnce(paid);
     expect((await open()).location).toBe(`${unavailable}?reason=inactive`);
     expect(await open()).toEqual({ status: 302, location: "https://menu.example.test/new", cache: "no-store" });
     expect(recordScan).toHaveBeenCalledExactlyOnceWith("q1");
