@@ -1,4 +1,4 @@
-import { and, count, eq, gte, inArray, isNull, sum } from "drizzle-orm";
+import { and, count, desc, eq, gte, inArray, isNull, sum } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { PACK_CREDITS, PLANS, type PlanId } from "../../shared/config/catalog-core";
 import { newId } from "../db/ids";
@@ -23,7 +23,15 @@ export const PLAN_STATUSES = ["active", "trialing", "past_due"];
 const ACTIVE = PLAN_STATUSES;
 
 /** `endsAt`: when a scheduled cancellation takes effect (Stripe's cancel_at, else the period end); null if none. */
-export type Plan = { id: PlanId; periodStart: Date; periodEnd: Date | null; cancelAtPeriodEnd: boolean; endsAt: Date | null };
+export type Plan = {
+  id: PlanId;
+  periodStart: Date;
+  periodEnd: Date | null;
+  cancelAtPeriodEnd: boolean;
+  endsAt: Date | null;
+  /** HEY-141: true while a renewal payment is overdue (past_due): the plan stays, the payment is due. */
+  overdue: boolean;
+};
 
 export async function currentPlan(db: Db, userId: string): Promise<Plan | null> {
   const sub = await db.query.subscription.findFirst({
@@ -38,7 +46,27 @@ export async function currentPlan(db: Db, userId: string): Promise<Plan | null> 
     periodEnd: sub.currentPeriodEnd,
     cancelAtPeriodEnd: sub.cancelAtPeriodEnd,
     endsAt: sub.cancelAtPeriodEnd ? (sub.cancelAt ?? sub.currentPeriodEnd) : null,
+    overdue: sub.status === "past_due",
   };
+}
+
+/**
+ * HEY-141: the account's subscription whose renewal payment failed and can still be paid: past_due (the plan stays,
+ * HEY-138) or unpaid (the plan has ended, the invoice is still open). Paying the open invoice in Stripe makes it active
+ * again; the webhook then reconciles it (HEY-134). Null when nothing is owed.
+ */
+export async function overdueSubscription(db: Db, userId: string) {
+  const [sub] = await db
+    .select({
+      stripeSubscriptionId: schema.subscription.stripeSubscriptionId,
+      status: schema.subscription.status,
+      plan: schema.subscription.plan,
+    })
+    .from(schema.subscription)
+    .where(and(eq(schema.subscription.userId, userId), inArray(schema.subscription.status, ["past_due", "unpaid"])))
+    .orderBy(desc(schema.subscription.updatedAt))
+    .limit(1);
+  return sub ?? null;
 }
 
 export async function creditBalance(db: Db, userId: string): Promise<number> {

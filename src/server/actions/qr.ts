@@ -6,7 +6,7 @@ import { z } from "zod";
 import { requireUser } from "../auth";
 import { createCheckout, createPrintPackCheckout } from "../billing/checkout";
 import { createPortalSession, isPortalIntent, portalFeatures } from "../billing/portal";
-import { currentPlan } from "../billing/allowances";
+import { currentPlan, overdueSubscription } from "../billing/allowances";
 import { getCurrency } from "../currency";
 import { guard, type ActionResult } from "./result";
 
@@ -301,7 +301,13 @@ export async function openBillingPortal(locale: string, intent: unknown = "manag
     const customer = await storedCustomer(db, user.id);
     if (!customer) return { ok: false, error: "not_found" };
     let subscriptionId: string | null = null;
-    if (intent !== "manage") {
+    if (intent === "recover") {
+      // HEY-141: only while a renewal is overdue or unpaid. The Portal's home offers the payment method update and
+      // "Pay failed amount" for the open invoice. Access changes only when Stripe's webhook reports the payment.
+      const overdue = await overdueSubscription(db, user.id);
+      if (!overdue) return { ok: false, error: "invalid" };
+      subscriptionId = overdue.stripeSubscriptionId;
+    } else if (intent !== "manage") {
       const [features, plan, subscription] = await Promise.all([portalFeatures(), currentPlan(db, user.id), activeSubscription(user.id)]);
       const allowed =
         intent === "payment" ? features.paymentMethodUpdate && Boolean(subscription) : features.upgrade && plan?.id === "starter";

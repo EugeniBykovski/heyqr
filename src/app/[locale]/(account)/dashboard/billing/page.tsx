@@ -5,7 +5,7 @@ import { BillingPortalButton } from "@/features/checkout";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
 import { requireAccount } from "../../require-account";
-import { accountUsage } from "@/server/billing/allowances";
+import { accountUsage, overdueSubscription } from "@/server/billing/allowances";
 import { activeSubscription, userTrial } from "@/server/billing/entitlements";
 import { paymentSummary, portalFeatures } from "@/server/billing/portal";
 import { storedCustomer } from "@/server/billing/customer";
@@ -35,7 +35,7 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
   const locale = await resolveLocale(params);
   const user = await requireAccount(locale, "/dashboard/billing", await searchParams);
   const [t, format, currency] = await Promise.all([getTranslations("billing"), getFormatter(), getCurrency()]);
-  const [usage, purchases, phase, test, customer, subscription, features] = await Promise.all([
+  const [usage, purchases, phase, test, customer, subscription, features, overdue] = await Promise.all([
     accountUsage(db, user.id),
     db.query.purchase.findMany({
       where: eq(schema.purchase.userId, user.id),
@@ -48,6 +48,8 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
     storedCustomer(db, user.id),
     activeSubscription(user.id),
     portalFeatures(),
+    // HEY-141: a renewal that failed and can still be paid (past_due: the plan stays; unpaid: it has ended).
+    overdueSubscription(db, user.id),
   ]);
   const payment = customer && subscription ? await paymentSummary(customer, subscription.stripeSubscriptionId) : null;
   const brand = (b: string) =>
@@ -66,7 +68,7 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
   const plan = usage.plan;
   const sheet = priceSheet(currency);
   const date = (d: Date) => format.dateTime(d, { dateStyle: "medium" });
-  const status = !plan ? "statusNone" : plan.cancelAtPeriodEnd ? "statusCanceling" : "statusActive";
+  const status = !plan ? "statusNone" : plan.overdue ? "overdue.status" : plan.cancelAtPeriodEnd ? "statusCanceling" : "statusActive";
 
   // Receipt lines: a Single QR with its Print Pack is two lines of one payment, as charged, in the currency paid.
   const rows = purchases.flatMap((p) => {
@@ -106,8 +108,22 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
               {plan ? t("planMonthly", { plan: t(`plans.${plan.id}`) }) : t("noPlan")}
             </h2>
           </div>
-          <Badge variant={plan ? (plan.cancelAtPeriodEnd ? "warning" : "success") : "neutral"}>{t(status)}</Badge>
+          <Badge variant={plan ? (plan.overdue || plan.cancelAtPeriodEnd ? "warning" : "success") : "neutral"}>{t(status)}</Badge>
         </div>
+        {/* HEY-141: a failed renewal that can still be paid, with the way to pay it (the Portal, no new Checkout). */}
+        {overdue && customer ? (
+          <div
+            role="alert"
+            data-slot="renewal-overdue"
+            className="flex flex-col gap-2.5 rounded-lg bg-warning-soft px-4 py-3.5 text-[0.9375rem]"
+          >
+            <b className="font-semibold">{t("overdue.title")}</b>
+            {/* HEY-138 policy: past_due keeps the plan; an unpaid (unrecovered) renewal ends it. */}
+            <p className="text-secondary-foreground">{overdue.status === "unpaid" ? t("overdue.unpaid") : t("overdue.pastDue")}</p>
+            <BillingPortalButton intent="recover" variant="primary" label={t("overdue.action")} />
+            <span className="text-caption text-muted-foreground">{t("overdue.pending")}</span>
+          </div>
+        ) : null}
         {/* HEY-136: the credit balance is always shown here, 0 included. */}
         <UsageTiles usage={usage} printPackCents={sheet.printPack} currency={currency} credits="always" />
         {plan ? (
@@ -117,7 +133,8 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
               <dd className="font-semibold tabular-nums">{t("perMonth", { price: formatMoney(sheet[plan.id], currency) })}</dd>
             </div>
             {/* HEY-139: the renewal date, or when a scheduled cancellation takes effect (Stripe's cancel_at). */}
-            {(plan.cancelAtPeriodEnd ? plan.endsAt : plan.periodEnd) ? (
+            {/* HEY-141: no renewal date while the renewal itself is unpaid. */}
+            {!plan.overdue && (plan.cancelAtPeriodEnd ? plan.endsAt : plan.periodEnd) ? (
               <div className="flex justify-between gap-3">
                 <dt className="text-secondary-foreground">{plan.cancelAtPeriodEnd ? t("endsOn") : t("renewsOn")}</dt>
                 <dd data-slot="plan-date" className="font-semibold">
@@ -141,7 +158,7 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
         )}
         <div className="flex flex-wrap gap-2.5">
           {/* HEY-139: only actions the account's state and the Portal configuration allow. */}
-          {plan?.id === "starter" && customer && features.upgrade && !plan.cancelAtPeriodEnd ? (
+          {plan?.id === "starter" && customer && features.upgrade && !plan.cancelAtPeriodEnd && !plan.overdue ? (
             <BillingPortalButton intent="upgrade" variant="primary" label={t("upgrade", { price: formatMoney(sheet.studio, currency) })} />
           ) : null}
           {!plan ? (
@@ -150,7 +167,9 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
             </Button>
           ) : null}
           {customer && plan ? <BillingPortalButton /> : null}
-          {customer && plan && features.paymentMethodUpdate ? <BillingPortalButton intent="payment" label={t("updatePayment")} /> : null}
+          {customer && plan && features.paymentMethodUpdate && !overdue ? (
+            <BillingPortalButton intent="payment" label={t("updatePayment")} />
+          ) : null}
           <Button asChild>
             <Link href="/pricing">{t("compare")}</Link>
           </Button>

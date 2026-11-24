@@ -23,13 +23,14 @@ const usage = (over: Partial<Usage> & { plan?: Usage["plan"] }): Usage => ({
   ...over,
 });
 const starter = (cancelAtPeriodEnd = false) => ({
+  overdue: false,
   id: "starter" as const,
   periodStart,
   periodEnd,
   cancelAtPeriodEnd,
   endsAt: cancelAtPeriodEnd ? periodEnd : null,
 });
-const studio = { id: "studio" as const, periodStart, periodEnd, cancelAtPeriodEnd: false, endsAt: null };
+const studio = { id: "studio" as const, periodStart, periodEnd, cancelAtPeriodEnd: false, endsAt: null, overdue: false };
 const show = async (u: Usage, credits: "always" | "never" | "auto" = "auto") =>
   render(<>{await UsageTiles({ usage: u, printPackCents: 299, currency: "USD", credits })}</>);
 const tile = (slot: string) => document.querySelector(`[data-slot="usage-${slot}"]`)?.textContent?.replace(/\s+/g, " ").trim() ?? null;

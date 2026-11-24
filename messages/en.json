@@ -1638,7 +1638,15 @@
       "failed": "We couldn’t open Stripe. Nothing changed; try again."
     },
     "updatePayment": "Update payment method",
-    "card": "{brand} •••• {last4}"
+    "card": "{brand} •••• {last4}",
+    "overdue": {
+      "title": "Your renewal payment didn’t go through",
+      "pastDue": "Your plan stays active while the payment is overdue. Update your payment method to pay the open invoice.",
+      "unpaid": "Your plan has ended because the renewal payment wasn’t recovered. Update your payment method to pay the open invoice and turn it back on.",
+      "action": "Update payment method and pay",
+      "status": "Payment overdue",
+      "pending": "After you pay, it can take a moment for your plan to update here."
+    }
   },
   "legal": {
     "terms": {
