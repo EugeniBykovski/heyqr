@@ -14,8 +14,13 @@ import { stripe } from "./stripe";
  * - The payment method summary is read from Stripe at render time and masked (brand and last 4); nothing is stored.
  */
 
-export type PortalIntent = "manage" | "payment" | "upgrade";
-export const isPortalIntent = (v: unknown): v is PortalIntent => v === "manage" || v === "payment" || v === "upgrade";
+/**
+ * HEY-141: `recover` opens the Portal's home for an overdue renewal: Stripe shows the failed invoice there with
+ * "Update payment method" and, once a working method is on file, "Pay failed amount", which pays that same invoice.
+ * (Updating the payment method alone doesn't pay it.)
+ */
+export type PortalIntent = "manage" | "payment" | "upgrade" | "recover";
+export const isPortalIntent = (v: unknown): v is PortalIntent => v === "manage" || v === "payment" || v === "upgrade" || v === "recover";
 
 /** What the default Portal configuration lets an owner do. */
 export type PortalFeatures = { paymentMethodUpdate: boolean; cancel: boolean; upgrade: boolean };

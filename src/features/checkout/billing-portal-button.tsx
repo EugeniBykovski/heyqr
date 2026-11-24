@@ -17,7 +17,7 @@ export function BillingPortalButton({
   variant = "secondary",
 }: {
   label?: string;
-  intent?: "manage" | "payment" | "upgrade";
+  intent?: "manage" | "payment" | "upgrade" | "recover";
   variant?: "primary" | "secondary";
 }) {
   const t = useTranslations("billing");

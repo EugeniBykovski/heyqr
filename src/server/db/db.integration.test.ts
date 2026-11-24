@@ -30,6 +30,7 @@ import {
   accountUsage,
   activateDynamicCode,
   applyPrintPackAllowance,
+  overdueSubscription,
   convertToStatic,
   creditBalance,
   grantPackCredits,
@@ -4948,5 +4949,121 @@ describe.skipIf(!url)("Portal-scheduled cancellation (HEY-139, real PostgreSQL)"
     // Undoing the cancellation in the Portal clears both.
     await deliverSubscription(db, sub({ cancel_at: null }));
     expect((await accountUsage(db, owner.id)).plan).toMatchObject({ cancelAtPeriodEnd: false, endsAt: null });
+  });
+});
+
+/*
+ * HEY-141 / QR-19.04: a failed renewal and its recovery, as the webhook sees it (HEY-134 reconciliation). The account
+ * follows Stripe's current status and period; a Portal return or a payment method change grants nothing by itself.
+ */
+describe.skipIf(!url)("failed renewal and recovery (HEY-141, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "renew-owner", name: "Owner", email: "owner@renew.test", stripeCustomerId: "cus_renew_owner" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const P1 = 1_797_600_000; // first period end
+  const P2 = 1_800_278_400; // the renewed period end
+  let stripeNow: SubscriptionEvent;
+  const sub = (status: string, periodEnd: number): SubscriptionEvent =>
+    ({
+      id: "sub_renew",
+      customer: owner.stripeCustomerId,
+      status,
+      cancel_at_period_end: false,
+      cancel_at: null,
+      metadata: { userId: owner.id },
+      items: { data: [{ price: { id: "price_starter" }, current_period_start: periodEnd - 2_678_400, current_period_end: periodEnd }] },
+    }) as unknown as SubscriptionEvent;
+  let n = 0;
+  /** One delivery of an event (its own payload), applied with Stripe's current state. */
+  const deliver = (payload: SubscriptionEvent) =>
+    applySubscriptionEvent(
+      db,
+      { id: `evt_renew_${++n}`, type: "customer.subscription.updated", subscription: payload },
+      {
+        planForPrice: () => null,
+        current: async () => stripeNow,
+      },
+    );
+  const access = async () => {
+    const usage = await accountUsage(db, owner.id);
+    return {
+      plan: usage.plan?.id ?? null,
+      overdue: usage.plan?.overdue ?? null,
+      periodEnd: usage.plan?.periodEnd?.getTime() ?? null,
+      owed: (await overdueSubscription(db, owner.id))?.status ?? null,
+    };
+  };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 2 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("past_due keeps the plan and is owed; unpaid ends it and is still owed; paying reconciles to Stripe's state", async () => {
+    stripeNow = sub("active", P1);
+    await deliver(stripeNow);
+    // Codes in different states before the failure: live, paused by the owner, deleted, and a static unlock.
+    const make = async (name: string, model: "dynamic" | "static" = "dynamic") => {
+      const saved = await saveQrWithLayouts(db, owner.id, {
+        name,
+        model,
+        content: { type: "website", url: "https://menu.example.test/" },
+        layouts,
+      });
+      if (!saved.ok) throw new Error("save failed");
+      return saved.data.qrCodeId;
+    };
+    const live = await make("Live");
+    const paused = await make("Paused");
+    const deleted = await make("Deleted");
+    const card = await make("Card", "static");
+    for (const [id, slug] of [
+      [live, "rnlive1"],
+      [paused, "rnpaus1"],
+      [deleted, "rndele1"],
+    ] as const)
+      expect((await activateDynamicCode(db, owner.id, id, () => slug)).ok).toBe(true);
+    await pauseDynamicCode(db, owner.id, paused);
+    await softDeleteQrCodes(db, owner.id, [deleted]);
+    expect((await unlockStatic(db, owner.id, card, "plan")).ok).toBe(true);
+    const codes = async () =>
+      (await db.query.qrCode.findMany({ where: (q, { eq }) => eq(q.userId, owner.id), orderBy: (q, { asc }) => asc(q.name) })).map((q) => [
+        q.name,
+        q.status,
+        q.shortCode,
+        q.deletedAt ? "deleted" : "-",
+        q.purchasedAt ? "unlocked" : "-",
+      ]);
+    const before = await codes();
+
+    // The renewal fails: past_due for the new period. The plan stays (HEY-138), the payment is owed.
+    stripeNow = sub("past_due", P2);
+    await deliver(stripeNow);
+    expect(await access()).toEqual({ plan: "starter", overdue: true, periodEnd: P2 * 1000, owed: "past_due" });
+    // A payment method update, a Portal return, another failed attempt: Stripe still says past_due; nothing changes.
+    await deliver(sub("past_due", P2));
+    expect(await access()).toEqual({ plan: "starter", overdue: true, periodEnd: P2 * 1000, owed: "past_due" });
+    // Not recovered in time: unpaid. The plan ends; the invoice can still be paid.
+    stripeNow = sub("unpaid", P2);
+    await deliver(stripeNow);
+    expect(await access()).toEqual({ plan: null, overdue: null, periodEnd: null, owed: "unpaid" });
+
+    // Paid: Stripe reports active for the renewed period.
+    stripeNow = sub("active", P2);
+    await deliver(stripeNow);
+    expect(await access()).toEqual({ plan: "starter", overdue: false, periodEnd: P2 * 1000, owed: null });
+    // A late copy of the failure event can't bring the overdue state back: Stripe's current state wins.
+    await deliver(sub("past_due", P2));
+    await deliver(sub("unpaid", P2));
+    expect(await access()).toEqual({ plan: "starter", overdue: false, periodEnd: P2 * 1000, owed: null });
+    expect((await db.query.subscription.findMany({ where: (t, { eq }) => eq(t.userId, owner.id) })).length).toBe(1);
+    // Codes as they were: the live code keeps its slug, the pause and the deletion stay, the static unlock stays.
+    expect(await codes()).toEqual(before);
   });
 });

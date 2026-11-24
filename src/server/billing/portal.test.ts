@@ -44,6 +44,9 @@ describe("Stripe Customer Portal (HEY-139)", () => {
     expect(sessions).toHaveBeenLastCalledWith({ customer: "cus_1", return_url: "https://heyqr.test/en/dashboard/billing" });
     await createPortalSession("cus_1", "en", "payment", "sub_1");
     expect(sessions.mock.lastCall?.[0]).toMatchObject({ flow_data: { type: "payment_method_update" } });
+    // HEY-141: recovery of an overdue renewal opens the Portal's home (update the method, then pay the failed amount).
+    await createPortalSession("cus_1", "en", "recover", "sub_1");
+    expect(sessions).toHaveBeenLastCalledWith({ customer: "cus_1", return_url: "https://heyqr.test/en/dashboard/billing" });
     subscriptions.mockResolvedValueOnce({ currency: "pln", items: { data: [{ id: "si_1" }] } });
     await createPortalSession("cus_1", "pl", "upgrade", "sub_1");
     expect(sessions.mock.lastCall?.[0]).toMatchObject({
