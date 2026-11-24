@@ -29,7 +29,17 @@ constant time (`apiKeyOwner`).
 - Every API path that accepts a key must scope QR data to `apiKeyOwner(...).userId` on the server.
 - Deleting an account deletes its keys.
 
-## For HEY-154
+## Revocation and last use (HEY-154)
 
-Verification builds on `apiKeyOwner`; revocation needs a `revoked_at` (and, if wanted, `last_used_at`) column on
-`api_key`, and `apiKeyOwner` should then refuse revoked keys. No public QR endpoint accepts keys yet (HEY-155, HEY-159).
+- `api_key.revoked_at` (set once) and `api_key.last_used_at`, both nullable: keys issued before migration 0016 stay
+  active.
+- **Revoke** (API keys page, with confirmation) is scoped to the signed-in account: another account's key id reads as
+  not found. Revoking again is harmless and keeps the original time.
+- **The shared verifier `apiKeyOwner(db, key)`** returns only the owner's account id, or `null`. It compares the secret
+  in constant time, then claims the key with one conditional update (`… where revoked_at is null`) that also sets
+  `last_used_at`. So an attempt that starts after a revocation has committed is refused, a refused key (malformed,
+  unknown, wrong secret or revoked) is indistinguishable from any other `null`, and only successful attempts change
+  `last_used_at`. Revoking one key leaves the account's other keys working.
+- The page shows each key as Active (with its last use) or Revoked (with the date), never the secret or verifier.
+- No public QR endpoint accepts keys yet: endpoint-level checks come with HEY-155 and HEY-159, scoping their data to
+  the verifier's owner.

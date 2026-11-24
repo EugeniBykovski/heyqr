@@ -27,7 +27,7 @@ import { pauseDynamicCode, resumeDynamicCode } from "../billing/pause";
 import { bindStripeCustomer, customerIdempotencyKey, storedCustomer, type CustomerCreate } from "../billing/customer";
 import { applySubscriptionEvent, type SubscriptionEvent } from "../billing/subscriptions";
 import { canDownloadCode, resolveShortLink } from "../billing/access";
-import { apiKeyOwner, createApiKey, listApiKeys } from "../api-keys/keys";
+import { apiKeyOwner, createApiKey, generateApiKey, listApiKeys, revokeApiKey } from "../api-keys/keys";
 import { hasScans, incrementScan, ownerScanSummary, scansByDay, utcDay } from "../qr/scans";
 import {
   accountUsage,
@@ -5808,8 +5808,8 @@ describe.skipIf(!url)("account API keys (HEY-153, real PostgreSQL)", () => {
     // The management list: prefix and date only.
     const list = await listApiKeys(db, alice.id);
     expect(list.map((k) => Object.keys(k).sort())).toEqual([
-      ["createdAt", "id", "prefix"],
-      ["createdAt", "id", "prefix"],
+      ["createdAt", "id", "lastUsedAt", "prefix", "revokedAt"],
+      ["createdAt", "id", "lastUsedAt", "prefix", "revokedAt"],
     ]);
     expect(JSON.stringify(list).includes(k1.key.slice(k1.prefix.length + 1))).toBe(false);
     expect(new Set(list.map((k) => k.prefix))).toEqual(new Set([k1.prefix, k2.prefix]));
@@ -5818,8 +5818,8 @@ describe.skipIf(!url)("account API keys (HEY-153, real PostgreSQL)", () => {
   it("each key resolves to its own account only; a wrong or mixed key resolves to none", async () => {
     const a = await createApiKey(db, alice.id);
     const b = await createApiKey(db, bob.id);
-    expect(await apiKeyOwner(db, a.key)).toMatchObject({ userId: alice.id });
-    expect(await apiKeyOwner(db, b.key)).toMatchObject({ userId: bob.id });
+    expect(await apiKeyOwner(db, a.key)).toBe(alice.id);
+    expect(await apiKeyOwner(db, b.key)).toBe(bob.id);
     // Alice's lookup id with Bob's secret, a changed character, and garbage.
     const mixed = `${a.prefix}_${b.key.slice(b.prefix.length + 1)}`;
     const changed = `${a.key.slice(0, -1)}${a.key.endsWith("A") ? "B" : "A"}`;
@@ -5835,5 +5835,86 @@ describe.skipIf(!url)("account API keys (HEY-153, real PostgreSQL)", () => {
     await db.delete(schema.user).where(eq(schema.user.id, carol.id));
     expect(await apiKeyOwner(db, c.key)).toBeNull();
     expect(Number((await pool.query("select count(*)::int as n from api_key where user_id = $1", [carol.id])).rows[0].n)).toBe(0);
+  });
+});
+
+/* HEY-154 / QR-21.02: revocation and the shared verifier. */
+describe.skipIf(!url)("API key revocation (HEY-154, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const ann = { id: "revoke-ann", name: "Ann", email: "ann@revoke.test" };
+  const ben = { id: "revoke-ben", name: "Ben", email: "ben@revoke.test" };
+  const row = async (keyId: string) =>
+    (await db.query.apiKey.findFirst({ where: (k, { eq }) => eq(k.id, keyId) })) as { revokedAt: Date | null; lastUsedAt: Date | null };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 3 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([ann, ben]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [ann.id, ben.id]));
+    await pool?.end();
+  });
+
+  it("migration 0016 keeps a key issued before it valid", async () => {
+    const migration = readFileSync(fileURLToPath(new URL("../../../drizzle/0016_api_key_revocation.sql", import.meta.url)), "utf8");
+    const client = await pool.connect();
+    try {
+      await client.query("begin");
+      // The table as HEY-153 left it, with a key issued then.
+      await client.query("alter table api_key drop column revoked_at, drop column last_used_at");
+      const old = generateApiKey();
+      await client.query("insert into api_key (id, user_id, lookup_id, secret_hash) values ('pre-0016', $1, $2, $3)", [
+        ann.id,
+        old.lookupId,
+        old.secretHash,
+      ]);
+      for (const statement of migration.split("--> statement-breakpoint")) await client.query(statement);
+      const inTx = drizzle(client, { schema, casing: "snake_case" });
+      expect(await apiKeyOwner(inTx, old.key)).toBe(ann.id);
+      expect(
+        (await client.query("select revoked_at, last_used_at is not null as used from api_key where id = 'pre-0016'")).rows[0],
+      ).toEqual({ revoked_at: null, used: true });
+    } finally {
+      await client.query("rollback");
+      client.release();
+    }
+  });
+
+  it("before revocation the key authenticates; after it, the key is refused like an invalid one; other keys keep working", async () => {
+    const [one, two] = [await createApiKey(db, ann.id), await createApiKey(db, ann.id)];
+    expect([await apiKeyOwner(db, one.key), await apiKeyOwner(db, two.key)]).toEqual([ann.id, ann.id]);
+    const revoked = await revokeApiKey(db, ann.id, one.id);
+    expect(revoked?.revokedAt).toEqual(expect.any(String));
+    // Refused: exactly what an unknown key gets.
+    expect([await apiKeyOwner(db, one.key), await apiKeyOwner(db, "hqk_nope")]).toEqual([null, null]);
+    expect(await apiKeyOwner(db, two.key)).toBe(ann.id);
+    expect((await listApiKeys(db, ann.id)).find((k) => k.id === one.id)).toMatchObject({ revokedAt: revoked?.revokedAt });
+  });
+
+  it("only the owner can revoke; repeating keeps the original time", async () => {
+    const key = await createApiKey(db, ann.id);
+    expect(await revokeApiKey(db, ben.id, key.id)).toBeNull();
+    expect([await apiKeyOwner(db, key.key), (await row(key.id)).revokedAt]).toEqual([ann.id, null]);
+    const first = await revokeApiKey(db, ann.id, key.id);
+    await new Promise((done) => setTimeout(done, 20));
+    expect(await revokeApiKey(db, ann.id, key.id)).toEqual(first);
+    expect((await row(key.id)).revokedAt?.toISOString()).toBe(first?.revokedAt);
+    expect(await revokeApiKey(db, ann.id, "no-such-key")).toBeNull();
+  });
+
+  it("last use: set only by a successful authentication; failed and revoked attempts leave it", async () => {
+    const key = await createApiKey(db, ben.id);
+    expect((await row(key.id)).lastUsedAt).toBeNull();
+    await apiKeyOwner(db, `${key.key.slice(0, -1)}${key.key.endsWith("A") ? "B" : "A"}`); // wrong secret
+    expect((await row(key.id)).lastUsedAt).toBeNull();
+    expect(await apiKeyOwner(db, key.key)).toBe(ben.id);
+    const used = (await row(key.id)).lastUsedAt;
+    expect(used).toBeInstanceOf(Date);
+    await revokeApiKey(db, ben.id, key.id);
+    await new Promise((done) => setTimeout(done, 20));
+    expect(await apiKeyOwner(db, key.key)).toBeNull();
+    expect((await row(key.id)).lastUsedAt).toEqual(used);
   });
 });
