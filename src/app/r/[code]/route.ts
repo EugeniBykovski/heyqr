@@ -20,6 +20,12 @@ export async function GET(_request: NextRequest, ctx: RouteContext<"/r/[code]">)
   const answer = await resolveShortLink(db, code);
   if (answer.kind === "unavailable")
     return redirect(new URL(answer.inactive ? "/link-unavailable?reason=inactive" : "/link-unavailable", env.NEXT_PUBLIC_APP_URL));
-  after(() => recordScan(answer.qrCodeId));
+  // HEY-145: the scan is counted after the 302 is sent (it never delays the redirect). A failed write is logged by code
+  // only and dropped: the scanner already has their redirect, and nothing about the request is retried or exposed.
+  after(() =>
+    recordScan(answer.qrCodeId).catch((error: unknown) =>
+      console.error(`[scan] not recorded: ${error instanceof Error ? error.name : "unknown error"}`),
+    ),
+  );
   return redirect(answer.to);
 }

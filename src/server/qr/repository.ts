@@ -4,6 +4,7 @@ import { pickLayoutForEdit, readLayoutRecord } from "@/entities/qr";
 import { db, schema } from "../db";
 import { logoStore } from "../storage/s3";
 import { resolveLogos } from "./logo-assets";
+import { incrementScan } from "./scans";
 import { layoutRevision } from "./update-layout";
 
 /**
@@ -97,12 +98,9 @@ export async function dailyScans(qrCodeId: string, days = 14) {
   });
 }
 
+/** One scan of a code on the app's database (scans.ts incrementScan). */
 export async function recordScan(qrCodeId: string) {
-  const day = new Date().toISOString().slice(0, 10);
-  await db
-    .insert(schema.scanDaily)
-    .values({ qrCodeId, day, count: 1 })
-    .onConflictDoUpdate({ target: [schema.scanDaily.qrCodeId, schema.scanDaily.day], set: { count: sql`${schema.scanDaily.count} + 1` } });
+  await incrementScan(db, qrCodeId);
 }
 
 /**
