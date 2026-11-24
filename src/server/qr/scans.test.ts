@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { SHORT_CODE_ALPHABET } from "../db/ids";
 import { PREVIEW_SLUG } from "../../shared/lib/short-link";
-import { isCountableScan, TEST_TRAFFIC_HEADER } from "./scans";
+import { isCountableScan, TEST_TRAFFIC_HEADER, utcDay } from "./scans";
 
 const headers = (h: Record<string, string> = {}) => new Headers(h);
 
@@ -29,5 +29,17 @@ describe("isCountableScan (HEY-146)", () => {
   it("the editor's preview link can never be a real code's slug", () => {
     // Dynamic previews encode /r/preview; it resolves to no code because its slug can't be issued.
     expect([...PREVIEW_SLUG].some((c) => !SHORT_CODE_ALPHABET.includes(c))).toBe(true);
+  });
+});
+
+/* HEY-147: daily counters are keyed by the UTC calendar day. */
+describe("utcDay (HEY-147)", () => {
+  it("both sides of UTC midnight are different days, whatever the local time zone", () => {
+    expect(utcDay(new Date("2026-11-30T23:59:59.999Z"))).toBe("2026-11-30");
+    expect(utcDay(new Date("2026-12-01T00:00:00.000Z"))).toBe("2026-12-01");
+    // 01:30 in Warsaw is still the previous UTC day; 20:00 in Los Angeles is already the next.
+    expect(utcDay(new Date("2026-12-01T01:30:00+01:00"))).toBe("2026-12-01");
+    expect(utcDay(new Date("2026-12-01T00:30:00+01:00"))).toBe("2026-11-30");
+    expect(utcDay(new Date("2026-11-30T20:00:00-08:00"))).toBe("2026-12-01");
   });
 });

@@ -12,7 +12,9 @@ export async function ScansChart({ days }: { days: { day: string; count: number 
   const max = Math.max(1, ...days.map((d) => d.count));
   const total = days.reduce((s, d) => s + d.count, 0);
   const today = days.at(-1)?.count ?? 0;
-  const label = (d: { day: string } | undefined) => (d ? format.dateTime(new Date(d.day), { day: "numeric", month: "short" }) : "");
+  // HEY-147: days are UTC calendar days; label them in UTC so a viewer west of UTC doesn't see the day before.
+  const label = (d: { day: string } | undefined) =>
+    d ? format.dateTime(new Date(`${d.day}T00:00:00Z`), { day: "numeric", month: "short", timeZone: "UTC" }) : "";
 
   return (
     <figure className="flex flex-col gap-4">

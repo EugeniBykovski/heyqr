@@ -27,7 +27,7 @@ import { pauseDynamicCode, resumeDynamicCode } from "../billing/pause";
 import { bindStripeCustomer, customerIdempotencyKey, storedCustomer, type CustomerCreate } from "../billing/customer";
 import { applySubscriptionEvent, type SubscriptionEvent } from "../billing/subscriptions";
 import { canDownloadCode, resolveShortLink } from "../billing/access";
-import { incrementScan, scansByDay } from "../qr/scans";
+import { incrementScan, scansByDay, utcDay } from "../qr/scans";
 import {
   accountUsage,
   activateDynamicCode,
@@ -5605,5 +5605,85 @@ describe.skipIf(!url)("owner-scoped scan report (HEY-146, real PostgreSQL)", () 
       await pool.query("select column_name from information_schema.columns where table_name = 'scan_daily' order by ordinal_position")
     ).rows.map((r) => r.column_name);
     expect(columns).toEqual(["qr_code_id", "day", "count"]);
+  });
+});
+
+/* HEY-147 / QR-20.03: daily scan counters per QR and UTC day, and the owner's per-code series. */
+describe.skipIf(!url)("daily scan counts per QR (HEY-147, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "daily-owner", name: "Owner", email: "owner@daily.test" };
+  const other = { id: "daily-other", name: "Other", email: "other@daily.test" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const codes = { a: "", b: "" };
+  const rows = async (id: string) =>
+    (await pool.query("select day::text as day, count from scan_daily where qr_code_id = $1 order by day", [id])).rows.map((r) => [
+      r.day,
+      r.count,
+    ]);
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+    for (const k of ["a", "b"] as const) {
+      const saved = await saveQrWithLayouts(db, owner.id, {
+        name: k,
+        model: "dynamic",
+        content: { type: "website", url: "https://a.example.test/" },
+        destination: "https://a.example.test/",
+        layouts,
+      });
+      if (!saved.ok) throw new Error("save failed");
+      codes[k] = saved.data.qrCodeId;
+    }
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("one counter per QR and UTC day: the last millisecond before midnight and midnight itself are separate days", async () => {
+    const before = new Date("2026-11-30T23:59:59.999Z");
+    const at = new Date("2026-12-01T00:00:00.000Z");
+    for (const moment of [before, before, at, at, at]) await incrementScan(db, codes.a, utcDay(moment));
+    await incrementScan(db, codes.b, utcDay(at)); // another QR, same day: its own counter
+    expect(await rows(codes.a)).toEqual([
+      ["2026-11-30", 2],
+      ["2026-12-01", 3],
+    ]);
+    expect(await rows(codes.b)).toEqual([["2026-12-01", 1]]);
+  });
+
+  it("the owner's series: oldest first, days without scans at zero, other QRs apart; another account gets zeros", async () => {
+    // "Now" is noon on Dec 2: four days back is Nov 29.
+    const now = new Date("2026-12-02T12:00:00Z");
+    expect(await scansByDay(db, owner.id, codes.a, 4, now)).toEqual([
+      { day: "2026-11-29", count: 0 },
+      { day: "2026-11-30", count: 2 },
+      { day: "2026-12-01", count: 3 },
+      { day: "2026-12-02", count: 0 },
+    ]);
+    expect((await scansByDay(db, owner.id, codes.b, 4, now)).map((d) => d.count)).toEqual([0, 0, 1, 0]);
+    expect((await scansByDay(db, other.id, codes.a, 4, now)).every((d) => d.count === 0)).toBe(true);
+    // A report built one millisecond before midnight ends on that day; one at midnight starts the next.
+    expect((await scansByDay(db, owner.id, codes.a, 2, new Date("2026-11-30T23:59:59.999Z"))).map((d) => d.day)).toEqual([
+      "2026-11-29",
+      "2026-11-30",
+    ]);
+    expect((await scansByDay(db, owner.id, codes.a, 2, new Date("2026-12-01T00:00:00Z"))).map((d) => d.day)).toEqual([
+      "2026-11-30",
+      "2026-12-01",
+    ]);
+  });
+
+  it("a destination change keeps the history under the same QR: later scans add to the same counters", async () => {
+    await db.update(schema.qrCode).set({ shortCode: "dly0001", status: "active" }).where(eq(schema.qrCode.id, codes.a));
+    expect((await changeFresh(db, owner.id, codes.a, "https://b.example.test/")).ok).toBe(true);
+    await incrementScan(db, codes.a, "2026-12-01");
+    expect(await rows(codes.a)).toEqual([
+      ["2026-11-30", 2],
+      ["2026-12-01", 4],
+    ]);
   });
 });

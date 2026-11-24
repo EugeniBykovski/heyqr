@@ -7,11 +7,10 @@ import * as schema from "../db/schema";
  * is atomic in PostgreSQL (the conflicting row is locked and re-read), so concurrent scans of the same code and day
  * never lose an increment, including the first scan of a day. Plain module so the PostgreSQL tests run this statement.
  */
-export async function incrementScan(
-  db: NodePgDatabase<typeof schema>,
-  qrCodeId: string,
-  day: string = new Date().toISOString().slice(0, 10),
-) {
+/** HEY-147: the UTC calendar day a moment falls on (YYYY-MM-DD): the key of every daily counter and report day. */
+export const utcDay = (moment: Date) => moment.toISOString().slice(0, 10);
+
+export async function incrementScan(db: NodePgDatabase<typeof schema>, qrCodeId: string, day: string = utcDay(new Date())) {
   await db
     .insert(schema.scanDaily)
     .values({ qrCodeId, day, count: 1 })
@@ -44,8 +43,10 @@ export function isCountableScan(method: string, headers: Pick<Headers, "get">): 
  * The owner-facing report: one code's scans per day for the last `days` days (zero-filled, oldest first), only when the
  * code is the signed-in owner's. Counts only: day and number, nothing else.
  */
-export async function scansByDay(db: NodePgDatabase<typeof schema>, userId: string, qrCodeId: string, days = 14) {
-  const since = new Date(Date.now() - (days - 1) * 86_400_000).toISOString().slice(0, 10);
+export async function scansByDay(db: NodePgDatabase<typeof schema>, userId: string, qrCodeId: string, days = 14, now: Date = new Date()) {
+  // HEY-147: one reading of the clock for the whole report, so it can't straddle UTC midnight.
+  const dayOf = (back: number) => utcDay(new Date(now.getTime() - back * 86_400_000));
+  const since = dayOf(days - 1);
   const rows = await db
     .select({ day: schema.scanDaily.day, count: schema.scanDaily.count })
     .from(schema.scanDaily)
@@ -53,7 +54,7 @@ export async function scansByDay(db: NodePgDatabase<typeof schema>, userId: stri
     .where(and(eq(schema.scanDaily.qrCodeId, qrCodeId), eq(schema.qrCode.userId, userId), gte(schema.scanDaily.day, since)));
   const byDay = new Map(rows.map((r) => [r.day, r.count]));
   return Array.from({ length: days }, (_, i) => {
-    const day = new Date(Date.now() - (days - 1 - i) * 86_400_000).toISOString().slice(0, 10);
+    const day = dayOf(days - 1 - i);
     return { day, count: byDay.get(day) ?? 0 };
   });
 }
