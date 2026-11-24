@@ -4,6 +4,8 @@
  * The test drops and recreates that database's schema, so it never runs against anything else.
  */
 import { and, eq, inArray } from "drizzle-orm";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
@@ -3308,5 +3310,258 @@ describe.skipIf(!url)("destination change history (HEY-125, real PostgreSQL)", (
     const first = await destinationHistory(db, owner.id, qrCodeId);
     expect(first.map((h) => h.newUrl)).toEqual([C, B]);
     expect(await destinationHistory(db, owner.id, qrCodeId)).toEqual(first);
+  });
+});
+
+/*
+ * HEY-126 / QR-17.04: a slug, once issued, is never issued again: not after its code is purged, not after its account
+ * is deleted (cascade). PostgreSQL keeps every issued slug in short_code_reservation (migration 0012).
+ */
+describe.skipIf(!url)("short link registry (HEY-126, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "reg-owner", name: "Owner", email: "owner@registry.test" };
+  const leaving = { id: "reg-leaving", name: "Leaving", email: "leaving@registry.test" };
+  // Its own account, so the drafts the other tests leave don't count against the draft limit.
+  const racer = { id: "reg-racer", name: "Racer", email: "racer@registry.test" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const A = "https://menu.example.test/a";
+  const B = "https://menu.example.test/b";
+  const make = async (name: string, userId = owner.id) => {
+    const saved = await saveQrWithLayouts(db, userId, {
+      name,
+      model: "dynamic",
+      content: { type: "website", url: A },
+      destination: A,
+      layouts,
+    });
+    if (!saved.ok) throw new Error("save failed");
+    return saved.data.qrCodeId;
+  };
+  const sequence = (...values: string[]) => {
+    const calls: string[] = [];
+    const next = () => {
+      const v = values[Math.min(calls.length, values.length - 1)] as string;
+      calls.push(v);
+      return v;
+    };
+    return Object.assign(next, { calls });
+  };
+  /** What /r/<slug> answers (src/app/r/[code]/route.ts: the same lookup and the same checks, for non-trial codes). */
+  const shortLink = async (slug: string) => {
+    const qr = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.shortCode, slug) });
+    return !qr || qr.deletedAt || qr.status !== "active" || !qr.destination ? "unavailable" : qr.destination;
+  };
+  const reserved = async (slug: string) =>
+    (await pool.query("select * from short_code_reservation where short_code = $1", [slug])).rows as Record<string, unknown>[];
+  /** The PostgreSQL error a write failed with (drizzle wraps it as the cause). */
+  const pgError = (write: Promise<unknown>) =>
+    write.then(
+      () => undefined,
+      (e: unknown) => {
+        for (let x: unknown = e; x instanceof Error; x = x.cause) {
+          const pg = x as { code?: string; constraint?: string };
+          if (pg.code) return { code: pg.code, constraint: pg.constraint };
+        }
+        throw e;
+      },
+    );
+  const plan = (userId: string) => ({
+    id: `${userId}-sub`,
+    userId,
+    stripeSubscriptionId: `sub_${userId}`,
+    stripePriceId: "price_x",
+    status: "active" as const,
+    plan: "studio" as const,
+    activeCodeLimit: 25,
+    currentPeriodStart: new Date(),
+  });
+  /** Waits until another session is blocked on a lock. */
+  const blockedOnLock = async (watcher: { query: Pool["query"] }) => {
+    for (let i = 0; i < 300; i++) {
+      const r = await watcher.query(
+        "select 1 from pg_stat_activity where datname = current_database() and state = 'active' and wait_event_type = 'Lock'",
+      );
+      if (r.rowCount) return true;
+      await new Promise((done) => setTimeout(done, 10));
+    }
+    return false;
+  };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 8 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, leaving, racer]).onConflictDoNothing();
+    await db.insert(schema.subscription).values([plan(owner.id), plan(leaving.id)]);
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, leaving.id, racer.id]));
+    await pool?.end();
+  });
+
+  it("migration 0012 backfills every slug still stored, live or soft-deleted, and nothing else", async () => {
+    const migration = readFileSync(fileURLToPath(new URL("../../../drizzle/0012_short_code_reservation.sql", import.meta.url)), "utf8");
+    const client = await pool.connect();
+    try {
+      await client.query("begin");
+      // The database as it was before 0012, with a slug purged before the migration ran.
+      await client.query(`
+        drop function qr_code_reserve_short_code() cascade;
+        drop table short_code_reservation;
+        drop function short_code_reservation_permanent() cascade;
+        insert into "user" (id, name, email, email_verified) values ('bf-user', 'Legacy', 'legacy@registry.test', false);
+        insert into qr_code (id, user_id, name, content, model, status, short_code, destination, deleted_at) values
+          ('bf-live', 'bf-user', 'Live', '{}', 'dynamic', 'active', 'bfliv01', '${A}', null),
+          ('bf-soft', 'bf-user', 'Soft-deleted', '{}', 'dynamic', 'active', 'bfsoft1', '${A}', now()),
+          ('bf-draft', 'bf-user', 'Draft', '{}', 'dynamic', 'draft', null, '${A}', null),
+          ('bf-purged', 'bf-user', 'Purged', '{}', 'dynamic', 'active', 'bfgone1', '${A}', null);
+        delete from qr_code where id = 'bf-purged';
+      `);
+      for (const statement of migration.split("--> statement-breakpoint")) await client.query(statement);
+
+      const stored = await client.query("select short_code from qr_code where short_code is not null order by 1");
+      const registry = await client.query("select short_code from short_code_reservation order by 1");
+      expect(registry.rows).toEqual(stored.rows);
+      const slugs = registry.rows.map((r: { short_code: string }) => r.short_code);
+      expect(slugs).toEqual(expect.arrayContaining(["bfliv01", "bfsoft1"]));
+      // A slug purged before the migration left no trace to reserve it from.
+      expect(slugs).not.toContain("bfgone1");
+      // From here on PostgreSQL reserves on issue.
+      await client.query(`update qr_code set short_code = 'bfdraf1' where id = 'bf-draft'`);
+      expect((await client.query(`select 1 from short_code_reservation where short_code = 'bfdraf1'`)).rowCount).toBe(1);
+    } finally {
+      await client.query("rollback");
+      client.release();
+    }
+    // The test database is as before: the registry and its triggers are back, the legacy rows gone.
+    expect(await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, "bf-live") })).toBeUndefined();
+    expect(await reserved("bfdraf1")).toEqual([]);
+  });
+
+  it("after a code is purged, the allocator's retry gives the next code a new slug; the old link stays unavailable", async () => {
+    const gone = await make("Purged");
+    expect(await activateDynamicCode(db, owner.id, gone, () => "gone001")).toEqual({ ok: true, shortCode: "gone001" });
+    expect(await shortLink("gone001")).toBe(A);
+    await db.delete(schema.qrCode).where(eq(schema.qrCode.id, gone));
+    expect(await shortLink("gone001")).toBe("unavailable");
+    // The reservation keeps the slug only: nothing about the code, its account or where it pointed.
+    expect(await reserved("gone001")).toEqual([{ short_code: "gone001" }]);
+
+    const next = await make("Next");
+    const gen = sequence("gone001", "new0001");
+    expect(await activateDynamicCode(db, owner.id, next, gen)).toEqual({ ok: true, shortCode: "new0001" });
+    expect(gen.calls).toEqual(["gone001", "new0001"]);
+    expect([await shortLink("gone001"), await shortLink("new0001")]).toEqual(["unavailable", A]);
+
+    // Enforced in PostgreSQL, also for writes that bypass the allocator: a first-time assignment and an insert.
+    const draft = await make("Bypass");
+    expect(await pgError(db.update(schema.qrCode).set({ shortCode: "gone001" }).where(eq(schema.qrCode.id, draft)))).toEqual({
+      code: "23505",
+      constraint: "short_code_reservation_pkey",
+    });
+    expect((await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, draft) }))?.shortCode).toBeNull();
+    expect(
+      await pgError(
+        db.insert(schema.qrCode).values({
+          id: "reg-insert",
+          userId: owner.id,
+          name: "Inserted",
+          model: "dynamic",
+          status: "active",
+          content: { type: "website", url: B },
+          shortCode: "gone001",
+          destination: B,
+        }),
+      ),
+    ).toEqual({ code: "23505", constraint: "short_code_reservation_pkey" });
+    expect(await shortLink("gone001")).toBe("unavailable");
+  });
+
+  it("after an account is deleted (its codes cascade), its slugs are never issued to another account", async () => {
+    const theirs = await make("Theirs", leaving.id);
+    expect(await activateDynamicCode(db, leaving.id, theirs, () => "casc001")).toEqual({ ok: true, shortCode: "casc001" });
+    await db.delete(schema.user).where(eq(schema.user.id, leaving.id));
+    expect(await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, theirs) })).toBeUndefined();
+    expect(await shortLink("casc001")).toBe("unavailable");
+    expect(await reserved("casc001")).toEqual([{ short_code: "casc001" }]);
+
+    const mine = await make("Mine");
+    const gen = sequence("casc001", "casc002");
+    expect(await activateDynamicCode(db, owner.id, mine, gen)).toEqual({ ok: true, shortCode: "casc002" });
+    expect(gen.calls).toEqual(["casc001", "casc002"]);
+    expect([await shortLink("casc001"), await shortLink("casc002")]).toEqual(["unavailable", A]);
+  });
+
+  it("soft-delete and Undo: the restored code gets its own slug back, and keeps it through a destination change", async () => {
+    const id = await make("Undo");
+    expect(await activateDynamicCode(db, owner.id, id, () => "undo001")).toEqual({ ok: true, shortCode: "undo001" });
+    expect(await softDeleteQrCodes(db, owner.id, [id])).toEqual([id]);
+    expect(await shortLink("undo001")).toBe("unavailable");
+    // While deleted, the slug is still the code's: another code can't take it.
+    const other = await make("Meanwhile");
+    const gen = sequence("undo001", "undo002");
+    expect(await activateDynamicCode(db, owner.id, other, gen)).toEqual({ ok: true, shortCode: "undo002" });
+
+    expect(await restoreQrCodes(db, owner.id, [id])).toEqual([id]);
+    expect(await shortLink("undo001")).toBe(A);
+    expect(await activateDynamicCode(db, owner.id, id, () => "undo003")).toEqual({ ok: true, shortCode: "undo001" });
+    expect(await changeDestination(db, owner.id, id, B)).toMatchObject({ ok: true, data: { destination: B } });
+    expect((await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, id) }))?.shortCode).toBe("undo001");
+    expect(await shortLink("undo001")).toBe(B);
+    expect(await reserved("undo003")).toEqual([]);
+  });
+
+  it("concurrent assignment: one code gets a contested slug, the others retry to distinct ones", async () => {
+    const ids = await Promise.all(Array.from({ length: 6 }, (_, i) => make(`Herd ${i}`)));
+    const slugs = await Promise.all(ids.map((id, i) => assignShortCode(db, id, sequence("herd000", `herd00${i + 1}`))));
+    expect(slugs.filter((s) => s === "herd000")).toHaveLength(1);
+    expect(new Set(slugs).size).toBe(ids.length);
+  });
+
+  it("a contested slug waits for the holder: released if its activation rolls back, a collision if it commits", async () => {
+    const watcher = await pool.connect();
+    const contest = async (slug: string, fallback: string, outcome: "rollback" | "commit") => {
+      const [x, y] = [await make(`Holder ${slug}`, racer.id), await make(`Waiter ${slug}`, racer.id)];
+      const holder = await pool.connect();
+      try {
+        let finish = () => {};
+        const gate = new Promise<void>((done) => (finish = done));
+        let assigned = () => {};
+        const ready = new Promise<void>((done) => (assigned = done));
+        const activation = drizzle(holder, { schema, casing: "snake_case" }).transaction(async (tx) => {
+          await assignShortCode(tx, x, () => slug);
+          assigned();
+          await gate;
+          if (outcome === "rollback") throw new Error("activation failed");
+        });
+        await ready;
+        const waiter = assignShortCode(db, y, sequence(slug, fallback));
+        expect(await blockedOnLock(watcher)).toBe(true);
+        finish();
+        if (outcome === "rollback") await expect(activation).rejects.toThrow("activation failed");
+        else await activation;
+        return { waiter: await waiter, holder: (await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, x) }))?.shortCode };
+      } finally {
+        holder.release();
+      }
+    };
+    try {
+      // The failed activation never issued the slug, so it is free: the waiting code gets it.
+      expect(await contest("race001", "race002", "rollback")).toEqual({ waiter: "race001", holder: null });
+      expect(await reserved("race002")).toEqual([]);
+      expect(await contest("race003", "race004", "commit")).toEqual({ waiter: "race004", holder: "race003" });
+    } finally {
+      watcher.release();
+    }
+  });
+
+  it("the registry is append-only", async () => {
+    for (const sql of [
+      "delete from short_code_reservation where short_code = 'gone001'",
+      "update short_code_reservation set short_code = 'gone00x' where short_code = 'gone001'",
+      "truncate short_code_reservation",
+    ])
+      await expect(pool.query(sql)).rejects.toMatchObject({ code: "23000" });
+    expect(await reserved("gone001")).toEqual([{ short_code: "gone001" }]);
   });
 });
