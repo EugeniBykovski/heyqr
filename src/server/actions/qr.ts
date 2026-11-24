@@ -23,6 +23,7 @@ import { logoStore } from "../storage/s3";
 import { newId, newShortCode } from "../db/ids";
 import { activateTrialCode, startTrial } from "../billing/trial";
 import { activeSubscription, canDownload, printPackForSale } from "../billing/entitlements";
+import { storedCustomer } from "../billing/customer";
 
 /** HEY-83: uploaded logos of a saved layout go to the account's private storage (inline in dev without storage). */
 function logosFor(userId: string): PrepareRecord | undefined {
@@ -287,8 +288,10 @@ export async function startCheckout(input: {
 export async function openBillingPortal(locale: string): Promise<ActionResult<{ url: string }>> {
   return guard(async () => {
     const user = await requireUser();
-    if (!user.stripeCustomerId) return { ok: false, error: "not_found" };
-    return { ok: true, data: { url: await createPortalSession(user.stripeCustomerId, locale) } };
+    // HEY-132: the account's stored Customer (the same one its Checkouts use), read from the database.
+    const customer = await storedCustomer(db, user.id);
+    if (!customer) return { ok: false, error: "not_found" };
+    return { ok: true, data: { url: await createPortalSession(customer, locale) } };
   });
 }
 

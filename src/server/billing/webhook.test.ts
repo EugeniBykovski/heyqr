@@ -7,15 +7,20 @@ const processCheckoutEvent = vi.fn();
 vi.mock("./fulfillment", () => ({ processCheckoutEvent: (...a: unknown[]) => processCheckoutEvent(...a) }));
 const sendPurchaseReceipt = vi.fn();
 vi.mock("../email/send", () => ({ sendPurchaseReceipt: (...a: unknown[]) => sendPurchaseReceipt(...a) }));
+const claimed = vi.fn(async () => [{ id: "evt" }]);
 vi.mock("../db", () => ({
-  db: { query: { user: { findFirst: async () => ({ email: "ana@example.test", name: "Ana" }) } } },
+  db: {
+    query: { user: { findFirst: async () => ({ email: "ana@example.test", name: "Ana" }) } },
+    insert: () => ({ values: () => ({ onConflictDoNothing: () => ({ returning: claimed }) }) }),
+  },
   schema: { user: { id: "id" }, webhookEvent: {}, subscription: {} },
 }));
 vi.mock("./catalog", () => ({ planForPrice: () => null }));
 vi.mock("./stripe", () => ({ stripe: () => ({}) }));
 const processRefundEvent = vi.fn();
 vi.mock("./refunds", () => ({ processRefundEvent: (...a: unknown[]) => processRefundEvent(...a) }));
-vi.mock("./allowances", () => ({ dynamicLimit: () => 0 }));
+const applySubscriptionEvent = vi.fn();
+vi.mock("./subscriptions", () => ({ applySubscriptionEvent: (...a: unknown[]) => applySubscriptionEvent(...a) }));
 
 const { handleStripeEvent } = await import("./webhook");
 const completed = { id: "evt_1", type: "checkout.session.completed", data: { object: { id: "cs_test_1" } } } as unknown as Stripe.Event;
@@ -86,5 +91,26 @@ describe("checkout webhook receipt (HEY-97)", () => {
     processRefundEvent.mockResolvedValueOnce({ duplicate: true });
     expect(await handleStripeEvent(refund)).toBe(false);
     expect(processCheckoutEvent).not.toHaveBeenCalled();
+  });
+});
+
+/* HEY-132: every subscription lifecycle event goes through the Customer-bound path, once per event. */
+describe("subscription lifecycle webhooks (HEY-132)", () => {
+  it("created, updated and deleted are applied by applySubscriptionEvent with the subscription; a duplicate is skipped", async () => {
+    applySubscriptionEvent.mockResolvedValue({ applied: true, userId: "u1" });
+    for (const type of ["customer.subscription.created", "customer.subscription.updated", "customer.subscription.deleted"]) {
+      const sub = { id: "sub_1", customer: "cus_1", metadata: { userId: "u1" } };
+      expect(await handleStripeEvent({ id: `evt_${type}`, type, data: { object: sub } } as unknown as Stripe.Event)).toBe(true);
+      expect(applySubscriptionEvent).toHaveBeenLastCalledWith(expect.anything(), sub, expect.any(Function));
+    }
+    claimed.mockResolvedValueOnce([]);
+    expect(
+      await handleStripeEvent({
+        id: "evt_dup",
+        type: "customer.subscription.updated",
+        data: { object: { id: "sub_1" } },
+      } as unknown as Stripe.Event),
+    ).toBe(false);
+    expect(applySubscriptionEvent).toHaveBeenCalledTimes(3);
   });
 });
