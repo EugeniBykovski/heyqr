@@ -14,7 +14,13 @@ import { assignShortCode } from "../qr/short-code";
  * Every unlock happens here, on the server, in one transaction with its check. Plain module so tests use the same code.
  */
 type Db = NodePgDatabase<typeof schema>;
-const ACTIVE = ["active", "trialing", "past_due"];
+/**
+ * Stripe subscription statuses that count as the plan, the one policy for slots, allowances, downloads and the trial's
+ * upgraded state. past_due keeps the plan while Stripe retries a failed renewal; any other status (canceled, unpaid,
+ * incomplete, incomplete_expired, paused) means no plan. How long Stripe retries is its own (Dashboard) setting.
+ */
+export const PLAN_STATUSES = ["active", "trialing", "past_due"];
+const ACTIVE = PLAN_STATUSES;
 
 export type Plan = { id: PlanId; periodStart: Date; periodEnd: Date | null; cancelAtPeriodEnd: boolean };
 

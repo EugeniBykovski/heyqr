@@ -4845,3 +4845,66 @@ describe.skipIf(!url)("quota checks inside activation transactions (HEY-135, rea
     }
   });
 });
+
+/*
+ * HEY-138 / QR-19.01: the confirmed rules behind the owner-facing matrix (docs/LINK_AVAILABILITY.md). Which Stripe
+ * statuses keep the plan, including a failed renewal (past_due) and its recovery, and what a static unlock keeps.
+ */
+describe.skipIf(!url)("plan access by subscription status (HEY-138, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "lapse-owner", name: "Owner", email: "owner@lapse.test" };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 2 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+    await db.insert(schema.subscription).values({
+      id: "lapse-sub",
+      userId: owner.id,
+      stripeSubscriptionId: "sub_lapse",
+      stripePriceId: "price_starter",
+      status: "active",
+      plan: "starter",
+      activeCodeLimit: 5,
+      currentPeriodStart: new Date(),
+    });
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("active, trialing and past_due keep the plan; every other status ends it; recovery brings it back", async () => {
+    const access = async (status: string) => {
+      await db.update(schema.subscription).set({ status }).where(eq(schema.subscription.stripeSubscriptionId, "sub_lapse"));
+      const usage = await accountUsage(db, owner.id);
+      return { plan: usage.plan?.id ?? null, slots: usage.dynamic.limit };
+    };
+    for (const status of ["active", "trialing", "past_due"])
+      expect([status, await access(status)]).toEqual([status, { plan: "starter", slots: 5 }]);
+    for (const status of ["unpaid", "canceled", "incomplete", "incomplete_expired", "paused"])
+      expect([status, await access(status)]).toEqual([status, { plan: null, slots: 0 }]);
+    // A failed renewal recovered: past_due → active keeps the plan throughout.
+    expect([await access("past_due"), await access("active")]).toEqual([
+      { plan: "starter", slots: 5 },
+      { plan: "starter", slots: 5 },
+    ]);
+  });
+
+  it("a static code unlocked with the plan keeps its unlock after the plan ends", async () => {
+    await db.update(schema.subscription).set({ status: "active" }).where(eq(schema.subscription.stripeSubscriptionId, "sub_lapse"));
+    const saved = await saveQrWithLayouts(db, owner.id, {
+      name: "Card",
+      model: "static",
+      content: { type: "website", url: "https://card.example.test/" },
+      layouts: [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }],
+    });
+    if (!saved.ok) throw new Error("save failed");
+    expect(await unlockStatic(db, owner.id, saved.data.qrCodeId, "plan")).toEqual({ ok: true, via: "plan" });
+    await db.update(schema.subscription).set({ status: "canceled" }).where(eq(schema.subscription.stripeSubscriptionId, "sub_lapse"));
+    const qr = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, saved.data.qrCodeId) });
+    // canDownload's static rule is purchasedAt alone (entitlements.test.ts); the unlock stays on the code.
+    expect([qr?.model, qr?.purchasedAt instanceof Date, (await accountUsage(db, owner.id)).plan]).toEqual(["static", true, null]);
+  });
+});

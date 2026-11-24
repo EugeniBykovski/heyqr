@@ -37,7 +37,7 @@ export default async function TrialPage({ params, searchParams }: PageProps<"/[l
   const locale = await resolveLocale(params);
   const user = await requireAccount(locale, "/dashboard/trial", await searchParams);
   const sample = samplePrint(env.NEXT_PUBLIC_APP_URL);
-  const [t, format] = await Promise.all([getTranslations("trial"), getFormatter()]);
+  const [t, format, tPlans] = await Promise.all([getTranslations("trial"), getFormatter(), getTranslations("plans")]);
   const [phase, code] = await Promise.all([userTrial(user.id), trialCode(db, user.id)]);
   const currency = await getCurrency();
   const starterCents = priceSheet(currency).starter;
@@ -170,6 +170,12 @@ export default async function TrialPage({ params, searchParams }: PageProps<"/[l
                 </>
               )}
             </div>
+            {/* HEY-138: the plan's cancellation and failed-renewal rules, before the paid Checkout. */}
+            {state === "upgraded" ? null : (
+              <p data-slot="plan-terms" className="text-caption text-muted-foreground">
+                {tPlans("terms")}
+              </p>
+            )}
             <span className="text-caption text-inverse-muted">{s("foot")}</span>
           </section>
 

@@ -2114,7 +2114,9 @@
       "3t": "Dynamic slots are live, not monthly",
       "3d": "A slot is in use while the code redirects. Pause or delete a Dynamic code to free its slot right away.",
       "4t": "Yours after you cancel",
-      "4d": "Static codes you unlocked stay downloadable. Dynamic short links stop redirecting when the paid period ends."
+      "4d": "Static codes you unlocked stay yours: printed copies keep working and their files stay downloadable. Dynamic codes can’t be downloaded or activated once the paid period ends.",
+      "5t": "If a renewal payment fails",
+      "5d": "Your plan stays active while the payment is overdue and Stripe retries it. If it isn’t recovered and the subscription ends, the plan ends as after a cancellation. Once the payment goes through, your plan carries on."
     },
     "cmp": {
       "title": "Compare",
@@ -2157,7 +2159,7 @@
       "ppStudio": "{n} included each month",
       "ppThen": "Then +{price} per QR",
       "stay": "Static codes stay downloadable",
-      "dynStop": "Dynamic links stop redirecting when the paid period ends",
+      "dynStop": "No Dynamic downloads or activations after the paid period",
       "foot": "Taxes are calculated at checkout. Website codes can be static or dynamic; Text, Wi-Fi and contact card codes are static."
     },
     "errors": {
@@ -2165,6 +2167,7 @@
       "price_mismatch": "The price changed since this page loaded. Nothing was charged; reload to see the current price.",
       "unauthorized": "Sign in to continue.",
       "failed": "We couldn’t open checkout. Nothing was charged; try again."
-    }
+    },
+    "terms": "Cancel anytime: your plan runs until the end of the paid period. If a renewal payment fails, it stays active while the payment is overdue."
   }
 }
