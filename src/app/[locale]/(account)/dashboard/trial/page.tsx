@@ -75,7 +75,7 @@ export default async function TrialPage({ params, searchParams }: PageProps<"/[l
   const day = state === "active" || state === "ending" ? phase.day : TRIAL_DAYS + 1;
   // HEY-83: through the read boundary, so a stored logo renders (resolved for this account only).
   const [layout] = code ? await readable(user.id, [...code.layouts].sort((a, b) => a.sortOrder - b.sortOrder).slice(0, 1)) : [];
-  const scans = code ? (await dailyScans(code.id, 7)).map((d) => d.count) : [];
+  const scans = code ? (await dailyScans(user.id, code.id, 7)).map((d) => d.count) : [];
   const total = scans.reduce((a, b) => a + b, 0);
   const max = Math.max(1, ...scans);
   const shortBase = env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "").replace(/^https?:\/\//, "");

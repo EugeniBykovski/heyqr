@@ -204,4 +204,24 @@ describe("GET /r/:code", () => {
       error.mockRestore();
     }
   });
+
+  it("HEY-146: HEAD, prefetch and marked test requests get the same redirect but count no scan", async () => {
+    findQr.mockResolvedValue(live);
+    const send = async (init: { method?: string; headers?: Record<string, string> }) => {
+      const res = await GET(new NextRequest("http://localhost:3000/r/AbCdEf2", init), { params: Promise.resolve({ code: "AbCdEf2" }) });
+      for (const fn of afterQueue.splice(0)) await fn();
+      return [res.status, res.headers.get("location"), res.headers.get("cache-control")];
+    };
+    const requests: { method?: string; headers?: Record<string, string> }[] = [
+      { method: "HEAD" },
+      { headers: { "sec-purpose": "prefetch" } },
+      { headers: { purpose: "prefetch" } },
+      { headers: { "x-heyqr-test": "1" } },
+    ];
+    for (const init of requests) expect(await send(init)).toEqual([302, live.destination, "no-store"]);
+    expect(recordScan).not.toHaveBeenCalled();
+    // A regular scan of the same code still counts.
+    expect(await send({ headers: { "user-agent": "Mozilla/5.0 (iPhone)" } })).toEqual([302, live.destination, "no-store"]);
+    expect(recordScan).toHaveBeenCalledExactlyOnceWith("q1");
+  });
 });
