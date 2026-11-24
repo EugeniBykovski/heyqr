@@ -48,6 +48,24 @@ const url = process.env.TEST_DATABASE_URL;
  * Change destination as a tab that has just opened the code: from its current destination revision (HEY-128). Read
  * without the owner check, so another account's attempt still reaches changeDestination's own ownership check.
  */
+let subscriptionEvents = 0;
+/**
+ * One delivery of a subscription lifecycle event (a fresh event id) whose payload is also Stripe's current state, as
+ * when events arrive in order. HEY-134's own tests drive the event and the current state separately.
+ */
+async function deliverSubscription(
+  db: ReturnType<typeof drizzle<typeof schema>>,
+  sub: SubscriptionEvent,
+  planForPrice: (priceId: string | undefined) => "starter" | "studio" | null = () => null,
+) {
+  const done = await applySubscriptionEvent(
+    db,
+    { id: `evt_sub_${++subscriptionEvents}_${sub.id}`, type: "customer.subscription.updated", subscription: sub },
+    { planForPrice, current: async () => sub },
+  );
+  return done.duplicate ? { duplicate: true } : done.outcome;
+}
+
 async function changeFresh(db: ReturnType<typeof drizzle<typeof schema>>, userId: string, qrCodeId: string, raw: unknown) {
   const row = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, qrCodeId), columns: { destinationRevision: true } });
   return changeDestination(db, userId, qrCodeId, raw, row?.destinationRevision ?? 0);
@@ -4025,15 +4043,15 @@ describe.skipIf(!url)("Stripe Customer binding (HEY-132, real PostgreSQL)", () =
   });
 
   it("a subscription event is written for the account bound to its Customer, with 5 Dynamic slots on Starter", async () => {
-    expect(await applySubscriptionEvent(db, subscriptionEvent({ id: "sub_hey132_ok" }), noPlanPrice)).toEqual({
+    expect(await deliverSubscription(db, subscriptionEvent({ id: "sub_hey132_ok" }), noPlanPrice)).toMatchObject({
       applied: true,
       userId: bound.id,
     });
     expect(await slots(bound.id)).toEqual({ used: 0, limit: 5 });
     // Without metadata the stored Customer alone decides; an update keeps the same account.
     expect(
-      await applySubscriptionEvent(db, subscriptionEvent({ id: "sub_hey132_ok", metadata: {}, cancel_at_period_end: true }), noPlanPrice),
-    ).toEqual({ applied: true, userId: bound.id });
+      await deliverSubscription(db, subscriptionEvent({ id: "sub_hey132_ok", metadata: {}, cancel_at_period_end: true }), noPlanPrice),
+    ).toMatchObject({ applied: true, userId: bound.id });
     expect((await subs(bound.id)).map((r) => [r.stripeSubscriptionId, r.cancelAtPeriodEnd])).toEqual([["sub_hey132_ok", true]]);
   });
 
@@ -4042,17 +4060,17 @@ describe.skipIf(!url)("Stripe Customer binding (HEY-132, real PostgreSQL)", () =
     try {
       // The event's Customer is Bound's, but its metadata names Other.
       const mismatched = subscriptionEvent({ id: "sub_hey132_bad", metadata: { userId: other.id, plan: "studio" } });
-      expect(await applySubscriptionEvent(db, mismatched, noPlanPrice)).toEqual({ applied: false, reason: "account_mismatch" });
+      expect(await deliverSubscription(db, mismatched, noPlanPrice)).toEqual({ applied: false, reason: "account_mismatch" });
       // A Customer no account holds, and a subscription already stored for another account.
       expect(
-        await applySubscriptionEvent(
+        await deliverSubscription(
           db,
           subscriptionEvent({ id: "sub_hey132_x", customer: "cus_nobody", metadata: { userId: other.id } }),
           noPlanPrice,
         ),
       ).toEqual({ applied: false, reason: "unknown_customer" });
       expect(
-        await applySubscriptionEvent(
+        await deliverSubscription(
           db,
           subscriptionEvent({ id: "sub_hey132_ok", customer: other.stripeCustomerId, metadata: { userId: other.id } }),
           noPlanPrice,
@@ -4145,7 +4163,7 @@ describe.skipIf(!url)("subscription Checkout (HEY-133, real PostgreSQL)", () => 
     plan: "starter" | "studio",
     status: "active" | "canceled" = "active",
   ) =>
-    applySubscriptionEvent(
+    deliverSubscription(
       db,
       {
         id: `sub_${account.id}`,
@@ -4207,14 +4225,14 @@ describe.skipIf(!url)("subscription Checkout (HEY-133, real PostgreSQL)", () => 
     const ids = [];
     for (let i = 0; i < 6; i++) ids.push(await make(starter.id, `S${i}`));
     expect(await activateDynamicCode(db, starter.id, ids[0] as string, () => "scst000")).toEqual({ ok: false, error: "no_plan" });
-    expect(await subscribe(starter, "starter")).toEqual({ applied: true, userId: starter.id });
+    expect(await subscribe(starter, "starter")).toMatchObject({ applied: true, userId: starter.id });
     for (let i = 0; i < 5; i++) expect((await activateDynamicCode(db, starter.id, ids[i] as string, () => `scst00${i}`)).ok).toBe(true);
     expect(await activateDynamicCode(db, starter.id, ids[5] as string, () => "scst005")).toEqual({ ok: false, error: "limit" });
     expect((await accountUsage(db, starter.id)).dynamic).toEqual({ used: 5, limit: 5 });
   });
 
   it("Studio: 25 live Dynamic codes, the 26th refused", async () => {
-    expect(await subscribe(studio, "studio")).toEqual({ applied: true, userId: studio.id });
+    expect(await subscribe(studio, "studio")).toMatchObject({ applied: true, userId: studio.id });
     const ids = [];
     for (let i = 0; i < 26; i++) {
       // Drafts are capped; each code goes live before the next is saved.
@@ -4242,7 +4260,7 @@ describe.skipIf(!url)("subscription Checkout (HEY-133, real PostgreSQL)", () => 
       duplicate: false,
       result: { granted: true },
     });
-    expect(await subscribe(upgrader, "starter")).toEqual({ applied: true, userId: upgrader.id });
+    expect(await subscribe(upgrader, "starter")).toMatchObject({ applied: true, userId: upgrader.id });
     const row = await code(id);
     expect([row?.id, row?.shortCode, row?.status, row?.isTrial, row?.destination]).toEqual([id, "scup001", "active", false, B]);
     expect(await shortLink("scup001")).toBe(B);
@@ -4268,7 +4286,7 @@ describe.skipIf(!url)("subscription Checkout (HEY-133, real PostgreSQL)", () => 
         )
       ).duplicate,
     ).toBe(false);
-    expect(await subscribe(upgrader, "starter")).toEqual({ applied: true, userId: upgrader.id });
+    expect(await subscribe(upgrader, "starter")).toMatchObject({ applied: true, userId: upgrader.id });
     const after = await snapshot();
     expect({ ...after, row: { ...after.row, updatedAt: null } }).toEqual({ ...before, row: { ...before.row, updatedAt: null } });
   });
@@ -4316,5 +4334,221 @@ describe.skipIf(!url)("subscription Checkout (HEY-133, real PostgreSQL)", () => 
       result: { granted: true },
     });
     expect((await code(sixth))?.shortCode).toBe("scroom1");
+  });
+});
+
+/*
+ * HEY-134 / QR-18.04: subscription lifecycle events are claimed and applied in one transaction, and write the
+ * subscription as Stripe has it now, so redelivery, duplicates and out-of-order delivery converge on Stripe's state.
+ */
+describe.skipIf(!url)("subscription status sync (HEY-134, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "sync-owner", name: "Owner", email: "owner@sync.test", stripeCustomerId: "cus_sync_owner" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const PRICES = { price_sync_starter: "starter", price_sync_studio: "studio" } as const;
+  const catalog = (id: string | undefined) => (id && id in PRICES ? PRICES[id as keyof typeof PRICES] : null);
+  /** Stripe as it is now, per subscription (what subscriptions.retrieve returns). */
+  const stripeNow = new Map<string, SubscriptionEvent>();
+  const sub = (id: string, over: Partial<SubscriptionEvent> & { price?: keyof typeof PRICES } = {}): SubscriptionEvent => {
+    const { price = "price_sync_starter", ...rest } = over;
+    return {
+      id,
+      customer: owner.stripeCustomerId,
+      status: "active",
+      cancel_at_period_end: false,
+      metadata: { userId: owner.id },
+      items: { data: [{ price: { id: price }, current_period_start: 1_795_000_000, current_period_end: 1_797_600_000 }] },
+      ...rest,
+    } as unknown as SubscriptionEvent;
+  };
+  const deliver = (eventId: string, payload: SubscriptionEvent, type = "customer.subscription.updated") =>
+    applySubscriptionEvent(
+      db,
+      { id: eventId, type, subscription: payload },
+      {
+        planForPrice: catalog,
+        current: async (id) => {
+          const now = stripeNow.get(id);
+          if (!now) throw new Error("stripe: no such subscription");
+          return now;
+        },
+      },
+    );
+  const row = (id: string) => db.query.subscription.findFirst({ where: (t, { eq }) => eq(t.stripeSubscriptionId, id) });
+  const claimed = async (eventId: string) => (await pool.query("select 1 from webhook_event where id = $1", [eventId])).rowCount;
+  const access = async () => {
+    const usage = await accountUsage(db, owner.id);
+    return { plan: usage.plan?.id ?? null, limit: usage.dynamic.limit };
+  };
+  const endAll = () => db.update(schema.subscription).set({ status: "canceled" }).where(eq(schema.subscription.userId, owner.id));
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 8 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("stores Stripe's status, the catalog plan and its slots, the period and cancel-at-period-end; access follows the policy", async () => {
+    stripeNow.set("sub_sync_1", sub("sub_sync_1"));
+    expect(await deliver("evt_sync_1a", sub("sub_sync_1"), "customer.subscription.created")).toMatchObject({
+      duplicate: false,
+      outcome: { applied: true },
+    });
+    const stored = await row("sub_sync_1");
+    expect([stored?.status, stored?.plan, stored?.activeCodeLimit, stored?.stripePriceId, stored?.cancelAtPeriodEnd]).toEqual([
+      "active",
+      "starter",
+      5,
+      "price_sync_starter",
+      false,
+    ]);
+    expect([stored?.currentPeriodStart?.getTime(), stored?.currentPeriodEnd?.getTime()]).toEqual([1_795_000_000_000, 1_797_600_000_000]);
+    expect(await access()).toEqual({ plan: "starter", limit: 5 });
+    // The catalog decides the plan from the Price, not metadata.
+    stripeNow.set("sub_sync_1", sub("sub_sync_1", { price: "price_sync_studio", metadata: { userId: owner.id, plan: "starter" } }));
+    await deliver("evt_sync_1b", sub("sub_sync_1"));
+    expect(await access()).toEqual({ plan: "studio", limit: 25 });
+    // Scheduled cancellation keeps the plan until the end; past_due keeps it (existing policy); the end removes it.
+    stripeNow.set("sub_sync_1", sub("sub_sync_1", { price: "price_sync_studio", cancel_at_period_end: true }));
+    await deliver("evt_sync_1c", sub("sub_sync_1"));
+    expect([(await row("sub_sync_1"))?.cancelAtPeriodEnd, await access()]).toEqual([true, { plan: "studio", limit: 25 }]);
+    stripeNow.set("sub_sync_1", sub("sub_sync_1", { price: "price_sync_studio", status: "past_due" }));
+    await deliver("evt_sync_1d", sub("sub_sync_1"));
+    expect([(await row("sub_sync_1"))?.status, await access()]).toEqual(["past_due", { plan: "studio", limit: 25 }]);
+    stripeNow.set("sub_sync_1", sub("sub_sync_1", { price: "price_sync_studio", status: "canceled" }));
+    await deliver("evt_sync_1e", sub("sub_sync_1", { status: "canceled" }), "customer.subscription.deleted");
+    expect([(await row("sub_sync_1"))?.status, await access()]).toEqual(["canceled", { plan: null, limit: 0 }]);
+  });
+
+  it("a failed write rolls the event claim back with it; the redelivery applies the event", async () => {
+    stripeNow.set("sub_sync_2", sub("sub_sync_2"));
+    await pool.query(`
+      create function hey134_refuse() returns trigger language plpgsql as $$ begin raise exception 'write failed'; end $$;
+      create trigger hey134_refuse before insert or update on subscription for each row execute function hey134_refuse();
+    `);
+    try {
+      await expect(deliver("evt_sync_2", sub("sub_sync_2"), "customer.subscription.created")).rejects.toThrow();
+    } finally {
+      await pool.query("drop trigger hey134_refuse on subscription; drop function hey134_refuse();");
+    }
+    expect([await claimed("evt_sync_2"), await row("sub_sync_2")]).toEqual([0, undefined]);
+    // Stripe unreachable while reconciling: the same, nothing claimed.
+    stripeNow.delete("sub_sync_2");
+    await expect(deliver("evt_sync_2", sub("sub_sync_2"), "customer.subscription.created")).rejects.toThrow("no such subscription");
+    expect(await claimed("evt_sync_2")).toBe(0);
+    stripeNow.set("sub_sync_2", sub("sub_sync_2"));
+    expect(await deliver("evt_sync_2", sub("sub_sync_2"), "customer.subscription.created")).toMatchObject({
+      duplicate: false,
+      outcome: { applied: true },
+    });
+    expect([await claimed("evt_sync_2"), (await row("sub_sync_2"))?.status, await access()]).toEqual([
+      1,
+      "active",
+      { plan: "starter", limit: 5 },
+    ]);
+    await endAll();
+  });
+
+  it("duplicate and concurrent delivery of one event apply it once; concurrent different events converge on Stripe's state", async () => {
+    stripeNow.set("sub_sync_3", sub("sub_sync_3"));
+    const results = await Promise.all(
+      Array.from({ length: 4 }, () => deliver("evt_sync_3", sub("sub_sync_3"), "customer.subscription.created")),
+    );
+    expect(results.filter((r) => !r.duplicate)).toHaveLength(1);
+    expect(await deliver("evt_sync_3", sub("sub_sync_3"))).toEqual({ duplicate: true });
+    stripeNow.set("sub_sync_3", sub("sub_sync_3", { price: "price_sync_studio" }));
+    const different = await Promise.all([
+      deliver("evt_sync_3b", sub("sub_sync_3")),
+      deliver("evt_sync_3c", sub("sub_sync_3", { price: "price_sync_studio" })),
+    ]);
+    expect(different.every((r) => !r.duplicate)).toBe(true);
+    expect((await db.query.subscription.findMany({ where: (t, { eq }) => eq(t.stripeSubscriptionId, "sub_sync_3") })).length).toBe(1);
+    expect(await access()).toEqual({ plan: "studio", limit: 25 });
+    await endAll();
+  });
+
+  it("an older update delivered after the cancellation doesn't bring back the status or the slots", async () => {
+    // Stripe: created, upgraded, then canceled. The webhook sees the cancellation first, then the older events.
+    stripeNow.set("sub_sync_4", sub("sub_sync_4", { price: "price_sync_studio", status: "canceled" }));
+    await deliver("evt_sync_4_del", sub("sub_sync_4", { price: "price_sync_studio", status: "canceled" }), "customer.subscription.deleted");
+    await deliver("evt_sync_4_old_up", sub("sub_sync_4", { price: "price_sync_studio" }));
+    await deliver("evt_sync_4_old_new", sub("sub_sync_4"), "customer.subscription.created");
+    expect([(await row("sub_sync_4"))?.status, (await row("sub_sync_4"))?.plan, await access()]).toEqual([
+      "canceled",
+      "studio",
+      { plan: null, limit: 0 },
+    ]);
+    // Even if a lagging read of Stripe still said "active", an ended subscription stays ended.
+    stripeNow.set("sub_sync_4", sub("sub_sync_4", { price: "price_sync_studio" }));
+    await deliver("evt_sync_4_lag", sub("sub_sync_4"));
+    expect([(await row("sub_sync_4"))?.status, await access()]).toEqual(["canceled", { plan: null, limit: 0 }]);
+    // An older update without a cancellation: the newer upgrade stays.
+    stripeNow.set("sub_sync_5", sub("sub_sync_5", { price: "price_sync_studio" }));
+    await deliver("evt_sync_5_new", sub("sub_sync_5", { price: "price_sync_studio" }));
+    await deliver("evt_sync_5_old", sub("sub_sync_5"), "customer.subscription.created");
+    expect(await access()).toEqual({ plan: "studio", limit: 25 });
+    await endAll();
+  });
+
+  it("Checkout fulfillment after the subscription ended doesn't activate its code; before it, the code goes live", async () => {
+    const make = async (name: string) => {
+      const saved = await saveQrWithLayouts(db, owner.id, {
+        name,
+        model: "dynamic",
+        content: { type: "website", url: "https://a.example.test/" },
+        layouts,
+      });
+      if (!saved.ok) throw new Error("save failed");
+      return saved.data.qrCodeId;
+    };
+    const completed = (eventId: string, subscriptionId: string, qrCodeId: string) => ({
+      id: eventId,
+      type: "checkout.session.completed",
+      session: {
+        id: `cs_${eventId}`,
+        mode: "subscription",
+        status: "complete",
+        payment_status: "paid",
+        payment_intent: null,
+        amount_subtotal: 900,
+        amount_total: 900,
+        total_details: null,
+        currency: "usd",
+        customer: owner.stripeCustomerId,
+        subscription: subscriptionId,
+        metadata: { userId: owner.id, qrCodeId, plan: "starter" },
+      } as unknown as Parameters<typeof processCheckoutEvent>[1]["session"],
+    });
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      // Canceled and synchronized first; the completion arrives late.
+      const late = await make("Late");
+      stripeNow.set("sub_sync_6", sub("sub_sync_6", { status: "canceled" }));
+      await deliver("evt_sync_6_del", sub("sub_sync_6", { status: "canceled" }), "customer.subscription.deleted");
+      expect(await processCheckoutEvent(db, completed("evt_sync_6_paid", "sub_sync_6", late), () => "sync601")).toEqual({
+        duplicate: false,
+        result: { granted: false, reason: "subscription_ended" },
+      });
+      expect([(await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, late) }))?.shortCode]).toEqual([null]);
+      // In the usual order (completion before the subscription events, or at once), the code goes live.
+      const onTime = await make("On time");
+      stripeNow.set("sub_sync_7", sub("sub_sync_7"));
+      const [paid] = await Promise.all([
+        processCheckoutEvent(db, completed("evt_sync_7_paid", "sub_sync_7", onTime), () => "sync701"),
+        deliver("evt_sync_7_new", sub("sub_sync_7"), "customer.subscription.created"),
+      ]);
+      expect(paid).toEqual({ duplicate: false, result: { granted: true } });
+      expect([(await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, onTime) }))?.status, await access()]).toEqual([
+        "active",
+        { plan: "starter", limit: 5 },
+      ]);
+    } finally {
+      warn.mockRestore();
+    }
   });
 });

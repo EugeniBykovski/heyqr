@@ -29,7 +29,7 @@ export type PaidSession = Pick<
   | "metadata"
 > &
   // HEY-132: read for subscription Checkout (the account is the one bound to this Customer).
-  Partial<Pick<Stripe.Checkout.Session, "customer">>;
+  Partial<Pick<Stripe.Checkout.Session, "customer" | "subscription">>;
 
 /** Why a one-time Checkout was not fulfilled (logged by code, never with the payload). */
 export type NotFulfilled =
@@ -49,7 +49,9 @@ export type NotFulfilled =
   | "unknown_customer"
   | "account_mismatch"
   // HEY-133: the plan was bought, but every live slot of it is taken: the Checkout's code isn't activated.
-  | "slot_full";
+  | "slot_full"
+  // HEY-134: the session's subscription had already ended (its cancellation was processed before this event).
+  | "subscription_ended";
 
 type Order = typeof schema.purchase.$inferSelect;
 
@@ -131,6 +133,19 @@ export async function fulfillCheckout(db: Db | Tx, s: PaidSession, newShortCode:
     // an activation holds while waiting for the code row: a deadlock (40P01). Taking the account row here first makes
     // the webhook queue behind the activation instead, and serializes it with the account's slot counting.
     await db.select({ id: schema.user.id }).from(schema.user).where(eq(schema.user.id, userId)).for("update");
+    // HEY-134: under the same account lock as subscription events. A completion delivered after the subscription's end
+    // was synchronized doesn't bring its code back to life.
+    const subscriptionId = typeof s.subscription === "string" ? s.subscription : (s.subscription?.id ?? null);
+    if (subscriptionId) {
+      const [stored] = await db
+        .select({ status: schema.subscription.status })
+        .from(schema.subscription)
+        .where(eq(schema.subscription.stripeSubscriptionId, subscriptionId));
+      if (stored && (stored.status === "canceled" || stored.status === "incomplete_expired")) {
+        diagnose("subscription_ended", null, s.id);
+        return { granted: false, reason: "subscription_ended" };
+      }
+    }
     // A plan bought for a code (export or the trial's test code): the code goes live and keeps its short link.
     const qr = await db.query.qrCode.findFirst({ where: ownCode });
     if (!qr || qr.model !== "dynamic") return { granted: false };

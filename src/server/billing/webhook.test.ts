@@ -94,16 +94,21 @@ describe("checkout webhook receipt (HEY-97)", () => {
   });
 });
 
-/* HEY-132: every subscription lifecycle event goes through the Customer-bound path, once per event. */
-describe("subscription lifecycle webhooks (HEY-132)", () => {
-  it("created, updated and deleted are applied by applySubscriptionEvent with the subscription; a duplicate is skipped", async () => {
-    applySubscriptionEvent.mockResolvedValue({ applied: true, userId: "u1" });
+/* HEY-132 / HEY-134: every subscription lifecycle event goes through the one transactional, Stripe-reconciled path. */
+describe("subscription lifecycle webhooks (HEY-132, HEY-134)", () => {
+  it("created, updated and deleted are applied by applySubscriptionEvent with the event and Stripe's current state", async () => {
+    applySubscriptionEvent.mockResolvedValue({ duplicate: false, outcome: { applied: true, userId: "u1", status: "active" } });
     for (const type of ["customer.subscription.created", "customer.subscription.updated", "customer.subscription.deleted"]) {
       const sub = { id: "sub_1", customer: "cus_1", metadata: { userId: "u1" } };
       expect(await handleStripeEvent({ id: `evt_${type}`, type, data: { object: sub } } as unknown as Stripe.Event)).toBe(true);
-      expect(applySubscriptionEvent).toHaveBeenLastCalledWith(expect.anything(), sub, expect.any(Function));
+      expect(applySubscriptionEvent).toHaveBeenLastCalledWith(
+        expect.anything(),
+        { id: `evt_${type}`, type, subscription: sub },
+        { planForPrice: expect.any(Function), current: expect.any(Function) },
+      );
     }
-    claimed.mockResolvedValueOnce([]);
+    // The claim is part of that transaction: a duplicate is reported by it, not by a separate insert.
+    applySubscriptionEvent.mockResolvedValueOnce({ duplicate: true });
     expect(
       await handleStripeEvent({
         id: "evt_dup",
@@ -111,6 +116,6 @@ describe("subscription lifecycle webhooks (HEY-132)", () => {
         data: { object: { id: "sub_1" } },
       } as unknown as Stripe.Event),
     ).toBe(false);
-    expect(applySubscriptionEvent).toHaveBeenCalledTimes(3);
+    expect(claimed).not.toHaveBeenCalled();
   });
 });

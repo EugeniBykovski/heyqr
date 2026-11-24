@@ -70,19 +70,22 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<boolean> {
     return !done.duplicate;
   }
 
-  const inserted = await db.insert(schema.webhookEvent).values({ id: event.id, type: event.type }).onConflictDoNothing().returning();
-  if (inserted.length === 0) return false;
-
-  switch (event.type) {
-    case "customer.subscription.created":
-    case "customer.subscription.updated":
-    case "customer.subscription.deleted": {
-      // HEY-132: written for the account bound to the subscription's Stripe Customer; a mismatch writes nothing.
-      await applySubscriptionEvent(db, event.data.object, planForPrice);
-      break;
-    }
-    default:
-      break;
+  if (
+    event.type === "customer.subscription.created" ||
+    event.type === "customer.subscription.updated" ||
+    event.type === "customer.subscription.deleted"
+  ) {
+    // HEY-132 / HEY-134: claimed and applied in one transaction, for the account bound to the subscription's Customer,
+    // with the subscription as Stripe has it now (events can arrive out of order).
+    const done = await applySubscriptionEvent(
+      db,
+      { id: event.id, type: event.type, subscription: event.data.object },
+      { planForPrice, current: (id) => stripe().subscriptions.retrieve(id) },
+    );
+    return !done.duplicate;
   }
-  return true;
+
+  // Other event types aren't used; they are recorded once so a redelivery reports as a duplicate.
+  const inserted = await db.insert(schema.webhookEvent).values({ id: event.id, type: event.type }).onConflictDoNothing().returning();
+  return inserted.length > 0;
 }
