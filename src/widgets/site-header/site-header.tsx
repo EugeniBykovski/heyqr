@@ -1,4 +1,4 @@
-import { CreditCardIcon, LayoutGridIcon, TimerIcon } from "lucide-react";
+import { CreditCardIcon, KeyRoundIcon, LayoutGridIcon, TimerIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { SignOutItem } from "@/features/auth";
 import { LanguageSwitch } from "@/features/language-switch";
@@ -42,6 +42,7 @@ export async function SiteHeader() {
           { href: "/dashboard", label: t("myCodes") },
           ...(trialItem ? [{ href: "/dashboard/trial", label: t("trial") }] : []),
           { href: "/dashboard/billing", label: t("billing") },
+          { href: "/dashboard/api-keys", label: t("apiKeys") },
         ]
       : []),
   ];
@@ -86,6 +87,12 @@ export async function SiteHeader() {
                   <Link href="/dashboard/billing">
                     <CreditCardIcon aria-hidden />
                     {t("billing")}
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard/api-keys">
+                    <KeyRoundIcon aria-hidden />
+                    {t("apiKeys")}
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

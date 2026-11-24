@@ -27,6 +27,7 @@ import { pauseDynamicCode, resumeDynamicCode } from "../billing/pause";
 import { bindStripeCustomer, customerIdempotencyKey, storedCustomer, type CustomerCreate } from "../billing/customer";
 import { applySubscriptionEvent, type SubscriptionEvent } from "../billing/subscriptions";
 import { canDownloadCode, resolveShortLink } from "../billing/access";
+import { apiKeyOwner, createApiKey, listApiKeys } from "../api-keys/keys";
 import { hasScans, incrementScan, ownerScanSummary, scansByDay, utcDay } from "../qr/scans";
 import {
   accountUsage,
@@ -5775,5 +5776,64 @@ describe.skipIf(!url)("scan period on QR details and the home summary (HEY-148, 
     await incrementScan(db, codes.busy, "2026-12-14");
     const days = await scansByDay(db, owner.id, codes.busy, 14, now);
     expect([days[0]?.count, days.at(-1)?.count, days.reduce((s, d) => s + d.count, 0)]).toEqual([2, 4, 7]);
+  });
+});
+
+/* HEY-153 / QR-21.01: account API keys: one-way stored, listed as metadata, bound to their account. */
+describe.skipIf(!url)("account API keys (HEY-153, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const alice = { id: "keys-alice", name: "Alice", email: "alice@keys.test" };
+  const bob = { id: "keys-bob", name: "Bob", email: "bob@keys.test" };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 2 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([alice, bob]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [alice.id, bob.id]));
+    await pool?.end();
+  });
+
+  it("two keys for one account are distinct; nothing stored contains the key or its secret", async () => {
+    const [k1, k2] = [await createApiKey(db, alice.id), await createApiKey(db, alice.id)];
+    expect(k1.key).not.toBe(k2.key);
+    expect(k1.prefix).not.toBe(k2.prefix);
+    const stored = JSON.stringify((await pool.query("select * from api_key where user_id = $1", [alice.id])).rows);
+    for (const k of [k1, k2]) {
+      const secret = k.key.slice(k.prefix.length + 1);
+      expect([stored.includes(k.key), stored.includes(secret)]).toEqual([false, false]);
+    }
+    // The management list: prefix and date only.
+    const list = await listApiKeys(db, alice.id);
+    expect(list.map((k) => Object.keys(k).sort())).toEqual([
+      ["createdAt", "id", "prefix"],
+      ["createdAt", "id", "prefix"],
+    ]);
+    expect(JSON.stringify(list).includes(k1.key.slice(k1.prefix.length + 1))).toBe(false);
+    expect(new Set(list.map((k) => k.prefix))).toEqual(new Set([k1.prefix, k2.prefix]));
+  });
+
+  it("each key resolves to its own account only; a wrong or mixed key resolves to none", async () => {
+    const a = await createApiKey(db, alice.id);
+    const b = await createApiKey(db, bob.id);
+    expect(await apiKeyOwner(db, a.key)).toMatchObject({ userId: alice.id });
+    expect(await apiKeyOwner(db, b.key)).toMatchObject({ userId: bob.id });
+    // Alice's lookup id with Bob's secret, a changed character, and garbage.
+    const mixed = `${a.prefix}_${b.key.slice(b.prefix.length + 1)}`;
+    const changed = `${a.key.slice(0, -1)}${a.key.endsWith("A") ? "B" : "A"}`;
+    for (const bad of [mixed, changed, "hqk_nope", ""]) expect(await apiKeyOwner(db, bad)).toBeNull();
+    // Bob's list never shows Alice's keys.
+    expect((await listApiKeys(db, bob.id)).map((k) => k.prefix)).toEqual([b.prefix]);
+  });
+
+  it("deleting the account deletes its keys; its keys stop resolving", async () => {
+    const carol = { id: "keys-carol", name: "Carol", email: "carol@keys.test" };
+    await db.insert(schema.user).values(carol);
+    const c = await createApiKey(db, carol.id);
+    await db.delete(schema.user).where(eq(schema.user.id, carol.id));
+    expect(await apiKeyOwner(db, c.key)).toBeNull();
+    expect(Number((await pool.query("select count(*)::int as n from api_key where user_id = $1", [carol.id])).rows[0].n)).toBe(0);
   });
 });

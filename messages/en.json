@@ -22,7 +22,8 @@
     "languageSearch": "Search languages",
     "languages": "Languages",
     "languageEmpty": "No language matches “{query}”.",
-    "trial": "Free trial"
+    "trial": "Free trial",
+    "apiKeys": "API keys"
   },
   "payment": {
     "title": "How payment works",
@@ -2186,5 +2187,18 @@
       "failed": "We couldn’t open checkout. Nothing was charged; try again."
     },
     "terms": "Cancel anytime: your plan runs until the end of the paid period. If a renewal payment fails, it stays active while the payment is overdue."
+  },
+  "apiKeys": {
+    "title": "API keys",
+    "lead": "Keys let your own tools work with this account’s QR codes. Each key belongs to this account only.",
+    "yourKeys": "Your keys",
+    "create": "Create API key",
+    "once": "Copy this key now. For your security it’s shown only once and can’t be retrieved later.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "done": "Done",
+    "none": "No API keys yet.",
+    "created": "Created {date}",
+    "failed": "We couldn’t create a key. Nothing was saved; try again."
   }
 }
