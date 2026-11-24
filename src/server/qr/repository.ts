@@ -4,7 +4,7 @@ import { pickLayoutForEdit, readLayoutRecord } from "@/entities/qr";
 import { db, schema } from "../db";
 import { logoStore } from "../storage/s3";
 import { resolveLogos } from "./logo-assets";
-import { incrementScan } from "./scans";
+import { incrementScan, scansByDay } from "./scans";
 import { layoutRevision } from "./update-layout";
 
 /**
@@ -85,18 +85,8 @@ export async function getLayoutWithQr(layoutId: string) {
 }
 
 /** Daily scans for the last `days` days, zero-filled, oldest first. */
-export async function dailyScans(qrCodeId: string, days = 14) {
-  const since = new Date(Date.now() - (days - 1) * 86_400_000).toISOString().slice(0, 10);
-  const rows = await db
-    .select({ day: schema.scanDaily.day, count: schema.scanDaily.count })
-    .from(schema.scanDaily)
-    .where(and(eq(schema.scanDaily.qrCodeId, qrCodeId), gte(schema.scanDaily.day, since)));
-  const byDay = new Map(rows.map((r) => [r.day, r.count]));
-  return Array.from({ length: days }, (_, i) => {
-    const day = new Date(Date.now() - (days - 1 - i) * 86_400_000).toISOString().slice(0, 10);
-    return { day, count: byDay.get(day) ?? 0 };
-  });
-}
+/** HEY-146: one of the owner's codes, its scans per day (scans.ts scansByDay); another account's code reads as zeros. */
+export const dailyScans = (userId: string, qrCodeId: string, days = 14) => scansByDay(db, userId, qrCodeId, days);
 
 /** One scan of a code on the app's database (scans.ts incrementScan). */
 export async function recordScan(qrCodeId: string) {

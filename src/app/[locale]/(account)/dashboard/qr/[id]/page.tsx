@@ -84,7 +84,7 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
     getTranslations("dashboard"),
     getFormatter(),
     canDownload(user.id, qr),
-    qr.model === "dynamic" ? dailyScans(qr.id) : Promise.resolve(null),
+    qr.model === "dynamic" ? dailyScans(user.id, qr.id) : Promise.resolve(null),
     userTrial(user.id),
     accountUsage(db, user.id),
   ]);

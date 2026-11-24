@@ -27,7 +27,7 @@ import { pauseDynamicCode, resumeDynamicCode } from "../billing/pause";
 import { bindStripeCustomer, customerIdempotencyKey, storedCustomer, type CustomerCreate } from "../billing/customer";
 import { applySubscriptionEvent, type SubscriptionEvent } from "../billing/subscriptions";
 import { canDownloadCode, resolveShortLink } from "../billing/access";
-import { incrementScan } from "../qr/scans";
+import { incrementScan, scansByDay } from "../qr/scans";
 import {
   accountUsage,
   activateDynamicCode,
@@ -5566,5 +5566,44 @@ describe.skipIf(!url)("scan counting (HEY-145, real PostgreSQL)", () => {
       await db.update(schema.subscription).set({ status: "active" }).where(eq(schema.subscription.stripeSubscriptionId, "sub_scan"));
     }
     expect([await count(codes.live, day), await count(codes.paused, day)]).toEqual([0, 0]);
+  });
+});
+
+/* HEY-146: the owner-facing scan report reads only the signed-in owner's code, as counts per day. */
+describe.skipIf(!url)("owner-scoped scan report (HEY-146, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "report-owner", name: "Owner", email: "owner@report.test" };
+  const other = { id: "report-other", name: "Other", email: "other@report.test" };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 2 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("the owner sees the code's daily counts; another account sees only zeros; rows hold no request data", async () => {
+    const saved = await saveQrWithLayouts(db, owner.id, {
+      name: "Report",
+      model: "dynamic",
+      content: { type: "website", url: "https://a.example.test/" },
+      layouts: [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }],
+    });
+    if (!saved.ok) throw new Error("save failed");
+    const today = new Date().toISOString().slice(0, 10);
+    for (let i = 0; i < 3; i++) await incrementScan(db, saved.data.qrCodeId, today);
+    const mine = await scansByDay(db, owner.id, saved.data.qrCodeId, 7);
+    expect([mine.length, mine.at(-1)]).toEqual([7, { day: today, count: 3 }]);
+    expect(Object.keys(mine[0] ?? {})).toEqual(["day", "count"]);
+    expect((await scansByDay(db, other.id, saved.data.qrCodeId, 7)).every((d) => d.count === 0)).toBe(true);
+    // The stored analytics: the code, the day and a number. No IP, user agent, cookie, referrer or destination.
+    const columns = (
+      await pool.query("select column_name from information_schema.columns where table_name = 'scan_daily' order by ordinal_position")
+    ).rows.map((r) => r.column_name);
+    expect(columns).toEqual(["qr_code_id", "day", "count"]);
   });
 });

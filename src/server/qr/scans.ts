@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { and, eq, gte, sql } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "../db/schema";
 
@@ -16,4 +16,44 @@ export async function incrementScan(
     .insert(schema.scanDaily)
     .values({ qrCodeId, day, count: 1 })
     .onConflictDoUpdate({ target: [schema.scanDaily.qrCodeId, schema.scanDaily.day], set: { count: sql`${schema.scanDaily.count} + 1` } });
+}
+
+/** HEY-146: the header that marks a request as test traffic (QA scripts, monitors, support checks): never counted. */
+export const TEST_TRAFFIC_HEADER = "x-heyqr-test";
+
+/**
+ * HEY-146: whether a request to /r/<code> is a scan worth counting. Only the request's method and these explicit
+ * signals are read, and nothing about the request is stored (no IP, user agent, cookie or referrer):
+ * - only GET counts: HEAD (link checkers, uptime probes) and anything else never does;
+ * - browser prefetch / prerender (Sec-Purpose, Purpose, X-Purpose, X-Moz) isn't a scan;
+ * - test traffic marked with the x-heyqr-test header isn't a scan.
+ * Every one of them still gets the same redirect; this decides the counter only.
+ */
+export function isCountableScan(method: string, headers: Pick<Headers, "get">): boolean {
+  if (method.toUpperCase() !== "GET") return false;
+  const purpose = ["sec-purpose", "purpose", "x-purpose", "x-moz"]
+    .map((h) => headers.get(h) ?? "")
+    .join(" ")
+    .toLowerCase();
+  if (/prefetch|prerender|preview/.test(purpose)) return false;
+  const test = headers.get(TEST_TRAFFIC_HEADER);
+  return !(test !== null && test !== "" && test !== "0");
+}
+
+/**
+ * The owner-facing report: one code's scans per day for the last `days` days (zero-filled, oldest first), only when the
+ * code is the signed-in owner's. Counts only: day and number, nothing else.
+ */
+export async function scansByDay(db: NodePgDatabase<typeof schema>, userId: string, qrCodeId: string, days = 14) {
+  const since = new Date(Date.now() - (days - 1) * 86_400_000).toISOString().slice(0, 10);
+  const rows = await db
+    .select({ day: schema.scanDaily.day, count: schema.scanDaily.count })
+    .from(schema.scanDaily)
+    .innerJoin(schema.qrCode, eq(schema.qrCode.id, schema.scanDaily.qrCodeId))
+    .where(and(eq(schema.scanDaily.qrCodeId, qrCodeId), eq(schema.qrCode.userId, userId), gte(schema.scanDaily.day, since)));
+  const byDay = new Map(rows.map((r) => [r.day, r.count]));
+  return Array.from({ length: days }, (_, i) => {
+    const day = new Date(Date.now() - (days - 1 - i) * 86_400_000).toISOString().slice(0, 10);
+    return { day, count: byDay.get(day) ?? 0 };
+  });
 }
