@@ -8,14 +8,16 @@ import { db, schema } from "../db";
 import type { PurchaseItem, PurchaseLine } from "../db/schema";
 import { newId } from "../db/ids";
 import { priceMatches, stripePriceFor } from "./catalog";
+import { bindStripeCustomer } from "./customer";
 import { awaitingFulfillment, singleQrCheckout, type CheckoutPort } from "./single-order";
 import { stripe } from "./stripe";
 
-async function customerFor(user: { id: string; email: string; name: string; stripeCustomerId?: string | null }) {
-  if (user.stripeCustomerId) return user.stripeCustomerId;
-  const customer = await stripe().customers.create({ email: user.email, name: user.name, metadata: { userId: user.id } });
-  await db.update(schema.user).set({ stripeCustomerId: customer.id }).where(eq(schema.user.id, user.id));
-  return customer.id;
+/**
+ * HEY-132: the account's one Stripe Customer, from the database (a session's copy may predate the binding). The first
+ * one is created once per account, under its row lock and with an account-scoped idempotency key (bindStripeCustomer).
+ */
+export function customerFor(user: { id: string }) {
+  return bindStripeCustomer(db, user.id, (params, idempotencyKey) => stripe().customers.create(params, { idempotencyKey }));
 }
 
 function checkoutUrl(session: { url: string | null }): string {

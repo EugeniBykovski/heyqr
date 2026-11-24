@@ -52,6 +52,9 @@ vi.mock("../db", () => ({
   },
 }));
 
+/* HEY-132: the account's Customer binding is covered against PostgreSQL; here, every session uses the bound one. */
+vi.mock("./customer", () => ({ bindStripeCustomer: async () => "cus_test" }));
+
 /* HEY-88: the Single QR order itself (create or reuse, attach) is covered against PostgreSQL; here, what it charges. */
 const orders: { charge: { item: string; currency: string; lines: unknown[] }; layoutId?: string }[] = [];
 vi.mock("./single-order", () => ({

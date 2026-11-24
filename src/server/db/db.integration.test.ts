@@ -24,6 +24,8 @@ import { saveQrWithLayouts } from "../qr/save-qr";
 import { addLayoutFrom, copyLayout, layoutRevision, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
 import { activateTrialCode, startTrial, trialCode } from "../billing/trial";
 import { pauseDynamicCode, resumeDynamicCode } from "../billing/pause";
+import { bindStripeCustomer, customerIdempotencyKey, storedCustomer, type CustomerCreate } from "../billing/customer";
+import { applySubscriptionEvent, type SubscriptionEvent } from "../billing/subscriptions";
 import {
   accountUsage,
   activateDynamicCode,
@@ -2693,7 +2695,7 @@ describe.skipIf(!url)("refund entitlements (HEY-100, real PostgreSQL)", () => {
 describe.skipIf(!url)("permanent short links (HEY-117, real PostgreSQL)", () => {
   let pool: Pool;
   let db: ReturnType<typeof drizzle<typeof schema>>;
-  const owner = { id: "slug-owner", name: "Owner", email: "owner@slug.test" };
+  const owner = { id: "slug-owner", name: "Owner", email: "owner@slug.test", stripeCustomerId: "cus_slug_owner" };
   const card = { ...DEFAULT_DESIGN, preset: "caption" as const, caption: "Menu" };
   const layouts = [{ name: "Card", layout: designToLayout(card), editor: designSettingsOf(card) }];
   const first = "https://menu.example.test/first";
@@ -2731,6 +2733,7 @@ describe.skipIf(!url)("permanent short links (HEY-117, real PostgreSQL)", () => 
       amount_total: 900,
       total_details: null,
       currency: "usd",
+      customer: owner.stripeCustomerId,
       metadata: { userId: owner.id, qrCodeId },
     } as unknown as Parameters<typeof processCheckoutEvent>[1]["session"],
   });
@@ -3591,7 +3594,7 @@ describe.skipIf(!url)("short link registry (HEY-126, real PostgreSQL)", () => {
 describe.skipIf(!url)("pause and resume (HEY-127, real PostgreSQL)", () => {
   let pool: Pool;
   let db: ReturnType<typeof drizzle<typeof schema>>;
-  const owner = { id: "pause-owner", name: "Owner", email: "owner@pause.test" };
+  const owner = { id: "pause-owner", name: "Owner", email: "owner@pause.test", stripeCustomerId: "cus_pause_owner" };
   const other = { id: "pause-other", name: "Other", email: "other@pause.test" };
   const tester = { id: "pause-trial", name: "Trial", email: "trial@pause.test" };
   const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
@@ -3795,6 +3798,7 @@ describe.skipIf(!url)("pause and resume (HEY-127, real PostgreSQL)", () => {
         amount_total: 900,
         total_details: null,
         currency: "usd",
+        customer: owner.stripeCustomerId,
         metadata: { userId: owner.id, qrCodeId: id },
       } as unknown as Parameters<typeof processCheckoutEvent>[1]["session"],
     };
@@ -3920,5 +3924,198 @@ describe.skipIf(!url)("destination revisions (HEY-128, real PostgreSQL)", () => 
     expect(saved.ok).toBe(true);
     expect((await snapshot(qrCodeId)).revision).toBe(0);
     expect(await changeDestination(db, owner.id, qrCodeId, B, 0)).toMatchObject({ ok: true, data: { destination: B, revision: 1 } });
+  });
+});
+
+/*
+ * HEY-132 / QR-18.02: one Stripe Customer per account, created once and used everywhere; subscription events and
+ * subscription Checkout are attributed by that stored Customer, with metadata.userId as a consistency check.
+ */
+describe.skipIf(!url)("Stripe Customer binding (HEY-132, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const first = { id: "cus-first", name: "First", email: "first@customer.test" };
+  const bound = { id: "cus-bound", name: "Bound", email: "bound@customer.test", stripeCustomerId: "cus_existing_1" };
+  const other = { id: "cus-other", name: "Other", email: "other@customer.test", stripeCustomerId: "cus_other_1" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+
+  /** A Stripe stand-in that honours idempotency keys like Stripe: the same key returns the same Customer. */
+  const fakeStripe = (delayMs = 0) => {
+    const byKey = new Map<string, { id: string; params: CustomerCreate }>();
+    const calls: { key: string; params: CustomerCreate }[] = [];
+    let n = 0;
+    const prefix = `cus_fake_${Math.random().toString(36).slice(2, 8)}`;
+    const create = async (params: CustomerCreate, key: string) => {
+      calls.push({ key, params });
+      await new Promise((done) => setTimeout(done, delayMs));
+      const known = byKey.get(key);
+      if (known) {
+        if (JSON.stringify(known.params) !== JSON.stringify(params)) throw new Error("idempotency_error: different parameters");
+        return { id: known.id };
+      }
+      const customer = { id: `${prefix}_${++n}`, params };
+      byKey.set(key, customer);
+      return { id: customer.id };
+    };
+    return { create, calls, customers: () => byKey.size };
+  };
+  const subscriptionEvent = (over: Partial<SubscriptionEvent> & { id: string }): SubscriptionEvent =>
+    ({
+      customer: bound.stripeCustomerId,
+      status: "active",
+      cancel_at_period_end: false,
+      metadata: { userId: bound.id, plan: "starter" },
+      items: { data: [{ price: { id: "price_starter_test" }, current_period_start: 1_795_000_000, current_period_end: 1_797_600_000 }] },
+      ...over,
+    }) as SubscriptionEvent;
+  const noPlanPrice = () => null;
+  const subs = (userId: string) => db.query.subscription.findMany({ where: (t, { eq }) => eq(t.userId, userId) });
+  const slots = async (userId: string) => (await accountUsage(db, userId)).dynamic;
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 8 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([first, bound, other]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [first.id, bound.id, other.id]));
+    await pool?.end();
+  });
+
+  it("two simultaneous first Checkouts of one account create one Customer and both use it", async () => {
+    const stripe = fakeStripe(50);
+    const ids = await Promise.all(Array.from({ length: 4 }, () => bindStripeCustomer(db, first.id, stripe.create)));
+    expect(new Set(ids).size).toBe(1);
+    expect(stripe.customers()).toBe(1);
+    // Under the account lock the later requests find the binding: Stripe is asked once, with the account's key.
+    expect(stripe.calls).toEqual([
+      { key: customerIdempotencyKey(first.id), params: { email: first.email, metadata: { userId: first.id } } },
+    ]);
+    expect(await storedCustomer(db, first.id)).toBe(ids[0]);
+  });
+
+  it("a retry after Stripe created the Customer but the binding didn't commit gets the same Customer", async () => {
+    const account = { id: "cus-retry", name: "Retry", email: "retry@customer.test" };
+    await db.insert(schema.user).values(account);
+    try {
+      const stripe = fakeStripe();
+      // Stripe creates the Customer, then the response is lost: nothing is bound.
+      const lost = (params: CustomerCreate, key: string) =>
+        stripe.create(params, key).then(() => Promise.reject(new Error("connection reset")));
+      await expect(bindStripeCustomer(db, account.id, lost)).rejects.toThrow("connection reset");
+      expect(await storedCustomer(db, account.id)).toBeNull();
+      const id = await bindStripeCustomer(db, account.id, stripe.create);
+      expect([stripe.customers(), stripe.calls.map((c) => c.key), await storedCustomer(db, account.id)]).toEqual([
+        1,
+        [customerIdempotencyKey(account.id), customerIdempotencyKey(account.id)],
+        id,
+      ]);
+    } finally {
+      await db.delete(schema.user).where(eq(schema.user.id, account.id));
+    }
+  });
+
+  it("an existing binding is reused and never replaced; Stripe isn't asked", async () => {
+    const stripe = fakeStripe();
+    expect(await bindStripeCustomer(db, bound.id, stripe.create)).toBe("cus_existing_1");
+    expect(stripe.calls).toEqual([]);
+    expect(await storedCustomer(db, bound.id)).toBe("cus_existing_1");
+    // Another account can't take a bound Customer (stripe_customer_id is unique).
+    await expect(db.update(schema.user).set({ stripeCustomerId: "cus_existing_1" }).where(eq(schema.user.id, first.id))).rejects.toThrow();
+  });
+
+  it("a subscription event is written for the account bound to its Customer, with 5 Dynamic slots on Starter", async () => {
+    expect(await applySubscriptionEvent(db, subscriptionEvent({ id: "sub_hey132_ok" }), noPlanPrice)).toEqual({
+      applied: true,
+      userId: bound.id,
+    });
+    expect(await slots(bound.id)).toEqual({ used: 0, limit: 5 });
+    // Without metadata the stored Customer alone decides; an update keeps the same account.
+    expect(
+      await applySubscriptionEvent(db, subscriptionEvent({ id: "sub_hey132_ok", metadata: {}, cancel_at_period_end: true }), noPlanPrice),
+    ).toEqual({ applied: true, userId: bound.id });
+    expect((await subs(bound.id)).map((r) => [r.stripeSubscriptionId, r.cancelAtPeriodEnd])).toEqual([["sub_hey132_ok", true]]);
+  });
+
+  it("a mismatched customer/account binding writes nothing and grants no access", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      // The event's Customer is Bound's, but its metadata names Other.
+      const mismatched = subscriptionEvent({ id: "sub_hey132_bad", metadata: { userId: other.id, plan: "studio" } });
+      expect(await applySubscriptionEvent(db, mismatched, noPlanPrice)).toEqual({ applied: false, reason: "account_mismatch" });
+      // A Customer no account holds, and a subscription already stored for another account.
+      expect(
+        await applySubscriptionEvent(
+          db,
+          subscriptionEvent({ id: "sub_hey132_x", customer: "cus_nobody", metadata: { userId: other.id } }),
+          noPlanPrice,
+        ),
+      ).toEqual({ applied: false, reason: "unknown_customer" });
+      expect(
+        await applySubscriptionEvent(
+          db,
+          subscriptionEvent({ id: "sub_hey132_ok", customer: other.stripeCustomerId, metadata: { userId: other.id } }),
+          noPlanPrice,
+        ),
+      ).toEqual({ applied: false, reason: "subscription_owner_mismatch" });
+      expect(await subs(other.id)).toEqual([]);
+      expect(await slots(other.id)).toEqual({ used: 0, limit: 0 });
+      expect((await subs(bound.id)).map((r) => r.stripeSubscriptionId)).toEqual(["sub_hey132_ok"]);
+
+      // Subscription Checkout for Other's code, paid by Bound's Customer: no plan, no slug, the code stays a draft.
+      const saved = await saveQrWithLayouts(db, other.id, {
+        name: "Other's code",
+        model: "dynamic",
+        content: { type: "website", url: "https://other.example.test/" },
+        layouts,
+      });
+      if (!saved.ok) throw new Error("save failed");
+      const session = (customer: string, id: string) =>
+        ({
+          id,
+          mode: "subscription",
+          status: "complete",
+          payment_status: "paid",
+          payment_intent: null,
+          amount_subtotal: 900,
+          amount_total: 900,
+          total_details: null,
+          currency: "usd",
+          customer,
+          metadata: { userId: other.id, qrCodeId: saved.data.qrCodeId },
+        }) as unknown as Parameters<typeof processCheckoutEvent>[1]["session"];
+      expect(
+        await processCheckoutEvent(
+          db,
+          { id: "evt_hey132_bad", type: "checkout.session.completed", session: session(bound.stripeCustomerId, "cs_hey132_bad") },
+          () => "hey132x",
+        ),
+      ).toEqual({ duplicate: false, result: { granted: false, reason: "account_mismatch" } });
+      expect(
+        await processCheckoutEvent(
+          db,
+          { id: "evt_hey132_unk", type: "checkout.session.completed", session: session("cus_nobody", "cs_hey132_unk") },
+          () => "hey132y",
+        ),
+      ).toEqual({ duplicate: false, result: { granted: false, reason: "unknown_customer" } });
+      const code = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, saved.data.qrCodeId) });
+      expect([code?.status, code?.shortCode]).toEqual(["draft", null]);
+      expect(warn).toHaveBeenCalledWith(expect.stringMatching(/^\[billing\] subscription not applied: account_mismatch sub=…/));
+      // Logs carry codes and id tails only, never the account ids or emails.
+      for (const [line] of warn.mock.calls)
+        for (const secret of [other.id, bound.id, other.email]) expect(String(line)).not.toContain(secret);
+
+      // The same Checkout with Other's own Customer goes through.
+      expect(
+        await processCheckoutEvent(
+          db,
+          { id: "evt_hey132_ok", type: "checkout.session.completed", session: session(other.stripeCustomerId, "cs_hey132_ok") },
+          () => "hey132z",
+        ),
+      ).toEqual({ duplicate: false, result: { granted: true } });
+      expect((await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, saved.data.qrCodeId) }))?.shortCode).toBe("hey132z");
+    } finally {
+      warn.mockRestore();
+    }
   });
 });

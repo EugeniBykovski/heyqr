@@ -3,6 +3,7 @@ import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import type Stripe from "stripe";
 import * as schema from "../db/schema";
 import { assignShortCode } from "../qr/short-code";
+import { accountForCustomer, customerIdOf } from "./customer";
 import { grantPackCredits } from "./allowances";
 import { refundedOffers } from "./refunds";
 
@@ -25,7 +26,9 @@ export type PaidSession = Pick<
   | "total_details"
   | "currency"
   | "metadata"
->;
+> &
+  // HEY-132: read for subscription Checkout (the account is the one bound to this Customer).
+  Partial<Pick<Stripe.Checkout.Session, "customer">>;
 
 /** Why a one-time Checkout was not fulfilled (logged by code, never with the payload). */
 export type NotFulfilled =
@@ -39,7 +42,11 @@ export type NotFulfilled =
   | "missing_amounts"
   | "currency_mismatch"
   | "subtotal_mismatch"
-  | "total_mismatch";
+  | "total_mismatch"
+  // HEY-132: a subscription Checkout whose Customer isn't the account's stored one (or names another account).
+  | "no_customer"
+  | "unknown_customer"
+  | "account_mismatch";
 
 type Order = typeof schema.purchase.$inferSelect;
 
@@ -97,11 +104,18 @@ const diagnose = (reason: NotFulfilled, orderId: string | null, sessionId: strin
  * Plain module (no "server-only") so the PostgreSQL tests exercise the same fulfilment as the webhook.
  */
 export async function fulfillCheckout(db: Db | Tx, s: PaidSession, newShortCode: () => string): Promise<FulfillResult> {
-  const { userId, qrCodeId, printPack } = s.metadata ?? {};
+  const { qrCodeId, printPack } = s.metadata ?? {};
   const now = new Date();
 
   if (s.mode === "subscription") {
-    if (!userId || s.payment_status !== "paid") return { granted: false };
+    if (s.payment_status !== "paid") return { granted: false };
+    // HEY-132: the account is the one bound to the session's Stripe Customer; metadata.userId must agree when present.
+    const account = await accountForCustomer(db, customerIdOf(s.customer), s.metadata?.userId);
+    if (!account.ok) {
+      diagnose(account.reason, null, s.id);
+      return { granted: false, reason: account.reason };
+    }
+    const userId = account.userId;
     const ownCode = qrCodeId ? and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId)) : undefined;
     if (!ownCode) return { granted: false };
     // Lock order: the account row first, then the code row, as trial and plan activation do (activateTrialCode,
