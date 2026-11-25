@@ -1,6 +1,7 @@
 import { parseWebsiteUrl, type WebsiteUrlProblem } from "@heyqr/qr-core";
 import { and, desc, eq, isNull, sql } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
+import { isHostedContent } from "../../entities/qr/model/hosted";
 import * as schema from "../db/schema";
 
 /** HEY-119: why a destination was refused (the field error shown next to it). */
@@ -70,11 +71,12 @@ export async function changeDestination(
   };
   return db.transaction(async (tx) => {
     const [qr] = await tx
-      .select({ model: schema.qrCode.model, ...columns })
+      .select({ model: schema.qrCode.model, content: schema.qrCode.content, ...columns })
       .from(schema.qrCode)
       .where(and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)))
       .for("update");
-    if (!qr || qr.model !== "dynamic") return { ok: false, error: "not_found" } as const;
+    // Hosted pages have no destination (their page is published instead).
+    if (!qr || qr.model !== "dynamic" || isHostedContent(qr.content)) return { ok: false, error: "not_found" } as const;
     if (qr.destinationRevision !== revision) return { ok: false, error: "conflict", latest: state(qr) } as const;
     if (qr.destination === parsed.url) return { ok: true, data: state(qr) } as const;
     const [saved] = await tx

@@ -1,4 +1,5 @@
-import type { Layout, QrContent } from "@heyqr/qr-core";
+import type { Layout } from "@heyqr/qr-core";
+import type { AnyQrContent } from "./hosted";
 import {
   CENTER_ICONS,
   DEFAULT_DESIGN,
@@ -20,7 +21,7 @@ import { isValidSize } from "./size";
  * DM Sans, and one without a caption size keeps the size it was drawn at.
  */
 export function designFromSaved(
-  qr: { name: string; model: "static" | "dynamic"; content: QrContent },
+  qr: { name: string; model: "static" | "dynamic"; content: AnyQrContent },
   record: LayoutRecordDesign,
 ): EditorDesign {
   const settings = record.editor ?? settingsFromLayout(record.layout);

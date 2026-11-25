@@ -1,6 +1,6 @@
 "use server";
 
-import type { QrContent } from "@heyqr/qr-core";
+import type { AnyQrContent } from "@/entities/qr/model/hosted";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireUser } from "../auth";
@@ -16,7 +16,7 @@ import { restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { encodedValue } from "../qr/export";
 import { readLayoutRecord } from "../../entities/qr/model/design-schema";
 import { ownedLayout } from "../qr/file-access";
-import { logosFor } from "../qr/logos-for";
+import { hostedContentFor, logosFor } from "../qr/logos-for";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { changeDestination, isRevision, type DestinationConflict, type DestinationState } from "../qr/destination";
@@ -35,7 +35,8 @@ const draftSchema = z.object({
     .optional(),
   name: z.string().trim().min(1).max(80),
   model: z.enum(["static", "dynamic"]),
-  content: z.custom<QrContent>((v) => typeof v === "object" && v !== null && "type" in v),
+  // Direct content is checked by its encoder; hosted content against its stored shape (saveQrWithLayouts).
+  content: z.custom<AnyQrContent>((v) => typeof v === "object" && v !== null && "type" in v),
   // HEY-119: checked by parseDestination in saveQrWithLayouts, the same check as Change destination.
   destination: z.string().max(2048).optional(),
   layouts: z
@@ -60,7 +61,7 @@ export async function saveDraft(input: DraftInput): Promise<ActionResult<{ qrCod
     const user = await requireUser();
     const parsed = draftSchema.safeParse(input);
     if (!parsed.success) return { ok: false, error: "invalid" };
-    const result = await saveQrWithLayouts(db, user.id, parsed.data, logosFor(user.id));
+    const result = await saveQrWithLayouts(db, user.id, parsed.data, logosFor(user.id), hostedContentFor(user.id));
     if (result.ok) revalidatePath("/[locale]/dashboard", "page");
     return result;
   });

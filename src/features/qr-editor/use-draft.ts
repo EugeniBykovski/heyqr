@@ -1,8 +1,15 @@
 "use client";
 
-import type { QrContentType } from "@heyqr/qr-core";
 import { useEffect, useRef, useState } from "react";
-import { DEFAULT_DESIGN, emptyContent, modeFor, readDraftDesign, serializeDraftDesign, type EditorDesign } from "@/entities/qr";
+import {
+  DEFAULT_DESIGN,
+  emptyContent,
+  modeFor,
+  readDraftDesign,
+  serializeDraftDesign,
+  type EditorDesign,
+  type QrType,
+} from "@/entities/qr";
 
 /** Browser slot for the guest draft. ":v1" names the slot; the JSON inside carries its own schemaVersion. */
 const KEY = "heyqr:draft:v1";
@@ -130,7 +137,7 @@ export function writeDraft(design: EditorDesign) {
 }
 
 /** Keeps the current draft's look but starts new content of `type` (home type chips and footer links). */
-export function draftForType(type: QrContentType): EditorDesign {
+export function draftForType(type: QrType): EditorDesign {
   const current = readDraft() ?? DEFAULT_DESIGN;
   return current.content.type === type ? current : { ...current, content: emptyContent(type), model: modeFor(type, current.model) };
 }

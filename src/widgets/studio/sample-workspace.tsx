@@ -1,7 +1,7 @@
 import { encodePayload } from "@heyqr/qr-core";
 import { ArrowRightIcon, CheckIcon, LockIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { DEFAULT_DESIGN, designToLayout, QrPreview, type EditorDesign } from "@/entities/qr";
+import { DEFAULT_DESIGN, designToLayout, QrPreview, type EditorDesign, directContent } from "@/entities/qr";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -109,7 +109,7 @@ export async function SampleWorkspace() {
               return (
                 <li key={s.key} className="flex items-center gap-3 py-2.5">
                   <span className="grid size-12 shrink-0 place-items-center rounded-md border border-border bg-white p-1">
-                    <QrPreview layout={designToLayout(d)} value={encodePayload(d.content)} label="" className="size-full" />
+                    <QrPreview layout={designToLayout(d)} value={encodePayload(directContent(d.content))} label="" className="size-full" />
                   </span>
                   <span className="flex min-w-0 flex-col gap-1">
                     <span className="truncate text-label">{t(`samples.${s.key}.name`)}</span>

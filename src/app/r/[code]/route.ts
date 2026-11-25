@@ -4,6 +4,7 @@ import { db } from "@/server/db";
 import { resolveShortLink } from "@/server/billing/access";
 import { recordScan } from "@/server/qr/repository";
 import { isCountableScan } from "@/server/qr/scans";
+import { deviceFromUserAgent, storeRedirect } from "@/server/qr/hosted-device";
 
 /**
  * HEY-120 / QR-16.05: every answer is a 302 that no browser, proxy or CDN may store. The same short link must follow a
@@ -21,8 +22,15 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/r/[code]">) 
   const answer = await resolveShortLink(db, code);
   if (answer.kind === "unavailable")
     return redirect(new URL(answer.inactive ? "/link-unavailable?reason=inactive" : "/link-unavailable", env.NEXT_PUBLIC_APP_URL));
+  // Hosted pages (design 11.0) live at /p/<code>; an Apps page sends a recognized phone straight to its store.
+  const to =
+    answer.kind === "hosted"
+      ? ((answer.page.content.type === "apps"
+          ? storeRedirect(answer.page.content, deviceFromUserAgent(request.headers.get("user-agent")))
+          : null) ?? new URL(`/p/${answer.shortCode}`, env.NEXT_PUBLIC_APP_URL))
+      : answer.to;
   // HEY-146: HEAD, prefetch/prerender and marked test traffic get the same redirect but aren't counted.
-  if (!isCountableScan(request.method, request.headers)) return redirect(answer.to);
+  if (!isCountableScan(request.method, request.headers)) return redirect(to);
   // HEY-145: the scan is counted after the 302 is sent (it never delays the redirect). A failed write is logged by code
   // only and dropped: the scanner already has their redirect, and nothing about the request is retried or exposed.
   after(() =>
@@ -30,5 +38,5 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/r/[code]">) 
       console.error(`[scan] not recorded: ${error instanceof Error ? error.name : "unknown error"}`),
     ),
   );
-  return redirect(answer.to);
+  return redirect(to);
 }

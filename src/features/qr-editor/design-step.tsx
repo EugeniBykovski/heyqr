@@ -67,6 +67,7 @@ export function DesignStep({
   stageTitle,
   panelHead,
   initialGroup,
+  afterScan,
 }: {
   design: EditorDesign;
   onChange: (patch: Partial<EditorDesign>) => void;
@@ -92,11 +93,15 @@ export function DesignStep({
   panelHead?: ReactNode;
   /** The settings group to open first, e.g. Size when coming from "Set up for print" (Edit design ?group=size). */
   initialGroup?: DesignGroup;
+  /** Hosted pages (design 10.7 / 11.16): the "After scan" page, offered beside the QR design on the stage. */
+  afterScan?: ReactNode;
 }) {
   const t = useTranslations("editor");
   const ts = useTranslations("editor.stage");
   const history = useDesignHistory(design, onChange);
   const view = useStageView();
+  const [stageMode, setStageMode] = useState<"qr" | "scan">("qr");
+  const showScan = Boolean(afterScan) && stageMode === "scan";
   const [group, setGroup] = useState<DesignGroup>(initialGroup ?? (design.designMode === "branded" ? "brand" : "layout"));
   // Design 2.6 / 5.3: while an image is read, the last ready design stays and the canvas says what is happening.
   const [brandBusy, setBrandBusy] = useState(false);
@@ -198,6 +203,15 @@ export function DesignStep({
           <StageBar>
             {stageTitle ?? <span className="min-w-0 grow truncate px-1 text-label">{title}</span>}
             <Badge variant={design.model === "dynamic" ? "accent" : "neutral"}>{t(`model.${design.model}`)}</Badge>
+            {afterScan ? (
+              <Segmented
+                label={t("hosted.previewSwitch")}
+                value={stageMode}
+                options={["qr", "scan"] as const}
+                render={(o) => t(o === "qr" ? "hosted.qrDesign" : "hosted.afterScan")}
+                onChange={setStageMode}
+              />
+            ) : null}
             <div className="flex basis-full flex-wrap items-center gap-2 max-sm:hidden lg:basis-auto">
               {historyButtons}
               <Segmented
@@ -216,7 +230,8 @@ export function DesignStep({
               />
             </div>
           </StageBar>
-          <div className="relative">
+          {showScan ? <div className="flex justify-center px-4 py-6">{afterScan}</div> : null}
+          <div className={cn("relative", showScan && "hidden")}>
             <StageCanvas actual={view.fit === "actual" ? dims.actual : undefined} className="select-none">
               {canvas}
             </StageCanvas>

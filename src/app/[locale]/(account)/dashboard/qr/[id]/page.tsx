@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { env } from "@/env";
-import { DEFAULT_PRINT_SETTINGS, printSettingsQuery, QrPreview } from "@/entities/qr";
+import { DEFAULT_PRINT_SETTINGS, printSettingsQuery, QrPreview, contentDisplayName, isHostedContent } from "@/entities/qr";
 import { CopyButton } from "@/features/copy-to-clipboard";
 import {
   DeleteLayoutButton,
@@ -27,6 +27,8 @@ import { canDownload, printPackForSale, userTrial } from "@/server/billing/entit
 import { db } from "@/server/db";
 import { loadPrint } from "@/server/print/load";
 import { encodedValue } from "@/server/qr/export";
+import { hostedStatus } from "@/server/qr/hosted";
+import { HostedPageCard } from "./hosted-page-card";
 import { dailyScans, everScanned, getQrCode } from "@/server/qr/repository";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -76,7 +78,7 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
   const user = await requireAccount(locale, `/dashboard/qr/${encodeURIComponent(id)}`, await searchParams);
   const qr = await getQrCode(user.id, id);
   if (!qr) notFound();
-  const [t, tl, tp, tTypes, tDash, , entitled, scans, phase, usage] = await Promise.all([
+  const [t, tl, tp, tTypes, tDash, format, entitled, scans, phase, usage] = await Promise.all([
     getTranslations("qr"),
     getTranslations("qr.details"),
     getTranslations("print"),
@@ -93,6 +95,8 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
   // HEY-148: no scans in the period, but earlier ones: the chart says "none in this period", not "no scans yet".
   const earlierScans = scans !== null && scans.every((d) => d.count === 0) ? await everScanned(user.id, qr.id) : false;
   const value = encodedValue(qr);
+  // Hosted pages: what's live and whether the draft has unpublished changes.
+  const hosted = isHostedContent(qr.content) ? await hostedStatus(db, qr) : null;
   const shortLink = qr.shortCode ? `${env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "")}/${qr.shortCode}` : null;
   const shortShown = shortLink?.replace(/^https?:\/\//, "") ?? "";
   // The same status My QR codes shows (a trial test code after its trial is Paused).
@@ -203,7 +207,20 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
                 ) : (
                   <p className="text-secondary-foreground">{tl("noShortLink")}</p>
                 )}
-                {shortLink ? (
+                {hosted ? (
+                  <>
+                    <hr className="border-border" />
+                    <HostedPageCard
+                      qrCodeId={qr.id}
+                      status={hosted}
+                      live={live && Boolean(shortLink)}
+                      publicHref={qr.shortCode ? `/p/${qr.shortCode}` : null}
+                      date={
+                        hosted.published ? format.dateTime(hosted.published.publishedAt, { dateStyle: "medium", timeStyle: "short" }) : ""
+                      }
+                    />
+                  </>
+                ) : shortLink ? (
                   <>
                     <hr className="border-border" />
                     <DestinationForm
@@ -235,7 +252,11 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
                   {qr.content.type === "website" ? tl("opens") : tTypes(qr.content.type)}
                 </span>
                 <span className="text-body font-semibold break-all">
-                  {qr.content.type === "website" ? qr.content.url : contentLine(qr.content)}
+                  {qr.content.type === "website"
+                    ? qr.content.url
+                    : isHostedContent(qr.content)
+                      ? contentDisplayName(qr.content)
+                      : contentLine(qr.content)}
                 </span>
               </div>
               <p className="text-caption text-secondary-foreground">{tl("staticNote")}</p>

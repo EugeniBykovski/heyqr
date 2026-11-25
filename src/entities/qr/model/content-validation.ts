@@ -1,4 +1,5 @@
-import { parseWebsiteUrl, type QrContent } from "@heyqr/qr-core";
+import { parseWebsiteUrl } from "@heyqr/qr-core";
+import { hostedErrors, isHostedContent, type AnyQrContent } from "./hosted";
 
 /**
  * Content step validation (design: contentErrors), shared by the editor and the public API (HEY-155). Keys are the content field names (inputs have id `content-<name>`),
@@ -17,7 +18,9 @@ export function urlProblem(raw: string): "urlEmpty" | "urlSpaces" | "urlInvalid"
   return parsed.ok ? null : URL_ERRORS[parsed.problem];
 }
 
-export function contentErrors(content: QrContent): ContentErrors {
+export function contentErrors(content: AnyQrContent): ContentErrors {
+  // Hosted pages: the shared publishing rules (keys are field paths, values message keys under editor.hosted.errors).
+  if (isHostedContent(content)) return hostedErrors(content);
   const c = content as Record<string, string | boolean | undefined>;
   const text = (k: string) => (typeof c[k] === "string" ? (c[k] as string) : "");
   const e: ContentErrors = {};

@@ -1,4 +1,5 @@
 import "server-only";
+import { isHostedContent, type AnyQrContent } from "@/entities/qr/model/hosted";
 import {
   captionWeightFor,
   imageAspect,
@@ -11,7 +12,6 @@ import {
   pngPixelSize,
   type Layout,
   type PngResolution,
-  type QrContent,
 } from "@heyqr/qr-core";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -84,8 +84,10 @@ export function downloadFileName(name: string, ext: string): { name: string; hea
  * HEY-118: a Dynamic draft without a slug shows the same preview link as Create (isShortLinkPreview); its files can't
  * be downloaded until activation issues the slug (canDownload).
  */
-export function encodedValue(qr: { model: "static" | "dynamic"; content: QrContent; shortCode: string | null }) {
-  if (qr.model === "dynamic") return shortLinkUrl(env.NEXT_PUBLIC_SHORT_LINK_BASE, qr.shortCode ?? PREVIEW_SLUG);
+export function encodedValue(qr: { model: "static" | "dynamic"; content: AnyQrContent; shortCode: string | null }) {
+  // Hosted pages are always Dynamic: the code holds the short link and the page lives behind it.
+  if (qr.model === "dynamic" || isHostedContent(qr.content))
+    return shortLinkUrl(env.NEXT_PUBLIC_SHORT_LINK_BASE, qr.shortCode ?? PREVIEW_SLUG);
   return encodePayload(qr.content);
 }
 

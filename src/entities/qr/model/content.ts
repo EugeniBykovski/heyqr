@@ -1,4 +1,5 @@
 import type { QrContent, QrContentType } from "@heyqr/qr-core";
+import { emptyHostedContent, hostedErrors, isHostedContent, isHostedType, type AnyQrContent, type QrType } from "./hosted";
 
 export type ContentField = {
   name: string;
@@ -63,7 +64,13 @@ export const CONTENT_FIELDS: Record<QrContentType, ContentField[]> = {
   ],
 };
 
-export function emptyContent(type: QrContentType): QrContent {
+/** An empty form of any type: a direct type's fields, or a hosted page's blank content. */
+export function emptyContent(type: QrType): AnyQrContent {
+  if (isHostedType(type)) return emptyHostedContent(type);
+  return emptyDirectContent(type);
+}
+
+function emptyDirectContent(type: QrContentType): QrContent {
   switch (type) {
     case "website":
       return { type, url: "" };
@@ -86,8 +93,16 @@ export function emptyContent(type: QrContentType): QrContent {
   }
 }
 
+/** Direct content (encoded in the pattern), or an error for a hosted page, which only ever encodes its short link. */
+export function directContent(content: AnyQrContent): QrContent {
+  if (isHostedContent(content)) throw new Error(`A ${content.type} page has no payload: hosted codes encode their short link`);
+  return content;
+}
+
 /** True when every required field has a value (so the preview encodes real content). */
-export function isContentComplete(content: QrContent): boolean {
+export function isContentComplete(content: AnyQrContent): boolean {
+  // A hosted page is complete when it passes the publishing rules.
+  if (isHostedContent(content)) return Object.keys(hostedErrors(content)).length === 0;
   const record = content as Record<string, unknown>;
   return CONTENT_FIELDS[content.type].every(
     (f) => !f.required || (typeof record[f.name] === "string" && (record[f.name] as string).trim() !== ""),
@@ -99,12 +114,22 @@ export function isContentComplete(content: QrContent): boolean {
  * website ("littlefern.cafe/menu" → "littlefern.cafe"), the first line of a text, the network, person, address or
  * event. Null while the content is still empty (callers fall back to their generic placeholder).
  */
-export function contentDisplayName(content: QrContent): string | null {
+export function contentDisplayName(content: AnyQrContent): string | null {
   const clip = (s: string | undefined) => {
     const v = (s ?? "").split("\n")[0]?.trim() ?? "";
     return v ? (v.length > 40 ? `${v.slice(0, 39)}…` : v) : null;
   };
   switch (content.type) {
+    case "menu":
+    case "social":
+    case "business":
+    case "apps":
+    case "product":
+      return clip(content.name);
+    case "coupon":
+      return clip(content.discount || content.title);
+    case "pdf":
+      return clip(content.title);
     case "website": {
       const host = content.url
         .trim()

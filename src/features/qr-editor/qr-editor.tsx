@@ -1,7 +1,7 @@
 "use client";
 
 import { DRAFT_LIMIT } from "@/shared/config/catalog-core";
-import { encodePayload, layoutCapacity, type QrContentType } from "@heyqr/qr-core";
+import { encodePayload, layoutCapacity } from "@heyqr/qr-core";
 import { ArrowLeftIcon, ArrowRightIcon, LoaderCircleIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -20,7 +20,15 @@ import {
   isContentComplete,
   modeFor,
   type EditorDesign,
+  directContent,
+  isHostedContent,
+  isHostedType,
+  QrPreview,
+  type AnyQrContent,
+  type QrType,
 } from "@/entities/qr";
+import type { PdfState } from "./hosted-files";
+import { HostedPreview } from "./hosted-preview";
 import { Link, useRouter } from "@/i18n/navigation";
 import { saveDraft } from "@/server/actions/qr";
 import { formatMoney } from "@/shared/config/catalog";
@@ -77,13 +85,20 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
     if (modeAdjusted) toast(t("mode.adjusted"), { id: "mode-adjusted" });
   }, [restored, unreadable, modeAdjusted, resume, t]);
 
-  const errors = useMemo(() => contentErrors(design.content), [design.content]);
+  // Design 11.12: a PDF still uploading can't continue yet ("Wait for the upload to finish.").
+  const [pdfState, setPdfState] = useState<PdfState>({ status: "idle" });
+  const errors = useMemo(() => {
+    const e = contentErrors(design.content);
+    if (design.content.type === "pdf" && (pdfState.status === "uploading" || pdfState.status === "processing"))
+      return { ...e, file: "pdfUploading" };
+    return e;
+  }, [design.content, pdfState.status]);
   // An empty caption hides the caption (HEY-43); preview and export render exactly the accepted text.
   const layout = useMemo(() => designToLayout(design), [design]);
   // What the printed code actually holds: the short link for dynamic codes, the serialized content (escaping,
   // vCard folding, UTF-8) for static ones. Capacity is checked on exactly this value with this layout's ECL (HEY-24).
   const encoded = useMemo(
-    () => (design.model === "dynamic" ? previewShortLink(env.NEXT_PUBLIC_SHORT_LINK_BASE) : encodePayload(design.content)),
+    () => (design.model === "dynamic" ? previewShortLink(env.NEXT_PUBLIC_SHORT_LINK_BASE) : encodePayload(directContent(design.content))),
     [design.model, design.content],
   );
   const capacity = useMemo(() => layoutCapacity(layout, encoded), [layout, encoded]);
@@ -98,6 +113,8 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
     [shownLayout, shownValue],
   );
   const prices = usePrices();
+  // The short link as previews show it ("heyqr.app/r/…"): the real slug is assigned when the plan starts.
+  const shortLabel = previewShortLink(env.NEXT_PUBLIC_SHORT_LINK_BASE).replace(/^https?:\/\//, "");
   const priceCents = design.model === "dynamic" ? prices.cents.starter : prices.cents.single;
   const price = formatMoney(priceCents, prices.currency);
   const canDownload = complete && Boolean(scan?.ok) && !saving;
@@ -123,18 +140,29 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
     }
     setShowErrors(true);
     if (step !== "content") goTo("content");
-    window.setTimeout(() => document.getElementById(`content-${keys[0]}`)?.focus(), 50);
+    // The first field marked invalid, in form order (direct fields are content-<name>; hosted fields carry ids too).
+    window.setTimeout(
+      () => (document.getElementById(`content-${keys[0]}`) ?? document.querySelector<HTMLElement>("form [aria-invalid=true]"))?.focus(),
+      50,
+    );
   };
 
   const requestStep = (target: EditorStep) => (target === "design" ? toDesign() : goTo(target));
 
-  /** A new type keeps the mode when it supports it; otherwise it becomes Static and the user is told. */
-  const changeType = (type: QrContentType) => {
+  /** What was typed for each type during this visit, so trying another type and coming back keeps it. */
+  const stash = useRef<Partial<Record<QrType, AnyQrContent>>>({});
+  /**
+   * A new type keeps the mode when it supports it; otherwise it changes and the user is told. Hosted pages are always
+   * Dynamic (no notice: the Type step says so).
+   */
+  const changeType = (type: QrType) => {
     if (type === design.content.type) return;
     const model = modeFor(type, design.model);
-    if (model !== design.model) toast(t("mode.switched", { type: tTypes(type) }), { id: "mode-switched" });
+    if (model !== design.model && !isHostedType(type)) toast(t("mode.switched", { type: tTypes(type) }), { id: "mode-switched" });
+    stash.current[design.content.type] = design.content;
     setShowErrors(false);
-    patch({ content: emptyContent(type), model });
+    setPdfState({ status: "idle" });
+    patch({ content: stash.current[type] ?? emptyContent(type), model });
   };
 
   // HEY-34 / HEY-35: colour and size fields whose text isn't valid. Export stops there instead of using the previous value.
@@ -275,6 +303,15 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
           onNameChange={(name) => patch({ name })}
           onBack={() => goTo("type")}
           onContinue={toDesign}
+          signedIn={signedIn}
+          shortLabel={shortLabel}
+          pdfState={pdfState}
+          onPdfState={setPdfState}
+          hostedNeeds={t("hosted.needsPlan", {
+            starter: formatMoney(prices.cents.starter, prices.currency),
+            studio: formatMoney(prices.cents.studio, prices.currency),
+          })}
+          qrPreview={<QrPreview layout={shownLayout} value={shownValue} label={t("hosted.qrDesign")} className="w-full max-w-[18.75rem]" />}
         />
       </TabsPrimitive.Content>
 
@@ -297,6 +334,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
             <BottomBarInfo title={t(design.model === "dynamic" ? "pricePerMonth" : "priceOnce", { price })} hint={t("previewFree")} />
           }
           note={t("previewNote")}
+          afterScan={isHostedContent(design.content) ? <HostedPreview content={design.content} shortLabel={shortLabel} /> : undefined}
         />
       </TabsPrimitive.Content>
     </TabsPrimitive.Root>

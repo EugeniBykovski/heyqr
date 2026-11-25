@@ -61,6 +61,10 @@ import * as schema from "./schema";
 import { assertAllowed } from "./target";
 import { DRAFT_LIMIT, PLANS, SCAN_MONITOR_THRESHOLDS } from "../../shared/config/catalog-core";
 import { newId } from "./ids";
+import { publishHosted, publicHostedContent, saveHostedDraft, hostedStatus } from "../qr/hosted";
+import { checkPdf, storeHostedContent, storePdf } from "../qr/hosted-assets";
+import { publicHostedFile, REPORTS_PER_HOUR, reportsFor, submitDeveloperNotify, submitReport } from "../qr/hosted-public";
+import { emptyHostedContent, sampleHostedContent, type HostedContent } from "../../entities/qr/model/hosted";
 
 const url = process.env.TEST_DATABASE_URL;
 
@@ -5275,7 +5279,7 @@ describe.skipIf(!url)("subscription transitions and out-of-order delivery (HEY-1
     const live = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, codes.live) });
     const link = async (slug: string) => {
       const a = await resolveShortLink(db, slug);
-      return a.kind === "redirect" ? a.to : a.inactive ? "inactive" : "unavailable";
+      return a.kind === "redirect" ? a.to : a.kind === "hosted" ? `hosted v${a.page.version}` : a.inactive ? "inactive" : "unavailable";
     };
     return {
       stored: `${row?.status} ${row?.currentPeriodEnd?.toISOString().slice(0, 10)}${row?.cancelAtPeriodEnd ? " scheduled" : ""}`,
@@ -7359,5 +7363,245 @@ describe.skipIf(!url)("idempotent create retries (HEY-165, real PostgreSQL)", ()
     expect(bad.status).toBe(422);
     expect(((await bad.json()) as { error: { details: { path: string }[] } }).error.details[0]?.path).toBe("Idempotency-Key");
     expect(await counts(a.id)).toEqual({ codes: 1, layouts: 2, keys: 1 });
+  });
+});
+
+/*
+ * Hosted pages (design 10.x / 11.x): draft vs published, the public short link, public files, cleanup, reports.
+ */
+describe.skipIf(!url)("hosted pages: drafts, publishing and public reads (real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "hp-owner", name: "Owner", email: "owner@hosted.test" };
+  const other = { id: "hp-other", name: "Other", email: "other@hosted.test" };
+  const objects = new Map<string, Uint8Array>();
+  const store: LogoStore = {
+    put: async (key, body) => void objects.set(key, body),
+    get: async (key) => objects.get(key) ?? null,
+    remove: async (key) => void objects.delete(key),
+  };
+  // A 1×1 PNG and a 1×1 JPEG (real headers; the server reads the type from the bytes).
+  const PNG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+  const JPEG = `data:image/jpeg;base64,${Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0, 0x10, 0x4a, 0x46, 0x49, 0x46, 0, 1]).toString("base64")}`;
+  const layout = designToLayout(DEFAULT_DESIGN);
+  const prepare = (userId: string) => (tx: Parameters<Parameters<typeof db.transaction>[0]>[0], c: HostedContent) =>
+    storeHostedContent(tx, store, userId, c, newId);
+  const save = (userId: string, content: unknown, model: "static" | "dynamic" = "dynamic", qrCodeId?: string) =>
+    saveQrWithLayouts(
+      db,
+      userId,
+      {
+        ...(qrCodeId ? { qrCodeId } : {}),
+        name: "Hosted",
+        model,
+        content: content as HostedContent,
+        layouts: [{ name: "Default", layout }],
+      },
+      undefined,
+      prepare(userId),
+    );
+  const activate = async (qrCodeId: string, shortCode: string) =>
+    db.update(schema.qrCode).set({ status: "active", shortCode }).where(eq(schema.qrCode.id, qrCodeId));
+  const link = async (code: string) => {
+    const a = await resolveShortLink(db, code);
+    return a.kind === "hosted" ? a : a.kind;
+  };
+  const menu = (name: string, photo: string | null = null): HostedContent => {
+    const m = sampleHostedContent("menu");
+    if (m.type !== "menu") throw new Error("menu");
+    const first = m.sections[0];
+    const dish = first?.dishes[0];
+    if (!first || !dish) throw new Error("menu");
+    return { ...m, name, sections: [{ ...first, dishes: [{ ...dish, photo }, ...first.dishes.slice(1)] }, ...m.sections.slice(1)] };
+  };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+    const day = 24 * 60 * 60 * 1000;
+    await db
+      .insert(schema.subscription)
+      .values({
+        id: "hp-sub",
+        userId: owner.id,
+        stripeSubscriptionId: "sub_hosted_test",
+        stripePriceId: "price_x",
+        status: "active",
+        plan: "starter",
+        activeCodeLimit: 5,
+        currentPeriodStart: new Date(Date.now() - day),
+        currentPeriodEnd: new Date(Date.now() + 30 * day),
+      })
+      .onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await pool.query("delete from qr_code where user_id = any($1)", [[owner.id, other.id]]);
+    await pool.query("delete from asset where user_id = any($1)", [[owner.id, other.id]]);
+    await pool.query("delete from subscription where id = 'hp-sub'");
+    await pool.query("delete from developer_notify where email like '%@hosted.test'");
+    await pool.end();
+  });
+
+  it("hosted types save only as Dynamic, in their stored shape, with photos moved to private storage", async () => {
+    expect(await save(owner.id, menu("Static menu"), "static")).toEqual({ ok: false, error: "invalid" });
+    expect(await save(owner.id, { ...menu("Bad"), extra: 1 })).toEqual({ ok: false, error: "invalid" });
+    // A GIF (or any non JPG/PNG bytes) is refused even when it claims to be a PNG.
+    expect(await save(owner.id, menu("Gif", `data:image/png;base64,${Buffer.from("GIF89a....").toString("base64")}`))).toEqual({
+      ok: false,
+      error: "invalid",
+    });
+    const saved = await save(owner.id, menu("Little Fern", PNG));
+    expect(saved.ok).toBe(true);
+    if (!saved.ok) return;
+    const row = await db.query.qrCode.findFirst({ where: eq(schema.qrCode.id, saved.data.qrCodeId) });
+    expect(row?.model).toBe("dynamic");
+    expect(row?.destination).toBeNull();
+    const photo = row?.content.type === "menu" ? row.content.sections[0]?.dishes[0]?.photo : null;
+    expect(photo).toMatch(/^asset:/);
+    expect([...objects.keys()].some((k) => k.startsWith(`hosted/${owner.id}/`))).toBe(true);
+    // A saved hosted code can't turn into another type, nor a direct code.
+    expect(await save(owner.id, sampleHostedContent("coupon"), "dynamic", saved.data.qrCodeId)).toEqual({ ok: false, error: "invalid" });
+    // Another account can't use the owner's stored file.
+    expect(await save(other.id, menu("Stolen", photo ?? ""))).toEqual({ ok: false, error: "invalid" });
+  });
+
+  it("visitors see only the latest published version; drafts, refused publishes and edits stay private", async () => {
+    const saved = await save(owner.id, menu("Version one", JPEG));
+    if (!saved.ok) throw new Error("save");
+    const id = saved.data.qrCodeId;
+    await activate(id, "hpmenu1");
+    // Never published: the live short link has nothing to show.
+    expect(await link("hpmenu1")).toBe("unavailable");
+    expect(await publishHosted(db, other.id, id)).toEqual({ ok: false, error: "not_found" });
+    const v1 = await publishHosted(db, owner.id, id);
+    expect(v1).toMatchObject({ ok: true, version: 1, unchanged: false });
+    const first = await link("hpmenu1");
+    expect(typeof first === "object" && first.page.content.type === "menu" && first.page.content.name).toBe("Version one");
+
+    // Scans before the edit, on the same code.
+    await incrementScan(db, id);
+    // The owner edits the draft: the public page doesn't change.
+    const draft = await saveHostedDraft(db, store, owner.id, id, menu("Version two (draft)"), newId);
+    expect(draft.ok).toBe(true);
+    const still = await link("hpmenu1");
+    expect(typeof still === "object" && still.page.content.type === "menu" && still.page.content.name).toBe("Version one");
+    expect(
+      (await hostedStatus(db, { id, content: (await db.query.qrCode.findFirst({ where: eq(schema.qrCode.id, id) }))?.content })).changed,
+    ).toBe(true);
+
+    // A draft that breaks the rules is refused; the live version stays.
+    await saveHostedDraft(db, store, owner.id, id, { ...menu(""), name: "" }, newId);
+    const refused = await publishHosted(db, owner.id, id);
+    expect(refused).toMatchObject({ ok: false, error: "invalid", errors: { name: "menuName" } });
+    expect((await link("hpmenu1")) !== "unavailable").toBe(true);
+
+    // Fixed and republished: version 2 on the same QR, short link and scan history.
+    await saveHostedDraft(db, store, owner.id, id, menu("Version two"), newId);
+    expect(await publishHosted(db, owner.id, id)).toMatchObject({ ok: true, version: 2 });
+    expect(await publishHosted(db, owner.id, id)).toMatchObject({ ok: true, version: 2, unchanged: true });
+    const second = await link("hpmenu1");
+    expect(typeof second === "object" && second.qrCodeId === id && second.page.content.type === "menu" && second.page.content.name).toBe(
+      "Version two",
+    );
+    const code = await db.query.qrCode.findFirst({ where: eq(schema.qrCode.id, id) });
+    expect(code?.shortCode).toBe("hpmenu1");
+    expect(await hasScans(db, owner.id, id)).toBe(true);
+
+    // Paused: unavailable, and its files too.
+    await db.update(schema.qrCode).set({ status: "paused" }).where(eq(schema.qrCode.id, id));
+    expect(await link("hpmenu1")).toBe("unavailable");
+  });
+
+  it("public files: only those of the live published version, of the code's owner", async () => {
+    const saved = await save(owner.id, menu("Files", PNG));
+    if (!saved.ok) throw new Error("save");
+    const id = saved.data.qrCodeId;
+    await activate(id, "hpfile1");
+    const row = await db.query.qrCode.findFirst({ where: eq(schema.qrCode.id, id) });
+    const published = row?.content.type === "menu" ? row.content.sections[0]?.dishes[0]?.photo?.slice(6) : undefined;
+    if (!published) throw new Error("photo");
+    // Before publishing, the stored photo is a draft file: not public.
+    expect(await publicHostedFile(db, store, "hpfile1", published)).toBeNull();
+    await publishHosted(db, owner.id, id);
+    expect((await publicHostedFile(db, store, "hpfile1", published))?.contentType).toBe("image/png");
+    // A new draft photo isn't public until published; the published one stays readable meanwhile.
+    await saveHostedDraft(db, store, owner.id, id, menu("Files", JPEG), newId);
+    const draftRow = await db.query.qrCode.findFirst({ where: eq(schema.qrCode.id, id) });
+    const draftPhoto = draftRow?.content.type === "menu" ? draftRow.content.sections[0]?.dishes[0]?.photo?.slice(6) : undefined;
+    if (!draftPhoto) throw new Error("draft photo");
+    expect(await publicHostedFile(db, store, "hpfile1", draftPhoto)).toBeNull();
+    expect(await publicHostedFile(db, store, "hpfile1", published)).not.toBeNull();
+    // Another account's file id, through this code: never.
+    const foreign = await save(other.id, menu("Other", JPEG));
+    if (!foreign.ok) throw new Error("foreign");
+    const foreignRow = await db.query.qrCode.findFirst({ where: eq(schema.qrCode.id, foreign.data.qrCodeId) });
+    const foreignPhoto = foreignRow?.content.type === "menu" ? foreignRow.content.sections[0]?.dishes[0]?.photo?.slice(6) : undefined;
+    expect(await publicHostedFile(db, store, "hpfile1", foreignPhoto ?? "x")).toBeNull();
+    // Cleanup keeps files referenced by drafts and published versions.
+    await pool.query("update asset set last_used_at = now() - interval '3 days' where user_id = $1", [owner.id]);
+    await cleanupLogos(db, store);
+    expect(await publicHostedFile(db, store, "hpfile1", published)).not.toBeNull();
+    expect(await db.query.asset.findFirst({ where: eq(schema.asset.id, draftPhoto) })).toBeDefined();
+  });
+
+  it("PDF: server checks, owner-only references, and the published file stays while a replacement is pending", async () => {
+    expect(checkPdf(new Uint8Array())).toEqual({ ok: false, reason: "empty" });
+    expect(checkPdf(new TextEncoder().encode("hello"))).toEqual({ ok: false, reason: "notPdf" });
+    const sample = new Uint8Array(
+      readFileSync(fileURLToPath(new URL("../../../public/samples/spring-class-schedule.pdf", import.meta.url))),
+    );
+    expect(checkPdf(sample)).toEqual({ ok: true, pages: 2 });
+    const assetId = await storePdf(db, store, owner.id, sample, newId);
+    const pdf = {
+      ...emptyHostedContent("pdf"),
+      title: "Schedule",
+      file: { asset: `asset:${assetId}`, name: "schedule.pdf", bytes: sample.byteLength, pages: 2 },
+    } as HostedContent;
+    // Not the other account's to use.
+    expect(await save(other.id, pdf)).toEqual({ ok: false, error: "invalid" });
+    const saved = await save(owner.id, pdf);
+    if (!saved.ok) throw new Error("save");
+    await activate(saved.data.qrCodeId, "hppdf01");
+    await publishHosted(db, owner.id, saved.data.qrCodeId);
+    expect((await publicHostedFile(db, store, "hppdf01", assetId))?.contentType).toBe("application/pdf");
+    // The owner removes the file in the draft (replacement still uploading): the live PDF is still served.
+    await saveHostedDraft(db, store, owner.id, saved.data.qrCodeId, { ...pdf, file: null }, newId);
+    expect(await publishHosted(db, owner.id, saved.data.qrCodeId)).toMatchObject({
+      ok: false,
+      error: "invalid",
+      errors: { file: "pdfFile" },
+    });
+    expect(await publicHostedFile(db, store, "hppdf01", assetId)).not.toBeNull();
+  });
+
+  it("coupon: the end date is valid through that day in the owner's time zone; expired pages hide code and link", async () => {
+    const coupon = { ...sampleHostedContent("coupon"), expires: "2026-11-30", timeZone: "America/Los_Angeles" } as HostedContent;
+    if (coupon.type !== "coupon") throw new Error("coupon");
+    // 2026-12-01 07:59 UTC is still Nov 30 in Los Angeles; 08:00 UTC is Dec 1 there.
+    const lastMinute = publicHostedContent(coupon, "x", new Date("2026-12-01T07:59:00Z"));
+    const ended = publicHostedContent(coupon, "x", new Date("2026-12-01T08:00:00Z"));
+    expect(lastMinute.type === "coupon" && [lastMinute.code, lastMinute.link]).toEqual([coupon.code, coupon.link]);
+    expect(ended.type === "coupon" && [ended.code, ended.link, ended.terms]).toEqual(["", "", coupon.terms]);
+  });
+
+  it("hosted codes have no destination: Change destination and Make it static are refused", async () => {
+    const saved = await save(owner.id, sampleHostedContent("social"));
+    if (!saved.ok) throw new Error("save");
+    expect(await changeFresh(db, owner.id, saved.data.qrCodeId, "https://example.com")).toMatchObject({ ok: false, error: "not_found" });
+    expect(await convertToStatic(db, owner.id, saved.data.qrCodeId)).toEqual({ ok: false });
+  });
+
+  it("reports are stored for existing links and limited per visitor; notify sign-ups are de-duplicated", async () => {
+    expect(await submitReport(db, { code: "nope-nope", reason: "scam" }, "r1")).toEqual({ ok: false, error: "not_found" });
+    expect(await submitReport(db, { code: "hpmenu1", reason: "bogus" }, "r1")).toEqual({ ok: false, error: "invalid" });
+    for (let i = 0; i < REPORTS_PER_HOUR; i++)
+      expect(await submitReport(db, { code: "hpmenu1", reason: "scam", details: `#${i}` }, "r-limit")).toEqual({ ok: true });
+    expect(await submitReport(db, { code: "hpmenu1", reason: "scam" }, "r-limit")).toEqual({ ok: false, error: "rate_limited" });
+    expect((await reportsFor(db, "hpmenu1")).length).toBe(REPORTS_PER_HOUR);
+    expect(await submitDeveloperNotify(db, { email: "Dev@hosted.test", topic: "packages" })).toEqual({ ok: true });
+    expect(await submitDeveloperNotify(db, { email: "dev@hosted.test", topic: "packages" })).toEqual({ ok: true });
+    expect(await submitDeveloperNotify(db, { email: "not an email", topic: "packages" })).toEqual({ ok: false, error: "invalid" });
+    expect(Number((await pool.query("select count(*)::int as n from developer_notify where email = 'dev@hosted.test'")).rows[0].n)).toBe(1);
   });
 });
