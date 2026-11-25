@@ -3,8 +3,10 @@
 The hosted HeyQR REST API, v1, for TypeScript. It has two parts:
 
 - **Types** (HEY-160): the public contract of every request, response and error.
-- **Client:** `HeyQrClient`, with `createQr`, `getLayout` and `getDestination` (HEY-161), and `updateLayout` and
-  `updateDestination` (HEY-162).
+- **Client:** `HeyQrClient`, with:
+  - `createQr`, `getLayout` and `getDestination` (HEY-161);
+  - `updateLayout` and `updateDestination` (HEY-162);
+  - `downloadExport` for PNG and SVG files (HEY-163).
 
 Retries and idempotent creation come with HEY-165, and npm publishing later. The HTTP
 contract itself is [docs/API_V1.md](../../docs/API_V1.md).
@@ -29,13 +31,14 @@ if (!apiKey) throw new Error("Set HEYQR_API_KEY");
 const heyqr = new HeyQrClient({ apiKey, baseUrl: "https://heyqr.example" });
 ```
 
-| Method                                      | Request                                                                                      | Returns                                                                                                                        |
-| ------------------------------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `createQr(request)`                         | `POST /api/v1/qr-codes`                                                                      | `CreateQrResponse`: the draft's `id`, `status` and its layouts' ids, in request order                                          |
-| `getLayout(qrCodeId, layoutId)`             | `GET /api/v1/qr-codes/{qrCodeId}/layouts/{layoutId}`                                         | `Layout`, with its `LayoutRevision` (a string)                                                                                 |
-| `getDestination(qrCodeId)`                  | `GET /api/v1/qr-codes/{qrCodeId}/destination`                                                | `Destination`, with its `DestinationRevision` (a number)                                                                       |
-| `updateLayout(qrCodeId, layoutId, request)` | `PATCH …/layouts/{layoutId}`: sends `revision` and the given `name`, `layout`, `editor` only | the updated `Layout`, with its new revision                                                                                    |
-| `updateDestination(qrCodeId, request)`      | `PATCH …/destination`: sends `destination` and `revision` only                               | `UpdateDestinationResponse`: the stored destination, its revision, and `changed` (`false` when the address was already stored) |
+| Method                                                                       | Request                                                                                      | Returns                                                                                                                        |
+| ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `createQr(request)`                                                          | `POST /api/v1/qr-codes`                                                                      | `CreateQrResponse`: the draft's `id`, `status` and its layouts' ids, in request order                                          |
+| `getLayout(qrCodeId, layoutId)`                                              | `GET /api/v1/qr-codes/{qrCodeId}/layouts/{layoutId}`                                         | `Layout`, with its `LayoutRevision` (a string)                                                                                 |
+| `getDestination(qrCodeId)`                                                   | `GET /api/v1/qr-codes/{qrCodeId}/destination`                                                | `Destination`, with its `DestinationRevision` (a number)                                                                       |
+| `updateLayout(qrCodeId, layoutId, request)`                                  | `PATCH …/layouts/{layoutId}`: sends `revision` and the given `name`, `layout`, `editor` only | the updated `Layout`, with its new revision                                                                                    |
+| `updateDestination(qrCodeId, request)`                                       | `PATCH …/destination`: sends `destination` and `revision` only                               | `UpdateDestinationResponse`: the stored destination, its revision, and `changed` (`false` when the address was already stored) |
+| `downloadExport(qrCodeId, layoutId, { format, dpi?, scale?, transparent? })` | `GET …/layouts/{layoutId}/export` (PNG or SVG)                                               | `ExportedFile`: `bytes` (`Uint8Array`), `contentType`, `filename` (or null), `delivery`                                        |
 
 **Options:**
 
@@ -57,6 +60,17 @@ client's JSON or `inspect` output. IDs are URL-encoded into the path.
   - Their `response` narrows by status and code, e.g. to `invalid_request` with its `details`.
 - **`HeyQrError`:** no documented answer arrived (a network failure, or a non-JSON body). It has `status` when a
   response arrived.
+
+**Downloads.** `downloadExport` follows how the API delivers files:
+
+- **Hosted HeyQR:** the API answers 302 to a short-lived signed link. The SDK fetches that link in a second request
+  without `Authorization`, cookies or any header (`delivery: "signed-link"`). The link never appears in an error.
+- **Local server without storage:** the file comes in the response itself (`delivery: "direct"`).
+- **Unpaid code:** a Static code that isn't paid for, or a Dynamic code that isn't live, throws `HeyQrApiError` 402
+  `payment_required`. `response.body.error.paymentUrl` is HeyQR's Export screen for that code, layout and format. The
+  owner opens it and pays; then call `downloadExport` again.
+- **Never automatic:** the SDK neither opens the payment URL nor retries. Downloading again never charges.
+- **Other errors:** 401 and 404 come back like the other methods'; an expired link is a `HeyQrError`.
 
 **Updates and conflicts.** Each update starts from the revision its read returned. A layout's revision is a string
 from `getLayout`; a destination's is a number from `getDestination`. If someone saved in between, the update throws
@@ -127,17 +141,39 @@ pnpm exec tsx packages/sdk/examples/read-and-update.ts
 }
 ```
 
+### Runnable example: download PNG and SVG
+
+[`examples/download-export.ts`](examples/download-export.ts) downloads a layout's PNG (scale 4) and SVG and saves them
+under their suggested names. On a 402 it prints the payment URL:
+
+```sh
+HEYQR_API_KEY=hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX \
+HEYQR_BASE_URL=http://localhost:3000 \
+HEYQR_QR_ID=<qr id> HEYQR_LAYOUT_ID=<layout id> HEYQR_OUT_DIR=. \
+pnpm exec tsx packages/sdk/examples/download-export.ts
+```
+
+```json
+[
+  { "path": "sticker.png", "contentType": "image/png", "bytes": 260582, "delivery": "signed-link" },
+  { "path": "sticker.svg", "contentType": "image/svg+xml", "bytes": 168274, "delivery": "signed-link" }
+]
+```
+
+Unpaid, it prints this instead: `Payment required: open https://heyqr.example/create/export?qr=…&layout=…&format=png
+as the code's owner, then run this again.`
+
 ## Exports
 
-| Area                                                         | Types                                                                                                                                                                                                                                                                    |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Client (HEY-161, HEY-162)                                    | `HeyQrClient`, `HeyQrApiError`, `HeyQrError`, `isHeyQrApiError`, `isRevisionConflict`, `HeyQrClientOptions`, `FetchLike`, `CreateQrError`, `GetLayoutError`, `GetDestinationError`, `UpdateLayoutError`, `UpdateDestinationError`                                        |
-| Create a QR (`POST /api/v1/qr-codes`)                        | `CreateQrRequest`, `CreateQrLayout`, `QrContent`, `QrContentType`, `QrMode`, `DesignInput`, `CreateQrResponse`, `QrStatus`, `DraftLimitError`, `ContentTooLongError`, `CreateQrErrorResponse`, `CreateQrResult`                                                          |
-| A layout (`GET` / `PATCH …/layouts/{layoutId}`)              | `Layout`, `LayoutRevision`, `LayoutDesign`, `LayoutEditorSettings`, `UpdateLayoutRequest`, `LayoutRevisionConflictError`, `GetLayoutErrorResponse`, `GetLayoutResult`, `UpdateLayoutErrorResponse`, `UpdateLayoutResult`                                                 |
-| A Dynamic code's destination (`GET` / `PATCH …/destination`) | `Destination`, `DestinationRevision`, `UpdateDestinationRequest`, `UpdateDestinationResponse`, `DestinationRevisionConflictError`, `NotDynamicError`, `GetDestinationErrorResponse`, `GetDestinationResult`, `UpdateDestinationErrorResponse`, `UpdateDestinationResult` |
-| Export (`GET …/layouts/{layoutId}/export`)                   | `ExportQuery`, `ExportFormat`, `ExportRedirect`, `ExportFile`, `PaymentRequiredError`, `ExportTooLongError`, `ExportTooLargeError`, `ScanCheckFailedError`, `ScanIssue`, `ExportErrorResponse`, `ExportResult`                                                           |
-| Errors (all routes)                                          | `ApiErrorBody`, `ApiResponse`, `CommonErrorResponse`, `UnauthorizedError`, `NotFoundError`, `MalformedJsonError`, `InvalidRequestError`, `ValidationProblem`, `InternalError`, `AnyApiErrorBody`                                                                         |
-| JSON                                                         | `JsonValue`, `JsonObject`                                                                                                                                                                                                                                                |
+| Area                                                         | Types                                                                                                                                                                                                                                                                                                                    |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Client (HEY-161 to HEY-163)                                  | `HeyQrClient`, `dispositionFilename`, `HeyQrApiError`, `HeyQrError`, `isHeyQrApiError`, `isRevisionConflict`, `HeyQrClientOptions`, `FetchLike`, `CreateQrError`, `GetLayoutError`, `GetDestinationError`, `UpdateLayoutError`, `UpdateDestinationError`, `DownloadExportRequest`, `DownloadExportError`, `ExportedFile` |
+| Create a QR (`POST /api/v1/qr-codes`)                        | `CreateQrRequest`, `CreateQrLayout`, `QrContent`, `QrContentType`, `QrMode`, `DesignInput`, `CreateQrResponse`, `QrStatus`, `DraftLimitError`, `ContentTooLongError`, `CreateQrErrorResponse`, `CreateQrResult`                                                                                                          |
+| A layout (`GET` / `PATCH …/layouts/{layoutId}`)              | `Layout`, `LayoutRevision`, `LayoutDesign`, `LayoutEditorSettings`, `UpdateLayoutRequest`, `LayoutRevisionConflictError`, `GetLayoutErrorResponse`, `GetLayoutResult`, `UpdateLayoutErrorResponse`, `UpdateLayoutResult`                                                                                                 |
+| A Dynamic code's destination (`GET` / `PATCH …/destination`) | `Destination`, `DestinationRevision`, `UpdateDestinationRequest`, `UpdateDestinationResponse`, `DestinationRevisionConflictError`, `NotDynamicError`, `GetDestinationErrorResponse`, `GetDestinationResult`, `UpdateDestinationErrorResponse`, `UpdateDestinationResult`                                                 |
+| Export (`GET …/layouts/{layoutId}/export`)                   | `ExportQuery`, `ExportFormat`, `ExportRedirect`, `ExportFile`, `PaymentRequiredError`, `ExportTooLongError`, `ExportTooLargeError`, `ScanCheckFailedError`, `ScanIssue`, `ExportErrorResponse`, `ExportResult`                                                                                                           |
+| Errors (all routes)                                          | `ApiErrorBody`, `ApiResponse`, `CommonErrorResponse`, `UnauthorizedError`, `NotFoundError`, `MalformedJsonError`, `InvalidRequestError`, `ValidationProblem`, `InternalError`, `AnyApiErrorBody`                                                                                                                         |
+| JSON                                                         | `JsonValue`, `JsonObject`                                                                                                                                                                                                                                                                                                |
 
 The `…Result` types pair each HTTP status with its body (`{ status, body }`), so a `switch (result.status)` and then
 `result.body.error.code` narrow to the exact error.
@@ -189,7 +225,8 @@ More, with compile-time checks for invalid input and error narrowing: [`test/con
 ## Checks
 
 - `pnpm exec vitest run packages/sdk`: the client's request path, the update bodies (only supported fields), errors
-  (401, 404, 422 validation, `not_dynamic`, both 409 conflicts, non-JSON, network) and where the key may not appear,
+  (401, 404, 422 validation, `not_dynamic`, both 409 conflicts, 402 with the payment URL, non-JSON, network), PNG
+  and SVG downloads through a signed link (no credentials sent) and directly and where the key may not appear,
   against a stubbed `fetch`.
 - The PostgreSQL suite (`SDK client updates against the routes`) runs the client against the real route handlers:
   each update changes only its own resource, and stale revisions leave the saved values unchanged.

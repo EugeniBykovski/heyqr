@@ -7,6 +7,8 @@ import {
   HeyQrClient,
   isHeyQrApiError,
   type CreateQrError,
+  type DownloadExportError,
+  type ExportedFile,
   type GetDestinationError,
   type UpdateDestinationError,
   type UpdateLayoutError,
@@ -275,6 +277,31 @@ export function layoutConflict(error: UpdateLayoutError): boolean {
   const r = error.response;
   // @ts-expect-error HEY-162: the layout conflict has no current state (only the destination conflict does)
   return r.status === 409 && r.body.error.current !== undefined;
+}
+
+/* ── HEY-163: download a PNG or SVG; a 402 hands the caller the payment URL ─────────────────────────────────── */
+
+export async function download(qrCodeId: string, layoutId: string): Promise<ExportedFile | { pay: string }> {
+  try {
+    return await heyqr.downloadExport(qrCodeId, layoutId, { format: "png", scale: 4 });
+  } catch (error) {
+    const r = (error as DownloadExportError).response;
+    if (isHeyQrApiError(error) && r.status === 402) return { pay: r.body.error.paymentUrl };
+    throw error;
+  }
+}
+
+export async function downloadMisuse(e: DownloadExportError): Promise<unknown[]> {
+  return [
+    // @ts-expect-error HEY-163: downloadExport is for PNG and SVG
+    await heyqr.downloadExport("Q8d3", "L2k9", { format: "pdf" }),
+    // @ts-expect-error HEY-163: the API's option is "transparent": "1", not a boolean
+    await heyqr.downloadExport("Q8d3", "L2k9", { format: "png", transparent: true }),
+    // @ts-expect-error HEY-163: the payment URL is only on the 402 response
+    e.response.body.error.paymentUrl,
+    // @ts-expect-error HEY-163: the file's bytes are a Uint8Array, not a string
+    (await heyqr.downloadExport("Q8d3", "L2k9", { format: "svg" })).bytes satisfies string,
+  ];
 }
 
 export type { QrMode };

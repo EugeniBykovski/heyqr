@@ -6994,7 +6994,7 @@ describe.skipIf(!url)("SDK client updates against the routes (HEY-162, real Post
     const [, qrCodeId, kind, layoutId] = /^\/qr-codes(?:\/([^/]+)(?:\/(layouts|destination)(?:\/([^/]+))?)?)?$/.exec(path) ?? [];
     const route = !qrCodeId ? routes.create : kind === "destination" ? routes.destination : routes.layout;
     const handler = route[init.method];
-    if (!handler) return { status: 405, headers: { get: () => null }, text: async () => "" };
+    if (!handler) return { status: 405, headers: { get: () => null }, text: async () => "", arrayBuffer: async () => new ArrayBuffer(0) };
     const params = Object.fromEntries(Object.entries({ qrCodeId, layoutId }).flatMap(([k, v]) => (v ? [[k, decodeURIComponent(v)]] : [])));
     const res = await handler(
       new Request(url, { method: init.method, headers: init.headers, ...(init.body === undefined ? {} : { body: init.body }) }),
@@ -7002,7 +7002,7 @@ describe.skipIf(!url)("SDK client updates against the routes (HEY-162, real Post
         params: Promise.resolve(params),
       },
     );
-    return { status: res.status, headers: res.headers, text: () => res.text() };
+    return { status: res.status, headers: res.headers, text: () => res.text(), arrayBuffer: () => res.arrayBuffer() };
   };
   const stored = async (qrCodeId: string) => ({
     code: (

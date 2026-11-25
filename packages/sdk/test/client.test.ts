@@ -8,6 +8,7 @@ import {
   isRevisionConflict,
   type CreateQrError,
   type FetchLike,
+  type DownloadExportError,
   type UpdateDestinationError,
   type UpdateLayoutRequest,
 } from "@heyqr/sdk";
@@ -24,6 +25,7 @@ function fakeFetch(status: number, body: unknown, contentType = "application/jso
       status,
       headers: { get: (n) => (n.toLowerCase() === "content-type" ? contentType : null) },
       text: async () => (typeof body === "string" ? body : JSON.stringify(body)),
+      arrayBuffer: async () => new TextEncoder().encode(typeof body === "string" ? body : JSON.stringify(body)).buffer as ArrayBuffer,
     };
   };
   return { fetch, calls };
@@ -291,5 +293,146 @@ describe("HeyQrClient updates (HEY-162)", () => {
       .catch((x: unknown) => x);
     expect(e).toMatchObject({ status: 422, code: "invalid_request", response: { body: invalid } });
     expect(isRevisionConflict(e)).toBe(false);
+  });
+});
+
+describe("HeyQrClient downloadExport (HEY-163)", () => {
+  const PNG = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 1, 2, 3]);
+  const SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><rect width="10" height="10"/></svg>';
+  const SIGNED = "https://storage.example/paid/user/q/l/rev/png-abc.png?X-Amz-Signature=deadbeef&X-Amz-Expires=120";
+  type Answer = { status: number; headers?: Record<string, string>; body?: Uint8Array | string };
+  /** A fetch that answers each call in turn (the API, then the storage link). */
+  const sequence = (...answers: Answer[]) => {
+    const calls: Call[] = [];
+    const fetch: FetchLike = async (url, init) => {
+      calls.push({ url, init });
+      const a = answers[calls.length - 1] ?? { status: 599 };
+      const bytes = typeof a.body === "string" ? new TextEncoder().encode(a.body) : (a.body ?? new Uint8Array());
+      const headers = Object.fromEntries(Object.entries(a.headers ?? {}).map(([k, v]) => [k.toLowerCase(), v]));
+      return {
+        status: a.status,
+        headers: { get: (n) => headers[n.toLowerCase()] ?? null },
+        text: async () => new TextDecoder().decode(bytes),
+        arrayBuffer: async () => bytes.slice().buffer as ArrayBuffer,
+      };
+    };
+    return { fetch, calls };
+  };
+  const redirect: Answer = { status: 302, headers: { location: SIGNED, "cache-control": "private, no-store" } };
+
+  it("PNG through a signed link: the API with the key, then the link with no Authorization, no cookies", async () => {
+    const { fetch, calls } = sequence(redirect, {
+      status: 200,
+      headers: {
+        "content-type": "image/png",
+        "content-disposition": `attachment; filename="Menu - Sticker.png"; filename*=UTF-8''${encodeURIComponent("Меню · Sticker.png")}`,
+      },
+      body: PNG,
+    });
+    const file = await client(fetch).downloadExport("Q 1", "L/1", { format: "png", scale: 4, transparent: "1" });
+    expect(file).toEqual({ format: "png", contentType: "image/png", filename: "Меню · Sticker.png", bytes: PNG, delivery: "signed-link" });
+    expect(calls).toHaveLength(2);
+    expect(calls[0]?.url).toBe("http://localhost:3000/api/v1/qr-codes/Q%201/layouts/L%2F1/export?format=png&scale=4&transparent=1");
+    expect(calls[0]?.init).toMatchObject({ method: "GET", redirect: "manual", headers: { authorization: `Bearer ${KEY}` } });
+    expect(calls[1]).toEqual({ url: SIGNED, init: { method: "GET", headers: {}, redirect: "follow", credentials: "omit" } });
+    expect(JSON.stringify(calls[1])).not.toContain(KEY);
+  });
+
+  it("SVG through a signed link, and directly from a server without storage", async () => {
+    const a = sequence(redirect, {
+      status: 200,
+      headers: { "content-type": "image/svg+xml", "content-disposition": 'attachment; filename="Menu.svg"' },
+      body: SVG,
+    });
+    const signed = await client(a.fetch).downloadExport("Q1", "L1", { format: "svg" });
+    expect([signed.contentType, signed.filename, new TextDecoder().decode(signed.bytes), signed.delivery]).toEqual([
+      "image/svg+xml",
+      "Menu.svg",
+      SVG,
+      "signed-link",
+    ]);
+    expect(a.calls[0]?.url).toBe("http://localhost:3000/api/v1/qr-codes/Q1/layouts/L1/export?format=svg");
+
+    const b = sequence({ status: 200, headers: { "content-type": "image/svg+xml", "cache-control": "private, no-store" }, body: SVG });
+    const direct = await client(b.fetch).downloadExport("Q1", "L1", { format: "svg" });
+    expect([direct.delivery, direct.filename, b.calls.length]).toEqual(["direct", null, 1]);
+  });
+
+  it("402 payment_required: the payment URL for the caller; no link followed, nothing retried", async () => {
+    const body = {
+      error: {
+        code: "payment_required",
+        message: "This code's files need a one-time purchase. Open paymentUrl, signed in as the owner, to pay; then repeat this request.",
+        paymentUrl: "https://heyqr.example/create/export?qr=Q1&layout=L1&format=png",
+        qrCodeId: "Q1",
+        layoutId: "L1",
+        format: "png",
+      },
+    };
+    const { fetch, calls } = sequence({ status: 402, headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+    const error = (await client(fetch)
+      .downloadExport("Q1", "L1", { format: "png" })
+      .catch((e: unknown) => e)) as DownloadExportError;
+    expect(error).toBeInstanceOf(HeyQrApiError);
+    expect([error.status, error.code]).toEqual([402, "payment_required"]);
+    const r = error.response;
+    expect(r.status === 402 ? r.body.error.paymentUrl : null).toBe("https://heyqr.example/create/export?qr=Q1&layout=L1&format=png");
+    expect(calls).toHaveLength(1);
+    expect(everything(error)).not.toContain(KEY);
+  });
+
+  it("401 and 404 keep their status and code; a 422 keeps its details", async () => {
+    for (const [status, body] of [
+      [401, unauthorized],
+      [404, notFound],
+      [
+        422,
+        {
+          error: { code: "invalid_request", message: "m", details: [{ path: "format", message: 'format must be "png", "svg" or "pdf"' }] },
+        },
+      ],
+    ] as const) {
+      const { fetch, calls } = sequence({ status, headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+      await expect(client(fetch).downloadExport("Q1", "L1", { format: "png" })).rejects.toMatchObject({
+        status,
+        code: body.error.code,
+        response: { status, body },
+      });
+      expect(calls).toHaveLength(1);
+    }
+  });
+
+  it("an expired or failing signed link: a HeyQrError without the link or the key; a missing Location too", async () => {
+    const { fetch } = sequence(redirect, {
+      status: 403,
+      headers: { "content-type": "application/xml" },
+      body: "<Error><Code>AccessDenied</Code></Error>",
+    });
+    const error = await client(fetch)
+      .downloadExport("Q1", "L1", { format: "png" })
+      .catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(HeyQrError);
+    expect(error).toMatchObject({ status: 403 });
+    expect(everything(error)).not.toMatch(/X-Amz|storage\.example|deadbeef/);
+    expect(everything(error)).not.toContain(KEY);
+    const noLocation = sequence({ status: 302, headers: {} });
+    await expect(client(noLocation.fetch).downloadExport("Q1", "L1", { format: "png" })).rejects.toBeInstanceOf(HeyQrError);
+    expect(noLocation.calls).toHaveLength(1);
+  });
+
+  it("only the API's option names go into the query; the JSON methods keep their path", async () => {
+    const { fetch, calls } = sequence(redirect, { status: 200, headers: { "content-type": "image/png" }, body: PNG });
+    await client(fetch).downloadExport("Q1", "L1", { format: "png", dpi: 600, key: "x", prepare: "1" } as never);
+    expect(calls[0]?.url.split("?")[1]).toBe("format=png&dpi=600");
+    const json = fakeFetch(200, {
+      qrCodeId: "Q1",
+      destination: "d",
+      revision: 0,
+      previousDestination: null,
+      changedAt: null,
+      shortLink: null,
+    });
+    await client(json.fetch).getDestination("Q1");
+    expect(json.calls[0]?.init.headers.accept).toBe("application/json");
   });
 });

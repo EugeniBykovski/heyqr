@@ -7,12 +7,16 @@ import type {
 } from "./destination";
 import type { AnyApiErrorBody } from "./errors";
 import type { GetLayoutErrorResponse, Layout, UpdateLayoutErrorResponse, UpdateLayoutRequest } from "./layouts";
+import type { ExportErrorResponse, ExportQuery } from "./export";
 import type { CreateQrErrorResponse, CreateQrRequest, CreateQrResponse } from "./qr-codes";
 
 /*
  * HEY-161 / QR-22.02: the HeyQR REST API v1 client: create a QR, read a layout, read a Dynamic code's destination.
  * HEY-162 / QR-22.03: update a layout and change a destination, each from the revision its read returned. A stale
  * revision throws HeyQrApiError 409 with the endpoint's conflict details; retrying is the caller's choice.
+ * HEY-163 / QR-22.04: download a layout's PNG or SVG. The API answers 302 to a short-lived signed link (HeyQR's
+ * private storage), fetched in a second request without Authorization or cookies, or 200 with the file (a local
+ * server without storage). 402 payment_required comes back as HeyQrApiError with its paymentUrl; nothing is retried.
  * One request path for every method: the configured base URL + /api/v1, `Authorization: Bearer <key>` (the only place
  * the key goes: never the URL, a log or an error message), JSON in and out. A non-2xx answer throws HeyQrApiError with
  * the documented HTTP status and API error code. No retries (HEY-165). Server-side only: an API key must not reach a
@@ -22,8 +26,21 @@ import type { CreateQrErrorResponse, CreateQrRequest, CreateQrResponse } from ".
 /** The subset of the Fetch API the client uses (the global `fetch` of Node 18+, Deno, Bun or workers fits). */
 export type FetchLike = (
   url: string,
-  init: { method: string; headers: Record<string, string>; body?: string; redirect?: "manual" | "follow" | "error" },
-) => Promise<{ status: number; headers: { get(name: string): string | null }; text(): Promise<string> }>;
+  init: {
+    method: string;
+    headers: Record<string, string>;
+    body?: string;
+    redirect?: "manual" | "follow" | "error";
+    credentials?: "omit";
+  },
+) => Promise<{
+  status: number;
+  headers: { get(name: string): string | null };
+  text(): Promise<string>;
+  arrayBuffer(): Promise<ArrayBuffer>;
+}>;
+
+type FetchResponse = Awaited<ReturnType<FetchLike>>;
 
 export type HeyQrClientOptions = {
   /** An account API key (`hqk_…`), created under Account → API keys. Keep it on the server. */
@@ -72,6 +89,22 @@ export type GetLayoutError = HeyQrApiError<GetLayoutErrorResponse>;
 export type GetDestinationError = HeyQrApiError<GetDestinationErrorResponse>;
 export type UpdateLayoutError = HeyQrApiError<UpdateLayoutErrorResponse>;
 export type UpdateDestinationError = HeyQrApiError<UpdateDestinationErrorResponse>;
+export type DownloadExportError = HeyQrApiError<ExportErrorResponse>;
+
+/** What downloadExport fetches: a PNG or an SVG, with the API's own option names (ExportQuery). */
+export type DownloadExportRequest = ExportQuery & { format: "png" | "svg" };
+
+/** A downloaded file, ready to save (e.g. `await writeFile(file.filename ?? "qr.png", file.bytes)`). */
+export type ExportedFile = {
+  format: "png" | "svg";
+  /** As delivered, e.g. `image/png` or `image/svg+xml`. */
+  contentType: string;
+  /** The file name HeyQR suggests (from Content-Disposition), or null when none was given. */
+  filename: string | null;
+  bytes: Uint8Array;
+  /** How it arrived: a signed storage link (hosted HeyQR) or directly in the response (a local server). */
+  delivery: "signed-link" | "direct";
+};
 
 /** A 409 revision conflict, from either update method (narrow `response` further for the destination's `current`). */
 export const isRevisionConflict = (value: unknown): value is HeyQrApiError & { status: 409; code: "revision_conflict" } =>
@@ -158,13 +191,50 @@ export class HeyQrClient {
     );
   }
 
-  /** Every method's one request path. */
-  async #request<T, E extends ErrorResponse>(method: "GET" | "POST" | "PATCH", path: string, body?: unknown): Promise<T> {
-    const headers: Record<string, string> = { authorization: `Bearer ${this.#apiKey}`, accept: "application/json" };
+  /**
+   * `GET /api/v1/qr-codes/{qrCodeId}/layouts/{layoutId}/export`: the layout's PNG or SVG, for a code that is paid for
+   * (Static) or live (Dynamic). Options are the API's: `format`, `dpi` (PNG of a print layout), `scale` (PNG of a
+   * screen layout), `transparent` (`"1"`). Every call is authorized again by HeyQR; downloading again never charges.
+   * @returns the file's bytes, content type and suggested file name.
+   * @throws {DownloadExportError} 401 unauthorized · 402 payment_required (`response.body.error.paymentUrl`: HeyQR's
+   *   Export screen for this code, layout and format; open it as the owner, then call again) · 404 not_found ·
+   *   422 invalid_request | too_long | too_large | scan_check_failed · 500 internal_error
+   * @throws {HeyQrError} the signed download link failed or expired (call again for a new one)
+   */
+  async downloadExport(qrCodeId: string, layoutId: string, request: DownloadExportRequest): Promise<ExportedFile> {
+    const query = [`format=${encodeURIComponent(request.format)}`];
+    if (request.dpi !== undefined) query.push(`dpi=${encodeURIComponent(String(request.dpi))}`);
+    if (request.scale !== undefined) query.push(`scale=${encodeURIComponent(String(request.scale))}`);
+    if (request.transparent !== undefined) query.push(`transparent=${encodeURIComponent(request.transparent)}`);
+    const path = `/qr-codes/${segment(qrCodeId)}/layouts/${segment(layoutId)}/export?${query.join("&")}`;
+    const response = await this.#send("GET", path, undefined, "*/*");
+
+    if (response.status === 302 || response.status === 303 || response.status === 307) {
+      const location = response.headers.get("location");
+      if (!location || !/^https?:\/\//.test(location))
+        throw new HeyQrError("The HeyQR API redirected without a download link.", response.status);
+      // The signed link is a bearer link to one file: no Authorization, no cookies, nothing else.
+      let file: FetchResponse;
+      try {
+        file = await this.#fetch(location, { method: "GET", headers: {}, redirect: "follow", credentials: "omit" });
+      } catch (cause) {
+        throw new HeyQrError(`Downloading the file failed (${cause instanceof Error ? cause.name : "network error"}).`);
+      }
+      // The link's own address is never put in an error (it grants access until it expires).
+      if (file.status !== 200)
+        throw new HeyQrError(`The download link answered ${file.status}; request the export again for a new link.`, file.status);
+      return exported(request.format, file, "signed-link");
+    }
+    if (response.status === 200 && !isJson(response)) return exported(request.format, response, "direct");
+    return this.#fail<ExportErrorResponse>(response);
+  }
+
+  /** Every API call's one request: the API URL, the Bearer key, no redirects followed. */
+  async #send(method: "GET" | "POST" | "PATCH", path: string, body: unknown, accept = "application/json"): Promise<FetchResponse> {
+    const headers: Record<string, string> = { authorization: `Bearer ${this.#apiKey}`, accept };
     if (body !== undefined) headers["content-type"] = "application/json";
-    let response: Awaited<ReturnType<FetchLike>>;
     try {
-      response = await this.#fetch(`${this.apiUrl}${path}`, {
+      return await this.#fetch(`${this.apiUrl}${path}`, {
         method,
         headers,
         redirect: "manual",
@@ -174,6 +244,18 @@ export class HeyQrClient {
       // The cause can carry the request (and its headers); only its name goes into the error.
       throw new HeyQrError(`Request to the HeyQR API failed (${cause instanceof Error ? cause.name : "network error"}).`);
     }
+  }
+
+  /** A response that isn't the success the caller expected: the documented API error, or a HeyQrError. */
+  async #fail<E extends ErrorResponse>(response: FetchResponse): Promise<never> {
+    const parsed = parseJson(await response.text().catch(() => ""));
+    if (isErrorBody(parsed)) throw new HeyQrApiError({ status: response.status, body: parsed } as E);
+    throw new HeyQrError(`The HeyQR API answered ${response.status} without a JSON body it documents.`, response.status);
+  }
+
+  /** The JSON methods' request path. */
+  async #request<T, E extends ErrorResponse>(method: "GET" | "POST" | "PATCH", path: string, body?: unknown): Promise<T> {
+    const response = await this.#send(method, path, body);
     const text = await response.text().catch(() => "");
     let parsed: unknown;
     try {
@@ -190,6 +272,40 @@ export class HeyQrClient {
   toJSON() {
     return { apiUrl: this.apiUrl };
   }
+}
+
+function parseJson(text: string): unknown {
+  try {
+    return text ? JSON.parse(text) : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+const isJson = (response: FetchResponse) => /^application\/(problem\+)?json\b/i.test(response.headers.get("content-type") ?? "");
+
+/** The file name in a Content-Disposition header: the UTF-8 `filename*` when given, else `filename`. */
+export function dispositionFilename(header: string | null): string | null {
+  if (!header) return null;
+  const utf8 = /filename\*\s*=\s*UTF-8''([^;]+)/i.exec(header)?.[1];
+  if (utf8) {
+    try {
+      return decodeURIComponent(utf8.trim());
+    } catch {
+      /* fall back to the plain name */
+    }
+  }
+  return /filename\s*=\s*"([^"]*)"/i.exec(header)?.[1] ?? /filename\s*=\s*([^;\s]+)/i.exec(header)?.[1] ?? null;
+}
+
+async function exported(format: "png" | "svg", response: FetchResponse, delivery: ExportedFile["delivery"]): Promise<ExportedFile> {
+  return {
+    format,
+    contentType: response.headers.get("content-type") ?? (format === "png" ? "image/png" : "image/svg+xml"),
+    filename: dispositionFilename(response.headers.get("content-disposition")),
+    bytes: new Uint8Array(await response.arrayBuffer()),
+    delivery,
+  };
 }
 
 /** A path segment, encoded (ids never change the path). */
