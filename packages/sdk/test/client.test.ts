@@ -1,6 +1,16 @@
 import { inspect } from "node:util";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { HeyQrApiError, HeyQrClient, HeyQrError, isHeyQrApiError, type CreateQrError, type FetchLike } from "@heyqr/sdk";
+import {
+  HeyQrApiError,
+  HeyQrClient,
+  HeyQrError,
+  isHeyQrApiError,
+  isRevisionConflict,
+  type CreateQrError,
+  type FetchLike,
+  type UpdateDestinationError,
+  type UpdateLayoutRequest,
+} from "@heyqr/sdk";
 
 /* HEY-161: the SDK client's one request path, its errors, and where the key may (and may not) appear. */
 const KEY = "hqk_AbCdEfGhIjKl_0123456789abcdefghijklmnopqrstuvwxyzABCDEFG";
@@ -178,5 +188,108 @@ describe("HeyQrClient errors (HEY-161)", () => {
     });
     expect(spy).toHaveBeenCalledOnce();
     spy.mockRestore();
+  });
+});
+
+describe("HeyQrClient updates (HEY-162)", () => {
+  const layout = {
+    id: "L1",
+    qrCodeId: "Q1",
+    name: "Sticker v2",
+    revision: "1764061234567999",
+    layout: { unit: "px" },
+    editor: { preset: "frame" },
+  };
+
+  it("updateLayout: PATCH with the layout revision and only name, layout and editor; returns the layout and its new revision", async () => {
+    const { fetch, calls } = fakeFetch(200, layout);
+    const request: UpdateLayoutRequest = { revision: "1764061234567890", name: "Sticker v2", layout: { unit: "px" } };
+    // Anything else a caller passes at runtime is not sent.
+    const sneaky = { ...request, qrCodeId: "someone-else", content: { type: "text", text: "x" }, destination: "https://evil.test" };
+    const result = await client(fetch).updateLayout("Q 1", "L/1", sneaky as UpdateLayoutRequest);
+    expect(result).toEqual(layout);
+    expect(typeof result.revision).toBe("string");
+    expect(calls[0]?.url).toBe("http://localhost:3000/api/v1/qr-codes/Q%201/layouts/L%2F1");
+    expect(calls[0]?.init.method).toBe("PATCH");
+    expect(calls[0]?.init.headers).toMatchObject({ authorization: `Bearer ${KEY}`, "content-type": "application/json" });
+    expect(JSON.parse(calls[0]?.init.body ?? "{}")).toEqual({ revision: "1764061234567890", name: "Sticker v2", layout: { unit: "px" } });
+  });
+
+  it("updateDestination: PATCH with only destination and revision; changed true and false are both kept", async () => {
+    const changed = {
+      qrCodeId: "Q1",
+      destination: "https://littlefern.cafe/today",
+      revision: 4,
+      previousDestination: "https://littlefern.cafe/menu",
+      changedAt: "2026-11-25T10:00:00.000Z",
+      shortLink: "https://heyqr.example/r/k7Qm2xPa",
+      changed: true,
+    };
+    const a = fakeFetch(200, changed);
+    const extra = { destination: "littlefern.cafe/today", revision: 3, shortLink: "https://evil.test/r/x", status: "active" };
+    expect(await client(a.fetch).updateDestination("Q1", extra as never)).toEqual(changed);
+    expect([a.calls[0]?.init.method, a.calls[0]?.url]).toEqual(["PATCH", "http://localhost:3000/api/v1/qr-codes/Q1/destination"]);
+    expect(JSON.parse(a.calls[0]?.init.body ?? "{}")).toEqual({ destination: "littlefern.cafe/today", revision: 3 });
+
+    const noop = { ...changed, revision: 3, changed: false };
+    const b = fakeFetch(200, noop);
+    const result = await client(b.fetch).updateDestination("Q1", { destination: "https://littlefern.cafe/today", revision: 3 });
+    expect([result.changed, result.revision]).toEqual([false, 3]);
+  });
+
+  it("a stale layout revision: 409 revision_conflict, no current state; nothing retried", async () => {
+    const conflict = {
+      error: { code: "revision_conflict", message: "The layout changed since this revision. GET it again and reapply your change." },
+    };
+    const { fetch, calls } = fakeFetch(409, conflict);
+    const error = await client(fetch)
+      .updateLayout("Q1", "L1", { revision: "1", name: "x" })
+      .catch((e: unknown) => e);
+    expect(isRevisionConflict(error)).toBe(true);
+    expect(error).toMatchObject({ status: 409, code: "revision_conflict", response: { status: 409, body: conflict } });
+    expect(calls).toHaveLength(1);
+  });
+
+  it("a stale destination revision: 409 with the destination and revision stored now; nothing retried", async () => {
+    const conflict = {
+      error: {
+        code: "revision_conflict",
+        message: "The destination changed since this revision. Nothing was saved.",
+        current: { destination: "https://littlefern.cafe/today", revision: 4 },
+      },
+    };
+    const { fetch, calls } = fakeFetch(409, conflict);
+    const error = (await client(fetch)
+      .updateDestination("Q1", { destination: "https://x.test", revision: 3 })
+      .catch((e: unknown) => e)) as UpdateDestinationError;
+    expect(isRevisionConflict(error)).toBe(true);
+    const r = error.response;
+    expect(r.status === 409 ? r.body.error.current : null).toEqual({ destination: "https://littlefern.cafe/today", revision: 4 });
+    expect(calls).toHaveLength(1);
+    expect(everything(error)).not.toContain(KEY);
+  });
+
+  it("other update errors keep their status and code (404, 422 not_dynamic, 422 invalid_request)", async () => {
+    await expect(client(fakeFetch(404, notFound).fetch).updateLayout("Q1", "L1", { revision: "1", name: "x" })).rejects.toMatchObject({
+      status: 404,
+      code: "not_found",
+    });
+    await expect(
+      client(fakeFetch(422, { error: { code: "not_dynamic", message: "m" } }).fetch).updateDestination("Q1", {
+        destination: "https://x.test",
+        revision: 0,
+      }),
+    ).rejects.toMatchObject({
+      status: 422,
+      code: "not_dynamic",
+    });
+    const invalid = {
+      error: { code: "invalid_request", message: "m", details: [{ path: "destination", message: "Invalid destination (spaces)" }] },
+    };
+    const e = await client(fakeFetch(422, invalid).fetch)
+      .updateDestination("Q1", { destination: "has spaces.com", revision: 0 })
+      .catch((x: unknown) => x);
+    expect(e).toMatchObject({ status: 422, code: "invalid_request", response: { body: invalid } });
+    expect(isRevisionConflict(e)).toBe(false);
   });
 });

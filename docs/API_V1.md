@@ -6,7 +6,8 @@ HEY-155 (create), HEY-156 (read and update a layout), HEY-157 (a Dynamic code's 
 Not in v1 yet: changing a code's content, and idempotent create retries (follow-up tickets).
 
 **TypeScript:** every request, response and error below is typed in [`@heyqr/sdk`](../packages/sdk/README.md)
-(HEY-160). Its `HeyQrClient` creates codes and reads layouts and destinations (HEY-161).
+(HEY-160). Its `HeyQrClient` creates codes, reads layouts and destinations (HEY-161), and updates both from
+their revisions (HEY-162).
 
 ## Authentication
 

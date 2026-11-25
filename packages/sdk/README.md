@@ -3,9 +3,10 @@
 The hosted HeyQR REST API, v1, for TypeScript. It has two parts:
 
 - **Types** (HEY-160): the public contract of every request, response and error.
-- **Client** (HEY-161): `HeyQrClient`, with `createQr`, `getLayout` and `getDestination`.
+- **Client:** `HeyQrClient`, with `createQr`, `getLayout` and `getDestination` (HEY-161), and `updateLayout` and
+  `updateDestination` (HEY-162).
 
-The update methods come with HEY-162, retries and idempotent creation with HEY-165, and npm publishing later. The HTTP
+Retries and idempotent creation come with HEY-165, and npm publishing later. The HTTP
 contract itself is [docs/API_V1.md](../../docs/API_V1.md).
 
 This package is separate from [`@heyqr/qr-core`](../qr-core), the free local renderer: nothing here renders a code.
@@ -28,11 +29,13 @@ if (!apiKey) throw new Error("Set HEYQR_API_KEY");
 const heyqr = new HeyQrClient({ apiKey, baseUrl: "https://heyqr.example" });
 ```
 
-| Method                          | Request                                              | Returns                                                                               |
-| ------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `createQr(request)`             | `POST /api/v1/qr-codes`                              | `CreateQrResponse`: the draft's `id`, `status` and its layouts' ids, in request order |
-| `getLayout(qrCodeId, layoutId)` | `GET /api/v1/qr-codes/{qrCodeId}/layouts/{layoutId}` | `Layout`, with its `LayoutRevision` (a string)                                        |
-| `getDestination(qrCodeId)`      | `GET /api/v1/qr-codes/{qrCodeId}/destination`        | `Destination`, with its `DestinationRevision` (a number)                              |
+| Method                                      | Request                                                                                      | Returns                                                                                                                        |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `createQr(request)`                         | `POST /api/v1/qr-codes`                                                                      | `CreateQrResponse`: the draft's `id`, `status` and its layouts' ids, in request order                                          |
+| `getLayout(qrCodeId, layoutId)`             | `GET /api/v1/qr-codes/{qrCodeId}/layouts/{layoutId}`                                         | `Layout`, with its `LayoutRevision` (a string)                                                                                 |
+| `getDestination(qrCodeId)`                  | `GET /api/v1/qr-codes/{qrCodeId}/destination`                                                | `Destination`, with its `DestinationRevision` (a number)                                                                       |
+| `updateLayout(qrCodeId, layoutId, request)` | `PATCH …/layouts/{layoutId}`: sends `revision` and the given `name`, `layout`, `editor` only | the updated `Layout`, with its new revision                                                                                    |
+| `updateDestination(qrCodeId, request)`      | `PATCH …/destination`: sends `destination` and `revision` only                               | `UpdateDestinationResponse`: the stored destination, its revision, and `changed` (`false` when the address was already stored) |
 
 **Options:**
 
@@ -55,7 +58,15 @@ client's JSON or `inspect` output. IDs are URL-encoded into the path.
 - **`HeyQrError`:** no documented answer arrived (a network failure, or a non-JSON body). It has `status` when a
   response arrived.
 
-There are no automatic retries yet (HEY-165).
+**Updates and conflicts.** Each update starts from the revision its read returned. A layout's revision is a string
+from `getLayout`; a destination's is a number from `getDestination`. If someone saved in between, the update throws
+`HeyQrApiError` with status 409 and code `revision_conflict`, and nothing is saved:
+
+- `isRevisionConflict(error)` tells you it's a conflict.
+- A destination conflict also carries `response.body.error.current: { destination, revision }`.
+- A layout conflict carries no current state: read the layout again.
+
+Whether to reload and apply the change again is up to the caller. The SDK never retries (HEY-165).
 
 ```ts
 try {
@@ -95,11 +106,32 @@ pnpm exec tsx packages/sdk/examples/create-and-read.ts
 }
 ```
 
+### Runnable example: read and update
+
+[`examples/read-and-update.ts`](examples/read-and-update.ts) reads a layout and a destination, renames the layout and
+changes the destination from their revisions, and reports a 409 instead of retrying:
+
+```sh
+HEYQR_API_KEY=hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX \
+HEYQR_BASE_URL=http://localhost:3000 \
+HEYQR_QR_ID=<qr id> HEYQR_LAYOUT_ID=<layout id> \
+HEYQR_LAYOUT_NAME="Sticker v2" HEYQR_DESTINATION=littlefern.cafe/today \
+pnpm exec tsx packages/sdk/examples/read-and-update.ts
+```
+
+```json
+{
+  "layout": { "name": "Sticker v2", "revision": { "before": "1795600193728985", "after": "1795600227675159" } },
+  "destination": { "destination": "https://littlefern.cafe/today", "changed": true, "revision": { "before": 1, "after": 2 } },
+  "shortLink": "https://heyqr.example/r/k7Qm2xPa"
+}
+```
+
 ## Exports
 
 | Area                                                         | Types                                                                                                                                                                                                                                                                    |
 | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Client (HEY-161)                                             | `HeyQrClient`, `HeyQrApiError`, `HeyQrError`, `isHeyQrApiError`, `HeyQrClientOptions`, `FetchLike`, `CreateQrError`, `GetLayoutError`, `GetDestinationError`                                                                                                             |
+| Client (HEY-161, HEY-162)                                    | `HeyQrClient`, `HeyQrApiError`, `HeyQrError`, `isHeyQrApiError`, `isRevisionConflict`, `HeyQrClientOptions`, `FetchLike`, `CreateQrError`, `GetLayoutError`, `GetDestinationError`, `UpdateLayoutError`, `UpdateDestinationError`                                        |
 | Create a QR (`POST /api/v1/qr-codes`)                        | `CreateQrRequest`, `CreateQrLayout`, `QrContent`, `QrContentType`, `QrMode`, `DesignInput`, `CreateQrResponse`, `QrStatus`, `DraftLimitError`, `ContentTooLongError`, `CreateQrErrorResponse`, `CreateQrResult`                                                          |
 | A layout (`GET` / `PATCH …/layouts/{layoutId}`)              | `Layout`, `LayoutRevision`, `LayoutDesign`, `LayoutEditorSettings`, `UpdateLayoutRequest`, `LayoutRevisionConflictError`, `GetLayoutErrorResponse`, `GetLayoutResult`, `UpdateLayoutErrorResponse`, `UpdateLayoutResult`                                                 |
 | A Dynamic code's destination (`GET` / `PATCH …/destination`) | `Destination`, `DestinationRevision`, `UpdateDestinationRequest`, `UpdateDestinationResponse`, `DestinationRevisionConflictError`, `NotDynamicError`, `GetDestinationErrorResponse`, `GetDestinationResult`, `UpdateDestinationErrorResponse`, `UpdateDestinationResult` |
@@ -156,8 +188,11 @@ More, with compile-time checks for invalid input and error narrowing: [`test/con
 
 ## Checks
 
-- `pnpm exec vitest run packages/sdk`: the client's request path, errors (401, 404, 422 validation, `not_dynamic`,
-  non-JSON, network) and where the key may not appear, against a stubbed `fetch`.
+- `pnpm exec vitest run packages/sdk`: the client's request path, the update bodies (only supported fields), errors
+  (401, 404, 422 validation, `not_dynamic`, both 409 conflicts, non-JSON, network) and where the key may not appear,
+  against a stubbed `fetch`.
+- The PostgreSQL suite (`SDK client updates against the routes`) runs the client against the real route handlers:
+  each update changes only its own resource, and stale revisions leave the saved values unchanged.
 - `packages/sdk/test/live.test.ts` runs against a running API when `HEYQR_API_KEY` and `HEYQR_BASE_URL` are set
   (optionally `HEYQR_REVOKED_API_KEY`). Otherwise it's skipped.
 - `pnpm --filter @heyqr/sdk typecheck` (also part of `pnpm typecheck`): the package and the examples compile, the package under its own config (no DOM, no Node
