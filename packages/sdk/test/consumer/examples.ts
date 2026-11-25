@@ -3,6 +3,7 @@
  * aliases), importing only the package's public entry point. Each `@ts-expect-error` is a compile-time check: the line
  * must fail to compile, or this file fails.
  */
+import { HeyQrClient, isHeyQrApiError, type CreateQrError, type GetDestinationError } from "@heyqr/sdk";
 import type {
   CreateQrRequest,
   CreateQrResponse,
@@ -180,6 +181,56 @@ export function withoutNarrowing(): unknown[] {
     anyCreate.body.error.details,
     // @ts-expect-error the layout conflict carries no current state (only the destination conflict does)
     ({} as UpdateLayoutResult & { status: 409 }).body.error.current,
+  ];
+}
+
+/* ── HEY-161: the client ─────────────────────────────────────────────────────────────────────────────────────── */
+
+declare const apiKey: string;
+const heyqr = new HeyQrClient({ apiKey, baseUrl: "https://heyqr.example" });
+
+export async function createAndRead(): Promise<{ qr: string; layoutRevision: LayoutRevision; destinationRevision: DestinationRevision }> {
+  const created: CreateQrResponse = await heyqr.createQr(createDynamic);
+  const first = created.layouts[0];
+  if (!first) throw new Error("no layout");
+  const layout: Layout = await heyqr.getLayout(created.id, first.id);
+  const destination: Destination = await heyqr.getDestination(created.id);
+  return { qr: created.id, layoutRevision: layout.revision, destinationRevision: destination.revision };
+}
+
+export function explain(error: unknown): string {
+  if (!isHeyQrApiError(error)) return "not an API error";
+  // Every API error has the HTTP status and the API's error code.
+  return `${error.status} ${error.code}`;
+}
+
+export function creationProblems(error: CreateQrError): string[] {
+  const r = error.response;
+  if (r.status === 422 && r.body.error.code === "invalid_request") return r.body.error.details.map((d) => d.path);
+  if (r.status === 403) return [r.body.error.code]; // "draft_limit"
+  return [];
+}
+
+export function destinationMissing(error: GetDestinationError): boolean {
+  return error.code === "not_found" || error.code === "not_dynamic";
+}
+
+export async function clientMisuse(): Promise<unknown[]> {
+  return [
+    // @ts-expect-error the base URL is required
+    new HeyQrClient({ apiKey }),
+    // @ts-expect-error createQr takes a CreateQrRequest: no owner field
+    await heyqr.createQr({ ...createMenu, userId: "x" }),
+    // @ts-expect-error getLayout needs the code and the layout id
+    await heyqr.getLayout("Q8d3"),
+    // @ts-expect-error a layout's revision is a string, not a DestinationRevision
+    (await heyqr.getLayout("Q8d3", "L2k9")).revision satisfies DestinationRevision,
+    // @ts-expect-error update methods come with HEY-162
+    heyqr.updateLayout,
+    // @ts-expect-error the key is private
+    heyqr.apiKey,
+    // @ts-expect-error get-destination errors have no draft_limit code
+    ((e: GetDestinationError) => e.code === "draft_limit")(undefined as never),
   ];
 }
 

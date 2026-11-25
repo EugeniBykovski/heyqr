@@ -158,7 +158,7 @@ describe("SDK contract: SDK-typed samples through the server's request validatio
 
 describe("SDK package boundary (HEY-160)", () => {
   const dir = fileURLToPath(new URL("../../../../packages/sdk/", import.meta.url));
-  it("exports one entry point and imports nothing outside itself (no Next.js, database, server or qr-core modules)", () => {
+  it("exports one entry point and imports nothing outside itself (no Next.js, database, server, qr-core or platform modules)", () => {
     const pkg = JSON.parse(readFileSync(`${dir}package.json`, "utf8")) as { exports: Record<string, unknown>; dependencies?: object };
     expect(Object.keys(pkg.exports)).toEqual(["."]);
     expect(pkg.dependencies).toBeUndefined();
@@ -169,8 +169,11 @@ describe("SDK package boundary (HEY-160)", () => {
         specifiers.every((s) => s?.startsWith("./")),
         `${file}: ${specifiers.join(", ")}`,
       ).toBe(true);
-      // Types only: no runtime code ships with the contract.
-      expect(source.replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "")).not.toMatch(/^\s*export\s+(const|function|class|let|var|enum)\b/m);
+      const code = source.replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "");
+      // HEY-161: runtime code only in the client; every other file is types only.
+      if (file !== "client.ts") expect(code, file).not.toMatch(/^\s*export\s+(const|function|class|let|var|enum)\b/m);
+      // No platform modules or globals beyond fetch: the client runs on Node 18+, Deno, Bun and workers.
+      expect(code, file).not.toMatch(/\b(process|require|Buffer|window|__dirname)\b|from\s+"node:/);
     }
   });
 });

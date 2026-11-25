@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Public TypeScript types for the hosted HeyQR REST API (v1). Types only; HTTP methods and npm publishing come later.",
+  "description": "TypeScript client and types for the hosted HeyQR REST API (v1). Update methods, retries and npm publishing come later.",
   "types": "./src/index.ts",
   "exports": {
     ".": {
@@ -13,6 +13,6 @@
   },
   "sideEffects": false,
   "scripts": {
-    "typecheck": "tsc --noEmit -p . && tsc --noEmit -p test/consumer"
+    "typecheck": "tsc --noEmit -p . && tsc --noEmit -p test/consumer && tsc --noEmit -p examples"
   }
 }
