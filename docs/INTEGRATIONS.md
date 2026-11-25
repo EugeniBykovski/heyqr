@@ -21,7 +21,7 @@ Never commit real values: put them in `.env` locally and in Vercel project setti
 | Service                 | Why                                                         | Variables                                            |
 | ----------------------- | ----------------------------------------------------------- | ---------------------------------------------------- |
 | **GitHub for Jira**     | Branches/commits/PRs in tickets                             | —                                                    |
-| **Upstash Redis**       | Rate limiting for redirects, exports and uploads            | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` |
+| **Upstash Redis**       | Not used (API limits are in PostgreSQL, HEY-178)            | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` |
 | **Sentry**              | Critical failures (HEY-175, [MONITORING.md](MONITORING.md)) | `SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN`               |
 | **Plausible / PostHog** | Product analytics                                           | added with HEY-33                                    |
 

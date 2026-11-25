@@ -2859,7 +2859,7 @@
         "e422": "a rule is broken; also not_dynamic, content_too_long and file checks",
         "e500": "nothing was changed; try again"
       },
-      "limits": "Limits: names up to 80 characters, 1–20 layouts per code, the account’s draft limit, and the content capacity of a QR code. The API doesn’t throttle requests yet; if it ever answers 429, the SDK reports it with Retry-After.",
+      "limits": "Limits: names up to 80 characters, 1–20 layouts per code, the account’s draft limit, and the content capacity of a QR code. Each account also has a request limit per minute, shared by its keys: over it the API answers 429, which the SDK reports with Retry-After.",
       "revisionsTitle": "Revision conflicts",
       "revisionsText": "Layouts and destinations carry a revision. Send the one you read with every update; if the code changed in the app or another request since, you get 409 revision_conflict and nothing is saved. A destination conflict includes error.current with the stored destination and revision.",
       "idempotencyTitle": "Safe retries",

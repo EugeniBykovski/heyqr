@@ -435,8 +435,9 @@ for (let attempt = 1; ; attempt++) {
 - **Domain limits:** these are ordinary API errors with their status and code, e.g. `403 draft_limit` from
   `createQr`.
 - **429:** a `429 Too Many Requests` throws `HeyQrRateLimitError`. It carries `retryAfterSeconds` (from `Retry-After`,
-  seconds or an HTTP date; `null` when absent), even when the body isn't JSON, and `code` when it is. HeyQR doesn't
-  rate-limit API keys today; this is ready for when it does.
+  seconds or an HTTP date; `null` when absent), even when the body isn't JSON, and `code` (`rate_limited`)
+  when it is. The account's keys share one budget, and a refused request changed nothing: wait `retryAfterSeconds`, then
+  send it again.
 
 **Payment required.** `isPaymentRequired(error)` narrows a 402 so `error.response.body.error.paymentUrl` is typed.
 Opening it and retrying are up to you.

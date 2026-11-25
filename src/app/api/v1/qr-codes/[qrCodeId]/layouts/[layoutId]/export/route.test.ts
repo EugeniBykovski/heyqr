@@ -8,6 +8,8 @@ vi.mock("@/server/db", () => ({ db: {} }));
 const KEY = "hqk_AbCdEfGhIjKl_0123456789abcdefghijklmnopqrstuvwxyzABCDEFG";
 const apiKeyOwner = vi.fn();
 vi.mock("@/server/api-keys/keys", () => ({ apiKeyOwner: (_db: unknown, key: unknown) => apiKeyOwner(key) }));
+const takeRequest = vi.fn();
+vi.mock("@/server/api/v1/rate-limit", () => ({ takeRequest: (...a: unknown[]) => takeRequest(...a) }));
 // The decision (owner, pair, format, entitlement) is covered against PostgreSQL; here it is scripted per request.
 const authorizeApiExport = vi.fn();
 vi.mock("@/server/api/v1/export", () => ({ authorizeApiExport: (...a: unknown[]) => authorizeApiExport(...a) }));
@@ -72,6 +74,7 @@ const nothingDelivered = () => {
 beforeEach(() => {
   stored.clear();
   apiKeyOwner.mockReset().mockImplementation(async (key: unknown) => (key === KEY ? "user-a" : null));
+  takeRequest.mockReset().mockResolvedValue({ ok: true });
   authorizeApiExport.mockReset().mockResolvedValue(allowed);
   getLayoutWithQr.mockReset().mockResolvedValue(record);
   renderExport.mockReset().mockResolvedValue({ body: Buffer.from("png"), contentType: "image/png", scan: { ok: true } });
@@ -79,6 +82,36 @@ beforeEach(() => {
 });
 
 describe("GET …/layouts/{layoutId}/export (HEY-158)", () => {
+  it("HEY-178: over either budget: 429 with Retry-After before the decision or anything rendered; an invalid key stays 401", async () => {
+    for (const bucket of ["api", "export"]) {
+      takeRequest
+        .mockReset()
+        .mockImplementation(async (_db: unknown, _owner: string, b: string) =>
+          b === bucket ? { ok: false, retryAfterSeconds: 17 } : { ok: true },
+        );
+      const res = await call();
+      expect([res.status, res.headers.get("retry-after"), res.headers.get("cache-control")]).toEqual([429, "17", "no-store"]);
+      expect(((await res.json()) as { error: object }).error).toMatchObject({ code: "rate_limited", limit: bucket });
+      takeRequest.mockClear();
+      expect((await call("format=png", "Bearer hqk_nope")).status).toBe(401);
+      expect(takeRequest).not.toHaveBeenCalled();
+    }
+    expect(authorizeApiExport).not.toHaveBeenCalled();
+    nothingDelivered();
+  });
+
+  it("HEY-178: an unavailable limiter is the API's 500 and nothing is rendered; the key isn't logged", async () => {
+    const error = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    takeRequest.mockRejectedValue(new Error(`connection lost ${KEY}`));
+    const res = await call();
+    expect([res.status, res.headers.get("retry-after")]).toEqual([500, "5"]);
+    expect(((await res.json()) as { error: { code: string } }).error.code).toBe("internal_error");
+    expect(JSON.stringify(error.mock.calls)).toContain("api.rate_limit");
+    expect(JSON.stringify(error.mock.calls)).not.toContain(KEY);
+    error.mockRestore();
+    nothingDelivered();
+  });
+
   it("missing, invalid and revoked keys: the shared 401, decided before anything else", async () => {
     const answers = new Set<string>();
     for (const auth of [null, "Bearer hqk_nope", "Bearer hqk_revokedrevok_0123456789abcdefghijklmnopqrstuvwxyzABCDEFG"]) {

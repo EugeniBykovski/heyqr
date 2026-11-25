@@ -291,6 +291,23 @@ export const apiIdempotencyKey = pgTable(
   (t) => [primaryKey({ columns: [t.userId, t.operation, t.key] })],
 );
 
+/**
+ * HEY-178: the public API's request budgets, one row per account and bucket (server/api/v1/rate-limit.ts). Counts in the
+ * account's current window only; the next window overwrites the row, so the table never grows past accounts × buckets.
+ */
+export const apiRateLimit = pgTable(
+  "api_rate_limit",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    bucket: text("bucket").notNull(),
+    windowStart: timestamp("window_start", { withTimezone: true }).notNull(),
+    count: integer("count").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.bucket] })],
+);
+
 /** One-time purchase of a static code. */
 export const purchase = pgTable(
   "purchase",
