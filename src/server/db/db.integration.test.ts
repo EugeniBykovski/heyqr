@@ -52,6 +52,21 @@ import { newId } from "./ids";
 
 const url = process.env.TEST_DATABASE_URL;
 
+/*
+ * HEY-155: the public API route runs here against this file's database. Only modules that import the app's db module
+ * (the route and the dashboard's listQrCodes) see the mock; everything else in this file passes its own db.
+ */
+const apiDb = vi.hoisted(() => ({ current: undefined as unknown }));
+vi.mock("@/server/db", async () => ({
+  get db() {
+    return apiDb.current;
+  },
+  schema: await import("./schema"),
+}));
+vi.mock("server-only", () => ({}));
+vi.mock("next/cache", () => ({ revalidatePath: () => undefined }));
+vi.mock("@/server/storage/s3", () => ({ logoStore: () => null }));
+
 /**
  * Change destination as a tab that has just opened the code: from its current destination revision (HEY-128). Read
  * without the owner check, so another account's attempt still reaches changeDestination's own ownership check.
@@ -5916,5 +5931,227 @@ describe.skipIf(!url)("API key revocation (HEY-154, real PostgreSQL)", () => {
     await new Promise((done) => setTimeout(done, 20));
     expect(await apiKeyOwner(db, key.key)).toBeNull();
     expect((await row(key.id)).lastUsedAt).toEqual(used);
+  });
+});
+
+/* HEY-155 / QR-21.03: POST /api/v1/qr-codes, through the route handler, the shared verifier and the editor's save path. */
+describe.skipIf(!url)("public API: create a QR (HEY-155, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  let POST: (request: Request) => Promise<Response>;
+  let listQrCodes: (userId: string) => Promise<{ id: string }[]>;
+  const owner = { id: "api-owner", name: "Owner", email: "owner@api.test" };
+  const other = { id: "api-other", name: "Other", email: "other@api.test" };
+  let ownerKey = "";
+  let otherCode = { id: "", layoutId: "" };
+  const design = { ...DEFAULT_DESIGN, fg: "#1F3A5F" };
+  const layout = { name: "Sticker", layout: designToLayout(design), editor: designSettingsOf(design) };
+  const valid = { name: "Menu", mode: "static", content: { type: "website", url: "littlefern.cafe/menu" }, layouts: [layout] };
+
+  const call = (body: unknown, auth?: string | null) =>
+    POST(
+      new Request("http://localhost/api/v1/qr-codes", {
+        method: "POST",
+        headers: { "content-type": "application/json", ...(auth === null ? {} : { authorization: auth ?? `Bearer ${ownerKey}` }) },
+        body: typeof body === "string" ? body : JSON.stringify(body),
+      }),
+    );
+  const rows = async () => {
+    const [codes, layouts] = await Promise.all([
+      pool.query("select id, user_id, name, content, updated_at from qr_code where user_id in ($1, $2) order by id", [owner.id, other.id]),
+      pool.query(
+        "select l.id, l.qr_code_id, l.name from qr_layout l join qr_code q on q.id = l.qr_code_id where q.user_id in ($1, $2) order by l.id",
+        [owner.id, other.id],
+      ),
+    ]);
+    return JSON.stringify([codes.rows, layouts.rows]);
+  };
+  const clear = () => pool.query("delete from qr_code where user_id = $1", [owner.id]);
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 3 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    apiDb.current = db;
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+    ownerKey = (await createApiKey(db, owner.id)).key;
+    const saved = await saveQrWithLayouts(db, other.id, {
+      name: "Theirs",
+      model: "static",
+      content: { type: "text", text: "theirs" },
+      layouts: [layout],
+    });
+    if (!saved.ok) throw new Error("fixture");
+    otherCode = { id: saved.data.qrCodeId, layoutId: saved.data.layoutIds[0] ?? "" };
+    ({ POST } = await import("../../app/api/v1/qr-codes/route"));
+    ({ listQrCodes } = await import("../qr/repository"));
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("a valid key creates a draft for its owner, with its layouts, shown in the owner's dashboard", async () => {
+    await clear();
+    const res = await call({ ...valid, layouts: [layout, { ...layout, name: "Poster" }] });
+    expect(res.status).toBe(201);
+    expect(res.headers.get("cache-control")).toBe("no-store");
+    const body = (await res.json()) as { id: string; status: string; layouts: { id: string }[] };
+    expect(body).toEqual({ id: expect.any(String), status: "draft", layouts: [{ id: expect.any(String) }, { id: expect.any(String) }] });
+    const [code] = (
+      await pool.query("select user_id, status, model, short_code, content, guest_claim_key from qr_code where id = $1", [body.id])
+    ).rows;
+    expect(code).toEqual({
+      user_id: owner.id,
+      status: "draft",
+      model: "static",
+      short_code: null,
+      content: { type: "website", url: "https://littlefern.cafe/menu" },
+      guest_claim_key: null,
+    });
+    const layouts = (await pool.query("select id, name from qr_layout where qr_code_id = $1 order by sort_order", [body.id])).rows;
+    expect(layouts).toEqual([
+      { id: body.layouts[0]?.id, name: "Sticker" },
+      { id: body.layouts[1]?.id, name: "Poster" },
+    ]);
+    expect((await listQrCodes(owner.id)).map((c) => c.id)).toContain(body.id);
+    expect((await listQrCodes(other.id)).map((c) => c.id)).not.toContain(body.id);
+  });
+
+  it("a dynamic website code keeps its destination and stays a draft without a short link", async () => {
+    await clear();
+    const res = await call({ ...valid, mode: "dynamic", destination: "littlefern.cafe/today" });
+    expect(res.status).toBe(201);
+    const { id } = (await res.json()) as { id: string };
+    expect((await pool.query("select status, short_code, destination from qr_code where id = $1", [id])).rows[0]).toEqual({
+      status: "draft",
+      short_code: null,
+      destination: "https://littlefern.cafe/today",
+    });
+  });
+
+  it("fields that choose an owner, address existing codes or layouts, claim a draft or set state are refused; nothing changes", async () => {
+    await clear();
+    const before = await rows();
+    const attempts: [Record<string, unknown>, string][] = [
+      [{ ...valid, userId: other.id }, "userId"],
+      [{ ...valid, ownerId: other.id }, "ownerId"],
+      [{ ...valid, qrCodeId: otherCode.id }, "qrCodeId"],
+      [{ ...valid, id: otherCode.id }, "id"],
+      [{ ...valid, layouts: [{ ...layout, id: otherCode.layoutId }] }, "layouts[0].id"],
+      [{ ...valid, claimKey: "abcdefghijklmnop" }, "claimKey"],
+      [{ ...valid, status: "active" }, "status"],
+      [{ ...valid, shortCode: "abc123" }, "shortCode"],
+      [{ ...valid, paid: true }, "paid"],
+      [{ ...valid, trial: true }, "trial"],
+    ];
+    for (const [body, path] of attempts) {
+      const res = await call(body);
+      expect(res.status, path).toBe(422);
+      const json = (await res.json()) as { error: { code: string; details: { path: string; message: string }[] } };
+      expect(json.error.code).toBe("invalid_request");
+      expect(json.error.details).toContainEqual({ path, message: "Unknown field" });
+    }
+    expect(await rows()).toBe(before);
+  });
+
+  it("a missing, malformed, unknown, wrong or revoked key gets the same 401 and leaves no rows", async () => {
+    await clear();
+    const revoked = await createApiKey(db, owner.id);
+    await revokeApiKey(db, owner.id, revoked.id);
+    const wrong = `${ownerKey.slice(0, -1)}${ownerKey.endsWith("A") ? "B" : "A"}`;
+    const before = await rows();
+    const answers = [];
+    for (const auth of [
+      null,
+      "",
+      "Bearer",
+      "Basic abc",
+      `Token ${ownerKey}`,
+      "Bearer hqk_nope",
+      `Bearer ${wrong}`,
+      `Bearer ${revoked.key}`,
+    ]) {
+      const res = await call(valid, auth);
+      answers.push({ status: res.status, auth: res.headers.get("www-authenticate"), body: await res.text() });
+    }
+    expect(new Set(answers.map((a) => JSON.stringify(a))).size).toBe(1);
+    expect(answers[0]?.status).toBe(401);
+    expect(answers[0]?.auth).toBe('Bearer realm="heyqr"');
+    // An invalid key is refused before the body is read: a malformed body gets the same 401.
+    expect((await call("{oops", `Bearer ${revoked.key}`)).status).toBe(401);
+    expect(await rows()).toBe(before);
+  });
+
+  it("malformed JSON, invalid content, mode, destination and layouts get consistent errors and save nothing", async () => {
+    await clear();
+    const before = await rows();
+    const cases: [unknown, number, string, string?][] = [
+      ["{oops", 400, "malformed_json"],
+      ["", 400, "malformed_json"],
+      [[], 422, "invalid_request", "(body)"],
+      [{ ...valid, name: " " }, 422, "invalid_request", "name"],
+      [{ ...valid, content: { type: "fax", number: "1" } }, 422, "invalid_request", "content.type"],
+      [{ ...valid, content: { type: "website", url: "not a url" } }, 422, "invalid_request", "content.url"],
+      [
+        { ...valid, content: { type: "wifi", ssid: "Cafe", security: "WPA", password: "short" } },
+        422,
+        "invalid_request",
+        "content.password",
+      ],
+      [{ ...valid, content: { type: "text", text: "hi", extra: 1 } }, 422, "invalid_request", "content.extra"],
+      [{ ...valid, mode: "dynamic", content: { type: "text", text: "hi" } }, 422, "invalid_request", "mode"],
+      [{ ...valid, destination: "https://elsewhere.test" }, 422, "invalid_request", "destination"],
+      [{ ...valid, mode: "dynamic", destination: "has spaces .com" }, 422, "invalid_request", "destination"],
+      [{ ...valid, layouts: [] }, 422, "invalid_request", "layouts"],
+      [{ ...valid, layouts: [{ name: "Broken", layout: { nope: true } }] }, 422, "invalid_request", "layouts"],
+    ];
+    for (const [body, status, code, path] of cases) {
+      const res = await call(body);
+      const json = (await res.json()) as { error: { code: string; message: string; details?: { path: string }[] } };
+      expect([res.status, json.error.code], JSON.stringify(body).slice(0, 80)).toEqual([status, code]);
+      expect(json.error.message).toEqual(expect.any(String));
+      if (path) expect(json.error.details?.map((d) => d.path)).toContain(path);
+    }
+    expect(await rows()).toBe(before);
+  });
+
+  it("the editor's draft limit applies; the request over it is refused and creates nothing", async () => {
+    await clear();
+    for (let i = 0; i < DRAFT_LIMIT; i++) expect((await call({ ...valid, name: `Draft ${i}` })).status).toBe(201);
+    const before = await rows();
+    const res = await call({ ...valid, name: "One too many" });
+    expect(res.status).toBe(403);
+    expect(((await res.json()) as { error: { code: string } }).error.code).toBe("draft_limit");
+    expect(await rows()).toBe(before);
+  });
+
+  it("keys, verifiers and internal errors stay out of responses and logs", async () => {
+    await clear();
+    const logged = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const ok = await (await call(valid)).text();
+    const refused = await (await call({ ...valid, userId: other.id })).text();
+    // A failure inside the save: only the error's name is logged, the response is generic.
+    apiDb.current = new Proxy(db, {
+      get: (target, prop) =>
+        prop === "transaction" ? () => Promise.reject(new Error(`boom ${ownerKey} insert into qr_code`)) : Reflect.get(target, prop),
+    });
+    const failed = await call(valid);
+    apiDb.current = db;
+    const failedText = await failed.text();
+    expect(failed.status).toBe(500);
+    expect(JSON.parse(failedText)).toEqual({ error: { code: "internal_error", message: expect.any(String) } });
+    const secret = ownerKey.slice(17);
+    const hash = (await pool.query("select secret_hash from api_key where user_id = $1 limit 1", [owner.id])).rows[0].secret_hash as string;
+    const logs = JSON.stringify(logged.mock.calls);
+    for (const text of [ok, refused, failedText, logs]) {
+      expect([text.includes(secret), text.includes(hash), text.includes("boom"), text.includes("insert into")]).toEqual([
+        false,
+        false,
+        false,
+        false,
+      ]);
+    }
+    expect(logs).toContain("[api/v1/qr-codes] failed: Error");
+    logged.mockRestore();
   });
 });
