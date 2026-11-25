@@ -39,7 +39,9 @@ import {
   type FetchLike,
   type UpdateDestinationError,
 } from "@heyqr/sdk";
+import { HeyQrRateLimitError } from "@heyqr/sdk";
 import { createQrForOwner } from "../api/v1/create-qr";
+import { takeRequest, WINDOW_SECONDS } from "../api/v1/rate-limit";
 import { hasScans, incrementScan, ownerScanSummary, scansByDay, utcDay } from "../qr/scans";
 import {
   accountUsage,
@@ -80,6 +82,18 @@ vi.mock("@/server/db", async () => ({
   schema: await import("./schema"),
 }));
 vi.mock("server-only", () => ({}));
+// HEY-178: the limiter as it is, except that its tests can set the clock the routes use.
+const limiterClock = vi.hoisted(() => ({ now: undefined as Date | undefined, timeoutMs: undefined as number | undefined }));
+vi.mock("../api/v1/rate-limit", async (original) => {
+  const real = await original<typeof import("../api/v1/rate-limit")>();
+  const takeRequest: typeof real.takeRequest = (d, userId, bucket, options) =>
+    real.takeRequest(d, userId, bucket, {
+      ...(limiterClock.now ? { now: limiterClock.now } : {}),
+      ...(limiterClock.timeoutMs ? { timeoutMs: limiterClock.timeoutMs } : {}),
+      ...options,
+    });
+  return { ...real, takeRequest };
+});
 vi.mock("next/cache", () => ({ revalidatePath: () => undefined }));
 vi.mock("@/server/storage/s3", () => ({ logoStore: () => null }));
 // HEY-156: what the printed code holds, as the app computes it (without the app's environment module).
@@ -7603,5 +7617,282 @@ describe.skipIf(!url)("hosted pages: drafts, publishing and public reads (real P
     expect(await submitDeveloperNotify(db, { email: "dev@hosted.test", topic: "packages" })).toEqual({ ok: true });
     expect(await submitDeveloperNotify(db, { email: "not an email", topic: "packages" })).toEqual({ ok: false, error: "invalid" });
     expect(Number((await pool.query("select count(*)::int as n from developer_notify where email = 'dev@hosted.test'")).rows[0].n)).toBe(1);
+  });
+});
+
+/* HEY-178: the public API's budgets per account, through the real routes, SDK and PostgreSQL counters. */
+describe.skipIf(!url)("public API rate limit (HEY-178, real PostgreSQL)", () => {
+  let pool: Pool;
+  /** A second app instance: its own pool. */
+  let pool2: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  let db2: ReturnType<typeof drizzle<typeof schema>>;
+  type Handler = (request: Request, ctx?: unknown) => Promise<Response>;
+  let create: Handler;
+  let layoutRoute: { GET: Handler; PATCH: Handler };
+  let destinationRoute: { GET: Handler; PATCH: Handler };
+  const a = { id: "rl178-a", name: "A", email: "a@rl178.test" };
+  const b = { id: "rl178-b", name: "B", email: "b@rl178.test" };
+  let keys: string[] = [];
+  let keyB = "";
+  const LIMIT = 6;
+  const T0 = new Date("2026-11-25T12:00:00.000Z");
+  const at = (seconds: number) => new Date(T0.getTime() + seconds * 1000);
+  const body = {
+    name: "Menu",
+    mode: "static",
+    content: { type: "website", url: "littlefern.cafe" },
+    layouts: [{ name: "A", layout: designToLayout(DEFAULT_DESIGN) }],
+  };
+  const post = (key: string, extra: Record<string, string> = {}, raw: unknown = body) =>
+    create(
+      new Request("http://localhost/api/v1/qr-codes", {
+        method: "POST",
+        headers: { authorization: `Bearer ${key}`, ...extra },
+        body: JSON.stringify(raw),
+      }),
+    );
+  const stored = async (user: string) =>
+    (
+      await pool.query(
+        `select (select count(*)::int from qr_code where user_id = $1) as codes,
+                (select count(*)::int from api_idempotency_key where user_id = $1) as keys,
+                (select coalesce(string_agg(destination || destination_revision, ','), '') from qr_code where user_id = $1) as destinations,
+                (select coalesce(string_agg(l.name || l.updated_at, ','), '') from qr_layout l join qr_code q on q.id = l.qr_code_id where q.user_id = $1) as layouts`,
+        [user],
+      )
+    ).rows[0] as { codes: number; keys: number; destinations: string; layouts: string };
+  const saturate = async () => {
+    while ((await takeRequest(db, a.id, "api")).ok);
+  };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 8 });
+    pool2 = new Pool({ connectionString: url, max: 8 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    db2 = drizzle(pool2, { schema, casing: "snake_case" });
+    apiDb.current = db;
+    vi.stubEnv("API_RATE_LIMIT_PER_MINUTE", String(LIMIT));
+    vi.stubEnv("API_RATE_LIMIT_EXPORTS_PER_MINUTE", "2");
+    await db.insert(schema.user).values([a, b]);
+    keys = [(await createApiKey(db, a.id)).key, (await createApiKey(db, a.id)).key];
+    keyB = (await createApiKey(db, b.id)).key;
+    create = (await import("../../app/api/v1/qr-codes/route")).POST as Handler;
+    layoutRoute = (await import("../../app/api/v1/qr-codes/[qrCodeId]/layouts/[layoutId]/route")) as unknown as typeof layoutRoute;
+    destinationRoute = (await import("../../app/api/v1/qr-codes/[qrCodeId]/destination/route")) as unknown as typeof destinationRoute;
+  });
+  const fresh = async () => {
+    limiterClock.now = T0;
+    limiterClock.timeoutMs = undefined;
+    await pool.query("delete from api_rate_limit");
+    await pool.query("delete from qr_code where user_id in ($1, $2)", [a.id, b.id]);
+  };
+  afterAll(async () => {
+    vi.unstubAllEnvs();
+    limiterClock.now = undefined;
+    limiterClock.timeoutMs = undefined;
+    await db?.delete(schema.user).where(inArray(schema.user.id, [a.id, b.id]));
+    await pool?.end();
+    await pool2?.end();
+  });
+
+  it("a concurrent burst over two keys stays within one account's budget; a second account is independent", async () => {
+    await fresh();
+    const results = await Promise.all(Array.from({ length: 20 }, (_, i) => post(keys[i % 2] ?? "", { "idempotency-key": `burst-${i}` })));
+    const statuses = results.map((r) => r.status);
+    expect(statuses.filter((s) => s === 201)).toHaveLength(LIMIT);
+    expect(statuses.filter((s) => s === 429)).toHaveLength(20 - LIMIT);
+    expect(await stored(a.id)).toMatchObject({ codes: LIMIT, keys: LIMIT });
+    expect((await post(keyB)).status).toBe(201);
+  });
+
+  it("the counter is atomic across two instances' connections", async () => {
+    await fresh();
+    const taken = await Promise.all(Array.from({ length: 40 }, (_, i) => takeRequest(i % 2 ? db : db2, a.id, "api", { now: T0 })));
+    expect(taken.filter((t) => t.ok)).toHaveLength(LIMIT);
+  });
+
+  it("429: code, limit, Retry-After and no-store; the wait counts down, isn't extended by retries, and then requests resume", async () => {
+    await fresh();
+    await saturate();
+    for (const [elapsed, wait] of [
+      [0, 60],
+      [42.5, 18],
+      [59.9, 1],
+    ] as const) {
+      limiterClock.now = at(elapsed);
+      for (const key of keys) {
+        const res = await post(key);
+        expect([res.status, res.headers.get("retry-after"), res.headers.get("cache-control")]).toEqual([429, String(wait), "no-store"]);
+        expect(((await res.json()) as { error: object }).error).toMatchObject({ code: "rate_limited", limit: "api" });
+      }
+    }
+    limiterClock.now = at(WINDOW_SECONDS);
+    expect((await post(keys[0] ?? "")).status).toBe(201);
+    expect((await post(keys[1] ?? "")).status).toBe(201);
+  });
+
+  it("the SDK exposes the code and Retry-After, and the same create succeeds after the wait", async () => {
+    await fresh();
+    const client = new HeyQrClient({
+      apiKey: keys[0] ?? "",
+      baseUrl: "http://localhost",
+      fetch: (async (u: string, init: RequestInit) => create(new Request(u, init))) as unknown as FetchLike,
+    });
+    await saturate();
+    limiterClock.now = at(43);
+    const options = { idempotencyKey: "sdk-178" };
+    const error: unknown = await client.createQr(body as Sdk.CreateQrRequest, options).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(HeyQrRateLimitError);
+    expect(error).toMatchObject({ status: 429, kind: "rate_limited", code: "rate_limited", retryAfterSeconds: 17 });
+    expect(await stored(a.id)).toMatchObject({ codes: 0, keys: 0 });
+    limiterClock.now = at(43 + 17);
+    expect((await client.createQr(body as Sdk.CreateQrRequest, options)).status).toBe("draft");
+  });
+
+  it("a refused create, layout update or destination update changes nothing; reads are refused too", async () => {
+    await fresh();
+    const made = (await (await post(keys[0] ?? "", {}, { ...body, mode: "dynamic" })).json()) as { id: string; layouts: { id: string }[] };
+    const params = { params: Promise.resolve({ qrCodeId: made.id, layoutId: made.layouts[0]?.id }) };
+    const send = (handler: Handler, method: string, payload?: unknown) =>
+      handler(
+        new Request("http://localhost/x", {
+          method,
+          headers: { authorization: `Bearer ${keys[1]}` },
+          ...(payload ? { body: JSON.stringify(payload) } : {}),
+        }),
+        params,
+      );
+    const { revision } = (await (await send(layoutRoute.GET, "GET")).json()) as { revision: string };
+    const destination = { destination: "https://littlefern.cafe/new", revision: 0 };
+    const layout = { revision, name: "Renamed" };
+    await saturate();
+    const before = await stored(a.id);
+    const answers = [
+      await post(keys[1] ?? "", { "idempotency-key": "refused-178" }),
+      await send(layoutRoute.PATCH, "PATCH", layout),
+      await send(destinationRoute.PATCH, "PATCH", destination),
+      await send(layoutRoute.GET, "GET"),
+      await send(destinationRoute.GET, "GET"),
+    ];
+    expect(answers.map((r) => r.status)).toEqual([429, 429, 429, 429, 429]);
+    expect(await stored(a.id)).toEqual(before);
+    // The same updates, from the same revisions, apply once the window has passed.
+    limiterClock.now = at(WINDOW_SECONDS);
+    expect((await send(layoutRoute.PATCH, "PATCH", layout)).status).toBe(200);
+    expect((await send(destinationRoute.PATCH, "PATCH", destination)).status).toBe(200);
+  });
+
+  it("exports have their own budget inside the account's", async () => {
+    await fresh();
+    const exports = [];
+    for (let i = 0; i < 3; i++) exports.push((await takeRequest(db, a.id, "export", { now: T0 })).ok);
+    expect(exports).toEqual([true, true, false]);
+    expect((await takeRequest(db, a.id, "api", { now: T0 })).ok).toBe(true);
+  });
+
+  it("invalid and revoked keys stay 401 and spend nothing, saturated or not", async () => {
+    await fresh();
+    const extra = await createApiKey(db, a.id);
+    await revokeApiKey(db, a.id, extra.id);
+    const bad = ["hqk_nope", generateApiKey().key, extra.key];
+    for (const key of bad) expect((await post(key)).status).toBe(401);
+    expect(Number((await pool.query("select count(*)::int as n from api_rate_limit")).rows[0].n)).toBe(0);
+    await saturate();
+    for (const key of bad) {
+      const res = await post(key);
+      expect([res.status, res.headers.get("retry-after")]).toEqual([401, null]);
+    }
+  });
+
+  it("while the owner's API budget is spent, short links resolve and count scans, and webhooks are fulfilled", async () => {
+    await fresh();
+    await db.insert(schema.qrCode).values({
+      id: "rl178-q",
+      userId: a.id,
+      name: "Q",
+      model: "dynamic",
+      status: "active",
+      content: { type: "website", url: "https://x.example" },
+      shortCode: "RL178qq",
+      destination: "https://x.example/now",
+    });
+    await db
+      .insert(schema.subscription)
+      .values({ id: "rl178-s", userId: a.id, stripeSubscriptionId: "sub_rl178", stripePriceId: "p", status: "active", activeCodeLimit: 5 });
+    await db.insert(schema.purchase).values({
+      id: "rl178-o",
+      userId: a.id,
+      item: "pack3",
+      lines: [{ offer: "pack3", amount: 1199 }],
+      stripeCheckoutSessionId: "cs_rl178",
+      amountTotal: 1199,
+      currency: "usd",
+    });
+    await saturate();
+    expect((await post(keys[0] ?? "")).status).toBe(429);
+    for (let i = 0; i < LIMIT * 2; i++) {
+      expect(await resolveShortLink(db, "RL178qq")).toMatchObject({ kind: "redirect", to: "https://x.example/now" });
+      await incrementScan(db, "rl178-q");
+    }
+    expect((await scansByDay(db, a.id, "rl178-q")).reduce((n, d) => n + d.count, 0)).toBe(LIMIT * 2);
+    const done = await processCheckoutEvent(
+      db,
+      {
+        id: "evt_rl178",
+        type: "checkout.session.completed",
+        session: {
+          id: "cs_rl178",
+          mode: "payment",
+          status: "complete",
+          payment_status: "paid",
+          payment_intent: "pi_rl178",
+          amount_subtotal: 1199,
+          amount_total: 1199,
+          total_details: { amount_discount: 0, amount_tax: 0, amount_shipping: 0 },
+          currency: "usd",
+          metadata: { userId: a.id },
+        },
+      },
+      () => "unused",
+    );
+    expect(done).toMatchObject({ duplicate: false, result: { granted: true } });
+    expect(await creditBalance(db, a.id)).toBe(3);
+  });
+
+  it("limiter store failing or not answering: 500 internal_error, nothing done, keys still checked first, nothing secret logged", async () => {
+    await fresh();
+    const error = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const refused = async () => {
+      const res = await post(keys[0] ?? "", { "idempotency-key": "down-178" });
+      expect([res.status, res.headers.get("retry-after")]).toEqual([500, "5"]);
+      expect(((await res.json()) as { error: { code: string } }).error.code).toBe("internal_error");
+      expect((await post("hqk_nope")).status).toBe(401);
+      expect(await stored(a.id)).toMatchObject({ codes: 0, keys: 0 });
+    };
+    try {
+      await pool.query("alter table api_rate_limit rename to api_rate_limit_away");
+      await refused();
+    } finally {
+      await pool.query("alter table api_rate_limit_away rename to api_rate_limit");
+    }
+    // Not answering: another session holds the account's row.
+    await takeRequest(db, a.id, "api");
+    const holder = await pool2.connect();
+    try {
+      await holder.query("begin");
+      await holder.query("select 1 from api_rate_limit where user_id = $1 for update", [a.id]);
+      limiterClock.timeoutMs = 150;
+      await refused();
+    } finally {
+      await holder.query("rollback");
+      holder.release();
+    }
+    const logged = JSON.stringify(error.mock.calls);
+    error.mockRestore();
+    expect(logged).toContain("api.rate_limit");
+    for (const key of keys) expect(logged).not.toContain(key.slice(17));
+    limiterClock.timeoutMs = undefined;
+    expect((await post(keys[0] ?? "")).status).toBe(201);
   });
 });

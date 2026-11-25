@@ -1,13 +1,13 @@
 import { env } from "@/env";
 import { authorizeApiExport } from "@/server/api/v1/export";
-import { apiError, internalError, notFound, requestOwner, unauthorized } from "@/server/api/v1/http";
+import { apiError, authorizeRequest, internalError, notFound } from "@/server/api/v1/http";
 import { db } from "@/server/db";
 import { deliverLayoutExport } from "@/server/qr/layout-export";
 import { getLayoutWithQr } from "@/server/qr/repository";
 
 /*
  * HEY-158 / QR-21.06: a layout's file for the account of the API key (docs/API_V1.md).
- * Order: the key (401), the options (422), the code and layout (404), the entitlement (402 with a payment URL), and
+ * Order: the key (401), the account's budgets (429, HEY-178), the options (422), the code and layout (404), the entitlement (402 with a payment URL), and
  * only then the private export flow (deliverLayoutExport: the same stored file and short-lived signed link as the
  * dashboard). Every request is checked again, including when the file is already stored. The 402 creates no charge or
  * Checkout Session; the payment URL and the download link never carry the key.
@@ -22,8 +22,9 @@ const RENDER_ERRORS: Record<string, string> = {
 
 export async function GET(request: Request, ctx: Ctx) {
   try {
-    const owner = await requestOwner(db, request);
-    if (!owner) return unauthorized();
+    const auth = await authorizeRequest(db, request, "export");
+    if (!auth.ok) return auth.response;
+    const { owner } = auth;
     const { qrCodeId, layoutId } = await ctx.params;
     const query = Object.fromEntries(new URL(request.url).searchParams);
     const decision = await authorizeApiExport(db, owner, { qrCodeId, layoutId, query }, { appUrl: env.NEXT_PUBLIC_APP_URL });

@@ -134,6 +134,13 @@
       "when": 1795604888686,
       "tag": "0018_hosted_pages",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1795642077365,
+      "tag": "0019_api_rate_limit",
+      "breakpoints": true
     }
   ]
 }

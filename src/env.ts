@@ -51,6 +51,9 @@ export const env = createEnv({
     S3_ACCESS_KEY_ID: z.string().min(1).optional(),
     S3_SECRET_ACCESS_KEY: z.string().min(1).optional(),
     S3_ENDPOINT: optionalUrl,
+    // HEY-178: the public API's requests per minute and account (defaults: server/api/v1/rate-limit.ts).
+    API_RATE_LIMIT_PER_MINUTE: z.coerce.number().int().min(1).max(100_000).optional(),
+    API_RATE_LIMIT_EXPORTS_PER_MINUTE: z.coerce.number().int().min(1).max(100_000).optional(),
     UPSTASH_REDIS_REST_URL: optionalUrl,
     UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
     // HEY-175 monitoring (docs/MONITORING.md): Sentry DSN for server and edge errors. Unset: nothing is sent.

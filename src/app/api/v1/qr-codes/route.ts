@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { createQrForOwner, IDEMPOTENCY_KEY } from "@/server/api/v1/create-qr";
-import { apiError, apiJson, internalError, jsonBody, malformedJson, requestOwner, unauthorized } from "@/server/api/v1/http";
+import { apiError, apiJson, authorizeRequest, internalError, jsonBody, malformedJson } from "@/server/api/v1/http";
 import { db } from "@/server/db";
 import { logosFor } from "@/server/qr/logos-for";
 
@@ -14,8 +14,9 @@ import { logosFor } from "@/server/qr/logos-for";
  */
 export async function POST(request: Request) {
   try {
-    const owner = await requestOwner(db, request);
-    if (!owner) return unauthorized();
+    const auth = await authorizeRequest(db, request);
+    if (!auth.ok) return auth.response;
+    const { owner } = auth;
     const parsed = await jsonBody(request);
     if (!parsed.ok) return malformedJson();
     const idempotencyKey = request.headers.get("idempotency-key") ?? undefined;

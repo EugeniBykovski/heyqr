@@ -28,6 +28,7 @@ Set the two DSNs in Vercel per scope (Production and Preview), preferably a Sent
 | Public QR                   | `qr.resolve`, `qr.redirect`, `qr.page`, `qr.hosted_file`                                  | high; `qr.scan.record` low                                                |
 | Pages                       | `page.render`, `navigation.load` (browser), `request.*` (server)                          | high on editor, dashboard, export, print, checkout return; else low       |
 | External probe              | `probe.short_link` ([SHORT_LINK_PROBE.md](SHORT_LINK_PROBE.md))                           | high                                                                      |
+| API limiter unavailable     | `api.rate_limit` (the API answers 500; a 429 is routine and not reported)                 | high                                                                      |
 | Checkout return check       | `checkout.return_check`                                                                   | high                                                                      |
 | Uncaught browser errors     | `browser.unhandled`                                                                       | low                                                                       |
 

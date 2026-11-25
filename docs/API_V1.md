@@ -27,6 +27,48 @@ WWW-Authenticate: Bearer realm="heyqr"
 { "error": { "code": "unauthorized", "message": "A valid API key is required: Authorization: Bearer <key>." } }
 ```
 
+## Rate limits
+
+HEY-178. Budgets belong to the **account**: all its keys spend the same ones, and accounts don't affect each other. A
+new key doesn't add requests.
+
+| Budget (`error.limit`) | Counts                                              | Default        | Setting                             |
+| ---------------------- | --------------------------------------------------- | -------------- | ----------------------------------- |
+| `api`                  | every request with a valid key, whatever its answer | 120 per minute | `API_RATE_LIMIT_PER_MINUTE`         |
+| `export`               | `GET …/export` requests, **also** counted in `api`  | 30 per minute  | `API_RATE_LIMIT_EXPORTS_PER_MINUTE` |
+
+A window starts with the first request and lasts 60 seconds; then the budget is whole again. Requests at the end of
+one window and the start of the next can add up to twice the limit in a short time. Idempotent replays count. Requests refused with
+429 don't extend the wait. A key that doesn't verify gets `401` and spends nothing.
+
+Over a budget, the request is refused before its body is read: nothing is created, changed or rendered.
+
+```
+429 Too Many Requests
+Retry-After: 17
+Cache-Control: no-store
+{ "error": { "code": "rate_limited", "message": "Too many requests for this account. Try again later.", "limit": "api" } }
+```
+
+`Retry-After` is whole seconds until the window ends. With [`@heyqr/sdk`](../packages/sdk/README.md):
+
+```ts
+try {
+  await heyqr.createQr(request, { idempotencyKey });
+} catch (error) {
+  if (!(error instanceof HeyQrRateLimitError)) throw error;
+  // error.code === "rate_limited"; error.retryAfterSeconds === 17. Wait, then send the same request again.
+}
+```
+
+If the budget can't be checked (its store fails or doesn't answer in 2 seconds), the answer is the usual
+`500 internal_error` with `Retry-After: 5`, and nothing is done: the API never runs unmetered. It is reported to
+monitoring as `api.rate_limit`.
+
+Any endpoint below can answer 429. Short links, the website, Checkout and Stripe webhooks aren't part of these
+budgets. The limits are counted in PostgreSQL (`api_rate_limit`), so every app instance shares them; there is no edge
+limit in front of unauthenticated requests.
+
 ## POST /api/v1/qr-codes
 
 Creates one QR code with its layouts, as a **draft** of the key's account. It is the editor's own save. The account's

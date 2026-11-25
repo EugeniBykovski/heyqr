@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { readDestinationForOwner, updateDestinationForOwner, type ShortLinkFor } from "@/server/api/v1/destination";
-import { apiError, apiJson, internalError, jsonBody, malformedJson, notFound, requestOwner, unauthorized } from "@/server/api/v1/http";
+import { apiError, apiJson, authorizeRequest, internalError, jsonBody, malformedJson, notFound } from "@/server/api/v1/http";
 import { db } from "@/server/db";
 import { encodedValue } from "@/server/qr/export";
 
@@ -17,8 +17,9 @@ const notDynamic = () => apiError(422, "not_dynamic", "Only Dynamic codes have a
 
 export async function GET(request: Request, ctx: Ctx) {
   try {
-    const owner = await requestOwner(db, request);
-    if (!owner) return unauthorized();
+    const auth = await authorizeRequest(db, request);
+    if (!auth.ok) return auth.response;
+    const { owner } = auth;
     const { qrCodeId } = await ctx.params;
     const read = await readDestinationForOwner(db, owner, qrCodeId, shortLinkFor);
     if (!read.ok) return read.error === "not_found" ? notFound() : notDynamic();
@@ -30,8 +31,9 @@ export async function GET(request: Request, ctx: Ctx) {
 
 export async function PATCH(request: Request, ctx: Ctx) {
   try {
-    const owner = await requestOwner(db, request);
-    if (!owner) return unauthorized();
+    const auth = await authorizeRequest(db, request);
+    if (!auth.ok) return auth.response;
+    const { owner } = auth;
     const { qrCodeId } = await ctx.params;
     const parsed = await jsonBody(request);
     if (!parsed.ok) return malformedJson();

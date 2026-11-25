@@ -148,7 +148,7 @@ export class HeyQrRateLimitError extends HeyQrError {
   readonly code: string | null;
   constructor(retryAfterSeconds: number | null, code: string | null) {
     super(
-      `The HeyQR API is rate limiting this key (429${retryAfterSeconds === null ? "" : `; retry after ${retryAfterSeconds} s`}).`,
+      `The HeyQR API is rate limiting this account (429${retryAfterSeconds === null ? "" : `; retry after ${retryAfterSeconds} s`}).`,
       429,
       "rate_limited",
     );
