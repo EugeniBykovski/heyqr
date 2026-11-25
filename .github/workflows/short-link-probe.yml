@@ -1,0 +1,67 @@
+name: Short link probe
+
+# HEY-176: an external availability check of one permanent Dynamic QR short link per environment, from GitHub's runners
+# (docs/SHORT_LINK_PROBE.md). Settings are repository variables, not GitHub environments: those can require a reviewer,
+# and a scheduled check must not wait for one.
+on:
+  schedule:
+    # Off the hour, when GitHub's scheduler is less busy. Runs from the default branch only.
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to check"
+        type: choice
+        options: [production, dev]
+        default: production
+      drill:
+        description: "Expect a wrong destination on purpose: the run must fail and the alert must arrive"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: short-link-probe-${{ github.event_name }}-${{ inputs.environment || 'scheduled' }}
+  cancel-in-progress: false
+
+jobs:
+  production:
+    # Scheduled runs are skipped (not green) until the link is configured; a manual run without it fails.
+    if: >-
+      (github.event_name == 'schedule' && (vars.SHORT_LINK_PROBE_URL_PRODUCTION != '' || vars.SHORT_LINK_PROBE_DESTINATION_PRODUCTION != ''))
+      || inputs.environment == 'production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/short-link-probe.ts
+        env:
+          SHORT_LINK_PROBE_ENVIRONMENT: production
+          SHORT_LINK_PROBE_URL: ${{ vars.SHORT_LINK_PROBE_URL_PRODUCTION }}
+          SHORT_LINK_PROBE_DESTINATION: ${{ vars.SHORT_LINK_PROBE_DESTINATION_PRODUCTION }}
+          SHORT_LINK_PROBE_SENTRY_DSN: ${{ secrets.SHORT_LINK_PROBE_SENTRY_DSN_PRODUCTION }}
+          SHORT_LINK_PROBE_DRILL: ${{ inputs.drill || false }}
+
+  dev:
+    if: >-
+      (github.event_name == 'schedule' && (vars.SHORT_LINK_PROBE_URL_DEV != '' || vars.SHORT_LINK_PROBE_DESTINATION_DEV != ''))
+      || inputs.environment == 'dev'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/short-link-probe.ts
+        env:
+          SHORT_LINK_PROBE_ENVIRONMENT: dev
+          SHORT_LINK_PROBE_URL: ${{ vars.SHORT_LINK_PROBE_URL_DEV }}
+          SHORT_LINK_PROBE_DESTINATION: ${{ vars.SHORT_LINK_PROBE_DESTINATION_DEV }}
+          SHORT_LINK_PROBE_SENTRY_DSN: ${{ secrets.SHORT_LINK_PROBE_SENTRY_DSN_DEV }}
+          SHORT_LINK_PROBE_DRILL: ${{ inputs.drill || false }}
