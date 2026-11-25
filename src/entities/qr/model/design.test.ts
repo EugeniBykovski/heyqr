@@ -2,7 +2,7 @@ import { composeLayout, encodePayload } from "@heyqr/qr-core";
 import { decodeSvg } from "@heyqr/qr-core/verify";
 import { describe, expect, it } from "vitest";
 import { DEFAULT_DESIGN, designToLayout, FRAME_STYLES, MODULE_SHAPES } from "./design";
-import { emptyContent, isContentComplete } from "./content";
+import { directContent, emptyContent, isContentComplete } from "./content";
 
 const url = "https://anareyes.studio/portfolio";
 
@@ -40,7 +40,7 @@ describe("content", () => {
 
   it("empty content of every type encodes without throwing", () => {
     for (const type of ["website", "text", "wifi", "contact", "email", "phone", "sms", "location", "event"] as const) {
-      expect(() => encodePayload(emptyContent(type))).not.toThrow();
+      expect(() => encodePayload(directContent(emptyContent(type)))).not.toThrow();
     }
   });
 });

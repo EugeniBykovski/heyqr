@@ -13,8 +13,8 @@ import {
   timestamp,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
-import type { QrContent } from "@heyqr/qr-core";
 import type { LayoutRecordDesign } from "../../entities/qr/model/design-schema";
+import type { AnyQrContent, HostedContent } from "../../entities/qr/model/hosted";
 
 const timestamps = {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -101,7 +101,8 @@ export const qrCode = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
-    content: jsonb("content").$type<QrContent>().notNull(),
+    /** The code's content: encoded in the pattern (direct types) or, for hosted pages, the owner's working draft. */
+    content: jsonb("content").$type<AnyQrContent>().notNull(),
     model: qrModel("model").notNull().default("static"),
     status: qrStatus("status").notNull().default("draft"),
     /** Dynamic codes only: permanent slug printed in the code. */
@@ -138,6 +139,60 @@ export const qrCode = pgTable(
       .on(t.userId, t.guestClaimKey)
       .where(sql`${t.guestClaimKey} is not null and ${t.deletedAt} is null`),
   ],
+);
+
+/**
+ * Hosted pages (design 10.x / 11.x): an immutable published snapshot of a hosted code's content. The code's `content`
+ * is the owner's working draft; the public page only ever shows the latest version here. Publishing again adds a
+ * version (the QR, its short link and its scans stay the same); older versions are kept for history and rollback.
+ */
+export const qrHostedVersion = pgTable(
+  "qr_hosted_version",
+  {
+    id: text("id").primaryKey(),
+    qrCodeId: text("qr_code_id")
+      .notNull()
+      .references(() => qrCode.id, { onDelete: "cascade" }),
+    /** 1, 2, 3… per code. */
+    version: integer("version").notNull(),
+    /** Validated hosted content (versioned JSON, `v`), images and the PDF as `asset:<id>` references. */
+    content: jsonb("content").$type<HostedContent>().notNull(),
+    publishedAt: timestamp("published_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("qr_hosted_version_qr_uq").on(t.qrCodeId, t.version)],
+);
+
+/** "Report this page" on a public hosted page. Stored for review; nothing is changed automatically. */
+export const pageReport = pgTable(
+  "page_report",
+  {
+    id: text("id").primaryKey(),
+    /** The short link the visitor reported (kept even if the code is deleted later). */
+    shortCode: text("short_code").notNull(),
+    qrCodeId: text("qr_code_id").references(() => qrCode.id, { onDelete: "set null" }),
+    /** The published version the visitor saw, when there was one. */
+    version: integer("version"),
+    reason: text("reason").notNull(),
+    details: text("details").notNull().default(""),
+    email: text("email"),
+    /** sha256 of the reporter's address and a server secret: rate limiting without storing the address. */
+    reporterHash: text("reporter_hash").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("page_report_code_idx").on(t.shortCode, t.createdAt), index("page_report_reporter_idx").on(t.reporterHash, t.createdAt)],
+);
+
+/** /developers "Email me": who wants to hear when the packages are published. One row per address and topic. */
+export const developerNotify = pgTable(
+  "developer_notify",
+  {
+    id: text("id").primaryKey(),
+    email: text("email").notNull(),
+    /** What they asked about: "packages" (npm release). */
+    topic: text("topic").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("developer_notify_email_topic_uq").on(t.email, t.topic)],
 );
 
 /** A named design of a QR code (Business card, Poster…). One QR has many layouts. */

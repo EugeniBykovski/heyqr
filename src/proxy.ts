@@ -5,5 +5,6 @@ import { routing } from "./i18n/routing";
 export default createMiddleware(routing);
 
 export const config = {
-  matcher: ["/((?!api|r/|_next|_vercel|.*\\..*).*)"],
+  // r/ (short links) and p/ (public hosted pages) are locale-free: the printed code's URL never changes with language.
+  matcher: ["/((?!api|r/|p/|_next|_vercel|.*\\..*).*)"],
 };

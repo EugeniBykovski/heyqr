@@ -2,6 +2,7 @@ import { CAPTION_FONT_IDS, isHexColor, QR_CONTENT_TYPES, type Layout, type QrCon
 import { checkLogoDataUrl } from "./logo";
 import { isValidSize } from "./size";
 import { z } from "zod";
+import { hostedContentSchema, type HostedContent } from "./hosted";
 import { modeFor, QR_MODES } from "./modes";
 import {
   CAPTION_ALIGNS,
@@ -85,10 +86,13 @@ export const designSettingsSchema = z.object({
 });
 export type DesignSettings = z.infer<typeof designSettingsSchema>;
 
-const contentSchema = z
+const directContentSchema = z
   .object({ type: oneOf(QR_CONTENT_TYPES) })
   .catchall(z.union([z.string(), z.boolean()]))
   .transform((c) => c as unknown as QrContent);
+
+/** Direct content (lenient, as before) or a hosted page in its strict, versioned shape. */
+const contentSchema = z.union([directContentSchema, hostedContentSchema.transform((c) => c as HostedContent)]);
 
 const draftFields = designSettingsSchema.extend({
   name: z.string().max(80),

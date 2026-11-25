@@ -39,6 +39,7 @@ const live = {
   status: "active",
   deletedAt: null,
   isTrial: false,
+  content: { type: "website", url: "https://menu.example.test" },
   destination: "https://menu.example.test/today?table=4#drinks",
 };
 const open = async (code = "AbCdEf2") => {

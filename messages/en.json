@@ -23,7 +23,8 @@
     "languages": "Languages",
     "languageEmpty": "No language matches “{query}”.",
     "trial": "Free trial",
-    "apiKeys": "API keys"
+    "apiKeys": "API keys",
+    "developers": "Developers"
   },
   "payment": {
     "title": "How payment works",
@@ -215,6 +216,34 @@
       "event": {
         "label": "Event",
         "desc": "Add an event to the calendar."
+      },
+      "menu": {
+        "label": "Menu",
+        "desc": "Dishes, sections and prices on a phone-friendly page."
+      },
+      "coupon": {
+        "label": "Coupon",
+        "desc": "A discount with a promo code and an end date."
+      },
+      "social": {
+        "label": "Social links",
+        "desc": "Your profiles and links on one page."
+      },
+      "business": {
+        "label": "Business",
+        "desc": "Hours, address, call and directions."
+      },
+      "apps": {
+        "label": "Apps",
+        "desc": "One code for the App Store and Google Play."
+      },
+      "pdf": {
+        "label": "PDF document",
+        "desc": "Upload a PDF that opens on any phone."
+      },
+      "product": {
+        "label": "Product",
+        "desc": "Photos, price and a buy button."
       }
     },
     "faq": {
@@ -372,6 +401,114 @@
       "withPack": "With Print Pack",
       "details": "See Print Pack details",
       "preview": "Open Print Preview"
+    },
+    "explore": {
+      "kicker": "Explore QR types",
+      "title": "One studio for every kind of code",
+      "lead": "Pick a type to see what people get on their phone after scanning.",
+      "tabs": "QR types",
+      "legend": "Hosted page: HeyQR keeps the page online and you can edit it after printing",
+      "hostedBadge": "Hosted page · Dynamic QR",
+      "websiteBadge": "Static or Dynamic QR",
+      "directBadge": "Opens directly · Static QR",
+      "hostedExtra": "Edit the page after printing. The code stays the same",
+      "directExtra": "Free to design and preview",
+      "hostedPrice": "Hosted pages need a Dynamic plan: Starter {price}/month, 7-day free trial.",
+      "directPrice": "Free to design. {price} per code when you download.",
+      "whatYouGet": "What you get",
+      "allTypes": "See all 16 types",
+      "types": {
+        "menu": {
+          "short": "Dishes and prices",
+          "use": "Put your whole menu on the table. Guests scan, browse by section and see prices without waiting for a printed copy.",
+          "cta": "Create a Menu QR",
+          "points": {
+            "a": "Sections, dishes, prices and optional photos",
+            "b": "Change prices any time; printed codes keep working"
+          }
+        },
+        "coupon": {
+          "short": "Discounts people claim",
+          "use": "Turn a scan into a sale with a code customers copy at checkout or show at the counter.",
+          "cta": "Create a Coupon QR",
+          "points": {
+            "a": "Promo code, end date and terms",
+            "b": "Shows a clear “offer ended” page after it expires"
+          }
+        },
+        "social": {
+          "short": "All your profiles",
+          "use": "One code for every profile you share: portfolio, social accounts and more, in the order you choose.",
+          "cta": "Create a Social links QR",
+          "points": {
+            "a": "Photo, name and a short bio",
+            "b": "Reorder links whenever you like"
+          }
+        },
+        "business": {
+          "short": "Hours, calls, directions",
+          "use": "Everything a visitor needs to reach you: opening hours, a call button, directions and your website.",
+          "cta": "Create a Business QR",
+          "points": {
+            "a": "Call, Directions and Website appear when you add those details",
+            "b": "Shows whether you’re open today"
+          }
+        },
+        "apps": {
+          "short": "Both app stores",
+          "use": "Send iPhones to the App Store and Android phones to Google Play from the same printed code.",
+          "cta": "Create an Apps QR",
+          "points": {
+            "a": "Works with one store or both",
+            "b": "Computers get a page with both links and a code to scan"
+          }
+        },
+        "pdf": {
+          "short": "Share a document",
+          "use": "Brochures, schedules or manuals: upload a PDF and people open it on their phone in one tap.",
+          "cta": "Create a PDF QR",
+          "points": {
+            "a": "Replace the file later without reprinting",
+            "b": "Open PDF and Download buttons"
+          }
+        },
+        "product": {
+          "short": "A product page",
+          "use": "Show a product with photos, price and a buy button, straight from the packaging or the shelf.",
+          "cta": "Create a Product QR",
+          "points": {
+            "a": "Up to 5 photos, price optional",
+            "b": "Your button: Buy now, View product or Order now"
+          }
+        },
+        "website": {
+          "short": "Open a web page",
+          "use": "Send people to any page: your portfolio, shop or booking form.",
+          "cta": "Create a Website QR",
+          "points": {
+            "a": "Static, or Dynamic if the link may change",
+            "b": "Live scan check while you design"
+          }
+        },
+        "wifi": {
+          "short": "Join Wi-Fi",
+          "use": "Guests point the camera and join your network. Nobody spells out a password.",
+          "cta": "Create a Wi-Fi QR",
+          "points": {
+            "a": "WPA, WEP or open networks",
+            "b": "Works offline: the details are in the code"
+          }
+        },
+        "contact": {
+          "short": "Save a contact",
+          "use": "A business card that saves your name, phone and email straight to their contacts.",
+          "cta": "Create a Contact QR",
+          "points": {
+            "a": "Works on iPhone and Android",
+            "b": "No app needed"
+          }
+        }
+      }
     }
   },
   "pricing": {
@@ -471,7 +608,14 @@
     "phone": "Phone",
     "sms": "SMS",
     "location": "Location",
-    "event": "Event"
+    "event": "Event",
+    "menu": "Menu",
+    "coupon": "Coupon",
+    "social": "Social links",
+    "business": "Business",
+    "apps": "Apps",
+    "pdf": "PDF document",
+    "product": "Product"
   },
   "fields": {
     "url": "Website address",
@@ -686,8 +830,21 @@
         "phone": "+1 415 555 0142",
         "sms": "“RSVP yes”",
         "location": "21 Pier St, San Francisco",
-        "event": "Spring show · Dec 5"
-      }
+        "event": "Spring show · Dec 5",
+        "menu": "Little Fern Café menu",
+        "coupon": "20% off pottery classes",
+        "social": "@ana.makes, portfolio, YouTube",
+        "business": "Reyes Ceramics Studio",
+        "apps": "Fern Rewards app",
+        "pdf": "Spring class schedule",
+        "product": "Speckled stoneware mug"
+      },
+      "directGroup": "Opens straight from the code",
+      "directGroupLabel": "QR types that open directly",
+      "hostedGroup": "Hosted pages",
+      "hostedNew": "New",
+      "hostedLead": "HeyQR hosts a mobile page for these and the code holds a Dynamic short link, so you can edit the page after printing. They need a Dynamic plan: Starter {starter}/month or Studio {studio}/month, with a 7-day free trial.",
+      "hostedSummary": "{type} · Hosted page · Dynamic"
     },
     "contentStep": {
       "titles": {
@@ -699,7 +856,14 @@
         "phone": "Which number should it call?",
         "sms": "Who gets the text message?",
         "location": "Which place should it open?",
-        "event": "What’s the event?"
+        "event": "What’s the event?",
+        "menu": "What’s on the menu?",
+        "coupon": "What’s the offer?",
+        "social": "Which links should people find?",
+        "business": "How do people reach you?",
+        "apps": "Where can people get your app?",
+        "pdf": "Which document should open?",
+        "product": "Which product are you showing?"
       },
       "subs": {
         "website": "Paste the full address. You’ll see what people get after scanning.",
@@ -710,7 +874,14 @@
         "phone": "Scanning offers to call the number. No typing.",
         "sms": "Scanning opens a text message, ready to send.",
         "location": "Scanning opens the place in the phone’s maps app.",
-        "event": "Scanning offers to add the event to the calendar."
+        "event": "Scanning offers to add the event to the calendar.",
+        "menu": "Add sections and dishes. Guests see a phone-friendly menu after scanning.",
+        "coupon": "People see the discount, copy the code and redeem it before it ends.",
+        "social": "One page with your photo, a short bio and your links, in your order.",
+        "business": "Buttons for calling, directions and your website appear when you add those details.",
+        "apps": "Phones go straight to their own store. Other devices see both links.",
+        "pdf": "Upload the PDF. People open or download it in one tap.",
+        "product": "Photos, price and one clear button to buy or learn more."
       },
       "nameLabel": "Name in My QR codes",
       "stepOf": "Step 2 of 3",
@@ -1157,6 +1328,201 @@
           "fix": "Reduce logo size"
         }
       }
+    },
+    "hosted": {
+      "badge": "Hosted page",
+      "notice": "HeyQR publishes this page at {short}. {needs} Changes go live when you publish; printed codes keep working.",
+      "noticePreview": "the code’s short link",
+      "needsPlan": "Publishing needs a Dynamic plan: Starter {starter}/month for 5 codes or Studio {studio}/month for 25, with a 7-day free trial. Designing and previewing stay free.",
+      "needsSlot": "It uses one of your {slots} Dynamic slots on {plan}.",
+      "sample": "Start from the example",
+      "sampleAdded": "Example added. Replace it with your own details.",
+      "previews": "Previews · After scan and QR design",
+      "previewSwitch": "Preview",
+      "afterScan": "After scan",
+      "qrDesign": "QR design",
+      "moveUp": "Move {item} up",
+      "moveDown": "Move {item} down",
+      "remove": "Remove {item}",
+      "optional": "optional",
+      "photoAdd": "Add photo",
+      "photoReplace": "Replace photo",
+      "photoRemove": "Remove photo",
+      "photoHint": "Photos are uploaded to HeyQR and resized for phones. JPG or PNG, up to 5 MB each.",
+      "photoType": "“{name}” isn’t a JPG or PNG.",
+      "photoTooLarge": "“{name}” is {size}. The limit is 5 MB.",
+      "photoUnreadable": "We couldn’t read “{name}”. Try another photo.",
+      "menu": {
+        "name": "Restaurant name",
+        "namePlaceholder": "Little Fern Café",
+        "note": "Note",
+        "notePlaceholder": "Kitchen open 8:00–15:00",
+        "currency": "Prices in",
+        "section": "Section {n}",
+        "sectionPlaceholder": "Breakfast",
+        "sectionHint": "Name this section, like “Breakfast” or “Drinks”.",
+        "dish": "Dish {n}",
+        "dishPlaceholder": "Avocado toast",
+        "descPlaceholder": "Description · optional",
+        "price": "Price",
+        "pricePlaceholder": "12",
+        "dishPhoto": "Dish photo",
+        "addDish": "Add dish",
+        "addSection": "Add section"
+      },
+      "coupon": {
+        "title": "Offer title",
+        "titlePlaceholder": "On any pottery class this month",
+        "discount": "Discount",
+        "discountPlaceholder": "20% off",
+        "discountHint": "Short and big: “20% off”, “$5 off”, “Free coffee”.",
+        "code": "Promo code",
+        "codePlaceholder": "FERN20",
+        "expires": "Ends on",
+        "expiresHint": "After this date the page shows “Offer ended” and hides the code. The offer is valid through the whole day in your time zone ({zone}).",
+        "clearDate": "Clear date",
+        "link": "Redemption link",
+        "linkPlaceholder": "yourshop.com/offer",
+        "terms": "Terms",
+        "termsPlaceholder": "One code per person. Not valid with other offers.",
+        "previewAs": "Preview the page as",
+        "valid": "Valid offer",
+        "expired": "Expired"
+      },
+      "social": {
+        "photo": "Profile photo",
+        "name": "Profile name",
+        "namePlaceholder": "Ana Reyes",
+        "bio": "Short bio",
+        "bioPlaceholder": "Product designer. Ceramics on weekends.",
+        "links": "Links, in the order people see them",
+        "link": "Link {n}",
+        "labelLabel": "Label",
+        "labelPlaceholder": "Instagram",
+        "urlLabel": "Address",
+        "urlPlaceholder": "instagram.com/yourname",
+        "quickAdd": "Add:",
+        "addLink": "Add link"
+      },
+      "business": {
+        "name": "Business name",
+        "namePlaceholder": "Reyes Ceramics Studio",
+        "desc": "Short description",
+        "descPlaceholder": "Hand-thrown tableware and pottery classes.",
+        "hours": "Opening hours",
+        "open": "Open",
+        "from": "Opens",
+        "to": "Closes",
+        "closed": "Closed",
+        "copyMonday": "Copy Monday’s hours to Tue–Fri",
+        "zone": "Times are in {zone}.",
+        "address": "Address",
+        "addressPlaceholder": "21 Pier St, San Francisco",
+        "addressHint": "Adds a Directions button.",
+        "phone": "Phone",
+        "phonePlaceholder": "+1 415 555 0142",
+        "phoneHint": "Adds a Call button.",
+        "website": "Website",
+        "websitePlaceholder": "yourshop.com",
+        "websiteHint": "Adds a Website button."
+      },
+      "apps": {
+        "icon": "App icon",
+        "name": "App name",
+        "namePlaceholder": "Fern Rewards",
+        "desc": "Description",
+        "descPlaceholder": "What the app does, in one sentence.",
+        "ios": "App Store link",
+        "iosPlaceholder": "apps.apple.com/app/your-app",
+        "android": "Google Play link",
+        "androidPlaceholder": "play.google.com/store/apps/details?id=…",
+        "storesHint": "Add at least one store. Phones open their own store; other devices see a page with both links."
+      },
+      "pdf": {
+        "title": "Title",
+        "titlePlaceholder": "Spring class schedule",
+        "desc": "Short description",
+        "descPlaceholder": "Dates, prices and what to bring.",
+        "file": "PDF file",
+        "choose": "Choose a PDF",
+        "limits": "Up to 25 MB · up to 300 pages",
+        "sample": "Use the sample PDF",
+        "uploading": "Uploading · {pct}%",
+        "processing": "Checking the PDF…",
+        "cancel": "Cancel",
+        "meta": "{pages, plural, one {# page} other {# pages}} · {size}",
+        "metaNoPages": "{size}",
+        "replace": "Replace",
+        "remove": "Remove",
+        "hint": "Stored by HeyQR. Replacing the file keeps the same short link, so printed codes open the new version after you publish.",
+        "signIn": "Sign in to upload a PDF. Your draft is kept.",
+        "notPdf": "“{name}” isn’t a PDF. Choose a file that ends in .pdf.",
+        "empty": "“{name}” is empty. Choose another file.",
+        "tooLarge": "“{name}” is {size}. The limit is 25 MB. Export a smaller PDF and try again.",
+        "tooManyPages": "“{name}” has {pages} pages. The limit is 300.",
+        "failed": "That file didn’t upload. Try again."
+      },
+      "product": {
+        "name": "Product name",
+        "namePlaceholder": "Speckled stoneware mug",
+        "photos": "Photos",
+        "cover": "Cover",
+        "photosHint": "Up to 5 photos. The first one is the cover. JPG or PNG, up to 5 MB each.",
+        "photo": "Photo {n}",
+        "desc": "Description",
+        "descPlaceholder": "Size, material, care.",
+        "currency": "Currency",
+        "price": "Price",
+        "pricePlaceholder": "38",
+        "cta": "Button",
+        "ctas": {
+          "buy": "Buy now",
+          "view": "View product",
+          "order": "Order now"
+        },
+        "link": "Product link",
+        "linkPlaceholder": "yourshop.com/product",
+        "linkHint": "Where the button goes: your shop or a marketplace listing."
+      },
+      "signInPhotos": "Sign in to add photos. Your draft is kept.",
+      "errors": {
+        "menuName": "Add the name guests see at the top of the menu.",
+        "menuSections": "Add at least one section.",
+        "sectionName": "Name this section, like “Breakfast” or “Drinks”.",
+        "sectionDishes": "Add at least one dish to this section.",
+        "dishName": "Every dish needs a name.",
+        "price": "Prices use digits only, like 12 or 4.50.",
+        "couponTitle": "Say what the offer is for.",
+        "couponDiscount": "Add the discount, like “20% off”.",
+        "couponCode": "Use letters, digits, - or _ only, with no spaces.",
+        "dateInvalid": "Pick a valid date.",
+        "datePassed": "This date has passed. Pick a later date, or clear it for an offer with no end date.",
+        "urlEmpty": "Enter a web address, like yourname.com.",
+        "urlSpaces": "Web addresses can’t contain spaces.",
+        "urlInvalid": "Check the address. It needs a domain, like yourname.com.",
+        "socialName": "Add the name people see at the top of the page.",
+        "socialLinks": "Add at least one link.",
+        "linkLabel": "This link needs a label.",
+        "linkUrl": "This link needs a full web address, like instagram.com/yourname.",
+        "businessName": "Add your business name.",
+        "businessReach": "Add an address, phone or website so people can reach you.",
+        "phone": "Use digits, spaces and an optional + for the country code.",
+        "hoursInvalid": "Use times like 09:00.",
+        "hoursOrder": "Closing time must be later than opening time.",
+        "appName": "Add the app name.",
+        "appStores": "Add at least one store link.",
+        "appStoreLink": "App Store links start with apps.apple.com/.",
+        "googlePlayLink": "Google Play links start with play.google.com/.",
+        "pdfTitle": "Add a title for the document.",
+        "pdfFile": "Upload a PDF to continue.",
+        "pdfUploading": "Wait for the upload to finish.",
+        "productName": "Add the product name.",
+        "productLink": "Add the page where people can buy or see the product.",
+        "productPrice": "Use digits only, like 38 or 38.50. Choose the currency in the menu.",
+        "productImages": "Up to 5 photos."
+      },
+      "previewNote": "HeyQR hosts this page at {short}. Edits go live when you publish; printed codes keep working.",
+      "qrNote": "The code holds the short link {short}, so the page can change after printing."
     }
   },
   "scan": {
@@ -1560,6 +1926,37 @@
         "noPlan": "Resuming this code needs an active Dynamic plan.",
         "failed": "We couldn’t change the code’s status. Nothing was changed; try again."
       }
+    },
+    "hostedPage": {
+      "title": "Hosted page",
+      "live": "Live · version {version}",
+      "publishedOn": "Published {date}",
+      "never": "Not published yet",
+      "neverNote": "Publish the page so people who scan the code see it.",
+      "changed": "Unpublished changes",
+      "changedNote": "Visitors still see the published version until you publish again.",
+      "upToDate": "Visitors see the latest version.",
+      "notLive": "The page goes live at the short link once the code is active.",
+      "edit": "Edit page",
+      "publish": "Publish",
+      "publishing": "Publishing…",
+      "published": "Published. The same QR code and short link now show this version.",
+      "unchanged": "Nothing new to publish.",
+      "rules": "Some details need attention before publishing. Edit the page to fix them.",
+      "failed": "Couldn’t publish. Try again.",
+      "open": "Open the page"
+    },
+    "hostedEditor": {
+      "title": "Edit page",
+      "back": "Back to QR details",
+      "lead": "Changes are saved as a draft. Visitors see them after you publish.",
+      "save": "Save draft",
+      "saving": "Saving…",
+      "saved": "Draft saved.",
+      "saveFailed": "Couldn’t save the draft. Check the photos and try again.",
+      "publish": "Save and publish",
+      "unsaved": "Unsaved changes",
+      "loading": "Loading the page editor"
     }
   },
   "billing": {
@@ -2215,6 +2612,253 @@
       "done": "{prefix} is revoked.",
       "failed": "We couldn’t revoke the key. Nothing changed; try again.",
       "close": "Close"
+    }
+  },
+  "hosted": {
+    "hostedBy": "Hosted by HeyQR",
+    "report": "Report this page",
+    "unavailableTitle": "This page isn’t available",
+    "unavailableText": "The owner paused this QR code or removed the page. Try again later or contact them directly.",
+    "loading": "Loading the page",
+    "menu": {
+      "kicker": "Menu",
+      "sections": "Menu sections"
+    },
+    "coupon": {
+      "kicker": "Coupon",
+      "expiredKicker": "Offer ended",
+      "copy": "Copy code",
+      "copied": "Copied",
+      "redeem": "Redeem online",
+      "expired": "Expired",
+      "ended": "This offer has ended. Ask the shop about current deals.",
+      "ends": "Ends {date}",
+      "endedOn": "Ended {date}",
+      "terms": "Terms"
+    },
+    "social": {
+      "links": "Links"
+    },
+    "business": {
+      "kicker": "Business",
+      "openNow": "Open now · until {to}",
+      "closedNow": "Closed now",
+      "closedToday": "Closed today",
+      "call": "Call",
+      "directions": "Directions",
+      "website": "Website",
+      "hours": "Opening hours",
+      "closed": "Closed",
+      "days": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
+      },
+      "closedOpens": "Closed now · opens {from}"
+    },
+    "apps": {
+      "appStoreTop": "Download on the",
+      "appStore": "App Store",
+      "playTop": "Get it on",
+      "play": "Google Play",
+      "phoneNote": "Open the link for your phone’s store.",
+      "desktopNote": "On a computer the buttons open each store’s website.",
+      "scanTitle": "Scan with your phone",
+      "scanText": "It opens the App Store on iPhone and Google Play on Android.",
+      "qrLabel": "QR code for this page"
+    },
+    "pdf": {
+      "open": "Open PDF",
+      "download": "Download",
+      "meta": "{pages, plural, one {# page} other {# pages}} · {size}",
+      "metaNoPages": "{size}",
+      "waiting": "A new version of this document is being prepared. Try again in a moment.",
+      "notReady": "The document is still being prepared."
+    },
+    "product": {
+      "photos": "Product photos",
+      "photo": "Photo {n} of {count}",
+      "prev": "Previous photo",
+      "next": "Next photo",
+      "opens": "Opens {host}"
+    },
+    "reportForm": {
+      "title": "Report this page",
+      "lead": "Tell us what’s wrong. HeyQR reviews every report.",
+      "reason": "Reason",
+      "reasons": {
+        "scam": "Scam or fraud",
+        "malware": "Malware or a harmful download",
+        "illegal": "Illegal or harmful content",
+        "impersonation": "Pretends to be someone else",
+        "other": "Something else"
+      },
+      "details": "Details",
+      "detailsPlaceholder": "What did you see? (optional)",
+      "email": "Your email",
+      "emailHint": "Optional. Only used if we need to ask you something.",
+      "send": "Send report",
+      "sending": "Sending…",
+      "sent": "Thanks. We’ll review this page.",
+      "failed": "We couldn’t send the report. Try again.",
+      "invalid": "Choose a reason, and check the email address.",
+      "back": "Back to the page"
+    }
+  },
+  "developers": {
+    "metaTitle": "Developers",
+    "metaDescription": "Make HeyQR codes in your own code: the free @heyqr/qr-core package for static codes, and the REST API and SDK for your account’s codes.",
+    "kicker": "Developers",
+    "title": "API for developers",
+    "lead": "Make HeyQR codes in your own code. Static codes render on your machine with the free npm package; the REST API manages your account’s codes from your server.",
+    "onThisPage": "On this page",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyCode": "Copy code: {name}",
+    "statusUnpublished": "Not on npm yet",
+    "statusLive": "On npm",
+    "statusApi": "Available",
+    "opensNewTab": "(opens in a new tab)",
+    "cards": {
+      "pkgTitle": "npm package",
+      "pkgText": "Free. Static QR codes rendered on your machine. No account, no API key.",
+      "restTitle": "REST API",
+      "restText": "Create and manage your account’s codes, including Dynamic codes, from your server with an API key."
+    },
+    "nav": {
+      "pkg": "@heyqr/qr-core",
+      "install": "Install",
+      "svg": "Render an SVG",
+      "png": "Save a PNG",
+      "opts": "Options",
+      "scan": "Check that it scans",
+      "rest": "REST API",
+      "restStart": "Quickstart",
+      "restAuth": "Authentication",
+      "restEndpoints": "Endpoints",
+      "restSdk": "SDK",
+      "restErrors": "Errors and limits",
+      "restRevisions": "Revision conflicts",
+      "restIdempotency": "Safe retries",
+      "restExport": "Export and payment",
+      "groupPkg": "npm package",
+      "groupRest": "REST API"
+    },
+    "pkg": {
+      "title": "@heyqr/qr-core",
+      "text": "The same engine that draws codes on HeyQR: encode content, render a styled SVG, check that it scans and, in Node.js, save a PNG.",
+      "points": {
+        "free": "Free to use",
+        "account": "No account or API key",
+        "local": "Runs locally. Nothing is sent to HeyQR",
+        "types": "TypeScript types included"
+      },
+      "static": "The package makes static codes: the content is built into the pattern. Dynamic codes with editable short links, hosted pages and scan counts need a HeyQR plan and are managed through the REST API."
+    },
+    "install": {
+      "title": "Install",
+      "unpublishedTitle": "Not on npm yet",
+      "unpublishedText": "We’re preparing the first public release. The install commands and the npm link appear here as soon as it’s published.",
+      "note": "The main entry has no Node.js dependencies and works in browser bundles. The PNG helper in /raster runs in Node.js only.",
+      "npmLink": "npmjs.com/package/{name}",
+      "managers": "Package manager"
+    },
+    "notify": {
+      "button": "Email me when it’s published",
+      "label": "Your email",
+      "placeholder": "you@example.com",
+      "send": "Notify me",
+      "sending": "Saving…",
+      "success": "Thanks. We’ll email you once when the packages are on npm.",
+      "invalid": "Enter an email address, like you@example.com.",
+      "failed": "We couldn’t save that. Try again.",
+      "privacy": "Only used for this one email."
+    },
+    "svg": {
+      "title": "Render an SVG",
+      "where": "Browser and Node.js",
+      "text": "renderQrSvg returns standalone SVG markup as a string. encodePayload turns structured content into the text that goes into the code."
+    },
+    "png": {
+      "title": "Save a PNG",
+      "where": "Node.js only",
+      "text": "@heyqr/qr-core/raster renders the SVG with resvg, a native module. Import it on the server or in scripts, never in a browser bundle."
+    },
+    "opts": {
+      "title": "Options",
+      "text": "Fields marked Required must be set. Types ship with the package, so your editor completes and checks them.",
+      "option": "Option",
+      "type": "Type",
+      "description": "Description",
+      "required": "Required",
+      "rows": {
+        "pattern": "The data modules’ shape.",
+        "eyeFrame": "The corner markers’ outer frame.",
+        "eyeBall": "The corner markers’ center.",
+        "colors": "fg (modules), eye (frames), eyeIn (centers) and bg, as #RRGGBB.",
+        "logo": "An icon path or image in the middle, its size (0.08–0.46 of the width) and plate.",
+        "centerText": "A short word in the middle instead of a logo."
+      },
+      "logoTitle": "Add a logo or icon"
+    },
+    "scan": {
+      "title": "Check that it scans",
+      "where": "Browser and Node.js",
+      "text": "renderQr returns the drawing and a scan report: low contrast, inverted colors or a logo that covers too much, each with a suggested fix."
+    },
+    "rest": {
+      "title": "REST API",
+      "lead": "Your account’s codes from your server: create drafts, read and update layouts and Dynamic destinations, and download paid files. Every request acts as the account that owns the API key.",
+      "startTitle": "Quickstart",
+      "start1": "Sign in and open Dashboard → API keys.",
+      "start2": "Create a key. It’s shown once: store it in your server’s environment as HEYQR_API_KEY.",
+      "start3": "Send it as a Bearer token with every request.",
+      "keysLink": "Open API keys",
+      "secret": "The key is a secret: server only, never in browser code or source control. Revoke it in Dashboard → API keys if it leaks.",
+      "authTitle": "Authentication",
+      "authText": "A missing, malformed, unknown or revoked key gets the same 401 unauthorized answer, before the body is read. Nothing in a request can choose another owner.",
+      "endpointsTitle": "Endpoints",
+      "method": "Method",
+      "path": "Path",
+      "what": "What it does",
+      "endpoints": {
+        "create": "Create a QR code with its layouts, as a draft.",
+        "getLayout": "Read one saved layout, with its revision.",
+        "patchLayout": "Update a layout’s name, design or editor settings from its revision.",
+        "getDestination": "Read a Dynamic code’s destination, revision and short link.",
+        "patchDestination": "Change where a Dynamic code’s short link goes, from its revision.",
+        "export": "Download a layout’s PNG, SVG or PDF once it’s paid or live."
+      },
+      "hostedNote": "Hosted pages (Menu, Coupon and the other page types) are edited and published in the app; the API doesn’t change page content yet.",
+      "sdkTitle": "SDK",
+      "sdkText": "@heyqr/sdk types every request, response and error, retries safely, times out and tells limits and payment errors apart. Node.js 18 or later, or any server runtime with fetch.",
+      "sdkUnpublished": "Not on npm yet: the install command appears here once it’s published.",
+      "errorsTitle": "Errors and limits",
+      "errorsText": "Every error has the same JSON shape, shown below, and responses are never cached. details names the field without echoing your values.",
+      "status": "Status",
+      "code": "error.code",
+      "when": "When",
+      "errors": {
+        "e400": "the body isn’t JSON (malformed_json)",
+        "e401": "no valid API key",
+        "e402": "the code’s files need a purchase or a live plan first",
+        "e403": "the account already has the most drafts it can keep",
+        "e404": "not the key owner’s code or layout, deleted, or missing (one answer for all)",
+        "e409": "an older revision, or an Idempotency-Key reused for a different request",
+        "e422": "a rule is broken; also not_dynamic, content_too_long and file checks",
+        "e500": "nothing was changed; try again"
+      },
+      "limits": "Limits: names up to 80 characters, 1–20 layouts per code, the account’s draft limit, and the content capacity of a QR code. The API doesn’t throttle requests yet; if it ever answers 429, the SDK reports it with Retry-After.",
+      "revisionsTitle": "Revision conflicts",
+      "revisionsText": "Layouts and destinations carry a revision. Send the one you read with every update; if the code changed in the app or another request since, you get 409 revision_conflict and nothing is saved. A destination conflict includes error.current with the stored destination and revision.",
+      "idempotencyTitle": "Safe retries",
+      "idempotencyText": "Send an Idempotency-Key header (a UUID works) with a create. Retrying the same request with the same key within 24 hours returns the original 201 and creates nothing; the same key with a different request is 409 idempotency_key_reused.",
+      "exportTitle": "Export and payment",
+      "exportText": "Files come from the same private export as the dashboard. A static code needs its one-time purchase; a Dynamic code must be live under a plan or the free trial. Until then you get 402 with a paymentUrl: the owner opens it signed in to pay or go live. The API itself never charges."
     }
   }
 }

@@ -6,7 +6,17 @@ import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { env } from "@/env";
 import { previewShortLink } from "@/shared/lib/short-link";
-import { composeShared, DEFAULT_DESIGN, designToLayout, type EditorDesign, emptyContent, modeFor, QR_INKS, QrPreview } from "@/entities/qr";
+import {
+  composeShared,
+  DEFAULT_DESIGN,
+  designToLayout,
+  type EditorDesign,
+  emptyContent,
+  modeFor,
+  QR_INKS,
+  QrPreview,
+  directContent,
+} from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
 import { formatMoney } from "@/shared/config/catalog";
 import { usePrices } from "@/shared/lib/currency";
@@ -61,9 +71,9 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
   }));
   /** What was typed on each tab during this visit, so switching away and back keeps it. */
   const [byType, setByType] = useState<Record<QuickType, QrContent>>(() => ({
-    website: emptyContent("website"),
-    wifi: emptyContent("wifi"),
-    contact: emptyContent("contact"),
+    website: directContent(emptyContent("website")),
+    wifi: directContent(emptyContent("wifi")),
+    contact: directContent(emptyContent("contact")),
   }));
   const [tried, setTried] = useState(false);
 
@@ -74,7 +84,7 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
     // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time sync from browser storage
     setDesign(saved);
     const savedType = saved.content.type;
-    if (isQuickType(savedType)) setByType((m) => ({ ...m, [savedType]: saved.content }));
+    if (isQuickType(savedType)) setByType((m) => ({ ...m, [savedType]: directContent(saved.content) }));
   }, []);
 
   const type = design.content.type;
@@ -85,7 +95,8 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
   const shownErrors = tried ? errors : errors.url === "urlSpaces" ? { url: errors.url } : {};
   const layout = useMemo(() => designToLayout(design), [design]);
   // Same rule as the editor (HEY-24): capacity is checked on what the code would actually hold.
-  const encoded = design.model === "dynamic" ? previewShortLink(env.NEXT_PUBLIC_SHORT_LINK_BASE) : encodePayload(design.content);
+  const encoded =
+    design.model === "dynamic" ? previewShortLink(env.NEXT_PUBLIC_SHORT_LINK_BASE) : encodePayload(directContent(design.content));
   const capacity = useMemo(() => layoutCapacity(layout, encoded), [layout, encoded]);
   const tooLong = capacity.ok ? null : capacity;
   const value = design.model === "dynamic" || valid || tooLong ? encoded : PLACEHOLDER_VALUE;
@@ -232,7 +243,7 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
             ) : null}
           </div>
         ) : quick ? (
-          <ContentForm content={design.content} onChange={setContent} errors={shownErrors} fields={QUICK_FIELDS[quick]} />
+          <ContentForm content={directContent(design.content)} onChange={setContent} errors={shownErrors} fields={QUICK_FIELDS[quick]} />
         ) : (
           <p className="flex items-start gap-2 rounded-md bg-subtle px-3.5 py-3 text-caption text-secondary-foreground">
             <InfoIcon aria-hidden className="mt-0.5 size-4 shrink-0" />

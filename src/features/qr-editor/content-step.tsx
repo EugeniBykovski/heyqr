@@ -3,22 +3,29 @@
 import type { QrCapacity, QrContent } from "@heyqr/qr-core";
 import { ChevronDownIcon, CircleAlertIcon, SmartphoneIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState, type FormEvent } from "react";
-import { contentDisplayName, type QrMode } from "@/entities/qr";
+import { useState, type FormEvent, type ReactNode } from "react";
+import { contentDisplayName, isHostedContent, isHostedEmpty, sampleHostedContent, type AnyQrContent, type QrMode } from "@/entities/qr";
 import { cn } from "@/shared/lib/utils";
+import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
+import { Segmented } from "@/shared/ui/segmented";
 import { BottomBar, BottomBarInfo } from "./bottom-bar";
 import { ContentForm } from "./content-form";
 import { ContentPreview } from "./content-preview";
 import { contentAside, contentStepGrid, previewToggle } from "./editor-layout";
 import type { ContentErrors } from "./content-validation";
+import { HostedForm } from "./hosted-form";
+import type { PdfState } from "./hosted-files";
+import { HostedPreview } from "./hosted-preview";
 import { TooLongNotice } from "./too-long-notice";
 
 /*
- * Design "1.3–1.5, 1.14 Content": the form for the chosen type beside an "After scanning" phone preview
- * (a collapsible bar above the form below 1024 px). Enter submits; Continue validates and focuses the first error.
+ * Design "1.3–1.5, 1.14 Content" and "10.4–11.15" (hosted pages): the form for the chosen type beside two live
+ * previews, "After scan" (what people get) and "QR design" (the code itself). Below 1024 px the previews collapse
+ * into a bar above the form. Enter submits; Continue validates, shows each error beside its field and a summary
+ * near Continue, and focuses the first error. Everything typed is kept when going back or switching types.
  */
 export function ContentStep({
   content,
@@ -31,22 +38,40 @@ export function ContentStep({
   onNameChange,
   onBack,
   onContinue,
+  signedIn = false,
+  qrPreview,
+  shortLabel = "",
+  pdfState = { status: "idle" },
+  onPdfState = () => undefined,
+  hostedNeeds,
 }: {
-  content: QrContent;
+  content: AnyQrContent;
   mode: QrMode;
   name: string;
   errors: ContentErrors;
   showErrors: boolean;
   /** Set when the serialized content doesn't fit a QR code (HEY-24); shown while typing, not only on Continue. */
   tooLong?: QrCapacity | null;
-  onContentChange: (content: QrContent) => void;
+  onContentChange: (content: AnyQrContent) => void;
   onNameChange: (name: string) => void;
   onBack: () => void;
   onContinue: () => void;
+  signedIn?: boolean;
+  /** The "QR design" preview: the code as it will print. */
+  qrPreview?: ReactNode;
+  /** The code's short link as shown in previews. */
+  shortLabel?: string;
+  pdfState?: PdfState;
+  onPdfState?: (s: PdfState) => void;
+  /** Hosted pages: what publishing needs (plan / slot), from the account. */
+  hostedNeeds?: string;
 }) {
   const t = useTranslations("editor");
   const tTypes = useTranslations("home.types");
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [tab, setTab] = useState<"scan" | "qr">("scan");
+  const [couponPreview, setCouponPreview] = useState<"valid" | "expired">("valid");
+  const hosted = isHostedContent(content) ? content : null;
   const visibleErrors = showErrors ? errors : {};
   const errorCount = Object.keys(visibleErrors).length;
   const submit = (e: FormEvent) => {
@@ -54,18 +79,73 @@ export function ContentStep({
     onContinue();
   };
 
+  const afterScan = hosted ? (
+    <HostedPreview content={hosted} shortLabel={shortLabel} forceExpired={hosted.type === "coupon" && couponPreview === "expired"} />
+  ) : (
+    <ContentPreview content={content as QrContent} mode={mode} />
+  );
+  const previews = (
+    <div className="flex flex-col items-center gap-4">
+      {qrPreview ? (
+        <Segmented
+          label={t("hosted.previewSwitch")}
+          className="max-w-[18.75rem]"
+          value={tab}
+          options={[
+            { value: "scan", label: t("hosted.afterScan") },
+            { value: "qr", label: t("hosted.qrDesign") },
+          ]}
+          onChange={setTab}
+        />
+      ) : null}
+      {tab === "qr" && qrPreview ? (
+        <div className="flex w-full max-w-[18.75rem] flex-col items-center gap-3">
+          {qrPreview}
+          {mode === "dynamic" && shortLabel ? (
+            <p className="text-center text-caption text-muted-foreground">{t("hosted.qrNote", { short: shortLabel })}</p>
+          ) : null}
+        </div>
+      ) : (
+        afterScan
+      )}
+    </div>
+  );
+
   return (
     <div className={cn("group/step", contentStepGrid)}>
       <form noValidate onSubmit={submit} aria-labelledby="content-step-title" className="flex min-w-0 flex-col gap-4.5">
         <header className="mb-1 flex max-w-measure flex-col gap-2">
           <span className="text-label text-accent-text">
-            {tTypes(`${content.type}.label`)} · {t(`model.${mode}`)}
+            {tTypes(`${content.type}.label`)} · {hosted ? `${t("hosted.badge")} · ` : ""}
+            {t(`model.${mode}`)}
           </span>
           <h1 id="content-step-title" className="text-h1">
             {t(`contentStep.titles.${content.type}`)}
           </h1>
           <p className="text-secondary-foreground">{t(`contentStep.subs.${content.type}`)}</p>
         </header>
+
+        {hosted ? (
+          <div className="flex flex-col gap-2.5 rounded-lg border border-border bg-subtle p-3.5">
+            <Badge variant="accent" className="self-start">
+              {t("hosted.badge")}
+            </Badge>
+            <p className="text-caption text-secondary-foreground">
+              {t("hosted.notice", { short: shortLabel || t("hosted.noticePreview"), needs: hostedNeeds ?? "" })}
+            </p>
+            {isHostedEmpty(hosted) ? (
+              <Button
+                type="button"
+                variant="primary"
+                size="sm"
+                className="self-start"
+                onClick={() => onContentChange(sampleHostedContent(hosted.type))}
+              >
+                {t("hosted.sample")}
+              </Button>
+            ) : null}
+          </div>
+        ) : null}
 
         <div className="lg:hidden">
           <button
@@ -80,7 +160,7 @@ export function ContentStep({
               <SmartphoneIcon aria-hidden className="size-5" />
             </span>
             <span className="flex min-w-0 grow flex-col">
-              <span className="text-label">{t("afterScanning.label")}</span>
+              <span className="text-label">{qrPreview ? t("hosted.previews") : t("afterScanning.label")}</span>
               <span className="truncate text-caption text-muted-foreground">
                 {contentDisplayName(content) ?? t("afterScanning.toggleHint")}
               </span>
@@ -93,18 +173,31 @@ export function ContentStep({
           </button>
           {/* Always in the document so aria-controls points at it; hidden while collapsed. */}
           <div id="after-scanning" hidden={!previewOpen} className="animate-rise pt-4 pb-2">
-            {previewOpen ? <ContentPreview content={content} mode={mode} /> : null}
+            {previewOpen ? previews : null}
           </div>
         </div>
 
-        <ContentForm
-          content={content}
-          onChange={onContentChange}
-          errors={visibleErrors}
-          hints={
-            content.type === "website" ? { url: t(mode === "dynamic" ? "contentStep.urlHintDynamic" : "contentStep.urlHint") } : undefined
-          }
-        />
+        {hosted ? (
+          <HostedForm
+            content={hosted}
+            onChange={onContentChange}
+            errors={visibleErrors}
+            signedIn={signedIn}
+            pdfState={pdfState}
+            onPdfState={onPdfState}
+            couponPreview={couponPreview}
+            onCouponPreview={setCouponPreview}
+          />
+        ) : (
+          <ContentForm
+            content={content as QrContent}
+            onChange={onContentChange}
+            errors={visibleErrors}
+            hints={
+              content.type === "website" ? { url: t(mode === "dynamic" ? "contentStep.urlHintDynamic" : "contentStep.urlHint") } : undefined
+            }
+          />
+        )}
 
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="qr-name">
@@ -149,7 +242,7 @@ export function ContentStep({
       </form>
 
       <aside aria-label={t("afterScanning.label")} className={contentAside}>
-        <ContentPreview content={content} mode={mode} />
+        {previews}
       </aside>
     </div>
   );

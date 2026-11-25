@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { env } from "@/env";
 import { previewShortLink } from "@/shared/lib/short-link";
-import { contentDisplayName, designToLayout, type EditorDesign } from "@/entities/qr";
+import { contentDisplayName, designToLayout, type EditorDesign, directContent } from "@/entities/qr";
 import { GoogleSignInButton, type SignInError } from "@/features/auth";
 import { ExportSurface, settingsQuery, type ExportFormat } from "@/features/checkout";
 import { readDraft } from "@/features/qr-editor";
@@ -61,7 +61,7 @@ export function GuestExport({
     );
 
   const layout = designToLayout(draft);
-  const value = draft.model === "dynamic" ? previewShortLink(env.NEXT_PUBLIC_SHORT_LINK_BASE) : encodePayload(draft.content);
+  const value = draft.model === "dynamic" ? previewShortLink(env.NEXT_PUBLIC_SHORT_LINK_BASE) : encodePayload(directContent(draft.content));
   const name = draft.name.trim() || contentDisplayName(draft.content) || tEditor("namePlaceholder");
   return (
     <ExportSurface

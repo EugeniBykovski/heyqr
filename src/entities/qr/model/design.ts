@@ -1,3 +1,4 @@
+import type { AnyQrContent } from "./hosted";
 import {
   CAPTION_FONTS,
   captionFontFamily,
@@ -12,7 +13,6 @@ import {
   type FrameStyle,
   type Layout,
   type ModuleShape,
-  type QrContent,
 } from "@heyqr/qr-core";
 import { defaultCaptionSize } from "./caption";
 import { LEGACY_SIZE, type DesignSize } from "./size";
@@ -93,7 +93,7 @@ export type CenterLogo = { kind: "none" } | { kind: "icon"; icon: CenterIcon } |
 export interface EditorDesign {
   name: string;
   model: "static" | "dynamic";
-  content: QrContent;
+  content: AnyQrContent;
   pattern: ModuleShape;
   eyeFrame: EyeFrameShape;
   eyeBall: EyeBallShape;

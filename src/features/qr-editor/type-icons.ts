@@ -1,19 +1,26 @@
-import type { QrContentType } from "@heyqr/qr-core";
 import {
+  AppWindowIcon,
   CalendarIcon,
   ContactIcon,
+  FileTextIcon,
   GlobeIcon,
+  Link2Icon,
   MailIcon,
   MapPinIcon,
   MessageSquareIcon,
   PhoneIcon,
+  ShoppingBagIcon,
+  StoreIcon,
+  TicketPercentIcon,
   TypeIcon,
+  UtensilsCrossedIcon,
   WifiIcon,
   type LucideIcon,
 } from "lucide-react";
+import type { QrType } from "@/entities/qr";
 
-/** One icon per content type, shared by the editor's type grid and the home page's type chips. */
-export const TYPE_ICONS: Record<QrContentType, LucideIcon> = {
+/** One icon per type (direct and hosted), shared by the editor's type grid and the home page's type sections. */
+export const TYPE_ICONS: Record<QrType, LucideIcon> = {
   website: GlobeIcon,
   text: TypeIcon,
   wifi: WifiIcon,
@@ -23,4 +30,11 @@ export const TYPE_ICONS: Record<QrContentType, LucideIcon> = {
   sms: MessageSquareIcon,
   location: MapPinIcon,
   event: CalendarIcon,
+  menu: UtensilsCrossedIcon,
+  coupon: TicketPercentIcon,
+  social: Link2Icon,
+  business: StoreIcon,
+  apps: AppWindowIcon,
+  pdf: FileTextIcon,
+  product: ShoppingBagIcon,
 };

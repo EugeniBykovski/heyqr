@@ -5,3 +5,6 @@ export { TypeChips, TypeLink } from "./type-picker";
 export { TooLongNotice } from "./too-long-notice";
 export { LayoutEditor } from "./layout-editor";
 export { readDraft } from "./use-draft";
+export { HostedPageEditor } from "./hosted-page-editor";
+export { PublishButton } from "./publish-button";
+export { ExploreTypes } from "./explore-types";

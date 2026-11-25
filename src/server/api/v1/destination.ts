@@ -1,6 +1,7 @@
 import { and, eq, isNull } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { z } from "zod";
+import { isHostedContent } from "../../../entities/qr/model/hosted";
 import * as schema from "../../db/schema";
 import { changeDestination } from "../../qr/destination";
 import type { Problem } from "./create-qr";
@@ -69,7 +70,8 @@ export async function readDestinationForOwner(
 ): Promise<ReadDestinationOutcome> {
   const row = await ownedCode(db, userId, qrCodeId);
   if (!row) return { ok: false, error: "not_found" };
-  if (row.model !== "dynamic") return { ok: false, error: "not_dynamic" };
+  // A hosted page has no destination: its page lives behind the short link.
+  if (row.model !== "dynamic" || isHostedContent(row.content)) return { ok: false, error: "not_dynamic" };
   return { ok: true, destination: view(row, shortLinkFor) };
 }
 
@@ -100,7 +102,7 @@ export async function updateDestinationForOwner(
 ): Promise<UpdateDestinationOutcome> {
   const owned = await ownedCode(db, userId, qrCodeId);
   if (!owned) return { ok: false, error: "not_found" };
-  if (owned.model !== "dynamic") return { ok: false, error: "not_dynamic" };
+  if (owned.model !== "dynamic" || isHostedContent(owned.content)) return { ok: false, error: "not_dynamic" };
   const parsed = updateDestinationRequestSchema.safeParse(body);
   if (!parsed.success) {
     const details = parsed.error.issues.flatMap((issue): Problem[] =>

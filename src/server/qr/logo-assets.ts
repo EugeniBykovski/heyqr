@@ -81,7 +81,13 @@ export async function storeLogos<T>(tx: Tx, store: LogoStore, userId: string, re
     if (!check.ok) return Promise.resolve(null);
     const bytes = Buffer.from(s.slice(s.indexOf(",") + 1), "base64");
     const sha256 = createHash("sha256").update(bytes).digest("hex");
-    return attach(tx, store, userId, { bytes, sha256, format: check.format }, newId).then(assetRef);
+    return attachFile(
+      tx,
+      store,
+      userId,
+      { bytes, sha256, ext: EXT[check.format], mime: LOGO_MIME[check.format], prefix: "logos" },
+      newId,
+    ).then(assetRef);
   };
   const next = await mapImages(record, async (s) => {
     const ref = REF.exec(s);
@@ -108,12 +114,15 @@ export async function storeLogos<T>(tx: Tx, store: LogoStore, userId: string, re
   return invalid ? null : (next as T);
 }
 
-/** The account's asset for this file: the existing one (touched, row locked) or a new one stored now. */
-async function attach(
+/**
+ * The account's asset for this file: the existing one (touched, row locked) or a new one stored now under
+ * `<prefix>/<user>/<asset>.<ext>`. Logos and hosted-page files (photos, PDFs) share it.
+ */
+export async function attachFile(
   tx: Tx,
   store: LogoStore,
   userId: string,
-  file: { bytes: Uint8Array; sha256: string; format: LogoFormat },
+  file: { bytes: Uint8Array; sha256: string; ext: string; mime: string; prefix: "logos" | "hosted" },
   newId: () => string,
 ): Promise<string> {
   const [existing] = await tx
@@ -123,11 +132,11 @@ async function attach(
     .returning({ id: schema.asset.id });
   if (existing) return existing.id;
   const id = newId();
-  const key = `logos/${userId}/${id}.${EXT[file.format]}`;
-  await store.put(key, file.bytes, LOGO_MIME[file.format]);
+  const key = `${file.prefix}/${userId}/${id}.${file.ext}`;
+  await store.put(key, file.bytes, file.mime);
   const [inserted] = await tx
     .insert(schema.asset)
-    .values({ id, userId, storageKey: key, contentType: LOGO_MIME[file.format], byteSize: file.bytes.byteLength, sha256: file.sha256 })
+    .values({ id, userId, storageKey: key, contentType: file.mime, byteSize: file.bytes.byteLength, sha256: file.sha256 })
     .onConflictDoNothing()
     .returning({ id: schema.asset.id });
   if (inserted) return inserted.id;
@@ -136,7 +145,7 @@ async function attach(
     .select({ id: schema.asset.id })
     .from(schema.asset)
     .where(and(eq(schema.asset.userId, userId), eq(schema.asset.sha256, file.sha256)));
-  if (!winner) throw new Error("logo asset vanished");
+  if (!winner) throw new Error("asset vanished");
   await store.remove(key).catch(() => undefined);
   return winner.id;
 }
@@ -193,8 +202,8 @@ function withoutDanglingLogos(value: unknown): unknown {
 }
 
 /**
- * Removes assets that no saved layout refers to (soft-deleted codes count: they can be restored) and that haven't been
- * used for `olderThanMs`, then their objects. Rows a save holds are skipped; a save after the delete stores the file
+ * Removes assets that nothing refers to (no saved layout, no hosted page draft, no published hosted version;
+ * soft-deleted codes count: they can be restored) and that haven't been used for `olderThanMs`, then their objects. Rows a save holds are skipped; a save after the delete stores the file
  * again. Returns the removed storage keys.
  */
 export async function cleanupLogos(db: Db, store: LogoStore, olderThanMs = CLEANUP_AFTER_MS): Promise<string[]> {
@@ -207,7 +216,11 @@ export async function cleanupLogos(db: Db, store: LogoStore, olderThanMs = CLEAN
     const gone: string[] = [];
     for (const c of candidates) {
       const [used] = await tx
-        .execute<{ n: number }>(sql`select count(*)::int as n from qr_layout where design::text like ${`%"asset:${c.id}"%`}`)
+        .execute<{ n: number }>(
+          sql`select ((select count(*) from qr_layout where design::text like ${`%"asset:${c.id}"%`})
+            + (select count(*) from qr_code where content::text like ${`%"asset:${c.id}"%`})
+            + (select count(*) from qr_hosted_version where content::text like ${`%"asset:${c.id}"%`}))::int as n`,
+        )
         .then((r) => r.rows);
       if ((used?.n ?? 0) > 0) continue;
       await tx.delete(schema.asset).where(eq(schema.asset.id, c.id));

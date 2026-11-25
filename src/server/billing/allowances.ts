@@ -2,6 +2,7 @@ import { and, count, desc, eq, gte, inArray, isNull, sum } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { PACK_CREDITS, PLANS, type PlanId } from "../../shared/config/catalog-core";
 import { newId } from "../db/ids";
+import { isHostedContent } from "../../entities/qr/model/hosted";
 import * as schema from "../db/schema";
 import { assignShortCode } from "../qr/short-code";
 
@@ -257,7 +258,8 @@ export async function convertToStatic(db: Db, userId: string, qrCodeId: string):
   const qr = await db.query.qrCode.findFirst({
     where: and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)),
   });
-  if (!qr || qr.model !== "dynamic" || qr.shortCode || qr.status === "active") return { ok: false };
+  // A hosted page can only be Dynamic (its page lives at the short link).
+  if (!qr || qr.model !== "dynamic" || qr.shortCode || qr.status === "active" || isHostedContent(qr.content)) return { ok: false };
   await db.update(schema.qrCode).set({ model: "static", destination: null }).where(eq(schema.qrCode.id, qrCodeId));
   return { ok: true };
 }

@@ -14,7 +14,9 @@ import {
 import { Suspense, type ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import { CENTER_ICONS, FRAME_STYLES } from "@/entities/qr";
-import { HomeExamples, QuickStart, TypeChips } from "@/features/qr-editor";
+import { ExploreTypes, HomeExamples, QuickStart } from "@/features/qr-editor";
+import { env } from "@/env";
+import { previewShortLink } from "@/shared/lib/short-link";
 import { Link } from "@/i18n/navigation";
 import { getCurrency } from "@/server/currency";
 import { resolveLocale } from "@/i18n/server";
@@ -163,8 +165,21 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       </section>
 
       <section aria-labelledby="home-types" className={section}>
-        <SectionHead id="home-types" kicker={t("types.kicker")} title={t("types.title")} lead={t("types.lead")} />
-        <TypeChips />
+        <SectionHead
+          id="home-types"
+          kicker={t("explore.kicker")}
+          title={t("explore.title")}
+          lead={t("explore.lead")}
+          aside={
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/create?step=type">
+                {t("explore.allTypes")}
+                <ArrowRightIcon aria-hidden />
+              </Link>
+            </Button>
+          }
+        />
+        <ExploreTypes shortLabel={previewShortLink(env.NEXT_PUBLIC_SHORT_LINK_BASE).replace(/^https?:\/\//, "")} />
       </section>
 
       <section aria-labelledby="models-title" className="grid reveal gap-3 pb-12 md:grid-cols-[1.2fr_1fr_1fr] md:items-stretch">
