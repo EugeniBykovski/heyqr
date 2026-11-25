@@ -1,8 +1,9 @@
 # Public API v1
 
-HEY-155 (create), HEY-156 (read and update a layout) and HEY-157 (a Dynamic code's destination). Keys and their verification: [API_KEYS.md](API_KEYS.md). Code: `src/app/api/v1/`, `src/server/api/v1/`.
+HEY-155 (create), HEY-156 (read and update a layout), HEY-157 (a Dynamic code's destination) and HEY-158
+(export a layout's file). Keys and their verification: [API_KEYS.md](API_KEYS.md). Code: `src/app/api/v1/`, `src/server/api/v1/`.
 
-Not in v1 yet: changing a code's content, paid file export, and idempotent create retries (follow-up tickets).
+Not in v1 yet: changing a code's content, and idempotent create retries (follow-up tickets).
 
 ## Authentication
 
@@ -254,3 +255,68 @@ curl -sS -X PATCH "$URL" \
 
 On `409`, use `error.current.revision` (or GET again), check the destination now stored, and send your change again if
 it still applies.
+
+## GET /api/v1/qr-codes/{qrCodeId}/layouts/{layoutId}/export
+
+A layout's full-size file. The file comes from the same private export flow as the dashboard's downloads, and the same
+download rule applies:
+
+- **Static code:** its one-time purchase.
+- **Dynamic code:** live under a plan, or the running free trial's test code.
+
+Every request is checked again, before anything is rendered or signed, including when the file was already prepared. A
+refunded purchase or an ended plan takes effect on the next request.
+
+Query (strict; any other parameter is refused):
+
+| Parameter     | Rules                                             |
+| ------------- | ------------------------------------------------- |
+| `format`      | **required**: `png`, `svg` or `pdf`               |
+| `dpi`         | PNG of a print (mm) layout: 72–1200 (default 300) |
+| `scale`       | PNG of a screen (px) layout: 1–8 (default 2)      |
+| `transparent` | `1` for a transparent background                  |
+
+| Status | `error.code`                                   | When                                                                                                                                       |
+| ------ | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `302`  | —                                              | the file: `Location` is a short-lived signed link to it (`Cache-Control: private, no-store`). Follow it without the `Authorization` header |
+| `401`  | `unauthorized`                                 | see Authentication                                                                                                                         |
+| `402`  | `payment_required`                             | the owner's code isn't paid for or live yet: see below                                                                                     |
+| `404`  | `not_found`                                    | the code isn't the key owner's, is deleted or missing, or the layout doesn't belong to it (one answer for all of these)                    |
+| `422`  | `invalid_request`                              | a missing or unsupported `format`, or another option out of range; `details` names it                                                      |
+| `422`  | `too_long` / `too_large` / `scan_check_failed` | the file can't be made as asked                                                                                                            |
+
+### Payment required
+
+```json
+{
+  "error": {
+    "code": "payment_required",
+    "message": "This code's files need a one-time purchase. Open paymentUrl, signed in as the owner, to pay; then repeat this request.",
+    "paymentUrl": "https://heyqr.example/create/export?qr=Q8d3…&layout=L2k9…&format=png",
+    "qrCodeId": "Q8d3…",
+    "layoutId": "L2k9…",
+    "format": "png"
+  }
+}
+```
+
+`paymentUrl` is the code's Export screen in HeyQR, for the same code, layout and format:
+
+- The owner signs in there (it never carries the API key) and chooses to pay. For a Dynamic code, they activate it with
+  a plan or the free trial.
+- The API request itself creates no charge, no Checkout Session and no order.
+- Once Stripe's verified webhook has unlocked the code, the same API request returns the file.
+- Downloading again, through the API or the dashboard, never charges again or uses a credit.
+
+### Example
+
+```sh
+KEY="hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX"
+URL="https://heyqr.example/api/v1/qr-codes/Q8d3…/layouts/L2k9…/export?format=png"
+
+# Not paid yet: 402 with paymentUrl (open it in a browser as the owner).
+curl -sS "$URL" -H "Authorization: Bearer $KEY"
+
+# Paid: follow the redirect to the file. curl drops the Authorization header on the redirect to another host.
+curl -sS -L -o menu.png "$URL" -H "Authorization: Bearer $KEY"
+```

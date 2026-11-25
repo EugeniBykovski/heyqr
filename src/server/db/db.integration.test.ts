@@ -29,6 +29,7 @@ import { applySubscriptionEvent, type SubscriptionEvent } from "../billing/subsc
 import { canDownloadCode, resolveShortLink } from "../billing/access";
 import { apiKeyOwner, createApiKey, generateApiKey, listApiKeys, revokeApiKey } from "../api-keys/keys";
 import { readLayoutForOwner } from "../api/v1/layouts";
+import { authorizeApiExport } from "../api/v1/export";
 import { hasScans, incrementScan, ownerScanSummary, scansByDay, utcDay } from "../qr/scans";
 import {
   accountUsage,
@@ -6689,6 +6690,129 @@ describe.skipIf(!url)("public API: a Dynamic code's destination (HEY-157, real P
       expect(row).toEqual({ destination: winner, destination_revision: 1 });
       if (!apiWon)
         expect(((await api.json()) as { error: { current: unknown } }).error.current).toEqual({ destination: winner, revision: 1 });
+    }
+  });
+});
+
+/* HEY-158 / QR-21.06: who may export through the public API (the dashboard's download rule, on every request). */
+describe.skipIf(!url)("public API: export authorization (HEY-158, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "api158-owner", name: "Owner", email: "owner@api158.test" };
+  const other = { id: "api158-other", name: "Other", email: "other@api158.test" };
+  const appUrl = "https://heyqr.test";
+  const d = { ...DEFAULT_DESIGN, fg: "#1F3A5F" };
+  const layout = { name: "Card", layout: designToLayout(d), editor: designSettingsOf(d) };
+  const save = async (userId: string, model: "static" | "dynamic", layouts = [layout]) => {
+    const saved = await saveQrWithLayouts(db, userId, {
+      name: `Code ${model}`,
+      model,
+      content: model === "static" ? { type: "text", text: "menu" } : { type: "website", url: "https://littlefern.cafe" },
+      layouts,
+    });
+    if (!saved.ok) throw new Error("fixture");
+    return { id: saved.data.qrCodeId, layouts: saved.data.layoutIds };
+  };
+  const decide = (userId: string, qrCodeId: string, layoutId: string, query: Record<string, string> = { format: "png" }) =>
+    authorizeApiExport(db, userId, { qrCodeId, layoutId, query }, { appUrl });
+  /** Fixture: the unlock a verified purchase leaves (canDownload's static rule is purchasedAt alone), set directly. */
+  const unlock = (id: string, at: Date | null) => pool.query("update qr_code set purchased_at = $2 where id = $1", [id, at]);
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 3 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("an unpaid Static code gets payment_required with a HeyQR URL for the same code, layout and format; nothing is created", async () => {
+    const code = await save(owner.id, "static", [layout, { ...layout, name: "Poster" }]);
+    const [first, second] = code.layouts as [string, string];
+    const orders = async () => (await pool.query("select count(*)::int as n from purchase where user_id = $1", [owner.id])).rows[0].n;
+    const before = await orders();
+    expect(await decide(owner.id, code.id, second, { format: "pdf" })).toEqual({
+      ok: false,
+      error: "payment_required",
+      paymentUrl: `${appUrl}/create/export?qr=${code.id}&layout=${second}&format=pdf`,
+      qrCodeId: code.id,
+      layoutId: second,
+      format: "pdf",
+      mode: "static",
+    });
+    const png = await decide(owner.id, code.id, first, { format: "png", dpi: "600", transparent: "1" });
+    expect(png.ok ? null : "paymentUrl" in png && png.paymentUrl).toBe(
+      `${appUrl}/create/export?qr=${code.id}&layout=${first}&format=png&res=600&transparent=1`,
+    );
+    expect(await orders()).toBe(before);
+  });
+
+  it("a paid Static code is allowed for every format; once the entitlement is revoked it isn't, on the very next request", async () => {
+    const code = await save(owner.id, "static");
+    const layoutId = code.layouts[0] ?? "";
+    await unlock(code.id, new Date());
+    for (const format of ["png", "svg", "pdf"])
+      expect(await decide(owner.id, code.id, layoutId, { format })).toMatchObject({ ok: true, options: { format } });
+    expect(await decide(owner.id, code.id, layoutId, { format: "png", scale: "4" })).toEqual({
+      ok: true,
+      options: { format: "png", scale: 4, transparent: false },
+    });
+    // A refund takes the unlock away (HEY-100): the next request is refused, whatever is already stored.
+    await unlock(code.id, null);
+    expect(await decide(owner.id, code.id, layoutId)).toMatchObject({ ok: false, error: "payment_required" });
+  });
+
+  it("Dynamic codes follow the dashboard's rule: a draft needs activation; the running trial's test code is allowed", async () => {
+    const draft = await save(owner.id, "dynamic");
+    expect(await decide(owner.id, draft.id, draft.layouts[0] ?? "")).toMatchObject({
+      ok: false,
+      error: "payment_required",
+      mode: "dynamic",
+    });
+    expect((await startTrial(db, owner.id, false)).ok).toBe(true);
+    expect(await decide(owner.id, draft.id, draft.layouts[0] ?? "")).toMatchObject({ ok: false, error: "payment_required" });
+    expect((await activateTrialCode(db, owner.id, draft.id, () => "qa158trial")).ok).toBe(true);
+    expect(await decide(owner.id, draft.id, draft.layouts[0] ?? "")).toMatchObject({ ok: true });
+  });
+
+  it("another account's, deleted, missing and mismatched code/layout pairs are one not_found, even when paid", async () => {
+    const mine = await save(owner.id, "static");
+    const mine2 = await save(owner.id, "static");
+    const theirs = await save(other.id, "static");
+    const gone = await save(owner.id, "static");
+    for (const c of [mine, mine2, theirs, gone]) await unlock(c.id, new Date());
+    await softDeleteQrCodes(db, owner.id, [gone.id]);
+    const [m, m2, t, g] = [mine, mine2, theirs, gone].map((c) => c.layouts[0] ?? "");
+    const pairs: [string, string][] = [
+      [theirs.id, t],
+      [mine.id, m2],
+      [theirs.id, m],
+      [gone.id, g],
+      [mine.id, "no-such-layout"],
+      ["no-such-code", m],
+      ["bad id!", m],
+    ];
+    for (const [q, l] of pairs) expect(await decide(owner.id, q, l), `${q}/${l}`).toEqual({ ok: false, error: "not_found" });
+    expect(await decide(owner.id, mine.id, m)).toMatchObject({ ok: true });
+  });
+
+  it("the format and options are validated: missing, unknown, out of range and extra parameters are refused", async () => {
+    const code = await save(owner.id, "static");
+    await unlock(code.id, new Date());
+    const layoutId = code.layouts[0] ?? "";
+    for (const [query, path] of [
+      [{}, "format"],
+      [{ format: "gif" }, "format"],
+      [{ format: "png", dpi: "5000" }, "dpi"],
+      [{ format: "png", scale: "0" }, "scale"],
+      [{ format: "png", transparent: "yes" }, "transparent"],
+      [{ format: "png", prepare: "1" }, "prepare"],
+      [{ format: "png", key: "hqk_x" }, "key"],
+    ] as [Record<string, string>, string][]) {
+      const out = await decide(owner.id, code.id, layoutId, query);
+      expect(out.ok ? [] : "details" in out ? out.details.map((x) => x.path) : [out.error], JSON.stringify(query)).toContain(path);
     }
   });
 });
