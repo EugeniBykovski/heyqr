@@ -3,16 +3,40 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "TypeScript client and types for the hosted HeyQR REST API (v1). Update methods, retries and npm publishing come later.",
-  "types": "./src/index.ts",
+  "description": "TypeScript client and types for the hosted HeyQR REST API (v1). ESM, server-side (Node 18+).",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "default": "./src/index.ts"
+      "@heyqr/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "sideEffects": false,
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js",
+        "default": "./dist/index.js"
+      }
+    }
+  },
   "scripts": {
-    "typecheck": "tsc --noEmit -p . && tsc --noEmit -p test/consumer && tsc --noEmit -p examples"
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "pnpm run clean && tsc -p tsconfig.build.json",
+    "prepack": "pnpm run build",
+    "typecheck": "tsc --noEmit -p . && tsc --noEmit -p test/consumer && tsc --noEmit -p examples",
+    "smoke": "node scripts/smoke.mjs"
   }
 }

@@ -1,4 +1,4 @@
-import type { ApiErrorBody, ApiResponse, CommonErrorResponse, InvalidRequestError, MalformedJsonError, NotFoundError } from "./errors";
+import type { ApiErrorBody, ApiResponse, CommonErrorResponse, InvalidRequestError, MalformedJsonError, NotFoundError } from "./errors.js";
 
 /**
  * A Dynamic code's destination revision: a non-negative integer, +1 per real change. Not interchangeable with a

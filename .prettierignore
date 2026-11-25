@@ -3,3 +3,5 @@ node_modules
 drizzle
 pnpm-lock.yaml
 next-env.d.ts
+packages/sdk/dist
+*.tgz

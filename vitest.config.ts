@@ -4,7 +4,13 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [react()],
-  resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
+  resolve: {
+    alias: [
+      { find: "@", replacement: fileURLToPath(new URL("./src", import.meta.url)) },
+      // HEY-166: workspace tests use @heyqr/sdk's TypeScript source (its entry), not the built dist.
+      { find: /^@heyqr\/sdk$/, replacement: fileURLToPath(new URL("./packages/sdk/src/index.ts", import.meta.url)) },
+    ],
+  },
   test: {
     environment: "node",
     include: ["src/**/*.test.{ts,tsx}", "packages/*/test/**/*.test.ts"],

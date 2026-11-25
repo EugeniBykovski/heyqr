@@ -1,5 +1,5 @@
-import type { ApiErrorBody, ApiResponse, CommonErrorResponse, InvalidRequestError, MalformedJsonError } from "./errors";
-import type { JsonObject } from "./json";
+import type { ApiErrorBody, ApiResponse, CommonErrorResponse, InvalidRequestError, MalformedJsonError } from "./errors.js";
+import type { JsonObject } from "./json.js";
 
 /** Static: the content is in the pattern. Dynamic: the pattern holds a short link whose destination can change. */
 export type QrMode = "static" | "dynamic";

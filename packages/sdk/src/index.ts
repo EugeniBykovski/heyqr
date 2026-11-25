@@ -21,7 +21,7 @@ export {
   isTimeout,
   newIdempotencyKey,
   retryAfter,
-} from "./client";
+} from "./client.js";
 export type {
   AbortSignalLike,
   CreateQrError,
@@ -37,8 +37,8 @@ export type {
   RequestOptions,
   UpdateDestinationError,
   UpdateLayoutError,
-} from "./client";
-export type { JsonObject, JsonValue } from "./json";
+} from "./client.js";
+export type { JsonObject, JsonValue } from "./json.js";
 export type {
   AnyApiErrorBody,
   ApiErrorBody,
@@ -50,7 +50,7 @@ export type {
   NotFoundError,
   UnauthorizedError,
   ValidationProblem,
-} from "./errors";
+} from "./errors.js";
 export type {
   ContentTooLongError,
   CreateQrErrorResponse,
@@ -67,7 +67,7 @@ export type {
   QrContentType,
   QrMode,
   QrStatus,
-} from "./qr-codes";
+} from "./qr-codes.js";
 export type {
   GetLayoutErrorResponse,
   GetLayoutResult,
@@ -77,7 +77,7 @@ export type {
   UpdateLayoutErrorResponse,
   UpdateLayoutRequest,
   UpdateLayoutResult,
-} from "./layouts";
+} from "./layouts.js";
 export type {
   Destination,
   DestinationRevision,
@@ -89,7 +89,7 @@ export type {
   UpdateDestinationRequest,
   UpdateDestinationResponse,
   UpdateDestinationResult,
-} from "./destination";
+} from "./destination.js";
 export type {
   ExportErrorResponse,
   ExportFile,
@@ -102,4 +102,4 @@ export type {
   PaymentRequiredError,
   ScanCheckFailedError,
   ScanIssue,
-} from "./export";
+} from "./export.js";

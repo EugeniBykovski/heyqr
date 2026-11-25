@@ -1,6 +1,7 @@
 # @heyqr/sdk
 
-The hosted HeyQR REST API, v1, for TypeScript. It has two parts:
+The hosted HeyQR REST API, v1, for TypeScript: an ESM package with JavaScript and declarations (HEY-166). It has two
+parts:
 
 - **Types** (HEY-160): the public contract of every request, response and error.
 - **Client:** `HeyQrClient`, with:
@@ -208,7 +209,7 @@ It prints the IDs and both revisions:
 ```sh
 HEYQR_API_KEY=hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX \
 HEYQR_BASE_URL=http://localhost:3000 \
-pnpm exec tsx packages/sdk/examples/create-and-read.ts
+pnpm exec tsx --conditions=@heyqr/source packages/sdk/examples/create-and-read.ts
 ```
 
 ```json
@@ -235,7 +236,7 @@ HEYQR_API_KEY=hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX \
 HEYQR_BASE_URL=http://localhost:3000 \
 HEYQR_QR_ID=<qr id> HEYQR_LAYOUT_ID=<layout id> \
 HEYQR_LAYOUT_NAME="Sticker v2" HEYQR_DESTINATION=littlefern.cafe/today \
-pnpm exec tsx packages/sdk/examples/read-and-update.ts
+pnpm exec tsx --conditions=@heyqr/source packages/sdk/examples/read-and-update.ts
 ```
 
 ```json
@@ -255,7 +256,7 @@ under their suggested names. On a 402 it prints the payment URL:
 HEYQR_API_KEY=hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX \
 HEYQR_BASE_URL=http://localhost:3000 \
 HEYQR_QR_ID=<qr id> HEYQR_LAYOUT_ID=<layout id> HEYQR_OUT_DIR=. \
-pnpm exec tsx packages/sdk/examples/download-export.ts
+pnpm exec tsx --conditions=@heyqr/source packages/sdk/examples/download-export.ts
 ```
 
 ```json
@@ -267,6 +268,62 @@ pnpm exec tsx packages/sdk/examples/download-export.ts
 
 Unpaid, it prints this instead: `Payment required: open https://heyqr.example/create/export?qr=…&layout=…&format=png
 as the code's owner, then run this again.`
+
+## Build, pack and install (HEY-166)
+
+`@heyqr/sdk` ships as **ESM only**, for Node.js 18+ (and other runtimes with `fetch`). It has no dependencies. The
+package's entry points (`main`, `types`, `exports`) are the built files in `dist/`: JavaScript plus `.d.ts`
+declarations, compiled from `src/` by `tsc`.
+
+```sh
+pnpm --filter @heyqr/sdk build                                  # dist/: index.js, client.js, … and their .d.ts
+cd packages/sdk && pnpm pack --pack-destination /tmp            # /tmp/heyqr-sdk-<version>.tgz (rebuilds first)
+tar -tzf /tmp/heyqr-sdk-*.tgz                                   # package.json, README.md, dist/*.js, dist/*.d.ts
+```
+
+**The archive:** `package/package.json`, `package/README.md`, and `package/dist/<module>.js` plus `.d.ts` for
+`index`, `client`, `qr-codes`, `layouts`, `destination`, `export`, `errors` and `json`.
+
+- **Exports:** the packed `package.json` (from `publishConfig`) exports only `./dist/index.js` (`import`) and
+  `./dist/index.d.ts` (`types`).
+- **Nothing workspace-only:** no `src/`, no tests, no dependencies.
+- **Not committed:** `dist/` and `*.tgz` are git-ignored.
+
+**Inside the monorepo** the code and tests use the TypeScript source through the `@heyqr/source` export condition
+(root `tsconfig` `customConditions`, a Vitest alias), so nothing needs building first. To run an example from
+source, pass the condition to tsx (`pnpm exec tsx --conditions=@heyqr/source …`), or build first.
+
+### Smoke test: install the .tgz in a clean project
+
+```sh
+pnpm --filter @heyqr/sdk smoke                                   # offline: install, typecheck, run
+HEYQR_API_KEY=hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX \
+HEYQR_BASE_URL=http://localhost:3000 \
+pnpm --filter @heyqr/sdk smoke                                   # …plus the live API run
+```
+
+[`scripts/smoke.mjs`](scripts/smoke.mjs) works through these steps:
+
+1. Builds and packs the SDK, checking that the archive holds only `package.json`, `README.md` and `dist/` files.
+2. Creates a project in the OS temp directory (outside the monorepo) and installs the `.tgz` with
+   `npm install <file>.tgz`.
+3. Checks that `node_modules/@heyqr/sdk` is a real installed package, not a link, with no dependencies and exports
+   pointing at `dist/`.
+4. Typechecks and compiles [`scripts/smoke-consumer.ts`](scripts/smoke-consumer.ts), which imports only
+   `"@heyqr/sdk"`, under strict `NodeNext` settings. It confirms with `--traceResolution` that `@heyqr/sdk` resolves
+   to the installed `dist/index.d.ts`.
+5. Runs the compiled JavaScript with plain `node`, with no loader or alias.
+
+With `HEYQR_API_KEY`, the consumer goes on to:
+
+1. create a Dynamic QR (with an Idempotency-Key);
+2. read its layout and destination;
+3. update both from their revisions;
+4. read them back and assert the updates persisted;
+5. check that a stale revision gets 409.
+
+TypeScript itself comes from the monorepo, as the compiler only (`SMOKE_TSC` picks another). The consumer declares
+its two globals, so it needs neither DOM nor `@types/node`. Use `SMOKE_KEEP=1` to keep the temp project for a look.
 
 ## Exports
 
@@ -329,6 +386,8 @@ More, with compile-time checks for invalid input and error narrowing: [`test/con
 
 ## Checks
 
+- `pnpm --filter @heyqr/sdk smoke`: the packed `.tgz`, installed with npm in a clean project and run with plain
+  Node.js (see above).
 - `packages/sdk/test/idempotency.test.ts`:
   - the key is sent only when given, and invalid keys are refused locally;
   - the 409 is typed;
