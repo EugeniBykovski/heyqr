@@ -12,7 +12,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "next typegen && tsc --noEmit && pnpm --filter @heyqr/qr-core typecheck",
+    "typecheck": "next typegen && tsc --noEmit && pnpm --filter @heyqr/qr-core typecheck && pnpm --filter @heyqr/sdk typecheck",
     "test": "vitest run",
     "test:db": "node --env-file-if-exists=.env node_modules/vitest/vitest.mjs run src/server/db",
     "test:watch": "vitest",
@@ -65,6 +65,7 @@
   "devDependencies": {
     "@commitlint/cli": "21.2.4",
     "@commitlint/config-conventional": "21.2.4",
+    "@heyqr/sdk": "workspace:*",
     "@tailwindcss/turbopack": "4.3.5",
     "@testing-library/jest-dom": "7.0.1",
     "@testing-library/react": "16.3.3",

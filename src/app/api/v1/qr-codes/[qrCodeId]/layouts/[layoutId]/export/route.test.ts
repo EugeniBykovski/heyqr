@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type * as Sdk from "@heyqr/sdk";
 import { DEFAULT_DESIGN, designSettingsOf, designToLayout } from "@/entities/qr";
 
 vi.mock("server-only", () => ({}));
@@ -157,5 +158,62 @@ describe("GET …/layouts/{layoutId}/export (HEY-158)", () => {
     expect(res.status).toBe(422);
     expect(await res.json()).toEqual({ error: { code: "scan_check_failed", message: expect.any(String), issues: ["contrast"] } });
     expect(signedFileUrl).not.toHaveBeenCalled();
+  });
+});
+
+/* HEY-160: the export route's responses against SDK-typed samples (compile-time `satisfies`, runtime shape). */
+const shape = (v: unknown): unknown =>
+  v === null
+    ? "null"
+    : Array.isArray(v)
+      ? [v.length ? shape(v[0]) : "empty"]
+      : typeof v === "object"
+        ? Object.fromEntries(
+            Object.entries(v)
+              .sort(([a], [b]) => a.localeCompare(b))
+              .map(([k, x]) => [k, shape(x)]),
+          )
+        : typeof v;
+
+describe("SDK contract: export responses (HEY-160)", () => {
+  it("302 redirect, 402 payment required, 404, 422 and 401 match the SDK types", async () => {
+    const ok = await call();
+    const redirect: Sdk.ExportRedirect = {
+      status: 302,
+      headers: { location: ok.headers.get("location") ?? "", "cache-control": "private, no-store" },
+    };
+    expect([ok.status, ok.headers.get("cache-control")]).toEqual([redirect.status, redirect.headers["cache-control"]]);
+    expect(redirect.headers.location).toMatch(/^https:/);
+
+    authorizeApiExport.mockResolvedValueOnce(payment);
+    const pay = await call();
+    const samplePay = {
+      error: { code: "payment_required", message: "m", paymentUrl: "https://x", qrCodeId: "q", layoutId: "l", format: "png" },
+    } satisfies Sdk.PaymentRequiredError;
+    expect([pay.status, shape(await pay.json())]).toEqual([402, shape(samplePay)]);
+
+    authorizeApiExport.mockResolvedValueOnce({ ok: false, error: "not_found" });
+    expect(shape(await (await call()).json())).toEqual(shape({ error: { code: "not_found", message: "m" } } satisfies Sdk.NotFoundError));
+
+    authorizeApiExport.mockResolvedValueOnce({ ok: false, error: "invalid_request", details: [{ path: "format", message: "bad" }] });
+    expect(shape(await (await call("format=gif")).json())).toEqual(
+      shape({ error: { code: "invalid_request", message: "m", details: [{ path: "p", message: "m" }] } } satisfies Sdk.InvalidRequestError),
+    );
+
+    stored.clear();
+    renderExport.mockResolvedValueOnce({
+      body: Buffer.from(""),
+      contentType: "image/png",
+      scan: { ok: false, issues: [{ code: "contrast", title: "t", detail: "d", fix: "f" }] },
+    });
+    const scan = await call();
+    const sampleScan = {
+      error: { code: "scan_check_failed", message: "m", issues: [{ code: "contrast", title: "t", detail: "d", fix: "f" }] },
+    } satisfies Sdk.ScanCheckFailedError;
+    expect([scan.status, shape(await scan.json())]).toEqual([422, shape(sampleScan)]);
+
+    expect(shape(await (await call("format=png", null)).json())).toEqual(
+      shape({ error: { code: "unauthorized", message: "m" } } satisfies Sdk.UnauthorizedError),
+    );
   });
 });

@@ -30,6 +30,7 @@ import { canDownloadCode, resolveShortLink } from "../billing/access";
 import { apiKeyOwner, createApiKey, generateApiKey, listApiKeys, revokeApiKey } from "../api-keys/keys";
 import { readLayoutForOwner } from "../api/v1/layouts";
 import { authorizeApiExport } from "../api/v1/export";
+import type * as Sdk from "@heyqr/sdk";
 import { hasScans, incrementScan, ownerScanSummary, scansByDay, utcDay } from "../qr/scans";
 import {
   accountUsage,
@@ -6814,5 +6815,161 @@ describe.skipIf(!url)("public API: export authorization (HEY-158, real PostgreSQ
       const out = await decide(owner.id, code.id, layoutId, query);
       expect(out.ok ? [] : "details" in out ? out.details.map((x) => x.path) : [out.error], JSON.stringify(query)).toContain(path);
     }
+  });
+});
+
+/*
+ * HEY-160 / QR-22.01: response bodies of the real route handlers against SDK-typed samples. Each sample is checked by
+ * the compiler against the @heyqr/sdk type (`satisfies`); its shape (keys and value kinds) must equal the response's.
+ */
+describe.skipIf(!url)("SDK contract: route responses (HEY-160, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  type Handler = (request: Request, ctx?: unknown) => Promise<Response>;
+  const routes: Record<string, { GET?: Handler; PATCH?: Handler; POST?: Handler }> = {};
+  const owner = { id: "sdk160-owner", name: "Owner", email: "owner@sdk160.test" };
+  let key = "";
+  const d = { ...DEFAULT_DESIGN, fg: "#1F3A5F" };
+  const layout = designToLayout(d);
+  const editor = designSettingsOf(d);
+  /** Keys and value kinds, recursively (designs collapse to "object": the SDK passes them through as JSON). */
+  const shape = (v: unknown, keyName = ""): unknown => {
+    if (keyName === "layout" || keyName === "editor") return v === null ? "null" : "object";
+    if (v === null) return "null";
+    if (Array.isArray(v)) return [v.length ? shape(v[0]) : "empty"];
+    if (typeof v === "object")
+      return Object.fromEntries(
+        Object.entries(v)
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([k, x]) => [k, shape(x, k)]),
+      );
+    return typeof v;
+  };
+  const send = async (
+    route: string,
+    method: "GET" | "PATCH" | "POST",
+    path: string,
+    body?: unknown,
+    auth: string | null = `Bearer ${key}`,
+  ) => {
+    const handler = routes[route]?.[method];
+    if (!handler) throw new Error(`${route} ${method}`);
+    const params = Object.fromEntries(
+      [...path.matchAll(/(qr-codes|layouts)\/([^/]+)/g)].map((m) => [m[1] === "qr-codes" ? "qrCodeId" : "layoutId", m[2]]),
+    );
+    const res = await handler(
+      new Request(`http://localhost/api/v1${path}`, {
+        method,
+        headers: { ...(auth ? { authorization: auth } : {}), "content-type": "application/json" },
+        ...(body === undefined ? {} : { body: typeof body === "string" ? body : JSON.stringify(body) }),
+      }),
+      { params: Promise.resolve(params) },
+    );
+    return { status: res.status, body: (await res.json()) as unknown };
+  };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 3 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    apiDb.current = db;
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+    key = (await createApiKey(db, owner.id)).key;
+    routes.create = (await import("../../app/api/v1/qr-codes/route")) as never;
+    routes.layout = (await import("../../app/api/v1/qr-codes/[qrCodeId]/layouts/[layoutId]/route")) as never;
+    routes.destination = (await import("../../app/api/v1/qr-codes/[qrCodeId]/destination/route")) as never;
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("create, layout and destination responses have exactly the SDK's shapes", async () => {
+    const createBody: Sdk.CreateQrRequest = {
+      name: "Menu",
+      mode: "static",
+      content: { type: "website", url: "littlefern.cafe/menu" },
+      layouts: [{ name: "Sticker", layout, editor }],
+    };
+    const created = await send("create", "POST", "/qr-codes", createBody);
+    expect(created.status).toBe(201);
+    expect(shape(created.body)).toEqual(shape({ id: "q", status: "draft", layouts: [{ id: "l" }] } satisfies Sdk.CreateQrResponse));
+    const { id, layouts } = created.body as Sdk.CreateQrResponse;
+    const layoutId = layouts[0]?.id ?? "";
+
+    const read = await send("layout", "GET", `/qr-codes/${id}/layouts/${layoutId}`);
+    const sampleLayout = {
+      id: "l",
+      qrCodeId: "q",
+      name: "Sticker",
+      revision: "1764061234567890",
+      layout: {},
+      editor: {},
+    } satisfies Sdk.Layout;
+    expect([read.status, shape(read.body)]).toEqual([200, shape(sampleLayout)]);
+    const current = read.body as Sdk.Layout;
+    expect(current.revision).toMatch(/^\d+$/);
+
+    const update: Sdk.UpdateLayoutRequest = { revision: current.revision, name: "Sticker v2" };
+    const updated = await send("layout", "PATCH", `/qr-codes/${id}/layouts/${layoutId}`, update);
+    expect([updated.status, shape(updated.body)]).toEqual([200, shape(sampleLayout)]);
+    const stale = await send("layout", "PATCH", `/qr-codes/${id}/layouts/${layoutId}`, update);
+    expect([stale.status, shape(stale.body)]).toEqual([
+      409,
+      shape({ error: { code: "revision_conflict", message: "m" } } satisfies Sdk.LayoutRevisionConflictError),
+    ]);
+
+    const invalid = await send("create", "POST", "/qr-codes", { ...createBody, userId: "x" });
+    const sampleInvalid = {
+      error: { code: "invalid_request", message: "m", details: [{ path: "userId", message: "Unknown field" }] },
+    } satisfies Sdk.InvalidRequestError;
+    expect([invalid.status, shape(invalid.body)]).toEqual([422, shape(sampleInvalid)]);
+    expect((await send("create", "POST", "/qr-codes", "{oops")).body).toEqual({
+      error: { code: "malformed_json", message: expect.any(String) },
+    } satisfies Sdk.MalformedJsonError);
+    expect(shape((await send("layout", "GET", `/qr-codes/${id}/layouts/nope`)).body)).toEqual(
+      shape({ error: { code: "not_found", message: "m" } } satisfies Sdk.NotFoundError),
+    );
+    expect(shape((await send("layout", "GET", `/qr-codes/${id}/layouts/${layoutId}`, undefined, null)).body)).toEqual(
+      shape({ error: { code: "unauthorized", message: "m" } } satisfies Sdk.UnauthorizedError),
+    );
+    expect(shape((await send("destination", "GET", `/qr-codes/${id}/destination`)).body)).toEqual(
+      shape({ error: { code: "not_dynamic", message: "m" } } satisfies Sdk.NotDynamicError),
+    );
+
+    const dyn = (
+      await send("create", "POST", "/qr-codes", {
+        ...createBody,
+        mode: "dynamic",
+        destination: "littlefern.cafe/menu",
+      } satisfies Sdk.CreateQrRequest)
+    ).body as Sdk.CreateQrResponse;
+    const dest = await send("destination", "GET", `/qr-codes/${dyn.id}/destination`);
+    // Before the first change and activation: the nullable fields are null.
+    const sampleDestination = {
+      qrCodeId: "q",
+      destination: "https://x",
+      revision: 0,
+      previousDestination: null,
+      changedAt: null,
+      shortLink: null,
+    } satisfies Sdk.Destination;
+    expect([dest.status, shape(dest.body)]).toEqual([200, shape(sampleDestination)]);
+    const change: Sdk.UpdateDestinationRequest = {
+      destination: "littlefern.cafe/today",
+      revision: (dest.body as Sdk.Destination).revision,
+    };
+    const changed = await send("destination", "PATCH", `/qr-codes/${dyn.id}/destination`, change);
+    const sampleChanged = {
+      ...sampleDestination,
+      previousDestination: "https://x",
+      changedAt: "t",
+      changed: true,
+    } satisfies Sdk.UpdateDestinationResponse;
+    expect([changed.status, shape(changed.body)]).toEqual([200, shape(sampleChanged)]);
+    const conflict = await send("destination", "PATCH", `/qr-codes/${dyn.id}/destination`, change);
+    const sampleConflict = {
+      error: { code: "revision_conflict", message: "m", current: { destination: "https://x", revision: 1 } },
+    } satisfies Sdk.DestinationRevisionConflictError;
+    expect([conflict.status, shape(conflict.body)]).toEqual([409, shape(sampleConflict)]);
   });
 });

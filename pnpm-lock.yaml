@@ -257,6 +257,9 @@ importers:
       '@commitlint/config-conventional':
         specifier: 21.2.4
         version: 21.2.4
+      '@heyqr/sdk':
+        specifier: workspace:*
+        version: link:packages/sdk
       '@tailwindcss/turbopack':
         specifier: 4.3.5
         version: 4.3.5
@@ -342,6 +345,8 @@ importers:
       jsqr:
         specifier: 1.4.0
         version: 1.4.0
+
+  packages/sdk: {}
 
 packages:
 
