@@ -1,0 +1,18 @@
+{
+  "name": "@heyqr/sdk",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Public TypeScript types for the hosted HeyQR REST API (v1). Types only; HTTP methods and npm publishing come later.",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "typecheck": "tsc --noEmit -p . && tsc --noEmit -p test/consumer"
+  }
+}
