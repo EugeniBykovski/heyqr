@@ -14,7 +14,10 @@ const plexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500", "600
 export const viewport: Viewport = { themeColor: "#F7F7F8", width: "device-width", initialScale: 1 };
 
 // Owners' pages are reachable by their printed code; they aren't meant for search engines.
-export const metadata: Metadata = { metadataBase: new URL(env.NEXT_PUBLIC_APP_URL), robots: { index: false, follow: false } };
+// Built at request time, like the locale layout: the app URL isn't needed (or set) when the build collects pages.
+export function generateMetadata(): Metadata {
+  return { metadataBase: new URL(env.NEXT_PUBLIC_APP_URL), robots: { index: false, follow: false } };
+}
 
 /**
  * Design 11.0: the shared mobile-first layout of every public hosted page. Its own root layout: no site header or
