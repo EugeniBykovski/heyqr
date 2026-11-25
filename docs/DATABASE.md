@@ -135,6 +135,8 @@ APP_ENV=production CONFIRM_PRODUCTION_MIGRATION=1 DATABASE_URL=… DATABASE_URL_
 
 Fixtures are never loaded into production.
 
+Backups, restoring and the checks after a restore: [BACKUP_RESTORE.md](BACKUP_RESTORE.md).
+
 ## Troubleshooting
 
 | Symptom                                                                 | Fix                                                                                                                            |
