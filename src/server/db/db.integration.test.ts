@@ -28,6 +28,7 @@ import { bindStripeCustomer, customerIdempotencyKey, storedCustomer, type Custom
 import { applySubscriptionEvent, type SubscriptionEvent } from "../billing/subscriptions";
 import { canDownloadCode, resolveShortLink } from "../billing/access";
 import { apiKeyOwner, createApiKey, generateApiKey, listApiKeys, revokeApiKey } from "../api-keys/keys";
+import { readLayoutForOwner } from "../api/v1/layouts";
 import { hasScans, incrementScan, ownerScanSummary, scansByDay, utcDay } from "../qr/scans";
 import {
   accountUsage,
@@ -66,6 +67,15 @@ vi.mock("@/server/db", async () => ({
 vi.mock("server-only", () => ({}));
 vi.mock("next/cache", () => ({ revalidatePath: () => undefined }));
 vi.mock("@/server/storage/s3", () => ({ logoStore: () => null }));
+// HEY-156: what the printed code holds, as the app computes it (without the app's environment module).
+vi.mock("@/server/qr/export", async () => {
+  const { encodePayload } = await import("@heyqr/qr-core");
+  const { PREVIEW_SLUG, shortLinkUrl } = await import("../../shared/lib/short-link");
+  return {
+    encodedValue: (qr: { model: string; content: Parameters<typeof encodePayload>[0]; shortCode: string | null }) =>
+      qr.model === "dynamic" ? shortLinkUrl("https://heyqr.test/r", qr.shortCode ?? PREVIEW_SLUG) : encodePayload(qr.content),
+  };
+});
 
 /**
  * Change destination as a tab that has just opened the code: from its current destination revision (HEY-128). Read
@@ -6153,5 +6163,305 @@ describe.skipIf(!url)("public API: create a QR (HEY-155, real PostgreSQL)", () =
     }
     expect(logs).toContain("[api/v1/qr-codes] failed: Error");
     logged.mockRestore();
+  });
+});
+
+/* HEY-156 / QR-21.04: GET and PATCH /api/v1/qr-codes/{qrCodeId}/layouts/{layoutId}, through the route handlers. */
+describe.skipIf(!url)("public API: read and update a layout (HEY-156, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  type Handler = (request: Request, ctx: { params: Promise<{ qrCodeId: string; layoutId: string }> }) => Promise<Response>;
+  let GET: Handler;
+  let PATCH: Handler;
+  let createPOST: (request: Request) => Promise<Response>;
+  const owner = { id: "api156-owner", name: "Owner", email: "owner@api156.test" };
+  const other = { id: "api156-other", name: "Other", email: "other@api156.test" };
+  let key = "";
+  let otherKey = "";
+  const look = (fg: string, caption = "Menu") => {
+    const d = { ...DEFAULT_DESIGN, fg, preset: "frame" as const, frameStyle: "bubble" as const, caption };
+    return { layout: designToLayout(d), editor: designSettingsOf(d) };
+  };
+  const base = "http://localhost/api/v1/qr-codes";
+  const ctx = (qrCodeId: string, layoutId: string) => ({ params: Promise.resolve({ qrCodeId, layoutId }) });
+  const get = (qrCodeId: string, layoutId: string, auth: string | null = `Bearer ${key}`) =>
+    GET(
+      new Request(`${base}/${qrCodeId}/layouts/${layoutId}`, { headers: auth === null ? {} : { authorization: auth } }),
+      ctx(qrCodeId, layoutId),
+    );
+  const patch = (qrCodeId: string, layoutId: string, body: unknown, auth: string | null = `Bearer ${key}`) =>
+    PATCH(
+      new Request(`${base}/${qrCodeId}/layouts/${layoutId}`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json", ...(auth === null ? {} : { authorization: auth }) },
+        body: typeof body === "string" ? body : JSON.stringify(body),
+      }),
+      ctx(qrCodeId, layoutId),
+    );
+  const create = async (body: Record<string, unknown>, k = key) => {
+    const res = await createPOST(
+      new Request(base, {
+        method: "POST",
+        headers: { "content-type": "application/json", authorization: `Bearer ${k}` },
+        body: JSON.stringify(body),
+      }),
+    );
+    expect(res.status).toBe(201);
+    return (await res.json()) as { id: string; layouts: { id: string }[] };
+  };
+  /** Everything stored for these accounts' codes and layouts, to show a refused request changed nothing. */
+  const snapshot = async () =>
+    JSON.stringify(
+      (
+        await pool.query(
+          "select q.id, q.name, q.content, q.model, q.status, q.destination, q.short_code, q.updated_at, l.id as lid, l.name as lname, l.design, l.updated_at as lup, l.sort_order from qr_code q join qr_layout l on l.qr_code_id = q.id where q.user_id in ($1, $2) order by q.id, l.sort_order",
+          [owner.id, other.id],
+        )
+      ).rows,
+    );
+  const designOf = async (layoutId: string) => (await pool.query("select design from qr_layout where id = $1", [layoutId])).rows[0]?.design;
+  const codeRow = async (id: string) =>
+    (
+      await pool.query(
+        "select user_id, name, content, model, status, destination, short_code, guest_claim_key from qr_code where id = $1",
+        [id],
+      )
+    ).rows[0];
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    apiDb.current = db;
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+    key = (await createApiKey(db, owner.id)).key;
+    otherKey = (await createApiKey(db, other.id)).key;
+    ({ GET, PATCH } = (await import("../../app/api/v1/qr-codes/[qrCodeId]/layouts/[layoutId]/route")) as unknown as {
+      GET: Handler;
+      PATCH: Handler;
+    });
+    ({ POST: createPOST } = await import("../../app/api/v1/qr-codes/route"));
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("create → GET → PATCH → GET: only the selected layout changes; the code and its other layouts keep everything", async () => {
+    const made = await create({
+      name: "Menu",
+      mode: "static",
+      content: { type: "website", url: "littlefern.cafe/menu" },
+      layouts: [
+        { name: "Sticker", ...look("#1F3A5F") },
+        { name: "Poster", ...look("#2F6B3A") },
+      ],
+    });
+    const [first, second] = made.layouts.map((l) => l.id) as [string, string];
+    const codeBefore = await codeRow(made.id);
+    const siblingBefore = await designOf(second);
+
+    const read = await get(made.id, first);
+    expect([read.status, read.headers.get("cache-control")]).toEqual([200, "no-store"]);
+    const got = (await read.json()) as Record<string, unknown> & { revision: string; layout: { colors: { fg: string } } };
+    expect(Object.keys(got).sort()).toEqual(["editor", "id", "layout", "name", "qrCodeId", "revision"]);
+    expect(got).toMatchObject({ id: first, qrCodeId: made.id, name: "Sticker", revision: expect.stringMatching(/^\d+$/) });
+    expect(got.layout.colors.fg).toBe("#1F3A5F");
+
+    const next = look("#8C2F4B", "Today");
+    const res = await patch(made.id, first, { revision: got.revision, name: "Sticker v2", ...next });
+    expect(res.status).toBe(200);
+    const updated = (await res.json()) as typeof got;
+    expect(updated).toMatchObject({ id: first, qrCodeId: made.id, name: "Sticker v2" });
+    expect(updated.revision).not.toBe(got.revision);
+    expect(updated.layout.colors.fg).toBe("#8C2F4B");
+    expect(await (await get(made.id, first)).json()).toEqual(updated);
+
+    expect(await codeRow(made.id)).toEqual(codeBefore);
+    expect(await designOf(second)).toEqual(siblingBefore);
+    // The editor reads the same stored record.
+    const stored = readLayoutRecord(await designOf(first));
+    expect(stored.ok && stored.value.layout.colors.fg).toBe("#8C2F4B");
+  });
+
+  it("an active Dynamic code keeps its destination, short link and state when a layout changes", async () => {
+    const made = await create({
+      name: "Live",
+      mode: "dynamic",
+      content: { type: "website", url: "littlefern.cafe" },
+      destination: "littlefern.cafe/today",
+      layouts: [{ name: "Card", ...look("#1F3A5F") }],
+    });
+    const layoutId = made.layouts[0]?.id ?? "";
+    // Fixture: activation done by the existing flows (labelled: set directly here).
+    await pool.query("update qr_code set status = 'active', short_code = 'qa156live' where id = $1", [made.id]);
+    const before = await codeRow(made.id);
+    const { revision } = (await (await get(made.id, layoutId)).json()) as { revision: string };
+    expect((await patch(made.id, layoutId, { revision, ...look("#2F6B3A") })).status).toBe(200);
+    expect(await codeRow(made.id)).toEqual(before);
+    expect(before).toMatchObject({ status: "active", short_code: "qa156live", destination: "https://littlefern.cafe/today" });
+  });
+
+  it("a foreign, deleted, missing or mismatched code/layout pair gets the same 404 and changes nothing", async () => {
+    const mine = await create({
+      name: "A",
+      mode: "static",
+      content: { type: "text", text: "a" },
+      layouts: [{ name: "A1", ...look("#1F3A5F") }],
+    });
+    const mine2 = await create({
+      name: "B",
+      mode: "static",
+      content: { type: "text", text: "b" },
+      layouts: [{ name: "B1", ...look("#1F3A5F") }],
+    });
+    const theirs = await create(
+      { name: "C", mode: "static", content: { type: "text", text: "c" }, layouts: [{ name: "C1", ...look("#1F3A5F") }] },
+      otherKey,
+    );
+    const gone = await create({
+      name: "D",
+      mode: "static",
+      content: { type: "text", text: "d" },
+      layouts: [{ name: "D1", ...look("#1F3A5F") }],
+    });
+    await softDeleteQrCodes(db, owner.id, [gone.id]);
+    const [a1, b1, c1, d1] = [mine, mine2, theirs, gone].map((c) => c.layouts[0]?.id ?? "");
+    const { revision } = (await (await get(mine.id, a1)).json()) as { revision: string };
+    const pairs: [string, string][] = [
+      [theirs.id, c1], // another account's code
+      [mine.id, b1], // my layout, under my other code
+      [theirs.id, a1], // my layout under their code
+      [gone.id, d1], // deleted
+      [mine.id, "no-such-layout"],
+      ["no-such-code", a1],
+      ["bad id!", a1],
+    ];
+    const before = await snapshot();
+    const answers = new Set<string>();
+    for (const [q, l] of pairs) {
+      for (const res of [await get(q, l), await patch(q, l, { revision, ...look("#000000") })])
+        answers.add(`${res.status} ${await res.text()}`);
+    }
+    expect([...answers]).toEqual(['404 {"error":{"code":"not_found","message":"No such QR code or layout for this API key."}}']);
+    expect(await snapshot()).toBe(before);
+  });
+
+  it("missing, invalid and revoked keys get the same 401 for GET and PATCH", async () => {
+    const made = await create({
+      name: "K",
+      mode: "static",
+      content: { type: "text", text: "k" },
+      layouts: [{ name: "K1", ...look("#1F3A5F") }],
+    });
+    const layoutId = made.layouts[0]?.id ?? "";
+    const { revision } = (await (await get(made.id, layoutId)).json()) as { revision: string };
+    const revoked = await createApiKey(db, owner.id);
+    await revokeApiKey(db, owner.id, revoked.id);
+    const before = await snapshot();
+    const answers = new Set<string>();
+    for (const auth of [null, "Bearer hqk_nope", `Bearer ${revoked.key}`]) {
+      for (const res of [await get(made.id, layoutId, auth), await patch(made.id, layoutId, { revision, ...look("#000000") }, auth)])
+        answers.add(`${res.status} ${res.headers.get("www-authenticate")} ${await res.text()}`);
+    }
+    expect(answers.size).toBe(1);
+    expect([...answers][0]).toMatch(/^401 Bearer realm="heyqr" /);
+    expect(await snapshot()).toBe(before);
+  });
+
+  it("invalid design data, unknown fields and a missing revision are refused; the stored design is unchanged", async () => {
+    const made = await create({
+      name: "V",
+      mode: "static",
+      content: { type: "text", text: "v" },
+      layouts: [{ name: "V1", ...look("#1F3A5F") }],
+    });
+    const layoutId = made.layouts[0]?.id ?? "";
+    const { revision } = (await (await get(made.id, layoutId)).json()) as { revision: string };
+    const before = await snapshot();
+    const cases: [unknown, number, string, string?][] = [
+      ["{oops", 400, "malformed_json"],
+      [{ revision, layout: { nope: true } }, 422, "invalid_request", "layout"],
+      [{ revision, editor: { preset: 42 } }, 422, "invalid_request", "editor"],
+      [{ ...look("#000000") }, 422, "invalid_request", "revision"],
+      [{ revision: "yesterday", ...look("#000000") }, 422, "invalid_request", "revision"],
+      [{ revision }, 422, "invalid_request", "(body)"],
+      [{ revision, name: " " }, 422, "invalid_request", "name"],
+      [{ revision, ...look("#000000"), content: { type: "text", text: "other" } }, 422, "invalid_request", "content"],
+      [{ revision, ...look("#000000"), destination: "https://elsewhere.test" }, 422, "invalid_request", "destination"],
+      [{ revision, ...look("#000000"), qrCodeId: "x" }, 422, "invalid_request", "qrCodeId"],
+      [{ revision, ...look("#000000"), id: "x" }, 422, "invalid_request", "id"],
+      [{ revision, ...look("#000000"), status: "active" }, 422, "invalid_request", "status"],
+    ];
+    for (const [body, status, code, path] of cases) {
+      const res = await patch(made.id, layoutId, body);
+      const json = (await res.json()) as { error: { code: string; details?: { path: string }[] } };
+      expect([res.status, json.error.code], JSON.stringify(body).slice(0, 60)).toEqual([status, code]);
+      if (path) expect(json.error.details?.map((d) => d.path)).toContain(path);
+    }
+    expect(await snapshot()).toBe(before);
+  });
+
+  it("two updates with the same revision: one wins, the other gets 409; a stale revision later also gets 409", async () => {
+    const made = await create({
+      name: "R",
+      mode: "static",
+      content: { type: "text", text: "r" },
+      layouts: [{ name: "R1", ...look("#1F3A5F") }],
+    });
+    const layoutId = made.layouts[0]?.id ?? "";
+    const { revision } = (await (await get(made.id, layoutId)).json()) as { revision: string };
+    const [x, y] = await Promise.all([
+      patch(made.id, layoutId, { revision, ...look("#8C2F4B") }),
+      patch(made.id, layoutId, { revision, ...look("#2F6B3A") }),
+    ]);
+    const statuses = [x.status, y.status].sort();
+    expect(statuses).toEqual([200, 409]);
+    const loser = x.status === 409 ? x : y;
+    expect(((await loser.json()) as { error: { code: string } }).error.code).toBe("revision_conflict");
+    const winner = (await (x.status === 200 ? x : y).json()) as { layout: { colors: { fg: string } }; revision: string };
+    const afterRace = await snapshot();
+    const stored = readLayoutRecord(await designOf(layoutId));
+    expect(stored.ok && stored.value.layout.colors.fg).toBe(winner.layout.colors.fg);
+    // The old revision stays stale.
+    expect((await patch(made.id, layoutId, { revision, ...look("#000000") })).status).toBe(409);
+    expect(await snapshot()).toBe(afterRace);
+    // The winner's revision works.
+    expect((await patch(made.id, layoutId, { revision: winner.revision, name: "R1 v3" })).status).toBe(200);
+  });
+
+  it("stored logo references stay internal: GET never returns asset ids; a name-only PATCH keeps the stored logo", async () => {
+    const objects = new Map<string, Uint8Array>();
+    const store: LogoStore = {
+      put: async (k, b) => void objects.set(k, b),
+      get: async (k) => objects.get(k) ?? null,
+      remove: async (k) => void objects.delete(k),
+    };
+    const PNG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+    const d = { ...DEFAULT_DESIGN, preset: "horizontal" as const, caption: "Logo card", logo: { kind: "image" as const, href: PNG } };
+    let n = 0;
+    const saved = await saveQrWithLayouts(
+      db,
+      owner.id,
+      {
+        name: "Logo",
+        model: "static",
+        content: { type: "text", text: "logo" },
+        layouts: [{ name: "L1", layout: designToLayout(d), editor: designSettingsOf(d) }],
+      },
+      (tx, rec) => storeLogos(tx, store, owner.id, rec, () => `api156asset${++n}`),
+    );
+    if (!saved.ok) throw new Error("fixture");
+    const [qrId, layoutId] = [saved.data.qrCodeId, saved.data.layoutIds[0] ?? ""];
+    expect(JSON.stringify(await designOf(layoutId))).toContain("asset:api156asset1");
+    // The route (no storage configured here): the reference is dropped, not returned.
+    const text = await (await get(qrId, layoutId)).text();
+    expect(text).not.toMatch(/asset:|storage|logos\//);
+    // With storage, the owner gets the image itself.
+    const resolved = await readLayoutForOwner(db, owner.id, qrId, layoutId, store);
+    expect(resolved?.layout.style.logo?.href).toBe(PNG);
+    const { revision } = JSON.parse(text) as { revision: string };
+    const before = await designOf(layoutId);
+    expect((await patch(qrId, layoutId, { revision, name: "L1 renamed" })).status).toBe(200);
+    expect(await designOf(layoutId)).toEqual(before);
   });
 });

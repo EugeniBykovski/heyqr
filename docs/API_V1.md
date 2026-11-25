@@ -1,9 +1,9 @@
 # Public API v1
 
-HEY-155 (create). Keys and their verification: [API_KEYS.md](API_KEYS.md). Code: `src/app/api/v1/qr-codes/route.ts`,
-`src/server/api/v1/create-qr.ts`.
+HEY-155 (create) and HEY-156 (read and update a layout). Keys and their verification: [API_KEYS.md](API_KEYS.md). Code: `src/app/api/v1/`, `src/server/api/v1/`.
 
-Not in v1 yet: reading and updating codes, paid file export, and idempotent create retries (follow-up tickets).
+Not in v1 yet: changing a code's content or destination, paid file export, and idempotent create retries (follow-up
+tickets).
 
 ## Authentication
 
@@ -105,3 +105,73 @@ The response:
 201 Created
 { "id": "Q8d3…", "status": "draft", "layouts": [{ "id": "L2k9…" }] }
 ```
+
+## GET /api/v1/qr-codes/{qrCodeId}/layouts/{layoutId}
+
+Returns one saved layout of the key owner's code:
+
+```json
+{
+  "id": "<layout id>",
+  "qrCodeId": "<qr id>",
+  "name": "Sticker",
+  "revision": "1764061234567890",
+  "layout": { "…": "the rendered layout" },
+  "editor": { "…": "editor settings, or null" }
+}
+```
+
+Only these fields are returned. Stored logos come back as the image itself (`data:image/…`), never as private storage
+references; a logo whose file can't be read is left out.
+
+| Status | `error.code`   | When                                                                                                                               |
+| ------ | -------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `200`  | —              | the layout                                                                                                                         |
+| `401`  | `unauthorized` | see Authentication                                                                                                                 |
+| `404`  | `not_found`    | the code isn't the key owner's, is deleted, doesn't exist, or the layout doesn't belong to that code (one answer for all of these) |
+
+## PATCH /api/v1/qr-codes/{qrCodeId}/layouts/{layoutId}
+
+Updates that layout only, from the `revision` GET returned. This is the editor's Edit design save: the layout contract,
+the capacity check (the code's content must still fit), logo storage, and the revision check, made atomically under
+the code's lock. The code's content, mode, destination, short link, activation, purchases and other layouts never
+change.
+
+| Field      | Type             | Rules                                      |
+| ---------- | ---------------- | ------------------------------------------ |
+| `revision` | string           | **required**, from GET (or the last PATCH) |
+| `name`     | string, optional | 1–60 characters                            |
+| `layout`   | object, optional | a rendered layout (as in create)           |
+| `editor`   | object, optional | editor settings                            |
+
+Send at least one of `name`, `layout` and `editor`. A field left out keeps its stored value; send `layout` and `editor`
+together to keep them in step. Any other field is refused (`422`, `"Unknown field"`).
+
+| Status | `error.code`        | When                                                                                                 |
+| ------ | ------------------- | ---------------------------------------------------------------------------------------------------- |
+| `200`  | —                   | the updated layout, as GET returns it, with its new `revision`                                       |
+| `400`  | `malformed_json`    | the body isn't JSON                                                                                  |
+| `401`  | `unauthorized`      | see Authentication                                                                                   |
+| `404`  | `not_found`         | as for GET                                                                                           |
+| `409`  | `revision_conflict` | the layout was saved since that revision (from the app or another request); GET it again and reapply |
+| `422`  | `invalid_request`   | a rule is broken; `details` names the field                                                          |
+| `422`  | `content_too_long`  | the code's content doesn't fit with the new layout                                                   |
+
+### Example
+
+```sh
+KEY="hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX"
+URL="https://heyqr.example/api/v1/qr-codes/Q8d3…/layouts/L2k9…"
+
+# Read it (note the revision).
+curl -sS "$URL" -H "Authorization: Bearer $KEY"
+
+# Rename it from that revision.
+curl -sS -X PATCH "$URL" \
+  -H "Authorization: Bearer $KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "revision": "1764061234567890", "name": "Sticker v2" }'
+```
+
+The PATCH response is the updated layout with its new revision. Sending the old revision again gets
+`409 revision_conflict`.
