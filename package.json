@@ -29,6 +29,7 @@
     "db:verify": "tsx --env-file-if-exists=.env src/server/db/verify.ts",
     "assets:cleanup": "tsx --env-file-if-exists=.env src/server/db/assets-cleanup.ts",
     "email:dev": "email dev --dir src/server/email/templates --port 3001",
+    "probe:short-link": "tsx scripts/short-link-probe.ts",
     "stripe:listen": "stripe listen --forward-to localhost:3000/api/stripe/webhook",
     "prepare": "husky"
   },

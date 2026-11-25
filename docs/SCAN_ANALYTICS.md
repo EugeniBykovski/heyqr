@@ -23,13 +23,13 @@ only the counter skips it. Unavailable links (1) are never counted.
 
 ## Deliberately excluded, and how it's recognised
 
-| Traffic                                 | How it's identified                                                                                                  |
-| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Link checkers, uptime probes, `curl -I` | `HEAD` (or any method other than `GET`)                                                                              |
-| Browser prefetch / prerender of a link  | `Sec-Purpose`, `Purpose`, `X-Purpose` or `X-Moz` containing `prefetch`, `prerender` or `preview`                     |
-| QA scripts, monitors, support checks    | the header `x-heyqr-test` with any value other than `0` (send `x-heyqr-test: 1`)                                     |
-| Editor and Export previews              | they encode `/r/preview`, which never resolves to a code: the slug alphabet has no `i`, so `preview` can't be issued |
-| The editor's scan check                 | it decodes the image in the browser and never requests the short link                                                |
+| Traffic                                 | How it's identified                                                                                                                |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Link checkers, uptime probes, `curl -I` | `HEAD` (or any method other than `GET`)                                                                                            |
+| Browser prefetch / prerender of a link  | `Sec-Purpose`, `Purpose`, `X-Purpose` or `X-Moz` containing `prefetch`, `prerender` or `preview`                                   |
+| QA scripts, monitors, support checks    | the header `x-heyqr-test` with any value other than `0` (send `x-heyqr-test: 1`; the [short link probe](SHORT_LINK_PROBE.md) does) |
+| Editor and Export previews              | they encode `/r/preview`, which never resolves to a code: the slug alphabet has no `i`, so `preview` can't be issued               |
+| The editor's scan check                 | it decodes the image in the browser and never requests the short link                                                              |
 
 Not excluded: any other `GET`, including link-preview bots of chat apps and crawlers that don't send one of these signals.
 No user-agent or IP-based filtering is done (neither is read nor stored).

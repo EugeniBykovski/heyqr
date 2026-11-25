@@ -225,4 +225,29 @@ describe("GET /r/:code", () => {
     expect(await send({ headers: { "user-agent": "Mozilla/5.0 (iPhone)" } })).toEqual([302, live.destination, "no-store"]);
     expect(recordScan).toHaveBeenCalledExactlyOnceWith("q1");
   });
+
+  it("HEY-176: the probe's marker changes the counter only: every access check answers as without it", async () => {
+    const answer = async (qr: unknown, subs: unknown, marked: boolean) => {
+      findQr.mockResolvedValueOnce(qr);
+      subscription.mockResolvedValue(subs);
+      const init = marked ? { headers: { "x-heyqr-test": "1" } } : {};
+      const res = await GET(new NextRequest("http://localhost:3000/r/AbCdEf2", init), { params: Promise.resolve({ code: "AbCdEf2" }) });
+      for (const fn of afterQueue.splice(0)) await fn();
+      return [res.status, res.headers.get("location"), res.headers.get("cache-control")];
+    };
+    const cases: [unknown, unknown, number][] = [
+      [live, paid, 1],
+      [live, [], 0], // no paid access
+      [{ ...live, status: "paused" }, paid, 0],
+      [{ ...live, deletedAt: new Date() }, paid, 0],
+      [undefined, paid, 0],
+    ];
+    for (const [qr, subs, counted] of cases) {
+      recordScan.mockClear();
+      const plain = await answer(qr, subs, false);
+      expect(recordScan).toHaveBeenCalledTimes(counted);
+      expect(await answer(qr, subs, true)).toEqual(plain);
+      expect(recordScan).toHaveBeenCalledTimes(counted); // the marked request added nothing
+    }
+  });
 });
