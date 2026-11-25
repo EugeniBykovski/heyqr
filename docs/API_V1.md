@@ -1,9 +1,8 @@
 # Public API v1
 
-HEY-155 (create) and HEY-156 (read and update a layout). Keys and their verification: [API_KEYS.md](API_KEYS.md). Code: `src/app/api/v1/`, `src/server/api/v1/`.
+HEY-155 (create), HEY-156 (read and update a layout) and HEY-157 (a Dynamic code's destination). Keys and their verification: [API_KEYS.md](API_KEYS.md). Code: `src/app/api/v1/`, `src/server/api/v1/`.
 
-Not in v1 yet: changing a code's content or destination, paid file export, and idempotent create retries (follow-up
-tickets).
+Not in v1 yet: changing a code's content, paid file export, and idempotent create retries (follow-up tickets).
 
 ## Authentication
 
@@ -175,3 +174,83 @@ curl -sS -X PATCH "$URL" \
 
 The PATCH response is the updated layout with its new revision. Sending the old revision again gets
 `409 revision_conflict`.
+
+## GET /api/v1/qr-codes/{qrCodeId}/destination
+
+The current destination of the key owner's Dynamic code, with the revision an update must start from:
+
+```json
+{
+  "qrCodeId": "<qr id>",
+  "destination": "https://littlefern.cafe/menu",
+  "revision": 3,
+  "previousDestination": "https://littlefern.cafe/brunch",
+  "changedAt": "2026-11-25T09:30:00.000Z",
+  "shortLink": "https://heyqr.example/r/k7Qm2xPa"
+}
+```
+
+`shortLink` is `null` until the code is activated in the app. `previousDestination` and `changedAt` are `null` before the
+first change.
+
+| Status | `error.code`   | When                                                                                       |
+| ------ | -------------- | ------------------------------------------------------------------------------------------ |
+| `200`  | —              | the destination                                                                            |
+| `401`  | `unauthorized` | see Authentication                                                                         |
+| `404`  | `not_found`    | the code isn't the key owner's, is deleted, or doesn't exist (one answer for all of these) |
+| `422`  | `not_dynamic`  | the owner's code is static: it has no destination                                          |
+
+## PATCH /api/v1/qr-codes/{qrCodeId}/destination
+
+Changes the destination from the revision GET returned. This is the dashboard's Change destination:
+
+- **Address rule:** an explicit `http://` or `https://` URL is kept (path, query and fragment included), and a bare
+  domain becomes `https://`. Blank input, spaces, other schemes, credentials and hosts without a dot are refused.
+- **Atomic and revision-checked**, under the code's lock.
+- **History:** a real change advances the revision by one and records one history entry (shown in QR details).
+- **Same address:** sending the address already stored, at the current revision, writes nothing. The revision and
+  history stay as they are, and the response says `"changed": false`.
+
+The code's id, short link, layouts, scans and activation never change. The short link redirects (`302`,
+`Cache-Control: no-store`) to the new destination at once.
+
+Body (strict; any other field is refused):
+
+| Field         | Type    | Rules                                      |
+| ------------- | ------- | ------------------------------------------ |
+| `destination` | string  | the new address, up to 2048 characters     |
+| `revision`    | integer | **required**, from GET (or the last PATCH) |
+
+| Status | `error.code`        | When                                                                                                                                                          |
+| ------ | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `200`  | —                   | the destination as GET returns it, plus `"changed": true` or `false`                                                                                          |
+| `400`  | `malformed_json`    | the body isn't JSON                                                                                                                                           |
+| `401`  | `unauthorized`      | see Authentication                                                                                                                                            |
+| `404`  | `not_found`         | as for GET                                                                                                                                                    |
+| `409`  | `revision_conflict` | the destination changed since that revision (in the app or another request); nothing was saved. `error.current` is `{ "destination", "revision" }` now stored |
+| `422`  | `invalid_request`   | the address or the body breaks a rule; `details` names the field                                                                                              |
+| `422`  | `not_dynamic`       | as for GET                                                                                                                                                    |
+
+A request that matches the stored destination but uses an older revision is still `409`, even when the URL looks the
+same (A → B → A).
+
+### Example
+
+```sh
+KEY="hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX"
+URL="https://heyqr.example/api/v1/qr-codes/Q8d3…/destination"
+
+# Read the current destination and revision.
+curl -sS "$URL" -H "Authorization: Bearer $KEY"
+# → { "destination": "https://littlefern.cafe/menu", "revision": 3, … }
+
+# Change it from that revision.
+curl -sS -X PATCH "$URL" \
+  -H "Authorization: Bearer $KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "destination": "https://littlefern.cafe/today", "revision": 3 }'
+# → { "destination": "https://littlefern.cafe/today", "revision": 4, "changed": true, … }
+```
+
+On `409`, use `error.current.revision` (or GET again), check the destination now stored, and send your change again if
+it still applies.

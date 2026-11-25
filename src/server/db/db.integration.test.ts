@@ -6465,3 +6465,230 @@ describe.skipIf(!url)("public API: read and update a layout (HEY-156, real Postg
     expect(await designOf(layoutId)).toEqual(before);
   });
 });
+
+/* HEY-157 / QR-21.05: GET and PATCH /api/v1/qr-codes/{qrCodeId}/destination, through the route handlers. */
+describe.skipIf(!url)("public API: a Dynamic code's destination (HEY-157, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  type Handler = (request: Request, ctx: { params: Promise<{ qrCodeId: string }> }) => Promise<Response>;
+  let GET: Handler;
+  let PATCH: Handler;
+  let createPOST: (request: Request) => Promise<Response>;
+  const owner = { id: "api157-owner", name: "Owner", email: "owner@api157.test" };
+  const other = { id: "api157-other", name: "Other", email: "other@api157.test" };
+  let key = "";
+  let otherKey = "";
+  const d = { ...DEFAULT_DESIGN, fg: "#1F3A5F" };
+  const layouts = [{ name: "Card", layout: designToLayout(d), editor: designSettingsOf(d) }];
+  const base = "http://localhost/api/v1/qr-codes";
+  const ctx = (qrCodeId: string) => ({ params: Promise.resolve({ qrCodeId }) });
+  const get = (qrCodeId: string, auth: string | null = `Bearer ${key}`) =>
+    GET(new Request(`${base}/${qrCodeId}/destination`, { headers: auth === null ? {} : { authorization: auth } }), ctx(qrCodeId));
+  const patch = (qrCodeId: string, body: unknown, auth: string | null = `Bearer ${key}`) =>
+    PATCH(
+      new Request(`${base}/${qrCodeId}/destination`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json", ...(auth === null ? {} : { authorization: auth }) },
+        body: typeof body === "string" ? body : JSON.stringify(body),
+      }),
+      ctx(qrCodeId),
+    );
+  const create = async (body: Record<string, unknown>, k = key) => {
+    const res = await createPOST(
+      new Request(base, { method: "POST", headers: { authorization: `Bearer ${k}` }, body: JSON.stringify({ layouts, ...body }) }),
+    );
+    expect(res.status).toBe(201);
+    return (await res.json()) as { id: string; layouts: { id: string }[] };
+  };
+  const dynamic = (name: string, k = key) =>
+    create({ name, mode: "dynamic", content: { type: "website", url: "littlefern.cafe" }, destination: "littlefern.cafe/menu" }, k);
+  const history = async (id: string) =>
+    (await pool.query("select previous_url, new_url from destination_change where qr_code_id = $1 order by id", [id])).rows;
+  const preserved = async (id: string) =>
+    JSON.stringify([
+      (
+        await pool.query("select id, user_id, name, content, model, status, short_code, is_trial, deleted_at from qr_code where id = $1", [
+          id,
+        ])
+      ).rows,
+      (await pool.query("select id, name, design, sort_order, updated_at from qr_layout where qr_code_id = $1 order by sort_order", [id]))
+        .rows,
+      (await pool.query("select * from scan_daily where qr_code_id = $1 order by day", [id])).rows,
+    ]);
+  const everything = async () =>
+    JSON.stringify([
+      (
+        await pool.query(
+          "select id, destination, previous_destination, destination_changed_at, destination_revision from qr_code where user_id in ($1, $2) order by id",
+          [owner.id, other.id],
+        )
+      ).rows,
+      (
+        await pool.query(
+          "select d.* from destination_change d join qr_code q on q.id = d.qr_code_id where q.user_id in ($1, $2) order by d.id",
+          [owner.id, other.id],
+        )
+      ).rows,
+    ]);
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    apiDb.current = db;
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+    key = (await createApiKey(db, owner.id)).key;
+    otherKey = (await createApiKey(db, other.id)).key;
+    ({ GET, PATCH } = (await import("../../app/api/v1/qr-codes/[qrCodeId]/destination/route")) as unknown as {
+      GET: Handler;
+      PATCH: Handler;
+    });
+    ({ POST: createPOST } = await import("../../app/api/v1/qr-codes/route"));
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("read, then a real change: destination updated, revision +1, one history entry; id, short link, layouts, scans and state kept", async () => {
+    const made = await dynamic("Live");
+    // Activated through the app's own trial flow (no card), so the short link redirects.
+    expect((await startTrial(db, owner.id, false)).ok).toBe(true);
+    expect((await activateTrialCode(db, owner.id, made.id, () => "qa157live")).ok).toBe(true);
+    await incrementScan(db, made.id);
+    const before = await preserved(made.id);
+
+    const read = await get(made.id);
+    expect([read.status, read.headers.get("cache-control")]).toEqual([200, "no-store"]);
+    const current = (await read.json()) as Record<string, unknown> & { revision: number };
+    expect(current).toEqual({
+      qrCodeId: made.id,
+      destination: "https://littlefern.cafe/menu",
+      revision: 0,
+      previousDestination: null,
+      changedAt: null,
+      shortLink: "https://heyqr.test/r/qa157live",
+    });
+
+    const res = await patch(made.id, { destination: "littlefern.cafe/today", revision: current.revision });
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as Record<string, unknown>;
+    expect(body).toMatchObject({
+      qrCodeId: made.id,
+      destination: "https://littlefern.cafe/today",
+      revision: 1,
+      previousDestination: "https://littlefern.cafe/menu",
+      changedAt: expect.any(String),
+      shortLink: "https://heyqr.test/r/qa157live",
+      changed: true,
+    });
+    expect(await history(made.id)).toEqual([{ previous_url: "https://littlefern.cafe/menu", new_url: "https://littlefern.cafe/today" }]);
+    expect(await preserved(made.id)).toBe(before);
+    // What the dashboard's QR details and the short link read.
+    expect((await destinationHistory(db, owner.id, made.id)).map((h) => h.newUrl)).toEqual(["https://littlefern.cafe/today"]);
+    expect(await resolveShortLink(db, "qa157live")).toMatchObject({ to: "https://littlefern.cafe/today" });
+    // GET shows the same state; only PATCH adds `changed`.
+    expect({ ...((await (await get(made.id)).json()) as object), changed: true }).toEqual(body);
+  });
+
+  it("the same URL at the current revision changes nothing: same revision, no history entry", async () => {
+    const made = await dynamic("Same");
+    const before = await everything();
+    for (const destination of ["https://littlefern.cafe/menu", "littlefern.cafe/menu"]) {
+      const res = await patch(made.id, { destination, revision: 0 });
+      expect(res.status).toBe(200);
+      expect(await res.json()).toMatchObject({ destination: "https://littlefern.cafe/menu", revision: 0, changed: false });
+    }
+    expect(await everything()).toBe(before);
+    expect(await history(made.id)).toEqual([]);
+  });
+
+  it("a stale revision gets 409 with only the current destination and revision; nothing is written", async () => {
+    const made = await dynamic("Stale");
+    expect((await patch(made.id, { destination: "littlefern.cafe/a", revision: 0 })).status).toBe(200);
+    expect((await patch(made.id, { destination: "littlefern.cafe/menu", revision: 1 })).status).toBe(200);
+    const before = await everything();
+    // A → B → A: the URL matches again, but revision 0 is still stale.
+    for (const destination of ["littlefern.cafe/menu", "littlefern.cafe/b"]) {
+      const res = await patch(made.id, { destination, revision: 0 });
+      expect(res.status).toBe(409);
+      expect(await res.json()).toEqual({
+        error: {
+          code: "revision_conflict",
+          message: expect.any(String),
+          current: { destination: "https://littlefern.cafe/menu", revision: 2 },
+        },
+      });
+    }
+    expect(await everything()).toBe(before);
+  });
+
+  it("another account's, deleted, missing and malformed codes get one 404; static codes have no destination; keys must verify", async () => {
+    const theirs = await dynamic("Theirs", otherKey);
+    const gone = await dynamic("Gone");
+    await softDeleteQrCodes(db, owner.id, [gone.id]);
+    const flat = await create({ name: "Flat", mode: "static", content: { type: "text", text: "flat" } });
+    const revoked = await createApiKey(db, owner.id);
+    await revokeApiKey(db, owner.id, revoked.id);
+    const before = await everything();
+    const notFound = new Set<string>();
+    for (const id of [theirs.id, gone.id, "no-such-code", "bad id!"])
+      for (const res of [await get(id), await patch(id, { destination: "https://evil.test", revision: 0 })])
+        notFound.add(`${res.status} ${await res.text()}`);
+    expect([...notFound]).toEqual(['404 {"error":{"code":"not_found","message":"No such QR code or layout for this API key."}}']);
+    for (const res of [await get(flat.id), await patch(flat.id, { destination: "https://elsewhere.test", revision: 0 })])
+      expect([res.status, ((await res.json()) as { error: { code: string } }).error.code]).toEqual([422, "not_dynamic"]);
+    const unauthorized = new Set<string>();
+    for (const auth of [null, "Bearer hqk_nope", `Bearer ${revoked.key}`])
+      for (const res of [await get(theirs.id, auth), await patch(theirs.id, { destination: "https://evil.test", revision: 0 }, auth)])
+        unauthorized.add(`${res.status} ${await res.text()}`);
+    expect(unauthorized.size).toBe(1);
+    expect([...unauthorized][0]).toMatch(/^401 /);
+    expect(await everything()).toBe(before);
+  });
+
+  it("invalid URLs and bodies are refused with the dashboard's rule; nothing is written", async () => {
+    const made = await dynamic("Rules");
+    const before = await everything();
+    const cases: [unknown, number, string, string][] = [
+      ["{oops", 400, "malformed_json", ""],
+      [{ destination: "", revision: 0 }, 422, "invalid_request", "destination"],
+      [{ destination: "has spaces.com", revision: 0 }, 422, "invalid_request", "destination"],
+      [{ destination: "ftp://files.test/menu", revision: 0 }, 422, "invalid_request", "destination"],
+      [{ destination: "javascript:alert(1)", revision: 0 }, 422, "invalid_request", "destination"],
+      [{ destination: "https://user:pass@site.test", revision: 0 }, 422, "invalid_request", "destination"],
+      [{ destination: "localhost", revision: 0 }, 422, "invalid_request", "destination"],
+      [{ destination: `https://x.test/${"a".repeat(2050)}`, revision: 0 }, 422, "invalid_request", "destination"],
+      [{ destination: "https://ok.test" }, 422, "invalid_request", "revision"],
+      [{ destination: "https://ok.test", revision: "0" }, 422, "invalid_request", "revision"],
+      [{ destination: "https://ok.test", revision: -1 }, 422, "invalid_request", "revision"],
+      [{ destination: "https://ok.test", revision: 0, shortCode: "mine" }, 422, "invalid_request", "shortCode"],
+      [{ destination: "https://ok.test", revision: 0, status: "active" }, 422, "invalid_request", "status"],
+    ];
+    for (const [body, status, code, path] of cases) {
+      const res = await patch(made.id, body);
+      const json = (await res.json()) as { error: { code: string; details?: { path: string }[] } };
+      expect([res.status, json.error.code], JSON.stringify(body).slice(0, 60)).toEqual([status, code]);
+      if (path) expect(json.error.details?.map((x) => x.path)).toContain(path);
+    }
+    expect(await everything()).toBe(before);
+  });
+
+  it("an API update and a dashboard update with the same revision: exactly one wins, with one history entry", async () => {
+    for (let round = 0; round < 5; round++) {
+      const made = await dynamic(`Race ${round}`);
+      const [api, dashboard] = await Promise.all([
+        patch(made.id, { destination: "https://api.test/menu", revision: 0 }),
+        // The dashboard's Change destination action: the same function, for the session's user.
+        changeDestination(db, owner.id, made.id, "https://dashboard.test/menu", 0),
+      ]);
+      const apiWon = api.status === 200;
+      expect([api.status, dashboard.ok ? "ok" : dashboard.error].sort()).toEqual(apiWon ? [200, "conflict"] : [409, "ok"]);
+      const winner = apiWon ? "https://api.test/menu" : "https://dashboard.test/menu";
+      expect(await history(made.id)).toEqual([{ previous_url: "https://littlefern.cafe/menu", new_url: winner }]);
+      const [row] = (await pool.query("select destination, destination_revision from qr_code where id = $1", [made.id])).rows;
+      expect(row).toEqual({ destination: winner, destination_revision: 1 });
+      if (!apiWon)
+        expect(((await api.json()) as { error: { current: unknown } }).error.current).toEqual({ destination: winner, revision: 1 });
+    }
+  });
+});
