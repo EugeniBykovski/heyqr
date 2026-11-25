@@ -25,6 +25,62 @@ import type { CreateQrRequest, Layout, UpdateLayoutRequest } from "@heyqr/sdk";
 
 Import only from `@heyqr/sdk`; deep imports aren't part of the contract.
 
+## Entry points and runtimes (HEY-168)
+
+| Import                                            | Contents                                                                             | Runs on                                                                                    |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| `import { HeyQrClient, … } from "@heyqr/sdk"`     | the API client, every request, response and error type, the error classes and guards | **servers:** Node.js 18+, and Deno, Bun or workers with a global `fetch`. No React needed. |
+| `import { HeyQrPreview } from "@heyqr/sdk/react"` | the React QR preview                                                                 | **browsers**, and React server rendering. Needs React 18+ (an optional peer dependency).   |
+
+**The boundary is in the package itself:**
+
+- **Separate entries:** `@heyqr/sdk/react` is its own bundle (React plus HeyQR's renderer). It never loads the API
+  client, authentication code or any Node-only module.
+- **`@heyqr/sdk` in a browser build:** a bundler (Vite, webpack, Next.js client components, …) resolves it to a browser
+  build through the package's `browser` export condition.
+  - That build has the same runtime exports (error classes, guards, constants), but no client: no transport, no
+    authentication, no key handling.
+  - Constructing `HeyQrClient` there throws `HeyQrError` with `kind: "server_only"` and a message pointing to your own
+    server and to `@heyqr/sdk/react`.
+  - Node.js always gets the real client. The real client also refuses to start where `document` exists.
+
+### Quick start (Node.js)
+
+```ts
+import { readFile } from "node:fs/promises";
+import { HeyQrClient, isHeyQrApiError } from "@heyqr/sdk";
+
+const heyqr = new HeyQrClient({
+  apiKey: process.env.HEYQR_API_KEY ?? "",
+  baseUrl: process.env.HEYQR_BASE_URL ?? "https://heyqr.example",
+});
+
+// A layout saved from HeyQR's editor (see examples/sticker-layout.json).
+const { layout, editor } = JSON.parse(await readFile("sticker-layout.json", "utf8")) as { layout: object; editor: object };
+
+try {
+  const created = await heyqr.createQr({
+    name: "Menu",
+    mode: "dynamic",
+    content: { type: "website", url: "littlefern.cafe" },
+    destination: "littlefern.cafe/menu",
+    layouts: [{ name: "Sticker", layout, editor }],
+  });
+  const layoutId = created.layouts[0]?.id ?? "";
+  const saved = await heyqr.getLayout(created.id, layoutId);
+  const destination = await heyqr.getDestination(created.id);
+  console.log({
+    id: created.id,
+    layoutRevision: saved.revision,
+    destination: destination.destination,
+    destinationRevision: destination.revision,
+  });
+} catch (error) {
+  if (isHeyQrApiError(error)) console.error(`HeyQR API ${error.status} ${error.code}`);
+  else throw error;
+}
+```
+
 ## Client
 
 ```ts

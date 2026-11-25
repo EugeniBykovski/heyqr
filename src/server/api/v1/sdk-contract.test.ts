@@ -165,19 +165,44 @@ describe("SDK package boundary (HEY-160)", () => {
     // The server SDK's own modules (src/react is a separate entry, checked below).
     for (const file of readdirSync(`${dir}src`).filter((f) => f.endsWith(".ts"))) {
       const source = readFileSync(`${dir}src/${file}`, "utf8");
-      const specifiers = [...source.matchAll(/from\s+"([^"]+)"/g)].map((m) => m[1]);
+      const specifiers = [...source.matchAll(/^\s*(?:import|export)\s+(?:type\s+)?[\w*{}\s,$]+?\s+from\s+"([^"]+)"/gm)].map((m) => m[1]);
       expect(
         specifiers.every((s) => s?.startsWith("./")),
         `${file}: ${specifiers.join(", ")}`,
       ).toBe(true);
       const code = source.replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "");
-      // HEY-161: runtime code only in the client; every other file is types only.
-      if (file !== "client.ts") expect(code, file).not.toMatch(/^\s*export\s+(const|function|class|let|var|enum)\b/m);
+      // HEY-161 / HEY-168: runtime code only in the client, its shared runtime and the browser entry; the rest is types.
+      if (!["client.ts", "shared.ts", "browser.ts"].includes(file))
+        expect(code, file).not.toMatch(/^\s*export\s+(const|function|class|let|var|enum)\b/m);
       // No platform modules or globals beyond fetch: the client runs on Node 18+, Deno, Bun and workers.
       expect(code, file).not.toMatch(/\b(process|require|Buffer|window|__dirname)\b|from\s+"node:/);
     }
   });
 });
+describe("SDK browser entry boundary (HEY-168)", () => {
+  const dir = fileURLToPath(new URL("../../../../packages/sdk/", import.meta.url));
+  it('the browser build of "." loads only shared.ts (no client); shared.ts has no runtime imports', () => {
+    const pkg = JSON.parse(readFileSync(`${dir}package.json`, "utf8")) as {
+      exports: Record<string, Record<string, string>>;
+      publishConfig: { exports: Record<string, Record<string, string>> };
+    };
+    for (const exp of [pkg.exports, pkg.publishConfig.exports]) {
+      expect(exp["."]?.browser).toBe("./dist/browser.js");
+      expect(exp["."]?.types).toBe("./dist/index.d.ts");
+      // Bundlers pick the first matching condition: browser must come before import/default.
+      const order = Object.keys(exp["."] ?? {});
+      expect(order.indexOf("browser")).toBeLessThan(order.indexOf("import"));
+    }
+    expect(JSON.stringify(pkg.publishConfig.exports)).not.toContain("@heyqr/source");
+    const specifiers = (file: string) =>
+      [...readFileSync(`${dir}src/${file}`, "utf8").matchAll(/^\s*(?:import|export)\s+(?:type\s+)?[\w*{}\s,$]+?\s+from\s+"([^"]+)"/gm)].map(
+        (m) => [m[0].includes(" type ") || /^\s*import type/.test(m[0]), m[1]] as const,
+      );
+    expect(specifiers("browser.ts").map(([, s]) => s)).toEqual(["./shared.js", "./shared.js"]);
+    expect(specifiers("shared.ts").every(([isType]) => isType)).toBe(true);
+  });
+});
+
 describe("SDK React entry boundary (HEY-167)", () => {
   const dir = fileURLToPath(new URL("../../../../packages/sdk/", import.meta.url));
   it("@heyqr/sdk/react imports only React and the renderer, never the server client; React is an optional peer", () => {
@@ -193,7 +218,7 @@ describe("SDK React entry boundary (HEY-167)", () => {
     expect(pkg.dependencies).toBeUndefined();
     for (const file of readdirSync(`${dir}src/react`)) {
       const source = readFileSync(`${dir}src/react/${file}`, "utf8");
-      const specifiers = [...source.matchAll(/from\s+"([^"]+)"/g)].map((m) => m[1]);
+      const specifiers = [...source.matchAll(/^\s*(?:import|export)\s+(?:type\s+)?[\w*{}\s,$]+?\s+from\s+"([^"]+)"/gm)].map((m) => m[1]);
       expect(
         specifiers.every((s) => s === "react" || s === "@heyqr/qr-core" || s?.startsWith("./")),
         `${file}: ${specifiers.join(", ")}`,
