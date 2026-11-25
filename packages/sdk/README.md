@@ -7,9 +7,10 @@ The hosted HeyQR REST API, v1, for TypeScript. It has two parts:
   - `createQr`, `getLayout` and `getDestination` (HEY-161);
   - `updateLayout` and `updateDestination` (HEY-162);
   - `downloadExport` for PNG and SVG files (HEY-163);
-  - timeouts, cancellation, rate limits and payment errors on every method (HEY-164).
+  - timeouts, cancellation, rate limits and payment errors on every method (HEY-164);
+  - idempotent `createQr` retries with an Idempotency-Key (HEY-165).
 
-Retries and idempotent creation come with HEY-165, and npm publishing later. The HTTP
+npm publishing comes later. The HTTP
 contract itself is [docs/API_V1.md](../../docs/API_V1.md).
 
 This package is separate from [`@heyqr/qr-core`](../qr-core), the free local renderer: nothing here renders a code.
@@ -81,9 +82,38 @@ reach the server and commit even though the SDK stopped waiting. Read before you
 
 - **An update:** call `getLayout` or `getDestination`. A retry with the same revision gets 409 if the first one was
   applied.
-- **A create:** a retry may create a second code. Idempotent create retries come with HEY-165.
+- **A create:** without a key, a retry may create a second code. With `idempotencyKey` it can't (below).
 
 The SDK never retries on its own.
+
+**Idempotent create retries.** Pass `idempotencyKey` to `createQr`. After a timeout or a lost response, send the same
+request with the same key: HeyQR answers with the code it created the first time, with the same code and layout ids,
+or creates it now if it hadn't.
+
+- **Scope:** a key belongs to your account and to creating codes. Use a new one (`newIdempotencyKey()`) per code you
+  mean to create, and keep it with the request until you have the response.
+- **Same key, different request:** `HeyQrApiError` 409 `idempotency_key_reused` (`isIdempotencyConflict`). Nothing
+  is created.
+- **Replays don't use a draft slot.** A refused attempt (e.g. `draft_limit`) stores nothing, so the same key can be
+  retried once a slot is free.
+- **Retention:** keys are kept for 24 hours; after that, the same key creates a new code.
+- **Who retries:** the SDK never retries on its own; the loop is yours.
+
+```ts
+import { HeyQrError, HeyQrTimeoutError, isIdempotencyConflict, newIdempotencyKey } from "@heyqr/sdk";
+
+const idempotencyKey = newIdempotencyKey(); // one per code you mean to create
+for (let attempt = 1; ; attempt++) {
+  try {
+    const created = await heyqr.createQr(request, { idempotencyKey, timeoutMs: 10_000 });
+    break; // created.id and created.layouts are the same on every successful attempt
+  } catch (error) {
+    const outcomeUnknown = error instanceof HeyQrTimeoutError || (error instanceof HeyQrError && error.kind === "network");
+    if (!outcomeUnknown || attempt === 3) throw error; // e.g. 422, 403 draft_limit, or isIdempotencyConflict(error)
+    // Same key, same request: safe to send again.
+  }
+}
+```
 
 **Limits and rate limiting.**
 
@@ -240,15 +270,15 @@ as the code's owner, then run this again.`
 
 ## Exports
 
-| Area                                                         | Types                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Client (HEY-161 to HEY-164)                                  | `HeyQrClient`, `HeyQrTimeoutError`, `HeyQrAbortError`, `HeyQrRateLimitError`, `isPaymentRequired`, `isTimeout`, `retryAfter`, `DEFAULT_TIMEOUT_MS`, `RequestOptions`, `AbortSignalLike`, `HeyQrErrorKind`, `dispositionFilename`, `HeyQrApiError`, `HeyQrError`, `isHeyQrApiError`, `isRevisionConflict`, `HeyQrClientOptions`, `FetchLike`, `CreateQrError`, `GetLayoutError`, `GetDestinationError`, `UpdateLayoutError`, `UpdateDestinationError`, `DownloadExportRequest`, `DownloadExportError`, `ExportedFile` |
-| Create a QR (`POST /api/v1/qr-codes`)                        | `CreateQrRequest`, `CreateQrLayout`, `QrContent`, `QrContentType`, `QrMode`, `DesignInput`, `CreateQrResponse`, `QrStatus`, `DraftLimitError`, `ContentTooLongError`, `CreateQrErrorResponse`, `CreateQrResult`                                                                                                                                                                                                                                                                                                      |
-| A layout (`GET` / `PATCH …/layouts/{layoutId}`)              | `Layout`, `LayoutRevision`, `LayoutDesign`, `LayoutEditorSettings`, `UpdateLayoutRequest`, `LayoutRevisionConflictError`, `GetLayoutErrorResponse`, `GetLayoutResult`, `UpdateLayoutErrorResponse`, `UpdateLayoutResult`                                                                                                                                                                                                                                                                                             |
-| A Dynamic code's destination (`GET` / `PATCH …/destination`) | `Destination`, `DestinationRevision`, `UpdateDestinationRequest`, `UpdateDestinationResponse`, `DestinationRevisionConflictError`, `NotDynamicError`, `GetDestinationErrorResponse`, `GetDestinationResult`, `UpdateDestinationErrorResponse`, `UpdateDestinationResult`                                                                                                                                                                                                                                             |
-| Export (`GET …/layouts/{layoutId}/export`)                   | `ExportQuery`, `ExportFormat`, `ExportRedirect`, `ExportFile`, `PaymentRequiredError`, `ExportTooLongError`, `ExportTooLargeError`, `ScanCheckFailedError`, `ScanIssue`, `ExportErrorResponse`, `ExportResult`                                                                                                                                                                                                                                                                                                       |
-| Errors (all routes)                                          | `ApiErrorBody`, `ApiResponse`, `CommonErrorResponse`, `UnauthorizedError`, `NotFoundError`, `MalformedJsonError`, `InvalidRequestError`, `ValidationProblem`, `InternalError`, `AnyApiErrorBody`                                                                                                                                                                                                                                                                                                                     |
-| JSON                                                         | `JsonValue`, `JsonObject`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| Area                                                         | Types                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Client (HEY-161 to HEY-165)                                  | `HeyQrClient`, `newIdempotencyKey`, `isIdempotencyConflict`, `CreateQrOptions`, `HeyQrTimeoutError`, `HeyQrAbortError`, `HeyQrRateLimitError`, `isPaymentRequired`, `isTimeout`, `retryAfter`, `DEFAULT_TIMEOUT_MS`, `RequestOptions`, `AbortSignalLike`, `HeyQrErrorKind`, `dispositionFilename`, `HeyQrApiError`, `HeyQrError`, `isHeyQrApiError`, `isRevisionConflict`, `HeyQrClientOptions`, `FetchLike`, `CreateQrError`, `GetLayoutError`, `GetDestinationError`, `UpdateLayoutError`, `UpdateDestinationError`, `DownloadExportRequest`, `DownloadExportError`, `ExportedFile` |
+| Create a QR (`POST /api/v1/qr-codes`)                        | `CreateQrRequest`, `CreateQrLayout`, `QrContent`, `QrContentType`, `QrMode`, `DesignInput`, `CreateQrResponse`, `QrStatus`, `DraftLimitError`, `IdempotencyKeyReusedError`, `ContentTooLongError`, `CreateQrErrorResponse`, `CreateQrResult`                                                                                                                                                                                                                                                                                                                                          |
+| A layout (`GET` / `PATCH …/layouts/{layoutId}`)              | `Layout`, `LayoutRevision`, `LayoutDesign`, `LayoutEditorSettings`, `UpdateLayoutRequest`, `LayoutRevisionConflictError`, `GetLayoutErrorResponse`, `GetLayoutResult`, `UpdateLayoutErrorResponse`, `UpdateLayoutResult`                                                                                                                                                                                                                                                                                                                                                              |
+| A Dynamic code's destination (`GET` / `PATCH …/destination`) | `Destination`, `DestinationRevision`, `UpdateDestinationRequest`, `UpdateDestinationResponse`, `DestinationRevisionConflictError`, `NotDynamicError`, `GetDestinationErrorResponse`, `GetDestinationResult`, `UpdateDestinationErrorResponse`, `UpdateDestinationResult`                                                                                                                                                                                                                                                                                                              |
+| Export (`GET …/layouts/{layoutId}/export`)                   | `ExportQuery`, `ExportFormat`, `ExportRedirect`, `ExportFile`, `PaymentRequiredError`, `ExportTooLongError`, `ExportTooLargeError`, `ScanCheckFailedError`, `ScanIssue`, `ExportErrorResponse`, `ExportResult`                                                                                                                                                                                                                                                                                                                                                                        |
+| Errors (all routes)                                          | `ApiErrorBody`, `ApiResponse`, `CommonErrorResponse`, `UnauthorizedError`, `NotFoundError`, `MalformedJsonError`, `InvalidRequestError`, `ValidationProblem`, `InternalError`, `AnyApiErrorBody`                                                                                                                                                                                                                                                                                                                                                                                      |
+| JSON                                                         | `JsonValue`, `JsonObject`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 
 The `…Result` types pair each HTTP status with its body (`{ status, body }`), so a `switch (result.status)` and then
 `result.body.error.code` narrow to the exact error.
@@ -299,6 +329,20 @@ More, with compile-time checks for invalid input and error narrowing: [`test/con
 
 ## Checks
 
+- `packages/sdk/test/idempotency.test.ts`:
+  - the key is sent only when given, and invalid keys are refused locally;
+  - the 409 is typed;
+  - a retry after a timeout reuses the same key and body;
+  - `newIdempotencyKey`.
+- The PostgreSQL suite (`idempotent create retries`) runs the SDK against the real create route:
+  - a response lost after commit, then a retry;
+  - concurrent duplicates;
+  - equivalent and different requests;
+  - two accounts with one key;
+  - a replay at the draft limit;
+  - refused and rolled-back attempts;
+  - the 24-hour expiry;
+  - authentication of replays.
 - `packages/sdk/test/errors.test.ts` (fake timers, scripted `fetch`):
   - a stalled response, a stalled body, and a stalled signed download (request or body), each ending at the deadline
     with its timer cleared;

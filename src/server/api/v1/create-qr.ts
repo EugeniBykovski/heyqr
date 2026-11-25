@@ -1,10 +1,12 @@
+import { createHash } from "node:crypto";
 import { normalizeUrl, type QrContent } from "@heyqr/qr-core";
+import { and, eq, sql } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { z } from "zod";
 import { contentErrors } from "../../../entities/qr/model/content-validation";
 import { TEXT_MAX_CHARS } from "../../../entities/qr/model/content";
 import { supportsMode } from "../../../entities/qr/model/modes";
-import type * as schema from "../../db/schema";
+import * as schema from "../../db/schema";
 import type { PrepareRecord } from "../../qr/update-layout";
 import { saveQrWithLayouts } from "../../qr/save-qr";
 
@@ -82,7 +84,8 @@ export type CreateQrRequest = z.infer<typeof createQrRequestSchema>;
 export type Problem = { path: string; message: string };
 
 export type CreateQrOutcome =
-  | { ok: true; qrCodeId: string; layoutIds: string[] }
+  | { ok: true; qrCodeId: string; layoutIds: string[]; replayed?: boolean }
+  | { ok: false; error: "idempotency_key_reused" }
   | { ok: false; error: "invalid_request"; details: Problem[] }
   | { ok: false; error: "content_too_long" }
   | { ok: false; error: "draft_limit" };
@@ -124,6 +127,35 @@ function stored(content: QrContent): QrContent {
   return content;
 }
 
+/*
+ * HEY-165 / QR-22.06: Idempotency-Key for create. A key belongs to one account and one operation ("create_qr"). Within
+ * the retention window, the same key with an equivalent validated request returns the original 201 (same code and
+ * layout ids) without creating anything or taking a draft slot; a different request with that key is refused
+ * (idempotency_key_reused). Only a successful create is stored, in the same transaction as the code, so a refused or
+ * rolled-back attempt leaves nothing and the same key can be retried. Requests with the same key are serialized by an
+ * advisory lock, so concurrent matching requests create exactly one code.
+ */
+export const IDEMPOTENCY_RETENTION_HOURS = 24;
+const OPERATION = "create_qr";
+/** An Idempotency-Key: 1–255 visible ASCII characters (a UUID is a good choice). */
+export const IDEMPOTENCY_KEY = /^[\x21-\x7E]{1,255}$/;
+
+/** The same validated request always hashes the same (object keys sorted; arrays keep their order). */
+function canonical(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
+  if (value && typeof value === "object")
+    return `{${Object.keys(value)
+      .sort()
+      .filter((k) => (value as Record<string, unknown>)[k] !== undefined)
+      .map((k) => `${JSON.stringify(k)}:${canonical((value as Record<string, unknown>)[k])}`)
+      .join(",")}}`;
+  return JSON.stringify(value);
+}
+const requestHash = (request: CreateQrRequest) =>
+  createHash("sha256")
+    .update(canonical({ ...request, content: stored(request.content as QrContent) }))
+    .digest("hex");
+
 /**
  * Creates the code and its layouts for `userId` (the verified key's owner, never the request). Always a new code: no
  * code id, layout ids or claim key are passed, so nothing existing is read or changed. Saved as a draft; activation,
@@ -134,10 +166,57 @@ export async function createQrForOwner(
   userId: string,
   body: unknown,
   prepare?: PrepareRecord,
+  idempotencyKey?: string,
 ): Promise<CreateQrOutcome> {
   const request = readCreateRequest(body);
   if (!request.ok) return { ok: false, error: "invalid_request", details: request.details };
-  const { name, mode, content, destination, layouts } = request.value;
+  if (idempotencyKey === undefined) return save(db, userId, request.value, prepare);
+
+  const hash = requestHash(request.value);
+  const where = and(
+    eq(schema.apiIdempotencyKey.userId, userId),
+    eq(schema.apiIdempotencyKey.operation, OPERATION),
+    eq(schema.apiIdempotencyKey.key, idempotencyKey),
+  );
+  return db.transaction(async (tx) => {
+    // One request per (account, key) at a time: a concurrent duplicate waits here, then replays what this one stored.
+    await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${`idem:${OPERATION}:${userId}:${idempotencyKey}`}))`);
+    const [stored] = await tx
+      .select({
+        requestHash: schema.apiIdempotencyKey.requestHash,
+        response: schema.apiIdempotencyKey.response,
+        fresh: sql<boolean>`${schema.apiIdempotencyKey.createdAt} > now() - make_interval(hours => ${IDEMPOTENCY_RETENTION_HOURS})`,
+      })
+      .from(schema.apiIdempotencyKey)
+      .where(where);
+    if (stored?.fresh) {
+      if (stored.requestHash !== hash) return { ok: false, error: "idempotency_key_reused" } as const;
+      return { ok: true, qrCodeId: stored.response.id, layoutIds: stored.response.layouts.map((l) => l.id), replayed: true } as const;
+    }
+    // Absent, or past the retention window: a new create (an expired row is replaced).
+    if (stored) await tx.delete(schema.apiIdempotencyKey).where(where);
+    const result = await save(tx, userId, request.value, prepare);
+    if (!result.ok) return result;
+    await tx.insert(schema.apiIdempotencyKey).values({
+      userId,
+      operation: OPERATION,
+      key: idempotencyKey,
+      requestHash: hash,
+      qrCodeId: result.qrCodeId,
+      response: { id: result.qrCodeId, status: "draft", layouts: result.layoutIds.map((id) => ({ id })) },
+    });
+    return result;
+  });
+}
+
+/** The editor's save of a validated request, as a new draft. */
+async function save(
+  db: Parameters<typeof saveQrWithLayouts>[0],
+  userId: string,
+  value: CreateQrRequest,
+  prepare: PrepareRecord | undefined,
+): Promise<CreateQrOutcome> {
+  const { name, mode, content, destination, layouts } = value;
   const result = await saveQrWithLayouts(
     db,
     userId,

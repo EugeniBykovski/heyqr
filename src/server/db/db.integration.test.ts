@@ -31,7 +31,15 @@ import { apiKeyOwner, createApiKey, generateApiKey, listApiKeys, revokeApiKey } 
 import { readLayoutForOwner } from "../api/v1/layouts";
 import { authorizeApiExport } from "../api/v1/export";
 import type * as Sdk from "@heyqr/sdk";
-import { HeyQrClient, isRevisionConflict, type FetchLike, type UpdateDestinationError } from "@heyqr/sdk";
+import {
+  HeyQrClient,
+  HeyQrError,
+  isIdempotencyConflict,
+  isRevisionConflict,
+  type FetchLike,
+  type UpdateDestinationError,
+} from "@heyqr/sdk";
+import { createQrForOwner } from "../api/v1/create-qr";
 import { hasScans, incrementScan, ownerScanSummary, scansByDay, utcDay } from "../qr/scans";
 import {
   accountUsage,
@@ -7132,5 +7140,224 @@ describe.skipIf(!url)("SDK client updates against the routes (HEY-162, real Post
     expect(
       (await heyqr.updateDestination(created.id, { destination: "littlefern.cafe/old-read", revision: current.revision })).revision,
     ).toBe(2);
+  });
+});
+
+/*
+ * HEY-165 / QR-22.06: idempotent create through the SDK, the real create route and PostgreSQL (fetch dispatched to
+ * the route in-process). Every case asserts the ids returned and the rows stored.
+ */
+describe.skipIf(!url)("idempotent create retries (HEY-165, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const a = { id: "idem-a", name: "A", email: "a@idem.test" };
+  const b = { id: "idem-b", name: "B", email: "b@idem.test" };
+  const keys: Record<string, string> = {};
+  let createRoute: (request: Request) => Promise<Response>;
+  const d = { ...DEFAULT_DESIGN, fg: "#1F3A5F" };
+  const body = (name = "Menu", url = "https://littlefern.cafe/menu") => ({
+    name,
+    mode: "static" as const,
+    content: { type: "website" as const, url },
+    layouts: [
+      { name: "Sticker", layout: designToLayout(d), editor: designSettingsOf(d) },
+      { name: "Poster", layout: designToLayout(d) },
+    ],
+  });
+  /** The SDK against the real route; `lose` drops the response after the server has handled the request. */
+  const client = (user: string, opts: { lose?: () => boolean } = {}) => {
+    const fetch: FetchLike = async (u, init) => {
+      const res = await createRoute(
+        new Request(u, { method: init.method, headers: init.headers, ...(init.body === undefined ? {} : { body: init.body }) }),
+      );
+      if (opts.lose?.()) throw new TypeError("socket hang up");
+      return { status: res.status, headers: res.headers, text: () => res.text(), arrayBuffer: () => res.arrayBuffer() };
+    };
+    return new HeyQrClient({ apiKey: keys[user] ?? "", baseUrl: "http://localhost", fetch });
+  };
+  const counts = async (userId: string) => {
+    const one = async (q: string) => Number((await pool.query(q, [userId])).rows[0].n);
+    return {
+      codes: await one("select count(*)::int as n from qr_code where user_id = $1"),
+      layouts: await one("select count(*)::int as n from qr_layout l join qr_code c on c.id = l.qr_code_id where c.user_id = $1"),
+      keys: await one("select count(*)::int as n from api_idempotency_key where user_id = $1"),
+    };
+  };
+  const reset = async () => {
+    await pool.query("delete from qr_code where user_id = any($1)", [[a.id, b.id]]);
+    await pool.query("delete from api_idempotency_key where user_id = any($1)", [[a.id, b.id]]);
+  };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 8 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    apiDb.current = db;
+    await db.insert(schema.user).values([a, b]).onConflictDoNothing();
+    keys[a.id] = (await createApiKey(db, a.id)).key;
+    keys[b.id] = (await createApiKey(db, b.id)).key;
+    ({ POST: createRoute } = await import("../../app/api/v1/qr-codes/route"));
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [a.id, b.id]));
+    await pool?.end();
+  });
+
+  it("a response lost after commit: the retry with the same key returns the same code and layouts; nothing more is stored", async () => {
+    await reset();
+    let lost = 0;
+    const flaky = client(a.id, { lose: () => lost++ === 0 });
+    const key = "retry-1f3a5f-0001";
+    const first = await flaky.createQr(body(), { idempotencyKey: key }).catch((e: unknown) => e);
+    expect(first).toBeInstanceOf(HeyQrError);
+    expect(first).toMatchObject({ kind: "network" });
+    // The server did commit it.
+    expect(await counts(a.id)).toEqual({ codes: 1, layouts: 2, keys: 1 });
+    const stored = (await pool.query("select id from qr_code where user_id = $1", [a.id])).rows[0].id as string;
+    const retried = await flaky.createQr(body(), { idempotencyKey: key });
+    expect(retried.id).toBe(stored);
+    const layoutIds = (await pool.query("select id from qr_layout where qr_code_id = $1 order by sort_order", [stored])).rows.map(
+      (r) => r.id,
+    );
+    expect(retried).toEqual({ id: stored, status: "draft", layouts: layoutIds.map((id) => ({ id })) });
+    expect(await counts(a.id)).toEqual({ codes: 1, layouts: 2, keys: 1 });
+    // The raw route marks the replay.
+    const raw = await createRoute(
+      new Request("http://localhost/api/v1/qr-codes", {
+        method: "POST",
+        headers: { authorization: `Bearer ${keys[a.id]}`, "idempotency-key": key },
+        body: JSON.stringify(body()),
+      }),
+    );
+    expect([raw.status, raw.headers.get("idempotent-replayed")]).toEqual([201, "true"]);
+  });
+
+  it("concurrent matching requests create exactly one code and one set of layouts", async () => {
+    await reset();
+    const results = await Promise.all(
+      Array.from({ length: 6 }, () => client(a.id).createQr(body(), { idempotencyKey: "concurrent-0001" })),
+    );
+    expect(new Set(results.map((r) => JSON.stringify(r))).size).toBe(1);
+    expect(await counts(a.id)).toEqual({ codes: 1, layouts: 2, keys: 1 });
+  });
+
+  it("an equivalent request replays (normalized URL, trimmed name, other key order); a different one is 409 and stores nothing", async () => {
+    await reset();
+    const first = await client(a.id).createQr(body(), { idempotencyKey: "equiv-0001" });
+    const reordered = {
+      layouts: body().layouts,
+      content: { url: "littlefern.cafe/menu", type: "website" as const },
+      mode: "static" as const,
+      name: "  Menu  ",
+    };
+    expect(await client(a.id).createQr(reordered, { idempotencyKey: "equiv-0001" })).toEqual(first);
+    const before = await counts(a.id);
+    const conflict = await client(a.id)
+      .createQr(body("Another menu"), { idempotencyKey: "equiv-0001" })
+      .catch((e: unknown) => e);
+    expect(isIdempotencyConflict(conflict)).toBe(true);
+    expect(conflict).toMatchObject({ status: 409, code: "idempotency_key_reused" });
+    expect(await counts(a.id)).toEqual(before);
+  });
+
+  it("two accounts can use the same key independently", async () => {
+    await reset();
+    const [fromA, fromB] = await Promise.all([
+      client(a.id).createQr(body(), { idempotencyKey: "shared-0001" }),
+      client(b.id).createQr(body("B's menu"), { idempotencyKey: "shared-0001" }),
+    ]);
+    expect(fromA.id).not.toBe(fromB.id);
+    expect((await pool.query("select user_id from qr_code where id = $1", [fromA.id])).rows[0].user_id).toBe(a.id);
+    expect((await pool.query("select user_id from qr_code where id = $1", [fromB.id])).rows[0].user_id).toBe(b.id);
+    expect([await counts(a.id), await counts(b.id)]).toEqual([
+      { codes: 1, layouts: 2, keys: 1 },
+      { codes: 1, layouts: 2, keys: 1 },
+    ]);
+    // B replaying its own key gets B's code; A's replay stays A's.
+    expect((await client(b.id).createQr(body("B's menu"), { idempotencyKey: "shared-0001" })).id).toBe(fromB.id);
+    expect((await client(a.id).createQr(body(), { idempotencyKey: "shared-0001" })).id).toBe(fromA.id);
+  });
+
+  it("a replay doesn't take a draft slot: at the limit, the replay is 201 and a new key is 403", async () => {
+    await reset();
+    for (let i = 0; i < DRAFT_LIMIT - 1; i++) await client(a.id).createQr(body(`Filler ${i}`));
+    const last = await client(a.id).createQr(body("The tenth"), { idempotencyKey: "at-limit-0001" });
+    expect((await counts(a.id)).codes).toBe(DRAFT_LIMIT);
+    expect(await client(a.id).createQr(body("The tenth"), { idempotencyKey: "at-limit-0001" })).toEqual(last);
+    await expect(client(a.id).createQr(body("One more"), { idempotencyKey: "at-limit-0002" })).rejects.toMatchObject({
+      status: 403,
+      code: "draft_limit",
+    });
+    expect((await counts(a.id)).codes).toBe(DRAFT_LIMIT);
+  });
+
+  it("a refused or rolled-back attempt stores nothing and stays retryable with the same key", async () => {
+    await reset();
+    // Refused at the limit: nothing stored; after a draft is gone, the same key succeeds.
+    for (let i = 0; i < DRAFT_LIMIT; i++) await client(a.id).createQr(body(`Filler ${i}`));
+    await expect(client(a.id).createQr(body("Later"), { idempotencyKey: "retryable-0001" })).rejects.toMatchObject({ status: 403 });
+    expect((await counts(a.id)).keys).toBe(0);
+    await pool.query("delete from qr_code where id = (select id from qr_code where user_id = $1 order by created_at limit 1)", [a.id]);
+    const later = await client(a.id).createQr(body("Later"), { idempotencyKey: "retryable-0001" });
+    expect((await counts(a.id)).keys).toBe(1);
+
+    // A failure inside the transaction before anything is written (logo storage): nothing stored; retryable.
+    await reset();
+    const failing: PrepareRecord = async () => {
+      throw new Error("storage unavailable");
+    };
+    await expect(createQrForOwner(db, a.id, body(), failing, "rollback-0001")).rejects.toThrow("storage unavailable");
+    expect(await counts(a.id)).toEqual({ codes: 0, layouts: 0, keys: 0 });
+    const after = await client(a.id).createQr(body(), { idempotencyKey: "rollback-0001" });
+    expect(await counts(a.id)).toEqual({ codes: 1, layouts: 2, keys: 1 });
+    expect(after.id).not.toBe(later.id);
+
+    // A failure after the code and its layouts were written (storing the replay fails): the whole create rolls back.
+    await reset();
+    await pool.query("alter table api_idempotency_key add constraint hey165_fail_once check (key <> 'rollback-0002')");
+    try {
+      await expect(createQrForOwner(db, a.id, body(), undefined, "rollback-0002")).rejects.toThrow();
+      expect(await counts(a.id)).toEqual({ codes: 0, layouts: 0, keys: 0 });
+    } finally {
+      await pool.query("alter table api_idempotency_key drop constraint hey165_fail_once");
+    }
+    const recovered = await client(a.id).createQr(body(), { idempotencyKey: "rollback-0002" });
+    expect(await counts(a.id)).toEqual({ codes: 1, layouts: 2, keys: 1 });
+    expect((await client(a.id).createQr(body(), { idempotencyKey: "rollback-0002" })).id).toBe(recovered.id);
+  });
+
+  it("after the 24-hour retention, the same key is a new create; without a key every create is new", async () => {
+    await reset();
+    const first = await client(a.id).createQr(body(), { idempotencyKey: "expiring-0001" });
+    await pool.query("update api_idempotency_key set created_at = now() - interval '25 hours' where user_id = $1", [a.id]);
+    const again = await client(a.id).createQr(body(), { idempotencyKey: "expiring-0001" });
+    expect(again.id).not.toBe(first.id);
+    expect(await counts(a.id)).toEqual({ codes: 2, layouts: 4, keys: 1 });
+    expect((await pool.query("select qr_code_id from api_idempotency_key where user_id = $1", [a.id])).rows[0].qr_code_id).toBe(again.id);
+    const [x, y] = [await client(a.id).createQr(body()), await client(a.id).createQr(body())];
+    expect(x.id).not.toBe(y.id);
+    expect((await counts(a.id)).codes).toBe(4);
+  });
+
+  it("every request is authenticated, replays included; a bad key header is refused before anything is stored", async () => {
+    await reset();
+    const created = await client(a.id).createQr(body(), { idempotencyKey: "auth-0001" });
+    const replay = (authorization: string | null, key = "auth-0001") =>
+      createRoute(
+        new Request("http://localhost/api/v1/qr-codes", {
+          method: "POST",
+          headers: { ...(authorization ? { authorization } : {}), "idempotency-key": key },
+          body: JSON.stringify(body()),
+        }),
+      );
+    const revoked = await createApiKey(db, a.id);
+    await revokeApiKey(db, a.id, revoked.id);
+    for (const auth of [null, `Bearer ${revoked.key}`, "Bearer hqk_nope"]) {
+      const res = await replay(auth);
+      expect([res.status, res.headers.get("idempotent-replayed"), (await res.text()).includes(created.id)]).toEqual([401, null, false]);
+    }
+    const bad = await replay(`Bearer ${keys[a.id]}`, "has spaces in it");
+    expect(bad.status).toBe(422);
+    expect(((await bad.json()) as { error: { details: { path: string }[] } }).error.details[0]?.path).toBe("Idempotency-Key");
+    expect(await counts(a.id)).toEqual({ codes: 1, layouts: 2, keys: 1 });
   });
 });

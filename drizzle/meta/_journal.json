@@ -120,6 +120,13 @@
       "when": 1795556854953,
       "tag": "0016_api_key_revocation",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1795601410987,
+      "tag": "0017_api_idempotency_key",
+      "breakpoints": true
     }
   ]
 }

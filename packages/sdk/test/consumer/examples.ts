@@ -11,9 +11,12 @@ import {
   HeyQrRateLimitError,
   HeyQrTimeoutError,
   isHeyQrApiError,
+  isIdempotencyConflict,
   isPaymentRequired,
+  newIdempotencyKey,
   isTimeout,
   type CreateQrError,
+  type CreateQrOptions,
   type DownloadExportError,
   type ExportedFile,
   type GetDestinationError,
@@ -78,6 +81,8 @@ export function createdIds(result: CreateQrResult): { qr: string; layouts: strin
       return result.body.error.code; // "unauthorized"
     case 403:
       return result.body.error.code; // "draft_limit"
+    case 409:
+      return result.body.error.code; // "idempotency_key_reused" (HEY-165)
     case 422:
       // Two 422s, told apart by code; only invalid_request has details.
       return result.body.error.code === "invalid_request"
@@ -355,6 +360,37 @@ export function timeoutMisuse(e: HeyQrRateLimitError, t: HeyQrTimeoutError): unk
     t.code,
     // @ts-expect-error HEY-164: isTimeout narrows to HeyQrTimeoutError, not to an API error with a response
     ((x: unknown) => (isTimeout(x) ? x.response : null))(null),
+  ];
+}
+
+/* ── HEY-165: idempotent create retries, under the caller's control ───────────────────────────────────────── */
+
+/** Create once, retrying with the same key and request after a timeout or a lost response. */
+export async function createOnce(request: CreateQrRequest, attempts = 3): Promise<CreateQrResponse> {
+  const options: CreateQrOptions = { idempotencyKey: newIdempotencyKey(), timeoutMs: 10_000 };
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await heyqr.createQr(request, options);
+    } catch (error) {
+      const unknownOutcome = error instanceof HeyQrTimeoutError || (error instanceof HeyQrError && error.kind === "network");
+      if (!unknownOutcome || attempt >= attempts) throw error;
+      // Same key, same request: the API answers with the code it created the first time, or creates it now.
+    }
+  }
+}
+
+export function reusedKey(error: CreateQrError): boolean {
+  return isIdempotencyConflict(error) && error.response.status === 409 && error.response.body.error.code === "idempotency_key_reused";
+}
+
+export async function idempotencyMisuse(): Promise<unknown[]> {
+  return [
+    // @ts-expect-error HEY-165: the key is a string
+    await heyqr.createQr(createMenu, { idempotencyKey: 42 }),
+    // @ts-expect-error HEY-165: only createQr takes an idempotency key
+    await heyqr.getLayout("Q8d3", "L2k9", { idempotencyKey: "k" }),
+    // @ts-expect-error HEY-165: a create's 409 is idempotency_key_reused, never a revision conflict
+    ((e: CreateQrError) => e.response.status === 409 && e.response.body.error.code === "revision_conflict")(undefined as never),
   ];
 }
 

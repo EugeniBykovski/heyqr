@@ -34,12 +34,10 @@ export type SaveQrResult =
  * Every variant is stored as the versioned design record (schemaVersion 1: rendered layout + editor settings).
  * Plain module (no "server-only") so the PostgreSQL tests exercise the same write path as the saveDraft action.
  */
-export async function saveQrWithLayouts(
-  db: NodePgDatabase<typeof schema>,
-  userId: string,
-  input: SaveQrInput,
-  prepare?: PrepareRecord,
-): Promise<SaveQrResult> {
+/** The database, or a transaction already open (HEY-165: the save then runs as a nested transaction, a savepoint). */
+type DbOrTx = NodePgDatabase<typeof schema> | Parameters<Parameters<NodePgDatabase<typeof schema>["transaction"]>[0]>[0];
+
+export async function saveQrWithLayouts(db: DbOrTx, userId: string, input: SaveQrInput, prepare?: PrepareRecord): Promise<SaveQrResult> {
   // Only website codes can be dynamic: the short link redirects to a web address (entities/qr/model/modes.ts).
   if (!supportsMode(input.content.type, input.model)) return { ok: false, error: "invalid" };
   const designs = input.layouts.map((l) => createLayoutRecord(l.layout, l.editor));
