@@ -160,9 +160,10 @@ describe("SDK package boundary (HEY-160)", () => {
   const dir = fileURLToPath(new URL("../../../../packages/sdk/", import.meta.url));
   it("exports one entry point and imports nothing outside itself (no Next.js, database, server, qr-core or platform modules)", () => {
     const pkg = JSON.parse(readFileSync(`${dir}package.json`, "utf8")) as { exports: Record<string, unknown>; dependencies?: object };
-    expect(Object.keys(pkg.exports)).toEqual(["."]);
+    expect(Object.keys(pkg.exports)).toEqual([".", "./react"]); // HEY-167: the server entry and the React entry
     expect(pkg.dependencies).toBeUndefined();
-    for (const file of readdirSync(`${dir}src`)) {
+    // The server SDK's own modules (src/react is a separate entry, checked below).
+    for (const file of readdirSync(`${dir}src`).filter((f) => f.endsWith(".ts"))) {
       const source = readFileSync(`${dir}src/${file}`, "utf8");
       const specifiers = [...source.matchAll(/from\s+"([^"]+)"/g)].map((m) => m[1]);
       expect(
@@ -175,5 +176,31 @@ describe("SDK package boundary (HEY-160)", () => {
       // No platform modules or globals beyond fetch: the client runs on Node 18+, Deno, Bun and workers.
       expect(code, file).not.toMatch(/\b(process|require|Buffer|window|__dirname)\b|from\s+"node:/);
     }
+  });
+});
+describe("SDK React entry boundary (HEY-167)", () => {
+  const dir = fileURLToPath(new URL("../../../../packages/sdk/", import.meta.url));
+  it("@heyqr/sdk/react imports only React and the renderer, never the server client; React is an optional peer", () => {
+    const pkg = JSON.parse(readFileSync(`${dir}package.json`, "utf8")) as {
+      exports: Record<string, unknown>;
+      peerDependencies?: Record<string, string>;
+      peerDependenciesMeta?: Record<string, { optional?: boolean }>;
+      dependencies?: object;
+    };
+    expect(Object.keys(pkg.exports)).toEqual([".", "./react"]);
+    expect(pkg.peerDependencies).toEqual({ react: ">=18" });
+    expect(pkg.peerDependenciesMeta?.react?.optional).toBe(true);
+    expect(pkg.dependencies).toBeUndefined();
+    for (const file of readdirSync(`${dir}src/react`)) {
+      const source = readFileSync(`${dir}src/react/${file}`, "utf8");
+      const specifiers = [...source.matchAll(/from\s+"([^"]+)"/g)].map((m) => m[1]);
+      expect(
+        specifiers.every((s) => s === "react" || s === "@heyqr/qr-core" || s?.startsWith("./")),
+        `${file}: ${specifiers.join(", ")}`,
+      ).toBe(true);
+    }
+    // And the server modules never import React.
+    for (const file of readdirSync(`${dir}src`).filter((f) => f.endsWith(".ts")))
+      expect(readFileSync(`${dir}src/${file}`, "utf8"), file).not.toMatch(/from\s+"react/);
   });
 });

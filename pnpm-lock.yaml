@@ -346,7 +346,15 @@ importers:
         specifier: 1.4.0
         version: 1.4.0
 
-  packages/sdk: {}
+  packages/sdk:
+    dependencies:
+      react:
+        specifier: '>=18'
+        version: 19.3.1
+    devDependencies:
+      esbuild:
+        specifier: 0.25.12
+        version: 0.25.12
 
 packages:
 

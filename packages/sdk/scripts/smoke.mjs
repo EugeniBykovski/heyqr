@@ -12,7 +12,7 @@
  * the monorepo's, used only as a compiler; the consumer resolves @heyqr/sdk from its own node_modules).
  */
 import { execFileSync } from "node:child_process";
-import { cpSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -30,7 +30,7 @@ run("pnpm", ["pack", "--pack-destination", packDir], { cwd: pkgDir });
 const tgz = join(packDir, readdirSync(packDir).find((f) => f.endsWith(".tgz")) ?? "");
 const files = run("tar", ["-tzf", tgz]).trim().split("\n").sort();
 console.log(`${tgz}\n${files.map((f) => `  ${f}`).join("\n")}`);
-const unexpected = files.filter((f) => !/^package\/(package\.json|README\.md|dist\/[a-z-]+\.(js|d\.ts))$/.test(f));
+const unexpected = files.filter((f) => !/^package\/(package\.json|README\.md|dist\/(react\/)?[a-z-]+\.(js|d\.ts))$/.test(f));
 if (unexpected.length) throw new Error(`Unexpected files in the archive: ${unexpected.join(", ")}`);
 
 step("Clean project outside the monorepo; npm install the .tgz");
@@ -41,8 +41,17 @@ const installed = join(project, "node_modules", "@heyqr", "sdk");
 if (lstatSync(installed).isSymbolicLink()) throw new Error("@heyqr/sdk is a link, not an installed package");
 const manifest = JSON.parse(readFileSync(join(installed, "package.json"), "utf8"));
 console.log(`${project}\n  node_modules/@heyqr/sdk: ${manifest.name}@${manifest.version} · exports ${JSON.stringify(manifest.exports)}`);
-if (manifest.dependencies || manifest.peerDependencies) throw new Error("The SDK must have no dependencies");
+if (manifest.dependencies) throw new Error("The SDK must have no dependencies");
+if (
+  JSON.stringify(manifest.peerDependencies) !== JSON.stringify({ react: ">=18" }) ||
+  manifest.peerDependenciesMeta?.react?.optional !== true
+)
+  throw new Error("React must be the only peer dependency, and optional");
 if (JSON.stringify(manifest.exports).includes("src")) throw new Error("exports point at source files");
+// HEY-167: React is an optional peer: a server-only consumer installs the SDK without it.
+const reactInstalled = ["react", "react-dom"].filter((p) => existsSync(join(project, "node_modules", p)));
+if (reactInstalled.length) throw new Error(`npm installed ${reactInstalled.join(", ")} for a server-only consumer`);
+console.log(`  peerDependencies ${JSON.stringify(manifest.peerDependencies)} (optional) · React not installed`);
 
 step("Consumer: typecheck and compile");
 const layout = JSON.parse(readFileSync(join(pkgDir, "examples", "sticker-layout.json"), "utf8"));
