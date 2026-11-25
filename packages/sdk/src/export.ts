@@ -1,4 +1,4 @@
-import type { ApiErrorBody, ApiResponse, CommonErrorResponse, InvalidRequestError, NotFoundError } from "./errors";
+import type { ApiErrorBody, ApiResponse, CommonErrorResponse, InvalidRequestError, NotFoundError } from "./errors.js";
 
 export type ExportFormat = "png" | "svg" | "pdf";
 

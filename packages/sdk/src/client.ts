@@ -4,12 +4,12 @@ import type {
   UpdateDestinationErrorResponse,
   UpdateDestinationRequest,
   UpdateDestinationResponse,
-} from "./destination";
-import type { AnyApiErrorBody } from "./errors";
-import type { GetLayoutErrorResponse, Layout, UpdateLayoutErrorResponse, UpdateLayoutRequest } from "./layouts";
-import type { ApiResponse } from "./errors";
-import type { ExportErrorResponse, ExportQuery, PaymentRequiredError } from "./export";
-import type { CreateQrErrorResponse, CreateQrRequest, CreateQrResponse } from "./qr-codes";
+} from "./destination.js";
+import type { AnyApiErrorBody } from "./errors.js";
+import type { GetLayoutErrorResponse, Layout, UpdateLayoutErrorResponse, UpdateLayoutRequest } from "./layouts.js";
+import type { ApiResponse } from "./errors.js";
+import type { ExportErrorResponse, ExportQuery, PaymentRequiredError } from "./export.js";
+import type { CreateQrErrorResponse, CreateQrRequest, CreateQrResponse } from "./qr-codes.js";
 
 /*
  * HEY-161 / QR-22.02: the HeyQR REST API v1 client: create a QR, read a layout, read a Dynamic code's destination.

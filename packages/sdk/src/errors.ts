@@ -1,4 +1,4 @@
-import type { JsonValue } from "./json";
+import type { JsonValue } from "./json.js";
 
 /**
  * Every API error has this body: `{ "error": { "code", "message", …extra } }`. `message` is for people; branch on

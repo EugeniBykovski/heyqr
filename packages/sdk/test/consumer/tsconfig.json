@@ -10,7 +10,8 @@
     "noUncheckedIndexedAccess": true,
     "noEmit": true,
     "isolatedModules": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "customConditions": ["@heyqr/source"]
   },
   "include": ["*.ts"]
 }

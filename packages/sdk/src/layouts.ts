@@ -1,5 +1,5 @@
-import type { ApiErrorBody, ApiResponse, CommonErrorResponse, InvalidRequestError, MalformedJsonError, NotFoundError } from "./errors";
-import type { ContentTooLongError, DesignInput, LayoutDesign, LayoutEditorSettings } from "./qr-codes";
+import type { ApiErrorBody, ApiResponse, CommonErrorResponse, InvalidRequestError, MalformedJsonError, NotFoundError } from "./errors.js";
+import type { ContentTooLongError, DesignInput, LayoutDesign, LayoutEditorSettings } from "./qr-codes.js";
 
 /**
  * A layout's revision: a decimal string (e.g. `"1764061234567890"`). It belongs to one layout and changes on every save.
