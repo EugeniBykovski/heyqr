@@ -4,8 +4,15 @@
  * must fail to compile, or this file fails.
  */
 import {
+  type AbortSignalLike,
+  HeyQrAbortError,
   HeyQrClient,
+  HeyQrError,
+  HeyQrRateLimitError,
+  HeyQrTimeoutError,
   isHeyQrApiError,
+  isPaymentRequired,
+  isTimeout,
   type CreateQrError,
   type DownloadExportError,
   type ExportedFile,
@@ -301,6 +308,53 @@ export async function downloadMisuse(e: DownloadExportError): Promise<unknown[]>
     e.response.body.error.paymentUrl,
     // @ts-expect-error HEY-163: the file's bytes are a Uint8Array, not a string
     (await heyqr.downloadExport("Q8d3", "L2k9", { format: "svg" })).bytes satisfies string,
+  ];
+}
+
+/* ── HEY-164: telling outcomes apart with the public exports only ───────────────────────────────────────────── */
+
+export type Outcome =
+  | { kind: "ok" }
+  | { kind: "timeout"; afterMs: number; mayHaveApplied: boolean }
+  | { kind: "cancelled" }
+  | { kind: "network" }
+  | { kind: "rate_limited"; retryAfterSeconds: number | null }
+  | { kind: "pay"; url: string }
+  | { kind: "limit"; code: string }
+  | { kind: "api"; status: number; code: string }
+  | { kind: "other"; message: string };
+
+export function classify(error: unknown, wasWrite: boolean): Outcome {
+  if (error instanceof HeyQrTimeoutError) return { kind: "timeout", afterMs: error.timeoutMs, mayHaveApplied: wasWrite };
+  if (error instanceof HeyQrAbortError) return { kind: "cancelled" };
+  if (error instanceof HeyQrRateLimitError) return { kind: "rate_limited", retryAfterSeconds: error.retryAfterSeconds };
+  if (isPaymentRequired(error)) return { kind: "pay", url: error.response.body.error.paymentUrl };
+  if (isHeyQrApiError(error) && error.status === 403 && error.code === "draft_limit") return { kind: "limit", code: error.code };
+  if (isHeyQrApiError(error)) return { kind: "api", status: error.status, code: error.code };
+  if (error instanceof HeyQrError) return error.kind === "network" ? { kind: "network" } : { kind: "other", message: error.message };
+  return { kind: "other", message: String(error) };
+}
+
+export async function withTimeouts(signal: AbortSignalLike): Promise<Outcome> {
+  const slow = new HeyQrClient({ apiKey, baseUrl: "https://heyqr.example", timeoutMs: 10_000 });
+  try {
+    await slow.getLayout("Q8d3", "L2k9", { timeoutMs: 2_000, signal });
+    return { kind: "ok" };
+  } catch (error) {
+    return classify(error, false);
+  }
+}
+
+export function timeoutMisuse(e: HeyQrRateLimitError, t: HeyQrTimeoutError): unknown[] {
+  return [
+    // @ts-expect-error HEY-164: timeoutMs is a number of milliseconds
+    new HeyQrClient({ apiKey, baseUrl: "https://heyqr.example", timeoutMs: "30s" }),
+    // @ts-expect-error HEY-164: Retry-After may be absent: a number or null
+    e.retryAfterSeconds satisfies number,
+    // @ts-expect-error HEY-164: a timeout has no API error code
+    t.code,
+    // @ts-expect-error HEY-164: isTimeout narrows to HeyQrTimeoutError, not to an API error with a response
+    ((x: unknown) => (isTimeout(x) ? x.response : null))(null),
   ];
 }
 
