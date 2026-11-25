@@ -69,11 +69,17 @@ export type CreateQrResponse = { id: string; status: QrStatus; layouts: { id: st
 export type DraftLimitError = ApiErrorBody<"draft_limit">;
 /** 422: static content doesn't fit in a QR code with one of the layouts. */
 export type ContentTooLongError = ApiErrorBody<"content_too_long">;
+/**
+ * 409 (HEY-165): this Idempotency-Key was already used, within its 24-hour retention, with a different request.
+ * Nothing was created. Use a new key for a new code.
+ */
+export type IdempotencyKeyReusedError = ApiErrorBody<"idempotency_key_reused">;
 
 export type CreateQrErrorResponse =
   | CommonErrorResponse
   | ApiResponse<400, MalformedJsonError>
   | ApiResponse<403, DraftLimitError>
+  | ApiResponse<409, IdempotencyKeyReusedError>
   | ApiResponse<422, InvalidRequestError | ContentTooLongError>;
 
 export type CreateQrResult = ApiResponse<201, CreateQrResponse> | CreateQrErrorResponse;

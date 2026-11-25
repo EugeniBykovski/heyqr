@@ -27,7 +27,10 @@ import type { CreateQrErrorResponse, CreateQrRequest, CreateQrResponse } from ".
  * ignores abort signals, and its timer is always cleared. A caller's AbortSignal cancels a call. Outcomes stay distinct:
  * HeyQrTimeoutError, HeyQrAbortError, a network HeyQrError, HeyQrRateLimitError (429, with Retry-After), and
  * HeyQrApiError for every documented API error (draft_limit, payment_required, revision_conflict, …). A call that timed
- * out may still have been applied by the server; nothing is retried here (idempotent create retries: HEY-165).
+ * out may still have been applied by the server; nothing is retried here.
+ * HEY-165 / QR-22.06: createQr takes an idempotencyKey (sent as Idempotency-Key). Retrying with the same key and the
+ * same request, after a timeout or a lost response, returns the original code instead of creating another; reusing the
+ * key for a different request is 409 idempotency_key_reused. When to retry stays with the caller.
  */
 
 /** The parts of an AbortSignal the client uses (the runtime's AbortSignal fits). */
@@ -43,6 +46,16 @@ export type RequestOptions = {
   timeoutMs?: number;
   /** Cancels the call when aborted (throws HeyQrAbortError). */
   signal?: AbortSignalLike;
+};
+
+/** createQr's options: RequestOptions plus an Idempotency-Key (HEY-165). */
+export type CreateQrOptions = RequestOptions & {
+  /**
+   * Makes retrying this create safe: keep the key (and the request) and send both again after a timeout or a lost
+   * response; the API answers with the code it created the first time. 1–255 visible ASCII characters; use
+   * newIdempotencyKey(). One key per intended code, for 24 hours.
+   */
+  idempotencyKey?: string;
 };
 
 /** The client's default deadline for one call (request, body and any signed download), in milliseconds. */
@@ -198,6 +211,20 @@ export const isPaymentRequired = (
 ): value is HeyQrApiError<ApiResponse<402, PaymentRequiredError>> & { status: 402; code: "payment_required" } =>
   value instanceof HeyQrApiError && value.status === 402 && value.code === "payment_required";
 
+/** A 409 idempotency_key_reused from createQr: the key was already used for a different request. */
+export const isIdempotencyConflict = (value: unknown): value is HeyQrApiError & { status: 409; code: "idempotency_key_reused" } =>
+  value instanceof HeyQrApiError && value.status === 409 && value.code === "idempotency_key_reused";
+
+/** A new Idempotency-Key (a random UUID from the runtime's Web Crypto). */
+export function newIdempotencyKey(): string {
+  const crypto = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
+  if (!crypto?.randomUUID)
+    throw new HeyQrError("No crypto.randomUUID in this runtime: pass your own idempotencyKey.", undefined, "invalid_options");
+  return crypto.randomUUID();
+}
+
+const IDEMPOTENCY_KEY = /^[\x21-\x7E]{1,255}$/;
+
 /** Whether the call ended because of a timeout (HeyQrTimeoutError). */
 export const isTimeout = (value: unknown): value is HeyQrTimeoutError => value instanceof HeyQrTimeoutError;
 
@@ -227,11 +254,23 @@ export class HeyQrClient {
   /**
    * `POST /api/v1/qr-codes`: creates a draft QR with its layouts for the key's account.
    * @returns the new code's id and its layouts' ids, in request order.
-   * @throws {CreateQrError} 400 malformed_json · 401 unauthorized · 403 draft_limit · 422 invalid_request |
-   *   content_too_long · 500 internal_error
+   * With `options.idempotencyKey`, a retry with the same key and request returns the same code (see CreateQrOptions).
+   * @throws {CreateQrError} 400 malformed_json · 401 unauthorized · 403 draft_limit · 409 idempotency_key_reused ·
+   *   422 invalid_request | content_too_long · 500 internal_error
    */
-  createQr(request: CreateQrRequest, options?: RequestOptions): Promise<CreateQrResponse> {
-    return this.#request<CreateQrResponse, CreateQrErrorResponse>("POST", "/qr-codes", request, options);
+  createQr(request: CreateQrRequest, options?: CreateQrOptions): Promise<CreateQrResponse> {
+    const key = options?.idempotencyKey;
+    if (key !== undefined && (typeof key !== "string" || !IDEMPOTENCY_KEY.test(key)))
+      return Promise.reject(
+        new HeyQrError("idempotencyKey must be 1–255 visible ASCII characters (use newIdempotencyKey()).", undefined, "invalid_options"),
+      );
+    return this.#request<CreateQrResponse, CreateQrErrorResponse>(
+      "POST",
+      "/qr-codes",
+      request,
+      options,
+      key === undefined ? {} : { "idempotency-key": key },
+    );
   }
 
   /**
@@ -370,8 +409,9 @@ export class HeyQrClient {
     body: unknown,
     deadline: Deadline,
     accept = "application/json",
+    extra: Record<string, string> = {},
   ): Promise<FetchResponse> {
-    const headers: Record<string, string> = { authorization: `Bearer ${this.#apiKey}`, accept };
+    const headers: Record<string, string> = { ...extra, authorization: `Bearer ${this.#apiKey}`, accept };
     if (body !== undefined) headers["content-type"] = "application/json";
     return this.#transport(
       () =>
@@ -406,9 +446,10 @@ export class HeyQrClient {
     path: string,
     body: unknown,
     options: RequestOptions | undefined,
+    extra: Record<string, string> = {},
   ): Promise<T> {
     return this.#withDeadline(options, async (deadline) => {
-      const response = await this.#send(method, path, body, deadline);
+      const response = await this.#send(method, path, body, deadline, "application/json", extra);
       const text = await readText(response, deadline);
       const parsed = parseJson(text);
       if (response.status >= 200 && response.status < 300 && parsed !== undefined) return parsed as T;

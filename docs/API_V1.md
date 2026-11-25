@@ -3,7 +3,7 @@
 HEY-155 (create), HEY-156 (read and update a layout), HEY-157 (a Dynamic code's destination) and HEY-158
 (export a layout's file). Keys and their verification: [API_KEYS.md](API_KEYS.md). Code: `src/app/api/v1/`, `src/server/api/v1/`.
 
-Not in v1 yet: changing a code's content, and idempotent create retries (follow-up tickets).
+Not in v1 yet: changing a code's content (a follow-up ticket).
 
 **TypeScript:** every request, response and error below is typed in [`@heyqr/sdk`](../packages/sdk/README.md)
 (HEY-160). Its `HeyQrClient` creates codes, reads layouts and destinations (HEY-161), and updates both from
@@ -68,17 +68,48 @@ includes anything that could choose an owner (`userId`, `ownerId`), address an e
 `designSettingsOf(design)`. Logos are inline `data:image/…` URLs (PNG, JPEG, WebP or SVG, at most 10 MB), stored in the
 account's private storage like editor uploads.
 
+### Idempotency-Key (safe retries)
+
+HEY-165. Send an `Idempotency-Key` header (1–255 visible ASCII characters; a UUID works) to make retrying a create
+safe:
+
+- **Same key, equivalent request, within 24 hours:** the original `201` with the same code and layout ids, marked
+  `Idempotent-Replayed: true`. Nothing is created, and no draft slot is used, even if the account is now at its
+  limit. "Equivalent" means equal after validation: field order, surrounding spaces in `name`, and a bare domain vs
+  `https://` don't matter.
+- **Same key, different request:** `409 idempotency_key_reused`. Nothing is created.
+- **Scope:** a key belongs to one account and to creating QR codes. Other accounts can use the same key. Every request
+  is authenticated first, replays included.
+- **Only success is stored:** the stored result is written in the same transaction as the code. A refused attempt
+  (`draft_limit`, `invalid_request`, …) or a rolled-back one stores nothing, so the same key can be retried. Requests
+  with the same key are serialized: concurrent duplicates create exactly one code.
+- **Retention:** 24 hours from the first success. After that the key is forgotten, and sending it again creates a
+  new code.
+
+**After a timeout or a lost response,** keep the key and the request and send both again. You get the code from the
+first attempt if it was created, or it's created now. Use a new key for each code you mean to create.
+
+```sh
+KEY="hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX"
+IDEM="$(uuidgen)"   # keep it with the request until you have a 201
+curl -sS -X POST https://heyqr.example/api/v1/qr-codes \
+  -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" \
+  -H "Idempotency-Key: $IDEM" -d @menu.json
+# Timed out? Send the same request with the same Idempotency-Key again.
+```
+
 ### Responses
 
-| Status | `error.code`       | When                                                                                                         |
-| ------ | ------------------ | ------------------------------------------------------------------------------------------------------------ |
-| `201`  | —                  | created: `{ "id": "<qr id>", "status": "draft", "layouts": [{ "id": "<layout id>" }, …] }`, in request order |
-| `400`  | `malformed_json`   | the body isn't JSON                                                                                          |
-| `401`  | `unauthorized`     | see Authentication                                                                                           |
-| `403`  | `draft_limit`      | the account already has the maximum number of drafts                                                         |
-| `422`  | `invalid_request`  | the body breaks a rule; `details: [{ "path": "content.url", "message": "…" }]` (never echoes values)         |
-| `422`  | `content_too_long` | static content doesn't fit in a QR code with one of the layouts                                              |
-| `500`  | `internal_error`   | nothing was created; try again                                                                               |
+| Status | `error.code`             | When                                                                                                         |
+| ------ | ------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| `201`  | —                        | created: `{ "id": "<qr id>", "status": "draft", "layouts": [{ "id": "<layout id>" }, …] }`, in request order |
+| `400`  | `malformed_json`         | the body isn't JSON                                                                                          |
+| `401`  | `unauthorized`           | see Authentication                                                                                           |
+| `403`  | `draft_limit`            | the account already has the maximum number of drafts                                                         |
+| `409`  | `idempotency_key_reused` | the `Idempotency-Key` was already used for a different request (see Idempotency-Key)                         |
+| `422`  | `invalid_request`        | the body breaks a rule; `details: [{ "path": "content.url", "message": "…" }]` (never echoes values)         |
+| `422`  | `content_too_long`       | static content doesn't fit in a QR code with one of the layouts                                              |
+| `500`  | `internal_error`         | nothing was created; try again                                                                               |
 
 Every error has the shape `{ "error": { "code": "…", "message": "…", "details"?: […] } }`. Responses are
 `Cache-Control: no-store`. Keys, verifiers, request bodies and internal error messages are never put in responses or

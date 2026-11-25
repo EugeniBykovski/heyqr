@@ -213,6 +213,29 @@ export const apiKey = pgTable(
   (t) => [index("api_key_user_idx").on(t.userId, t.createdAt)],
 );
 
+/**
+ * HEY-165: Idempotency-Key replays of the public API's create. One row per (account, operation, key), written in the
+ * same transaction as the code it created: `requestHash` is the SHA-256 of the validated request, `response` the
+ * original 201 body. Rows older than the retention window (24 h) are treated as absent and replaced.
+ */
+export const apiIdempotencyKey = pgTable(
+  "api_idempotency_key",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    operation: text("operation").notNull(),
+    key: text("key").notNull(),
+    requestHash: text("request_hash").notNull(),
+    qrCodeId: text("qr_code_id")
+      .notNull()
+      .references(() => qrCode.id, { onDelete: "cascade" }),
+    response: jsonb("response").$type<{ id: string; status: "draft"; layouts: { id: string }[] }>().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.operation, t.key] })],
+);
+
 /** One-time purchase of a static code. */
 export const purchase = pgTable(
   "purchase",
