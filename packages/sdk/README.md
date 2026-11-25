@@ -25,6 +25,144 @@ import type { CreateQrRequest, Layout, UpdateLayoutRequest } from "@heyqr/sdk";
 
 Import only from `@heyqr/sdk`; deep imports aren't part of the contract.
 
+## Quickstart
+
+Create a Dynamic QR draft from a Node.js server, then read back its layout and destination.
+
+**1. Requirements.** Node.js **18 or later**, with npm, and a HeyQR account.
+
+**2. Issue an API key.** Sign in to HeyQR, open **Dashboard → API keys** (the account menu, or `/dashboard/api-keys`)
+and choose **Create API key**. Copy the key (`hqk_…`): it's shown only once. The key belongs to your account and is
+a secret. Use it only on a server, never in browser code, and never commit it.
+
+**3. Create a project and install the SDK.**
+
+```sh
+mkdir heyqr-quickstart && cd heyqr-quickstart
+npm init -y && npm pkg set type=module
+npm install -D typescript @types/node
+```
+
+Install the SDK:
+
+- **Pre-release (now):** install the packed tarball. In the HeyQR monorepo, run
+  `cd packages/sdk && pnpm pack --pack-destination /tmp`. Then, in your project:
+
+  ```sh
+  npm install /tmp/heyqr-sdk-0.1.0.tgz
+  ```
+
+- **After publication (not available yet):** install it from the npm registry.
+
+  ```sh
+  npm install @heyqr/sdk
+  ```
+
+**4. Configure the environment.** Put these in your server's environment (a secret manager, or a `.env` file that
+isn't committed):
+
+```sh
+export HEYQR_API_KEY="hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX"
+export HEYQR_BASE_URL="https://heyqr.example"   # HeyQR's origin; http://localhost:3000 for a local HeyQR
+```
+
+**5. Save `quickstart.ts`.** This is the same file as
+[`examples/quickstart.ts`](examples/quickstart.ts):
+
+```ts
+/*
+ * HeyQR SDK quickstart: create a Dynamic QR draft, then read its saved layout and destination.
+ * Server-side only (Node.js 18 or later). HEYQR_API_KEY is a secret: keep it in your server's environment, never in
+ * browser code or source control. This script never prints it.
+ */
+import { HeyQrClient, isHeyQrApiError } from "@heyqr/sdk";
+
+const apiKey = process.env.HEYQR_API_KEY;
+const baseUrl = process.env.HEYQR_BASE_URL;
+if (!apiKey || !baseUrl) {
+  console.error("Set HEYQR_API_KEY and HEYQR_BASE_URL first (see the SDK README).");
+  process.exit(1);
+}
+
+const heyqr = new HeyQrClient({ apiKey, baseUrl, timeoutMs: 15_000 });
+
+// A plain 512 × 512 px QR layout: HeyQR's default design, as the editor saves it.
+const layout = {
+  preset: "qr",
+  unit: "px",
+  width: 512,
+  height: 512,
+  qrSize: 512,
+  border: false,
+  colors: { fg: "#0D0D12", eye: "#0D0D12", eyeIn: "#0D0D12", bg: "#FFFFFF", frame: "#0D0D12", caption: "#0D0D12" },
+  style: { pattern: "rounded", eyeFrame: "rounded", eyeBall: "rounded", logo: null },
+  caption: { text: "", font: "dm", fontFamily: "'HeyQR Onest', sans-serif", weight: 700, size: 40, align: "center", position: "after" },
+};
+
+try {
+  // 1. Create a Dynamic QR draft: its short link will send people to `destination`.
+  const created = await heyqr.createQr({
+    name: "Quickstart menu",
+    mode: "dynamic",
+    content: { type: "website", url: "https://example.com" },
+    destination: "https://example.com/menu",
+    layouts: [{ name: "Default", layout }],
+  });
+  const layoutId = created.layouts[0]?.id;
+  if (!layoutId) throw new Error("The API returned no layout id.");
+
+  // 2. Read the saved layout (its revision is a string) and the destination (its revision is a number).
+  const saved = await heyqr.getLayout(created.id, layoutId);
+  const destination = await heyqr.getDestination(created.id);
+
+  console.log(
+    JSON.stringify(
+      {
+        qrCodeId: created.id,
+        status: created.status,
+        layoutIds: created.layouts.map((l) => l.id),
+        layout: { id: saved.id, name: saved.name, revision: saved.revision },
+        destination: { url: destination.destination, revision: destination.revision, shortLink: destination.shortLink },
+      },
+      null,
+      2,
+    ),
+  );
+  console.log("Open Dashboard → My QR codes to see the draft.");
+} catch (error) {
+  if (!isHeyQrApiError(error)) throw error;
+  console.error(`HeyQR API error ${error.status} ${error.code}: ${error.message}`);
+  process.exitCode = 1;
+}
+```
+
+**6. Compile and run it with plain Node.js:**
+
+```sh
+npx tsc quickstart.ts --target es2022 --module nodenext --moduleResolution nodenext --strict --types node --outDir dist
+node dist/quickstart.js
+```
+
+It prints the new code's ids and both revisions, and never the key:
+
+```json
+{
+  "qrCodeId": "8iQlIBDtOy5b4mPGCDKxT",
+  "status": "draft",
+  "layoutIds": ["086QhjBHjhDalfvkRYr__"],
+  "layout": { "id": "086QhjBHjhDalfvkRYr__", "name": "Default", "revision": "1795599789219452" },
+  "destination": { "url": "https://example.com/menu", "revision": 0, "shortLink": null }
+}
+Open Dashboard → My QR codes to see the draft.
+```
+
+**What the output means:**
+
+- **`shortLink`** is `null` until you activate the code in HeyQR. Downloading files is a separate step.
+- **Revisions:** the layout's is a string and the destination's is a number. Each update starts from its own revision
+  (see the update methods below).
+- **The draft:** it appears in **Dashboard → My QR codes** as a Dynamic Website code named "Quickstart menu".
+
 ## Entry points and runtimes (HEY-168)
 
 | Import                                            | Contents                                                                             | Runs on                                                                                    |
@@ -46,40 +184,7 @@ Import only from `@heyqr/sdk`; deep imports aren't part of the contract.
 
 ### Quick start (Node.js)
 
-```ts
-import { readFile } from "node:fs/promises";
-import { HeyQrClient, isHeyQrApiError } from "@heyqr/sdk";
-
-const heyqr = new HeyQrClient({
-  apiKey: process.env.HEYQR_API_KEY ?? "",
-  baseUrl: process.env.HEYQR_BASE_URL ?? "https://heyqr.example",
-});
-
-// A layout saved from HeyQR's editor (see examples/sticker-layout.json).
-const { layout, editor } = JSON.parse(await readFile("sticker-layout.json", "utf8")) as { layout: object; editor: object };
-
-try {
-  const created = await heyqr.createQr({
-    name: "Menu",
-    mode: "dynamic",
-    content: { type: "website", url: "littlefern.cafe" },
-    destination: "littlefern.cafe/menu",
-    layouts: [{ name: "Sticker", layout, editor }],
-  });
-  const layoutId = created.layouts[0]?.id ?? "";
-  const saved = await heyqr.getLayout(created.id, layoutId);
-  const destination = await heyqr.getDestination(created.id);
-  console.log({
-    id: created.id,
-    layoutRevision: saved.revision,
-    destination: destination.destination,
-    destinationRevision: destination.revision,
-  });
-} catch (error) {
-  if (isHeyQrApiError(error)) console.error(`HeyQR API ${error.status} ${error.code}`);
-  else throw error;
-}
-```
+See [Quickstart](#quickstart) at the top: a complete, self-contained server example.
 
 ## Client
 
