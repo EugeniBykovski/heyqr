@@ -31,7 +31,7 @@ export async function startPackCheckout(input: { pack: "pack3" | "pack10"; local
       ok: true,
       data: { url: await createPackCheckout({ user, currency: await getCurrency(), pack: pack.data, locale: input.locale }) },
     };
-  });
+  }, "checkout.create_pack");
 }
 
 /**
@@ -59,7 +59,7 @@ export async function startPlanCheckout(input: {
       qrCodeId: test?.id,
     });
     return { ok: true, data: { url } };
-  });
+  }, "checkout.create_plan");
 }
 
 /** Design 7.5 "Use 1 included unlock" (plan) / "Use 1 static credit": unlocks a static code without paying. */

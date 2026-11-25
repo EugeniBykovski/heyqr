@@ -210,7 +210,7 @@ export async function startPrintPackCheckout(input: {
       locale: input.locale,
     });
     return { ok: true, data: { url } };
-  });
+  }, "checkout.create_print_pack");
 }
 
 export async function renameQr(qrCodeId: string, name: string): Promise<ActionResult> {
@@ -279,7 +279,7 @@ export async function startCheckout(input: {
     // HEY-133: an account with a plan activates Dynamic codes under it instead of a second subscription.
     if ("error" in checkout) return { ok: false, error: checkout.error === "has_plan" ? "invalid" : checkout.error };
     return { ok: true, data: { url: checkout.url } };
-  });
+  }, "checkout.create");
 }
 
 /**
@@ -309,7 +309,7 @@ export async function openBillingPortal(locale: string, intent: unknown = "manag
       subscriptionId = subscription.stripeSubscriptionId;
     }
     return { ok: true, data: { url: await createPortalSession(customer, locale, intent, subscriptionId) } };
-  });
+  }, "billing.portal");
 }
 
 const idsSchema = z.array(z.string().min(1).max(64)).min(1).max(100);
