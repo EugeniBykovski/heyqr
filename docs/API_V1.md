@@ -7,7 +7,8 @@ Not in v1 yet: changing a code's content, and idempotent create retries (follow-
 
 **TypeScript:** every request, response and error below is typed in [`@heyqr/sdk`](../packages/sdk/README.md)
 (HEY-160). Its `HeyQrClient` creates codes, reads layouts and destinations (HEY-161), and updates both from
-their revisions (HEY-162), and downloads PNG and SVG exports, following the signed link (HEY-163).
+their revisions (HEY-162), and downloads PNG and SVG exports, following the signed link (HEY-163). Every call has a timeout,
+can be cancelled, and reports limits and payment errors distinctly (HEY-164).
 
 ## Authentication
 

@@ -61,6 +61,7 @@ describe("HeyQrClient requests (HEY-161)", () => {
           headers: { authorization: `Bearer ${KEY}`, accept: "application/json", "content-type": "application/json" },
           body: JSON.stringify(request),
           redirect: "manual",
+          signal: expect.anything(),
         },
       },
     ]);
@@ -334,7 +335,10 @@ describe("HeyQrClient downloadExport (HEY-163)", () => {
     expect(calls).toHaveLength(2);
     expect(calls[0]?.url).toBe("http://localhost:3000/api/v1/qr-codes/Q%201/layouts/L%2F1/export?format=png&scale=4&transparent=1");
     expect(calls[0]?.init).toMatchObject({ method: "GET", redirect: "manual", headers: { authorization: `Bearer ${KEY}` } });
-    expect(calls[1]).toEqual({ url: SIGNED, init: { method: "GET", headers: {}, redirect: "follow", credentials: "omit" } });
+    expect(calls[1]).toEqual({
+      url: SIGNED,
+      init: { method: "GET", headers: {}, redirect: "follow", credentials: "omit", signal: expect.anything() },
+    });
     expect(JSON.stringify(calls[1])).not.toContain(KEY);
   });
 

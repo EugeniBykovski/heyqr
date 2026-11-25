@@ -1,11 +1,26 @@
 /**
  * @heyqr/sdk: the hosted HeyQR REST API, v1 (docs/API_V1.md): its public TypeScript contract (HEY-160) and a client
  * (HEY-161: create a QR, read a layout, read a destination; HEY-162: update a layout, change a destination;
- * HEY-163: download a PNG or SVG export). Every request sends `Authorization: Bearer <api key>`
+ * HEY-163: download a PNG or SVG export; HEY-164: timeouts, cancellation, rate limits, payment errors). Every request sends `Authorization: Bearer <api key>`
  * to `<baseUrl>/api/v1`. Separate from @heyqr/qr-core (the free local renderer): nothing here renders a code.
  */
-export { dispositionFilename, HeyQrApiError, HeyQrClient, HeyQrError, isHeyQrApiError, isRevisionConflict } from "./client";
+export {
+  DEFAULT_TIMEOUT_MS,
+  dispositionFilename,
+  HeyQrAbortError,
+  HeyQrApiError,
+  HeyQrClient,
+  HeyQrError,
+  HeyQrRateLimitError,
+  HeyQrTimeoutError,
+  isHeyQrApiError,
+  isPaymentRequired,
+  isRevisionConflict,
+  isTimeout,
+  retryAfter,
+} from "./client";
 export type {
+  AbortSignalLike,
   CreateQrError,
   DownloadExportError,
   DownloadExportRequest,
@@ -14,6 +29,8 @@ export type {
   GetDestinationError,
   GetLayoutError,
   HeyQrClientOptions,
+  HeyQrErrorKind,
+  RequestOptions,
   UpdateDestinationError,
   UpdateLayoutError,
 } from "./client";
