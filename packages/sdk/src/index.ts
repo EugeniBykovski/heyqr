@@ -5,12 +5,12 @@
  * HEY-165: idempotent create retries). Every request sends `Authorization: Bearer <api key>`
  * to `<baseUrl>/api/v1`. Separate from @heyqr/qr-core (the free local renderer): nothing here renders a code.
  */
+export { HeyQrClient } from "./client.js";
 export {
   DEFAULT_TIMEOUT_MS,
   dispositionFilename,
   HeyQrAbortError,
   HeyQrApiError,
-  HeyQrClient,
   HeyQrError,
   HeyQrRateLimitError,
   HeyQrTimeoutError,
@@ -21,7 +21,7 @@ export {
   isTimeout,
   newIdempotencyKey,
   retryAfter,
-} from "./client.js";
+} from "./shared.js";
 export type {
   AbortSignalLike,
   CreateQrError,
@@ -37,7 +37,7 @@ export type {
   RequestOptions,
   UpdateDestinationError,
   UpdateLayoutError,
-} from "./client.js";
+} from "./shared.js";
 export type { JsonObject, JsonValue } from "./json.js";
 export type {
   AnyApiErrorBody,
