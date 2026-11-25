@@ -33,7 +33,11 @@ try {
   const tgz = join(packDir, readdirSync(packDir).find((f) => f.endsWith(".tgz")) ?? "");
   const files = run("tar", ["-tzf", tgz]).trim().split("\n").sort();
   console.log(`${tgz}\n${files.map((f) => `  ${f}`).join("\n")}`);
-  const unexpected = files.filter((f) => !/^package\/(package\.json|README\.md|dist\/(react\/)?[a-z-]+\.(js|d\.ts))$/.test(f));
+  // The README's runnable examples ship with it (sources and their layout fixture); their workspace tsconfig doesn't.
+  const unexpected = files.filter(
+    (f) =>
+      !/^package\/(package\.json|README\.md|dist\/(react\/)?[a-z-]+\.(js|d\.ts)|examples\/([a-z-]+\.ts|sticker-layout\.json))$/.test(f),
+  );
   if (unexpected.length) throw new Error(`Unexpected files in the archive: ${unexpected.join(", ")}`);
 
   step("Clean project outside the monorepo; npm install the .tgz");

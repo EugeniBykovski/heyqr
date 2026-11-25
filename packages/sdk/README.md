@@ -359,7 +359,7 @@ const heyqr = new HeyQrClient({ apiKey, baseUrl: "https://heyqr.example" });
 
 **Options:**
 
-- `apiKey` (required): an `hqk_…` key from Account → API keys.
+- `apiKey` (required): an `hqk_…` key from Dashboard → API keys.
 - `baseUrl` (required): HeyQR's origin, without `/api/v1`. It's `http://localhost:3000` locally.
 - `fetch` (optional): defaults to the global one.
 - `timeoutMs` (optional): the deadline for one call, default `DEFAULT_TIMEOUT_MS` (30,000 ms).
@@ -656,14 +656,16 @@ cd packages/sdk && pnpm pack --pack-destination /tmp            # /tmp/heyqr-sdk
 tar -tzf /tmp/heyqr-sdk-*.tgz                                   # package.json, README.md, dist/*.js, dist/*.d.ts
 ```
 
-**The archive:** `package/package.json`, `package/README.md`, and `package/dist/<module>.js` plus `.d.ts` for
-`index`, `client`, `qr-codes`, `layouts`, `destination`, `export`, `errors` and `json`, plus
-`package/dist/react/index.js` and `.d.ts`. The React entry is bundled with esbuild: the renderer is inlined, and
-`react` and `react/jsx-runtime` stay external.
+**The archive:** `package/package.json`, `package/README.md`, `package/dist/<module>.js` plus `.d.ts` for `index`,
+`browser`, `client`, `shared`, `qr-codes`, `layouts`, `destination`, `export`, `errors` and `json`, plus
+`package/dist/react/index.js` and `.d.ts`, and the README's runnable examples (`package/examples/*.ts` with
+`sticker-layout.json`). The React entry is bundled with esbuild: the renderer is inlined, and `react` and
+`react/jsx-runtime` stay external.
 
-- **Exports:** the packed `package.json` (from `publishConfig`) exports only `./dist/index.js` (`import`) and
-  `./dist/index.d.ts` (`types`).
-- **Nothing workspace-only:** no `src/`, no tests, no dependencies.
+- **Exports:** the packed `package.json` (from `publishConfig`) maps `.` to `./dist/index.js` (`import`, with
+  `./dist/browser.js` under the `browser` condition) and `./react` to `./dist/react/index.js`, each with its `.d.ts`.
+- **Nothing workspace-only:** no `src/`, no tests, no build or test configuration, no dependencies (React is an
+  optional peer).
 - **Not committed:** `dist/` and `*.tgz` are git-ignored.
 
 **Inside the monorepo** the code and tests use the TypeScript source through the `@heyqr/source` export condition
@@ -681,7 +683,8 @@ pnpm --filter @heyqr/sdk smoke                                   # …plus the l
 
 [`scripts/smoke.mjs`](scripts/smoke.mjs) works through these steps:
 
-1. Builds and packs the SDK, checking that the archive holds only `package.json`, `README.md` and `dist/` files.
+1. Builds and packs the SDK, checking that the archive holds only `package.json`, `README.md`, `dist/` files and the
+   README's examples.
 2. Creates a project in the OS temp directory (outside the monorepo) and installs the `.tgz` with
    `npm install <file>.tgz`.
 3. Checks that `node_modules/@heyqr/sdk` is a real installed package, not a link, with no dependencies and exports
