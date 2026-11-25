@@ -16,22 +16,15 @@ import { restoreQrCodes, softDeleteQrCodes } from "../qr/delete-qr";
 import { encodedValue } from "../qr/export";
 import { readLayoutRecord } from "../../entities/qr/model/design-schema";
 import { ownedLayout } from "../qr/file-access";
-import { storeLogos } from "../qr/logo-assets";
+import { logosFor } from "../qr/logos-for";
 import { renameQrCode } from "../qr/rename-qr";
 import { saveQrWithLayouts } from "../qr/save-qr";
 import { changeDestination, isRevision, type DestinationConflict, type DestinationState } from "../qr/destination";
-import { addLayoutFrom, copyLayout, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
-import { logoStore } from "../storage/s3";
+import { addLayoutFrom, copyLayout, removeLayout, updateLayoutDesign } from "../qr/update-layout";
 import { newId, newShortCode } from "../db/ids";
 import { activateTrialCode, startTrial } from "../billing/trial";
 import { activeSubscription, canDownload, printPackForSale } from "../billing/entitlements";
 import { storedCustomer } from "../billing/customer";
-
-/** HEY-83: uploaded logos of a saved layout go to the account's private storage (inline in dev without storage). */
-function logosFor(userId: string): PrepareRecord | undefined {
-  const store = logoStore();
-  return store ? (tx, record) => storeLogos(tx, store, userId, record, newId) : undefined;
-}
 
 const draftSchema = z.object({
   qrCodeId: z.string().optional(),

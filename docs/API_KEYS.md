@@ -25,8 +25,9 @@ constant time (`apiKeyOwner`).
 - The full key appears in exactly one place: the response of the server action that created it. It isn't stored, logged,
   put in a URL, counted in analytics, or rendered by any page. The UI shows it once, with Copy and a warning; Done,
   leaving or refreshing the page clears it.
-- Management views list only the prefix and creation date.
-- Every API path that accepts a key must scope QR data to `apiKeyOwner(...).userId` on the server.
+- Management views list only safe metadata: the prefix, creation date, state (active or revoked) and last use.
+- Every API path that accepts a key must scope QR data to the account id `apiKeyOwner(db, key)` returns, on the server
+  (the public API: [API_V1.md](API_V1.md)).
 - Deleting an account deletes its keys.
 
 ## Revocation and last use (HEY-154)
@@ -41,5 +42,4 @@ constant time (`apiKeyOwner`).
   unknown, wrong secret or revoked) is indistinguishable from any other `null`, and only successful attempts change
   `last_used_at`. Revoking one key leaves the account's other keys working.
 - The page shows each key as Active (with its last use) or Revoked (with the date), never the secret or verifier.
-- No public QR endpoint accepts keys yet: endpoint-level checks come with HEY-155 and HEY-159, scoping their data to
-  the verifier's owner.
+- `POST /api/v1/qr-codes` (HEY-155) authenticates with the verifier; HEY-159 adds the other endpoints.
