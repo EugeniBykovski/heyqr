@@ -3,7 +3,14 @@
  * aliases), importing only the package's public entry point. Each `@ts-expect-error` is a compile-time check: the line
  * must fail to compile, or this file fails.
  */
-import { HeyQrClient, isHeyQrApiError, type CreateQrError, type GetDestinationError } from "@heyqr/sdk";
+import {
+  HeyQrClient,
+  isHeyQrApiError,
+  type CreateQrError,
+  type GetDestinationError,
+  type UpdateDestinationError,
+  type UpdateLayoutError,
+} from "@heyqr/sdk";
 import type {
   CreateQrRequest,
   CreateQrResponse,
@@ -225,13 +232,49 @@ export async function clientMisuse(): Promise<unknown[]> {
     await heyqr.getLayout("Q8d3"),
     // @ts-expect-error a layout's revision is a string, not a DestinationRevision
     (await heyqr.getLayout("Q8d3", "L2k9")).revision satisfies DestinationRevision,
-    // @ts-expect-error update methods come with HEY-162
-    heyqr.updateLayout,
+    // @ts-expect-error HEY-162: a layout update needs the layout's revision (a string), not the destination's
+    await heyqr.updateLayout("Q8d3", "L2k9", { revision: 3, name: "x" }),
+    // @ts-expect-error HEY-162: a destination change needs the destination's revision (a number), not a layout's
+    await heyqr.updateDestination("Q8d3", { destination: "https://x.test", revision: "1764061234567890" }),
+    // @ts-expect-error HEY-162: the destination route takes only destination and revision
+    await heyqr.updateDestination("Q8d3", { destination: "https://x.test", revision: 3, shortLink: "x" }),
+    // @ts-expect-error HEY-162: a layout update can't change the code's destination
+    await heyqr.updateLayout("Q8d3", "L2k9", { revision: "1", destination: "https://x.test" }),
     // @ts-expect-error the key is private
     heyqr.apiKey,
     // @ts-expect-error get-destination errors have no draft_limit code
     ((e: GetDestinationError) => e.code === "draft_limit")(undefined as never),
   ];
+}
+
+/* ── HEY-162: read, then update from that revision; a 409 is the caller's to handle ─────────────────────────── */
+
+export async function renameFromRead(qrCodeId: string, layoutId: string, name: string): Promise<LayoutRevision> {
+  const current = await heyqr.getLayout(qrCodeId, layoutId);
+  const updated: Layout = await heyqr.updateLayout(qrCodeId, layoutId, { revision: current.revision, name });
+  return updated.revision;
+}
+
+export async function moveFromRead(qrCodeId: string, to: string): Promise<{ revision: DestinationRevision; changed: boolean } | "reload"> {
+  const current = await heyqr.getDestination(qrCodeId);
+  try {
+    const next = await heyqr.updateDestination(qrCodeId, { destination: to, revision: current.revision });
+    return { revision: next.revision, changed: next.changed };
+  } catch (error) {
+    if (isHeyQrApiError(error) && error.status === 409) return "reload";
+    throw error;
+  }
+}
+
+export function conflictCurrent(error: UpdateDestinationError): { destination: string; revision: DestinationRevision } | null {
+  const r = error.response;
+  return r.status === 409 ? r.body.error.current : null;
+}
+
+export function layoutConflict(error: UpdateLayoutError): boolean {
+  const r = error.response;
+  // @ts-expect-error HEY-162: the layout conflict has no current state (only the destination conflict does)
+  return r.status === 409 && r.body.error.current !== undefined;
 }
 
 export type { QrMode };

@@ -1,10 +1,18 @@
-import type { Destination, GetDestinationErrorResponse } from "./destination";
+import type {
+  Destination,
+  GetDestinationErrorResponse,
+  UpdateDestinationErrorResponse,
+  UpdateDestinationRequest,
+  UpdateDestinationResponse,
+} from "./destination";
 import type { AnyApiErrorBody } from "./errors";
-import type { GetLayoutErrorResponse, Layout } from "./layouts";
+import type { GetLayoutErrorResponse, Layout, UpdateLayoutErrorResponse, UpdateLayoutRequest } from "./layouts";
 import type { CreateQrErrorResponse, CreateQrRequest, CreateQrResponse } from "./qr-codes";
 
 /*
  * HEY-161 / QR-22.02: the HeyQR REST API v1 client: create a QR, read a layout, read a Dynamic code's destination.
+ * HEY-162 / QR-22.03: update a layout and change a destination, each from the revision its read returned. A stale
+ * revision throws HeyQrApiError 409 with the endpoint's conflict details; retrying is the caller's choice.
  * One request path for every method: the configured base URL + /api/v1, `Authorization: Bearer <key>` (the only place
  * the key goes: never the URL, a log or an error message), JSON in and out. A non-2xx answer throws HeyQrApiError with
  * the documented HTTP status and API error code. No retries (HEY-165). Server-side only: an API key must not reach a
@@ -62,6 +70,12 @@ export class HeyQrError extends Error {
 export type CreateQrError = HeyQrApiError<CreateQrErrorResponse>;
 export type GetLayoutError = HeyQrApiError<GetLayoutErrorResponse>;
 export type GetDestinationError = HeyQrApiError<GetDestinationErrorResponse>;
+export type UpdateLayoutError = HeyQrApiError<UpdateLayoutErrorResponse>;
+export type UpdateDestinationError = HeyQrApiError<UpdateDestinationErrorResponse>;
+
+/** A 409 revision conflict, from either update method (narrow `response` further for the destination's `current`). */
+export const isRevisionConflict = (value: unknown): value is HeyQrApiError & { status: 409; code: "revision_conflict" } =>
+  value instanceof HeyQrApiError && value.status === 409 && value.code === "revision_conflict";
 
 export const isHeyQrApiError = (value: unknown): value is HeyQrApiError => value instanceof HeyQrApiError;
 
@@ -112,8 +126,40 @@ export class HeyQrClient {
     return this.#request<Destination, GetDestinationErrorResponse>("GET", `/qr-codes/${segment(qrCodeId)}/destination`);
   }
 
+  /**
+   * `PATCH /api/v1/qr-codes/{qrCodeId}/layouts/{layoutId}`: changes only that layout, from the LayoutRevision
+   * getLayout (or the last update) returned. Sends `revision` and the given `name`, `layout` and `editor` only.
+   * @returns the updated layout, with its new revision.
+   * @throws {UpdateLayoutError} 400 malformed_json · 401 unauthorized · 404 not_found · 409 revision_conflict (the
+   *   layout was saved since: reload it and decide) · 422 invalid_request | content_too_long · 500 internal_error
+   */
+  updateLayout(qrCodeId: string, layoutId: string, request: UpdateLayoutRequest): Promise<Layout> {
+    const body: Record<string, unknown> = { revision: request.revision };
+    if (request.name !== undefined) body.name = request.name;
+    if (request.layout !== undefined) body.layout = request.layout;
+    if (request.editor !== undefined) body.editor = request.editor;
+    return this.#request<Layout, UpdateLayoutErrorResponse>("PATCH", `/qr-codes/${segment(qrCodeId)}/layouts/${segment(layoutId)}`, body);
+  }
+
+  /**
+   * `PATCH /api/v1/qr-codes/{qrCodeId}/destination`: changes a Dynamic code's destination from the DestinationRevision
+   * getDestination (or the last change) returned. Sends `destination` and `revision` only.
+   * @returns the destination now stored; `changed: false` when that address was already stored (nothing written).
+   * @throws {UpdateDestinationError} 400 malformed_json · 401 unauthorized · 404 not_found · 409 revision_conflict
+   *   (`response.body.error.current` is the destination and revision stored now) · 422 invalid_request | not_dynamic ·
+   *   500 internal_error
+   */
+  updateDestination(qrCodeId: string, request: UpdateDestinationRequest): Promise<UpdateDestinationResponse> {
+    const body = { destination: request.destination, revision: request.revision };
+    return this.#request<UpdateDestinationResponse, UpdateDestinationErrorResponse>(
+      "PATCH",
+      `/qr-codes/${segment(qrCodeId)}/destination`,
+      body,
+    );
+  }
+
   /** Every method's one request path. */
-  async #request<T, E extends ErrorResponse>(method: "GET" | "POST", path: string, body?: unknown): Promise<T> {
+  async #request<T, E extends ErrorResponse>(method: "GET" | "POST" | "PATCH", path: string, body?: unknown): Promise<T> {
     const headers: Record<string, string> = { authorization: `Bearer ${this.#apiKey}`, accept: "application/json" };
     if (body !== undefined) headers["content-type"] = "application/json";
     let response: Awaited<ReturnType<FetchLike>>;

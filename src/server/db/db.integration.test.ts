@@ -31,6 +31,7 @@ import { apiKeyOwner, createApiKey, generateApiKey, listApiKeys, revokeApiKey } 
 import { readLayoutForOwner } from "../api/v1/layouts";
 import { authorizeApiExport } from "../api/v1/export";
 import type * as Sdk from "@heyqr/sdk";
+import { HeyQrClient, isRevisionConflict, type FetchLike, type UpdateDestinationError } from "@heyqr/sdk";
 import { hasScans, incrementScan, ownerScanSummary, scansByDay, utcDay } from "../qr/scans";
 import {
   accountUsage,
@@ -6971,5 +6972,165 @@ describe.skipIf(!url)("SDK contract: route responses (HEY-160, real PostgreSQL)"
       error: { code: "revision_conflict", message: "m", current: { destination: "https://x", revision: 1 } },
     } satisfies Sdk.DestinationRevisionConflictError;
     expect([conflict.status, shape(conflict.body)]).toEqual([409, shape(sampleConflict)]);
+  });
+});
+
+/*
+ * HEY-162 / QR-22.03: the SDK client's update methods against the real route handlers and PostgreSQL. `fetch` is
+ * dispatched to the handlers in-process, so this runs without a server; the live API run is in packages/sdk/test.
+ */
+describe.skipIf(!url)("SDK client updates against the routes (HEY-162, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "sdk162-owner", name: "Owner", email: "owner@sdk162.test" };
+  let heyqr: HeyQrClient;
+  const d = { ...DEFAULT_DESIGN, fg: "#1F3A5F", preset: "frame" as const, frameStyle: "bubble" as const, caption: "Menu" };
+  const next = { ...d, fg: "#8C2F4B", caption: "Today" };
+  type Handler = (request: Request, ctx: unknown) => Promise<Response>;
+  let routes: { create: Record<string, Handler>; layout: Record<string, Handler>; destination: Record<string, Handler> };
+  /** Routes a request the SDK makes to the matching route handler. */
+  const inProcess: FetchLike = async (url, init) => {
+    const path = new URL(url).pathname.replace(/^\/api\/v1/, "");
+    const [, qrCodeId, kind, layoutId] = /^\/qr-codes(?:\/([^/]+)(?:\/(layouts|destination)(?:\/([^/]+))?)?)?$/.exec(path) ?? [];
+    const route = !qrCodeId ? routes.create : kind === "destination" ? routes.destination : routes.layout;
+    const handler = route[init.method];
+    if (!handler) return { status: 405, headers: { get: () => null }, text: async () => "" };
+    const params = Object.fromEntries(Object.entries({ qrCodeId, layoutId }).flatMap(([k, v]) => (v ? [[k, decodeURIComponent(v)]] : [])));
+    const res = await handler(
+      new Request(url, { method: init.method, headers: init.headers, ...(init.body === undefined ? {} : { body: init.body }) }),
+      {
+        params: Promise.resolve(params),
+      },
+    );
+    return { status: res.status, headers: res.headers, text: () => res.text() };
+  };
+  const stored = async (qrCodeId: string) => ({
+    code: (
+      await pool.query(
+        "select destination, previous_destination, destination_revision, status, short_code, updated_at from qr_code where id = $1",
+        [qrCodeId],
+      )
+    ).rows[0],
+    layouts: (await pool.query("select id, name, design, updated_at from qr_layout where qr_code_id = $1 order by sort_order", [qrCodeId]))
+      .rows,
+    history: (await pool.query("select new_url from destination_change where qr_code_id = $1 order by id", [qrCodeId])).rows.map(
+      (r) => r.new_url,
+    ),
+  });
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 3 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    apiDb.current = db;
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+    routes = {
+      create: (await import("../../app/api/v1/qr-codes/route")) as never,
+      layout: (await import("../../app/api/v1/qr-codes/[qrCodeId]/layouts/[layoutId]/route")) as never,
+      destination: (await import("../../app/api/v1/qr-codes/[qrCodeId]/destination/route")) as never,
+    };
+    heyqr = new HeyQrClient({ apiKey: (await createApiKey(db, owner.id)).key, baseUrl: "http://localhost", fetch: inProcess });
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  const create = () =>
+    heyqr.createQr({
+      name: "Live",
+      mode: "dynamic",
+      content: { type: "website", url: "littlefern.cafe" },
+      destination: "littlefern.cafe/menu",
+      layouts: [
+        { name: "Sticker", layout: designToLayout(d), editor: designSettingsOf(d) },
+        { name: "Poster", layout: designToLayout(d) },
+      ],
+    });
+
+  it("each update changes only its own resource, from the revision its read returned", async () => {
+    const created = await create();
+    const [first, second] = created.layouts.map((l) => l.id) as [string, string];
+    const layout0 = await heyqr.getLayout(created.id, first);
+    const destination0 = await heyqr.getDestination(created.id);
+    const before = await stored(created.id);
+
+    // The layout: name, design and revision change; the destination and the other layout don't.
+    const layout1 = await heyqr.updateLayout(created.id, first, {
+      revision: layout0.revision,
+      name: "Sticker v2",
+      layout: designToLayout(next),
+      editor: designSettingsOf(next),
+    });
+    expect(layout1).toMatchObject({ id: first, qrCodeId: created.id, name: "Sticker v2" });
+    expect(layout1.revision).not.toBe(layout0.revision);
+    expect((layout1.layout as { colors: { fg: string } }).colors.fg).toBe("#8C2F4B");
+    expect(await heyqr.getDestination(created.id)).toEqual(destination0);
+    const afterLayout = await stored(created.id);
+    expect([afterLayout.code.destination, afterLayout.code.destination_revision, afterLayout.history]).toEqual([
+      before.code.destination,
+      0,
+      [],
+    ]);
+    expect(afterLayout.layouts[1]).toEqual(before.layouts[1]);
+
+    // The destination: revision +1 and one history entry; no layout changes.
+    const moved = await heyqr.updateDestination(created.id, { destination: "littlefern.cafe/today", revision: destination0.revision });
+    expect(moved).toEqual({
+      ...destination0,
+      destination: "https://littlefern.cafe/today",
+      revision: 1,
+      previousDestination: "https://littlefern.cafe/menu",
+      changedAt: expect.any(String),
+      changed: true,
+    });
+    expect(await heyqr.getLayout(created.id, first)).toEqual(layout1);
+    const afterMove = await stored(created.id);
+    expect(afterMove.layouts).toEqual(afterLayout.layouts);
+    expect(afterMove.history).toEqual(["https://littlefern.cafe/today"]);
+
+    // The same address again at the current revision: changed false, nothing written.
+    const same = await heyqr.updateDestination(created.id, { destination: "https://littlefern.cafe/today", revision: moved.revision });
+    expect([same.changed, same.revision]).toEqual([false, 1]);
+    expect(await stored(created.id)).toEqual(afterMove);
+    expect(second).toBeTruthy();
+  });
+
+  it("stale revisions: 409 with each endpoint's details, and the saved values stay exactly as they were", async () => {
+    const created = await create();
+    const layoutId = created.layouts[0]?.id ?? "";
+    const layout0 = await heyqr.getLayout(created.id, layoutId);
+    const destination0 = await heyqr.getDestination(created.id);
+    const layout1 = await heyqr.updateLayout(created.id, layoutId, { revision: layout0.revision, name: "Sticker v2" });
+    await heyqr.updateDestination(created.id, { destination: "littlefern.cafe/today", revision: destination0.revision });
+    const saved = await stored(created.id);
+
+    const staleLayout = await heyqr
+      .updateLayout(created.id, layoutId, { revision: layout0.revision, name: "From an old read", layout: designToLayout(next) })
+      .catch((e: unknown) => e);
+    expect(isRevisionConflict(staleLayout)).toBe(true);
+    expect(staleLayout).toMatchObject({
+      status: 409,
+      code: "revision_conflict",
+      response: { body: { error: { code: "revision_conflict", message: expect.any(String) } } },
+    });
+    expect(await heyqr.getLayout(created.id, layoutId)).toEqual(layout1);
+
+    const staleDestination = (await heyqr
+      .updateDestination(created.id, { destination: "littlefern.cafe/old-read", revision: destination0.revision })
+      .catch((e: unknown) => e)) as UpdateDestinationError;
+    expect(isRevisionConflict(staleDestination)).toBe(true);
+    const r = staleDestination.response;
+    expect(r.status === 409 ? r.body.error.current : null).toEqual({ destination: "https://littlefern.cafe/today", revision: 1 });
+    // A → B → A: even the stored URL from an old revision is refused.
+    await expect(
+      heyqr.updateDestination(created.id, { destination: "https://littlefern.cafe/today", revision: destination0.revision }),
+    ).rejects.toMatchObject({ status: 409 });
+
+    expect(await stored(created.id)).toEqual(saved);
+    // The caller decides: reload, then the same change succeeds from the current revision.
+    const current = await heyqr.getDestination(created.id);
+    expect(
+      (await heyqr.updateDestination(created.id, { destination: "littlefern.cafe/old-read", revision: current.revision })).revision,
+    ).toBe(2);
   });
 });
