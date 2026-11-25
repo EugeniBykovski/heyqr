@@ -20,7 +20,7 @@ import { NavLink } from "./nav-links";
 
 /*
  * Design "header": translucent paper with blur, hairline bottom border, 60 px high, wide container.
- * Phones: logo, language, Sign in or avatar, menu button. Wider: Pricing / My QR codes nav and the Create action.
+ * Phones: logo, language, Sign in or avatar, menu button. Wider: Pricing / Developers / My QR codes nav and the Create action.
  */
 export async function SiteHeader() {
   const t = await getTranslations("nav");
@@ -37,6 +37,7 @@ export async function SiteHeader() {
   const trialItem = phase && phase.state !== "none" && phase.state !== "upgraded";
   const items = [
     { href: "/pricing", label: t("pricing") },
+    { href: "/developers", label: t("developers") },
     ...(user
       ? [
           { href: "/dashboard", label: t("myCodes") },
@@ -55,6 +56,7 @@ export async function SiteHeader() {
         </Link>
         <nav aria-label={t("main")} className="hidden items-center gap-0.5 sm:flex">
           <NavLink href="/pricing">{t("pricing")}</NavLink>
+          <NavLink href="/developers">{t("developers")}</NavLink>
           {user ? <NavLink href="/dashboard">{t("myCodes")}</NavLink> : null}
         </nav>
         <div className="ml-auto flex items-center gap-3 sm:gap-4 lg:gap-5">
