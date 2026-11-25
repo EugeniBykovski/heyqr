@@ -1,0 +1,48 @@
+{
+  "layout": {
+    "preset": "frame",
+    "frameStyle": "bubble",
+    "unit": "px",
+    "width": 512,
+    "height": 512,
+    "qrSize": 512,
+    "border": false,
+    "colors": {
+      "fg": "#1F3A5F",
+      "eye": "#1F3A5F",
+      "eyeIn": "#1F3A5F",
+      "bg": "#FFFFFF",
+      "frame": "#1F3A5F",
+      "caption": "#FFFFFF"
+    },
+    "style": {
+      "pattern": "rounded",
+      "eyeFrame": "rounded",
+      "eyeBall": "rounded",
+      "logo": null
+    },
+    "caption": {
+      "text": "Menu",
+      "font": "dm",
+      "fontFamily": "'HeyQR Onest', sans-serif",
+      "weight": 700,
+      "size": 40,
+      "align": "center",
+      "position": "after"
+    }
+  },
+  "editor": {
+    "pattern": "rounded",
+    "eyeFrame": "rounded",
+    "eyeBall": "rounded",
+    "fg": "#1F3A5F",
+    "bg": "#FFFFFF",
+    "logo": {
+      "kind": "none"
+    },
+    "logoSize": 0.22,
+    "preset": "frame",
+    "frameStyle": "bubble",
+    "caption": "Menu"
+  }
+}
