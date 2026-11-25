@@ -61,7 +61,7 @@ export type FetchLike = (
 export type FetchResponse = Awaited<ReturnType<FetchLike>>;
 
 export type HeyQrClientOptions = {
-  /** An account API key (`hqk_…`), created under Account → API keys. Keep it on the server. */
+  /** An account API key (`hqk_…`), created under Dashboard → API keys. Keep it on the server. */
   apiKey: string;
   /** HeyQR's origin, e.g. `https://heyqr.example` (no `/api/v1`). For local development, `http://localhost:3000`. */
   baseUrl: string;
