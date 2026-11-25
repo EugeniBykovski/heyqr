@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "TypeScript client and types for the hosted HeyQR REST API (v1). ESM, server-side (Node 18+).",
+  "description": "TypeScript client and types for the hosted HeyQR REST API (v1), and an embeddable React QR preview (@heyqr/sdk/react). ESM, Node 18+.",
   "license": "UNLICENSED",
   "engines": {
     "node": ">=18"
@@ -16,6 +16,12 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./react": {
+      "@heyqr/source": "./src/react/index.tsx",
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js",
+      "default": "./dist/react/index.js"
     }
   },
   "files": [
@@ -23,20 +29,36 @@
     "README.md"
   ],
   "sideEffects": false,
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
   "publishConfig": {
     "exports": {
       ".": {
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js",
         "default": "./dist/index.js"
+      },
+      "./react": {
+        "types": "./dist/react/index.d.ts",
+        "import": "./dist/react/index.js",
+        "default": "./dist/react/index.js"
       }
     }
   },
   "scripts": {
     "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
-    "build": "pnpm run clean && tsc -p tsconfig.build.json",
+    "build": "pnpm run clean && tsc -p tsconfig.build.json && tsc -p tsconfig.react.build.json && node scripts/build-react.mjs",
     "prepack": "pnpm run build",
-    "typecheck": "tsc --noEmit -p . && tsc --noEmit -p test/consumer && tsc --noEmit -p examples",
+    "typecheck": "tsc --noEmit -p . && tsc --noEmit -p tsconfig.react.json && tsc --noEmit -p test/consumer && tsc --noEmit -p examples",
     "smoke": "node scripts/smoke.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12"
   }
 }

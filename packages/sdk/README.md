@@ -10,6 +10,7 @@ parts:
   - `downloadExport` for PNG and SVG files (HEY-163);
   - timeouts, cancellation, rate limits and payment errors on every method (HEY-164);
   - idempotent `createQr` retries with an Idempotency-Key (HEY-165).
+- **React preview** (HEY-167): `HeyQrPreview` from `@heyqr/sdk/react`, a local QR preview for your own UI.
 
 npm publishing comes later. The HTTP
 contract itself is [docs/API_V1.md](../../docs/API_V1.md).
@@ -269,6 +270,64 @@ pnpm exec tsx --conditions=@heyqr/source packages/sdk/examples/download-export.t
 Unpaid, it prints this instead: `Payment required: open https://heyqr.example/create/export?qr=…&layout=…&format=png
 as the code's owner, then run this again.`
 
+## React preview: `@heyqr/sdk/react` (HEY-167)
+
+`HeyQrPreview` draws a live QR preview with HeyQR's own renderer, bundled into this entry.
+
+- **Local:** it runs in the browser (or on the server, for SSR). No network request, no API key, no account. It never
+  imports the server client.
+- **Optional React:** React (18 or later) is an optional peer dependency. Server-only consumers of `@heyqr/sdk` don't
+  need it, and installing the SDK doesn't install it.
+
+```tsx
+import { useState } from "react";
+import { HeyQrPreview } from "@heyqr/sdk/react";
+
+export function MenuPreview() {
+  const [url, setUrl] = useState("https://littlefern.cafe/menu");
+  const [color, setColor] = useState("#1F3A5F");
+  return (
+    <div>
+      <input value={url} onChange={(e) => setUrl(e.target.value)} aria-label="Link" />
+      <input type="color" value={color} onChange={(e) => setColor(e.target.value)} aria-label="Colour" />
+      <HeyQrPreview
+        value={url}
+        color={color}
+        pattern="rounded"
+        eyeFrame="rounded"
+        size={240}
+        title="Menu QR code"
+        placeholder="Type a link"
+        fallback={(error) => error.message}
+      />
+    </div>
+  );
+}
+```
+
+| Prop                                                | Type                                                                                                     | Default                                   |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| `value`                                             | `string`: what the code encodes                                                                          | (required)                                |
+| `pattern`                                           | `"square" \| "rounded" \| "dot" \| "diamond" \| "leaf" \| "fluid" \| "vbars" \| "hbars"` (`QR_PATTERNS`) | `"square"`                                |
+| `eyeFrame`                                          | `"square" \| "rounded" \| "cushion" \| "circle" \| "leaf"` (`QR_EYE_FRAMES`)                             | `"square"`                                |
+| `eyeBall`                                           | `"square" \| "rounded" \| "circle" \| "diamond" \| "leaf"` (`QR_EYE_BALLS`)                              | `"square"`                                |
+| `color`, `background`, `eyeColor`, `eyeCenterColor` | `"#RRGGBB"`                                                                                              | `#111111`, `#FFFFFF`; eyes follow `color` |
+| `size`                                              | pixels or a CSS length                                                                                   | `256`                                     |
+| `title`                                             | accessible name                                                                                          | `"QR code"`                               |
+| `className`, `style`                                | as usual                                                                                                 | —                                         |
+| `placeholder`                                       | shown while `value` is empty                                                                             | an empty box                              |
+| `fallback`                                          | node, or `(error) => node`, shown when it can't be drawn                                                 | an empty box                              |
+| `onError`                                           | `(error: HeyQrPreviewError) => void`, once per new error                                                 | —                                         |
+
+**How it behaves:**
+
+- **Updates:** the preview redraws whenever `value` or a design option changes.
+- **Errors:** empty input shows `placeholder`. A value too long for a QR code (`too_long`) or an unsupported shape or
+  colour (`invalid_option`) shows `fallback` and calls `onError`. It never throws into your app.
+- **Safety:** colours and shapes are checked before rendering, and the value is encoded into the pattern, never
+  inserted as text. Nothing a caller passes can add markup to the SVG.
+- **Not included:** logos and caption text belong to HeyQR's editor and the paid files.
+
 ## Build, pack and install (HEY-166)
 
 `@heyqr/sdk` ships as **ESM only**, for Node.js 18+ (and other runtimes with `fetch`). It has no dependencies. The
@@ -282,7 +341,9 @@ tar -tzf /tmp/heyqr-sdk-*.tgz                                   # package.json, 
 ```
 
 **The archive:** `package/package.json`, `package/README.md`, and `package/dist/<module>.js` plus `.d.ts` for
-`index`, `client`, `qr-codes`, `layouts`, `destination`, `export`, `errors` and `json`.
+`index`, `client`, `qr-codes`, `layouts`, `destination`, `export`, `errors` and `json`, plus
+`package/dist/react/index.js` and `.d.ts`. The React entry is bundled with esbuild: the renderer is inlined, and
+`react` and `react/jsx-runtime` stay external.
 
 - **Exports:** the packed `package.json` (from `publishConfig`) exports only `./dist/index.js` (`import`) and
   `./dist/index.d.ts` (`types`).
@@ -329,6 +390,7 @@ its two globals, so it needs neither DOM nor `@types/node`. Use `SMOKE_KEEP=1` t
 
 | Area                                                         | Types                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| React (HEY-167), from `@heyqr/sdk/react`                     | `HeyQrPreview`, `HeyQrPreviewProps`, `HeyQrPreviewError`, `QR_PATTERNS`, `QR_EYE_FRAMES`, `QR_EYE_BALLS`, `QrPattern`, `QrEyeFrame`, `QrEyeBall`                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | Client (HEY-161 to HEY-165)                                  | `HeyQrClient`, `newIdempotencyKey`, `isIdempotencyConflict`, `CreateQrOptions`, `HeyQrTimeoutError`, `HeyQrAbortError`, `HeyQrRateLimitError`, `isPaymentRequired`, `isTimeout`, `retryAfter`, `DEFAULT_TIMEOUT_MS`, `RequestOptions`, `AbortSignalLike`, `HeyQrErrorKind`, `dispositionFilename`, `HeyQrApiError`, `HeyQrError`, `isHeyQrApiError`, `isRevisionConflict`, `HeyQrClientOptions`, `FetchLike`, `CreateQrError`, `GetLayoutError`, `GetDestinationError`, `UpdateLayoutError`, `UpdateDestinationError`, `DownloadExportRequest`, `DownloadExportError`, `ExportedFile` |
 | Create a QR (`POST /api/v1/qr-codes`)                        | `CreateQrRequest`, `CreateQrLayout`, `QrContent`, `QrContentType`, `QrMode`, `DesignInput`, `CreateQrResponse`, `QrStatus`, `DraftLimitError`, `IdempotencyKeyReusedError`, `ContentTooLongError`, `CreateQrErrorResponse`, `CreateQrResult`                                                                                                                                                                                                                                                                                                                                          |
 | A layout (`GET` / `PATCH …/layouts/{layoutId}`)              | `Layout`, `LayoutRevision`, `LayoutDesign`, `LayoutEditorSettings`, `UpdateLayoutRequest`, `LayoutRevisionConflictError`, `GetLayoutErrorResponse`, `GetLayoutResult`, `UpdateLayoutErrorResponse`, `UpdateLayoutResult`                                                                                                                                                                                                                                                                                                                                                              |
@@ -386,6 +448,14 @@ More, with compile-time checks for invalid input and error narrowing: [`test/con
 
 ## Checks
 
+- `packages/sdk/test/react.test.tsx` (jsdom):
+  - output is decoded with ZXing, including every shape;
+  - prop changes redraw;
+  - empty and too-long input;
+  - unsupported or injected options;
+  - SSR.
+- The boundary test (`sdk-contract.test.ts`): the React entry imports only React and the renderer, React is an
+  optional peer, and the server modules never import React.
 - `pnpm --filter @heyqr/sdk smoke`: the packed `.tgz`, installed with npm in a clean project and run with plain
   Node.js (see above).
 - `packages/sdk/test/idempotency.test.ts`:
