@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getSession } from "@/server/auth";
 import { canDownload } from "@/server/billing/entitlements";
 import { downloadFileName, encodedValue, renderExport } from "@/server/qr/export";
+import { reportAndRethrow, requestIdOf } from "@/server/monitoring";
 import { deliverPaidFile } from "@/server/qr/paid-delivery";
 import { getQrCode } from "@/server/qr/repository";
 import { zipFiles } from "@/server/qr/zip";
@@ -20,9 +21,19 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/api/export/a
   if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const q = query.safeParse(Object.fromEntries(request.nextUrl.searchParams));
   if (!q.success) return NextResponse.json({ error: "invalid_query" }, { status: 400 });
-  const qr = await getQrCode(session.user.id, qrId);
+  // HEY-175: unexpected failures only; 401, 402, 404 and 422 are answers.
+  const failed = (operation: string) =>
+    reportAndRethrow({
+      operation,
+      severity: "high",
+      route: "/api/export/all/[qrId]",
+      correlationId: requestIdOf(request.headers),
+      tags: { format: q.data.format },
+    });
+  const qr = await getQrCode(session.user.id, qrId).catch(failed("export.authorize"));
   if (!qr) return NextResponse.json({ error: "not_found" }, { status: 404 });
-  if (!(await canDownload(session.user.id, qr))) return NextResponse.json({ error: "payment_required" }, { status: 402 });
+  if (!(await canDownload(session.user.id, qr).catch(failed("export.authorize"))))
+    return NextResponse.json({ error: "payment_required" }, { status: 402 });
   const value = encodedValue(qr);
   // HEY-102: one stored ZIP per set of saved layouts (ids and revisions) and format, delivered through a signed link.
   return deliverPaidFile(
@@ -68,5 +79,5 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/api/export/a
         },
       });
     },
-  );
+  ).catch(failed("export.deliver"));
 }

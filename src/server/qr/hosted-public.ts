@@ -6,6 +6,7 @@ import { hostedAssetIds } from "../../entities/qr/model/hosted";
 import { resolveShortLink } from "../billing/access";
 import { newId } from "../db/ids";
 import * as schema from "../db/schema";
+import { reportFailure } from "../monitoring";
 import type { LogoStore } from "./logo-assets";
 
 /*
@@ -38,7 +39,10 @@ export async function publicHostedFile(
     .innerJoin(schema.qrCode, eq(schema.qrCode.userId, schema.asset.userId))
     .where(and(eq(schema.asset.id, assetId), eq(schema.qrCode.id, answer.qrCodeId)));
   if (!row) return null;
-  const bytes = await store.get(row.key).catch(() => null);
+  const bytes = await store.get(row.key).catch((error: unknown) => {
+    reportFailure(error, { operation: "qr.hosted_file", severity: "high", route: "/p/[code]/a/[assetId]" });
+    return null;
+  });
   return bytes ? { bytes, contentType: row.type, byteSize: row.size } : null;
 }
 

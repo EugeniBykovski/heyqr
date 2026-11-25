@@ -38,6 +38,7 @@
     "@heyqr/qr-core": "workspace:*",
     "@hookform/resolvers": "7.0.7",
     "@react-email/components": "1.0.12",
+    "@sentry/nextjs": "11.12.0",
     "@t3-oss/env-nextjs": "0.13.11",
     "@tanstack/react-query": "5.108.0",
     "better-auth": "1.7.25",

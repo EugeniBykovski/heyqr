@@ -10,6 +10,8 @@ import { newId } from "../db/ids";
 import { priceMatches, stripePriceFor } from "./catalog";
 import { currentPlan } from "./allowances";
 import { bindStripeCustomer } from "./customer";
+import { reportFailure } from "../monitoring";
+import { step } from "../monitoring-step";
 import { awaitingFulfillment, singleQrCheckout, type CheckoutPort } from "./single-order";
 import { stripe } from "./stripe";
 
@@ -18,7 +20,9 @@ import { stripe } from "./stripe";
  * one is created once per account, under its row lock and with an account-scoped idempotency key (bindStripeCustomer).
  */
 export function customerFor(user: { id: string }) {
-  return bindStripeCustomer(db, user.id, (params, idempotencyKey) => stripe().customers.create(params, { idempotencyKey }));
+  return step("checkout.customer", () =>
+    bindStripeCustomer(db, user.id, (params, idempotencyKey) => stripe().customers.create(params, { idempotencyKey })),
+  );
 }
 
 function checkoutUrl(session: { url: string | null }): string {
@@ -37,7 +41,7 @@ export class CatalogError extends Error {
 async function verifiedPrice(currency: Currency, offer: Offer): Promise<string> {
   const id = stripePriceFor(currency, offer);
   if (!id || pricePoint(currency, offer) === null) throw new CatalogError("not_offered");
-  const price = await stripe().prices.retrieve(id);
+  const price = await step("stripe.price_retrieve", () => stripe().prices.retrieve(id));
   if (!priceMatches(price, currency, offer)) throw new CatalogError("price_mismatch");
   return id;
 }
@@ -97,18 +101,21 @@ async function session(
   },
 ): Promise<string> {
   const customer = await customerFor(input.user);
-  const created = await stripe().checkout.sessions.create(sessionParams(customer, input));
-  if (input.purchase)
-    await db.insert(schema.purchase).values({
-      id: newId(),
-      userId: input.user.id,
-      qrCodeId: input.purchase.qrCodeId,
-      item: input.purchase.item,
-      lines: input.purchase.lines,
-      stripeCheckoutSessionId: created.id,
-      amountTotal: created.amount_total ?? input.purchase.lines.reduce((s, l) => s + l.amount, 0),
-      currency: (created.currency ?? input.purchase.currency).toLowerCase(),
-    });
+  const created = await step("stripe.session_create", () => stripe().checkout.sessions.create(sessionParams(customer, input)));
+  const { purchase } = input;
+  if (purchase)
+    await step("checkout.order_insert", () =>
+      db.insert(schema.purchase).values({
+        id: newId(),
+        userId: input.user.id,
+        qrCodeId: purchase.qrCodeId,
+        item: purchase.item,
+        lines: purchase.lines,
+        stripeCheckoutSessionId: created.id,
+        amountTotal: created.amount_total ?? purchase.lines.reduce((s, l) => s + l.amount, 0),
+        currency: (created.currency ?? purchase.currency).toLowerCase(),
+      }),
+    );
   return checkoutUrl(created);
 }
 
@@ -131,16 +138,18 @@ function stripeOrderPort(customer: string, input: SessionInput): CheckoutPort {
     create: ({ orderId, previous }) => {
       const params = sessionParams(customer, { ...input, metadata: { ...input.metadata, orderId } });
       const hash = createHash("sha256").update(JSON.stringify(params)).digest("hex").slice(0, 16);
-      return stripe().checkout.sessions.create(
-        { ...params, client_reference_id: orderId },
-        { idempotencyKey: `heyqr-order-${orderId}-${previous ?? "first"}-${hash}` },
+      return step("stripe.session_create", () =>
+        stripe().checkout.sessions.create(
+          { ...params, client_reference_id: orderId },
+          { idempotencyKey: `heyqr-order-${orderId}-${previous ?? "first"}-${hash}` },
+        ),
       );
     },
     retrieve: async (id) => {
-      const s = await stripe().checkout.sessions.retrieve(id);
+      const s = await step("stripe.session_retrieve", () => stripe().checkout.sessions.retrieve(id));
       return { status: s.status, url: s.url };
     },
-    expire: (id) => stripe().checkout.sessions.expire(id),
+    expire: (id) => step("stripe.session_expire", () => stripe().checkout.sessions.expire(id)),
   };
 }
 
@@ -276,5 +285,9 @@ export async function pendingPaidCheckout(userId: string, qrCodeId: string) {
     },
     userId,
     qrCodeId,
-  ).catch(() => null);
+  ).catch((error: unknown) => {
+    // HEY-175: the screen falls back as documented above; the failed check is still reported.
+    reportFailure(error, { operation: "checkout.return_check", severity: "high", route: "/create/export" });
+    return null;
+  });
 }

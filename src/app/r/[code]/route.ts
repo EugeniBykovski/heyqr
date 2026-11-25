@@ -4,6 +4,7 @@ import { db } from "@/server/db";
 import { resolveShortLink } from "@/server/billing/access";
 import { recordScan } from "@/server/qr/repository";
 import { isCountableScan } from "@/server/qr/scans";
+import { reportFailure, requestIdOf } from "@/server/monitoring";
 import { deviceFromUserAgent, storeRedirect } from "@/server/qr/hosted-device";
 
 /**
@@ -19,7 +20,14 @@ const redirect = (to: string | URL) => NextResponse.redirect(to, { status: 302, 
 export async function GET(request: NextRequest, ctx: RouteContext<"/r/[code]">) {
   const { code } = await ctx.params;
   // HEY-143: the decision (trial, paid access at the cutoff, paused/deleted) is resolveShortLink, shared with the tests.
-  const answer = await resolveShortLink(db, code);
+  let answer: Awaited<ReturnType<typeof resolveShortLink>>;
+  try {
+    answer = await resolveShortLink(db, code);
+  } catch (error) {
+    // HEY-175: the lookup itself failed (an unavailable code is an answer, not a failure). The short code isn't sent.
+    reportFailure(error, { operation: "qr.resolve", severity: "high", route: "/r/[code]", correlationId: requestIdOf(request.headers) });
+    throw error;
+  }
   if (answer.kind === "unavailable")
     return redirect(new URL(answer.inactive ? "/link-unavailable?reason=inactive" : "/link-unavailable", env.NEXT_PUBLIC_APP_URL));
   // Hosted pages (design 11.0) live at /p/<code>; an Apps page sends a recognized phone straight to its store.
@@ -34,9 +42,10 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/r/[code]">) 
   // HEY-145: the scan is counted after the 302 is sent (it never delays the redirect). A failed write is logged by code
   // only and dropped: the scanner already has their redirect, and nothing about the request is retried or exposed.
   after(() =>
-    recordScan(answer.qrCodeId).catch((error: unknown) =>
-      console.error(`[scan] not recorded: ${error instanceof Error ? error.name : "unknown error"}`),
-    ),
+    recordScan(answer.qrCodeId).catch((error: unknown) => {
+      console.error(`[scan] not recorded: ${error instanceof Error ? error.name : "unknown error"}`);
+      reportFailure(error, { operation: "qr.scan.record", severity: "low", route: "/r/[code]", log: false });
+    }),
   );
   return redirect(to);
 }

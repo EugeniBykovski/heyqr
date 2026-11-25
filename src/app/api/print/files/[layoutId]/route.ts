@@ -4,6 +4,7 @@ import { routing } from "@/i18n/routing";
 import { getSession } from "@/server/auth";
 import { loadPrint } from "@/server/print/load";
 import { printFileResponse } from "@/server/print/files";
+import { reportAndRethrow, requestIdOf } from "@/server/monitoring";
 import { deliverPaidFile } from "@/server/qr/paid-delivery";
 
 const query = z.object({ file: z.enum(["pdf", "svg", "spec"]), key: z.string().min(8).max(64), locale: z.string().optional() });
@@ -20,7 +21,16 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/api/print/fi
   const params = Object.fromEntries(request.nextUrl.searchParams);
   const q = query.safeParse(params);
   if (!q.success) return NextResponse.json({ error: "invalid_query" }, { status: 400 });
-  const result = await loadPrint(session.user.id, layoutId, params);
+  // HEY-175: unexpected failures only; a locked Print Pack, a stale preview or a missing layout is an answer.
+  const failed = (operation: string) =>
+    reportAndRethrow({
+      operation,
+      severity: "high",
+      route: "/api/print/files/[layoutId]",
+      correlationId: requestIdOf(request.headers),
+      tags: { format: `print-${q.data.file}` },
+    });
+  const result = await loadPrint(session.user.id, layoutId, params).catch(failed("export.authorize"));
   if (!result.ok) return NextResponse.json({ error: result.error }, { status: result.error === "not_found" ? 404 : 422 });
   const { layout, page, value, settings, name, layoutName, unlocked, qrCodeId, revision } = result.ctx;
   // HEY-102: a layout of another code than the one named is refused like another account's.
@@ -61,5 +71,5 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/api/print/fi
       facts: { renderKey: page.renderKey, settings, value, name, layoutName, locale },
     },
     () => printFileResponse(q.data.file, { layout, page, value, settings, name, layoutName, locale: q.data.locale }),
-  );
+  ).catch(failed("export.deliver"));
 }

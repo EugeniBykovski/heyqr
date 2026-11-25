@@ -6,6 +6,7 @@ import { assignShortCode } from "../qr/short-code";
 import { accountForCustomer, customerIdOf } from "./customer";
 import { isPlanId } from "../../shared/config/catalog-core";
 import { currentPlan, dynamicLimit, grantPackCredits } from "./allowances";
+import { step } from "../monitoring-step";
 import { refundedOffers } from "./refunds";
 
 type Db = NodePgDatabase<typeof schema>;
@@ -255,12 +256,14 @@ export async function processCheckoutEvent(
   newShortCode: () => string,
 ): Promise<{ duplicate: true } | { duplicate: false; result: FulfillResult }> {
   return db.transaction(async (tx) => {
-    const [claimed] = await tx
-      .insert(schema.webhookEvent)
-      .values({ id: event.id, type: event.type })
-      .onConflictDoNothing()
-      .returning({ id: schema.webhookEvent.id });
+    const [claimed] = await step("webhook.claim", () =>
+      tx
+        .insert(schema.webhookEvent)
+        .values({ id: event.id, type: event.type })
+        .onConflictDoNothing()
+        .returning({ id: schema.webhookEvent.id }),
+    );
     if (!claimed) return { duplicate: true } as const;
-    return { duplicate: false, result: await fulfillCheckout(tx, event.session, newShortCode) } as const;
+    return { duplicate: false, result: await step("webhook.grant", () => fulfillCheckout(tx, event.session, newShortCode)) } as const;
   });
 }

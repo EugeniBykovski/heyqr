@@ -53,14 +53,26 @@ export const env = createEnv({
     S3_ENDPOINT: optionalUrl,
     UPSTASH_REDIS_REST_URL: optionalUrl,
     UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
+    // HEY-175 monitoring (docs/MONITORING.md): Sentry DSN for server and edge errors. Unset: nothing is sent.
+    SENTRY_DSN: optionalUrl,
+    // Optional: the release name (defaults to the Vercel commit SHA) and environment (defaults to APP_ENV).
+    SENTRY_RELEASE: z.string().optional(),
+    SENTRY_ENVIRONMENT: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.url(),
     NEXT_PUBLIC_SHORT_LINK_BASE: z.url(),
+    // HEY-175: the browser's Sentry DSN (public by design; usually the same project as SENTRY_DSN). Unset: off.
+    NEXT_PUBLIC_SENTRY_DSN: optionalUrl,
+    NEXT_PUBLIC_SENTRY_ENVIRONMENT: z.string().optional(),
+    NEXT_PUBLIC_SENTRY_RELEASE: z.string().optional(),
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_SHORT_LINK_BASE: process.env.NEXT_PUBLIC_SHORT_LINK_BASE,
+    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    NEXT_PUBLIC_SENTRY_ENVIRONMENT: process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT,
+    NEXT_PUBLIC_SENTRY_RELEASE: process.env.NEXT_PUBLIC_SENTRY_RELEASE,
   },
   // Environment-dependent rules run on the server, where every variable is visible.
   createFinalSchema: (shape, server) =>

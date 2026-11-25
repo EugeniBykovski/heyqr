@@ -1,9 +1,18 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { resolveAppEnv } from "./src/shared/config/app-env";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
+// HEY-175: the browser reports the same environment and release as the server (src/instrumentation.ts).
+const browserMonitoring = {
+  NEXT_PUBLIC_SENTRY_ENVIRONMENT: process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT || process.env.SENTRY_ENVIRONMENT || resolveAppEnv(),
+  NEXT_PUBLIC_SENTRY_RELEASE:
+    process.env.NEXT_PUBLIC_SENTRY_RELEASE || process.env.SENTRY_RELEASE || process.env.VERCEL_GIT_COMMIT_SHA || "",
+};
+
 const nextConfig: NextConfig = {
+  env: browserMonitoring,
   // Cache Components stays off until the data layer is stable (see docs/adr/0003-rendering-and-caching.md).
   reactStrictMode: true,
   poweredByHeader: false,

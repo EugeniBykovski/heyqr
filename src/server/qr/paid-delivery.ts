@@ -1,6 +1,7 @@
 import "server-only";
 import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
+import { step } from "@/server/monitoring-step";
 import { isConfigured } from "@/server/config";
 import { headObject, putObject, signedFileUrl } from "@/server/storage/s3";
 
@@ -59,22 +60,25 @@ export async function deliverPaidFile(request: Request, key: PaidFileKey, render
   const prepare = new URL(request.url).searchParams.get("prepare") === "1";
   const fallbackName = `qr-code.${key.ext}`;
   if (!isConfigured("storage")) {
-    const res = await render();
+    const res = await step("export.render", render);
     if (!prepare || !res.ok) return res;
     return ready(dispositionName(res.headers.get("Content-Disposition"), fallbackName));
   }
 
   const objectKey = paidFileKey(key);
-  let disposition = (await headObject(objectKey))?.contentDisposition ?? null;
+  let disposition = (await step("storage.head", () => headObject(objectKey)))?.contentDisposition ?? null;
   if (!disposition) {
-    const res = await render();
+    const res = await step("export.render", render);
     if (!res.ok) return res; // 402 / 422 etc. from the renderer: nothing stored
     disposition = res.headers.get("Content-Disposition") ?? `attachment; filename="${fallbackName}"`;
     const type = res.headers.get("Content-Type") ?? "application/octet-stream";
-    await putObject(objectKey, Buffer.from(await res.arrayBuffer()), type, disposition);
+    const body = Buffer.from(await res.arrayBuffer());
+    const name = disposition;
+    await step("storage.put", () => putObject(objectKey, body, type, name));
   }
   if (prepare) return ready(dispositionName(disposition, fallbackName));
-  const url = await signedFileUrl(objectKey, disposition);
+  const name = disposition;
+  const url = await step("storage.sign", () => signedFileUrl(objectKey, name));
   return new NextResponse(null, {
     status: 302,
     headers: { Location: url, "Cache-Control": "private, no-store", "Referrer-Policy": "no-referrer" },

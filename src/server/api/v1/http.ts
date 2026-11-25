@@ -1,3 +1,4 @@
+import { reportFailure } from "../../monitoring";
 import { NextResponse } from "next/server";
 import { apiKeyOwner } from "../../api-keys/keys";
 import type * as schema from "../../db/schema";
@@ -35,6 +36,12 @@ export const malformedJson = () => apiError(400, "malformed_json", "The request 
 export const internalError = (route: string, cause: unknown) => {
   // Only the error's name: messages of failed queries carry their parameters (QR content, designs).
   console.error(`[${route}] failed: ${cause instanceof Error ? cause.name : "unknown error"}`);
+  // HEY-175: the same 500 as before; the paid file route alerts higher than the other API calls.
+  reportFailure(cause, {
+    operation: `api.${route.replace(/^api\/v1\//, "").replace(/\//g, ".")}`,
+    severity: /export/.test(route) ? "high" : "low",
+    route: `/${route}`,
+  });
   return apiError(500, "internal_error", "Something went wrong. Nothing was changed; try again.");
 };
 
