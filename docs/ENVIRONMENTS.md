@@ -54,7 +54,7 @@ variable names and the environment, never values. Database commands validate onl
 | `S3_ENDPOINT`                                                    | server | MinIO / R2 endpoint; empty for AWS                            | R2 endpoint, or empty for AWS             |
 | `DYNAMIC_ACTIVE_CODE_LIMIT`                                      | server | optional (10)                                                 | optional (10)                             |
 | `NEXT_PUBLIC_APP_URL`                                            | public | `http://localhost:3000` or the dev domain                     | the production domain, `https://`         |
-| `NEXT_PUBLIC_SHORT_LINK_BASE`                                    | public | `http://localhost:3000/r` or the dev domain `/r`              | the short domain, `https://`              |
+| `NEXT_PUBLIC_SHORT_LINK_BASE`                                    | public | `http://localhost:3000/r` or the dev domain `/r`              | `{NEXT_PUBLIC_APP_URL}/r` (enforced)      |
 | `API_RATE_LIMIT_PER_MINUTE`, `API_RATE_LIMIT_EXPORTS_PER_MINUTE` | server | optional (120, 30)                                            | optional (120, 30)                        |
 | `UPSTASH_REDIS_REST_URL` / `_TOKEN`                              | secret | not used yet                                                  | not used yet                              |
 | `TEST_DATABASE_URL`, `DATABASE_TARGET=test`                      | test   | tests and CI only                                             | never                                     |
@@ -85,30 +85,30 @@ In production every integration is required at startup.
 
 ## Hosting: Vercel scopes
 
-| Vercel scope    | HeyQR environment | Deploys                          | Domain                                                                   |
-| --------------- | ----------------- | -------------------------------- | ------------------------------------------------------------------------ |
-| **Production**  | production        | `main`                           | production domain (e.g. `heyqr.app`, short `hqr.to`)                     |
-| **Preview**     | dev               | every other branch and PR        | stable dev domain on a `dev` branch (e.g. `dev.heyqr.app`) + per-PR URLs |
-| **Development** | dev               | `vercel dev` / `vercel env pull` | `localhost`                                                              |
+| Vercel scope    | HeyQR environment | Deploys                          | Domain                                                                  |
+| --------------- | ----------------- | -------------------------------- | ----------------------------------------------------------------------- |
+| **Production**  | production        | `main`                           | `https://www.heyqr.me` (short links `https://www.heyqr.me/r`)           |
+| **Preview**     | dev               | every other branch and PR        | stable dev domain on a `dev` branch (e.g. `dev.heyqr.me`) + per-PR URLs |
+| **Development** | dev               | `vercel dev` / `vercel env pull` | `localhost`                                                             |
 
 Set every variable from the table above in **both** the Preview and Production scopes, each with its own values.
 Leave `APP_ENV` unset in Vercel, or set it to the matching value.
 
 Google sign-in needs exact redirect URIs. `BETTER_AUTH_URL` and `NEXT_PUBLIC_APP_URL` in the Preview scope therefore
-point at the stable dev domain, and the dev OAuth client lists `https://dev.heyqr.app/api/auth/callback/google` and
+point at the stable dev domain, and the dev OAuth client lists `https://dev.heyqr.me/api/auth/callback/google` and
 `http://localhost:3000/api/auth/callback/google`. Per-PR preview URLs serve the app, but sign-in completes on the dev
 domain.
 
 ### Per-environment services
 
-| Service      | dev                                                                        | production                                     |
-| ------------ | -------------------------------------------------------------------------- | ---------------------------------------------- |
-| Neon         | branch `dev`                                                               | branch `main` (production)                     |
-| Google OAuth | client "HeyQR dev": localhost + dev domain redirect URIs                   | client "HeyQR": production domain redirect URI |
-| Better Auth  | own secret                                                                 | own secret                                     |
-| Stripe       | test mode: test prices, webhook `https://dev.heyqr.app/api/stripe/webhook` | live mode: live prices, production webhook     |
-| Resend       | own API key, dev sender                                                    | own API key, verified production domain        |
-| S3 / R2      | bucket `heyqr-dev` (or local MinIO)                                        | bucket `heyqr-prod`                            |
+| Service      | dev                                                                       | production                                     |
+| ------------ | ------------------------------------------------------------------------- | ---------------------------------------------- |
+| Neon         | branch `dev`                                                              | branch `main` (production)                     |
+| Google OAuth | client "HeyQR dev": localhost + dev domain redirect URIs                  | client "HeyQR": production domain redirect URI |
+| Better Auth  | own secret                                                                | own secret                                     |
+| Stripe       | test mode: test prices, webhook `https://dev.heyqr.me/api/stripe/webhook` | live mode: live prices, production webhook     |
+| Resend       | own API key, dev sender                                                   | own API key, verified production domain        |
+| S3 / R2      | bucket `heyqr-dev` (or local MinIO)                                       | bucket `heyqr-prod`                            |
 
 ## Deploying and migrating
 
@@ -133,7 +133,7 @@ pnpm db:verify         # prints {"target": "dev", "database": "localhost:5432/he
 ## One-time hosted setup (not done yet)
 
 1. **Neon**: create a project with branches `main` (production) and `dev`.
-2. **Vercel**: import the GitHub repo. Production branch `main`. Add a `dev` branch domain (e.g. `dev.heyqr.app`).
+2. **Vercel**: import the GitHub repo. Production branch `main`. Add a `dev` branch domain (e.g. `dev.heyqr.me`).
    Install the Neon integration with the Preview scope on the `dev` branch and the Production scope on `main`, or enter
    `DATABASE_URL` and `DATABASE_URL_UNPOOLED` per scope by hand.
 3. **Vercel → Settings → Environment Variables**: enter the variables above for Preview (dev values) and Production
@@ -141,4 +141,6 @@ pnpm db:verify         # prints {"target": "dev", "database": "localhost:5432/he
 4. **Google, Stripe, Resend, S3**: create the per-environment clients, keys, webhooks and buckets from the table.
 5. **GitHub → Settings → Environments**: create `dev` and `production` with the database secrets (the HEY-7
    `preview` environment can be deleted). Add required reviewers to `production`.
-6. Run **Actions → Dev database** with "seed" ticked, then open `https://dev.heyqr.app/api/health`.
+6. Run **Actions → Dev database** with "seed" ticked, then open `https://dev.heyqr.me/api/health`.
+
+Production domain, OAuth, Stripe and DNS settings: [LAUNCH_DOMAIN.md](LAUNCH_DOMAIN.md).

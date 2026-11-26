@@ -560,7 +560,7 @@ export const TABBED = {
           '  "revision": 4,',
           '  "previousDestination": "https://littlefern.cafe/menu",',
           '  "changedAt": "2026-11-26T10:05:00.000Z",',
-          '  "shortLink": "https://hqr.to/k7Qm2xP",',
+          '  "shortLink": "https://www.heyqr.me/r/k7Qm2xP",',
           '  "changed": true',
           "}",
         ),

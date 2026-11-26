@@ -104,7 +104,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
   const capacity = useMemo(() => layoutCapacity(layout, encoded), [layout, encoded]);
   const tooLong = capacity.ok ? null : capacity;
   const complete = isContentComplete(design.content) && Object.keys(errors).length === 0 && !tooLong;
-  const value = design.model === "dynamic" || complete || tooLong ? encoded : "https://heyqr.app";
+  const value = design.model === "dynamic" || complete || tooLong ? encoded : env.NEXT_PUBLIC_APP_URL;
   // HEY-41: the canvas and its scan check render deferred, so settings stay responsive and the canvas keeps its last
   // finished render while a newer one is built. React discards a deferred render that newer settings overtake.
   const { layout: shownLayout, value: shownValue, rebuilding } = useShownRender(layout, value);
@@ -113,7 +113,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
     [shownLayout, shownValue],
   );
   const prices = usePrices();
-  // The short link as previews show it ("heyqr.app/r/…"): the real slug is assigned when the plan starts.
+  // The short link as previews show it ("www.heyqr.me/r/…"): the real slug is assigned when the plan starts.
   const shortLabel = previewShortLink(env.NEXT_PUBLIC_SHORT_LINK_BASE).replace(/^https?:\/\//, "");
   const priceCents = design.model === "dynamic" ? prices.cents.starter : prices.cents.single;
   const price = formatMoney(priceCents, prices.currency);

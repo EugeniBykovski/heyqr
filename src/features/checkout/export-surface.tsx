@@ -91,6 +91,8 @@ export type ExportSurfaceProps = {
   /** HEY-118: a Dynamic code before activation. The art shows the preview short link, marked as a preview. */
   shortLinkPreview?: boolean;
   typeLabel: string;
+  /** HEY-182: a hosted page (menu, coupon…) lives at its short link, so it can't become a static code. */
+  hosted?: boolean;
   layoutName: string;
   /** Other named layouts of this code (design 3.11), each linking to its own export screen. */
   layouts?: { id: string; name: string; href: string; active: boolean }[];
@@ -981,7 +983,10 @@ export function ExportSurface(props: ExportSurfaceProps) {
                     price: t("perMonthShort", { price: money(offer.cents.studio) }),
                     href: "/dashboard/billing",
                   },
-                  { label: t("limits.toStatic"), sub: t("limits.toStaticSub"), onClick: toStatic, disabled: paying },
+                  // A hosted page can only be Dynamic (the server refuses the conversion too).
+                  ...(props.hosted
+                    ? []
+                    : [{ label: t("limits.toStatic"), sub: t("limits.toStaticSub"), onClick: toStatic, disabled: paying }]),
                 ]}
               />
             ) : null}

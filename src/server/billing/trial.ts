@@ -1,6 +1,7 @@
 import { and, eq, isNull, ne } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "../db/schema";
+import { publishOnFirstLive } from "../qr/hosted";
 import { assignShortCode } from "../qr/short-code";
 
 /*
@@ -99,6 +100,8 @@ export async function activateTrialCode(
     // HEY-117: assigned once, from NULL; a code that had a short link keeps it.
     const shortCode = await assignShortCode(tx, qr.id, newShortCode);
     await tx.update(schema.qrCode).set({ status: "active", isTrial: true }).where(eq(schema.qrCode.id, qr.id));
+    // HEY-182: a hosted page goes live with its page published (first time only).
+    await publishOnFirstLive(tx, userId, qr.id, now);
     return { ok: true, shortCode } as const;
   });
 }

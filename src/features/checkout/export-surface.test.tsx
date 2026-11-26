@@ -229,6 +229,16 @@ describe("the note under the main action (HEY-180, design 3.11)", () => {
       cleanup();
     }
   });
+
+  it("HEY-182: all Dynamic slots in use: a hosted page isn't offered “Make it a static QR instead”", () => {
+    const full = { ...offer("limitDyn"), dynamic: { used: 5, limit: 5 } };
+    signed({ entitled: false, model: "dynamic", offer: full });
+    expect(screen.getByText("Make it a static QR instead")).toBeInTheDocument();
+    cleanup();
+    signed({ entitled: false, model: "dynamic", hosted: true, offer: full });
+    expect(screen.queryByText("Make it a static QR instead")).toBeNull();
+    expect(screen.getByText("Pause or delete a Dynamic code")).toBeInTheDocument();
+  });
 });
 
 describe("guest export (design 3.1)", () => {

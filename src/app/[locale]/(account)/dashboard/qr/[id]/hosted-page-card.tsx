@@ -13,12 +13,15 @@ export async function HostedPageCard({
   live,
   publicHref,
   date,
+  takenDown = false,
 }: {
   qrCodeId: string;
   status: { published: { version: number; publishedAt: Date } | null; changed: boolean };
   live: boolean;
   publicHref: string | null;
   date: string;
+  /** HEY-182: an operator took the page down after a report; the owner can't publish it back. */
+  takenDown?: boolean;
 }) {
   const t = await getTranslations("qr.hostedPage");
   return (
@@ -36,7 +39,13 @@ export async function HostedPageCard({
       <p className="text-caption text-secondary-foreground">
         {status.published ? `${t("publishedOn", { date })} · ${status.changed ? t("changedNote") : t("upToDate")}` : t("neverNote")}
       </p>
-      {!live ? <p className="text-caption text-muted-foreground">{t("notLive")}</p> : null}
+      {takenDown ? (
+        <p role="note" className="rounded-md bg-danger-soft px-3 py-2 text-caption text-danger">
+          {t("takenDown")}
+        </p>
+      ) : !live ? (
+        <p className="text-caption text-muted-foreground">{t("notLive")}</p>
+      ) : null}
       <div className="flex flex-wrap gap-2">
         <Button asChild size="sm" variant="secondary">
           <Link href={`/dashboard/qr/${qrCodeId}/content`}>
@@ -45,7 +54,7 @@ export async function HostedPageCard({
           </Link>
         </Button>
         {!status.published || status.changed ? <PublishButton qrCodeId={qrCodeId} /> : null}
-        {live && status.published && publicHref ? (
+        {live && !takenDown && status.published && publicHref ? (
           <Button asChild size="sm" variant="ghost">
             <a href={publicHref} target="_blank" rel="noreferrer">
               <ExternalLinkIcon aria-hidden />

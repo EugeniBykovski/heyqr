@@ -4,6 +4,7 @@ import { PACK_CREDITS, PLANS, type PlanId } from "../../shared/config/catalog-co
 import { newId } from "../db/ids";
 import { isHostedContent } from "../../entities/qr/model/hosted";
 import * as schema from "../db/schema";
+import { publishOnFirstLive } from "../qr/hosted";
 import { assignShortCode } from "../qr/short-code";
 
 /*
@@ -249,6 +250,8 @@ export async function activateDynamicCode(
     // HEY-117: assigned once, from NULL; a code that had a short link keeps it.
     const shortCode = await assignShortCode(tx, qrCodeId, newShortCode);
     await tx.update(schema.qrCode).set({ status: "active", isTrial: false }).where(eq(schema.qrCode.id, qrCodeId));
+    // HEY-182: a hosted page goes live with its page published (first time only).
+    await publishOnFirstLive(tx, userId, qrCodeId);
     return { ok: true, shortCode };
   });
 }
