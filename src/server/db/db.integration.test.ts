@@ -7534,6 +7534,32 @@ describe.skipIf(!url)("hosted pages: drafts, publishing and public reads (real P
     expect(await link("hpmenu1")).toBe("unavailable");
   });
 
+  it("HEY-182: going live (plan slot) publishes a hosted page the first time only; a broken draft goes live unpublished", async () => {
+    const saved = await save(owner.id, menu("Live at once", JPEG));
+    if (!saved.ok) throw new Error("save");
+    const id = saved.data.qrCodeId;
+    // Export's "Go live": the code and its page are live together, so the printed code never opens "Unavailable".
+    expect(await activateDynamicCode(db, owner.id, id, () => "hplive1")).toEqual({ ok: true, shortCode: "hplive1" });
+    const live = await link("hplive1");
+    expect(typeof live === "object" && live.page.content.type === "menu" && live.page.content.name).toBe("Live at once");
+    const row = await db.query.qrCode.findFirst({ where: eq(schema.qrCode.id, id) });
+    expect((await hostedStatus(db, { id, content: row?.content })).published?.version).toBe(1);
+    // Paused and resumed later with an unpublished edit: the live version stays, nothing is published for the owner.
+    await saveHostedDraft(db, store, owner.id, id, menu("Edited, not published"), newId);
+    await db.update(schema.qrCode).set({ status: "paused" }).where(eq(schema.qrCode.id, id));
+    expect(await activateDynamicCode(db, owner.id, id, () => "unused1")).toEqual({ ok: true, shortCode: "hplive1" });
+    const after = await link("hplive1");
+    expect(typeof after === "object" && after.page.content.type === "menu" && after.page.content.name).toBe("Live at once");
+
+    // A draft that breaks the publishing rules still goes live (the slot is the owner's), but nothing is published.
+    const broken = await save(owner.id, { ...menu(""), name: "" });
+    if (!broken.ok) throw new Error("broken");
+    expect(await activateDynamicCode(db, owner.id, broken.data.qrCodeId, () => "hplive2")).toEqual({ ok: true, shortCode: "hplive2" });
+    expect(await link("hplive2")).toBe("unavailable");
+    const versions = await pool.query("select count(*)::int as n from qr_hosted_version where qr_code_id = $1", [broken.data.qrCodeId]);
+    expect(versions.rows[0].n).toBe(0);
+  });
+
   it("public files: only those of the live published version, of the code's owner", async () => {
     const saved = await save(owner.id, menu("Files", PNG));
     if (!saved.ok) throw new Error("save");

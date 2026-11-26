@@ -95,40 +95,53 @@ export type PublishResult =
  * consecutive versions. Publishing the same content again is a no-op (no new version).
  */
 export async function publishHosted(db: Db, userId: string, qrCodeId: string, now: Date = new Date()): Promise<PublishResult> {
-  return db.transaction(async (tx) => {
-    const [qr] = await tx
-      .select({ id: schema.qrCode.id, content: schema.qrCode.content, model: schema.qrCode.model })
-      .from(schema.qrCode)
-      .where(and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)))
-      .for("update");
-    if (!qr) return { ok: false, error: "not_found" } as const;
-    if (qr.model !== "dynamic" || !isHostedContent(qr.content)) return { ok: false, error: "not_hosted" } as const;
-    const content = readHostedContent(qr.content);
-    if (!content) return { ok: false, error: "invalid", errors: { content: "shape" } } as const;
-    const errors = hostedErrors(content, now);
-    if (Object.keys(errors).length) return { ok: false, error: "invalid", errors } as const;
-    // Every file must already be stored (no inline data) and be the owner's, of the right kind.
-    if (hostedImages(content).some((i) => !i.startsWith("asset:")) || !(await contentAssetsOwned(tx, userId, content)))
-      return { ok: false, error: "files" } as const;
-    const latest = await latestHostedVersion(tx, qrCodeId);
-    if (latest && hostedFingerprint(latest.content) === hostedFingerprint(content))
-      return { ok: true, version: latest.version, publishedAt: latest.publishedAt, unchanged: true } as const;
-    const version = (latest?.version ?? 0) + 1;
-    const [row] = await tx
-      .insert(schema.qrHostedVersion)
-      .values({ id: `${qrCodeId}.${version}`, qrCodeId, version, content, publishedAt: now })
-      .returning({ publishedAt: schema.qrHostedVersion.publishedAt });
-    // Touch the files so cleanup's grace period starts from the publish.
-    const ids = hostedAssetIds(content);
-    if (ids.length)
-      await tx.execute(
-        sql`update asset set last_used_at = now() where user_id = ${userId} and id in (${sql.join(
-          ids.map((i) => sql`${i}`),
-          sql`, `,
-        )})`,
-      );
-    return { ok: true, version, publishedAt: row?.publishedAt ?? now, unchanged: false } as const;
-  });
+  return db.transaction((tx) => publishInTransaction(tx, userId, qrCodeId, now));
+}
+
+/**
+ * HEY-182: a hosted code going live for the first time (a plan slot or the trial) publishes its draft in the same
+ * transaction, so the printed code opens the page right away instead of "Unavailable" until the owner finds Publish.
+ * Only when nothing was ever published: a code coming back (resume, renewal) keeps the version that was live, and a
+ * draft that breaks the rules goes live unpublished (QR details then shows "Not published yet" with Publish).
+ */
+export async function publishOnFirstLive(tx: Tx, userId: string, qrCodeId: string, now: Date = new Date()): Promise<PublishResult | null> {
+  if (await latestHostedVersion(tx, qrCodeId)) return null;
+  return publishInTransaction(tx, userId, qrCodeId, now);
+}
+
+async function publishInTransaction(tx: Tx, userId: string, qrCodeId: string, now: Date): Promise<PublishResult> {
+  const [qr] = await tx
+    .select({ id: schema.qrCode.id, content: schema.qrCode.content, model: schema.qrCode.model })
+    .from(schema.qrCode)
+    .where(and(eq(schema.qrCode.id, qrCodeId), eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt)))
+    .for("update");
+  if (!qr) return { ok: false, error: "not_found" } as const;
+  if (qr.model !== "dynamic" || !isHostedContent(qr.content)) return { ok: false, error: "not_hosted" } as const;
+  const content = readHostedContent(qr.content);
+  if (!content) return { ok: false, error: "invalid", errors: { content: "shape" } } as const;
+  const errors = hostedErrors(content, now);
+  if (Object.keys(errors).length) return { ok: false, error: "invalid", errors } as const;
+  // Every file must already be stored (no inline data) and be the owner's, of the right kind.
+  if (hostedImages(content).some((i) => !i.startsWith("asset:")) || !(await contentAssetsOwned(tx, userId, content)))
+    return { ok: false, error: "files" } as const;
+  const latest = await latestHostedVersion(tx, qrCodeId);
+  if (latest && hostedFingerprint(latest.content) === hostedFingerprint(content))
+    return { ok: true, version: latest.version, publishedAt: latest.publishedAt, unchanged: true } as const;
+  const version = (latest?.version ?? 0) + 1;
+  const [row] = await tx
+    .insert(schema.qrHostedVersion)
+    .values({ id: `${qrCodeId}.${version}`, qrCodeId, version, content, publishedAt: now })
+    .returning({ publishedAt: schema.qrHostedVersion.publishedAt });
+  // Touch the files so cleanup's grace period starts from the publish.
+  const ids = hostedAssetIds(content);
+  if (ids.length)
+    await tx.execute(
+      sql`update asset set last_used_at = now() where user_id = ${userId} and id in (${sql.join(
+        ids.map((i) => sql`${i}`),
+        sql`, `,
+      )})`,
+    );
+  return { ok: true, version, publishedAt: row?.publishedAt ?? now, unchanged: false } as const;
 }
 
 /** What the owner's screens show about publishing: the live version and whether the draft has unpublished changes. */
