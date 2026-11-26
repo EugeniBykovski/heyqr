@@ -13,7 +13,7 @@ import { pendingPaidCheckout } from "@/server/billing/checkout";
 import { supportEmail } from "@/server/support";
 import { accountUsage } from "@/server/billing/allowances";
 import { loadPrint } from "@/server/print/load";
-import { DEFAULT_PRINT_SETTINGS, pickLayoutForEdit, printSettingsQuery } from "@/entities/qr";
+import { DEFAULT_PRINT_SETTINGS, isHostedContent, pickLayoutForEdit, printSettingsQuery } from "@/entities/qr";
 import { trialCode } from "@/server/billing/trial";
 import { db } from "@/server/db";
 import { encodedValue, isShortLinkPreview } from "@/server/qr/export";
@@ -196,6 +196,7 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
       model={qr.model}
       shortLinkPreview={isShortLinkPreview(qr)}
       typeLabel={tTypes(qr.content.type)}
+      hosted={isHostedContent(qr.content)}
       layoutName={layout.name}
       layouts={qr.layouts.map((l) => ({ id: l.id, name: l.name, href: hrefFor(l.id), active: l.id === layout.id }))}
       backHref={`/edit/${qr.id}?layout=${layout.id}`}
