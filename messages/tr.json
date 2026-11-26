@@ -282,60 +282,43 @@
       "pricing": "Fiyatları görün"
     },
     "studio": {
-      "kicker": "Stüdyonuz",
-      "welcome": "Tekrar hoş geldiniz, {name}",
-      "summaryTop": "{name} bugün {count, plural, one {# kez} other {# kez}} tarandı. Oluşturduğunuz her şey bir dokunuş uzağınızda.",
-      "summary": "Oluşturduğunuz her şey bir dokunuş uzağınızda: dosyalar, bağlantılar ve taramalar.",
-      "summaryEmpty": "İlk kodunuzu oluşturun; dosyaları ve taramalarıyla birlikte burada görünecek.",
       "billing": "Plan ve faturalandırma",
       "library": "QR kodlarımı aç",
-      "kpi": {
-        "codes": "QR kodlar",
-        "codesNote": "{paid} ücretli · {drafts, plural, one {# taslak} other {# taslak}}",
-        "scans": "Taramalar · 14 gün",
-        "scansNone": "Henüz tarama yok",
-        "scansDelta": "Önceki haftaya göre {delta, number, ::sign-always percent}",
-        "dynamic": "Dinamik kodlar",
-        "dynamicNote": "Planınızda {left, plural, one {# yer} other {# yer}} kaldı",
-        "dynamicMeter": "Kullanımdaki dinamik kodlar",
-        "files": "Hazır dosyalar",
-        "filesNote": "PNG veya SVG olarak indirilecek {count, plural, one {düzen} other {düzen}}"
-      },
       "chart": {
-        "title": "Taramalar · son 14 gün",
-        "sub": "Tüm dinamik kodlar birlikte",
+        "title": "Tarama analizi",
+        "sub": "Dinamik kodlar · son 14 gün",
         "empty": "Dinamik kodlarınızın taramaları burada görünecek.",
-        "today": "Bugün",
-        "label": "Son 14 gün için dinamik kodlardaki günlük taramalar"
+        "label": "Son 14 gün için dinamik kodlardaki günlük taramalar",
+        "plans": "Tarama analizi Starter ve Studio ile gelir.",
+        "note": "Yalnızca dinamik planlarda: Starter’da günlük toplamlar, Studio’da kod başına grafikler."
       },
-      "top": "En iyi kod",
-      "topNote": "14 günde {count, plural, one {# tarama} other {# tarama}} · {link}",
-      "topNone": "Henüz dinamik kod yok",
-      "topNoneNote": "Dinamik kodlar her taramayı sayar.",
       "recent": "Son kodlar",
-      "seeAll": "{count} kodun tümünü görün",
-      "recentEmpty": "Kodlarınız dosyaları ve taramalarıyla birlikte burada yer alacak.",
-      "createFirst": "İlk kodunuzu oluşturun",
-      "open": "Aç",
+      "recentEmpty": "İlk kodunuz düzenleri ve dosyalarıyla birlikte burada görünecek.",
+      "createFirst": "QR kod oluştur",
       "openName": "{name} kodunu aç",
       "status": {
-        "dynamic": "Dinamik · etkin",
-        "paid": "Ücretli",
         "draft": "Taslak"
       },
-      "metricScans": "{count, plural, one {# tarama} other {# tarama}}",
       "metricLayouts": "{count, plural, one {# düzen} other {# düzen}}",
-      "metricFinish": "İndirmek için tamamlayın",
-      "perksTitle": "Hesabınıza dahil",
-      "perks": {
-        "again": "Ücretli her düzeni PNG veya SVG olarak ücretsiz yeniden indirin",
-        "redirect": "Dinamik kodları yeniden basmadan yeni bir yere yönlendirin",
-        "scans": "Her dinamik kod için günlük tarama sayıları",
-        "drafts": "Taslaklar her cihazda hesabınıza kaydedilir",
-        "billing": "Makbuzlar, plan ve ödeme yöntemi Plan ve faturalandırma bölümünde"
-      },
       "loading": "Stüdyonuz yükleniyor",
-      "trial": "Ücretsiz deneme · {days, plural, one {# gün} other {# gün}} kaldı"
+      "trial": "Ücretsiz deneme · {days, plural, one {# gün} other {# gün}} kaldı",
+      "lead": "Tekrar hoş geldiniz, {name}. Oluşturduğunuz her şey bir dokunuş uzağınızda: dosyalar, düzenler ve taramalar.",
+      "leadEmpty": "Tekrar hoş geldiniz, {name}. İlk kodunuz burada görünecek.",
+      "points": {
+        "side": "Statik ve dinamik kodlar yan yana, her biri kendi düzenleri ve dosyalarıyla",
+        "files": "Tasarımı düzenleyin veya PNG ve SVG’yi istediğiniz zaman yeniden indirin",
+        "scans": "Dinamik planlarda tarama analizi: Starter’da günlük toplamlar, Studio’da kod başına",
+        "print": "Print Pack’ler QR’larıyla birlikte kalır, matbaaya gönderilmeye hazır"
+      },
+      "onlyYou": "Bunu yalnızca siz görebilirsiniz",
+      "printPack": "Print Pack",
+      "notActive": "Etkin değil",
+      "edit": "Tasarımı düzenle",
+      "download": "İndir",
+      "editName": "{name} adlı kodun tasarımını düzenle",
+      "downloadName": "{name} adlı kodu indir",
+      "private": "Yalnızca {email} için özel. Bu kodları başka kimse göremez.",
+      "metricScans14": "{count, plural, one {# tarama} other {# tarama}} · 14 gün"
     },
     "workspace": {
       "kicker": "QR kodlarım",
@@ -597,7 +580,7 @@
     "title": "Hey QR’a giriş yapın",
     "lead": "Tasarımınız hesabınıza kaydedilir, böylece ödemeden sonra indirebilirsiniz.",
     "google": "Google ile devam et",
-    "legal": "Devam ederek Koşulları ve Gizlilik Politikasını kabul etmiş olursunuz.",
+    "legal": "Devam ederek <terms>Koşulları</terms> ve <privacy>Gizlilik Politikasını</privacy> kabul etmiş olursunuz.",
     "failed": "Giriş başarısız oldu. Lütfen tekrar deneyin.",
     "canceled": {
       "draft": "Google ile giriş iptal edildi. Tasarımınız bu tarayıcıda hâlâ kayıtlı. Tekrar denemek için Google ile devam edin.",
@@ -922,7 +905,11 @@
       "smsTo": "Mesajı alacak numarayı girin.",
       "address": "Harita uygulamasının açacağı adresi girin.",
       "eventTitle": "Etkinliğe bir ad verin.",
-      "eventStart": "Bir tarih seçin."
+      "eventStart": "Bir tarih seçin.",
+      "eventDateInvalid": "Geçerli bir tarih girin.",
+      "eventEndInvalid": "Bitiş saatini saat ve dakika olarak girin.",
+      "eventEndNeedsStart": "Bir başlangıç saati ekleyin veya bitiş saatini temizleyin.",
+      "eventEnd": "Etkinlik başlamadan önce bitiyor. Daha geç bir bitiş saati seçin."
     },
     "afterScanning": {
       "label": "Taradıktan sonra",
@@ -1546,7 +1533,7 @@
     "text": "Koddaki metin çok uzun. Yaklaşık 8 karakterde tutun."
   },
   "export": {
-    "title": "Kodunuzu indirin",
+    "title": "Dosyanızı indirin",
     "shortLinkPreview": {
       "mark": "Önizleme",
       "note": "Örnek bir kısa bağlantıyla önizleme. Kalıcı kısa bağlantınız bu kodu etkinleştirdiğinizde oluşturulur ve indirdiğiniz her dosya onu içerir."
@@ -1569,10 +1556,10 @@
     "dpi": "{dpi} dpi",
     "pixels": "{width} × {height} px",
     "titleBuy": "QR kodunuzu indirin",
-    "titleGuest": "İndirmeye hazır",
-    "subGuest": "Düzeni ve dosyayı kontrol edin, ardından ödemek ve indirmek için Google ile giriş yapın. Tasarımınız olduğu gibi kalır.",
+    "titleGuest": "QR kodunuzu indirin",
+    "subGuest": "Düzeni ve biçimi kontrol edin. Ödemeden önce toplam tutarı göreceksiniz.",
     "subPay": "Düzeni ve biçimi kontrol edin. Ödemeden önce toplam tutarı göreceksiniz.",
-    "subEntitled": "Bu kod sizin. İstediğiniz biçimi, istediğiniz sıklıkta indirin.",
+    "subEntitled": "Satın alımınıza dahil. PNG ve SVG, istediğiniz kadar.",
     "stageLabel": "İndirilecek düzen",
     "layouts": "Bu kodun düzenleri",
     "backToDesign": "Tasarıma dön",
@@ -1609,7 +1596,7 @@
     },
     "checkoutFailed": "Ödeme sayfasını açamadık. Ücret alınmadı; tekrar deneyin.",
     "continueGoogle": "Google ile devam et",
-    "guestNote": "Tasarlamak ücretsiz. Yalnızca indirirken ödersiniz.",
+    "guestNote": "Ödemek için giriş yapın. Sizi {format} seçili olarak doğrudan bu düzene geri getireceğiz.",
     "receipt": {
       "title": "Makbuz",
       "paid": "Ödendi",
@@ -1636,7 +1623,8 @@
       "total": "Toplam",
       "tax": "Varsa vergi, ödeme sırasında hesaplanır.",
       "included": "Dahil",
-      "includedShort": "Dahil"
+      "includedShort": "Dahil",
+      "toPay": "Şimdi ödenecek"
     },
     "emptyTitle": "Henüz indirilecek bir şey yok",
     "emptyText": "Önce bir QR kod tasarlayın. Taslağınız siz indirene kadar bu tarayıcıda kalır.",
@@ -1713,7 +1701,11 @@
     },
     "limit": "daha büyük boyutlar {max} px’i aşar",
     "subUnlock": "{plan} planına dahil: bu, aylık statik kilit açma haklarınızdan 1’ini kullanır.",
-    "subCredit": "Bu, statik kredilerinizden 1’ini kullanır."
+    "subCredit": "Bu, statik kredilerinizden 1’ini kullanır.",
+    "titleDone": "İndirildi",
+    "subEntitledPlan": "Planınıza dahil. İstediğiniz kadar indirin.",
+    "pendingNote": "Bu genellikle birkaç saniye sürer. Lütfen bu sayfayı açık tutun.",
+    "includedNotePlan": "Planınıza dahil. Ödenecek bir şey yok."
   },
   "dashboard": {
     "noMatch": {
@@ -2091,7 +2083,12 @@
     "privacy": {
       "title": "Gizlilik Politikası"
     },
-    "draft": "Bu sayfa, yasal metin onaylanana kadar yer tutucudur."
+    "draft": "Sahibin ve hukuk ekibinin incelemesi için taslak. Bu metin henüz yürürlükte değildir ve yayımlanmadan önce değişebilir. Vurgulanan bölümlerin hâlâ onaylanması gerekiyor.",
+    "updated": "Son güncelleme: {date}",
+    "effectiveNote": "Yürürlük tarihi, bu metin onaylandığında belirlenecek.",
+    "onThisPage": "Bu sayfada",
+    "englishOnly": "Bu metin şimdilik yalnızca İngilizce olarak sunuluyor. İngilizce metin onaylandığında çevirisi de eklenecek.",
+    "placeholder": "Onaylanacak"
   },
   "errors": {
     "notFound": {

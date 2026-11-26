@@ -282,60 +282,43 @@
       "pricing": "Xem bảng giá"
     },
     "studio": {
-      "kicker": "Studio của bạn",
-      "welcome": "Chào mừng trở lại, {name}",
-      "summaryTop": "{name} đã được quét {count, plural, other {# lần}} hôm nay. Mọi thứ bạn tạo chỉ cách một chạm.",
-      "summary": "Mọi thứ bạn tạo chỉ cách một chạm: tệp, liên kết và lượt quét.",
-      "summaryEmpty": "Tạo mã đầu tiên và nó sẽ xuất hiện ở đây cùng tệp và lượt quét.",
       "billing": "Gói & thanh toán",
       "library": "Mở Mã QR của tôi",
-      "kpi": {
-        "codes": "Mã QR",
-        "codesNote": "{paid} đã thanh toán · {drafts, plural, other {# bản nháp}}",
-        "scans": "Lượt quét · 14 ngày",
-        "scansNone": "Chưa có lượt quét",
-        "scansDelta": "{delta, number, ::sign-always percent} so với tuần trước",
-        "dynamic": "Mã động",
-        "dynamicNote": "Còn {left, plural, other {# suất}} trong gói của bạn",
-        "dynamicMeter": "Mã động đang dùng",
-        "files": "Tệp sẵn sàng",
-        "filesNote": "{count, plural, other {bố cục}} để tải dưới dạng PNG hoặc SVG"
-      },
       "chart": {
-        "title": "Lượt quét · 14 ngày qua",
-        "sub": "Tất cả mã động",
+        "title": "Phân tích lượt quét",
+        "sub": "Mã động · 14 ngày qua",
         "empty": "Lượt quét mã động của bạn sẽ hiển thị ở đây.",
-        "today": "Hôm nay",
-        "label": "Lượt quét hằng ngày của các mã động trong 14 ngày qua"
+        "label": "Lượt quét hằng ngày của các mã động trong 14 ngày qua",
+        "plans": "Phân tích lượt quét có trong Starter và Studio.",
+        "note": "Chỉ với gói mã động: tổng theo ngày trên Starter, biểu đồ theo từng mã trên Studio."
       },
-      "top": "Mã nổi bật",
-      "topNote": "{count, plural, other {# lượt quét}} trong 14 ngày · {link}",
-      "topNone": "Chưa có mã động",
-      "topNoneNote": "Mã động đếm mọi lượt quét.",
       "recent": "Mã gần đây",
-      "seeAll": "Xem tất cả {count}",
-      "recentEmpty": "Mã của bạn sẽ nằm ở đây, cùng tệp và lượt quét.",
-      "createFirst": "Tạo mã đầu tiên",
-      "open": "Mở",
+      "recentEmpty": "Mã đầu tiên của bạn sẽ xuất hiện ở đây cùng bố cục và tệp.",
+      "createFirst": "Tạo mã QR",
       "openName": "Mở {name}",
       "status": {
-        "dynamic": "Động · đang hoạt động",
-        "paid": "Đã thanh toán",
         "draft": "Bản nháp"
       },
-      "metricScans": "{count, plural, other {# lượt quét}}",
       "metricLayouts": "{count, plural, other {# bố cục}}",
-      "metricFinish": "Hoàn tất để tải xuống",
-      "perksTitle": "Có sẵn trong tài khoản của bạn",
-      "perks": {
-        "again": "Tải lại miễn phí mọi bố cục đã thanh toán, dạng PNG hoặc SVG",
-        "redirect": "Trỏ mã động sang nơi mới mà không cần in lại",
-        "scans": "Số lượt quét hằng ngày cho mọi mã động",
-        "drafts": "Bản nháp được lưu vào tài khoản trên mọi thiết bị",
-        "billing": "Biên lai, gói và phương thức thanh toán trong Gói & thanh toán"
-      },
       "loading": "Đang tải studio của bạn",
-      "trial": "Dùng thử miễn phí · còn {days, plural, other {# ngày}}"
+      "trial": "Dùng thử miễn phí · còn {days, plural, other {# ngày}}",
+      "lead": "Chào mừng trở lại, {name}. Mọi thứ bạn đã tạo chỉ cách một lần chạm: tệp, bố cục và lượt quét.",
+      "leadEmpty": "Chào mừng trở lại, {name}. Mã đầu tiên của bạn sẽ xuất hiện ở đây.",
+      "points": {
+        "side": "Mã tĩnh và mã động đặt cạnh nhau, mỗi mã kèm bố cục và tệp của nó",
+        "files": "Sửa thiết kế hoặc tải lại PNG và SVG bất cứ lúc nào",
+        "scans": "Phân tích lượt quét với gói mã động: tổng theo ngày trên Starter, theo từng mã trên Studio",
+        "print": "Print Pack luôn đi kèm mã QR của nó, sẵn sàng gửi đến nhà in"
+      },
+      "onlyYou": "Chỉ bạn mới thấy mục này",
+      "printPack": "Print Pack",
+      "notActive": "Không hoạt động",
+      "edit": "Sửa thiết kế",
+      "download": "Tải xuống",
+      "editName": "Sửa thiết kế của {name}",
+      "downloadName": "Tải xuống {name}",
+      "private": "Riêng tư với {email}. Không ai khác có thể thấy các mã này.",
+      "metricScans14": "{count, plural, other {# lượt quét}} · 14 ngày"
     },
     "workspace": {
       "kicker": "Mã QR của tôi",
@@ -593,7 +576,7 @@
     "title": "Đăng nhập Hey QR",
     "lead": "Thiết kế của bạn được lưu vào tài khoản để bạn có thể tải xuống sau khi thanh toán.",
     "google": "Tiếp tục với Google",
-    "legal": "Khi tiếp tục, bạn đồng ý với Điều khoản và Chính sách quyền riêng tư.",
+    "legal": "Khi tiếp tục, bạn đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách quyền riêng tư</privacy>.",
     "failed": "Đăng nhập thất bại. Vui lòng thử lại.",
     "canceled": {
       "draft": "Đăng nhập Google đã bị hủy. Thiết kế của bạn vẫn được lưu trong trình duyệt này. Chọn Tiếp tục với Google để thử lại.",
@@ -918,7 +901,11 @@
       "smsTo": "Nhập số sẽ nhận tin nhắn.",
       "address": "Nhập địa chỉ ứng dụng bản đồ sẽ mở.",
       "eventTitle": "Đặt tên cho sự kiện.",
-      "eventStart": "Chọn một ngày."
+      "eventStart": "Chọn một ngày.",
+      "eventDateInvalid": "Nhập một ngày hợp lệ.",
+      "eventEndInvalid": "Nhập giờ kết thúc theo giờ và phút.",
+      "eventEndNeedsStart": "Thêm giờ bắt đầu hoặc xóa giờ kết thúc.",
+      "eventEnd": "Sự kiện kết thúc trước khi bắt đầu. Chọn giờ kết thúc muộn hơn."
     },
     "afterScanning": {
       "label": "Sau khi quét",
@@ -1542,7 +1529,7 @@
     "text": "Văn bản trong mã quá dài. Hãy giữ khoảng 8 ký tự."
   },
   "export": {
-    "title": "Tải mã của bạn",
+    "title": "Tải tệp của bạn",
     "shortLinkPreview": {
       "mark": "Xem trước",
       "note": "Bản xem trước với liên kết rút gọn mẫu. Liên kết rút gọn cố định của bạn được tạo khi bạn kích hoạt mã này, và mọi tệp bạn tải xuống đều chứa liên kết đó."
@@ -1565,10 +1552,10 @@
     "dpi": "{dpi} dpi",
     "pixels": "{width} × {height} px",
     "titleBuy": "Tải mã QR của bạn",
-    "titleGuest": "Sẵn sàng tải xuống",
-    "subGuest": "Kiểm tra bố cục và tệp, rồi đăng nhập bằng Google để thanh toán và tải xuống. Thiết kế của bạn vẫn giữ nguyên.",
+    "titleGuest": "Tải mã QR của bạn",
+    "subGuest": "Kiểm tra bố cục và định dạng. Bạn sẽ thấy tổng tiền trước khi thanh toán.",
     "subPay": "Kiểm tra bố cục và định dạng. Bạn sẽ thấy tổng tiền trước khi thanh toán.",
-    "subEntitled": "Mã này là của bạn. Tải bất kỳ định dạng nào, bao nhiêu lần tùy ý.",
+    "subEntitled": "Đã bao gồm trong giao dịch mua. PNG và SVG, bao nhiêu lần tùy ý.",
     "stageLabel": "Bố cục để tải xuống",
     "layouts": "Bố cục của mã này",
     "backToDesign": "Quay lại thiết kế",
@@ -1605,7 +1592,7 @@
     },
     "checkoutFailed": "Không thể mở trang thanh toán. Bạn chưa bị trừ tiền; hãy thử lại.",
     "continueGoogle": "Tiếp tục với Google",
-    "guestNote": "Thiết kế miễn phí. Bạn chỉ trả tiền khi tải xuống.",
+    "guestNote": "Đăng nhập để thanh toán. Chúng tôi sẽ đưa bạn quay lại ngay bố cục này với {format} đã chọn.",
     "receipt": {
       "title": "Biên lai",
       "paid": "Đã thanh toán",
@@ -1632,7 +1619,8 @@
       "total": "Tổng",
       "tax": "Thuế (nếu có) được tính khi thanh toán.",
       "included": "Đã bao gồm",
-      "includedShort": "Bao gồm"
+      "includedShort": "Bao gồm",
+      "toPay": "Cần thanh toán ngay"
     },
     "emptyTitle": "Chưa có gì để tải xuống",
     "emptyText": "Hãy thiết kế một mã QR trước. Bản nháp được lưu trong trình duyệt này cho đến khi bạn tải xuống.",
@@ -1709,7 +1697,11 @@
     },
     "limit": "kích thước lớn hơn vượt quá {max} px",
     "subUnlock": "Có trong {plan}: lần này dùng 1 lượt mở khóa Tĩnh hằng tháng của bạn.",
-    "subCredit": "Lần này dùng 1 tín dụng Tĩnh của bạn."
+    "subCredit": "Lần này dùng 1 tín dụng Tĩnh của bạn.",
+    "titleDone": "Đã tải xuống",
+    "subEntitledPlan": "Đã bao gồm trong gói của bạn. Tải xuống bao nhiêu lần tùy ý.",
+    "pendingNote": "Thường chỉ mất vài giây. Vui lòng giữ trang này mở.",
+    "includedNotePlan": "Đã bao gồm trong gói của bạn. Không cần trả thêm."
   },
   "dashboard": {
     "noMatch": {
@@ -2087,7 +2079,12 @@
     "privacy": {
       "title": "Chính sách quyền riêng tư"
     },
-    "draft": "Trang này là bản tạm thời cho đến khi nội dung pháp lý được phê duyệt."
+    "draft": "Bản nháp để chủ sở hữu và bộ phận pháp lý xem xét. Văn bản này chưa có hiệu lực và có thể thay đổi trước khi công bố. Các phần được đánh dấu vẫn cần xác nhận.",
+    "updated": "Cập nhật lần cuối: {date}",
+    "effectiveNote": "Ngày có hiệu lực sẽ được ấn định khi văn bản này được phê duyệt.",
+    "onThisPage": "Trên trang này",
+    "englishOnly": "Hiện văn bản này chỉ có bằng tiếng Anh. Bản dịch sẽ có sau khi văn bản tiếng Anh được phê duyệt.",
+    "placeholder": "Chờ xác nhận"
   },
   "errors": {
     "notFound": {

@@ -282,60 +282,43 @@
       "pricing": "Zobacz cennik"
     },
     "studio": {
-      "kicker": "Twoje studio",
-      "welcome": "Witaj ponownie, {name}",
-      "summaryTop": "{name} zeskanowano dziś {count, plural, one {# raz} few {# razy} many {# razy} other {# razy}}. Wszystkie Twoje projekty masz pod ręką.",
-      "summary": "Wszystkie Twoje projekty masz pod ręką: pliki, linki i skany.",
-      "summaryEmpty": "Utwórz pierwszy kod, a pojawi się tutaj razem z plikami i skanami.",
       "billing": "Plan i płatności",
       "library": "Otwórz Moje kody QR",
-      "kpi": {
-        "codes": "Kody QR",
-        "codesNote": "Opłacone: {paid} · {drafts, plural, one {# szkic} few {# szkice} many {# szkiców} other {# szkicu}}",
-        "scans": "Skany · 14 dni",
-        "scansNone": "Brak skanów",
-        "scansDelta": "{delta, number, ::sign-always percent} w porównaniu z poprzednim tygodniem",
-        "dynamic": "Kody dynamiczne",
-        "dynamicNote": "W Twoim planie {left, plural, one {został # slot} few {zostały # sloty} many {zostało # slotów} other {zostało # slotu}}",
-        "dynamicMeter": "Używane kody dynamiczne",
-        "files": "Gotowe pliki",
-        "filesNote": "{count, plural, one {układ} few {układy} many {układów} other {układu}} do pobrania jako PNG lub SVG"
-      },
       "chart": {
-        "title": "Skany · ostatnie 14 dni",
-        "sub": "Wszystkie kody dynamiczne razem",
+        "title": "Analityka skanów",
+        "sub": "Kody dynamiczne · ostatnie 14 dni",
         "empty": "Tutaj pojawią się skany Twoich kodów dynamicznych.",
-        "today": "Dziś",
-        "label": "Dzienne skany wszystkich kodów dynamicznych z ostatnich 14 dni"
+        "label": "Dzienne skany wszystkich kodów dynamicznych z ostatnich 14 dni",
+        "plans": "Analityka skanów jest dostępna w planach Starter i Studio.",
+        "note": "Tylko plany dynamiczne: dzienne sumy w Starter, wykresy dla każdego kodu w Studio."
       },
-      "top": "Najlepszy kod",
-      "topNote": "{count, plural, one {# skan} few {# skany} many {# skanów} other {# skanu}} w 14 dni · {link}",
-      "topNone": "Nie masz jeszcze kodów dynamicznych",
-      "topNoneNote": "Kody dynamiczne liczą każdy skan.",
       "recent": "Ostatnie kody",
-      "seeAll": "Zobacz wszystkie ({count})",
-      "recentEmpty": "Tutaj znajdziesz swoje kody razem z plikami i skanami.",
-      "createFirst": "Utwórz pierwszy kod",
-      "open": "Otwórz",
+      "recentEmpty": "Tutaj pojawi się Twój pierwszy kod wraz z układami i plikami.",
+      "createFirst": "Utwórz kod QR",
       "openName": "Otwórz {name}",
       "status": {
-        "dynamic": "Dynamiczny · aktywny",
-        "paid": "Opłacony",
         "draft": "Szkic"
       },
-      "metricScans": "{count, plural, one {# skan} few {# skany} many {# skanów} other {# skanu}}",
       "metricLayouts": "{count, plural, one {# układ} few {# układy} many {# układów} other {# układu}}",
-      "metricFinish": "Dokończ, aby pobrać",
-      "perksTitle": "W ramach Twojego konta",
-      "perks": {
-        "again": "Pobieraj każdy opłacony układ ponownie, jako PNG lub SVG, bez opłat",
-        "redirect": "Kieruj kody dynamiczne w nowe miejsca bez ponownego drukowania",
-        "scans": "Dzienne statystyki skanów dla każdego kodu dynamicznego",
-        "drafts": "Szkice zapisane na koncie na każdym urządzeniu",
-        "billing": "Potwierdzenia, plan i metoda płatności w sekcji Plan i płatności"
-      },
       "loading": "Ładowanie Twojego studia",
-      "trial": "Darmowy okres próbny · {days, plural, one {został # dzień} few {zostały # dni} many {zostało # dni} other {zostało # dnia}}"
+      "trial": "Darmowy okres próbny · {days, plural, one {został # dzień} few {zostały # dni} many {zostało # dni} other {zostało # dnia}}",
+      "lead": "Witaj ponownie, {name}. Wszystkie Twoje kody masz pod ręką: pliki, układy i skany.",
+      "leadEmpty": "Witaj ponownie, {name}. Tutaj pojawi się Twój pierwszy kod.",
+      "points": {
+        "side": "Kody statyczne i dynamiczne obok siebie, każdy ze swoimi układami i plikami",
+        "files": "Edytuj wygląd lub pobierz ponownie PNG i SVG, kiedy chcesz",
+        "scans": "Analityka skanów w planach dynamicznych: dzienne sumy w Starter, dla każdego kodu w Studio",
+        "print": "Print Packi zostają przy swoim QR, gotowe do wysłania do drukarni"
+      },
+      "onlyYou": "Tylko Ty to widzisz",
+      "printPack": "Print Pack",
+      "notActive": "Nieaktywny",
+      "edit": "Edytuj wygląd",
+      "download": "Pobierz",
+      "editName": "Edytuj wygląd: {name}",
+      "downloadName": "Pobierz {name}",
+      "private": "Widoczne tylko dla {email}. Nikt inny nie widzi tych kodów.",
+      "metricScans14": "{count, plural, one {# skan} few {# skany} many {# skanów} other {# skanu}} · 14 dni"
     },
     "workspace": {
       "kicker": "Moje kody QR",
@@ -597,7 +580,7 @@
     "title": "Zaloguj się do Hey QR",
     "lead": "Twój projekt zostaje zapisany na koncie, więc możesz go pobrać po płatności.",
     "google": "Kontynuuj z Google",
-    "legal": "Kontynuując, akceptujesz Regulamin i Politykę prywatności.",
+    "legal": "Kontynuując, akceptujesz <terms>Regulamin</terms> i <privacy>Politykę prywatności</privacy>.",
     "failed": "Logowanie nie powiodło się. Spróbuj ponownie.",
     "canceled": {
       "draft": "Logowanie przez Google zostało anulowane. Twój projekt jest nadal zapisany w tej przeglądarce. Kliknij „Kontynuuj z Google”, aby spróbować ponownie.",
@@ -922,7 +905,11 @@
       "smsTo": "Wpisz numer, który ma otrzymać wiadomość.",
       "address": "Wpisz adres, który ma otworzyć aplikacja map.",
       "eventTitle": "Nadaj wydarzeniu nazwę.",
-      "eventStart": "Wybierz datę."
+      "eventStart": "Wybierz datę.",
+      "eventDateInvalid": "Wpisz prawidłową datę.",
+      "eventEndInvalid": "Wpisz godzinę zakończenia w godzinach i minutach.",
+      "eventEndNeedsStart": "Dodaj godzinę rozpoczęcia albo wyczyść godzinę zakończenia.",
+      "eventEnd": "Wydarzenie kończy się, zanim się zacznie. Wybierz późniejszą godzinę zakończenia."
     },
     "afterScanning": {
       "label": "Po zeskanowaniu",
@@ -1546,7 +1533,7 @@
     "text": "Tekst w kodzie jest za długi. Ogranicz go do ok. 8 znaków."
   },
   "export": {
-    "title": "Pobierz swój kod",
+    "title": "Pobierz swój plik",
     "shortLinkPreview": {
       "mark": "Podgląd",
       "note": "Podgląd z przykładowym krótkim linkiem. Twój stały krótki link powstaje po aktywowaniu kodu i zawiera go każdy pobrany plik."
@@ -1569,10 +1556,10 @@
     "dpi": "{dpi} dpi",
     "pixels": "{width} × {height} px",
     "titleBuy": "Pobierz swój kod QR",
-    "titleGuest": "Gotowe do pobrania",
-    "subGuest": "Sprawdź układ i plik, a potem zaloguj się przez Google, aby zapłacić i pobrać. Twój projekt zostaje bez zmian.",
+    "titleGuest": "Pobierz swój kod QR",
+    "subGuest": "Sprawdź układ i format. Przed płatnością zobaczysz kwotę końcową.",
     "subPay": "Sprawdź układ i format. Przed płatnością zobaczysz kwotę końcową.",
-    "subEntitled": "Ten kod jest Twój. Pobieraj go w dowolnym formacie tyle razy, ile potrzebujesz.",
+    "subEntitled": "W cenie zakupu. PNG i SVG, tyle razy, ile chcesz.",
     "stageLabel": "Układ do pobrania",
     "layouts": "Układy tego kodu",
     "backToDesign": "Wróć do wyglądu",
@@ -1609,7 +1596,7 @@
     },
     "checkoutFailed": "Nie udało się otworzyć płatności. Nie pobrano opłaty; spróbuj ponownie.",
     "continueGoogle": "Kontynuuj z Google",
-    "guestNote": "Projektowanie za darmo. Płacisz dopiero przy pobieraniu.",
+    "guestNote": "Zaloguj się, aby zapłacić. Wrócisz prosto do tego układu z wybranym formatem {format}.",
     "receipt": {
       "title": "Potwierdzenie",
       "paid": "Zapłacono",
@@ -1636,7 +1623,8 @@
       "total": "Razem",
       "tax": "Ewentualny podatek jest naliczany przy płatności.",
       "included": "W cenie",
-      "includedShort": "W cenie"
+      "includedShort": "W cenie",
+      "toPay": "Do zapłaty teraz"
     },
     "emptyTitle": "Nie ma jeszcze nic do pobrania",
     "emptyText": "Najpierw zaprojektuj kod QR. Twój szkic zostaje w tej przeglądarce do czasu pobrania.",
@@ -1713,7 +1701,11 @@
     },
     "limit": "większe rozmiary przekraczają {max} px",
     "subUnlock": "W ramach {plan}: zużywa 1 z miesięcznych odblokowań statycznych.",
-    "subCredit": "Zużywa 1 z Twoich kredytów statycznych."
+    "subCredit": "Zużywa 1 z Twoich kredytów statycznych.",
+    "titleDone": "Pobrano",
+    "subEntitledPlan": "W ramach Twojego planu. Pobieraj tyle razy, ile chcesz.",
+    "pendingNote": "Zwykle trwa to kilka sekund. Nie zamykaj tej strony.",
+    "includedNotePlan": "W ramach Twojego planu. Nic nie płacisz."
   },
   "dashboard": {
     "noMatch": {
@@ -2091,7 +2083,12 @@
     "privacy": {
       "title": "Polityka prywatności"
     },
-    "draft": "Ta strona jest tymczasowa, dopóki tekst prawny nie zostanie zatwierdzony."
+    "draft": "Wersja robocza do weryfikacji przez właściciela i prawnika. Ten tekst jeszcze nie obowiązuje i może się zmienić przed publikacją. Wyróżnione fragmenty wymagają jeszcze potwierdzenia.",
+    "updated": "Ostatnia aktualizacja: {date}",
+    "effectiveNote": "Data wejścia w życie zostanie ustalona po zatwierdzeniu tego tekstu.",
+    "onThisPage": "Na tej stronie",
+    "englishOnly": "Na razie ten dokument jest dostępny tylko po angielsku. Tłumaczenie pojawi się po zatwierdzeniu tekstu angielskiego.",
+    "placeholder": "Do potwierdzenia"
   },
   "errors": {
     "notFound": {
