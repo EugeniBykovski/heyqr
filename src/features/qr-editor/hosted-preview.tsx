@@ -2,22 +2,25 @@
 
 import { LockIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { HostedPage } from "@/entities/hosted-page";
-import type { HostedContent } from "@/entities/qr";
+import { HostedPage, HostedPageSkeleton } from "@/entities/hosted-page";
+import type { HostedContent, HostedType } from "@/entities/qr";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 
 /**
  * Design 10.4 / 11.x "After scan": the hosted page as visitors will see it, inside a phone. Nothing in it navigates
- * (the editor preview stays in the editor). The address bar shows the code's short link.
+ * (the editor preview stays in the editor). The address bar shows the code's short link. Without content (design
+ * 10.8, the draft still loading) the phone shows the hosted page's loading shapes for `type`.
  */
 export function HostedPreview({
   content,
+  type = content?.type ?? "menu",
   shortLabel,
   forceExpired,
   className,
 }: {
-  content: HostedContent;
+  content: HostedContent | null;
+  type?: HostedType;
   /** The short link as shown in the address bar ("www.heyqr.me/r/…"). */
   shortLabel: string;
   forceExpired?: boolean;
@@ -29,7 +32,7 @@ export function HostedPreview({
     <figure aria-label={t("afterScanning.label")} className={cn("flex flex-col items-center gap-3", className)}>
       <figcaption className="flex w-full max-w-[23rem] items-center justify-between gap-2">
         <span className="text-[0.8125rem] font-semibold text-secondary-foreground">{t("afterScanning.label")}</span>
-        <Badge>{tTypes(content.type)}</Badge>
+        <Badge>{tTypes(type)}</Badge>
       </figcaption>
       <div className="aspect-[9/17] w-full max-w-[18.75rem] rounded-[2.5rem] bg-inverse p-2 shadow-2">
         <div className="flex h-full flex-col overflow-hidden rounded-[2rem] bg-surface">
@@ -38,7 +41,7 @@ export function HostedPreview({
             <span className="truncate">{shortLabel}</span>
           </div>
           <div className="min-h-0 flex-1 [scrollbar-width:none] overflow-y-auto">
-            <HostedPage content={content} mode="preview" forceExpired={forceExpired} />
+            {content ? <HostedPage content={content} mode="preview" forceExpired={forceExpired} /> : <HostedPageSkeleton />}
           </div>
         </div>
       </div>
