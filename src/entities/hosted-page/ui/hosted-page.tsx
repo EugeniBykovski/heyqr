@@ -244,7 +244,7 @@ function CouponPage({ content, mode, forceExpired, now }: HostedPageProps & { co
         className={cn(
           pad,
           "mt-1 overflow-hidden rounded-[1.125rem]",
-          expired ? "bg-muted text-secondary-foreground" : "bg-accent-strong text-inverse-foreground",
+          expired ? "bg-muted text-secondary-foreground" : "bg-primary text-primary-foreground",
         )}
       >
         <div className="flex flex-col gap-1.5 px-4.5 pt-4.5 pb-3.5">
@@ -506,7 +506,7 @@ function AppsPage({ content, mode, desktop, desktopQr }: HostedPageProps & { con
       ) : (
         <span
           aria-hidden
-          className="grid size-19 shrink-0 place-items-center rounded-[1.25rem] bg-accent-strong text-inverse-foreground shadow-2"
+          className="grid size-19 shrink-0 place-items-center rounded-[1.25rem] bg-primary text-primary-foreground shadow-2"
         >
           <SmartphoneIcon className="size-8" />
         </span>

@@ -36,7 +36,7 @@ import { ContentForm } from "./content-form";
 import { contentErrors } from "./content-validation";
 import { ScanStatus } from "./scan-status";
 import { TooLongNotice } from "./too-long-notice";
-import { readDraft, writeDraft } from "./use-draft";
+import { handOffDraft, readDraft, setHomeDraft } from "./use-draft";
 
 /** Types the quick builder edits in place; "more" opens the editor's Type step. */
 const QUICK_TYPES = ["website", "wifi", "contact"] as const;
@@ -89,6 +89,12 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
     if (isQuickType(savedType)) setByType((m) => ({ ...m, [savedType]: directContent(saved.content) }));
   }, []);
 
+  // Explore's CTA, further down the page, starts from what is shown here (see setHomeDraft).
+  useEffect(() => {
+    setHomeDraft(design);
+  }, [design]);
+  useEffect(() => () => setHomeDraft(null), []);
+
   const type = design.content.type;
   const quick = isQuickType(type) ? type : null;
   const errors = useMemo(() => contentErrors(design.content), [design.content]);
@@ -115,7 +121,7 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
 
   /** The draft goes through browser storage only; the URL carries just the step. */
   const openEditor = (next: EditorDesign, step: "type" | "content" | "design") => {
-    writeDraft(next);
+    handOffDraft(next);
     router.push(`/create?step=${step}`);
   };
 

@@ -5,11 +5,15 @@ import { SmartphoneIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { env } from "@/env";
+import { isHostedType, type HostedType } from "@/entities/qr";
+import { previewShortLink } from "@/shared/lib/short-link";
 import { cn } from "@/shared/lib/utils";
 import { Skeleton, SkeletonGhostText, SkeletonText, skeletonReveal } from "@/shared/ui/skeleton";
 import { Stage, StageBar, StageCanvas, StageFoot } from "@/shared/ui/stage";
 import { BottomBar } from "./bottom-bar";
 import { ContentPreview } from "./content-preview";
+import { HostedPreview } from "./hosted-preview";
 import { ModeChoice } from "./mode-choice";
 import {
   contentAside,
@@ -85,20 +89,34 @@ function TypeSkeleton() {
 }
 
 /**
- * Design 5.1 "Content · loading": the form's boxes and, in the phone, the preview's own loading shapes at the final
- * size (website, the default type). The real form replaces this on the editor's first render; nothing after that waits.
+ * Design 5.1 / 10.8 "Content · loading": the form's boxes and, in the phone, the preview's own loading shapes at the
+ * final size. A hosted type named in the URL (?type=menu, from Explore) gets its heading, the hosted notice and the
+ * hosted page's loading shapes; otherwise website, the default type. The real form replaces this on the editor's
+ * first render; nothing after that waits.
  */
-function ContentSkeleton({ label }: { label: string }) {
+function ContentSkeleton({ label, hosted }: { label: string; hosted: HostedType | null }) {
   const t = useTranslations("editor");
   const tTypes = useTranslations("home.types");
+  const type = hosted ?? "website";
+  const eyebrow = hosted
+    ? `${tTypes(`${hosted}.label`)} · ${t("hosted.badge")} · ${t("model.dynamic")}`
+    : `${tTypes("website.label")} · ${t("model.static")}`;
   return (
     <div className={cn("group/step", contentStepGrid)}>
       <div className="flex min-w-0 flex-col gap-4.5">
         <div className="mb-1 flex max-w-measure flex-col gap-2">
-          <SkeletonGhostText className="text-label" barClassName="w-28" text={`${tTypes("website.label")} · ${t("model.static")}`} />
-          <SkeletonGhostText className="text-h1" barClassName="w-3/4" text={t("contentStep.titles.website")} />
-          <SkeletonGhostText className="text-secondary-foreground" text={t("contentStep.subs.website")} />
+          <SkeletonGhostText className="text-label" barClassName="w-28" text={eyebrow} />
+          <SkeletonGhostText className="text-h1" barClassName="w-3/4" text={t(`contentStep.titles.${type}`)} />
+          <SkeletonGhostText className="text-secondary-foreground" text={t(`contentStep.subs.${type}`)} />
         </div>
+        {hosted ? (
+          <div className="flex flex-col gap-2.5 rounded-lg border border-border bg-subtle p-3.5">
+            <Skeleton className="h-5.5 w-24 rounded-full" />
+            <Skeleton className="h-3 w-full rounded-full" />
+            <Skeleton className="h-3 w-5/6 rounded-full" />
+            <Skeleton className="h-3 w-2/3 rounded-full" />
+          </div>
+        ) : null}
         <div className="lg:hidden">
           <div data-slot="preview-toggle" className={previewToggle}>
             <span className="grid size-9 shrink-0 place-items-center rounded-sm bg-subtle">
@@ -110,12 +128,13 @@ function ContentSkeleton({ label }: { label: string }) {
             </span>
           </div>
         </div>
-        {[0, 1].map((i) => (
+        {(hosted ? [0, 1, 2] : [0, 1]).map((i) => (
           <div key={i} className="flex flex-col gap-1.5">
             <SkeletonText className="text-label" barClassName="w-28" />
             <Skeleton className="h-11 w-full rounded-md" />
           </div>
         ))}
+        {hosted ? <Skeleton className="h-40 w-full rounded-xl" /> : null}
         <BottomBar>
           <Skeleton className="h-11 w-20 rounded-full max-sm:hidden" />
           <div className="flex min-w-0 flex-1 flex-col gap-1.5 sm:hidden">
@@ -127,7 +146,15 @@ function ContentSkeleton({ label }: { label: string }) {
         </BottomBar>
       </div>
       <div className={contentAside}>
-        <ContentPreview content={{ type: "website", url: "" }} mode="static" loading />
+        {hosted ? (
+          <HostedPreview
+            content={null}
+            type={hosted}
+            shortLabel={previewShortLink(env.NEXT_PUBLIC_SHORT_LINK_BASE).replace(/^https?:\/\//, "")}
+          />
+        ) : (
+          <ContentPreview content={{ type: "website", url: "" }} mode="static" loading />
+        )}
       </div>
       <p role="status" className="sr-only">
         {label}
@@ -141,6 +168,8 @@ export function EditorSkeleton({ design = false }: { design?: boolean }) {
   const t = useTranslations("loading");
   const params = useSearchParams();
   const step = params.get("step");
+  const urlType = params.get("type") ?? "";
+  const hosted = isHostedType(urlType) ? urlType : null;
   if (!design && step !== "design" && !params.get("resume"))
     return (
       <div aria-busy="true" aria-label={t("editor")} className={cn("flex flex-col", skeletonReveal)}>
@@ -158,7 +187,7 @@ export function EditorSkeleton({ design = false }: { design?: boolean }) {
             <div className="flex flex-1 justify-end" />
           </div>
         </div>
-        {step === "content" ? <ContentSkeleton label={t("editor")} /> : <TypeSkeleton />}
+        {step === "content" ? <ContentSkeleton label={t("editor")} hosted={hosted} /> : <TypeSkeleton />}
       </div>
     );
   return (

@@ -21,6 +21,11 @@ const UNREADABLE_KEY = "heyqr:draft:unreadable";
  * once the save succeeds; kept (with the draft) when it fails.
  */
 const CLAIM_KEY = "heyqr:draft:claim";
+/**
+ * Set for one editor load when the homepage hands its draft over (Explore's "Create a … QR", quick-create's
+ * "Continue designing"): that draft is what the visitor just chose, not something to announce as restored.
+ */
+const HANDOFF_KEY = "heyqr:draft:handoff";
 
 /** This draft's claim key, created on first use; undefined when storage is unavailable (the save still works). */
 export function draftClaimKey(): string | undefined {
@@ -85,6 +90,21 @@ export function readDraft(): EditorDesign | null {
 export function useDraft() {
   // The editor renders only in the browser (see QrEditorLoader), so storage can be read during the first render.
   const [read] = useState(loadDraft);
+  // Read once (Strict Mode renders twice, so the flag is cleared in an effect, not here).
+  const [handedOff] = useState(() => {
+    try {
+      return window.sessionStorage.getItem(HANDOFF_KEY) === "1";
+    } catch {
+      return false;
+    }
+  });
+  useEffect(() => {
+    try {
+      window.sessionStorage.removeItem(HANDOFF_KEY);
+    } catch {
+      /* nothing to clear */
+    }
+  }, []);
   const [design, setDesign] = useState<EditorDesign>(read.status === "restored" ? read.design : DEFAULT_DESIGN);
   const initial = useRef(design);
   /** The latest edit that the debounce hasn't written yet. */
@@ -122,6 +142,8 @@ export function useDraft() {
     design,
     setDesign,
     restored: read.status === "restored",
+    /** The draft came from the homepage just now (see HANDOFF_KEY). */
+    handedOff: read.status === "restored" && handedOff,
     unreadable: read.status === "unreadable",
     modeAdjusted: read.status === "restored" && read.modeAdjusted,
   };
@@ -136,9 +158,29 @@ export function writeDraft(design: EditorDesign) {
   }
 }
 
-/** Keeps the current draft's look but starts new content of `type` (home type chips and footer links). */
+/** Saves the draft and marks it as handed over by the homepage, right before opening the editor with it. */
+export function handOffDraft(design: EditorDesign) {
+  writeDraft(design);
+  try {
+    window.sessionStorage.setItem(HANDOFF_KEY, "1");
+  } catch {
+    /* storage unavailable: the editor then says the draft was restored, which is still true */
+  }
+}
+
+/**
+ * What the homepage's quick builder shows right now, while it is on the page. It isn't saved until "Continue
+ * designing" (an invalid draft is never stored, HEY-16), so Explore's "Create a … QR" reads it from here to carry the
+ * typed content and the chosen look into the editor (design 10.1).
+ */
+let homeDraft: EditorDesign | null = null;
+export function setHomeDraft(design: EditorDesign | null) {
+  homeDraft = design;
+}
+
+/** Keeps the current draft's look (the quick builder's, else the stored one) but starts new content of `type`. */
 export function draftForType(type: QrType): EditorDesign {
-  const current = readDraft() ?? DEFAULT_DESIGN;
+  const current = homeDraft ?? readDraft() ?? DEFAULT_DESIGN;
   return current.content.type === type ? current : { ...current, content: emptyContent(type), model: modeFor(type, current.model) };
 }
 

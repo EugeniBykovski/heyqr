@@ -58,7 +58,8 @@ describe("hosted page rules (shared by the editor and the server)", () => {
     });
     expect(hostedErrors({ ...m, sections: [] }, NOW)).toEqual({ sections: "menuSections" });
     expect(formatHostedPrice("4.50", "USD")).toBe("$4.50");
-    expect(formatHostedPrice("12", "EUR", "de").replace(/\s/g, " ")).toBe("12 €");
+    expect(formatHostedPrice("12", "EUR", "de").replace(/\s/g, " ")).toBe("12,00 €");
+    expect(formatHostedPrice("11", "USD")).toBe("$11.00");
     expect(formatHostedPrice("", "USD")).toBe("");
   });
 

@@ -893,7 +893,8 @@
       "back": "Back",
       "urlHint": "This address is built into the code. To point printed codes elsewhere later, choose Dynamic on the previous step.",
       "urlHintDynamic": "Your code will contain a permanent short link. This is where it sends people, and you can change it after printing.",
-      "nameHint": "Only you see this name."
+      "nameHint": "Only you see this name.",
+      "namePlaceholderType": "{type} QR"
     },
     "errors": {
       "urlEmpty": "Enter a web address, like yourname.com.",

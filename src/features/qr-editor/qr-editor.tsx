@@ -1,7 +1,7 @@
 "use client";
 
 import { DRAFT_LIMIT } from "@/shared/config/catalog-core";
-import { encodePayload, layoutCapacity } from "@heyqr/qr-core";
+import { encodePayload, layoutCapacity, QR_CONTENT_TYPES } from "@heyqr/qr-core";
 import { ArrowLeftIcon, ArrowRightIcon, LoaderCircleIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -68,7 +68,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
   const tTypes = useTranslations("contentTypes");
   const router = useRouter();
   const params = useSearchParams();
-  const { design, setDesign, restored, unreadable, modeAdjusted } = useDraft();
+  const { design, setDesign, restored, handedOff, unreadable, modeAdjusted } = useDraft();
   const urlStep = params.get("step");
   const step: EditorStep = resume ? "design" : isStep(urlStep) ? urlStep : "type";
   const [showErrors, setShowErrors] = useState(false);
@@ -78,12 +78,13 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
 
   useEffect(() => {
     // Fixed id: shown once even when the effect runs twice (React Strict Mode in development).
-    if (restored && !resume) toast(t("draftRestored"), { id: "draft-restored" });
+    // Not for a draft the homepage just handed over: the visitor chose it a moment ago.
+    if (restored && !handedOff && !resume) toast(t("draftRestored"), { id: "draft-restored" });
     // A malformed draft or one from a newer version is kept aside, not overwritten; the editor starts fresh.
     if (unreadable) toast(t("draftUnreadable"), { id: "draft-unreadable" });
     // A draft from an earlier build had Dynamic on a type that can't redirect; it was kept as Static.
     if (modeAdjusted) toast(t("mode.adjusted"), { id: "mode-adjusted" });
-  }, [restored, unreadable, modeAdjusted, resume, t]);
+  }, [restored, handedOff, unreadable, modeAdjusted, resume, t]);
 
   // Design 11.12: a PDF still uploading can't continue yet ("Wait for the upload to finish.").
   const [pdfState, setPdfState] = useState<PdfState>({ status: "idle" });
@@ -124,6 +125,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
     const url = new URL(window.location.href);
     url.searchParams.set("step", next);
     url.searchParams.delete("resume");
+    url.searchParams.delete("type");
     window.history.pushState(null, "", url);
     window.scrollTo({ top: 0 });
   };
@@ -164,6 +166,25 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
     setPdfState({ status: "idle" });
     patch({ content: stash.current[type] ?? emptyContent(type), model });
   };
+
+  /*
+   * A type in the URL (design handoff: /create?step=content&type=menu, Explore's CTA or a shared link) opens with that
+   * type selected; the draft's look is kept. An unknown type falls back to the Type step. Read once, then dropped from
+   * the URL so Back and refresh follow the draft.
+   */
+  const urlType = useRef(params.get("type"));
+  const applyUrlType = useEffectEvent(() => {
+    const raw = urlType.current;
+    if (raw === null) return;
+    urlType.current = null;
+    const url = new URL(window.location.href);
+    url.searchParams.delete("type");
+    const known = isHostedType(raw) || (QR_CONTENT_TYPES as readonly string[]).includes(raw);
+    if (!known) url.searchParams.set("step", "type");
+    window.history.replaceState(null, "", url);
+    if (known && raw !== design.content.type) changeType(raw as QrType);
+  });
+  useEffect(() => applyUrlType(), []);
 
   // HEY-34 / HEY-35: colour and size fields whose text isn't valid. Export stops there instead of using the previous value.
   const [invalidColors, setInvalidColors] = useState<string[]>([]);

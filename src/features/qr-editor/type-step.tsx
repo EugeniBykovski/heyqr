@@ -80,7 +80,7 @@ export function TypeStep({
       <div role="group" aria-label={t("typeStep.directGroupLabel")} className={typeGrid}>
         {QR_CONTENT_TYPES.map((value) => card(value))}
       </div>
-      <section aria-labelledby="hosted-group" className="mt-8">
+      <section aria-labelledby="hosted-group" className="mt-8 border-t border-border pt-8">
         <div className="mb-3 flex flex-col gap-1">
           <div className="flex flex-wrap items-center gap-2">
             <h2 id="hosted-group" className="text-h3">
@@ -88,7 +88,7 @@ export function TypeStep({
             </h2>
             <Badge variant="accent">{t("typeStep.hostedNew")}</Badge>
           </div>
-          <p className="max-w-measure text-caption text-secondary-foreground">
+          <p className="max-w-[48rem] text-caption text-secondary-foreground">
             {t("typeStep.hostedLead", { starter: money(prices.cents.starter), studio: money(prices.cents.studio) })}
           </p>
         </div>
