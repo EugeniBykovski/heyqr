@@ -222,7 +222,7 @@ export function PrintPreview({
   ];
 
   return (
-    <main className="mx-auto flex w-full max-w-wide flex-col gap-5 px-4 pt-4 pb-12 sm:px-6 lg:px-8">
+    <div className="mx-auto flex w-full max-w-wide flex-col gap-5 px-4 pt-4 pb-12 sm:px-6 lg:px-8">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <Button asChild variant="ghost" size="sm">
           <Link href={back.href}>
@@ -733,7 +733,7 @@ export function PrintPreview({
       ) : null}
       {/* Refreshes server data once unlocked (details, badges). */}
       {preview?.unlocked && checkout === "success" ? <RefreshOnce onRefresh={() => router.refresh()} /> : null}
-    </main>
+    </div>
   );
 }
 

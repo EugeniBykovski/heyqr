@@ -99,10 +99,10 @@ export default async function ExportPage({ params, searchParams }: PageProps<"/[
   const capacity = layoutCapacity(layout.design.layout, value);
   if (!capacity.ok)
     return (
-      <main className="mx-auto max-w-measure px-4 py-10 sm:px-6">
+      <div className="mx-auto max-w-measure px-4 py-10 sm:px-6">
         <h1 className="mb-4 text-h1">{t("title")}</h1>
         <TooLongNotice capacity={capacity} />
-      </main>
+      </div>
     );
 
   const keep = new URLSearchParams();

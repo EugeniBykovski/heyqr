@@ -5,7 +5,7 @@ import type { AnchorHTMLAttributes } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_DESIGN, designToLayout, presetSize } from "@/entities/qr";
 import messages from "../../../messages/en.json";
-import { ExportSurface, exportFileUrl, fileNameFrom, type ExportSurfaceProps } from "./export-surface";
+import { ExportSurface, exportFileUrl, fileNameFrom, type ExportOffer, type ExportSurfaceProps } from "./export-surface";
 
 const startCheckout = vi.fn();
 vi.mock("@/server/actions/qr", () => ({ startCheckout: (...a: unknown[]) => startCheckout(...a) }));
@@ -192,6 +192,42 @@ describe("file states (design 3.7–3.10)", () => {
       transparent: false,
       printPack: false,
     });
+  });
+});
+
+describe("the note under the main action (HEY-180, design 3.11)", () => {
+  const STRIPE = "You’ll finish on Stripe’s secure checkout, then come back here to download.";
+  const INCLUDED = "Included in your purchase. Nothing to pay.";
+  const offer = (path: ExportOffer["path"]): ExportOffer => ({
+    path,
+    cents: { single: 499, pack3: 1199, studio: 2400 },
+    credits: 2,
+    planName: "Starter",
+    unlocks: { left: 9, limit: 10 },
+    printPack: null,
+  });
+
+  it("paid for: Download again says nothing is left to pay, never that checkout comes next", () => {
+    signed({ entitled: true });
+    expect(screen.getByText(INCLUDED)).toBeInTheDocument();
+    expect(screen.queryByText(STRIPE)).toBeNull();
+  });
+
+  it("the next step is Stripe (Single QR, or no server offer): the Stripe note", () => {
+    signed({ entitled: false, offer: offer("buy") });
+    expect(screen.getByText(STRIPE)).toBeInTheDocument();
+    cleanup();
+    signed({ entitled: false });
+    expect(screen.getByText(STRIPE)).toBeInTheDocument();
+  });
+
+  it("covered by a credit or the plan: no Stripe note and no claim of a purchase", () => {
+    for (const path of ["credit", "unlock"] as const) {
+      signed({ entitled: false, offer: offer(path) });
+      expect(screen.queryByText(STRIPE), path).toBeNull();
+      expect(screen.queryByText(INCLUDED), path).toBeNull();
+      cleanup();
+    }
   });
 });
 

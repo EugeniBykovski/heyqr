@@ -533,7 +533,7 @@ function ModeChooser({ design, value, onChoose }: { design: EditorDesign; value:
     </button>
   );
   return (
-    <main className="mx-auto flex w-full max-w-page flex-col gap-6 px-4 py-8 sm:px-6 lg:py-12">
+    <div className="mx-auto flex w-full max-w-page flex-col gap-6 px-4 py-8 sm:px-6 lg:py-12">
       <header className="flex max-w-measure flex-col gap-2">
         <h1 className="text-h1">{t("chooseTitle")}</h1>
         <p className="text-secondary-foreground">{t("chooseLead")}</p>
@@ -542,6 +542,6 @@ function ModeChooser({ design, value, onChoose }: { design: EditorDesign; value:
         {card("custom", custom)}
         {card("branded", branded, t("brandedBadge"))}
       </div>
-    </main>
+    </div>
   );
 }

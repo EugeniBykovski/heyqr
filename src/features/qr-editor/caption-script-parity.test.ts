@@ -115,7 +115,9 @@ describe("Cyrillic and Latin captions: downloaded SVG and PNG agree (HEY-49)", (
           /^<svg ([^>]*?)width="[^"]*" height="[^"]*"/,
           `<svg $1width="${w}" height="${h}" preserveAspectRatio="none"`,
         );
-        const fromSvg = rasterizeSvg(sized, { width: w, fontFiles: files, systemFonts: false });
+        // HEY-180: print PNGs also state their dpi (pHYs); the same metadata, so the comparison stays byte for byte.
+        const dpi = layout.unit === "mm" ? (resolution.dpi ?? 300) : undefined;
+        const fromSvg = rasterizeSvg(sized, { width: w, fontFiles: files, systemFonts: false, ...(dpi ? { dpi } : {}) });
         expect(Buffer.compare(fromSvg, png), "SVG drawn with its own fonts = PNG").toBe(0);
 
         expect(await decodeImage(new Uint8Array(png)), "downloaded PNG").toBe(VALUE);

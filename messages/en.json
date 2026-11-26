@@ -1550,6 +1550,7 @@
     "pending": "Confirming your payment… This usually takes a few seconds. Your settings are locked so the file matches the receipt.",
     "cancelled": "<b>Checkout cancelled.</b> You weren’t charged. Your design and format are saved, so you can pay whenever you’re ready.",
     "secure": "You’ll finish on Stripe’s secure checkout, then come back here to download.",
+    "includedNote": "Included in your purchase. Nothing to pay.",
     "resolution": "PNG size",
     "scale": "{scale}×",
     "dpi": "{dpi} dpi",
