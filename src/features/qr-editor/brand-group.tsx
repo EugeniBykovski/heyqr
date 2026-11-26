@@ -1,7 +1,7 @@
 "use client";
 
 import { contrastRatio } from "@heyqr/qr-core";
-import { ImageIcon, InfoIcon, RotateCcwIcon, Trash2Icon, UploadIcon } from "lucide-react";
+import { CheckIcon, ImageIcon, InfoIcon, RotateCcwIcon, Trash2Icon, UploadIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRef, useState, type DragEvent } from "react";
 import {
@@ -325,7 +325,8 @@ export function BrandGroup({
               </h3>
               <span className="text-caption text-muted-foreground">{t("step3Hint")}</span>
             </div>
-            <div role="group" aria-label={t("looks")} className="grid grid-cols-1 gap-2 @[26rem]/panel:grid-cols-3">
+            {/* Design 2.7: the three looks side by side at every width (phones included), the chosen one with a check. */}
+            <div role="group" aria-label={t("looks")} className="grid grid-cols-3 gap-2">
               {BRAND_LOOKS.map((look) => (
                 <LookCard
                   key={look}
@@ -377,12 +378,18 @@ function LookCard({
       type="button"
       aria-pressed={selected}
       onClick={onPick}
-      className="relative flex min-w-0 cursor-pointer flex-col gap-1.5 rounded-lg border border-border bg-surface p-2 text-start hover:border-border-hover aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]"
+      className="group/look relative flex min-w-0 cursor-pointer flex-col gap-1 rounded-lg border border-border bg-surface p-1.5 text-start hover:border-border-hover aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]"
     >
-      <span className="grid aspect-[4/3] place-items-center overflow-hidden rounded-md bg-subtle p-1.5">
+      <span
+        aria-hidden
+        className="absolute end-1.5 top-1.5 z-10 hidden size-5 place-items-center rounded-full bg-selected-mark text-inverse-foreground group-aria-pressed/look:grid"
+      >
+        <CheckIcon strokeWidth={3.2} className="size-3" />
+      </span>
+      <span className="grid aspect-square place-items-center overflow-hidden rounded-md bg-subtle p-1.5">
         <QrPreview layout={layout} value={value} label="" className="size-full" />
       </span>
-      <span className="text-[0.8125rem] font-semibold">{t(`${look}.title`)}</span>
+      <span className="text-[0.8125rem] leading-tight font-semibold">{t(`${look}.title`)}</span>
       <span className="text-caption text-muted-foreground">{t(`${look}.desc`)}</span>
     </button>
   );
