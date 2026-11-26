@@ -1,3 +1,4 @@
+import { unsupportedCaptionChars } from "@heyqr/qr-core";
 import { and, eq, isNull } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { z } from "zod";
@@ -5,7 +6,7 @@ import { readLayoutRecord, type LayoutRecordDesign } from "../../../entities/qr/
 import * as schema from "../../db/schema";
 import { resolveLogos, type LogoStore } from "../../qr/logo-assets";
 import { layoutRevision, updateLayoutDesign, type PrepareRecord } from "../../qr/update-layout";
-import type { Problem } from "./create-qr";
+import { isLayoutShaped, type Problem } from "./create-qr";
 
 /*
  * HEY-156 / QR-21.04: read and update one saved layout through the public API:
@@ -151,7 +152,14 @@ export async function updateLayoutForOwner(
       return {
         ok: false,
         error: "invalid_request",
-        details: [{ path: layout === undefined ? "editor" : "layout", message: "Not a valid design (see docs/API_V1.md)" }],
+        details: [
+          isLayoutShaped(layout) && unsupportedCaptionChars(layout).length
+            ? {
+                path: "layout.caption.text",
+                message: `The caption font can't draw ${unsupportedCaptionChars(layout).slice(0, 8).join(" ")}; choose another font or change the text`,
+              }
+            : { path: layout === undefined ? "editor" : "layout", message: "Not a valid design (see docs/API_V1.md)" },
+        ],
       };
     if (result.error === "too_long") return { ok: false, error: "content_too_long" };
     return { ok: false, error: result.error };

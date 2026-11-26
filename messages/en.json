@@ -1000,7 +1000,8 @@
       "hint": "Press Enter for a second line. Leave empty to hide the caption.",
       "tooLong": "Use up to {max} characters: remove {over, plural, one {# character} other {# characters}}. The preview keeps your last caption that fits.",
       "tooManyLines": "Use up to {max} lines. The preview keeps your last caption that fits.",
-      "count": "{count} of {max} characters"
+      "count": "{count} of {max} characters",
+      "unsupported": "{font} can’t draw {chars}. Choose another font, or change {count, plural, one {this character} other {these characters}}: the files would show {count, plural, one {it} other {them}} as empty boxes."
     },
     "captionFont": {
       "title": "Font",

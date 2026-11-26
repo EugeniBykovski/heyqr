@@ -8,12 +8,16 @@ import {
   layoutGeometry,
   moduleSwatch,
   type FrameStyle,
+  DEFAULT_CAPTION_WEIGHT,
+  unsupportedCaptionChars,
+  CAPTION_FONTS,
 } from "@heyqr/qr-core";
 import { CircleAlertIcon, CircleSlashIcon, RotateCcwIcon, SearchIcon, ShuffleIcon, Trash2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Tabs as TabsPrimitive } from "radix-ui";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
+  captionFontOf,
   CAPTION_POSITIONS,
   CENTER_ICONS,
   defaultFrameTextColor,
@@ -45,6 +49,7 @@ import { Label } from "@/shared/ui/label";
 import { Swatch } from "@/shared/ui/swatch";
 import { BrandGroup } from "./brand-group";
 import { CaptionField } from "./caption-field";
+import { useFieldValidity } from "./use-field-validity";
 import { CaptionSizeField } from "./caption-size-field";
 import { ColorField } from "./design-panel";
 import { CaptionAlignPicker, CaptionFontPicker, CaptionWeightPicker } from "./frame-panel";
@@ -750,7 +755,13 @@ function ColorsGroup({
 
 /* ---------- Logo (1.11) ---------- */
 
-function LogoGroup({ design, onChange, logoScanMax, onGroupChange }: GroupProps & { onGroupChange: (g: DesignGroup) => void }) {
+function LogoGroup({
+  design,
+  onChange,
+  logoScanMax,
+  onGroupChange,
+  onFieldValidity,
+}: GroupProps & { onGroupChange: (g: DesignGroup) => void }) {
   const t = useTranslations("editor");
   const tl = useTranslations("editor.logoGroup");
   const [source, setSource] = useState<"icons" | "upload">(design.logo.kind === "image" ? "upload" : "icons");
@@ -910,16 +921,7 @@ function LogoGroup({ design, onChange, logoScanMax, onGroupChange }: GroupProps 
             {onTop ? (
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="brand-name">{tl("brandName")}</Label>
-                <Input
-                  id="brand-name"
-                  value={design.brandName ?? ""}
-                  maxLength={40}
-                  aria-describedby="brand-name-hint"
-                  onChange={(e) => onChange({ brandName: e.target.value })}
-                />
-                <p id="brand-name-hint" className="text-caption text-muted-foreground">
-                  {tl("brandNameHint")}
-                </p>
+                <BrandNameField design={design} onChange={onChange} onValidity={onFieldValidity} hint={tl("brandNameHint")} />
               </div>
             ) : null}
           </Section>
@@ -937,6 +939,52 @@ function LogoGroup({ design, onChange, logoScanMax, onGroupChange }: GroupProps 
           )}
         </>
       ) : null}
+    </>
+  );
+}
+
+/** The brand card's name (design 2.8). HEY-181: characters the caption font can't draw are flagged and block Export. */
+function BrandNameField({
+  design,
+  onChange,
+  onValidity,
+  hint,
+}: Pick<GroupProps, "design" | "onChange"> & { onValidity?: (id: string, valid: boolean) => void; hint: string }) {
+  const t = useTranslations("editor.captionField");
+  const font = captionFontOf(design);
+  const missing = unsupportedCaptionChars({
+    preset: "qr",
+    caption: { text: "", font, weight: 700 },
+    brandName: design.brandName ?? "",
+    topLogoHref: "brand",
+  });
+  useFieldValidity("brand-name", missing.length === 0, onValidity);
+  return (
+    <>
+      <Input
+        id="brand-name"
+        value={design.brandName ?? ""}
+        maxLength={40}
+        aria-invalid={missing.length > 0 || undefined}
+        aria-describedby="brand-name-hint"
+        onChange={(e) => onChange({ brandName: e.target.value })}
+      />
+      {missing.length ? (
+        <p id="brand-name-hint" role="alert" className="flex items-start gap-1.5 text-caption font-medium text-danger">
+          <CircleAlertIcon aria-hidden className="mt-0.5 size-3.5 shrink-0" />
+          <span>
+            {t("unsupported", {
+              font: font ? CAPTION_FONTS[font].label : "DM Sans",
+              chars: missing.slice(0, 8).join(" "),
+              count: missing.length,
+            })}
+          </span>
+        </p>
+      ) : (
+        <p id="brand-name-hint" className="text-caption text-muted-foreground">
+          {hint}
+        </p>
+      )}
     </>
   );
 }
@@ -1013,6 +1061,8 @@ function CaptionGroup({
         value={design.caption}
         onAccept={(caption) => onChange({ caption })}
         onValidity={onFieldValidity}
+        font={captionFontOf(design)}
+        weight={design.captionWeight ?? DEFAULT_CAPTION_WEIGHT}
       />
       <CaptionFontPicker design={design} onChange={onChange} withWeight={false} />
       {/* Design 1.16: Size beside Weight, Align beside Position, then the caption color row. */}

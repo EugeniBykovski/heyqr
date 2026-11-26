@@ -45,11 +45,19 @@ describe("caption length rule (HEY-43)", () => {
 });
 
 describe("Caption field (HEY-43)", () => {
-  function Harness({ initial, onValidity = () => {} }: { initial: string; onValidity?: (id: string, ok: boolean) => void }) {
+  function Harness({
+    initial,
+    onValidity = () => {},
+    font = "dm",
+  }: {
+    initial: string;
+    onValidity?: (id: string, ok: boolean) => void;
+    font?: "dm" | "instrument";
+  }) {
     const [caption, setCaption] = useState(initial);
     return (
       <NextIntlClientProvider locale="en" messages={messages} timeZone="UTC">
-        <CaptionField id="caption" label="Caption text" value={caption} onAccept={setCaption} onValidity={onValidity} />
+        <CaptionField id="caption" label="Caption text" value={caption} onAccept={setCaption} onValidity={onValidity} font={font} />
         <output data-testid="accepted">{caption}</output>
       </NextIntlClientProvider>
     );
@@ -83,14 +91,34 @@ describe("Caption field (HEY-43)", () => {
     expect(accepted()).toBe("Scan for the menu\nTable 4");
     expect(screen.queryByRole("alert")).toBeNull();
     expect(validity).toHaveBeenLastCalledWith("caption", true);
+    cleanup();
+    // The same Polish caption is fine in Onest and undrawable in Prata (no ż ł ś): a font change is caught too.
+    const prata = vi.fn();
+    render(<Harness initial="Zażółć gęślą jaźń" onValidity={prata} font="instrument" />);
+    expect(screen.getByRole("alert")).toHaveTextContent("Prata can’t draw ż ł ć ę ś ą ź ń");
+    expect(prata).toHaveBeenLastCalledWith("caption", false);
   });
 
-  it("an emoji at the limit is never split: 80 emoji pass, 81 are refused whole", () => {
+  it("a combined character at the limit is never split: 80 pass, 81 are refused whole", () => {
+    // é as e + combining acute: one grapheme of two code points, which the caption fonts draw.
     render(<Harness initial="" />);
-    type("👩🏽‍💻".repeat(80));
-    expect(accepted()).toBe("👩🏽‍💻".repeat(80));
-    type("👩🏽‍💻".repeat(81));
-    expect(accepted()).toBe("👩🏽‍💻".repeat(80));
+    type("e\u0301".repeat(80));
+    expect(accepted()).toBe("e\u0301".repeat(80));
+    type("e\u0301".repeat(81));
+    expect(accepted()).toBe("e\u0301".repeat(80));
+  });
+
+  it("HEY-181: characters the caption font can't draw are refused with what to change, and block Export", () => {
+    const validity = vi.fn();
+    render(<Harness initial="Menu" onValidity={validity} />);
+    type("Menu 👩🏽‍💻 扫码");
+    expect(accepted()).toBe("Menu");
+    expect(screen.getByRole("alert")).toHaveTextContent("Onest can’t draw 👩🏽‍💻 扫 码");
+    expect(field()).toHaveAttribute("aria-invalid", "true");
+    expect(validity).toHaveBeenLastCalledWith("caption", false);
+    type("Menu · Меню");
+    expect(accepted()).toBe("Menu · Меню");
+    expect(validity).toHaveBeenLastCalledWith("caption", true);
   });
 
   it("clearing the field accepts an empty caption; pasted Windows line breaks are normalized", () => {

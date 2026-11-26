@@ -24,6 +24,7 @@ export {
   logoOnTop,
   MODULE_SHAPES,
   ORIGINAL_CAPTION_FONT,
+  captionFontOf,
   QR_INKS,
   designToLayout,
   type CaptionAlign,

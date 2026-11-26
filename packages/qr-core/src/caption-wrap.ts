@@ -38,6 +38,37 @@ export function captionFaceFile(font: CaptionFontId | undefined, weight: number)
   return CAPTION_FONTS[font].faces[captionWeightFor(font, weight)] ?? "";
 }
 
+/**
+ * HEY-181: the characters of a layout's drawn text (caption or frame label, and a brand card's name) that its caption
+ * font can't draw, in the order they first appear. Every output embeds only the caption font: the PDF draws such a
+ * character as an empty box and the PNG with whatever fonts the server has, so a layout with any is refused before it
+ * is saved. Spaces and line breaks don't count. The first line is checked at the caption's weight, the others at
+ * Regular, as they are drawn (captionFaces).
+ */
+export function unsupportedCaptionChars(layout: {
+  preset: string;
+  caption: { text: string; font?: CaptionFontId; weight: number };
+  brandName?: string;
+  topLogoHref?: string;
+}): string[] {
+  const missing: string[] = [];
+  const check = (text: string, file: string) => {
+    const { widths } = face(file);
+    for (const { segment } of graphemes.segment(text))
+      for (const ch of segment) {
+        const cp = ch.codePointAt(0) ?? 0;
+        // Spaces, controls and joiners/variation selectors shape with their neighbours; they need no glyph of their own.
+        if (/\s/.test(ch) || cp < 0x20 || cp === 0x200d || cp === 0x200c || (cp >= 0xfe00 && cp <= 0xfe0f)) continue;
+        if (!widths.has(cp) && !missing.includes(segment)) missing.push(segment);
+      }
+  };
+  const { font, weight } = layout.caption;
+  if (layout.preset !== "qr")
+    layout.caption.text.split("\n").forEach((line, i) => check(line, captionFaceFile(font, i === 0 ? weight : 400)));
+  if (layout.brandName && layout.topLogoHref) check(layout.brandName, captionFaceFile(font, font ? captionWeightFor(font, 700) : 700));
+  return missing;
+}
+
 /** Width of `text` at `size` (layout units) in a face. A grapheme the face can't draw counts as one wide letter. */
 export function measureCaptionText(text: string, file: string, size: number): number {
   const { widths, fallback } = face(file);

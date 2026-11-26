@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { env } from "@/env";
 import { previewShortLink } from "@/shared/lib/short-link";
 import {
+  captionFontOf,
   composeShared,
   DEFAULT_DESIGN,
   designToLayout,
@@ -276,6 +277,8 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
             label={t("caption")}
             value={design.caption}
             onAccept={(caption) => patch({ caption, preset: caption.trim() ? "horizontal" : "qr" })}
+            font={captionFontOf(design)}
+            weight={design.captionWeight ?? 700}
           />
         </div>
 

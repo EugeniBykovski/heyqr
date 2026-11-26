@@ -72,5 +72,13 @@ export {
   type CaptionFontId,
   type CaptionWeight,
 } from "./caption-fonts";
-export { captionFaceFile, fitCaption, measureCaptionText, wrapCaption, wrapCaptionLine, type CaptionLine } from "./caption-wrap";
+export {
+  captionFaceFile,
+  fitCaption,
+  measureCaptionText,
+  unsupportedCaptionChars,
+  wrapCaption,
+  wrapCaptionLine,
+  type CaptionLine,
+} from "./caption-wrap";
 export type * from "./types";

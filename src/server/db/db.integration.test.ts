@@ -7896,3 +7896,33 @@ describe.skipIf(!url)("public API rate limit (HEY-178, real PostgreSQL)", () => 
     expect((await post(keys[0] ?? "")).status).toBe(201);
   });
 });
+
+/* HEY-181: a layout whose caption the font can't draw is refused by the public API's create, with nothing stored. */
+describe.skipIf(!url)("caption font coverage on save (HEY-181, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const u = { id: "cov181-owner", name: "Cov", email: "cov@hey181.test" };
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 2 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(u).onConflictDoNothing();
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, u.id));
+    await pool?.end();
+  });
+
+  it("422 names the caption and the characters; a drawable caption saves", async () => {
+    const body = (caption: string) => ({
+      name: "Menu",
+      mode: "static",
+      content: { type: "website", url: "littlefern.cafe" },
+      layouts: [{ name: "A", layout: designToLayout({ ...DEFAULT_DESIGN, preset: "caption", caption }) }],
+    });
+    const refused = await createQrForOwner(db, u.id, body("扫码查看菜单"));
+    expect(refused).toMatchObject({ ok: false, error: "invalid_request", details: [{ path: "layouts[0].layout.caption.text" }] });
+    expect(JSON.stringify(refused)).toContain("扫 码");
+    expect(Number((await pool.query("select count(*)::int as n from qr_code where user_id = $1", [u.id])).rows[0].n)).toBe(0);
+    expect(await createQrForOwner(db, u.id, body("Меню · Menu"))).toMatchObject({ ok: true });
+  });
+});

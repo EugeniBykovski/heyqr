@@ -1,4 +1,4 @@
-import { CAPTION_FONT_IDS, isHexColor, QR_CONTENT_TYPES, type Layout, type QrContent } from "@heyqr/qr-core";
+import { CAPTION_FONT_IDS, isHexColor, QR_CONTENT_TYPES, unsupportedCaptionChars, type Layout, type QrContent } from "@heyqr/qr-core";
 import { checkLogoDataUrl } from "./logo";
 import { isValidSize } from "./size";
 import { z } from "zod";
@@ -199,6 +199,8 @@ export function createLayoutRecord(layout: unknown, editor?: unknown): LayoutRec
   // A logo above the code on a card follows the same rule as the centre logo.
   if (!acceptableLogoHref(result.value.layout.topLogoHref)) return null;
   if (editorLogo?.kind === "image" && !acceptableLogoHref(editorLogo.href)) return null;
+  // HEY-181: every file embeds only the caption font; a character it can't draw would print as an empty box.
+  if (unsupportedCaptionChars(result.value.layout).length) return null;
   return result.value;
 }
 

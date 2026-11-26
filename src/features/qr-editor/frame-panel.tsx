@@ -11,6 +11,7 @@ import {
 } from "@heyqr/qr-core";
 import { useTranslations } from "next-intl";
 import {
+  captionFontOf,
   CAPTION_ALIGNS,
   defaultCaptionAlign,
   EDITOR_PRESETS,
@@ -71,6 +72,8 @@ export function FramePanel({
           value={design.caption}
           onAccept={(caption) => onChange({ caption })}
           onValidity={onValidity}
+          font={captionFontOf(design)}
+          weight={design.captionWeight ?? DEFAULT_CAPTION_WEIGHT}
         />
       ) : null}
       {design.preset !== "qr" ? <CaptionFontPicker design={design} onChange={onChange} /> : null}

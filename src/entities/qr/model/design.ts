@@ -284,6 +284,11 @@ export const FRAME_PHRASES = ["scanMe", "callMe", "menu", "wifi", "payHere", "re
  */
 export const ORIGINAL_CAPTION_FONT = "dm-original" as const;
 
+/** HEY-181: the caption font a design draws with; undefined = the original DM Sans of layouts from before HEY-44. */
+export function captionFontOf(d: Pick<EditorDesign, "captionFont">): CaptionFontId | undefined {
+  return d.captionFont === ORIGINAL_CAPTION_FONT ? undefined : (d.captionFont ?? DEFAULT_CAPTION_FONT);
+}
+
 /** Caption font, family, and the weight actually drawn, for the layout. */
 function captionTypeface(d: EditorDesign): Pick<Layout["caption"], "font" | "fontFamily" | "weight"> {
   const weight = d.captionWeight ?? DEFAULT_CAPTION_WEIGHT;
