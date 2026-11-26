@@ -3,6 +3,7 @@
 import { ArrowLeftIcon, CircleAlertIcon, SaveIcon, SendIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState, useTransition } from "react";
+import { useCarriedState } from "@/shared/lib/locale-carry";
 import { toast } from "sonner";
 import { hostedErrors, type HostedContent, type HostedErrors } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
@@ -34,7 +35,8 @@ export function HostedPageEditor({
   const tHosted = useTranslations("qr.hostedPage");
   const tEd = useTranslations("editor");
   const router = useRouter();
-  const [content, setContent] = useState<HostedContent>(initial);
+  // HEY-192: unsaved page content survives a language change of this page.
+  const [content, setContent] = useCarriedState<HostedContent>(`hosted:${qrCodeId}:content`, initial);
   const [saved, setSaved] = useState<HostedContent>(initial);
   const [showErrors, setShowErrors] = useState(false);
   const [serverErrors, setServerErrors] = useState<HostedErrors>({});

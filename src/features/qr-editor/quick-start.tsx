@@ -21,6 +21,7 @@ import {
 import { Link, useRouter } from "@/i18n/navigation";
 import { formatMoney } from "@/shared/config/catalog";
 import { usePrices } from "@/shared/lib/currency";
+import { useCarriedState } from "@/shared/lib/locale-carry";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -65,14 +66,15 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
   const tEditor = useTranslations("editor");
   const router = useRouter();
   // Design 1.1: the hero starts as the Business card layout (90 × 50 mm, code beside the caption).
-  const [design, setDesign] = useState<EditorDesign>(() => ({
+  // HEY-192: what is typed here survives a language change (it isn't stored until Continue designing, HEY-16).
+  const [design, setDesign, carried] = useCarriedState<EditorDesign>("home:quick:design", () => ({
     ...DEFAULT_DESIGN,
     preset: "horizontal",
     caption: t("captionDefault"),
     size: { unit: "mm", qr: 35, width: 90, height: 50 },
   }));
   /** What was typed on each tab during this visit, so switching away and back keeps it. */
-  const [byType, setByType] = useState<Record<QuickType, QrContent>>(() => ({
+  const [byType, setByType] = useCarriedState<Record<QuickType, QrContent>>("home:quick:byType", () => ({
     website: directContent(emptyContent("website")),
     wifi: directContent(emptyContent("wifi")),
     contact: directContent(emptyContent("contact")),
@@ -81,13 +83,14 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
 
   // The draft lives in localStorage, so it is restored after hydration to keep server and client markup identical.
   useEffect(() => {
+    if (carried) return;
     const saved = readDraft();
     if (!saved) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time sync from browser storage
+
     setDesign(saved);
     const savedType = saved.content.type;
     if (isQuickType(savedType)) setByType((m) => ({ ...m, [savedType]: directContent(saved.content) }));
-  }, []);
+  }, [carried, setByType, setDesign]);
 
   // Explore's CTA, further down the page, starts from what is shown here (see setHomeDraft).
   useEffect(() => {

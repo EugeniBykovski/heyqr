@@ -6,6 +6,7 @@ import { Popover } from "radix-ui";
 import { useState, useTransition } from "react";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { LOCALES, localeMeta, type Locale } from "@/i18n/locales";
+import { announceLocaleChange } from "@/shared/lib/locale-carry";
 import { cn } from "@/shared/lib/utils";
 
 function Flag({ className }: { className: string }) {
@@ -40,7 +41,11 @@ export function LanguageSwitch() {
   const choose = (next: Locale) => {
     setOpen(false);
     if (next === locale) return;
-    startTransition(() => router.replace(pathname, { locale: next }));
+    // HEY-192: the same page in the other language: its query (editor step, plan, currency, filters) and hash stay, and
+    // the page hands its unsaved state over before it remounts. A plain navigation: nothing is submitted or bought.
+    const { search, hash } = window.location;
+    announceLocaleChange();
+    startTransition(() => router.replace(`${pathname}${search}${hash}`, { locale: next, scroll: false }));
   };
 
   return (
@@ -125,6 +130,7 @@ export function LanguageSwitch() {
               {t("languageEmpty", { query: query.trim() })}
             </p>
           ) : null}
+          <p className="text-caption text-muted-foreground">{t("languageNote")}</p>
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

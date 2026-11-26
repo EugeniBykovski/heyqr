@@ -22,6 +22,7 @@
     "languageSearch": "Search languages",
     "languages": "Languages",
     "languageEmpty": "No language matches “{query}”.",
+    "languageNote": "Prices stay in your currency. Arabic switches the layout to right-to-left.",
     "trial": "Free trial",
     "apiKeys": "API keys",
     "developers": "API for developers",
