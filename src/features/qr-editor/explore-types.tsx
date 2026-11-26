@@ -154,7 +154,7 @@ export function ExploreTypes({ shortLabel }: { shortLabel: string }) {
               {isHostedType(key) ? (
                 <span
                   aria-hidden
-                  className="absolute top-2 right-2 size-1.5 rounded-full bg-selected-mark sm:top-1.5 sm:right-[calc(50%-1.5rem)]"
+                  className="absolute end-2 top-2 size-1.5 rounded-full bg-selected-mark sm:end-[calc(50%-1.5rem)] sm:top-1.5"
                 />
               ) : null}
             </button>

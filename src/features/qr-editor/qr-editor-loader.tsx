@@ -44,7 +44,7 @@ function TypeSkeleton() {
         {QR_CONTENT_TYPES.map((type) => (
           <div key={type} className={typeCard}>
             <Skeleton className="size-12 rounded-md" />
-            <span className="flex min-w-0 flex-col gap-1 pr-5">
+            <span className="flex min-w-0 flex-col gap-1 pe-5">
               <SkeletonGhostText className="text-h3" barClassName="w-1/2" text={tTypes(`${type}.label`)} />
               <SkeletonGhostText className="text-secondary-foreground" barClassName="w-5/6" text={tTypes(`${type}.desc`)} />
               <SkeletonGhostText

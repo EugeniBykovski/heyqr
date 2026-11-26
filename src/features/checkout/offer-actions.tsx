@@ -1,10 +1,11 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useState, useTransition, type ReactNode } from "react";
+import { useTransition, type ReactNode } from "react";
 import { toast } from "sonner";
 import { startPackCheckout, startPlanCheckout } from "@/server/actions/billing";
 import type { ActionResult } from "@/server/actions/result";
+import { useCarriedState } from "@/shared/lib/locale-carry";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 
@@ -47,7 +48,8 @@ export function PackPicker({
   unavailable: string;
 }) {
   const locale = useLocale();
-  const [chosen, setChosen] = useState<"pack3" | "pack10">("pack3");
+  // HEY-192: the chosen pack (and so the amount) is kept when the language changes.
+  const [chosen, setChosen] = useCarriedState<"pack3" | "pack10">("offer:staticPack", "pack3");
   const { pending, go } = useCheckout();
   return (
     <>
@@ -58,7 +60,7 @@ export function PackPicker({
             type="button"
             aria-pressed={chosen === o.id}
             onClick={() => setChosen(o.id)}
-            className="flex min-h-14 w-full cursor-pointer items-center gap-3 rounded-lg border border-border bg-surface px-3.5 py-2.5 text-left aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--selected-border)]"
+            className="flex min-h-14 w-full cursor-pointer items-center gap-3 rounded-lg border border-border bg-surface px-3.5 py-2.5 text-start aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--selected-border)]"
           >
             <span className="grid size-10 shrink-0 place-items-center rounded-md bg-inverse text-base font-bold text-inverse-foreground">
               {o.n}

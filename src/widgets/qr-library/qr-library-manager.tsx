@@ -157,7 +157,7 @@ export function QrLibraryManager({
         <div
           role="region"
           aria-label={t("select")}
-          className="sticky top-[calc(var(--spacing-header)+0.5rem)] z-20 mb-3.5 flex animate-rise flex-wrap items-center gap-x-4 gap-y-2 rounded-lg bg-inverse py-2 pr-2 pl-4 text-inverse-foreground shadow-2"
+          className="sticky top-[calc(var(--spacing-header)+0.5rem)] z-20 mb-3.5 flex animate-rise flex-wrap items-center gap-x-4 gap-y-2 rounded-lg bg-inverse py-2 ps-4 pe-2 text-inverse-foreground shadow-2"
         >
           <label className="flex min-h-9 cursor-pointer items-center gap-2.5 text-[0.875rem] font-semibold">
             <input type="checkbox" className="size-5 cursor-pointer accent-primary" checked={allChosen} onChange={toggleAll} />
@@ -166,7 +166,7 @@ export function QrLibraryManager({
           <span aria-live="polite" className="text-[0.875rem] text-inverse-muted tabular-nums">
             {chosen.length ? t("selected", { count: chosen.length, total }) : t("chooseToDelete")}
           </span>
-          <div className="ml-auto flex gap-1.5">
+          <div className="ms-auto flex gap-1.5">
             <Button size="sm" variant="ghost" className="text-inverse-foreground hover:bg-inverse-foreground/8" onClick={toggleMode}>
               {t("cancel")}
             </Button>

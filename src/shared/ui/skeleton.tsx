@@ -45,7 +45,7 @@ export function SkeletonGhostText({ text, className, barClassName }: { text: str
   return (
     <span aria-hidden className={cn("relative", className)}>
       <span className="invisible">{text}</span>
-      <Skeleton className={cn("absolute top-[0.15lh] left-0 h-[0.7lh] w-full rounded-full", barClassName)} />
+      <Skeleton className={cn("absolute start-0 top-[0.15lh] h-[0.7lh] w-full rounded-full", barClassName)} />
     </span>
   );
 }

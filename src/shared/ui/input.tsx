@@ -24,7 +24,7 @@ export function InputPrefix({ className, ...props }: ComponentProps<"span">) {
     <span
       data-slot="input-prefix"
       className={cn(
-        "flex shrink-0 items-center rounded-l-md border border-r-0 border-input bg-subtle px-2.5 text-[0.875rem] whitespace-nowrap text-secondary-foreground",
+        "flex shrink-0 items-center rounded-s-md border border-e-0 border-input bg-subtle px-2.5 text-[0.875rem] whitespace-nowrap text-secondary-foreground",
         className,
       )}
       {...props}

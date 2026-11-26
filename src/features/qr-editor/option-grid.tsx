@@ -30,7 +30,7 @@ export function OptionGrid<T extends string>({
     <fieldset className="flex flex-col gap-2">
       <legend className="mb-2 flex w-full items-baseline justify-between gap-3">
         <span className="text-label">{label}</span>
-        {hint ? <span className="text-right text-caption text-muted-foreground">{hint}</span> : null}
+        {hint ? <span className="text-end text-caption text-muted-foreground">{hint}</span> : null}
       </legend>
       <div className={cn("grid gap-2", columns)}>
         {options.map((option) => {
@@ -43,13 +43,13 @@ export function OptionGrid<T extends string>({
               onClick={() => onChange(option)}
               className={cn(
                 "relative flex min-h-11 cursor-pointer flex-col gap-1.5 rounded-lg border border-border bg-surface text-[0.8125rem] leading-tight font-semibold",
-                variant === "tile" ? "items-stretch p-1.5 pb-2 text-left" : "items-center justify-center p-2",
+                variant === "tile" ? "items-stretch p-1.5 pb-2 text-start" : "items-center justify-center p-2",
                 "transition-[border-color,box-shadow,background-color] duration-(--motion-fast) hover:border-border-hover",
                 "aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]",
               )}
             >
               {selected ? (
-                <span className="absolute top-1.75 right-1.75 grid size-5 place-items-center rounded-full bg-selected-mark text-inverse-foreground">
+                <span className="absolute end-1.75 top-1.75 grid size-5 place-items-center rounded-full bg-selected-mark text-inverse-foreground">
                   <CheckIcon aria-hidden strokeWidth={3.2} className="size-3" />
                 </span>
               ) : null}

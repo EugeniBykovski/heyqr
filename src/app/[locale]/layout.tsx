@@ -8,7 +8,7 @@ import { CaptionFontFaces } from "@/entities/qr";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { env } from "@/env";
-import { RTL_LOCALES, type Locale } from "@/i18n/locales";
+import { textDirection, type Locale } from "@/i18n/locales";
 import { routing } from "@/i18n/routing";
 import { Providers } from "@/shared/lib/providers";
 import { SiteFooter } from "@/widgets/site-footer";
@@ -43,12 +43,12 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const [t, currency] = await Promise.all([getTranslations("nav"), getCurrency()]);
 
   return (
-    <html lang={locale} dir={RTL_LOCALES.includes(locale) ? "rtl" : "ltr"} className={`${dmSans.variable} ${plexMono.variable}`}>
+    <html lang={locale} dir={textDirection(locale)} className={`${dmSans.variable} ${plexMono.variable}`}>
       <body className="flex min-h-dvh flex-col">
         <CaptionFontFaces />
         <a
           href="#main"
-          className="sr-only z-50 rounded-full bg-primary px-4 py-2 text-primary-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+          className="sr-only z-50 rounded-full bg-primary px-4 py-2 text-primary-foreground focus:not-sr-only focus:fixed focus:start-3 focus:top-3"
         >
           {t("skipToContent")}
         </a>

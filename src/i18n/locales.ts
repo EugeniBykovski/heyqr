@@ -138,4 +138,6 @@ export type Locale = (typeof LOCALES)[number]["code"];
 export const LOCALE_CODES = LOCALES.map((l) => l.code) as [Locale, ...Locale[]];
 export const DEFAULT_LOCALE: Locale = "en";
 export const RTL_LOCALES: readonly Locale[] = ["ar"];
+/** The document's `dir` for a locale: Arabic reads right to left, every other interface language left to right. */
+export const textDirection = (locale: string): "rtl" | "ltr" => ((RTL_LOCALES as readonly string[]).includes(locale) ? "rtl" : "ltr");
 export const localeMeta = (code: string) => LOCALES.find((l) => l.code === code) ?? LOCALES[0];

@@ -42,7 +42,7 @@ export default async function SignInPage({ params, searchParams }: PageProps<"/[
           <div
             role={error === "canceled" ? "status" : "alert"}
             className={cn(
-              "flex w-full items-start gap-2.5 rounded-md px-3.5 py-3 text-left text-body",
+              "flex w-full items-start gap-2.5 rounded-md px-3.5 py-3 text-start text-body",
               error === "canceled" ? "bg-subtle text-secondary-foreground" : "bg-danger-soft text-danger",
             )}
           >

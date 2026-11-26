@@ -57,7 +57,7 @@ export function DialogContent({
         {children}
         {hideClose ? null : (
           <DialogPrimitive.Close
-            className="absolute top-4 right-4 grid size-9 cursor-pointer place-items-center rounded-full text-muted-foreground transition-colors duration-(--motion-fast) hover:bg-subtle hover:text-foreground"
+            className="absolute end-4 top-4 grid size-9 cursor-pointer place-items-center rounded-full text-muted-foreground transition-colors duration-(--motion-fast) hover:bg-subtle hover:text-foreground"
             aria-label={closeLabel}
           >
             <XIcon className="size-4" aria-hidden />
@@ -68,7 +68,7 @@ export function DialogContent({
   );
 }
 export function DialogTitle({ className, ...props }: ComponentProps<typeof DialogPrimitive.Title>) {
-  return <DialogPrimitive.Title className={cn("pr-10 text-h2", className)} {...props} />;
+  return <DialogPrimitive.Title className={cn("pe-10 text-h2", className)} {...props} />;
 }
 export function DialogDescription({ className, ...props }: ComponentProps<typeof DialogPrimitive.Description>) {
   return <DialogPrimitive.Description className={cn("text-body text-secondary-foreground", className)} {...props} />;

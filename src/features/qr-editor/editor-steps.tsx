@@ -31,7 +31,7 @@ export function EditorSteps<T extends string>({
             <TabsPrimitive.Trigger
               value={s.value}
               className={cn(
-                "group inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-2 rounded-full py-1 pr-3 pl-1 text-label text-muted-foreground",
+                "group inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-2 rounded-full py-1 ps-1 pe-3 text-label text-muted-foreground",
                 "transition-colors duration-(--motion-fast) hover:bg-subtle",
                 "data-[state=active]:bg-subtle data-[state=active]:text-foreground",
                 done && "text-foreground",

@@ -411,7 +411,7 @@ export function CompactPhoto({
             type="button"
             aria-label={`${t("photoRemove")} · ${label}`}
             onClick={() => onChange(null)}
-            className="absolute -top-1.5 -right-1.5 grid size-6 cursor-pointer place-items-center rounded-full border border-border bg-surface shadow-1"
+            className="absolute -end-1.5 -top-1.5 grid size-6 cursor-pointer place-items-center rounded-full border border-border bg-surface shadow-1"
           >
             <Trash2Icon aria-hidden className="size-3" />
           </button>

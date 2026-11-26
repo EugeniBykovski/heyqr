@@ -23,7 +23,7 @@ export const editorStage = cn(
 
 export const editorPanel = cn(
   "@container/panel min-w-0 px-4 pt-4 sm:mx-auto sm:w-full sm:max-w-[47.5rem] sm:px-6 sm:pt-5",
-  "lg:order-0 lg:m-0 lg:min-h-[calc(var(--stage-canvas-h)+13.75rem)] lg:max-w-none lg:border-r lg:border-border lg:bg-surface lg:pb-8",
+  "lg:order-0 lg:m-0 lg:min-h-[calc(var(--stage-canvas-h)+13.75rem)] lg:max-w-none lg:border-e lg:border-border lg:bg-surface lg:pb-8",
 );
 
 export const editorTopBar = "border-b border-border bg-surface";
@@ -37,10 +37,10 @@ export const contentStepGrid = cn(
 export const contentAside = "sticky top-[calc(var(--spacing-header)+1.5rem)] max-lg:hidden";
 /** Below 1024 px: the "After scanning" bar that opens the phone above the form. */
 export const previewToggle =
-  "flex min-h-14 w-full cursor-pointer items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2.5 text-left";
+  "flex min-h-14 w-full cursor-pointer items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2.5 text-start";
 
 /* Type step (design 1.2): the type catalog, shared with its loading skeleton. */
 export const typeStepRoot = "mx-auto w-full max-w-[56.25rem] px-4 pt-6 pb-8 sm:px-6 lg:px-8 lg:pt-10 lg:pb-16";
 /** One shrinkable column on phones (an implicit auto column grew to the cards' text and overflowed 320 px), two from 480 px. */
 export const typeGrid = "grid grid-cols-[minmax(0,1fr)] gap-3 min-[30rem]:grid-cols-2";
-export const typeCard = "relative flex min-h-28 items-start gap-4 rounded-xl border border-border bg-surface p-4.5 text-left";
+export const typeCard = "relative flex min-h-28 items-start gap-4 rounded-xl border border-border bg-surface p-4.5 text-start";

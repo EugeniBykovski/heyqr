@@ -28,7 +28,7 @@ export function TypeChips() {
             key={type}
             type="button"
             onClick={() => open(type)}
-            className="group flex min-h-15 min-w-0 cursor-pointer items-center gap-3 rounded-lg border border-border bg-surface px-3.5 py-3 text-left transition-[border-color,background-color] duration-(--motion-fast) hover:border-accent-strong-hover hover:bg-accent md:min-h-19 md:px-4 md:py-3.5"
+            className="group flex min-h-15 min-w-0 cursor-pointer items-center gap-3 rounded-lg border border-border bg-surface px-3.5 py-3 text-start transition-[border-color,background-color] duration-(--motion-fast) hover:border-accent-strong-hover hover:bg-accent md:min-h-19 md:px-4 md:py-3.5"
           >
             <span className="grid size-9.5 shrink-0 place-items-center rounded-full bg-subtle text-icon-muted transition-colors duration-(--motion-fast) group-hover:bg-surface group-hover:text-accent-text">
               <Icon aria-hidden className="size-5" strokeWidth={1.9} />
@@ -49,7 +49,7 @@ export function TypeLink({ type, className }: { type: QrContentType; className?:
   const t = useTranslations("home.types");
   const open = useOpenType();
   return (
-    <button type="button" onClick={() => open(type)} className={cn("cursor-pointer text-left", className)}>
+    <button type="button" onClick={() => open(type)} className={cn("cursor-pointer text-start", className)}>
       {t(`${type}.label`)}
     </button>
   );

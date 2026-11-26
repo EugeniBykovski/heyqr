@@ -316,7 +316,7 @@ export function LayoutEditor({
           </div>
           <p className="min-w-0 truncate text-label">
             {tEdit("title", { layout: layoutName })}
-            {changed ? <span className="ml-2 text-caption text-muted-foreground">{tEdit("unsaved")}</span> : null}
+            {changed ? <span className="ms-2 text-caption text-muted-foreground">{tEdit("unsaved")}</span> : null}
           </p>
           <div className="flex min-w-0 flex-1 items-center justify-end">{saveButton("sm", "max-sm:hidden")}</div>
         </div>

@@ -518,7 +518,7 @@ function ModeChooser({ design, value, onChoose }: { design: EditorDesign; value:
     <button
       type="button"
       onClick={() => onChoose(mode)}
-      className="flex cursor-pointer flex-col gap-4 rounded-2xl border border-border bg-surface p-4 text-left shadow-1 transition-[border-color,box-shadow] duration-(--motion-fast) hover:border-accent-strong-hover hover:shadow-2 sm:p-5"
+      className="flex cursor-pointer flex-col gap-4 rounded-2xl border border-border bg-surface p-4 text-start shadow-1 transition-[border-color,box-shadow] duration-(--motion-fast) hover:border-accent-strong-hover hover:shadow-2 sm:p-5"
     >
       <span className="grid h-56 place-items-center rounded-xl bg-stage bg-[radial-gradient(var(--color-stage-dot)_1px,transparent_1.3px)] bg-size-[18px_18px] p-4 sm:h-64">
         <QrPreview layout={layout} value={value} label="" className="size-full" />

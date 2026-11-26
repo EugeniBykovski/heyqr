@@ -78,8 +78,8 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         revealLine={t("hero.reveal")}
         copy={
           <>
-            <span className="inline-flex items-center gap-2 self-start rounded-full border border-border bg-surface py-1 pr-3 pl-1.5 text-[0.8125rem] font-semibold text-secondary-foreground">
-              <i aria-hidden className="ml-1.5 size-2 rounded-full bg-selected-mark" />
+            <span className="inline-flex items-center gap-2 self-start rounded-full border border-border bg-surface py-1 ps-1.5 pe-3 text-[0.8125rem] font-semibold text-secondary-foreground">
+              <i aria-hidden className="ms-1.5 size-2 rounded-full bg-selected-mark" />
               {t("hero.eyebrow")}
             </span>
             <h1 className="text-display text-balance">{t("hero.title")}</h1>
@@ -229,7 +229,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 
       <section aria-label={t("cta.label")} className={section}>
         <div className="relative grid items-center gap-6 overflow-hidden rounded-2xl bg-inverse px-6 py-8 text-inverse-foreground md:grid-cols-[minmax(0,1fr)_auto] md:gap-10 md:p-14">
-          <svg aria-hidden viewBox="0 0 32 32" className="pointer-events-none absolute -right-15 -bottom-20 size-80 text-icon-muted">
+          <svg aria-hidden viewBox="0 0 32 32" className="pointer-events-none absolute -end-15 -bottom-20 size-80 text-icon-muted">
             <rect x="10" y="10" width="12" height="12" rx="3.6" fill="currentColor" />
           </svg>
           <div className="relative flex max-w-155 flex-col gap-3">

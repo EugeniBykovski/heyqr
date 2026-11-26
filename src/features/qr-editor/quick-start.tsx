@@ -233,7 +233,7 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
                 inputMode="url"
                 autoComplete="url"
                 placeholder={t("urlPlaceholder")}
-                className="rounded-l-none"
+                className="rounded-s-none"
                 value={bareUrl(design.content.url)}
                 aria-invalid={urlError ? true : undefined}
                 aria-describedby={urlError ? "content-url-error" : undefined}

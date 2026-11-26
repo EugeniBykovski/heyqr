@@ -29,6 +29,7 @@ import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Segmented } from "@/shared/ui/segmented";
 import { Stage, StageBar, StageCanvas, StageFoot } from "@/shared/ui/stage";
+import { useCarriedState } from "@/shared/lib/locale-carry";
 import { UseTrialButton } from "./trial-actions";
 import { formatMoney, type Currency } from "@/shared/config/catalog-core";
 
@@ -219,7 +220,11 @@ export function ExportSurface(props: ExportSurfaceProps) {
   const offer = props.offer;
   const pp = offer?.printPack ?? null;
   // Design 7.2 Print Pack switch: off by default; on when coming back from checkout with it.
-  const [addPrint, setAddPrint] = useState(Boolean(props.initial.printPack) && Boolean(pp && !pp.owned));
+  // HEY-192: kept when the language changes, so the itemized total doesn't change with it.
+  const [addPrint, setAddPrint] = useCarriedState(
+    `export:${props.mode === "signed" ? props.layoutId : "guest"}:printPack`,
+    Boolean(props.initial.printPack) && Boolean(pp && !pp.owned),
+  );
   const ppIncluded = Boolean(pp?.included && pp.included.left > 0);
   const ppOn = addPrint && Boolean(pp && !pp.owned) && (ppIncluded || Boolean(pp?.forSale));
   const cur = props.price.currency;
@@ -723,7 +728,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
                   aria-describedby={`format-${f}-hint`}
                   onClick={() => update({ format: f })}
                   className={cn(
-                    "relative flex cursor-pointer flex-col items-start gap-0.5 rounded-lg border border-border bg-surface p-3.5 text-left disabled:cursor-not-allowed disabled:opacity-60",
+                    "relative flex cursor-pointer flex-col items-start gap-0.5 rounded-lg border border-border bg-surface p-3.5 text-start disabled:cursor-not-allowed disabled:opacity-60",
                     "aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]",
                   )}
                 >
@@ -731,7 +736,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
                   {settings.format === f ? (
                     <span
                       aria-hidden
-                      className="absolute top-2 right-2 grid size-5 place-items-center rounded-full bg-primary text-primary-foreground"
+                      className="absolute end-2 top-2 grid size-5 place-items-center rounded-full bg-primary text-primary-foreground"
                     >
                       <CheckIcon className="size-3.5" strokeWidth={3} />
                     </span>
@@ -1011,7 +1016,7 @@ function LimitPanel({
   options: { label: string; sub: string; price?: string; href?: string; onClick?: () => void; disabled?: boolean }[];
 }) {
   const box =
-    "flex min-h-14 w-full items-center gap-3 rounded-lg border border-border bg-surface px-3.5 py-2.5 text-left hover:border-border-hover first:border-selected-border first:shadow-[0_0_0_1px_var(--selected-border)]";
+    "flex min-h-14 w-full items-center gap-3 rounded-lg border border-border bg-surface px-3.5 py-2.5 text-start hover:border-border-hover first:border-selected-border first:shadow-[0_0_0_1px_var(--selected-border)]";
   return (
     <div role="status" className="mt-2 flex flex-col gap-3 rounded-xl border border-warning/30 bg-warning-soft p-4">
       <div className="flex items-start gap-2.5">
@@ -1065,7 +1070,7 @@ function Line({ label, value, strong, tone }: { label: string; value: string; st
       <span className="min-w-0">{label}</span>
       <span
         className={cn(
-          "shrink-0 text-right tabular-nums",
+          "shrink-0 text-end tabular-nums",
           !strong && "text-foreground",
           tone === "ok" && "font-semibold text-success",
           strong && "text-[1.75rem] leading-none",

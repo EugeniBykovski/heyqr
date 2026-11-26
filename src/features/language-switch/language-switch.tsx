@@ -61,7 +61,7 @@ export function LanguageSwitch() {
           type="button"
           aria-label={`${t("language")}: ${current.native}`}
           disabled={pending}
-          className="group inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-full border border-border bg-surface pr-2.5 pl-2 text-[0.8125rem] font-bold tracking-[0.02em] transition-[border-color,box-shadow] duration-(--motion-fast) hover:border-border-hover hover:shadow-1 disabled:opacity-40 aria-expanded:border-violet-300 aria-expanded:ring-3 aria-expanded:ring-violet-100"
+          className="group inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-full border border-border bg-surface ps-2 pe-2.5 text-[0.8125rem] font-bold tracking-[0.02em] transition-[border-color,box-shadow] duration-(--motion-fast) hover:border-border-hover hover:shadow-1 disabled:opacity-40 aria-expanded:border-violet-300 aria-expanded:ring-3 aria-expanded:ring-violet-100"
         >
           <Flag className={current.flag} />
           <span className="max-[390px]:hidden">{current.short}</span>

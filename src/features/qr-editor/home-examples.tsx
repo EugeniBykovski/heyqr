@@ -38,7 +38,7 @@ export function HomeExamples() {
             writeDraft({ ...DEFAULT_DESIGN, ...ex.design, name: t(`items.${ex.id}.title`), model: ex.model, content: ex.content });
             router.push("/create?step=design");
           }}
-          className="group flex cursor-pointer snap-start flex-col gap-3.5 rounded-xl border border-border bg-surface p-3 text-left shadow-1 transition-[border-color,box-shadow] duration-(--motion-base) ease-out hover:border-border-hover hover:shadow-2"
+          className="group flex cursor-pointer snap-start flex-col gap-3.5 rounded-xl border border-border bg-surface p-3 text-start shadow-1 transition-[border-color,box-shadow] duration-(--motion-base) ease-out hover:border-border-hover hover:shadow-2"
         >
           <span className="grid aspect-square place-items-center overflow-hidden rounded-lg bg-stage bg-[radial-gradient(var(--color-stage-dot)_1px,transparent_1.3px)] bg-size-[14px_14px] p-5">
             <span className="block w-4/5 drop-shadow-[0_10px_22px_rgb(13_13_18/0.16)] transition-transform duration-(--motion-panel) ease-out group-hover:scale-[1.03] motion-reduce:group-hover:scale-100">

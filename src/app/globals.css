@@ -529,6 +529,11 @@
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-ring;
   }
+  /* HEY-192: in right-to-left (Arabic) "next" points the reading direction. `scale` is its own property, so icons that
+     also rotate (open / closed) keep their transform. */
+  [dir="rtl"] :is(.lucide-arrow-right, .lucide-arrow-left, .lucide-chevron-right, .lucide-chevron-left) {
+    scale: -1 1;
+  }
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

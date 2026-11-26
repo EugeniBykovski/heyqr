@@ -273,7 +273,7 @@ function LayoutGroup({ design, onChange, onNotice }: GroupProps) {
                 onChange(quickStylePatch(s), { step: true });
                 onNotice?.(tq("applied", { name: tq(`names.${s.id}`) }));
               }}
-              className="flex cursor-pointer flex-col items-stretch gap-1.5 rounded-lg border border-border bg-surface p-1.5 pb-2 text-left transition-[border-color,box-shadow] duration-(--motion-fast) hover:border-border-hover hover:shadow-2"
+              className="flex cursor-pointer flex-col items-stretch gap-1.5 rounded-lg border border-border bg-surface p-1.5 pb-2 text-start transition-[border-color,box-shadow] duration-(--motion-fast) hover:border-border-hover hover:shadow-2"
             >
               <span className="grid aspect-square place-items-center rounded-sm p-2" style={{ backgroundColor: s.bg }}>
                 <svg viewBox="3.4 3.4 5.2 5.2" aria-hidden className="size-full">
@@ -334,7 +334,7 @@ function OptionCard({
       aria-pressed={selected}
       onClick={onClick}
       className={cn(
-        "relative flex min-w-0 cursor-pointer flex-col items-stretch gap-1 rounded-lg border border-border bg-surface p-2 text-left",
+        "relative flex min-w-0 cursor-pointer flex-col items-stretch gap-1 rounded-lg border border-border bg-surface p-2 text-start",
         "transition-[border-color,box-shadow,background-color] duration-(--motion-fast) hover:border-border-hover",
         "aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]",
       )}
@@ -351,7 +351,7 @@ function SelectedMark({ selected }: { selected: boolean }) {
   return selected ? (
     <span
       aria-hidden
-      className="absolute top-1.5 right-1.5 z-1 grid size-5 place-items-center rounded-full bg-selected-mark text-inverse-foreground"
+      className="absolute end-1.5 top-1.5 z-1 grid size-5 place-items-center rounded-full bg-selected-mark text-inverse-foreground"
     >
       <svg viewBox="0 0 24 24" className="size-3 fill-none stroke-current stroke-[3.2]">
         <path d="M20 6 9 17l-5-5" />
@@ -411,11 +411,11 @@ function FrameGroup({ design, onChange, value }: GroupProps) {
                 maxLength={Math.max(FRAME_TEXT_MAX, design.caption.length)}
                 aria-describedby="frame-text-hint frame-text-count"
                 onChange={(e) => onChange({ caption: e.target.value.slice(0, Math.max(FRAME_TEXT_MAX, design.caption.length)) })}
-                className="pr-14"
+                className="pe-14"
               />
               <span
                 id="frame-text-count"
-                className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-caption text-muted-foreground tabular-nums"
+                className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-caption text-muted-foreground tabular-nums"
               >
                 {[...design.caption].length}/{FRAME_TEXT_MAX}
               </span>
@@ -470,7 +470,7 @@ function FrameCard({ selected, label, onClick, children }: { selected: boolean; 
       aria-pressed={selected}
       onClick={onClick}
       className={cn(
-        "relative flex min-w-0 cursor-pointer flex-col gap-1.5 rounded-lg border border-border bg-surface p-1.5 pb-2 text-left",
+        "relative flex min-w-0 cursor-pointer flex-col gap-1.5 rounded-lg border border-border bg-surface p-1.5 pb-2 text-start",
         "transition-[border-color,box-shadow,background-color] duration-(--motion-fast) hover:border-border-hover",
         "aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]",
       )}
@@ -678,7 +678,7 @@ function ColorsGroup({
                 aria-pressed={role === r}
                 onClick={() => setRole(r)}
                 className={cn(
-                  "flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-md border border-border bg-surface px-2.5 py-1.5 text-left",
+                  "flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-md border border-border bg-surface px-2.5 py-1.5 text-start",
                   "transition-[border-color,box-shadow] duration-(--motion-fast) hover:border-border-hover",
                   "aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]",
                 )}
@@ -811,13 +811,16 @@ function LogoGroup({
       ) : source === "icons" ? (
         <Section title={tl("icons")} hint={tl("count", { count: Object.keys(CENTER_ICONS).length })}>
           <div className="relative">
-            <SearchIcon aria-hidden className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+            <SearchIcon
+              aria-hidden
+              className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+            />
             <Input
               aria-label={tl("search")}
               placeholder={tl("searchPlaceholder")}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="pl-9"
+              className="ps-9"
             />
           </div>
           <div role="group" aria-label={t("logo")} className="grid grid-cols-6 gap-1.5 @[26rem]/panel:grid-cols-8">
@@ -1092,7 +1095,7 @@ function CaptionGroup({
       <button
         type="button"
         onClick={onEditColor}
-        className="flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-md border border-border bg-surface px-2.5 py-1.5 text-left transition-[border-color] duration-(--motion-fast) hover:border-border-hover"
+        className="flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-md border border-border bg-surface px-2.5 py-1.5 text-start transition-[border-color] duration-(--motion-fast) hover:border-border-hover"
       >
         <span aria-hidden className="size-7 shrink-0 rounded-sm border border-border" style={{ backgroundColor: captionColor }} />
         <span className="grow text-label">{tc("color")}</span>
