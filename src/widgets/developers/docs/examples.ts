@@ -1,0 +1,642 @@
+/*
+ * Code on the docs pages (design 12.x). The @heyqr/qr-core examples are run against the real package by
+ * examples.test.ts (fragments get the variables they rely on from a small prelude there), and their "→" comments are
+ * the package's actual output. REST examples use only the v1 contract in docs/API_V1.md; keys always come from the
+ * server's environment, never from browser code.
+ */
+import type { DocsEnv } from "./registry";
+
+export type CodeEnv = DocsEnv | "shell" | "types" | "http" | "json";
+export type Example = {
+  file: string;
+  env: CodeEnv;
+  code: string;
+  /** Shown with a "$ " prompt that isn't copied. */
+  prompt?: boolean;
+  /** Needs these variables from the page above it (the test prelude provides them). */
+  uses?: readonly ("value" | "style" | "layout" | "svg" | "png")[];
+};
+/** One example in tabs (cURL / TypeScript, or response statuses). */
+export type TabbedExample = { env: CodeEnv; tabs: readonly { id: string; label: string; code: string; note?: string }[] };
+
+const J = (...lines: string[]) => lines.join("\n");
+
+const STYLE = J(
+  "const style: QrStyle = {",
+  '  pattern: "rounded",',
+  '  eyeFrame: "rounded",',
+  '  eyeBall: "circle",',
+  '  colors: { fg: "#0D0D12", eye: "#0D0D12", eyeIn: "#5B3BFF", bg: "#FFFFFF" },',
+  "};",
+);
+
+export const INSTALL_COMMANDS = {
+  qrCore: { npm: "npm install @heyqr/qr-core", pnpm: "pnpm add @heyqr/qr-core", yarn: "yarn add @heyqr/qr-core" },
+  sdk: { npm: "npm install @heyqr/sdk", pnpm: "pnpm add @heyqr/sdk", yarn: "yarn add @heyqr/sdk" },
+} as const;
+
+export const EXAMPLES = {
+  wasm: {
+    file: "terminal",
+    env: "shell",
+    prompt: true,
+    // Resolved through the package, so it works whether or not the package manager hoists zxing-wasm (pnpm doesn't).
+    code: `mkdir -p public/wasm && cp "$(node --input-type=module -e "import { createRequire } from 'node:module'; console.log(createRequire(import.meta.resolve('@heyqr/qr-core')).resolve('zxing-wasm/reader/zxing_reader.wasm'))")" public/wasm/`,
+  },
+  quickstartBrowser: {
+    file: "quick-start.ts",
+    env: "both",
+    code: J(
+      'import { encodePayload, renderQr, renderQrSvg, type QrStyle } from "@heyqr/qr-core";',
+      "",
+      'const value = encodePayload({ type: "website", url: "anareyes.studio/portfolio" });',
+      '// → "https://anareyes.studio/portfolio"',
+      "",
+      STYLE,
+      "",
+      "const { scan } = renderQr(value, style);",
+      "if (!scan.ok) console.warn(scan.issues.map((issue) => issue.fix));",
+      "",
+      "const svg = renderQrSvg(value, style, 512);",
+      'document.querySelector("#qr")?.insertAdjacentHTML("beforeend", svg);',
+    ),
+  },
+  quickstartNode: {
+    file: "save.mjs",
+    env: "node",
+    code: J(
+      'import { writeFile } from "node:fs/promises";',
+      'import { encodePayload, renderQrSvg } from "@heyqr/qr-core";',
+      'import { rasterizeSvg } from "@heyqr/qr-core/raster";',
+      "",
+      'const value = encodePayload({ type: "website", url: "anareyes.studio/portfolio" });',
+      "const svg = renderQrSvg(value, {",
+      '  pattern: "dot",',
+      '  eyeFrame: "circle",',
+      '  eyeBall: "circle",',
+      '  colors: { fg: "#1F4D3A", eye: "#1F4D3A", eyeIn: "#1F4D3A", bg: "#FFFFFF" },',
+      "});",
+      "",
+      'await writeFile("portfolio-qr.svg", svg);',
+      'await writeFile("portfolio-qr.png", rasterizeSvg(svg, { width: 1200 }));',
+    ),
+  },
+  contentExamples: {
+    file: "content.ts",
+    env: "both",
+    code: J(
+      'import { encodePayload } from "@heyqr/qr-core";',
+      "",
+      'encodePayload({ type: "wifi", ssid: "Reyes Studio Guest", security: "WPA", password: "linen-orbit-42" });',
+      '// → "WIFI:T:WPA;S:Reyes Studio Guest;P:linen-orbit-42;;"',
+      "",
+      'encodePayload({ type: "phone", number: "+1 415 555 0142" });',
+      '// → "tel:+14155550142"',
+      "",
+      'encodePayload({ type: "email", to: "hello@reyes.studio", subject: "Class booking" });',
+      '// → "mailto:hello@reyes.studio?subject=Class%20booking"',
+      "",
+      'encodePayload({ type: "location", address: "21 Pier St, San Francisco" });',
+      '// → "geo:0,0?q=21%20Pier%20St%2C%20San%20Francisco"',
+    ),
+  },
+  vcard: {
+    file: "contact.ts",
+    env: "both",
+    code: J(
+      'import { encodePayload } from "@heyqr/qr-core";',
+      "",
+      "encodePayload({",
+      '  type: "contact",',
+      '  firstName: "Ana",',
+      '  lastName: "Reyes",',
+      '  title: "Product designer",',
+      '  company: "Reyes Studio",',
+      '  phone: "+1 415 555 0142",',
+      '  email: "ana@anareyes.studio",',
+      '  website: "anareyes.studio",',
+      "});",
+      "// BEGIN:VCARD",
+      "// VERSION:3.0",
+      "// N:Reyes;Ana;;;",
+      "// FN:Ana Reyes",
+      "// ORG:Reyes Studio",
+      "// TITLE:Product designer",
+      "// TEL;TYPE=CELL:+1 415 555 0142",
+      "// EMAIL;TYPE=INTERNET:ana@anareyes.studio",
+      "// URL:https://anareyes.studio",
+      "// END:VCARD",
+    ),
+  },
+  event: {
+    file: "event.ts",
+    env: "both",
+    code: J(
+      'import { encodePayload } from "@heyqr/qr-core";',
+      "",
+      'encodePayload({ type: "event", title: "Spring show", start: "2026-12-05T19:00", end: "2026-12-05T22:00", place: "Reyes Studio" });',
+      "// BEGIN:VEVENT",
+      "// SUMMARY:Spring show",
+      "// DTSTART:20261205T190000",
+      "// DTEND:20261205T220000",
+      "// LOCATION:Reyes Studio",
+      "// END:VEVENT",
+    ),
+  },
+  urlCheck: {
+    file: "url-check.ts",
+    env: "both",
+    code: J(
+      'import { parseWebsiteUrl } from "@heyqr/qr-core";',
+      "",
+      'parseWebsiteUrl("anareyes.studio/portfolio"); // { ok: true, url: "https://anareyes.studio/portfolio" }',
+      'parseWebsiteUrl("anareyes studio");           // { ok: false, problem: "spaces" }',
+      'parseWebsiteUrl("ftp://reyes.studio");        // { ok: false, problem: "invalid" }',
+    ),
+  },
+  contrast: {
+    file: "contrast.ts",
+    env: "both",
+    code: J(
+      'import { contrastRatio, MIN_CONTRAST } from "@heyqr/qr-core";',
+      "",
+      'contrastRatio("#1F4E8C", "#EEF3FA") >= MIN_CONTRAST.modules; // true',
+    ),
+  },
+  centerText: {
+    file: "center-text.ts",
+    env: "both",
+    code: J(
+      'import type { QrStyle } from "@heyqr/qr-core";',
+      "",
+      "const style: QrStyle = {",
+      '  pattern: "rounded",',
+      '  eyeFrame: "cushion",',
+      '  eyeBall: "rounded",',
+      '  colors: { fg: "#0D0D12", eye: "#0D0D12", eyeIn: "#0D0D12", bg: "#FFFFFF" },',
+      '  centerText: { text: "MENU", bg: "#0D0D12", color: "#FFFFFF", fontFamily: "DM Sans, sans-serif" },',
+      "};",
+    ),
+  },
+  art: {
+    file: "art.ts",
+    env: "both",
+    code: J(
+      'import type { QrStyle } from "@heyqr/qr-core";',
+      "",
+      "const style: QrStyle = {",
+      '  pattern: "fluid",',
+      '  eyeFrame: "circle",',
+      '  eyeBall: "rounded",',
+      '  colors: { fg: "#3B2A20", eye: "#3B2A20", eyeIn: "#3B2A20", bg: "#FFFFFF" },',
+      '  art: { tint: "#E9DCCB", tint2: "#8DB596" },',
+      "};",
+    ),
+  },
+  logoStyle: {
+    file: "logo-style.ts",
+    env: "both",
+    code: J(
+      'import type { QrStyle } from "@heyqr/qr-core";',
+      "",
+      "const style: QrStyle = {",
+      '  pattern: "rounded",',
+      '  eyeFrame: "cushion",',
+      '  eyeBall: "rounded",',
+      '  colors: { fg: "#0D0D12", eye: "#0D0D12", eyeIn: "#0D0D12", bg: "#FFFFFF" },',
+      '  logo: { iconPath: "M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20", size: 0.22, plate: "circle" },',
+      "};",
+    ),
+  },
+  logoFit: {
+    file: "logo-fit.ts",
+    env: "both",
+    uses: ["value", "style"],
+    code: J(
+      "const { scan } = renderQr(value, style);",
+      "if (style.logo && style.logo.size > scan.maxLogoSize) {",
+      "  style.logo.size = scan.maxLogoSize;",
+      "}",
+    ),
+  },
+  compose: {
+    file: "menu-sticker.ts",
+    env: "both",
+    code: J(
+      'import { composeLayout, encodePayload, layoutCapacity, type Layout } from "@heyqr/qr-core";',
+      "",
+      "const layout: Layout = {",
+      '  preset: "frame",',
+      '  frameStyle: "bubble",',
+      '  unit: "mm",',
+      "  width: 40, // frames take their size from qrSize",
+      "  height: 40,",
+      "  qrSize: 40,",
+      "  border: false,",
+      '  colors: { fg: "#8C2F4B", eye: "#8C2F4B", eyeIn: "#8C2F4B", bg: "#FFFFFF", frame: "#8C2F4B", caption: "#FFFFFF" },',
+      '  style: { pattern: "rounded", eyeFrame: "cushion", eyeBall: "rounded" },',
+      '  caption: { text: "See the menu", fontFamily: "DM Sans, sans-serif", font: "dm", size: 12, weight: 700, align: "center", position: "after" },',
+      "};",
+      "",
+      'const value = encodePayload({ type: "website", url: "littlefern.coffee/menu" });',
+      "",
+      "if (layoutCapacity(layout, value).ok) {",
+      "  const { svg, width, height, scan } = composeLayout(layout, value);",
+      "}",
+    ),
+  },
+  png: {
+    file: "save-png.mjs",
+    env: "node",
+    code: J(
+      'import { writeFile } from "node:fs/promises";',
+      'import { encodePayload, renderQrSvg } from "@heyqr/qr-core";',
+      'import { rasterizeSvg } from "@heyqr/qr-core/raster";',
+      "",
+      "const value = encodePayload({",
+      '  type: "wifi",',
+      '  ssid: "Reyes Studio Guest",',
+      '  security: "WPA",',
+      '  password: "linen-orbit-42",',
+      "});",
+      "",
+      "const svg = renderQrSvg(value, {",
+      '  pattern: "dot",',
+      '  eyeFrame: "circle",',
+      '  eyeBall: "circle",',
+      '  colors: { fg: "#1F4D3A", eye: "#1F4D3A", eyeIn: "#1F4D3A", bg: "#FFFFFF" },',
+      "});",
+      "",
+      "const png = rasterizeSvg(svg, { width: 1200 });",
+      'await writeFile("wifi-qr.png", png);',
+    ),
+  },
+  printPng: {
+    file: "print-png.mjs",
+    env: "node",
+    uses: ["layout", "value"],
+    code: J(
+      'import { composeLayout, pngPixelSize } from "@heyqr/qr-core";',
+      'import { rasterizeSvg } from "@heyqr/qr-core/raster";',
+      "",
+      "const { width, ok } = pngPixelSize(layout, { dpi: 600 });",
+      "if (ok) {",
+      "  const { svg } = composeLayout(layout, value);",
+      "  // dpi is written into the PNG, so print software opens it at its physical size.",
+      "  const png = rasterizeSvg(svg, { width, dpi: 600 });",
+      "}",
+    ),
+  },
+  scanReport: {
+    file: "scan-check.ts",
+    env: "both",
+    uses: ["value", "style"],
+    code: J(
+      'import { renderQr } from "@heyqr/qr-core";',
+      "",
+      "const { scan } = renderQr(value, style);",
+      "// scan.ok          true when no rule failed",
+      "// scan.issues      [{ code, title, detail, fix }]",
+      "// scan.maxLogoSize largest logo that still decodes (0 without a logo)",
+      "// scan.version, scan.ecl, scan.modules",
+    ),
+  },
+  verifyNode: {
+    file: "verify.mjs",
+    env: "node",
+    uses: ["svg", "value", "png"],
+    code: J(
+      'import { verifyScan, decodeImage } from "@heyqr/qr-core/verify";',
+      "",
+      "// Decodes at 300, 600 and 1200 px; true only if every size returns the value.",
+      "const ok = await verifyScan(svg, value);",
+      "",
+      "// Reads a stored file exactly as saved, e.g. the PNG from rasterizeSvg.",
+      "const text = await decodeImage(png);",
+    ),
+  },
+  verifyBrowser: {
+    file: "verify-browser.ts",
+    env: "browser",
+    uses: ["svg", "value"],
+    code: J(
+      'import { decodeSvgInBrowser } from "@heyqr/qr-core/verify-browser";',
+      "",
+      'const text = await decodeSvgInBrowser(svg, { wasmUrl: "/wasm/zxing_reader.wasm" });',
+      "const verified = text === value;",
+    ),
+  },
+  typesStyle: {
+    file: "types.d.ts",
+    env: "types",
+    code: J(
+      'type ModuleShape = "square" | "rounded" | "dot" | "diamond" | "leaf" | "fluid" | "vbars" | "hbars";',
+      'type EyeFrameShape = "square" | "rounded" | "cushion" | "circle" | "leaf";',
+      'type EyeBallShape = "square" | "rounded" | "circle" | "diamond" | "leaf";',
+      "",
+      "interface QrStyle {",
+      "  pattern: ModuleShape;",
+      "  eyeFrame: EyeFrameShape;",
+      "  eyeBall: EyeBallShape;",
+      "  colors: QrColors; // { fg, eye, eyeIn, bg }",
+      "  logo?: QrLogo | null;",
+      "  centerText?: QrCenterText | null; // { text, bg, color, fontFamily }",
+      "  art?: QrArt | null; // { tint, tint2, image? }",
+      "}",
+      "",
+      "interface QrLogo {",
+      "  href?: string;",
+      "  iconPath?: string;",
+      "  size: number;",
+      '  plate: "none" | "square" | "circle";',
+      "  tile?: boolean;",
+      "  plateColor?: string;",
+      "  iconColor?: string;",
+      "}",
+    ),
+  },
+  typesReport: {
+    file: "types.d.ts",
+    env: "types",
+    code: J(
+      "interface RenderedQr {",
+      "  inner: string; // SVG markup without the outer <svg>, in module units",
+      "  viewBox: number; // symbol size including the 4-module quiet zone",
+      "  scan: ScanReport;",
+      "}",
+      "",
+      "interface ScanReport {",
+      "  ok: boolean;",
+      "  issues: ScanIssue[];",
+      "  maxLogoSize: number;",
+      "  version: number;",
+      '  ecl: "L" | "M" | "Q" | "H";',
+      "  modules: number;",
+      "}",
+      "",
+      "interface ScanIssue {",
+      '  code: "invert" | "contrast" | "eyes" | "logo" | "text";',
+      "  title: string;",
+      "  detail: string;",
+      "  fix: string;",
+      "}",
+    ),
+  },
+  typesContent: {
+    file: "types.d.ts",
+    env: "types",
+    code: J(
+      "type QrContent =",
+      '  | { type: "website"; url: string }',
+      '  | { type: "text"; text: string }',
+      '  | { type: "wifi"; ssid: string; security: "WPA" | "WEP" | "nopass"; password?: string; hidden?: boolean }',
+      '  | { type: "contact"; firstName?: string; lastName?: string; title?: string; company?: string; phone?: string; email?: string; website?: string }',
+      '  | { type: "email"; to: string; subject?: string; body?: string }',
+      '  | { type: "phone"; number: string }',
+      '  | { type: "sms"; number: string; message?: string }',
+      '  | { type: "location"; name?: string; address: string }',
+      '  | { type: "event"; title: string; start: string; end?: string; place?: string };',
+    ),
+  },
+  capacity: {
+    file: "capacity.ts",
+    env: "both",
+    uses: ["value", "style"],
+    code: J(
+      'import { renderQrSvg, maxPayloadBytes, payloadBytes, QrCapacityError } from "@heyqr/qr-core";',
+      "",
+      'payloadBytes(value) <= maxPayloadBytes("H"); // check first when a logo is on',
+      "",
+      "try {",
+      "  renderQrSvg(value, style);",
+      "} catch (error) {",
+      "  if (error instanceof QrCapacityError) {",
+      "    console.warn(`${error.byteLength} bytes; this style holds ${error.maxBytes}`);",
+      "  }",
+      "}",
+    ),
+  },
+  /* ── REST API v1: what this build implements (docs/API_V1.md). Keys come from the server's environment. ─────── */
+  restHeader: {
+    file: "request headers",
+    env: "http",
+    code: J("Authorization: Bearer $HEYQR_API_KEY", "Content-Type: application/json"),
+  },
+  restDestinationRead: {
+    file: "destination.sh",
+    env: "shell",
+    code: J(
+      'curl -sS "$HEYQR_URL/api/v1/qr-codes/$QR_ID/destination" \\',
+      '  -H "Authorization: Bearer $HEYQR_API_KEY"',
+      '# 200 { "qrCodeId": "…", "destination": "https://littlefern.cafe/menu", "revision": 3, … }',
+    ),
+  },
+  sdkInstallNote: {
+    file: "server.ts",
+    env: "node",
+    code: J(
+      'import { HeyQrClient, HeyQrRateLimitError, isRevisionConflict } from "@heyqr/sdk";',
+      "",
+      "// Server only: the key is a secret. Keep it in the environment, never in browser code.",
+      'const heyqr = new HeyQrClient({ apiKey: process.env.HEYQR_API_KEY ?? "", baseUrl: process.env.HEYQR_URL ?? "" });',
+      "",
+      'const current = await heyqr.getDestination("Q8d3…");',
+      "try {",
+      '  await heyqr.updateDestination("Q8d3…", { destination: "https://littlefern.cafe/today", revision: current.revision });',
+      "} catch (error) {",
+      '  if (isRevisionConflict(error)) console.warn("Changed elsewhere: read it again and reapply if it still applies.");',
+      "  else if (error instanceof HeyQrRateLimitError) console.warn(`Rate limited; retry in ${error.retryAfterSeconds ?? 60} s.`);",
+      "  else throw error;",
+      "}",
+    ),
+  },
+} satisfies Record<string, Example>;
+
+export type ExampleId = keyof typeof EXAMPLES;
+
+/** Request and response tabs (design 12.21 / 12.22: cURL / TypeScript, then one tab per status). */
+export const TABBED = {
+  restCreateRequest: {
+    env: "http",
+    tabs: [
+      {
+        id: "curl",
+        label: "cURL",
+        code: J(
+          'curl -sS -X POST "$HEYQR_URL/api/v1/qr-codes" \\',
+          '  -H "Authorization: Bearer $HEYQR_API_KEY" \\',
+          '  -H "Content-Type: application/json" \\',
+          '  -H "Idempotency-Key: $(uuidgen)" \\',
+          "  -d @menu.json",
+        ),
+      },
+      {
+        id: "ts",
+        label: "TypeScript",
+        code: J(
+          "// On your server. menu.json: name, mode, content and layouts (see Request body).",
+          "const res = await fetch(`${process.env.HEYQR_URL}/api/v1/qr-codes`, {",
+          '  method: "POST",',
+          "  headers: {",
+          "    Authorization: `Bearer ${process.env.HEYQR_API_KEY}`,",
+          '    "Content-Type": "application/json",',
+          '    "Idempotency-Key": crypto.randomUUID(),',
+          "  },",
+          "  body: JSON.stringify(menu),",
+          "});",
+        ),
+      },
+    ],
+  },
+  restCreateResponses: {
+    env: "json",
+    tabs: [
+      { id: "201", label: "201 Created", code: '{ "id": "Q8d3…", "status": "draft", "layouts": [{ "id": "L2k9…" }] }', note: "created" },
+      {
+        id: "422",
+        label: "422 Invalid request",
+        code: J(
+          "{",
+          '  "error": {',
+          '    "code": "invalid_request",',
+          '    "message": "The request isn\'t valid.",',
+          '    "details": [{ "path": "content.url", "message": "…" }]',
+          "  }",
+          "}",
+        ),
+        note: "invalid",
+      },
+      {
+        id: "403",
+        label: "403 Draft limit",
+        code: '{ "error": { "code": "draft_limit", "message": "This account has the maximum number of draft codes. Activate or delete one first." } }',
+        note: "draftLimit",
+      },
+      {
+        id: "409",
+        label: "409 Key reused",
+        code: '{ "error": { "code": "idempotency_key_reused", "message": "This Idempotency-Key was already used with a different request. Use a new key for a new code." } }',
+        note: "reused",
+      },
+    ],
+  },
+  restDestinationRequest: {
+    env: "http",
+    tabs: [
+      {
+        id: "curl",
+        label: "cURL",
+        code: J(
+          'curl -sS -X PATCH "$HEYQR_URL/api/v1/qr-codes/$QR_ID/destination" \\',
+          '  -H "Authorization: Bearer $HEYQR_API_KEY" \\',
+          '  -H "Content-Type: application/json" \\',
+          '  -d \'{ "destination": "https://littlefern.cafe/today", "revision": 3 }\'',
+        ),
+      },
+      {
+        id: "ts",
+        label: "TypeScript",
+        code: J(
+          "// On your server.",
+          "const res = await fetch(`${process.env.HEYQR_URL}/api/v1/qr-codes/${qrId}/destination`, {",
+          '  method: "PATCH",',
+          '  headers: { Authorization: `Bearer ${process.env.HEYQR_API_KEY}`, "Content-Type": "application/json" },',
+          '  body: JSON.stringify({ destination: "https://littlefern.cafe/today", revision: 3 }),',
+          "});",
+        ),
+      },
+    ],
+  },
+  restDestinationResponses: {
+    env: "json",
+    tabs: [
+      {
+        id: "200",
+        label: "200 OK",
+        code: J(
+          "{",
+          '  "qrCodeId": "Q8d3…",',
+          '  "destination": "https://littlefern.cafe/today",',
+          '  "revision": 4,',
+          '  "previousDestination": "https://littlefern.cafe/menu",',
+          '  "changedAt": "2026-11-26T10:05:00.000Z",',
+          '  "shortLink": "https://hqr.to/k7Qm2xP",',
+          '  "changed": true',
+          "}",
+        ),
+        note: "changed",
+      },
+      {
+        id: "409",
+        label: "409 Revision conflict",
+        code: '{ "error": { "code": "revision_conflict", "message": "The destination changed since this revision. Nothing was saved.", "current": { "destination": "…", "revision": 5 } } }',
+        note: "conflict",
+      },
+      {
+        id: "422",
+        label: "422 Not Dynamic",
+        code: '{ "error": { "code": "not_dynamic", "message": "Only Dynamic codes have a destination." } }',
+        note: "notDynamic",
+      },
+    ],
+  },
+  restRateLimited: {
+    env: "http",
+    tabs: [
+      {
+        id: "429",
+        label: "429 Too Many Requests",
+        code: J(
+          "HTTP/1.1 429 Too Many Requests",
+          "Retry-After: 17",
+          "Cache-Control: no-store",
+          "",
+          '{ "error": { "code": "rate_limited", "message": "Too many requests for this account. Try again later.", "limit": "api" } }',
+        ),
+        note: "rateLimited",
+      },
+      {
+        id: "401",
+        label: "401 Unauthorized",
+        code: J(
+          "HTTP/1.1 401 Unauthorized",
+          'WWW-Authenticate: Bearer realm="heyqr"',
+          "",
+          '{ "error": { "code": "unauthorized", "message": "A valid API key is required: Authorization: Bearer <key>." } }',
+        ),
+        note: "unauthorized",
+      },
+    ],
+  },
+  /* Design previews (12.22 and the scan statistics board): proposed, not implemented, shown only in previews. */
+  bulkResponses: {
+    env: "json",
+    tabs: [
+      {
+        id: "202",
+        label: "202 Accepted",
+        code: J("{", '  "job_id": "job_3Fq9",', '  "status": "queued",', '  "count": 24', "}"),
+        note: "bulk202",
+      },
+      {
+        id: "400",
+        label: "400 Validation error",
+        code: J("{", '  "error": { "code": "validation_error", "fields": { "items[3].content.url": "spaces" } }', "}"),
+        note: "bulk400",
+      },
+    ],
+  },
+  scansResponses: {
+    env: "json",
+    tabs: [
+      {
+        id: "200",
+        label: "200 OK",
+        code: J("{", '  "total": 412,', '  "days": [{ "date": "2026-11-25", "scans": 21 }, { "date": "2026-11-26", "scans": 9 }]', "}"),
+        note: "scans200",
+      },
+    ],
+  },
+} satisfies Record<string, TabbedExample>;
+
+export type TabbedId = keyof typeof TABBED;

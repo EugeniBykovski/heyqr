@@ -24,7 +24,8 @@
     "languageEmpty": "No language matches “{query}”.",
     "trial": "Free trial",
     "apiKeys": "API keys",
-    "developers": "Developers"
+    "developers": "API for developers",
+    "developersShort": "API"
   },
   "payment": {
     "title": "How payment works",
@@ -2718,155 +2719,1744 @@
     }
   },
   "developers": {
-    "metaTitle": "Developers",
-    "metaDescription": "Make HeyQR codes in your own code: the free @heyqr/qr-core package for static codes, and the REST API and SDK for your account’s codes.",
-    "kicker": "Developers",
-    "title": "API for developers",
-    "lead": "Make HeyQR codes in your own code. Static codes render on your machine with the free npm package; the REST API manages your account’s codes from your server.",
-    "onThisPage": "On this page",
-    "copy": "Copy",
-    "copied": "Copied",
-    "copyCode": "Copy code: {name}",
-    "statusUnpublished": "Not on npm yet",
-    "statusLive": "On npm",
-    "statusApi": "Available",
-    "opensNewTab": "(opens in a new tab)",
-    "cards": {
-      "pkgTitle": "npm package",
-      "pkgText": "Free. Static QR codes rendered on your machine. No account, no API key.",
-      "restTitle": "REST API",
-      "restText": "Create and manage your account’s codes, including Dynamic codes, from your server with an API key."
-    },
-    "nav": {
-      "pkg": "@heyqr/qr-core",
-      "install": "Install",
-      "svg": "Render an SVG",
-      "png": "Save a PNG",
-      "opts": "Options",
-      "scan": "Check that it scans",
-      "rest": "REST API",
-      "restStart": "Quickstart",
-      "restAuth": "Authentication",
-      "restEndpoints": "Endpoints",
-      "restSdk": "SDK",
-      "restErrors": "Errors and limits",
-      "restRevisions": "Revision conflicts",
-      "restIdempotency": "Safe retries",
-      "restExport": "Export and payment",
-      "groupPkg": "npm package",
-      "groupRest": "REST API"
-    },
-    "pkg": {
-      "title": "@heyqr/qr-core",
-      "text": "The same engine that draws codes on HeyQR: encode content, render a styled SVG, check that it scans and, in Node.js, save a PNG.",
-      "points": {
-        "free": "Free to use",
-        "account": "No account or API key",
-        "local": "Runs locally. Nothing is sent to HeyQR",
-        "types": "TypeScript types included"
+    "metaTitle": "API for developers",
+    "metaDescription": "Make HeyQR codes in your own code: the @heyqr/qr-core package for static codes, and a REST API for Dynamic codes that’s on the way.",
+    "docs": {
+      "search": {
+        "label": "Search the docs",
+        "placeholder": "Search the docs",
+        "clear": "Clear search",
+        "empty": "No pages match “{query}”.",
+        "emptyHint": "Try “logo”, “PNG”, “scan” or “Wi-Fi”.",
+        "suggestions": ["logo", "PNG", "scan", "Wi-Fi"],
+        "resultOne": "1 page",
+        "resultOther": "{count} pages"
       },
-      "static": "The package makes static codes: the content is built into the pattern. Dynamic codes with editable short links, hosted pages and scan counts need a HeyQR plan and are managed through the REST API."
-    },
-    "install": {
-      "title": "Install",
-      "unpublishedTitle": "Not on npm yet",
-      "unpublishedText": "We’re preparing the first public release. The install commands and the npm link appear here as soon as it’s published.",
-      "note": "The main entry has no Node.js dependencies and works in browser bundles. The PNG helper in /raster runs in Node.js only.",
-      "npmLink": "npmjs.com/package/{name}",
-      "managers": "Package manager"
-    },
-    "notify": {
-      "button": "Email me when it’s published",
-      "label": "Your email",
-      "placeholder": "you@example.com",
-      "send": "Notify me",
-      "sending": "Saving…",
-      "success": "Thanks. We’ll email you once when the packages are on npm.",
-      "invalid": "Enter an email address, like you@example.com.",
-      "failed": "We couldn’t save that. Try again.",
-      "privacy": "Only used for this one email."
-    },
-    "svg": {
-      "title": "Render an SVG",
-      "where": "Browser and Node.js",
-      "text": "renderQrSvg returns standalone SVG markup as a string. encodePayload turns structured content into the text that goes into the code."
-    },
-    "png": {
-      "title": "Save a PNG",
-      "where": "Node.js only",
-      "text": "@heyqr/qr-core/raster renders the SVG with resvg, a native module. Import it on the server or in scripts, never in a browser bundle."
-    },
-    "opts": {
-      "title": "Options",
-      "text": "Fields marked Required must be set. Types ship with the package, so your editor completes and checks them.",
-      "option": "Option",
-      "type": "Type",
-      "description": "Description",
+      "groups": {
+        "start": "Get started",
+        "guides": "Guides",
+        "ref": "Reference",
+        "help": "Help",
+        "rest": "REST API"
+      },
+      "menu": {
+        "open": "Open the docs menu",
+        "close": "Close the docs menu",
+        "label": "Docs"
+      },
+      "breadcrumbRoot": "Developers",
+      "onThisPage": "On this page",
+      "backToTop": "Back to top",
+      "previous": "Previous",
+      "next": "Next",
+      "soon": "Soon",
+      "preview": "Preview",
+      "designPreview": "Design preview",
+      "notPublic": "Not public yet",
+      "env": {
+        "both": "Browser and Node.js",
+        "browser": "Browser",
+        "node": "Node.js only",
+        "shell": "Terminal",
+        "types": "Types",
+        "http": "HTTP",
+        "json": "JSON"
+      },
+      "copy": "Copy",
+      "copied": "Copied",
+      "copiedAnnounce": "Copied {file} to the clipboard",
+      "copyFailed": "Couldn’t copy. Select the code instead.",
       "required": "Required",
-      "rows": {
-        "pattern": "The data modules’ shape.",
-        "eyeFrame": "The corner markers’ outer frame.",
-        "eyeBall": "The corner markers’ center.",
-        "colors": "fg (modules), eye (frames), eyeIn (centers) and bg, as #RRGGBB.",
-        "logo": "An icon path or image in the middle, its size (0.08–0.46 of the width) and plate.",
-        "centerText": "A short word in the middle instead of a logo."
+      "endpoint": {
+        "auth": "Authorization",
+        "authValue": "Authorization: Bearer <API key>",
+        "method": "Method",
+        "url": "Request URL",
+        "base": "On the HeyQR server you use; the public API isn’t available yet."
       },
-      "logoTitle": "Add a logo or icon"
-    },
-    "scan": {
-      "title": "Check that it scans",
-      "where": "Browser and Node.js",
-      "text": "renderQr returns the drawing and a scan report: low contrast, inverted colors or a logo that covers too much, each with a suggested fix."
-    },
-    "rest": {
-      "title": "REST API",
-      "lead": "Your account’s codes from your server: create drafts, read and update layouts and Dynamic destinations, and download paid files. Every request acts as the account that owns the API key.",
-      "startTitle": "Quickstart",
-      "start1": "Sign in and open Dashboard → API keys.",
-      "start2": "Create a key. It’s shown once: store it in your server’s environment as HEYQR_API_KEY.",
-      "start3": "Send it as a Bearer token with every request.",
-      "keysLink": "Open API keys",
-      "secret": "The key is a secret: server only, never in browser code or source control. Revoke it in Dashboard → API keys if it leaks.",
-      "authTitle": "Authentication",
-      "authText": "A missing, malformed, unknown or revoked key gets the same 401 unauthorized answer, before the body is read. Nothing in a request can choose another owner.",
-      "endpointsTitle": "Endpoints",
-      "method": "Method",
-      "path": "Path",
-      "what": "What it does",
-      "endpoints": {
-        "create": "Create a QR code with its layouts, as a draft.",
-        "getLayout": "Read one saved layout, with its revision.",
-        "patchLayout": "Update a layout’s name, design or editor settings from its revision.",
-        "getDestination": "Read a Dynamic code’s destination, revision and short link.",
-        "patchDestination": "Change where a Dynamic code’s short link goes, from its revision.",
-        "export": "Download a layout’s PNG, SVG or PDF once it’s paid or live."
+      "helpful": {
+        "question": "Was this page helpful?",
+        "yes": "Yes",
+        "no": "No",
+        "sending": "Sending…",
+        "thanks": "Thanks for the feedback.",
+        "failed": "We couldn’t save that. Try again."
       },
-      "hostedNote": "Hosted pages (Menu, Coupon and the other page types) are edited and published in the app; the API doesn’t change page content yet.",
-      "sdkTitle": "SDK",
-      "sdkText": "@heyqr/sdk types every request, response and error, retries safely, times out and tells limits and payment errors apart. Node.js 18 or later, or any server runtime with fetch.",
-      "sdkUnpublished": "Not on npm yet: the install command appears here once it’s published.",
-      "errorsTitle": "Errors and limits",
-      "errorsText": "Every error has the same JSON shape, shown below, and responses are never cached. details names the field without echoing your values.",
-      "status": "Status",
-      "code": "error.code",
-      "when": "When",
-      "errors": {
-        "e400": "the body isn’t JSON (malformed_json)",
-        "e401": "no valid API key",
-        "e402": "the code’s files need a purchase or a live plan first",
-        "e403": "the account already has the most drafts it can keep",
-        "e404": "not the key owner’s code or layout, deleted, or missing (one answer for all)",
-        "e409": "an older revision, or an Idempotency-Key reused for a different request",
-        "e422": "a rule is broken; also not_dynamic, content_too_long and file checks",
-        "e500": "nothing was changed; try again"
+      "footer": {
+        "checked": "Checked against the @heyqr/qr-core {version} source. Route: {route}",
+        "restChecked": "Checked against this build’s /api/v1 routes. Route: {route}",
+        "proposed": "Proposed design. Not a published contract."
       },
-      "limits": "Limits: names up to 80 characters, 1–20 layouts per code, the account’s draft limit, and the content capacity of a QR code. Each account also has a request limit per minute, shared by its keys: over it the API answers 429, which the SDK reports with Retry-After.",
-      "revisionsTitle": "Revision conflicts",
-      "revisionsText": "Layouts and destinations carry a revision. Send the one you read with every update; if the code changed in the app or another request since, you get 409 revision_conflict and nothing is saved. A destination conflict includes error.current with the stored destination and revision.",
-      "idempotencyTitle": "Safe retries",
-      "idempotencyText": "Send an Idempotency-Key header (a UUID works) with a create. Retrying the same request with the same key within 24 hours returns the original 201 and creates nothing; the same key with a different request is 409 idempotency_key_reused.",
-      "exportTitle": "Export and payment",
-      "exportText": "Files come from the same private export as the dashboard. A static code needs its one-time purchase; a Dynamic code must be live under a plan or the free trial. Until then you get 402 with a paymentUrl: the owner opens it signed in to pay or go live. The API itself never charges."
+      "status": {
+        "unpublished": "Unpublished",
+        "live": "Live",
+        "liveOnNpm": "Live on npm",
+        "soon": "Coming soon"
+      },
+      "products": {
+        "pkgTitle": "npm package",
+        "pkgText": "Free. Static QR codes rendered on your machine. No account, no API key.",
+        "restTitle": "REST API",
+        "restText": "Create and manage codes, including Dynamic codes, from your server."
+      },
+      "install": {
+        "managers": "Package manager",
+        "npmLink": "npmjs.com/package/{name}",
+        "opensNewTab": "(opens in a new tab)",
+        "unpublishedTitle": "Not on npm yet",
+        "unpublishedText": "{name} {version} isn’t published yet, so there’s nothing to install. Everything on these pages matches its current source. Get an email when it’s out:"
+      },
+      "restSoon": {
+        "cardTitle": "Dynamic codes from your server",
+        "cardText": "An API key from your account will let you create codes, change where Dynamic codes point and read scan counts. We’ll publish the full reference with real requests and responses when it opens.",
+        "planned": "Planned",
+        "items": [
+          "API keys for your account",
+          "Create one code or up to 100 at once",
+          "Change a Dynamic code’s destination",
+          "Daily scan counts"
+        ],
+        "npmLink": "Use the npm package now"
+      },
+      "waitlist": {
+        "label": "Get an email when the REST API opens",
+        "placeholder": "you@company.com",
+        "join": "Join the waitlist",
+        "joining": "Joining…",
+        "invalid": "Check the address. It needs a name, @ and a domain.",
+        "failed": "We couldn’t add you just now. Try again.",
+        "joined": "You’re on the list. We’ll write to {email} when the REST API opens.",
+        "hint": "One email when it opens. No newsletter."
+      },
+      "notifyPackages": {
+        "label": "Get an email when the package is published",
+        "join": "Email me",
+        "joined": "You’re on the list. We’ll write to {email} when it’s published.",
+        "hint": "One email when it’s out. No newsletter."
+      },
+      "responseNotes": {
+        "created": "The code was created as a draft, with one layout id per layout in the request.",
+        "invalid": "A field breaks a rule; `details` names each one and never echoes values.",
+        "draftLimit": "The account already has the maximum number of drafts.",
+        "reused": "The Idempotency-Key was used for a different request; nothing was created.",
+        "changed": "Saved. `changed` is false when the address was already the stored one.",
+        "conflict": "Someone changed it first. `current` is what’s stored now; read it and decide again.",
+        "notDynamic": "Static codes have no destination: their content is in the pattern.",
+        "rateLimited": "Over the account’s budget. Wait Retry-After seconds, then send the same request again.",
+        "unauthorized": "Any key that doesn’t verify gets this answer, before the body is read.",
+        "bulk202": "Poll GET /v1/jobs/{job_id} or wait for the webhook.",
+        "bulk400": "No code is created when any item fails.",
+        "scans200": "Days without scans are included with 0."
+      },
+      "pages": {
+        "overview": {
+          "title": "API for developers",
+          "nav": "Overview",
+          "lead": "Make HeyQR codes in your own code. Start today with the free npm package; a REST API for Dynamic codes is on the way.",
+          "blocks": [
+            {
+              "k": "products"
+            },
+            {
+              "k": "h2",
+              "id": "what",
+              "t": "What you can build"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Styled QR codes in a browser app: shapes, colors, a logo or short text in the center.",
+                "Print-ready SVG and PNG files from a script or a server job.",
+                "A scan check before anything is shown or printed: contrast, inverted colors, a logo that covers too much.",
+                "Full layouts with frames and captions, the same ones the HeyQR editor exports."
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "entries",
+              "t": "Entry points"
+            },
+            {
+              "k": "p",
+              "t": "One package, five imports. Use the main entry anywhere; the others are for Node.js or for decoding in the browser."
+            },
+            {
+              "k": "table",
+              "label": "Entry points",
+              "cols": ["Import", "Runs in", "What it gives you"],
+              "rows": [
+                {
+                  "cells": [
+                    "`@heyqr/qr-core`",
+                    "Browser and Node.js",
+                    "`encodePayload`, `renderQr`, `renderQrSvg`, `composeLayout`, color and capacity helpers"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/raster`", "Node.js only", "`rasterizeSvg`: SVG to PNG with resvg"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`@heyqr/qr-core/verify`",
+                    "Node.js only",
+                    "`decodeSvg`, `decodeImage`, `verifyScan`: read the code back with ZXing"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`@heyqr/qr-core/verify-browser`",
+                    "Browser",
+                    "`decodeSvgInBrowser`: the same decoder, from a wasm file you host"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/node`", "Node.js only", "`rasterizeSvg` and the verify functions in one import"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "The package makes static codes: the content is built into the pattern. Dynamic codes with an editable short link and scan counts need a HeyQR plan and come with the REST API."
+            },
+            {
+              "k": "h2",
+              "id": "next",
+              "t": "Next steps"
+            },
+            {
+              "k": "cards",
+              "items": [
+                {
+                  "page": "quickstart",
+                  "title": "Quick start",
+                  "t": "Your first code in five lines.",
+                  "icon": "zap"
+                },
+                {
+                  "page": "content",
+                  "title": "Encode content",
+                  "t": "Websites, Wi-Fi, contacts, events and more.",
+                  "icon": "book"
+                },
+                {
+                  "page": "scan",
+                  "title": "Check that it scans",
+                  "t": "Read the scan report and decode the result.",
+                  "icon": "scan"
+                },
+                {
+                  "page": "api",
+                  "title": "Functions",
+                  "t": "Every export with its signature.",
+                  "icon": "braces"
+                }
+              ]
+            }
+          ]
+        },
+        "install": {
+          "title": "Installation",
+          "lead": "Add @heyqr/qr-core to a browser app, a Node.js service or both.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "add",
+              "t": "Add the package"
+            },
+            {
+              "k": "install",
+              "package": "qrCore"
+            },
+            {
+              "k": "h2",
+              "id": "reqs",
+              "t": "Requirements"
+            },
+            {
+              "k": "table",
+              "label": "Requirements",
+              "cols": ["Item", "Details"],
+              "rows": [
+                {
+                  "cells": ["Module format", "ES modules only (the package is `\"type\": \"module\"`). Use `import`, not `require`."],
+                  "required": false
+                },
+                {
+                  "cells": ["TypeScript", "Types ship with the package. No `@types` package needed."],
+                  "required": false
+                },
+                {
+                  "cells": ["Browser", "The main entry has no Node.js dependencies and works with any modern bundler."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "Node.js",
+                    "`/raster` and `/verify` use `@resvg/resvg-js`, a native module with prebuilt binaries for common platforms."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "Decoding in the browser",
+                    "`/verify-browser` loads `zxing_reader.wasm` from a URL you choose, never from a CDN."
+                  ],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "wasm",
+              "t": "Host the decoder for the browser"
+            },
+            {
+              "k": "p",
+              "t": "Only needed for `decodeSvgInBrowser`. Copy the wasm file from the `zxing-wasm` dependency into your public folder and pass its URL. The command finds the file through the package, so it works with npm, pnpm and Yarn."
+            },
+            {
+              "k": "code",
+              "example": "wasm"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "The file is `zxing-wasm/reader/zxing_reader.wasm` in zxing-wasm 3.1.7, the version the package depends on today. Check it again after upgrading."
+            }
+          ]
+        },
+        "quickstart": {
+          "title": "Quick start",
+          "lead": "Encode content, style it, check the scan and get an SVG, in about a minute.",
+          "blocks": [
+            {
+              "k": "steps",
+              "items": [
+                {
+                  "title": "Install",
+                  "t": "Add `@heyqr/qr-core` with your package manager."
+                },
+                {
+                  "title": "Encode the content",
+                  "t": "`encodePayload` turns a website, Wi-Fi network or contact into the text inside the code."
+                },
+                {
+                  "title": "Describe the look",
+                  "t": "A `QrStyle` sets module shape, corner shapes and colors."
+                },
+                {
+                  "title": "Check the scan",
+                  "t": "`renderQr` returns a scan report with a fix for every problem."
+                },
+                {
+                  "title": "Get the file",
+                  "t": "`renderQrSvg` returns a standalone SVG; in Node.js, `rasterizeSvg` turns it into a PNG."
+                }
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "In the browser"
+            },
+            {
+              "k": "code",
+              "example": "quickstartBrowser"
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Save files in Node.js"
+            },
+            {
+              "k": "code",
+              "example": "quickstartNode"
+            }
+          ]
+        },
+        "content": {
+          "title": "Encode content",
+          "lead": "encodePayload turns structured content into the exact text phones expect for each kind of code.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "types",
+              "t": "Content types"
+            },
+            {
+              "k": "p",
+              "t": "Pass one of nine `QrContent` objects. `QR_CONTENT_TYPES` lists the `type` values."
+            },
+            {
+              "k": "table",
+              "label": "Content types",
+              "cols": ["type", "Fields", "The code contains"],
+              "rows": [
+                {
+                  "cells": ["`website`", "`url` (bare domains get https://)", "The normalized URL"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "`text`", "The text as is"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`wifi`",
+                    "`ssid`, `security` \"WPA\" | \"WEP\" | \"nopass\", `password?`, `hidden?`",
+                    "`WIFI:T:WPA;S:…;P:…;;`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`contact`", "`firstName?`, `lastName?`, `title?`, `company?`, `phone?`, `email?`, `website?`", "A vCard 3.0"],
+                  "required": false
+                },
+                {
+                  "cells": ["`email`", "`to`, `subject?`, `body?`", "`mailto:` with subject and body"],
+                  "required": false
+                },
+                {
+                  "cells": ["`phone`", "`number`", "`tel:` with digits and +"],
+                  "required": false
+                },
+                {
+                  "cells": ["`sms`", "`number`, `message?`", "`SMSTO:number:message`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`location`", "`address`, `name?`", "`geo:0,0?q=` with the address"],
+                  "required": false
+                },
+                {
+                  "cells": ["`event`", "`title`, `start`, `end?`, `place?`", "A calendar event (VEVENT)"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "examples",
+              "t": "Examples"
+            },
+            {
+              "k": "code",
+              "example": "contentExamples"
+            },
+            {
+              "k": "h2",
+              "id": "contact",
+              "t": "Contact cards"
+            },
+            {
+              "k": "p",
+              "t": "Contacts become a vCard 3.0, the version phone cameras read most reliably. Empty fields are left out and long lines are folded."
+            },
+            {
+              "k": "code",
+              "example": "vcard"
+            },
+            {
+              "k": "h2",
+              "id": "events",
+              "t": "Events"
+            },
+            {
+              "k": "p",
+              "t": "`start` and `end` are local times like `2026-12-05T19:00`. A date without a time, like `2026-12-05`, makes an all-day event."
+            },
+            {
+              "k": "code",
+              "example": "event"
+            },
+            {
+              "k": "h2",
+              "id": "urls",
+              "t": "Check a website address"
+            },
+            {
+              "k": "p",
+              "t": "`parseWebsiteUrl` is the same check the HeyQR editor uses. It rejects spaces, other schemes, credentials and hosts without a dot."
+            },
+            {
+              "k": "code",
+              "example": "urlCheck"
+            }
+          ]
+        },
+        "style": {
+          "title": "Style a code",
+          "lead": "A QrStyle describes shapes and colors. Every style is checked against the same scan rules.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "shapes",
+              "t": "Shapes"
+            },
+            {
+              "k": "chips",
+              "t": "pattern · data modules",
+              "items": ["square", "rounded", "dot", "diamond", "leaf", "fluid", "vbars", "hbars"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeFrame · corner marker rings",
+              "items": ["square", "rounded", "cushion", "circle", "leaf"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeBall · corner marker centers",
+              "items": ["square", "rounded", "circle", "diamond", "leaf"]
+            },
+            {
+              "k": "h2",
+              "id": "colors",
+              "t": "Colors"
+            },
+            {
+              "k": "p",
+              "t": "`colors` takes four hex colors: `fg` for data modules, `eye` for the corner rings, `eyeIn` for the corner centers and `bg` for the background."
+            },
+            {
+              "k": "table",
+              "label": "Minimum contrast",
+              "cols": ["Part", "Minimum contrast with the background"],
+              "rows": [
+                {
+                  "cells": ["Data modules (`fg`)", "3 : 1 (`MIN_CONTRAST.modules`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Corner rings (`eye`)", "3 : 1 (`MIN_CONTRAST.eyeFrame`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Corner centers (`eyeIn`)", "2.5 : 1 (`MIN_CONTRAST.eyeCenter`)"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Codes must be darker than their background. A light code on a dark background fails with the `invert` issue even when the contrast is high."
+            },
+            {
+              "k": "code",
+              "example": "contrast"
+            },
+            {
+              "k": "h2",
+              "id": "center",
+              "t": "Short text in the center"
+            },
+            {
+              "k": "p",
+              "t": "`centerText` puts a label inside the code. It shows the first line, up to 14 characters (`CENTER_TEXT_MAX`); longer text is cut at a whole word with an ellipsis."
+            },
+            {
+              "k": "code",
+              "example": "centerText"
+            },
+            {
+              "k": "h2",
+              "id": "art",
+              "t": "Artwork behind the code"
+            },
+            {
+              "k": "p",
+              "t": "`art` draws soft shapes in two tints behind the modules, with an optional faint image. The scan check reads the background as tinted."
+            },
+            {
+              "k": "code",
+              "example": "art"
+            }
+          ]
+        },
+        "logo": {
+          "title": "Logos and icons",
+          "lead": "Put an image or a 24 × 24 stroke icon in the center. Error correction rises automatically so the code still reads.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "fields",
+              "t": "Logo fields"
+            },
+            {
+              "k": "table",
+              "label": "QrLogo",
+              "cols": ["Field", "Type", "Description"],
+              "rows": [
+                {
+                  "cells": ["`href`", "string", "Image URL or data URI. Ignored when `iconPath` is set."],
+                  "required": false
+                },
+                {
+                  "cells": ["`iconPath`", "string", "A 24 × 24 stroke path, for example a Lucide icon."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`size`",
+                    "number",
+                    "Logo width as a share of the code width. Drawn between 0.10 and 0.46 (`CENTER_LOGO_SIZE`)."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`plate`", "\"none\" | \"square\" | \"circle\"", "Backing behind the logo."],
+                  "required": true
+                },
+                {
+                  "cells": ["`tile`", "boolean", "Icon on a colored rounded tile instead of a plate."],
+                  "required": false
+                },
+                {
+                  "cells": ["`plateColor`, `iconColor`", "string", "Hex colors for the plate and the icon."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "example",
+              "t": "Example"
+            },
+            {
+              "k": "code",
+              "example": "logoStyle"
+            },
+            {
+              "k": "h2",
+              "id": "fit",
+              "t": "How big can it be?"
+            },
+            {
+              "k": "p",
+              "t": "With a logo or center text the code uses error correction H, so it holds a little more than half as much (382 bytes instead of 666). After rendering, `scan.maxLogoSize` is the largest size that still decodes; a larger logo fails with the `logo` issue."
+            },
+            {
+              "k": "code",
+              "example": "logoFit"
+            }
+          ]
+        },
+        "layouts": {
+          "title": "Frames and captions",
+          "lead": "composeLayout draws a full layout: a card or frame, the code, a caption and an optional logo, exactly like the HeyQR export.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "presets",
+              "t": "Layout presets"
+            },
+            {
+              "k": "table",
+              "label": "Presets",
+              "cols": ["preset", "What it draws"],
+              "rows": [
+                {
+                  "cells": ["`qr`", "The code alone, at `qrSize`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`caption`", "The code with a caption above or below, or text inside the code"],
+                  "required": false
+                },
+                {
+                  "cells": ["`vertical`", "A card with the code above the caption"],
+                  "required": false
+                },
+                {
+                  "cells": ["`horizontal`", "A card with the code beside the caption"],
+                  "required": false
+                },
+                {
+                  "cells": ["`frame`", "A frame around the code; size comes from `qrSize`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "chips",
+              "t": "frameStyle",
+              "items": ["bar", "tab", "bubble", "pill", "corners", "circle", "ticket", "phone"]
+            },
+            {
+              "k": "h2",
+              "id": "compose",
+              "t": "Compose a layout"
+            },
+            {
+              "k": "code",
+              "example": "compose"
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Call `layoutCapacity` before `composeLayout` so content that is too long becomes a message instead of an exception. Pass `{ transparent: true }` as the third argument for a transparent background."
+            },
+            {
+              "k": "h2",
+              "id": "fonts",
+              "t": "Caption fonts"
+            },
+            {
+              "k": "p",
+              "t": "Captions are SVG text. In the browser they use the page’s fonts; when you rasterize in Node.js, pass font files with `fontFiles`, or the machine’s installed fonts are used. The caption fonts cover Latin and Cyrillic."
+            }
+          ]
+        },
+        "png": {
+          "title": "Save a PNG",
+          "lead": "rasterizeSvg renders any SVG from the package to a PNG Buffer with resvg.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "basic",
+              "t": "Render a PNG"
+            },
+            {
+              "k": "code",
+              "example": "png"
+            },
+            {
+              "k": "h2",
+              "id": "options",
+              "t": "Options"
+            },
+            {
+              "k": "table",
+              "label": "RasterOptions",
+              "cols": ["Option", "Type", "Description"],
+              "rows": [
+                {
+                  "cells": ["`width`", "number", "Output width in pixels. The height follows the SVG."],
+                  "required": true
+                },
+                {
+                  "cells": ["`fontFiles`", "string[]", "Font files for captions."],
+                  "required": false
+                },
+                {
+                  "cells": ["`systemFonts`", "boolean", "Also use installed fonts. Default `true`."],
+                  "required": false
+                },
+                {
+                  "cells": ["`background`", "string", "Background color behind transparent areas."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`dpi`",
+                    "number",
+                    "Print resolution written into the file, so print software opens it at its physical size. Leave it out for screen files."
+                  ],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "print",
+              "t": "Print sizes"
+            },
+            {
+              "k": "p",
+              "t": "`pngPixelSize` gives the exact pixel size of a layout: mm layouts at 300, 600 or 1200 dpi (`PNG_DPIS`), px layouts at 1×, 2×, 4× or 8× (`PNG_SCALES`). Sides stay between 64 and 8192 px."
+            },
+            {
+              "k": "code",
+              "example": "printPng"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Don’t import `/raster` in browser bundles: resvg is a native Node.js module."
+            }
+          ]
+        },
+        "scan": {
+          "title": "Check that it scans",
+          "lead": "Every render comes with a scan report. In Node.js and the browser you can also decode the result to be sure.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "The scan report"
+            },
+            {
+              "k": "code",
+              "example": "scanReport"
+            },
+            {
+              "k": "table",
+              "label": "Issue codes",
+              "cols": ["code", "title", "fix"],
+              "rows": [
+                {
+                  "cells": ["`invert`", "Light code on a dark background", "Swap colors"],
+                  "required": false
+                },
+                {
+                  "cells": ["`contrast`", "Not enough contrast", "Increase contrast"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eyes`", "Corner markers are too light", "Darken corner markers"],
+                  "required": false
+                },
+                {
+                  "cells": ["`logo`", "The logo hides too much of the code", "Reduce logo size"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "The text in the code is too long", "Shorten the text"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "The report is rule-based: it checks the exact geometry and colors without decoding. Decode when you need proof."
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Decode in Node.js"
+            },
+            {
+              "k": "code",
+              "example": "verifyNode"
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "Decode in the browser"
+            },
+            {
+              "k": "code",
+              "example": "verifyBrowser"
+            },
+            {
+              "k": "p",
+              "t": "Nothing leaves the device: the decoder runs locally and never opens the code’s destination."
+            }
+          ]
+        },
+        "api": {
+          "title": "Functions",
+          "lead": "Every public function, grouped by entry point. Signatures match the TypeScript types in the package.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "Content"
+            },
+            {
+              "k": "table",
+              "label": "Content functions",
+              "cols": ["Function", "Signature"],
+              "rows": [
+                {
+                  "cells": ["`encodePayload`", "`(content: QrContent) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`encodeVCard`", "`(contact) => string` · vCard 3.0"],
+                  "required": false
+                },
+                {
+                  "cells": ["`normalizeUrl`", "`(input: string) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseWebsiteUrl`", "`(input: string) => { ok: true; url } | { ok: false; problem }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "render",
+              "t": "Rendering"
+            },
+            {
+              "k": "table",
+              "label": "Rendering functions",
+              "cols": ["Function", "Signature"],
+              "rows": [
+                {
+                  "cells": ["`renderQr`", "`(value: string, style: QrStyle) => RenderedQr`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`renderQrSvg`", "`(value: string, style: QrStyle, sizePx = 512) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eclForStyle`", "`(style) => \"M\" | \"H\"` · H when a logo or text covers the center"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerLogoSize`", "`(size: number) => number` · clamps to 0.10–0.46"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerTextLabel`", "`(text: string) => { label; shortened }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "layout",
+              "t": "Layouts"
+            },
+            {
+              "k": "table",
+              "label": "Layout functions",
+              "cols": ["Function", "Signature"],
+              "rows": [
+                {
+                  "cells": [
+                    "`composeLayout`",
+                    "`(layout: Layout, value: string, options?: { transparent? }) => { svg, width, height, scan }`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutCapacity`", "`(layout: Layout, value: string) => { ok, bytes, maxBytes, ecl, centerCovered }`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutGeometry`", "`(layout: Layout) => LayoutGeometry`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pngPixelSize`", "`(layout: Layout, { scale?, dpi? }) => { width, height, ok }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "encode",
+              "t": "Encoding and capacity"
+            },
+            {
+              "k": "table",
+              "label": "Encoding functions",
+              "cols": ["Function", "Signature"],
+              "rows": [
+                {
+                  "cells": ["`encodeQr`", "`(text: string, ecl = \"M\") => QrMatrix`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`payloadBytes`", "`(text: string) => number` · UTF-8 bytes"],
+                  "required": false
+                },
+                {
+                  "cells": ["`maxPayloadBytes`", "`(ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pickVersion`", "`(byteLength: number, ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`QrCapacityError`", "Error with `byteLength` and `maxBytes`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "color",
+              "t": "Color"
+            },
+            {
+              "k": "table",
+              "label": "Color functions",
+              "cols": ["Function", "Signature"],
+              "rows": [
+                {
+                  "cells": ["`contrastRatio`", "`(a: string, b: string) => number` · WCAG ratio"],
+                  "required": false
+                },
+                {
+                  "cells": ["`luminance`", "`(hex: string) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`isHexColor`", "`(value: string) => boolean` · `#RRGGBB` only"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseHexColor`", "`(text: string) => string | null`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`mixColors`", "`(a: string, b: string, t: number) => string`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Node.js and browser entries"
+            },
+            {
+              "k": "table",
+              "label": "Other entries",
+              "cols": ["Function", "Entry", "Signature"],
+              "rows": [
+                {
+                  "cells": ["`rasterizeSvg`", "`/raster`", "`(svg: string, options: RasterOptions) => Buffer`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvg`", "`/verify`", "`(svg: string, width = 720) => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeImage`", "`/verify`", "`(file: Uint8Array, type = \"image/png\") => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`verifyScan`", "`/verify`", "`(svg, expected, widths = [300, 600, 1200]) => Promise<boolean>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvgInBrowser`", "`/verify-browser`", "`(svg, { wasmUrl, size? = 960 }) => Promise<string | null>`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        },
+        "types": {
+          "title": "Types",
+          "lead": "The main types, as they appear in the package.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "style",
+              "t": "QrStyle"
+            },
+            {
+              "k": "code",
+              "example": "typesStyle"
+            },
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "RenderedQr and ScanReport"
+            },
+            {
+              "k": "code",
+              "example": "typesReport"
+            },
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "QrContent"
+            },
+            {
+              "k": "code",
+              "example": "typesContent"
+            }
+          ]
+        },
+        "limits": {
+          "title": "Limits and errors",
+          "lead": "What the encoder accepts, and what happens when content doesn’t fit.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Limits"
+            },
+            {
+              "k": "table",
+              "label": "Limits",
+              "cols": ["Limit", "Value"],
+              "rows": [
+                {
+                  "cells": ["Largest QR version", "20 (`MAX_VERSION`), 97 × 97 modules"],
+                  "required": false
+                },
+                {
+                  "cells": ["Content", "666 bytes at error correction M, 382 at H"],
+                  "required": false
+                },
+                {
+                  "cells": ["Error correction", "M, or H with a logo or center text"],
+                  "required": false
+                },
+                {
+                  "cells": ["Quiet zone", "4 modules on every side, included in `viewBox`"],
+                  "required": false
+                },
+                {
+                  "cells": ["Logo size", "0.10–0.46 of the code width (`CENTER_LOGO_SIZE`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Center text", "14 characters (`CENTER_TEXT_MAX`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["PNG side", "64–8192 px (`PNG_MIN_SIDE`, `PNG_MAX_SIDE`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Contrast", "3 : 1 modules and rings, 2.5 : 1 corner centers"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "capacity",
+              "t": "Content that’s too long"
+            },
+            {
+              "k": "p",
+              "t": "Rendering throws `QrCapacityError` when the content doesn’t fit. It carries sizes, never the content, so it is safe to log."
+            },
+            {
+              "k": "code",
+              "example": "capacity"
+            },
+            {
+              "k": "h2",
+              "id": "null",
+              "t": "Decoders that return null"
+            },
+            {
+              "k": "p",
+              "t": "`decodeSvg`, `decodeImage` and `decodeSvgInBrowser` return `null` when no code can be read. Treat it as a failed check, not an error."
+            }
+          ]
+        },
+        "faq": {
+          "title": "FAQ",
+          "lead": "Short answers to common questions.",
+          "blocks": [
+            {
+              "k": "faq",
+              "items": [
+                {
+                  "q": "Does the package send anything to HeyQR?",
+                  "a": "No. Encoding, rendering and the scan check run on your machine. The browser decoder loads its wasm file from a URL you host."
+                },
+                {
+                  "q": "Can I make Dynamic codes with it?",
+                  "a": "Not yet. A Dynamic code needs a HeyQR short link, a plan and scan counting on our servers. That comes with the REST API."
+                },
+                {
+                  "q": "Why does my code with a logo fail?",
+                  "a": "A logo raises error correction to H, which lowers capacity, and hides modules. Make the logo smaller than `scan.maxLogoSize` or shorten the content."
+                },
+                {
+                  "q": "Why is PNG export Node.js only?",
+                  "a": "PNGs are rendered with resvg, a native module. In the browser, draw the SVG on a canvas if you need pixels."
+                },
+                {
+                  "q": "Will the files match the HeyQR editor?",
+                  "a": "Yes. The editor preview and the paid export both use `composeLayout`, so the same layout gives the same SVG."
+                },
+                {
+                  "q": "Can I use it in a commercial product?",
+                  "a": "The license is set with the first public release and will be shown here and on npm."
+                }
+              ]
+            }
+          ]
+        },
+        "changelog": {
+          "title": "Changelog",
+          "lead": "Releases of @heyqr/qr-core.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "v010",
+              "t": "0.1.0 · not published yet"
+            },
+            {
+              "k": "list",
+              "items": [
+                "First public release in preparation. Everything on these pages matches the current source of the package.",
+                "Entry points: main, `/raster`, `/verify`, `/verify-browser`, `/node`."
+              ]
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "When a version is published, its notes and the npm link appear here."
+            }
+          ]
+        },
+        "rest": {
+          "title": "REST API",
+          "lead": "Create codes, change where Dynamic codes point and read scan counts from your server.",
+          "blocks": [
+            {
+              "k": "restSoon"
+            }
+          ]
+        },
+        "restAuth": {
+          "title": "Authentication",
+          "lead": "Every request carries an API key from your HeyQR account.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Not public yet. This page describes the REST API in this build of HeyQR, checked against its routes. It isn’t available on heyqr.app yet, and it stays out of search until it is."
+            },
+            {
+              "k": "h2",
+              "id": "keys",
+              "t": "API keys"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Create keys in Account → API keys. A key belongs to your account; every key of the account sees the same codes.",
+                "Keys look like `hqk_<lookupId>_<secret>`. The full key is shown once, when you create it; HeyQR keeps only a verifier.",
+                "Send the key in the `Authorization` header from your server. Never put it in a URL or in browser code.",
+                "A missing, wrong or revoked key gets the same `401 unauthorized`, before the request body is read."
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "header",
+              "t": "Request headers"
+            },
+            {
+              "k": "code",
+              "example": "restHeader"
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Rate limits"
+            },
+            {
+              "k": "p",
+              "t": "Limits belong to the account: all its keys share them, and accounts don’t affect each other. A window starts with the first request and lasts 60 seconds."
+            },
+            {
+              "k": "table",
+              "label": "Rate limits",
+              "cols": ["Budget", "Counts", "Default per minute"],
+              "rows": [
+                {
+                  "cells": ["`api`", "Every request with a valid key", "120"],
+                  "required": false
+                },
+                {
+                  "cells": ["`export`", "File exports, also counted in `api`", "30"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "p",
+              "t": "Over a budget the answer is `429 rate_limited` with `Retry-After`, before anything is created, changed or rendered."
+            }
+          ]
+        },
+        "restCreate": {
+          "title": "Create a QR code",
+          "lead": "Creates one QR code with its layouts, as a draft of your account. Activation, short links and payment stay in the app.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Not public yet. This page describes the REST API in this build of HeyQR, checked against its routes. It isn’t available on heyqr.app yet, and it stays out of search until it is."
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Request body"
+            },
+            {
+              "k": "table",
+              "label": "Request body",
+              "cols": ["Parameter", "Type", "Example", "Description"],
+              "rows": [
+                {
+                  "cells": ["`name`", "string", "\"Spring menu\"", "1–80 characters. The name in My QR codes."],
+                  "required": true
+                },
+                {
+                  "cells": ["`mode`", "\"static\" | \"dynamic\"", "\"static\"", "`dynamic` is for `website` content only."],
+                  "required": true
+                },
+                {
+                  "cells": [
+                    "`content`",
+                    "QrContent",
+                    "{ \"type\": \"website\", … }",
+                    "What the code opens. Same shapes as `encodePayload`."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"littlefern.cafe/menu\"",
+                    "`dynamic` only: where the short link sends people. Defaults to the website address."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`layouts`",
+                    "array",
+                    "[{ \"name\": \"Sticker\", \"layout\": … }]",
+                    "1–20 layouts: `name` (1–60), a rendered `layout` and optional `editor` settings."
+                  ],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "p",
+              "t": "The body is strict: an unknown field is refused. Send an `Idempotency-Key` header (1–255 visible characters, a UUID works) to make retries safe: the same key and request return the original `201`."
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "Request"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateRequest",
+              "label": "Request example"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Responses"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateResponses",
+              "label": "Responses"
+            }
+          ]
+        },
+        "restBulk": {
+          "title": "Bulk create",
+          "lead": "Creates up to 100 codes in one request. The job runs in the background.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "Design preview. Proposed endpoint: nothing on this page is live yet, and names and fields may change before release."
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes/bulk"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Request body"
+            },
+            {
+              "k": "table",
+              "label": "Request body",
+              "cols": ["Parameter", "Type", "Example", "Description"],
+              "rows": [
+                {
+                  "cells": ["`items`", "array", "[{ \"name\": …, \"content\": … }]", "1–100 codes, each like Create a QR code."],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].name`", "string", "\"Table 12\"", "Name in My QR codes."],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].content`", "QrContent", "{ \"type\": \"website\", … }", "What each code opens."],
+                  "required": true
+                },
+                {
+                  "cells": ["`style`", "QrStyle", "{ \"pattern\": \"rounded\", … }", "One style for every code in the batch."],
+                  "required": false
+                },
+                {
+                  "cells": ["`webhook_url`", "string", "\"https://…/heyqr\"", "Called once when the job finishes."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Responses"
+            },
+            {
+              "k": "tabs",
+              "example": "bulkResponses",
+              "label": "Responses"
+            }
+          ]
+        },
+        "restDestination": {
+          "title": "Change a destination",
+          "lead": "Points a Dynamic code somewhere else. Printed codes keep their short link and follow at once.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Not public yet. This page describes the REST API in this build of HeyQR, checked against its routes. It isn’t available on heyqr.app yet, and it stays out of search until it is."
+            },
+            {
+              "k": "h2",
+              "id": "read",
+              "t": "Read the current destination"
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "code",
+              "example": "restDestinationRead"
+            },
+            {
+              "k": "p",
+              "t": "Change it from the `revision` you read: a destination changed in the app or by another request since then gets `409` and nothing is saved."
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Request body"
+            },
+            {
+              "k": "endpoint",
+              "method": "PATCH",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "table",
+              "label": "Request body",
+              "cols": ["Parameter", "Type", "Example", "Description"],
+              "rows": [
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"https://littlefern.cafe/today\"",
+                    "The new address, up to 2048 characters. A bare domain becomes https://."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`revision`", "integer", "3", "The revision from GET or the last PATCH."],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "Request"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationRequest",
+              "label": "Request example"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Responses"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationResponses",
+              "label": "Responses"
+            }
+          ]
+        },
+        "restScans": {
+          "title": "Scan statistics",
+          "lead": "Daily scan counts for a Dynamic code.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "Design preview. Proposed endpoint: nothing on this page is live yet, and names and fields may change before release."
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{id}/scans?from=2026-11-01&to=2026-11-26"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Responses"
+            },
+            {
+              "k": "tabs",
+              "example": "scansResponses",
+              "label": "Responses"
+            }
+          ]
+        },
+        "restErrors": {
+          "title": "Errors and rate limits",
+          "lead": "Errors share one shape. Branch on code, never on the message.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Not public yet. This page describes the REST API in this build of HeyQR, checked against its routes. It isn’t available on heyqr.app yet, and it stays out of search until it is."
+            },
+            {
+              "k": "h2",
+              "id": "shape",
+              "t": "Error shape"
+            },
+            {
+              "k": "p",
+              "t": "Every error is `{ \"error\": { \"code\", \"message\", …details } }` with `Cache-Control: no-store`. Messages are for people; codes are stable."
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "Status codes"
+            },
+            {
+              "k": "table",
+              "label": "Errors",
+              "cols": ["Status", "code", "When"],
+              "rows": [
+                {
+                  "cells": ["400", "`malformed_json`", "The body isn’t JSON."],
+                  "required": false
+                },
+                {
+                  "cells": ["401", "`unauthorized`", "Missing, malformed, wrong or revoked key."],
+                  "required": false
+                },
+                {
+                  "cells": ["402", "`payment_required`", "Export of a code that isn’t paid or live; `paymentUrl` opens its Export screen."],
+                  "required": false
+                },
+                {
+                  "cells": ["403", "`draft_limit`", "The account has the maximum number of drafts."],
+                  "required": false
+                },
+                {
+                  "cells": ["404", "`not_found`", "Not your code or layout, deleted, or missing: one answer for all."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "409",
+                    "`revision_conflict`, `idempotency_key_reused`",
+                    "Changed since your revision, or a reused Idempotency-Key."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["422", "`invalid_request`, `content_too_long`, `not_dynamic`", "A rule is broken; `details` names the field."],
+                  "required": false
+                },
+                {
+                  "cells": ["429", "`rate_limited`", "Over the account’s budget; wait `Retry-After` seconds."],
+                  "required": false
+                },
+                {
+                  "cells": ["500", "`internal_error`", "Nothing was changed; try again."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Rate limits"
+            },
+            {
+              "k": "tabs",
+              "example": "restRateLimited",
+              "label": "Example responses"
+            },
+            {
+              "k": "p",
+              "t": "The defaults are 120 requests and 30 exports per minute and account. Refused requests don’t extend the wait."
+            }
+          ]
+        },
+        "restSdk": {
+          "title": "TypeScript SDK",
+          "lead": "@heyqr/sdk is a typed client for the REST API, for Node.js 18 and later. It renders nothing: that’s @heyqr/qr-core.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Not public yet. This page describes the REST API in this build of HeyQR, checked against its routes. It isn’t available on heyqr.app yet, and it stays out of search until it is."
+            },
+            {
+              "k": "h2",
+              "id": "install",
+              "t": "Install"
+            },
+            {
+              "k": "install",
+              "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "server",
+              "t": "On your server"
+            },
+            {
+              "k": "p",
+              "t": "`HeyQrClient` needs an API key, so it runs on a server only. In a browser bundle the package resolves to an entry whose `HeyQrClient` throws a `HeyQrError` of kind `server_only`. For previews in the browser, use `@heyqr/sdk/react`."
+            },
+            {
+              "k": "code",
+              "example": "sdkInstallNote"
+            },
+            {
+              "k": "h2",
+              "id": "methods",
+              "t": "Methods"
+            },
+            {
+              "k": "table",
+              "label": "HeyQrClient",
+              "cols": ["Method", "Request"],
+              "rows": [
+                {
+                  "cells": ["`createQr(request, { idempotencyKey? })`", "`POST /api/v1/qr-codes`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getLayout(qrCodeId, layoutId)`", "`GET …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateLayout(qrCodeId, layoutId, request)`", "`PATCH …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getDestination(qrCodeId)`", "`GET …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateDestination(qrCodeId, request)`", "`PATCH …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`downloadExport(qrCodeId, layoutId, { format })`", "`GET …/export`, following the signed link"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "Errors"
+            },
+            {
+              "k": "table",
+              "label": "Errors",
+              "cols": ["Error", "When"],
+              "rows": [
+                {
+                  "cells": ["`HeyQrApiError`", "A documented API error, with `status`, `code` and the typed response"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrRateLimitError`", "429, with `retryAfterSeconds` and `code`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrTimeoutError`, `HeyQrAbortError`", "The deadline passed, or your `signal` cancelled the call"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrError`", "No documented answer: `kind` says why"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        }
+      },
+      "breadcrumb": "Breadcrumb"
     }
   }
 }

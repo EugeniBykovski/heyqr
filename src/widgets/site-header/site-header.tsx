@@ -56,7 +56,13 @@ export async function SiteHeader() {
         </Link>
         <nav aria-label={t("main")} className="hidden items-center gap-0.5 sm:flex">
           <NavLink href="/pricing">{t("pricing")}</NavLink>
-          <NavLink href="/developers">{t("developers")}</NavLink>
+          {/* Design header: "API for developers" on desktop, "API" on tablets (the accessible name stays the full one). */}
+          <NavLink href="/developers">
+            <span aria-hidden className="lg:hidden">
+              {t("developersShort")}
+            </span>
+            <span className="max-lg:sr-only">{t("developers")}</span>
+          </NavLink>
           {user ? <NavLink href="/dashboard">{t("myCodes")}</NavLink> : null}
         </nav>
         <div className="ml-auto flex items-center gap-3 sm:gap-4 lg:gap-5">

@@ -188,11 +188,26 @@ export const developerNotify = pgTable(
   {
     id: text("id").primaryKey(),
     email: text("email").notNull(),
-    /** What they asked about: "packages" (npm release). */
+    /** What they asked about: "packages" (npm release) or "rest" (the REST API waitlist). */
     topic: text("topic").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [uniqueIndex("developer_notify_email_topic_uq").on(t.email, t.topic)],
+);
+
+/**
+ * Design 12.x "Was this page helpful?": one answer per click, by docs page id. Nothing about the visitor is stored
+ * (no account, address, cookie or user agent): the counts per page are the whole point.
+ */
+export const docFeedback = pgTable(
+  "doc_feedback",
+  {
+    id: text("id").primaryKey(),
+    page: text("page").notNull(),
+    helpful: boolean("helpful").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("doc_feedback_page_idx").on(t.page, t.createdAt)],
 );
 
 /** A named design of a QR code (Business card, Poster…). One QR has many layouts. */
