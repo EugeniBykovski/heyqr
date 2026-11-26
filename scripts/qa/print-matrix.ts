@@ -472,7 +472,23 @@ async function printPack(c: Case, code: { qrId: string; layoutId: string }, cook
 
 const { cookie, key } = await setup();
 const made: Record<string, { qrId: string; layoutId: string; value: string }> = {};
+// HEY-181: scripts the caption fonts don't cover are refused when saved (the files would print empty boxes).
+const UNCOVERED = new Set(["script-han", "script-devanagari", "script-arabic", "script-kana", "script-hangul", "script-thai"]);
 for (const c of cases()) {
+  if (UNCOVERED.has(c.id)) {
+    const refused = await createCode(c, key).then(
+      () => "saved",
+      (e: unknown) => String(e instanceof Error ? e.message : e),
+    );
+    ok(/^create .*: 422 .*caption font can't draw/.test(refused), {
+      group: c.group,
+      preset: c.preset,
+      font: c.font,
+      check: "refused on save: the caption font can't draw it",
+      detail: refused.slice(0, 160),
+    });
+    continue;
+  }
   const code = await createCode(c, key);
   made[c.id] = code;
   const size = await exportsOf(c, code, cookie);
