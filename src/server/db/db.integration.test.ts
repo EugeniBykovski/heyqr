@@ -25,8 +25,8 @@ import { addLayoutFrom, copyLayout, layoutRevision, removeLayout, updateLayoutDe
 import { activateTrialCode, startTrial, trialCode, trialCovers, trialPhase } from "../billing/trial";
 import { pauseDynamicCode, resumeDynamicCode } from "../billing/pause";
 import { bindStripeCustomer, customerIdempotencyKey, storedCustomer, type CustomerCreate } from "../billing/customer";
-import { applySubscriptionEvent, type SubscriptionEvent } from "../billing/subscriptions";
-import { canDownloadCode, resolveShortLink } from "../billing/access";
+import { applySubscriptionEvent, resumeScheduledCancellation, type SubscriptionEvent } from "../billing/subscriptions";
+import { canDownloadCode, ownerStatus, resolveShortLink } from "../billing/access";
 import { apiKeyOwner, createApiKey, generateApiKey, listApiKeys, revokeApiKey } from "../api-keys/keys";
 import { readLayoutForOwner } from "../api/v1/layouts";
 import { authorizeApiExport } from "../api/v1/export";
@@ -48,6 +48,7 @@ import {
   activateDynamicCode,
   applyPrintPackAllowance,
   currentPlan,
+  endedPlan,
   hasPlanAccess,
   overdueSubscription,
   type AccessFields,
@@ -5670,6 +5671,194 @@ describe.skipIf(!url)("reactivation after a plan ended keeps pauses, deletions a
       Boolean(byId.get(ids.takenDown)?.takenDownAt),
     ]).toEqual(["paused", true, true]);
     expect(byId.get(ids.live)?.shortCode).toBe(slugs.live);
+  });
+});
+
+/*
+ * HEY-185 / QR-25.04: undoing a scheduled cancellation ("Keep my plan") and reactivating after the plan ended, through
+ * the functions Plan & billing, My QR codes and the short link use (resumeScheduledCancellation, endedPlan,
+ * ownerStatus, resolveShortLink) and the webhook's own applySubscriptionEvent. Stripe is a fake holding its current
+ * state; `now` is set per step, so the cutoff is passed without waiting.
+ */
+describe.skipIf(!url)("cancellation, Keep my plan and reactivation (HEY-185, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "life-owner", name: "Owner", email: "owner@life.test", stripeCustomerId: "cus_life_owner" };
+  const other = { id: "life-other", name: "Other", email: "other@life.test", stripeCustomerId: "cus_life_other" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const START = 1_795_000_000; // period start
+  const END = START + 2_678_400; // period end and the scheduled cutoff
+  const before = new Date((END - 86_400) * 1000); // a day before the cutoff
+  const after = new Date((END + 86_400) * 1000); // a day after it
+  const stripeNow = new Map<string, SubscriptionEvent>();
+  const sub = (id: string, customer: string, userId: string, over: Partial<SubscriptionEvent> = {}): SubscriptionEvent =>
+    ({
+      id,
+      customer,
+      status: "active",
+      cancel_at_period_end: false,
+      cancel_at: null,
+      metadata: { userId, plan: "starter" },
+      items: { data: [{ price: { id: "price_starter" }, current_period_start: START, current_period_end: END }] },
+      ...over,
+    }) as unknown as SubscriptionEvent;
+  let events = 0;
+  const deliver = (payload: SubscriptionEvent, id = `evt_life_${++events}`) =>
+    applySubscriptionEvent(
+      db,
+      { id, type: "customer.subscription.updated", subscription: payload },
+      {
+        planForPrice: () => null,
+        current: async (sid) => {
+          const s = stripeNow.get(sid);
+          if (!s) throw new Error("unknown subscription");
+          return s;
+        },
+      },
+    );
+  /** The fake Stripe's "clear the scheduled cancellation" (subscriptions.update), recording each call. */
+  const calls: string[] = [];
+  const fakeStripe = {
+    clearCancellation: async (sid: string) => {
+      calls.push(sid);
+      const s = stripeNow.get(sid);
+      if (!s) throw new Error("unknown subscription");
+      const resumed = { ...s, cancel_at_period_end: false, cancel_at: null } as SubscriptionEvent;
+      stripeNow.set(sid, resumed);
+      return resumed;
+    },
+  };
+  const codes = { live: "", paused: "", deleted: "", blocked: "" };
+  const slugs = { live: "lifelve", paused: "lifepau", deleted: "lifedel", blocked: "lifeblk" };
+  const D1 = "https://life.example.test/menu";
+  /** What the owner and a scanner see at `now`. */
+  const observe = async (now: Date) => {
+    const link = async (slug: string) => {
+      const a = await resolveShortLink(db, slug, now);
+      return a.kind === "redirect" ? a.to : a.kind === "hosted" ? "hosted" : a.inactive ? "inactive" : "unavailable";
+    };
+    const plan = await currentPlan(db, owner.id, now);
+    const live = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, codes.live) });
+    if (!live) throw new Error("no code");
+    const trial = trialPhase({ trialStartedAt: null, trialEndsAt: null }, Boolean(plan), now);
+    const ended = await endedPlan(db, owner.id, now);
+    return {
+      billing: plan ? (plan.cancelAtPeriodEnd ? `ends ${plan.endsAt?.toISOString().slice(0, 10)}` : "renews") : "no plan",
+      ended: ended ? `${ended.id} ${ended.endedAt?.toISOString().slice(0, 10)}` : null,
+      owner: ownerStatus(live, { plan: Boolean(plan), trial }),
+      link: await link(slugs.live),
+      paused: await link(slugs.paused),
+      deleted: await link(slugs.deleted),
+      blocked: await link(slugs.blocked),
+      subscriptions: (await db.query.subscription.findMany({ where: (s, { eq }) => eq(s.userId, owner.id) })).length,
+    };
+  };
+  const cutoffDay = new Date(END * 1000).toISOString().slice(0, 10);
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+    stripeNow.set("sub_life_1", sub("sub_life_1", owner.stripeCustomerId, owner.id));
+    await deliver(sub("sub_life_1", owner.stripeCustomerId, owner.id), "evt_life_create");
+    for (const k of ["live", "paused", "deleted", "blocked"] as const) {
+      const saved = await saveQrWithLayouts(db, owner.id, {
+        name: k,
+        model: "dynamic",
+        content: { type: "website", url: D1 },
+        destination: D1,
+        layouts,
+      });
+      if (!saved.ok) throw new Error("save failed");
+      codes[k] = saved.data.qrCodeId;
+      expect((await activateDynamicCode(db, owner.id, codes[k], () => slugs[k])).ok).toBe(true);
+    }
+    await pauseDynamicCode(db, owner.id, codes.paused);
+    await softDeleteQrCodes(db, owner.id, [codes.deleted]);
+    // An operator's takedown after a report (HEY-182).
+    await db.update(schema.qrCode).set({ takenDownAt: new Date(), takedownReason: "scam" }).where(eq(schema.qrCode.id, codes.blocked));
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("A: a scheduled cancellation keeps everything until its date; Keep my plan resumes the same subscription", async () => {
+    const scheduled = sub("sub_life_1", owner.stripeCustomerId, owner.id, { cancel_at_period_end: true, cancel_at: END });
+    stripeNow.set("sub_life_1", scheduled);
+    const scheduling = `evt_life_${++events}`;
+    await deliver(scheduled, scheduling);
+    expect(await observe(before)).toEqual({
+      billing: `ends ${cutoffDay}`,
+      ended: null,
+      owner: "active",
+      link: D1,
+      paused: "unavailable",
+      deleted: "unavailable",
+      blocked: "unavailable",
+      subscriptions: 1,
+    });
+    // Another account has nothing to resume, and Stripe isn't called for it.
+    expect(await resumeScheduledCancellation(db, other.id, fakeStripe, () => null, before)).toEqual({ ok: false, error: "not_scheduled" });
+    expect(calls).toEqual([]);
+    // The owner keeps the plan: one Stripe update of the same subscription, stored at once.
+    expect(await resumeScheduledCancellation(db, owner.id, fakeStripe, () => null, before)).toEqual({
+      ok: true,
+      renewsAt: new Date(END * 1000),
+    });
+    expect(calls).toEqual(["sub_life_1"]);
+    expect(await observe(before)).toMatchObject({ billing: "renews", owner: "active", link: D1, subscriptions: 1 });
+    // The scheduling event delivered again, and a late copy of it, can't schedule the cancellation again.
+    expect(await deliver(scheduled, scheduling)).toEqual({ duplicate: true });
+    await deliver(scheduled);
+    expect(await observe(before)).toMatchObject({ billing: "renews", owner: "active", link: D1 });
+    // Nothing left to undo: a second Keep my plan doesn't call Stripe.
+    expect(await resumeScheduledCancellation(db, owner.id, fakeStripe, () => null, before)).toEqual({ ok: false, error: "not_scheduled" });
+    expect(calls).toEqual(["sub_life_1"]);
+  });
+
+  it("B: past the cutoff the plan has ended (even before Stripe's final event); reactivation brings back only the live code", async () => {
+    const scheduled = sub("sub_life_1", owner.stripeCustomerId, owner.id, { cancel_at_period_end: true, cancel_at: END });
+    stripeNow.set("sub_life_1", scheduled);
+    await deliver(scheduled);
+    // The cutoff passed; Stripe's final event hasn't arrived yet.
+    const lapsed = { billing: "no plan", ended: `starter ${cutoffDay}`, owner: "inactive", link: "inactive" };
+    expect(await observe(after)).toMatchObject({ ...lapsed, paused: "unavailable", deleted: "unavailable", blocked: "unavailable" });
+    // Too late for Keep my plan: coming back is a new plan.
+    expect(await resumeScheduledCancellation(db, owner.id, fakeStripe, () => null, after)).toEqual({ ok: false, error: "not_scheduled" });
+    // Stripe ends it.
+    const canceled = sub("sub_life_1", owner.stripeCustomerId, owner.id, {
+      status: "canceled",
+      cancel_at_period_end: true,
+      cancel_at: END,
+    });
+    stripeNow.set("sub_life_1", canceled);
+    await deliver(canceled);
+    expect(await observe(after)).toMatchObject(lapsed);
+    // Reactivate: a new subscription (Checkout). The same printed code redirects again; the pause, the deletion and
+    // the takedown stay as they were.
+    const again = sub("sub_life_2", owner.stripeCustomerId, owner.id, {
+      items: {
+        data: [{ price: { id: "price_starter" }, current_period_start: END + 86_400, current_period_end: END + 86_400 + 2_678_400 }],
+      },
+    } as Partial<SubscriptionEvent>);
+    stripeNow.set("sub_life_2", again);
+    await deliver(again);
+    expect(await observe(after)).toEqual({
+      billing: "renews",
+      ended: null,
+      owner: "active",
+      link: D1,
+      paused: "unavailable",
+      deleted: "unavailable",
+      blocked: "unavailable",
+      subscriptions: 2,
+    });
+    // A late copy of the canceled subscription's event changes nothing.
+    await deliver(canceled);
+    expect(await observe(after)).toMatchObject({ billing: "renews", owner: "active", link: D1 });
+    const live = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, codes.live) });
+    expect([live?.shortCode, live?.destination]).toEqual([slugs.live, D1]);
   });
 });
 

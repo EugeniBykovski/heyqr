@@ -73,6 +73,23 @@ export async function currentPlan(db: Db, userId: string, now: Date = new Date()
 }
 
 /**
+ * HEY-185: the account's last plan when it has none now: which plan and when it ended (the scheduled cutoff, Stripe's
+ * cancel_at, else the period end). Plan & billing offers Reactivate with it; null while a plan gives access, or for an
+ * account that never had one. A failed renewal still owed (past_due / unpaid) is `overdueSubscription`'s, not this.
+ */
+export async function endedPlan(db: Db, userId: string, now: Date = new Date()): Promise<{ id: PlanId; endedAt: Date | null } | null> {
+  const subs = await db.query.subscription.findMany({
+    where: eq(schema.subscription.userId, userId),
+    orderBy: desc(schema.subscription.updatedAt),
+  });
+  if (subs.some((s) => hasPlanAccess(s, now))) return null;
+  // An abandoned first payment (incomplete, incomplete_expired) was never a plan.
+  const last = subs.find((s) => !["past_due", "unpaid", "incomplete", "incomplete_expired"].includes(s.status));
+  if (!last) return null;
+  return { id: last.plan, endedAt: last.cancelAt ?? last.currentPeriodEnd };
+}
+
+/**
  * HEY-141: the account's subscription whose renewal payment failed and can still be paid: past_due (the plan stays,
  * HEY-138) or unpaid (the plan has ended, the invoice is still open). Paying the open invoice in Stripe makes it active
  * again; the webhook then reconciles it (HEY-134). Null when nothing is owed.

@@ -1,11 +1,11 @@
 import { desc, eq } from "drizzle-orm";
 import type { Metadata } from "next";
 import { getFormatter, getTranslations } from "next-intl/server";
-import { BillingPortalButton } from "@/features/checkout";
+import { BillingPortalButton, PlanCheckoutButton, ResumeSubscriptionButton } from "@/features/checkout";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
 import { requireAccount } from "../../require-account";
-import { accountUsage, overdueSubscription } from "@/server/billing/allowances";
+import { accountUsage, endedPlan, overdueSubscription } from "@/server/billing/allowances";
 import { activeSubscription, userTrial } from "@/server/billing/entitlements";
 import { paymentSummary, portalFeatures } from "@/server/billing/portal";
 import { storedCustomer } from "@/server/billing/customer";
@@ -35,7 +35,7 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
   const locale = await resolveLocale(params);
   const user = await requireAccount(locale, "/dashboard/billing", await searchParams);
   const [t, format, currency] = await Promise.all([getTranslations("billing"), getFormatter(), getCurrency()]);
-  const [usage, purchases, phase, test, customer, subscription, features, overdue] = await Promise.all([
+  const [usage, purchases, phase, test, customer, subscription, features, overdue, ended] = await Promise.all([
     accountUsage(db, user.id),
     db.query.purchase.findMany({
       where: eq(schema.purchase.userId, user.id),
@@ -50,6 +50,8 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
     portalFeatures(),
     // HEY-141: a renewal that failed and can still be paid (past_due: the plan stays; unpaid: it has ended).
     overdueSubscription(db, user.id),
+    // HEY-185: the plan that ended, for Reactivate.
+    endedPlan(db, user.id),
   ]);
   const payment = customer && subscription ? await paymentSummary(customer, subscription.stripeSubscriptionId) : null;
   const brand = (b: string) =>
@@ -125,6 +127,37 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
           </div>
         ) : null}
         {/* HEY-136: the credit balance is always shown here, 0 included. */}
+        {/* HEY-185: a scheduled cancellation, its cutoff and what happens then (docs/LINK_AVAILABILITY.md 2a–2b), with
+            Keep my plan: the same subscription resumes, no new Checkout or charge. */}
+        {plan?.cancelAtPeriodEnd && !plan.overdue && plan.endsAt ? (
+          <div data-slot="cancellation-scheduled" className="flex flex-col gap-2.5 rounded-lg bg-warning-soft px-4 py-3.5 text-[0.9375rem]">
+            <b className="font-semibold">{t("canceling.title", { date: date(plan.endsAt) })}</b>
+            <p className="text-secondary-foreground">{t("canceling.until")}</p>
+            <p className="text-secondary-foreground">{t("canceling.after", { count: usage.dynamic.used })}</p>
+            <div className="flex flex-wrap gap-2.5">
+              <ResumeSubscriptionButton label={t("canceling.resume")} />
+            </div>
+            <span className="text-caption text-muted-foreground">{t("canceling.resumeNote")}</span>
+          </div>
+        ) : null}
+        {/* HEY-185: the plan has ended. Taking it again turns the same short links back on (2b, 3c); a pause, deletion
+            or takedown is the owner's or an operator's and stays. */}
+        {!plan && ended && !overdue ? (
+          <div data-slot="plan-ended" className="flex flex-col gap-2.5 rounded-lg bg-subtle px-4 py-3.5 text-[0.9375rem]">
+            <b className="font-semibold">
+              {ended.endedAt
+                ? t("ended.title", { plan: t(`plans.${ended.id}`), date: date(ended.endedAt) })
+                : t("ended.titleNoDate", { plan: t(`plans.${ended.id}`) })}
+            </b>
+            <p className="text-secondary-foreground">{t("ended.scans")}</p>
+            <p className="text-secondary-foreground">{t("ended.back")}</p>
+            <div className="flex flex-wrap gap-2.5">
+              <PlanCheckoutButton plan={ended.id} returnTo="billing" size="md" className="w-auto">
+                {t("ended.reactivate", { plan: t(`plans.${ended.id}`), price: formatMoney(sheet[ended.id], currency) })}
+              </PlanCheckoutButton>
+            </div>
+          </div>
+        ) : null}
         <UsageTiles usage={usage} printPackCents={sheet.printPack} currency={currency} credits="always" />
         {plan ? (
           <dl className="flex flex-col gap-2 text-[0.875rem]">
@@ -153,7 +186,7 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
               </dd>
             </div>
           </dl>
-        ) : (
+        ) : ended ? null : (
           <p className="text-secondary-foreground">{t("none")}</p>
         )}
         <div className="flex flex-wrap gap-2.5">
@@ -161,7 +194,7 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
           {plan?.id === "starter" && customer && features.upgrade && !plan.cancelAtPeriodEnd && !plan.overdue ? (
             <BillingPortalButton intent="upgrade" variant="primary" label={t("upgrade", { price: formatMoney(sheet.studio, currency) })} />
           ) : null}
-          {!plan ? (
+          {!plan && !ended ? (
             <Button asChild variant="primary">
               <Link href="/pricing">{t("choosePlan")}</Link>
             </Button>

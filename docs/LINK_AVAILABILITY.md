@@ -20,6 +20,19 @@ what this matrix confirms.
 | **4. Scan monitoring threshold** (Starter 10,000, Studio 100,000 monthly scans per code) | **Never suspended** by reaching or passing it.                                                                                                                                                         | No effect; monitoring only.                                                                                                                                                           | `SCAN_MONITOR_THRESHOLDS`; PostgreSQL + HTTP (HEY-135)                                                                        |
 | **5. Plan ends after a static QR was unlocked**                                          | A static code holds its content in the pattern: printed copies keep working with no server involved.                                                                                                   | Its files stay downloadable: the unlock belongs to the code, not the plan.                                                                                                            | `canDownload` static rule; `entitlements.test.ts`; PostgreSQL HEY-138 / HEY-142                                               |
 
+### What the owner sees (HEY-185)
+
+- **My QR codes, QR details and Your studio** call a Dynamic code **Active** only while its scans redirect, by the
+  short link's own rule (`scansLive` / `ownerStatus`, `server/billing/access.ts`). In 1, 2b and 3b it shows as
+  **Not active**, says why on QR details, and its main action leads to Plan & billing.
+- **Plan & billing, 2a:** "Your plan ends on {cutoff}", what stays until then and what happens after, and
+  **Keep my plan**: it clears the cancellation on Stripe's same subscription (no Checkout, no charge now) and is offered
+  only before the cutoff. The webhook that follows re-reads Stripe's current state, so a late or repeated event can't
+  schedule the cancellation again.
+- **Plan & billing, 2b (no plan, an earlier one ended or was canceled):** "Your {plan} plan ended on {cutoff}" with
+  **Reactivate**, which is that plan's Checkout. The new subscription turns the same short links back on. An unpaid
+  renewal (3b, still payable) shows "Payment overdue" with the way to pay it instead (HEY-141).
+
 Manual pauses and deletions are never changed by any of this: a paused or deleted code stays unavailable whatever the
 plan says, and comes back only through Resume or Undo. Scanner-facing pages stay neutral: they never mention the owner's
 plan, trial or payment (`link-unavailable`, HEY-121).
