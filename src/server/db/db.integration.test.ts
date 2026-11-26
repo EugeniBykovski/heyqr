@@ -65,7 +65,14 @@ import { DRAFT_LIMIT, PLANS, SCAN_MONITOR_THRESHOLDS } from "../../shared/config
 import { newId } from "./ids";
 import { publishHosted, publicHostedContent, saveHostedDraft, hostedStatus } from "../qr/hosted";
 import { checkPdf, storeHostedContent, storePdf } from "../qr/hosted-assets";
-import { publicHostedFile, REPORTS_PER_HOUR, reportsFor, submitDeveloperNotify, submitReport } from "../qr/hosted-public";
+import {
+  publicHostedFile,
+  REPORTS_PER_HOUR,
+  reportsFor,
+  submitDeveloperNotify,
+  submitDocFeedback,
+  submitReport,
+} from "../qr/hosted-public";
 import { emptyHostedContent, sampleHostedContent, type HostedContent } from "../../entities/qr/model/hosted";
 
 const url = process.env.TEST_DATABASE_URL;
@@ -7617,6 +7624,31 @@ describe.skipIf(!url)("hosted pages: drafts, publishing and public reads (real P
     expect(await submitDeveloperNotify(db, { email: "dev@hosted.test", topic: "packages" })).toEqual({ ok: true });
     expect(await submitDeveloperNotify(db, { email: "not an email", topic: "packages" })).toEqual({ ok: false, error: "invalid" });
     expect(Number((await pool.query("select count(*)::int as n from developer_notify where email = 'dev@hosted.test'")).rows[0].n)).toBe(1);
+  });
+
+  it("docs: the REST waitlist is its own topic; answers to 'Was this page helpful?' are stored only for docs pages", async () => {
+    expect(await submitDeveloperNotify(db, { email: "dev@hosted.test", topic: "rest" })).toEqual({ ok: true });
+    expect(await submitDeveloperNotify(db, { email: "DEV@hosted.test", topic: "rest" })).toEqual({ ok: true });
+    expect(await submitDeveloperNotify(db, { email: "dev@hosted.test", topic: "billing" })).toEqual({ ok: false, error: "invalid" });
+    const topics = (await pool.query("select topic from developer_notify where email = 'dev@hosted.test' order by topic")).rows.map(
+      (r) => r.topic,
+    );
+    expect(topics).toEqual(["packages", "rest"]);
+    const pages = ["overview", "faq"];
+    expect(await submitDocFeedback(db, { page: "faq", helpful: true }, pages)).toEqual({ ok: true });
+    expect(await submitDocFeedback(db, { page: "faq", helpful: false }, pages)).toEqual({ ok: true });
+    for (const bad of [
+      { page: "restBulk", helpful: true },
+      { page: "faq", helpful: "yes" },
+      { page: "faq", helpful: true, email: "x@y.z" },
+      null,
+    ])
+      expect(await submitDocFeedback(db, bad, pages), JSON.stringify(bad)).toEqual({ ok: false, error: "invalid" });
+    const rows = (await pool.query("select page, helpful from doc_feedback order by helpful desc")).rows;
+    expect(rows).toEqual([
+      { page: "faq", helpful: true },
+      { page: "faq", helpful: false },
+    ]);
   });
 });
 

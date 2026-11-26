@@ -7,7 +7,7 @@ import { LOCALES } from "@/i18n/locales";
  */
 export const STATIC_SEGMENTS = new Set(
   (
-    "a all api api-keys assets auth billing content create dashboard destination developers edit export files health hosted " +
+    "a all api api-keys assets auth billing content create dashboard destination developers edit export feedback files health hosted " +
     "layouts link-unavailable logo notify p pdf preview pricing print privacy qr qr-codes r reader-wasm receipt report sample " +
     "scan sign-in stripe terms trial v1 webhook"
   ).split(" "),

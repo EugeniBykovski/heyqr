@@ -109,7 +109,9 @@ export async function submitReport(db: Db, raw: unknown, reporter: string, now: 
 
 /* ── /developers "Email me" ──────────────────────────────────────────────────────────────────────────────────── */
 
-export const notifySchema = z.strictObject({ email: z.email().max(254), topic: z.literal("packages") });
+/** Topics: "packages" (npm releases, design 12.2) and "rest" (the REST API waitlist, design 12.18–12.20). */
+export const NOTIFY_TOPICS = ["packages", "rest"] as const;
+export const notifySchema = z.strictObject({ email: z.email().max(254), topic: z.enum(NOTIFY_TOPICS) });
 
 /** Adds the address to the release list; signing up twice is fine (one row per address and topic). */
 export async function submitDeveloperNotify(db: Db, raw: unknown): Promise<{ ok: true } | { ok: false; error: "invalid" }> {
@@ -129,4 +131,18 @@ export async function reportsFor(db: Db, shortCode: string) {
     .from(schema.pageReport)
     .where(eq(schema.pageReport.shortCode, shortCode))
     .orderBy(sql`created_at desc`);
+}
+
+/* ── Docs "Was this page helpful?" ───────────────────────────────────────────────────────────────────────────── */
+
+/** Stores one answer for a docs page. `pages`: the ids answers may name (public docs pages), so nothing else gets in. */
+export async function submitDocFeedback(
+  db: Db,
+  raw: unknown,
+  pages: readonly string[],
+): Promise<{ ok: true } | { ok: false; error: "invalid" }> {
+  const parsed = z.strictObject({ page: z.string().max(64), helpful: z.boolean() }).safeParse(raw);
+  if (!parsed.success || !pages.includes(parsed.data.page)) return { ok: false, error: "invalid" };
+  await db.insert(schema.docFeedback).values({ id: newId(), page: parsed.data.page, helpful: parsed.data.helpful });
+  return { ok: true };
 }
