@@ -1,4 +1,5 @@
 import "server-only";
+import { attachDatabasePool } from "@vercel/functions";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { env } from "@/env";
@@ -11,6 +12,8 @@ const globalForDb = globalThis as unknown as { pool?: Pool };
  * One pool per server instance, reused across hot reloads in development.
  * On Vercel each function instance gets a small pool that releases idle connections quickly; DATABASE_URL there is
  * Neon's pooled (PgBouncer) endpoint, so many instances share few Postgres connections. Locally a larger pool is fine.
+ * On Vercel (Fluid compute) the pool is attached to the function's lifecycle, so idle clients are released before an
+ * instance is suspended instead of leaking connections (Neon's guidance for node-postgres on Vercel).
  */
 function createPool() {
   const serverless = Boolean(process.env.VERCEL);
@@ -24,6 +27,7 @@ function createPool() {
   pool.on("error", (error) => {
     console.error(`[db] idle client error on the ${resolveDbTarget()} database ${describeDatabaseUrl(env.DATABASE_URL)}: ${error.message}`);
   });
+  if (serverless) attachDatabasePool(pool);
   return pool;
 }
 
