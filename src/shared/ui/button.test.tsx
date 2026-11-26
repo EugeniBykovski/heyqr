@@ -135,6 +135,28 @@ describe("Button", () => {
     expect(screen.getByRole("button", { name: "Delete for good" }).className).toContain("disabled:opacity-45");
   });
 
+  it("renders in Server Components: no handler of its own unless loading (no function props to pass)", () => {
+    const plain = Button({ children: "Export" });
+    expect((plain.props as { onClick?: unknown }).onClick).toBeUndefined();
+    const linked = Button({ asChild: true, children: <a href="https://example.com/pricing">Pricing</a> });
+    expect((linked.props as { onClick?: unknown }).onClick).toBeUndefined();
+    const pending = Button({ loading: true, children: "Export" });
+    expect(typeof (pending.props as { onClick?: unknown }).onClick).toBe("function");
+  });
+
+  it("the hover pulse runs only with motion allowed, never while loading; solid danger pulses red", () => {
+    render(
+      <>
+        <Button variant="primary">Primary</Button>
+        <Button variant="danger-solid">Delete for good</Button>
+      </>,
+    );
+    expect(screen.getByRole("button", { name: "Primary" }).className).toContain(
+      "motion-safe:not-disabled:not-data-loading:hover:animate-pulse-primary",
+    );
+    expect(screen.getByRole("button", { name: "Delete for good" }).className).toContain("hover:animate-pulse-danger");
+  });
+
   it("icon-only buttons carry their name in aria-label", () => {
     render(
       <Button size="icon" aria-label="Close">

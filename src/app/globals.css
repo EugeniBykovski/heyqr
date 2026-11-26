@@ -152,6 +152,8 @@
   --animate-pulse-neutral: pulse-neutral 1.7s var(--ease-out) infinite;
   --animate-pulse-accent: pulse-accent 1.7s var(--ease-out) infinite;
   --animate-pulse-inverse: pulse-inverse 1.7s var(--ease-out) infinite;
+  /* Solid danger confirm (design .btn--danger-solid --_pulse rgba(194, 38, 30, .32)). */
+  --animate-pulse-danger: pulse-danger 1.7s var(--ease-out) infinite;
   --animate-rise: rise 240ms var(--ease-out) both;
   --animate-fade: fade 200ms var(--ease-out) both;
   --animate-pop: pop 240ms var(--ease-out) both;
@@ -198,6 +200,17 @@
     }
     100% {
       box-shadow: 0 0 0 0 rgb(110 82 255 / 0);
+    }
+  }
+  @keyframes pulse-danger {
+    0% {
+      box-shadow: 0 0 0 0 rgb(194 38 30 / 0.32);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgb(194 38 30 / 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgb(194 38 30 / 0);
     }
   }
   @keyframes pulse-inverse {
