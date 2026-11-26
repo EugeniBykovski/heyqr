@@ -73,6 +73,15 @@ function nextDay(iso: string): string {
   d.setUTCDate(d.getUTCDate() + 1);
   return d.toISOString().slice(0, 10).replace(/-/g, "");
 }
+/**
+ * iCalendar TEXT (RFC 5545 §3.3.11): backslash, semicolon and comma are backslash-escaped and a line break becomes
+ * "\n", so "Show; part 1, live" stays one value and a line break in a title can never start a new property.
+ */
+const icsText = (s: string) =>
+  s
+    .replace(/\r\n?/g, "\n")
+    .replace(/[\\;,]/g, "\\$&")
+    .replace(/\n/g, "\\n");
 /** DTSTART / DTEND lines: timed events as before; a date-only start is an all-day event (VALUE=DATE). */
 function icsEventDates(start: string, end?: string): string[] {
   if (!isDateOnly(start)) return [`DTSTART:${icsDate(start)}`, `DTEND:${icsDate(end ?? start)}`];
@@ -166,9 +175,9 @@ export function encodePayload(content: QrContent): string {
     case "event":
       return [
         "BEGIN:VEVENT",
-        `SUMMARY:${content.title}`,
+        `SUMMARY:${icsText(content.title)}`,
         ...icsEventDates(content.start, content.end),
-        content.place ? `LOCATION:${content.place}` : null,
+        content.place ? `LOCATION:${icsText(content.place)}` : null,
         "END:VEVENT",
       ]
         .filter(Boolean)

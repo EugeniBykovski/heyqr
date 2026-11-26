@@ -116,7 +116,14 @@ export function readCreateRequest(body: unknown): { ok: true; value: CreateQrReq
   const errors = contentErrors(content as QrContent);
   const fields = Object.keys(errors);
   if (fields.length > 0)
-    return { ok: false, details: fields.map((field) => ({ path: `content.${field}`, message: `Invalid ${field} (${errors[field]})` })) };
+    return {
+      ok: false,
+      // The editor shows an event's end time in its own field ("endTime"); the API's field is `end`.
+      details: fields.map((field) => {
+        const path = field === "endTime" ? "end" : field;
+        return { path: `content.${path}`, message: `Invalid ${path} (${errors[field]})` };
+      }),
+    };
   return { ok: true, value: parsed.data };
 }
 

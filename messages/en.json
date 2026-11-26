@@ -914,7 +914,11 @@
       "smsTo": "Enter the number that should receive the message.",
       "address": "Enter the address the maps app should open.",
       "eventTitle": "Give the event a name.",
-      "eventStart": "Pick a date."
+      "eventStart": "Pick a date.",
+      "eventDateInvalid": "Enter a real date.",
+      "eventEndInvalid": "Enter the end time as hours and minutes.",
+      "eventEndNeedsStart": "Add a start time, or clear the end time.",
+      "eventEnd": "The event ends before it starts. Pick a later end time."
     },
     "afterScanning": {
       "label": "After scanning",

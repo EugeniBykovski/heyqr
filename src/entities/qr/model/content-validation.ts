@@ -62,10 +62,55 @@ export function contentErrors(content: AnyQrContent): ContentErrors {
     case "location":
       if (!text("address").trim()) e.address = "address";
       break;
-    case "event":
+    case "event": {
       if (!text("title").trim()) e.title = "eventTitle";
-      if (!text("start")) e.start = "eventStart";
+      const problem = eventTimeProblem(text("start"), text("end") || undefined);
+      if (problem === "eventStart" || problem === "eventDateInvalid") e.start = problem;
+      else if (problem) e.endTime = problem;
       break;
+    }
   }
   return e;
+}
+
+/** "2026-12-05" or "2026-12-05T19:00", and a real calendar day (not 2026-02-30). */
+function eventMoment(value: string): { date: string; time: string | null } | null {
+  const m = /^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?$/.exec(value);
+  if (!m) return null;
+  const [y, mo, d, h, mi] = [m[1], m[2], m[3], m[4], m[5]].map((x) => (x === undefined ? undefined : Number(x)));
+  const day = new Date(Date.UTC(y ?? 0, (mo ?? 1) - 1, d ?? 1));
+  if (day.getUTCFullYear() !== y || day.getUTCMonth() + 1 !== mo || day.getUTCDate() !== d) return null;
+  if (h !== undefined && (h > 23 || (mi ?? 0) > 59)) return null;
+  return { date: value.slice(0, 10), time: h === undefined ? null : value.slice(11, 16) };
+}
+
+/**
+ * Design 1.14 / HEY-193: an event's date and times. Required: a real date. Optional: a start time, and an end time
+ * that needs a start time and comes after it on the same day (the form has one date, so an event can't run past
+ * midnight). Times are floating local times: a 19:00 event is 19:00 wherever the code is scanned.
+ */
+export function eventTimeProblem(
+  start: string,
+  end?: string,
+): "eventStart" | "eventDateInvalid" | "eventEndInvalid" | "eventEndNeedsStart" | "eventEnd" | null {
+  if (!start.trim()) return "eventStart";
+  const s = eventMoment(start.trim());
+  if (!s) return "eventDateInvalid";
+  if (end === undefined || !end.trim()) return null;
+  const e = eventMoment(end.trim());
+  if (!e) return "eventEndInvalid";
+  if (e.time && !s.time) return "eventEndNeedsStart";
+  // A date-only end is an all-day event's last day (the encoder ends it the next day): it may equal the start.
+  if (!e.time) return e.date >= s.date ? null : "eventEnd";
+  return `${e.date}T${e.time}` > `${s.date}T${s.time ?? ""}` ? null : "eventEnd";
+}
+
+/**
+ * What a saved draft may hold for an event (HEY-193): unfinished is fine (no title or date yet), but a date or time
+ * that is there has to be one the encoder can turn into a correct calendar entry.
+ */
+export function eventDraftOk(content: AnyQrContent): boolean {
+  if (content.type !== "event") return true;
+  if (!content.start) return !content.end;
+  return eventTimeProblem(content.start, content.end) === null;
 }
