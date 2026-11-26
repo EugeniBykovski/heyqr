@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { normalizeUrl, type QrContent } from "@heyqr/qr-core";
+import { normalizeUrl, unsupportedCaptionChars, type QrContent } from "@heyqr/qr-core";
 import { and, eq, sql } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { z } from "zod";
@@ -209,6 +209,12 @@ export async function createQrForOwner(
   });
 }
 
+/** Enough of a layout to check its caption (the schema validated the request; the record check happens on save). */
+export const isLayoutShaped = (l: unknown): l is Parameters<typeof unsupportedCaptionChars>[0] => {
+  const c = (l as { preset?: unknown; caption?: { text?: unknown; weight?: unknown } } | null)?.caption;
+  return typeof (l as { preset?: unknown })?.preset === "string" && typeof c?.text === "string" && typeof c.weight === "number";
+};
+
 /** The editor's save of a validated request, as a new draft. */
 async function save(
   db: Parameters<typeof saveQrWithLayouts>[0],
@@ -234,10 +240,22 @@ async function save(
   if (result.error === "too_long") return { ok: false, error: "content_too_long" };
   if ("field" in result)
     return { ok: false, error: "invalid_request", details: [{ path: "destination", message: `Invalid destination (${result.problem})` }] };
-  // "invalid" (mode and content were checked above): a layout isn't a valid design record, or its logo isn't usable.
+  // "invalid" (mode and content were checked above): a layout isn't a valid design record, or its logo isn't usable,
+  // or (HEY-181) its caption has characters the caption font can't draw.
+  const undrawable = layouts.flatMap((l, i) => {
+    const chars = isLayoutShaped(l.layout) ? unsupportedCaptionChars(l.layout) : [];
+    return chars.length
+      ? [
+          {
+            path: `layouts[${i}].layout.caption.text`,
+            message: `The caption font can't draw ${chars.slice(0, 8).join(" ")}; choose another font or change the text`,
+          },
+        ]
+      : [];
+  });
   return {
     ok: false,
     error: "invalid_request",
-    details: [{ path: "layouts", message: "A layout isn't a valid design (see docs/API_V1.md)" }],
+    details: undrawable.length ? undrawable : [{ path: "layouts", message: "A layout isn't a valid design (see docs/API_V1.md)" }],
   };
 }
