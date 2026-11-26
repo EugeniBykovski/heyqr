@@ -3,9 +3,9 @@ import { environmentProblems } from "./env-rules";
 
 const base = {
   DATABASE_URL: "postgres://u:p@db.example.com/heyqr",
-  NEXT_PUBLIC_APP_URL: "https://heyqr.app",
-  NEXT_PUBLIC_SHORT_LINK_BASE: "https://hqr.to",
-  BETTER_AUTH_URL: "https://heyqr.app",
+  NEXT_PUBLIC_APP_URL: "https://www.heyqr.me",
+  NEXT_PUBLIC_SHORT_LINK_BASE: "https://www.heyqr.me/r",
+  BETTER_AUTH_URL: "https://www.heyqr.me",
 };
 const stripeLive = {
   STRIPE_SECRET_KEY: "sk_live_x",
@@ -13,7 +13,7 @@ const stripeLive = {
   STRIPE_PRICE_STATIC: "price_a",
   STRIPE_PRICE_DYNAMIC_MONTHLY: "price_b",
 };
-const email = { RESEND_API_KEY: "re_x", EMAIL_FROM: "Hey QR <hello@heyqr.app>", SUPPORT_EMAIL: "support@example.test" };
+const email = { RESEND_API_KEY: "re_x", EMAIL_FROM: "HeyQR <notifications@heyqr.me>", SUPPORT_EMAIL: "support@example.test" };
 const storage = {
   S3_REGION: "eu-central-1",
   S3_BUCKET: "heyqr",
@@ -25,6 +25,18 @@ const vars = (problems: { variable: string }[]) => problems.map((p) => p.variabl
 describe("environmentProblems", () => {
   it("accepts a complete production configuration", () => {
     expect(environmentProblems("production", { ...base, ...stripeLive, ...email, ...storage })).toEqual([]);
+  });
+
+  it("production short links must be /r on the app's own origin, where /r/[code] serves them", () => {
+    const full = { ...base, ...stripeLive, ...email, ...storage };
+    for (const short of ["https://hqr.to", "https://heyqr.me/r", "https://www.heyqr.me", "https://www.heyqr.me/s"])
+      expect(vars(environmentProblems("production", { ...full, NEXT_PUBLIC_SHORT_LINK_BASE: short })), short).toEqual([
+        "NEXT_PUBLIC_SHORT_LINK_BASE",
+      ]);
+    expect(environmentProblems("production", { ...full, NEXT_PUBLIC_SHORT_LINK_BASE: "https://www.heyqr.me/r/" })).toEqual([]);
+    expect(vars(environmentProblems("dev", { ...base, NEXT_PUBLIC_SHORT_LINK_BASE: "http://localhost:3000/r" }))).not.toContain(
+      "NEXT_PUBLIC_SHORT_LINK_BASE",
+    );
   });
 
   it("requires every integration in production and names the missing variables", () => {
@@ -70,7 +82,13 @@ describe("environmentProblems", () => {
       BETTER_AUTH_URL: "http://localhost:3000",
       DATABASE_URL: "postgres://h/heyqr_test",
     };
-    expect(vars(environmentProblems("production", local))).toEqual(["BETTER_AUTH_URL", "DATABASE_URL", "NEXT_PUBLIC_APP_URL"]);
+    // The short-link base no longer matches the (local) app origin either.
+    expect(vars(environmentProblems("production", local))).toEqual([
+      "BETTER_AUTH_URL",
+      "DATABASE_URL",
+      "NEXT_PUBLIC_APP_URL",
+      "NEXT_PUBLIC_SHORT_LINK_BASE",
+    ]);
   });
 
   it("keeps auth on the app origin so Google's callback URL matches", () => {

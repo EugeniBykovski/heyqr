@@ -28,5 +28,5 @@ export function PurchaseReceiptEmail({ name, amount, url }: Props) {
   );
 }
 
-PurchaseReceiptEmail.PreviewProps = { name: "Ana Reyes", amount: "$4.99", url: "https://heyqr.app/dashboard" } satisfies Props;
+PurchaseReceiptEmail.PreviewProps = { name: "Ana Reyes", amount: "$4.99", url: "https://www.heyqr.me/dashboard" } satisfies Props;
 export default PurchaseReceiptEmail;

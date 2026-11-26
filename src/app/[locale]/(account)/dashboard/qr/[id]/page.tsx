@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { env } from "@/env";
+import { shortLinkUrl } from "@/shared/lib/short-link";
 import { DEFAULT_PRINT_SETTINGS, printSettingsQuery, QrPreview, contentDisplayName, isHostedContent } from "@/entities/qr";
 import { CopyButton } from "@/features/copy-to-clipboard";
 import {
@@ -97,7 +98,8 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
   const value = encodedValue(qr);
   // Hosted pages: what's live and whether the draft has unpublished changes.
   const hosted = isHostedContent(qr.content) ? await hostedStatus(db, qr) : null;
-  const shortLink = qr.shortCode ? `${env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "")}/${qr.shortCode}` : null;
+  // The same address the exported file encodes (server/qr/export.ts).
+  const shortLink = qr.shortCode ? shortLinkUrl(env.NEXT_PUBLIC_SHORT_LINK_BASE, qr.shortCode) : null;
   const shortShown = shortLink?.replace(/^https?:\/\//, "") ?? "";
   // The same status My QR codes shows (a trial test code after its trial is Paused).
   const trialLive = phase.state === "active" || phase.state === "ending" || phase.state === "upgraded";

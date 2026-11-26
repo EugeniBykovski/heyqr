@@ -134,7 +134,7 @@ first attempt if it was created, or it's created now. Use a new key for each cod
 ```sh
 KEY="hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX"
 IDEM="$(uuidgen)"   # keep it with the request until you have a 201
-curl -sS -X POST https://heyqr.example/api/v1/qr-codes \
+curl -sS -X POST https://www.heyqr.me/api/v1/qr-codes \
   -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" \
   -H "Idempotency-Key: $IDEM" -d @menu.json
 # Timed out? Send the same request with the same Idempotency-Key again.
@@ -160,7 +160,7 @@ logs.
 ### Example
 
 ```sh
-curl -sS -X POST https://heyqr.example/api/v1/qr-codes \
+curl -sS -X POST https://www.heyqr.me/api/v1/qr-codes \
   -H "Authorization: Bearer hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX" \
   -H "Content-Type: application/json" \
   -d @menu.json
@@ -239,7 +239,7 @@ together to keep them in step. Any other field is refused (`422`, `"Unknown fiel
 
 ```sh
 KEY="hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX"
-URL="https://heyqr.example/api/v1/qr-codes/Q8d3…/layouts/L2k9…"
+URL="https://www.heyqr.me/api/v1/qr-codes/Q8d3…/layouts/L2k9…"
 
 # Read it (note the revision).
 curl -sS "$URL" -H "Authorization: Bearer $KEY"
@@ -265,7 +265,7 @@ The current destination of the key owner's Dynamic code, with the revision an up
   "revision": 3,
   "previousDestination": "https://littlefern.cafe/brunch",
   "changedAt": "2026-11-25T09:30:00.000Z",
-  "shortLink": "https://heyqr.example/r/k7Qm2xPa"
+  "shortLink": "https://www.heyqr.me/r/k7Qm2xPa"
 }
 ```
 
@@ -317,7 +317,7 @@ same (A → B → A).
 
 ```sh
 KEY="hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX"
-URL="https://heyqr.example/api/v1/qr-codes/Q8d3…/destination"
+URL="https://www.heyqr.me/api/v1/qr-codes/Q8d3…/destination"
 
 # Read the current destination and revision.
 curl -sS "$URL" -H "Authorization: Bearer $KEY"
@@ -370,7 +370,7 @@ Query (strict; any other parameter is refused):
   "error": {
     "code": "payment_required",
     "message": "This code's files need a one-time purchase. Open paymentUrl, signed in as the owner, to pay; then repeat this request.",
-    "paymentUrl": "https://heyqr.example/create/export?qr=Q8d3…&layout=L2k9…&format=png",
+    "paymentUrl": "https://www.heyqr.me/create/export?qr=Q8d3…&layout=L2k9…&format=png",
     "qrCodeId": "Q8d3…",
     "layoutId": "L2k9…",
     "format": "png"
@@ -390,7 +390,7 @@ Query (strict; any other parameter is refused):
 
 ```sh
 KEY="hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX"
-URL="https://heyqr.example/api/v1/qr-codes/Q8d3…/layouts/L2k9…/export?format=png"
+URL="https://www.heyqr.me/api/v1/qr-codes/Q8d3…/layouts/L2k9…/export?format=png"
 
 # Not paid yet: 402 with paymentUrl (open it in a browser as the owner).
 curl -sS "$URL" -H "Authorization: Bearer $KEY"

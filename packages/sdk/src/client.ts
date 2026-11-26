@@ -67,7 +67,7 @@ export class HeyQrClient {
       throw new HeyQrError("HeyQrClient runs on a server only: an API key must never be sent to a browser.", undefined, "server_only");
     if (typeof options.apiKey !== "string" || !KEY.test(options.apiKey)) throw new HeyQrError("apiKey must be a HeyQR API key (hqk_…).");
     if (!/^https?:\/\/[^/?#\s]+(\/[^?#\s]*)?$/.test(options.baseUrl ?? ""))
-      throw new HeyQrError("baseUrl must be an http(s) origin such as https://heyqr.example (without /api/v1).");
+      throw new HeyQrError("baseUrl must be an http(s) origin such as https://www.heyqr.me (without /api/v1).");
     const fetchImpl = options.fetch ?? (globalThis as unknown as { fetch?: FetchLike }).fetch;
     if (!fetchImpl) throw new HeyQrError("No fetch available: pass options.fetch (Node 18+ has a global fetch).");
     this.#timeoutMs = checkTimeout(options.timeoutMs ?? DEFAULT_TIMEOUT_MS);

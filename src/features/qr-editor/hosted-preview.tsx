@@ -18,7 +18,7 @@ export function HostedPreview({
   className,
 }: {
   content: HostedContent;
-  /** The short link as shown in the address bar ("heyqr.app/r/…"). */
+  /** The short link as shown in the address bar ("www.heyqr.me/r/…"). */
   shortLabel: string;
   forceExpired?: boolean;
   className?: string;

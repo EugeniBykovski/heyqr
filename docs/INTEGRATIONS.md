@@ -14,7 +14,7 @@ Never commit real values: put them in `.env` locally and in Vercel project setti
 | **Resend**                    | API key + verified sending domain (SPF, DKIM, DMARC DNS records)                                                                                                                                                                                                                                                                                                                                                              | `RESEND_API_KEY`, `EMAIL_FROM`                                                                                             |
 | **Cloudflare R2** (or AWS S3) | Private bucket per environment for uploaded logos (HEY-83: never public, no CORS needed; the server reads and writes it), an "Object Read & Write" token scoped to that bucket (`s3:PutObject`, `s3:GetObject`, `s3:DeleteObject`)                                                                                                                                                                                            | `S3_REGION` (`auto` for R2), `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_ENDPOINT` (R2/MinIO only)        |
 | **Vercel**                    | Project linked to GitHub, env vars per environment, main domain                                                                                                                                                                                                                                                                                                                                                               | —                                                                                                                          |
-| **Domains + DNS**             | Main domain (e.g. heyqr.app) and a short domain for dynamic codes (e.g. hqr.to)                                                                                                                                                                                                                                                                                                                                               | `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_SHORT_LINK_BASE`                                                                       |
+| **Domains + DNS**             | `www.heyqr.me` (canonical) and `heyqr.me` redirecting to it; short links at `https://www.heyqr.me/r` ([LAUNCH_DOMAIN.md](LAUNCH_DOMAIN.md))                                                                                                                                                                                                                                                                                   | `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_SHORT_LINK_BASE`                                                                       |
 
 ## Recommended
 
@@ -36,7 +36,7 @@ Never commit real values: put them in `.env` locally and in Vercel project setti
 ```json
 [
   {
-    "AllowedOrigins": ["http://localhost:3000", "https://heyqr.app"],
+    "AllowedOrigins": ["http://localhost:3000", "https://www.heyqr.me"],
     "AllowedMethods": ["PUT", "GET"],
     "AllowedHeaders": ["*"],
     "MaxAgeSeconds": 3000

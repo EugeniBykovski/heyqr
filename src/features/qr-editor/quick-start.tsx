@@ -50,7 +50,8 @@ const QUICK_FIELDS: Record<QuickType, readonly string[]> = {
   wifi: ["ssid", "security", "password"],
   contact: ["firstName", "lastName", "phone", "email"],
 };
-const PLACEHOLDER_VALUE = "https://heyqr.app";
+/** What the stage shows until the fields are complete: HeyQR's own address, never a domain it doesn't own. */
+const PLACEHOLDER_VALUE = env.NEXT_PUBLIC_APP_URL;
 
 /**
  * Design "hero": the real tool on the first screen. Copy, live stage and tool card share one grid:

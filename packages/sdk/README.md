@@ -63,7 +63,7 @@ isn't committed):
 
 ```sh
 export HEYQR_API_KEY="hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX"
-export HEYQR_BASE_URL="https://heyqr.example"   # HeyQR's origin; http://localhost:3000 for a local HeyQR
+export HEYQR_BASE_URL="https://www.heyqr.me"   # HeyQR's origin; http://localhost:3000 for a local HeyQR
 ```
 
 **5. Save `quickstart.ts`.** This is the same file as
@@ -282,7 +282,7 @@ this code and layout and exits with code 2:
 
 ```
 Payment required (402). Open this page in a browser, signed in as the code's owner, and complete Checkout:
-  https://heyqr.example/create/export?qr=<qr id>&layout=<layout id>&format=png&res=2
+  https://www.heyqr.me/create/export?qr=<qr id>&layout=<layout id>&format=png&res=2
 The code isn't unlocked yet. HeyQR unlocks it once Stripe confirms the payment (usually within seconds); run this again with the same HEYQR_QR_ID and HEYQR_LAYOUT_ID.
 ```
 
@@ -345,7 +345,7 @@ import { HeyQrClient, isHeyQrApiError } from "@heyqr/sdk";
 
 const apiKey = process.env.HEYQR_API_KEY;
 if (!apiKey) throw new Error("Set HEYQR_API_KEY");
-const heyqr = new HeyQrClient({ apiKey, baseUrl: "https://heyqr.example" });
+const heyqr = new HeyQrClient({ apiKey, baseUrl: "https://www.heyqr.me" });
 ```
 
 | Method                                                                       | Request                                                                                      | Returns                                                                                                                        |
@@ -558,7 +558,7 @@ pnpm exec tsx --conditions=@heyqr/source packages/sdk/examples/read-and-update.t
 {
   "layout": { "name": "Sticker v2", "revision": { "before": "1795600193728985", "after": "1795600227675159" } },
   "destination": { "destination": "https://littlefern.cafe/today", "changed": true, "revision": { "before": 1, "after": 2 } },
-  "shortLink": "https://heyqr.example/r/k7Qm2xPa"
+  "shortLink": "https://www.heyqr.me/r/k7Qm2xPa"
 }
 ```
 
@@ -581,7 +581,7 @@ pnpm exec tsx --conditions=@heyqr/source packages/sdk/examples/download-export.t
 ]
 ```
 
-Unpaid, it prints this instead: `Payment required: open https://heyqr.example/create/export?qr=…&layout=…&format=png
+Unpaid, it prints this instead: `Payment required: open https://www.heyqr.me/create/export?qr=…&layout=…&format=png
 as the code's owner, then run this again.`
 
 For the whole flow from an unpaid code (402, Checkout, download, download again), see

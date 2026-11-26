@@ -61,6 +61,14 @@ export function environmentProblems(appEnv: AppEnv, v: Values): EnvProblem[] {
       if (present(url) && (!String(url).startsWith("https://") || isLocalUrl(String(url))))
         add(k, "must be a public https:// URL in production");
     }
+    // Printed Dynamic codes hold {NEXT_PUBLIC_SHORT_LINK_BASE}/{slug}, served only by /r/[code] on the app's own origin
+    // (no host rewrite for a separate short domain exists), so any other base would print codes that never resolve.
+    const short = v.NEXT_PUBLIC_SHORT_LINK_BASE;
+    if (present(short) && present(v.NEXT_PUBLIC_APP_URL)) {
+      const want = `${origin(v.NEXT_PUBLIC_APP_URL) ?? ""}/r`;
+      if (String(short).replace(/\/$/, "") !== want)
+        add("NEXT_PUBLIC_SHORT_LINK_BASE", `must be ${want} (short links are served at /r on the app's origin)`);
+    }
     const db = String(v.DATABASE_URL ?? "");
     if (/\/[^/?]*_test(\?|$)/.test(db)) add("DATABASE_URL", "points at a *_test database; production needs its own database");
   }
