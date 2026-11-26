@@ -399,7 +399,8 @@ export function formatHostedPrice(price: string, currency: HostedCurrency, local
   const n = Number(price.trim().replace(",", "."));
   if (!price.trim() || Number.isNaN(n)) return "";
   try {
-    return new Intl.NumberFormat(locale, { style: "currency", currency, minimumFractionDigits: Number.isInteger(n) ? 0 : 2 }).format(n);
+    // Always the currency's minor units, so a menu lists $11.00 beside $4.50 (design 10.x / 11.0).
+    return new Intl.NumberFormat(locale, { style: "currency", currency }).format(n);
   } catch {
     return `${n} ${currency}`;
   }

@@ -77,7 +77,7 @@ describe("public hosted pages", () => {
     page(p);
     expect(screen.getByRole("link", { name: /Buy now/ }).getAttribute("href")).toBe("https://reyes.studio/shop/speckled-mug");
     expect(screen.getByText("Opens reyes.studio")).toBeTruthy();
-    expect(screen.getByText("$38")).toBeTruthy();
+    expect(screen.getByText("$38.00")).toBeTruthy();
   });
 
   it("pdf: Open PDF and Download only for a ready file", () => {
