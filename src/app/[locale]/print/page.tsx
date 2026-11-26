@@ -50,7 +50,7 @@ export default async function PrintPage({ params, searchParams }: PageProps<"/[l
 
   if (saved.unit !== "mm")
     return (
-      <main className="mx-auto flex max-w-measure flex-col items-start gap-4 px-4 py-14 sm:px-6">
+      <div className="mx-auto flex max-w-measure flex-col items-start gap-4 px-4 py-14 sm:px-6">
         <h1 className="text-h1">{t("notPrint.title")}</h1>
         <p className="text-secondary-foreground">{t("notPrint.text")}</p>
         <div className="flex flex-wrap gap-3">
@@ -61,7 +61,7 @@ export default async function PrintPage({ params, searchParams }: PageProps<"/[l
             <Link href={back.href}>{back.label}</Link>
           </Button>
         </div>
-      </main>
+      </div>
     );
 
   const checkout = query.checkout === "success" || query.checkout === "cancelled" ? query.checkout : undefined;

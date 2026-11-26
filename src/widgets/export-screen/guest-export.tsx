@@ -44,20 +44,20 @@ export function GuestExport({
 
   if (draft === undefined)
     return (
-      <main aria-busy className="mx-auto grid w-full max-w-wide gap-6 px-4 pt-14 pb-10 sm:px-6 lg:grid-cols-[minmax(0,1fr)_26rem] lg:px-8">
+      <div aria-busy className="mx-auto grid w-full max-w-wide gap-6 px-4 pt-14 pb-10 sm:px-6 lg:grid-cols-[minmax(0,1fr)_26rem] lg:px-8">
         <Skeleton className="aspect-square w-full rounded-xl lg:aspect-[4/3]" />
         <Skeleton className="h-120 w-full rounded-2xl" />
-      </main>
+      </div>
     );
   if (!draft)
     return (
-      <main className="mx-auto flex max-w-measure flex-col items-start gap-4 px-4 py-16 sm:px-6">
+      <div className="mx-auto flex max-w-measure flex-col items-start gap-4 px-4 py-16 sm:px-6">
         <h1 className="text-h1">{t("emptyTitle")}</h1>
         <p className="text-secondary-foreground">{t("emptyText")}</p>
         <Button asChild variant="primary">
           <Link href="/create">{t("emptyAction")}</Link>
         </Button>
-      </main>
+      </div>
     );
 
   const layout = designToLayout(draft);

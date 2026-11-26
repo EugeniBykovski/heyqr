@@ -71,7 +71,7 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
   const compare = compareData(t, sheet, currency);
 
   return (
-    <main className="mx-auto w-full max-w-page px-4 pt-6 pb-8 sm:px-6 md:pt-10 md:pb-16 lg:px-8">
+    <div className="mx-auto w-full max-w-page px-4 pt-6 pb-8 sm:px-6 md:pt-10 md:pb-16 lg:px-8">
       <header className="mb-6 flex max-w-190 flex-col gap-2">
         <h1 className="text-h1">{t("title")}</h1>
         <p className="text-secondary-foreground">{t("lead")}</p>
@@ -304,7 +304,7 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
         />
         <p className="text-caption text-muted-foreground">{t("cmp.foot")}</p>
       </section>
-    </main>
+    </div>
   );
 }
 

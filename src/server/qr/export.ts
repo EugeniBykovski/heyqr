@@ -9,6 +9,7 @@ import {
   encodePayload,
   PNG_MAX_SIDE,
   PNG_MIN_SIDE,
+  PNG_DEFAULTS,
   pngPixelSize,
   type Layout,
   type PngResolution,
@@ -150,7 +151,12 @@ export async function renderExport(
     `<svg $1width="${size.width}" height="${size.height}" preserveAspectRatio="none"`,
   );
   return {
-    body: rasterizeSvg(forRaster, { width: size.width, fontFiles: faces.map((f) => f.file) }),
+    // HEY-180: print layouts carry their dpi in the file, so they open at their physical size.
+    body: rasterizeSvg(forRaster, {
+      width: size.width,
+      fontFiles: faces.map((f) => f.file),
+      ...(layout.unit === "mm" ? { dpi: opts.dpi ?? PNG_DEFAULTS.dpi } : {}),
+    }),
     contentType: "image/png",
     scan: composed.scan,
     size,

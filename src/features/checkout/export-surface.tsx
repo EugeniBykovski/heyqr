@@ -576,7 +576,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
   })();
 
   return (
-    <main className="mx-auto w-full max-w-wide px-4 pt-4 pb-10 sm:px-6 lg:px-8">
+    <div className="mx-auto w-full max-w-wide px-4 pt-4 pb-10 sm:px-6 lg:px-8">
       <div className="mb-3">
         <Button asChild variant="ghost" size="sm">
           <Link href={props.backHref}>
@@ -988,14 +988,22 @@ export function ExportSurface(props: ExportSurfaceProps) {
           </section>
 
           {action}
-          <p className="text-center text-caption text-muted-foreground">{props.mode === "guest" ? t("guestNote") : t("secure")}</p>
+          {/* HEY-180 (design 3.11): the note says what the action costs. Stripe only where the next step is Stripe; once the
+              code is paid for, nothing to pay. A plan unlock, a credit or a free slot has no note. */}
+          {props.mode === "guest" ? (
+            <p className="text-center text-caption text-muted-foreground">{t("guestNote")}</p>
+          ) : entitled ? (
+            <p className="text-center text-caption text-muted-foreground">{t("includedNote")}</p>
+          ) : totalCents > 0 || offer?.path === "buy" || offer?.path === "subscribe" || !offer ? (
+            <p className="text-center text-caption text-muted-foreground">{t("secure")}</p>
+          ) : null}
           {/* HEY-109: shown where the next step is a Single QR payment on Stripe (as a guest, or the Pay path). */}
           {props.model === "static" && !entitled && !confirming && (props.mode === "guest" || offer?.path === "buy") ? (
             <PaymentInfo compact price={amount} support={props.support ?? null} className="rounded-lg bg-subtle p-3.5" />
           ) : null}
         </aside>
       </div>
-    </main>
+    </div>
   );
 }
 

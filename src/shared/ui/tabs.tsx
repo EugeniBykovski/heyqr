@@ -36,5 +36,6 @@ export function TabsTrigger({ className, ...props }: ComponentProps<typeof TabsP
   );
 }
 export function TabsContent({ className, ...props }: ComponentProps<typeof TabsPrimitive.Content>) {
-  return <TabsPrimitive.Content data-slot="tabs-content" className={cn("animate-rise outline-none", className)} {...props} />;
+  // HEY-180: panels aren't Tab stops (they draw no focus ring); Tab goes from the tabs to the panel's first control.
+  return <TabsPrimitive.Content data-slot="tabs-content" tabIndex={-1} className={cn("animate-rise outline-none", className)} {...props} />;
 }

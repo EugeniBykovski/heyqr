@@ -281,7 +281,9 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
         </div>
       </div>
 
-      <TabsPrimitive.Content value="type" className="animate-rise outline-none">
+      {/* HEY-180 (as HEY-63's settings panels): a step panel isn't a Tab stop. It has no visible ring, and each step
+          starts with its own controls. */}
+      <TabsPrimitive.Content value="type" tabIndex={-1} className="animate-rise outline-none">
         <TypeStep
           type={design.content.type}
           mode={design.model}
@@ -291,7 +293,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
         />
       </TabsPrimitive.Content>
 
-      <TabsPrimitive.Content value="content" className="animate-rise outline-none">
+      <TabsPrimitive.Content value="content" tabIndex={-1} className="animate-rise outline-none">
         <ContentStep
           content={design.content}
           mode={design.model}
@@ -315,7 +317,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
         />
       </TabsPrimitive.Content>
 
-      <TabsPrimitive.Content value="design" className="animate-rise outline-none">
+      <TabsPrimitive.Content value="design" tabIndex={-1} className="animate-rise outline-none">
         <DesignStep
           design={design}
           onChange={patch}
