@@ -1,6 +1,6 @@
 "use client";
 
-import { LoaderCircleIcon, SendIcon } from "lucide-react";
+import { SendIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -21,8 +21,8 @@ export function PublishButton({ qrCodeId, variant = "primary" }: { qrCodeId: str
       router.refresh();
     });
   return (
-    <Button size="sm" variant={variant} onClick={run} disabled={pending} aria-busy={pending || undefined}>
-      {pending ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : <SendIcon aria-hidden />}
+    <Button size="sm" variant={variant} onClick={run} loading={pending}>
+      {pending ? null : <SendIcon aria-hidden />}
       {pending ? t("publishing") : t("publish")}
     </Button>
   );

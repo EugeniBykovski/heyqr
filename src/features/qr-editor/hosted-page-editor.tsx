@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeftIcon, CircleAlertIcon, LoaderCircleIcon, SaveIcon, SendIcon } from "lucide-react";
+import { ArrowLeftIcon, CircleAlertIcon, SaveIcon, SendIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -137,9 +137,9 @@ export function HostedPageEditor({
         <div className="sticky bottom-0 flex flex-wrap items-center gap-2 border-t border-border bg-page py-3">
           {dirty ? <span className="text-caption text-muted-foreground">{t("unsaved")}</span> : null}
           <span className="grow" />
-          <Button type="submit" variant="secondary" disabled={pending}>
-            {pending ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : <SaveIcon aria-hidden />}
-            {pending ? t("saving") : t("save")}
+          <Button type="submit" variant="secondary" loading={pending} loadingText={t("saving")}>
+            <SaveIcon aria-hidden />
+            {t("save")}
           </Button>
           <Button type="button" variant="primary" disabled={pending} onClick={() => save(true)}>
             <SendIcon aria-hidden />

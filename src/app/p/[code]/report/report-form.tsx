@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2Icon, CircleAlertIcon, LoaderCircleIcon } from "lucide-react";
+import { CheckCircle2Icon, CircleAlertIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, type FormEvent } from "react";
 import { Button } from "@/shared/ui/button";
@@ -97,8 +97,7 @@ export function ReportForm({ code }: { code: string }) {
         </p>
       ) : null}
       <div className="flex items-center gap-3">
-        <Button type="submit" variant="primary" disabled={state === "sending"} aria-busy={state === "sending" || undefined}>
-          {state === "sending" ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
+        <Button type="submit" variant="primary" loading={state === "sending"}>
           {state === "sending" ? t("sending") : t("send")}
         </Button>
         <a href={`/p/${code}`} className="text-label text-secondary-foreground underline underline-offset-2">

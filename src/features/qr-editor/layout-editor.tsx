@@ -239,12 +239,13 @@ export function LayoutEditor({
       variant="primary"
       size={size}
       className={className}
-      disabled={saving || !scan?.ok || Boolean(tooLong)}
-      aria-busy={saving || undefined}
+      disabled={!saving && (!scan?.ok || Boolean(tooLong))}
+      loading={saving}
+      loadingText={t("saving")}
       onClick={save}
     >
-      {saving ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : <CheckIcon aria-hidden />}
-      {saving ? t("saving") : tEdit("save")}
+      <CheckIcon aria-hidden />
+      {tEdit("save")}
     </Button>
   );
 

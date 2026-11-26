@@ -1,6 +1,6 @@
 "use client";
 
-import { KeyRoundIcon, LoaderCircleIcon, TriangleAlertIcon } from "lucide-react";
+import { KeyRoundIcon, TriangleAlertIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -50,8 +50,8 @@ export function CreateApiKey() {
       </div>
     );
   return (
-    <Button variant="primary" className="self-start" onClick={create} disabled={pending} aria-busy={pending || undefined}>
-      {pending ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : <KeyRoundIcon aria-hidden />}
+    <Button variant="primary" className="self-start" onClick={create} loading={pending}>
+      {pending ? null : <KeyRoundIcon aria-hidden />}
       {t("create")}
     </Button>
   );

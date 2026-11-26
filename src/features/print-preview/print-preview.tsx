@@ -455,8 +455,7 @@ export function PrintPreview({
                   </>
                 ) : included && included.left > 0 ? (
                   <>
-                    <Button variant="primary" size="lg" disabled={!ready || paying} aria-busy={paying || undefined} onClick={useIncluded}>
-                      {paying ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
+                    <Button variant="primary" size="lg" disabled={!ready} loading={paying} onClick={useIncluded}>
                       {t("unlock.useIncluded")}
                     </Button>
                     {(preview?.forSale ?? forSale) ? (
@@ -472,8 +471,7 @@ export function PrintPreview({
                   <p className="text-caption font-medium text-secondary-foreground">{t("unlock.notForSale")}</p>
                 ) : (
                   <>
-                    <Button variant="primary" size="lg" disabled={!ready || paying} aria-busy={paying || undefined} onClick={unlock}>
-                      {paying ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
+                    <Button variant="primary" size="lg" disabled={!ready} loading={paying} onClick={unlock}>
                       {t("unlock.action", { price: amount })}
                     </Button>
                     <span className="text-caption text-muted-foreground">{t("unlock.sub")}</span>

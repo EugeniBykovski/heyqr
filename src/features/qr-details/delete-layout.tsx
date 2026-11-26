@@ -1,6 +1,6 @@
 "use client";
 
-import { LoaderCircleIcon, Trash2Icon } from "lucide-react";
+import { Trash2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -69,8 +69,8 @@ export function DeleteLayoutButton({
               <DialogDescription>{t("text", { name })}</DialogDescription>
               <p className="text-caption text-secondary-foreground">{t("keeps")}</p>
               <div className="flex flex-wrap gap-2">
-                <Button variant="danger-solid" disabled={pending} aria-busy={pending || undefined} onClick={run}>
-                  {pending ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : <Trash2Icon aria-hidden />}
+                <Button variant="danger-solid" loading={pending} onClick={run}>
+                  {pending ? null : <Trash2Icon aria-hidden />}
                   {t("confirm")}
                 </Button>
                 <Button variant="ghost" disabled={pending} onClick={() => setOpen(false)}>

@@ -1,6 +1,5 @@
 "use client";
 
-import { LoaderCircleIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState, useTransition, type ReactNode } from "react";
 import { toast } from "sonner";
@@ -78,11 +77,10 @@ export function PackPicker({
           <Button
             size="lg"
             className="w-full"
-            disabled={pending || !forSale[chosen]}
-            aria-busy={pending || undefined}
+            disabled={!forSale[chosen]}
+            loading={pending}
             onClick={() => go(() => startPackCheckout({ pack: chosen, locale }))}
           >
-            {pending ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
             {cta[chosen]}
           </Button>
         ) : (
@@ -121,11 +119,10 @@ export function PlanCheckoutButton({
       variant={variant}
       size={size}
       className={cn("w-full", className)}
-      disabled={disabled || pending}
-      aria-busy={pending || undefined}
+      disabled={disabled}
+      loading={pending}
       onClick={() => go(() => startPlanCheckout({ plan, locale, returnTo }))}
     >
-      {pending ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
       {children}
     </Button>
   );

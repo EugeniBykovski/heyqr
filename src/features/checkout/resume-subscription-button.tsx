@@ -1,6 +1,5 @@
 "use client";
 
-import { LoaderCircleIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -19,8 +18,7 @@ export function ResumeSubscriptionButton({ label }: { label: string }) {
   return (
     <Button
       variant="primary"
-      disabled={pending}
-      aria-busy={pending || undefined}
+      loading={pending}
       data-slot="resume-subscription"
       onClick={() =>
         start(async () => {
@@ -32,7 +30,6 @@ export function ResumeSubscriptionButton({ label }: { label: string }) {
         })
       }
     >
-      {pending ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
       {label}
     </Button>
   );
