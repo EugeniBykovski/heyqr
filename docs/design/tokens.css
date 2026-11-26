@@ -1,0 +1,95 @@
+:root {
+  /* primitive */
+  --color-ink-990: #050508;
+  --color-ink-950: #0d0d12;
+  --color-ink-900: #1a1a22;
+  --color-ink-800: #2a2a34;
+  --color-ink-700: #4a4a57;
+  --color-ink-600: #6b6b78;
+  --color-ink-500: #8e8e9a;
+  --color-ink-300: #c9c9d1;
+  --color-ink-200: #e3e3e8;
+  --color-ink-150: #ececef;
+  --color-ink-100: #f3f3f5;
+  --color-ink-75: #f7f7f8;
+  --color-ink-50: #fbfbfc;
+  --color-violet-900: #24137a;
+  --color-violet-800: #3b22b8;
+  --color-violet-700: #4b2ee0;
+  --color-violet-600: #5b3bff;
+  --color-violet-500: #6e52ff;
+  --color-violet-300: #b3a6ff;
+  --color-violet-200: #d4ccff;
+  --color-violet-100: #eae6ff;
+  --color-violet-50: #f5f3ff;
+  --color-green-700: #157f4f;
+  --color-green-50: #e8f6ee;
+  --color-amber-700: #8a5300;
+  --color-amber-50: #fff4de;
+  --color-red-700: #c2261e;
+  --color-red-50: #fdecea;
+  --color-blue-700: #2556c4;
+  --color-blue-50: #ebf1fc;
+  --color-white: #ffffff;
+
+  /* semantic */
+  --color-bg-page: var(--color-ink-75);
+  --color-bg-surface: var(--color-white);
+  --color-bg-subtle: var(--color-ink-100);
+  --color-bg-stage: var(--color-ink-100);
+  --color-text-primary: var(--color-ink-950);
+  --color-text-secondary: var(--color-ink-700);
+  --color-text-muted: var(--color-ink-600);
+  --color-text-accent: var(--color-violet-700);
+  --color-border-subtle: var(--color-ink-200);
+  --color-border-control: var(--color-ink-500);
+  --color-action-primary-bg: var(--color-violet-600);
+  --color-action-primary-bg-hover: var(--color-violet-700);
+  --color-action-primary-bg-pressed: var(--color-violet-800);
+  --color-action-primary-fg: var(--color-white);
+  --color-accent-bg: var(--color-violet-500);
+  --color-accent-fg: var(--color-white);
+  --color-selected-bg: var(--color-violet-50);
+  --color-selected-border: var(--color-violet-500);
+  --color-focus-ring: var(--color-violet-600);
+  --color-status-success-fg: var(--color-green-700);
+  --color-status-warning-fg: var(--color-amber-700);
+  --color-status-danger-fg: var(--color-red-700);
+  --skeleton-base: var(--color-ink-150);
+  --skeleton-highlight: var(--color-ink-50);
+  --skeleton-accent: var(--color-violet-100);
+  --motion-fast: 160ms;
+  --motion-base: 200ms;
+  --motion-panel: 240ms;
+  --motion-shimmer: 1500ms;
+  --motion-ease: cubic-bezier(0.2, 0, 0, 1);
+
+  /* component */
+  --button-primary-bg: var(--color-action-primary-bg);
+  --button-primary-fg: var(--color-action-primary-fg);
+  --button-radius: var(--radius-full);
+  --button-height: 44px;
+  --field-border: var(--color-border-control);
+  --field-border-error: var(--color-status-danger-fg);
+  --field-radius: var(--radius-md);
+  --field-height: 44px;
+  --card-radius: var(--radius-xl);
+  --swatch-size: 36px;
+  --swatch-ring: var(--color-selected-border);
+  --logo-mark-bg: var(--color-ink-950);
+  --logo-mark-dot: var(--color-violet-500);
+  --header-height: 60px;
+  --panel-width: 400 / 440 / 480px;
+  --google-btn-border: #747775;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms;
+    --motion-base: 0ms;
+    --motion-panel: 0ms;
+  }
+  .skeleton::after {
+    animation: none;
+  }
+}
