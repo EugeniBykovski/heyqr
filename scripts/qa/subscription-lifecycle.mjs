@@ -657,17 +657,24 @@ async function journey() {
       },
     );
     await check(
-      "Reactivate: Choose a plan → Subscribe again (Stripe test Checkout); the ORIGINAL file's short link redirects again",
+      "Reactivate from Plan & billing (Stripe test Checkout); the ORIGINAL file's short link redirects again",
       "stripe-test",
       p,
       async () => {
         await p.goto(`${BASE}/dashboard/billing`, { waitUntil: "networkidle" });
-        await p.getByRole("link", { name: /^Choose a plan/ }).click();
-        await p.waitForURL(/\/pricing/);
-        await p
-          .getByRole("button", { name: /^Subscribe now/ })
-          .first()
-          .click();
+        // HEY-185 Plan & billing offers "Reactivate <plan>" once a plan has ended; before it, Choose a plan → Pricing.
+        const reactivate = p.getByRole("button", { name: /^Reactivate / }).or(p.getByRole("link", { name: /^Reactivate / }));
+        if (await reactivate.count()) {
+          evidence.reactivateLabel = (await reactivate.first().innerText()).trim();
+          await reactivate.first().click();
+        } else {
+          await p.getByRole("link", { name: /^Choose a plan/ }).click();
+          await p.waitForURL(/\/pricing/);
+          await p
+            .getByRole("button", { name: /^Subscribe now/ })
+            .first()
+            .click();
+        }
         await stripeFill(p, "4242 4242 4242 4242");
         await p.waitForURL((u) => u.host === new URL(BASE).host, { timeout: 90000 });
         const l = await until(() => {
