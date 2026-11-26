@@ -208,7 +208,13 @@ export function ContentStep({
             id="qr-name"
             value={name}
             maxLength={80}
-            placeholder={contentDisplayName(content) ?? t("namePlaceholder")}
+            placeholder={
+              // Design 10.5: an empty Menu suggests "Menu QR"; Website keeps its example name.
+              contentDisplayName(content) ??
+              (content.type === "website"
+                ? t("namePlaceholder")
+                : t("contentStep.namePlaceholderType", { type: tTypes(`${content.type}.label`) }))
+            }
             aria-describedby="qr-name-hint"
             onChange={(e) => onNameChange(e.target.value)}
           />

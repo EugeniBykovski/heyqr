@@ -13,7 +13,7 @@ import {
   StoreIcon,
   TicketPercentIcon,
   TypeIcon,
-  UtensilsCrossedIcon,
+  UtensilsIcon,
   WifiIcon,
   type LucideIcon,
 } from "lucide-react";
@@ -30,7 +30,7 @@ export const TYPE_ICONS: Record<QrType, LucideIcon> = {
   sms: MessageSquareIcon,
   location: MapPinIcon,
   event: CalendarIcon,
-  menu: UtensilsCrossedIcon,
+  menu: UtensilsIcon,
   coupon: TicketPercentIcon,
   social: Link2Icon,
   business: StoreIcon,

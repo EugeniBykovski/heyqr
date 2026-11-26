@@ -88,6 +88,25 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         }
       />
 
+      {/* Design 10.1: Explore QR types sits right under the hero. */}
+      <section aria-labelledby="home-types" className={section}>
+        <SectionHead
+          id="home-types"
+          kicker={t("explore.kicker")}
+          title={t("explore.title")}
+          lead={t("explore.lead")}
+          aside={
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/create?step=type">
+                {t("explore.allTypes")}
+                <ArrowRightIcon aria-hidden />
+              </Link>
+            </Button>
+          }
+        />
+        <ExploreTypes shortLabel={previewShortLink(env.NEXT_PUBLIC_SHORT_LINK_BASE).replace(/^https?:\/\//, "")} />
+      </section>
+
       {session ? (
         <Suspense fallback={<StudioSkeleton label={t("studio.loading")} />}>
           <Studio userId={session.user.id} name={session.user.name} />
@@ -162,24 +181,6 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
             );
           })}
         </div>
-      </section>
-
-      <section aria-labelledby="home-types" className={section}>
-        <SectionHead
-          id="home-types"
-          kicker={t("explore.kicker")}
-          title={t("explore.title")}
-          lead={t("explore.lead")}
-          aside={
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/create?step=type">
-                {t("explore.allTypes")}
-                <ArrowRightIcon aria-hidden />
-              </Link>
-            </Button>
-          }
-        />
-        <ExploreTypes shortLabel={previewShortLink(env.NEXT_PUBLIC_SHORT_LINK_BASE).replace(/^https?:\/\//, "")} />
       </section>
 
       <section aria-labelledby="models-title" className="grid reveal gap-3 pb-12 md:grid-cols-[1.2fr_1fr_1fr] md:items-stretch">

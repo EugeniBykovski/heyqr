@@ -3,7 +3,7 @@
 import type { QrContent } from "@heyqr/qr-core";
 import { ArrowRightIcon, CheckIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { HOSTED_TYPES, isHostedType, sampleHostedContent, type HostedType } from "@/entities/qr";
 import { useRouter } from "@/i18n/navigation";
 import { formatMoney } from "@/shared/config/catalog";
@@ -14,7 +14,7 @@ import { Button } from "@/shared/ui/button";
 import { ContentPreview } from "./content-preview";
 import { HostedPreview } from "./hosted-preview";
 import { TYPE_ICONS } from "./type-icons";
-import { draftForType, writeDraft } from "./use-draft";
+import { draftForType, handOffDraft } from "./use-draft";
 
 /*
  * Design 10.1 / 10.2 "Explore QR types" (home): ten types as tabs (the seven hosted pages, then Website, Wi-Fi and
@@ -46,7 +46,6 @@ export function ExploreTypes({ shortLabel }: { shortLabel: string }) {
   const prices = usePrices();
   const [current, setCurrent] = useState<ExploreType>("menu");
   const tabs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const hosted = isHostedType(current);
   // Stable ids and a fixed zone: the preview renders the same on the server and in the browser.
   const sample = useMemo(() => {
     if (!isHostedType(current)) return null;
@@ -75,17 +74,41 @@ export function ExploreTypes({ shortLabel }: { shortLabel: string }) {
   };
 
   const create = () => {
-    writeDraft(draftForType(current));
-    router.push("/create?step=content");
+    handOffDraft(draftForType(current));
+    // The type in the URL lets the loading state show that type (design 10.8) and makes the link shareable.
+    router.push(`/create?step=content&type=${current}`);
   };
+
+  /* One variant of the copy or checklist per type, stacked in one cell: the cell keeps the tallest height, so
+   * switching tabs swaps the panel in place without the page moving (design 10.2). Hidden variants are invisible
+   * and inert, so only the current one is read, tabbed to or clicked. */
+  const stacked = (render: (key: ExploreType) => ReactNode) => (
+    <div className="grid">
+      {EXPLORE.map((key) => (
+        <div
+          key={key}
+          aria-hidden={key !== current || undefined}
+          inert={key !== current}
+          className={cn("col-start-1 row-start-1", key !== current && "invisible")}
+        >
+          {render(key)}
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Design 10.1: phones show every type in a grid of tiles; from 640 px one row with an underline, scrolling
+          sideways when it doesn't fit. */}
       <div
         role="tablist"
         aria-label={t("tabs")}
         onKeyDown={onKey}
-        className="grid grid-cols-2 gap-1.5 min-[30rem]:grid-cols-3 sm:flex sm:flex-wrap"
+        // Firefox makes a scrolling box a Tab stop of its own; the tabs are the stop (roving tabindex), and the
+        // focused tab scrolls itself into view.
+        tabIndex={-1}
+        className="grid grid-cols-3 gap-2 sm:flex sm:[scrollbar-width:none] sm:gap-0 sm:overflow-x-auto sm:border-b sm:border-border"
       >
         {EXPLORE.map((key) => {
           const Icon = TYPE_ICONS[key];
@@ -102,64 +125,105 @@ export function ExploreTypes({ shortLabel }: { shortLabel: string }) {
               aria-selected={on}
               aria-controls="xp-panel"
               tabIndex={on ? 0 : -1}
-              onClick={() => setCurrent(key)}
+              onClick={(e) => {
+                setCurrent(key);
+                e.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" });
+              }}
               className={cn(
-                "flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-3.5 text-label transition-colors duration-(--motion-fast)",
-                on ? "border-inverse bg-inverse text-inverse-foreground" : "border-border bg-surface hover:border-border-hover",
+                "group relative flex min-h-11 cursor-pointer flex-col items-center justify-center gap-1.5 text-center text-caption transition-colors duration-(--motion-fast)",
+                // Phone tile
+                "rounded-xl border px-1.5 py-3",
+                on
+                  ? "border-selected-border bg-selected font-semibold text-foreground"
+                  : "border-border bg-surface text-secondary-foreground hover:border-border-hover",
+                // Tab row from 640 px: no tile, an underline under the current tab
+                "sm:min-w-22 sm:flex-1 sm:shrink-0 sm:rounded-none sm:border-0 sm:bg-transparent sm:px-3 sm:pt-2 sm:pb-3",
+                "sm:after:absolute sm:after:inset-x-2 sm:after:-bottom-px sm:after:h-0.5 sm:after:rounded-full",
+                on ? "sm:after:bg-selected-mark" : "sm:hover:text-foreground",
               )}
             >
-              <Icon aria-hidden className="size-4 shrink-0" />
-              <span className="truncate">{tTypes(`${key}.label`)}</span>
+              <span
+                className={cn(
+                  "grid size-9 place-items-center rounded-lg transition-colors duration-(--motion-fast)",
+                  on ? "bg-selected-mark text-inverse-foreground" : "bg-subtle text-secondary-foreground sm:bg-transparent",
+                )}
+              >
+                <Icon aria-hidden className="size-4.5" strokeWidth={1.9} />
+              </span>
+              <span className="leading-tight">{tTypes(`${key}.label`)}</span>
               {isHostedType(key) ? (
-                <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", on ? "bg-inverse-accent" : "bg-accent-strong")} />
+                <span
+                  aria-hidden
+                  className="absolute top-2 right-2 size-1.5 rounded-full bg-selected-mark sm:top-1.5 sm:right-[calc(50%-1.5rem)]"
+                />
               ) : null}
             </button>
           );
         })}
       </div>
       <p className="flex items-center gap-2 text-caption text-muted-foreground">
-        <span aria-hidden className="size-1.5 rounded-full bg-accent-strong" />
+        <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-selected-mark" />
         {t("legend")}
       </p>
+      {/* Phones: copy, preview, checklist. 768 px: copy and checklist beside the preview. 1024 px: three columns. */}
       <div
         id="xp-panel"
         role="tabpanel"
         aria-labelledby={`xp-tab-${current}`}
-        className="grid gap-6 rounded-2xl border border-border bg-surface p-5 sm:p-7 lg:grid-cols-[minmax(0,1fr)_20rem_minmax(0,0.8fr)] lg:items-center lg:gap-10"
+        className="grid gap-6 rounded-2xl border border-border bg-surface p-5 sm:p-7 md:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] md:gap-x-8 lg:grid-cols-[minmax(0,1fr)_20rem_minmax(0,0.8fr)] lg:items-center lg:gap-10"
       >
-        <div className="flex flex-col items-start gap-3">
-          <Badge variant={hosted ? "accent" : "neutral"}>
-            {hosted ? t("hostedBadge") : current === "website" ? t("websiteBadge") : t("directBadge")}
-          </Badge>
-          <h3 className="text-h2">{t(`types.${current}.short`)}</h3>
-          <p className="text-secondary-foreground">{t(`types.${current}.use`)}</p>
-          <Button variant="primary" size="lg" onClick={create}>
-            {t(`types.${current}.cta`)}
-            <ArrowRightIcon aria-hidden />
-          </Button>
-          <p className="text-caption text-muted-foreground">
-            {hosted
-              ? t("hostedPrice", { price: formatMoney(prices.cents.starter, prices.currency) })
-              : t("directPrice", { price: formatMoney(prices.cents.single, prices.currency) })}
-          </p>
+        <div className="md:col-start-1 md:row-start-1 md:self-start lg:self-center">
+          {stacked((key) => {
+            const isHosted = isHostedType(key);
+            return (
+              <div className="flex flex-col items-start gap-3">
+                <Badge variant={isHosted ? "accent" : "neutral"}>
+                  {isHosted ? t("hostedBadge") : key === "website" ? t("websiteBadge") : t("directBadge")}
+                </Badge>
+                <h3 className="text-h2">{t(`types.${key}.short`)}</h3>
+                <p className="text-secondary-foreground">{t(`types.${key}.use`)}</p>
+                <Button variant="primary" size="lg" onClick={create}>
+                  {t(`types.${key}.cta`)}
+                  <ArrowRightIcon aria-hidden />
+                </Button>
+                <p className="text-caption text-muted-foreground">
+                  {isHosted
+                    ? t("hostedPrice", { price: formatMoney(prices.cents.starter, prices.currency) })
+                    : t("directPrice", { price: formatMoney(prices.cents.single, prices.currency) })}
+                </p>
+              </div>
+            );
+          })}
         </div>
-        <div className="flex justify-center">
-          {sample ? (
-            <HostedPreview content={sample} shortLabel={shortLabel} className="w-full" />
-          ) : (
-            <ContentPreview content={DIRECT_SAMPLES[current as "website" | "wifi" | "contact"]} mode="static" className="w-full" />
-          )}
+        {/* An invisible hosted phone under the preview keeps the cell one size for every type. */}
+        <div className="grid justify-items-center md:col-start-2 md:row-span-2 md:row-start-1 lg:row-span-1">
+          <div aria-hidden inert className="invisible col-start-1 row-start-1 w-full">
+            <HostedPreview content={null} type="menu" shortLabel={shortLabel} className="w-full" />
+          </div>
+          <div className="col-start-1 row-start-1 flex w-full justify-center self-start">
+            {sample ? (
+              <HostedPreview content={sample} shortLabel={shortLabel} className="w-full" />
+            ) : (
+              <ContentPreview content={DIRECT_SAMPLES[current as "website" | "wifi" | "contact"]} mode="static" className="w-full" />
+            )}
+          </div>
         </div>
-        <div className="flex flex-col gap-2.5">
-          <span className="text-label">{t("whatYouGet")}</span>
-          <ul className="flex flex-col gap-2">
-            {[t(`types.${current}.points.a`), t(`types.${current}.points.b`), hosted ? t("hostedExtra") : t("directExtra")].map((p) => (
-              <li key={p} className="flex items-start gap-2 text-[0.9375rem]">
-                <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-success" />
-                {p}
-              </li>
-            ))}
-          </ul>
+        <div className="md:col-start-1 md:row-start-2 md:self-end lg:col-start-3 lg:row-start-1 lg:self-center">
+          {stacked((key) => (
+            <div className="flex flex-col gap-2.5">
+              <span className="text-label">{t("whatYouGet")}</span>
+              <ul className="flex flex-col gap-2">
+                {[t(`types.${key}.points.a`), t(`types.${key}.points.b`), isHostedType(key) ? t("hostedExtra") : t("directExtra")].map(
+                  (pt) => (
+                    <li key={pt} className="flex items-start gap-2 text-[0.9375rem]">
+                      <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-success" />
+                      {pt}
+                    </li>
+                  ),
+                )}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
     </div>
