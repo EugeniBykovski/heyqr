@@ -1,0 +1,4450 @@
+{
+  "meta": {
+    "title": "Hey QR — 与品牌风格一致的二维码",
+    "description": "设计二维码，检查能否扫描，并下载可直接印刷的 PNG 和 SVG 文件。"
+  },
+  "nav": {
+    "create": "创建",
+    "pricing": "价格",
+    "myCodes": "我的二维码",
+    "billing": "套餐与账单",
+    "signIn": "登录",
+    "signOut": "退出登录",
+    "account": "账户与账单，{name}",
+    "language": "语言",
+    "skipToContent": "跳到主要内容",
+    "home": "Hey QR 首页",
+    "createCode": "创建二维码",
+    "menu": "菜单",
+    "main": "主导航",
+    "languageChoose": "选择语言",
+    "languageCount": "{count} 种语言",
+    "languageSearch": "搜索语言",
+    "languages": "语言",
+    "languageEmpty": "没有与“{query}”匹配的语言。",
+    "trial": "免费试用",
+    "apiKeys": "API 密钥",
+    "developers": "面向开发者的 API",
+    "developersShort": "API"
+  },
+  "payment": {
+    "title": "付款方式说明",
+    "oneTime": "单个二维码为一次性付款，每个 {price}，另加 Stripe 在结账时计算的税费。这不是订阅，不会自动续费。",
+    "where": "你将在 Stripe 的安全结账页面付款。Hey QR 不会看到你的银行卡信息。",
+    "receipt": "收据位于你账户的“账单”中，就在对应的购买记录旁边。",
+    "support": "对付款有疑问？请发送邮件至 <link>{email}</link>。",
+    "terms": "条款",
+    "privacy": "隐私",
+    "supportLink": "支持"
+  },
+  "footer": {
+    "terms": "条款",
+    "privacy": "隐私",
+    "support": "支持",
+    "rights": "© {year} Hey QR",
+    "pricing": "价格",
+    "label": "页脚",
+    "tagline": "与品牌风格一致、始终可扫描的二维码。",
+    "product": "产品",
+    "makeFor": "制作二维码用于",
+    "company": "公司",
+    "smallPrint": "21 种语言 · 由 Stripe 处理付款"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "二维码工作室 · 免费设计和预览",
+      "title": "一个真正属于你的二维码。",
+      "lead": "粘贴链接，在这里设置样式。预览随输入实时更新，设计完全免费。",
+      "reveal": "美好只需扫码一下。"
+    },
+    "tool": {
+      "typesLabel": "二维码要打开什么？",
+      "more": "更多 +",
+      "url": "网址",
+      "urlPlaceholder": "yourname.com/portfolio",
+      "errors": {
+        "empty": "请输入网址，例如 yourname.com。",
+        "spaces": "网址不能包含空格。"
+      },
+      "color": "二维码颜色",
+      "inks": {
+        "ink": "墨黑",
+        "violet": "紫罗兰",
+        "forest": "森林绿",
+        "ocean": "海洋蓝",
+        "berry": "莓果红",
+        "clay": "陶土色"
+      },
+      "caption": "文字说明",
+      "captionDefault": "查看作品集",
+      "continue": "继续设计",
+      "priceNote": "设计和预览免费。下载 PNG 和 SVG 每个二维码一次性收费 <b>{price}</b>。",
+      "seePricing": "查看价格",
+      "stageTitle": "{type} · 实时预览",
+      "scans": "可扫描",
+      "livePreview": "实时预览",
+      "realCode": "真实可扫描的二维码",
+      "previewLabel": "你的二维码预览",
+      "otherType": "你的草稿是{type}二维码。点击“继续设计”将在编辑器中打开。",
+      "stageCard": "名片 · 90 mm × 50 mm"
+    },
+    "how": {
+      "label": "使用方式",
+      "content": {
+        "title": "添加内容",
+        "text": "链接、文本、Wi-Fi 信息或联系人名片。"
+      },
+      "design": {
+        "title": "进行设计",
+        "text": "版式、尺寸、形状、颜色、Logo 和文字说明，并实时检查能否扫描。"
+      },
+      "download": {
+        "title": "付款并下载",
+        "text": "使用 Google 登录，一次付款，随时重新下载 PNG 或 SVG。"
+      }
+    },
+    "models": {
+      "title": "印刷后你会更改链接吗？",
+      "lead": "这一个问题决定你需要哪种二维码。",
+      "static": {
+        "badge": "不会 · 静态二维码",
+        "text": "链接直接编码在图案中。每个二维码一次性付款 <b>{price}</b>。"
+      },
+      "dynamic": {
+        "badge": "会 · 动态二维码",
+        "text": "二维码包含一个永久短链接，可随时更改跳转地址。<b>{price}</b>/月，最多 {limit} 个二维码。"
+      }
+    },
+    "examples": {
+      "kicker": "示例",
+      "title": "专为印刷和屏幕打造",
+      "lead": "从一个真实可扫描的版式开始，打造属于你的二维码。每个示例都会连同颜色、形状和边框一起在编辑器中打开。",
+      "hint": "滚动查看更多",
+      "use": "从“{title}”示例开始",
+      "useShort": "使用",
+      "items": {
+        "businessCard": {
+          "title": "名片",
+          "kind": "网站 · 静态"
+        },
+        "tableTent": {
+          "title": "咖啡馆桌牌",
+          "kind": "Wi-Fi · 静态"
+        },
+        "menuSticker": {
+          "title": "菜单贴纸",
+          "kind": "网站 · 动态"
+        },
+        "eventPoster": {
+          "title": "活动海报",
+          "kind": "网站 · 动态"
+        },
+        "contactBadge": {
+          "title": "联系人胸牌",
+          "kind": "联系人 · 静态"
+        },
+        "windowSticker": {
+          "title": "橱窗贴纸",
+          "kind": "网站 · 静态"
+        }
+      }
+    },
+    "features": {
+      "kicker": "为什么选择 HeyQR",
+      "title": "印刷二维码所需的一切",
+      "lead": "不打扰你的设计工具，以及在你付款前检查作品的扫描器。",
+      "scan": {
+        "title": "每次编辑都检查能否扫描",
+        "text": "我们像手机相机一样读取你的二维码，并准确告诉你需要修正什么：对比度过低、颜色反转或 Logo 遮挡过多。"
+      },
+      "style": {
+        "title": "你的形状和颜色",
+        "text": "八种码点形状、五种定位角样式，颜色随你选择，同时确保对比度达标。"
+      },
+      "logo": {
+        "title": "中心的 Logo 或图标",
+        "text": "上传你的 Logo，或从 {icons} 个图标中选择。我们会调整其大小，确保二维码仍可识别。"
+      },
+      "frames": {
+        "title": "边框和文字说明",
+        "text": "{frames} 种边框，可添加“扫码查看菜单”等行动号召，或直接在二维码内放入简短文字。"
+      },
+      "files": {
+        "title": "可直接印刷的文件",
+        "text": "实际尺寸的矢量 SVG 和清晰 PNG：名片、海报、桌牌和贴纸。"
+      },
+      "dynamic": {
+        "title": "印刷后仍可更改",
+        "text": "动态二维码指向一个可随时更改跳转地址的短链接，并提供每日扫描次数。"
+      }
+    },
+    "types": {
+      "kicker": "九种内容类型",
+      "title": "一个工作室，满足各类二维码",
+      "lead": "选择二维码要打开的内容。表单只会询问该类型所需的信息。",
+      "website": {
+        "label": "网站",
+        "desc": "打开网页、作品集或菜单。"
+      },
+      "text": {
+        "label": "文本",
+        "desc": "显示备注、营业时间或说明。"
+      },
+      "wifi": {
+        "label": "Wi-Fi",
+        "desc": "访客无需输入即可连接你的网络。"
+      },
+      "contact": {
+        "label": "联系人名片",
+        "desc": "一键保存姓名、电话和电子邮件。"
+      },
+      "email": {
+        "label": "电子邮件",
+        "desc": "打开一封可直接发送的邮件。"
+      },
+      "phone": {
+        "label": "拨打电话",
+        "desc": "一键拨打号码。"
+      },
+      "sms": {
+        "label": "短信",
+        "desc": "用你预设的文字开始一条短信。"
+      },
+      "location": {
+        "label": "位置",
+        "desc": "在地图应用中打开地点。"
+      },
+      "event": {
+        "label": "活动",
+        "desc": "将活动添加到日历。"
+      },
+      "menu": {
+        "label": "菜单",
+        "desc": "在适合手机浏览的页面上展示菜品、分类和价格。"
+      },
+      "coupon": {
+        "label": "优惠券",
+        "desc": "带优惠码和截止日期的折扣。"
+      },
+      "social": {
+        "label": "社交链接",
+        "desc": "在一个页面上展示你的个人主页和链接。"
+      },
+      "business": {
+        "label": "商家",
+        "desc": "营业时间、地址、电话和路线。"
+      },
+      "apps": {
+        "label": "应用",
+        "desc": "一个二维码同时对应 App Store 和 Google Play。"
+      },
+      "pdf": {
+        "label": "PDF 文档",
+        "desc": "上传可在任何手机上打开的 PDF。"
+      },
+      "product": {
+        "label": "产品",
+        "desc": "照片、价格和购买按钮。"
+      }
+    },
+    "faq": {
+      "kicker": "常见问题",
+      "title": "须知",
+      "lead": "关于付款、文件和扫描的简短解答。",
+      "items": {
+        "model": {
+          "q": "静态还是动态：我需要哪一种？",
+          "a": "静态二维码的内容直接编码在图案中，一次付款 {static} 即可永久使用。动态二维码包含一个短链接，印刷后仍可指向其他地址，{dynamic}/月，最多 {limit} 个二维码。"
+        },
+        "scan": {
+          "q": "加了 Logo 和颜色后，二维码还能扫描吗？",
+          "a": "设计过程中每次修改都会检查。如果对比度过低、颜色反转或 Logo 遮挡过多，我们会提示你，并在付款前提供一键修复。"
+        },
+        "account": {
+          "q": "设计需要账户吗？",
+          "a": "不需要。设计和预览都是免费的。只有下载时才需使用 Google 登录，你的设计会随之保留。"
+        },
+        "files": {
+          "q": "我会得到哪些文件？",
+          "a": "你购买的二维码的每种版式都包含：适用于屏幕和打印机的清晰 PNG，以及适用于印刷厂的矢量 SVG。"
+        },
+        "again": {
+          "q": "以后可以重新下载文件吗？",
+          "a": "可以。你的二维码保存在“我的二维码”中，可以免费以任意格式重新下载。"
+        }
+      }
+    },
+    "cta": {
+      "label": "立即开始",
+      "title": "制作第一个二维码只需约一分钟。",
+      "lead": "免费设计，下载时才需支付 {price}。",
+      "pricing": "查看价格"
+    },
+    "studio": {
+      "kicker": "你的工作室",
+      "welcome": "欢迎回来，{name}",
+      "summaryTop": "{name} 今天被扫描了 {count, plural, other {# 次}}。你制作的一切都触手可及。",
+      "summary": "你制作的一切都触手可及：文件、链接和扫描数据。",
+      "summaryEmpty": "制作你的第一个二维码，它会连同文件和扫描数据显示在这里。",
+      "billing": "套餐与账单",
+      "library": "打开我的二维码",
+      "kpi": {
+        "codes": "二维码",
+        "codesNote": "{paid} 个已付款 · {drafts, plural, other {# 个草稿}}",
+        "scans": "扫描 · 14 天",
+        "scansNone": "暂无扫描",
+        "scansDelta": "较上周 {delta, number, ::sign-always percent}",
+        "dynamic": "动态二维码",
+        "dynamicNote": "你的套餐还剩 {left, plural, other {# 个名额}}",
+        "dynamicMeter": "使用中的动态二维码",
+        "files": "可下载文件",
+        "filesNote": "{count, plural, other {个版式}}可下载为 PNG 或 SVG"
+      },
+      "chart": {
+        "title": "扫描 · 最近 14 天",
+        "sub": "所有动态二维码合计",
+        "empty": "动态二维码的扫描数据将显示在这里。",
+        "today": "今天",
+        "label": "最近 14 天所有动态二维码的每日扫描次数"
+      },
+      "top": "最热门的二维码",
+      "topNote": "14 天内 {count, plural, other {# 次扫描}} · {link}",
+      "topNone": "还没有动态二维码",
+      "topNoneNote": "动态二维码会统计每一次扫描。",
+      "recent": "最近的二维码",
+      "seeAll": "查看全部 {count} 个",
+      "recentEmpty": "你的二维码将连同文件和扫描数据显示在这里。",
+      "createFirst": "创建你的第一个二维码",
+      "open": "打开",
+      "openName": "打开 {name}",
+      "status": {
+        "dynamic": "动态 · 生效中",
+        "paid": "已付款",
+        "draft": "草稿"
+      },
+      "metricScans": "{count, plural, other {# 次扫描}}",
+      "metricLayouts": "{count, plural, other {# 个版式}}",
+      "metricFinish": "完成后即可下载",
+      "perksTitle": "账户包含的权益",
+      "perks": {
+        "again": "所有已付款的版式均可免费重新下载为 PNG 或 SVG",
+        "redirect": "无需重新印刷即可让动态二维码指向新地址",
+        "scans": "每个动态二维码的每日扫描次数",
+        "drafts": "草稿保存到你的账户，所有设备均可访问",
+        "billing": "在“套餐与账单”中查看收据、套餐和付款方式"
+      },
+      "loading": "正在加载你的工作室",
+      "trial": "免费试用 · 剩余 {days, plural, other {# 天}}"
+    },
+    "workspace": {
+      "kicker": "我的二维码",
+      "title": "所有二维码，集中一处。",
+      "lead": "登录后即拥有你的私人工作区。你设计的每个二维码都会保留其版式和文件；动态二维码还会保留扫描数据。",
+      "points": {
+        "layouts": "每个二维码可有多个命名版式：名片、海报、网站",
+        "files": "随时重新下载 PNG 和 SVG",
+        "edit": "印刷后更改动态二维码的目标链接",
+        "scans": "动态二维码的每日扫描次数"
+      },
+      "create": "创建二维码",
+      "signIn": "登录",
+      "sampleOwner": "示例工作区",
+      "sampleBadge": "示例",
+      "sampleNote": "示例二维码和扫描数据仅供展示。登录即可查看你自己的数据。",
+      "tabs": {
+        "all": "全部 {count}",
+        "static": "静态 {count}",
+        "dynamic": "动态 {count}"
+      },
+      "models": {
+        "static": "静态",
+        "dynamic": "动态"
+      },
+      "samples": {
+        "portfolio": {
+          "name": "作品集名片",
+          "meta": "3 个版式 · 已购买"
+        },
+        "menu": {
+          "name": "咖啡馆菜单",
+          "meta": "桌牌 · 214 次扫描"
+        },
+        "wifi": {
+          "name": "访客 Wi-Fi",
+          "meta": "草稿"
+        }
+      },
+      "scans": "扫描统计 · 最近 14 天",
+      "startTrial": "开始 7 天免费试用",
+      "trialNote": "Starter 试用 · 无需银行卡 · 不会自动扣费"
+    },
+    "printPack": {
+      "kicker": "Print Pack",
+      "title": "从屏幕到印刷厂。",
+      "lead": "为任意二维码添加 Print Pack，一次下载即可为印刷商提供所需的一切：精确尺寸、正确颜色，以及始终清晰的文件。",
+      "cardTag": "名片 · 90 × 50 mm",
+      "labelTag": "包装标签 · 50 × 62 mm",
+      "cardLabel": "名片印刷版式",
+      "labelLabel": "包装标签印刷版式",
+      "panelKicker": "导出 · Print Pack",
+      "panelTitle": "三个文件，可直接印刷",
+      "perQr": "每个二维码",
+      "files": {
+        "pdf": "矢量印刷 PDF",
+        "pdfSub": "任意尺寸都清晰，含 3 mm 出血和裁切标记，sRGB 色彩。",
+        "svg": "可编辑 SVG",
+        "svgSub": "在 Illustrator、Figma 或 Inkscape 中打开，将二维码放入你自己的设计稿。",
+        "spec": "颜色和尺寸规格",
+        "specSub": "一页说明成品尺寸、二维码尺寸、静区和所有颜色值。"
+      },
+      "addNote": "默认关闭，可在结账时开启。加购 +{price}，或稍后在二维码详情中添加。",
+      "single": "单个二维码",
+      "withPack": "含 Print Pack",
+      "details": "查看 Print Pack 详情",
+      "preview": "打开印刷预览"
+    },
+    "explore": {
+      "kicker": "探索二维码类型",
+      "title": "一个工作室，满足各类二维码",
+      "lead": "选择一种类型，看看用户扫码后在手机上会看到什么。",
+      "tabs": "二维码类型",
+      "legend": "托管页面：HeyQR 保持页面在线，印刷后你仍可编辑",
+      "hostedBadge": "托管页面 · 动态二维码",
+      "websiteBadge": "静态或动态二维码",
+      "directBadge": "直接打开 · 静态二维码",
+      "hostedExtra": "印刷后可编辑页面，二维码保持不变",
+      "directExtra": "免费设计和预览",
+      "hostedPrice": "托管页面需要动态套餐：Starter {price}/月，7 天免费试用。",
+      "directPrice": "免费设计。下载时每个二维码 {price}。",
+      "whatYouGet": "包含内容",
+      "allTypes": "查看全部 16 种类型",
+      "types": {
+        "menu": {
+          "short": "菜品和价格",
+          "use": "把整份菜单放到桌上。顾客扫码后按分类浏览并查看价格，无需等待纸质菜单。",
+          "cta": "创建菜单二维码",
+          "points": {
+            "a": "分类、菜品、价格和可选照片",
+            "b": "随时修改价格，已印刷的二维码照常使用"
+          }
+        },
+        "coupon": {
+          "short": "顾客可领取的折扣",
+          "use": "让扫码变成成交：顾客可在结账时复制优惠码，或在柜台出示。",
+          "cta": "创建优惠券二维码",
+          "points": {
+            "a": "优惠码、截止日期和条款",
+            "b": "过期后显示清晰的“活动已结束”页面"
+          }
+        },
+        "social": {
+          "short": "你的所有主页",
+          "use": "一个二维码汇集你分享的所有主页：作品集、社交账号等，按你选择的顺序排列。",
+          "cta": "创建社交链接二维码",
+          "points": {
+            "a": "照片、姓名和简短介绍",
+            "b": "随时调整链接顺序"
+          }
+        },
+        "business": {
+          "short": "营业时间、电话、路线",
+          "use": "访客联系你所需的一切：营业时间、拨号按钮、路线和你的网站。",
+          "cta": "创建商家二维码",
+          "points": {
+            "a": "添加相应信息后，会显示“拨打电话”“路线”和“网站”",
+            "b": "显示你今天是否营业"
+          }
+        },
+        "apps": {
+          "short": "两大应用商店",
+          "use": "同一个印刷二维码，让 iPhone 前往 App Store，让 Android 手机前往 Google Play。",
+          "cta": "创建应用二维码",
+          "points": {
+            "a": "支持一个或两个应用商店",
+            "b": "电脑上会显示包含两个链接和可扫描二维码的页面"
+          }
+        },
+        "pdf": {
+          "short": "分享文档",
+          "use": "宣传册、日程表或使用手册：上传 PDF，用户在手机上一键即可打开。",
+          "cta": "创建 PDF 二维码",
+          "points": {
+            "a": "以后可替换文件，无需重新印刷",
+            "b": "“打开 PDF”和“下载”按钮"
+          }
+        },
+        "product": {
+          "short": "产品页面",
+          "use": "直接从包装或货架展示产品的照片、价格和购买按钮。",
+          "cta": "创建产品二维码",
+          "points": {
+            "a": "最多 5 张照片，价格可选",
+            "b": "按钮文字可选：立即购买、查看产品或立即订购"
+          }
+        },
+        "website": {
+          "short": "打开网页",
+          "use": "将用户引导至任意页面：你的作品集、店铺或预订表单。",
+          "cta": "创建网站二维码",
+          "points": {
+            "a": "静态，或在链接可能变化时选择动态",
+            "b": "设计时实时检查能否扫描"
+          }
+        },
+        "wifi": {
+          "short": "连接 Wi-Fi",
+          "use": "访客用相机对准即可连接你的网络，无需逐字念出密码。",
+          "cta": "创建 Wi-Fi 二维码",
+          "points": {
+            "a": "支持 WPA、WEP 或开放网络",
+            "b": "离线可用：信息就在二维码中"
+          }
+        },
+        "contact": {
+          "short": "保存联系人",
+          "use": "一张名片，直接将你的姓名、电话和电子邮件保存到对方的通讯录。",
+          "cta": "创建联系人二维码",
+          "points": {
+            "a": "适用于 iPhone 和 Android",
+            "b": "无需安装应用"
+          }
+        }
+      }
+    }
+  },
+  "pricing": {
+    "title": "价格",
+    "head": "单个二维码一次性付费，或按月付费使用可修改的二维码。",
+    "lead": "设计、预览和扫描检查始终免费。下载时才需付款。",
+    "currency": {
+      "label": "价格显示货币",
+      "unavailable": "暂不支持以 {chosen} 显示价格。HeyQR 以 {charged} 收费，由你的银行换算金额。收据显示你实际支付的 {charged} 金额。"
+    },
+    "once": {
+      "title": "一次性",
+      "sub": "无需订阅。已解锁的二维码永久归你所有。"
+    },
+    "monthly": {
+      "title": "按月",
+      "sub": "适用于印刷后仍可修改的动态二维码。可随时取消。"
+    },
+    "free": {
+      "name": "免费",
+      "price": "{price}",
+      "q": "先设计并测试二维码，无需任何花费。",
+      "points": ["所有版式、形状、颜色、Logo 和文字说明", "每次修改都实时检查能否扫描", "草稿保存在此浏览器中"],
+      "cta": "开始设计"
+    },
+    "single": {
+      "name": "单个二维码",
+      "price": "{price}",
+      "per": "一次性",
+      "q": "一个静态二维码，包含全部下载文件。",
+      "points": ["每种版式的 PNG 和 SVG 文件", "以毫米计的印刷尺寸和以像素计的屏幕尺寸", "随时可重新下载，永久有效"],
+      "cta": "创建二维码"
+    },
+    "dynamic": {
+      "name": "动态",
+      "price": "{price}",
+      "per": "每月",
+      "q": "一个永久短链接，可随时指向任意地址，印刷后也可以。",
+      "live": "生效中的动态二维码",
+      "liveCount": "最多同时 {limit} 个生效",
+      "liveHint": "这是实时数量，不是每月额度：暂停或删除二维码即可释放名额。",
+      "points": ["随时更改目标链接，已印刷的二维码保持不变", "最近 14 天的每日扫描数据", "每种版式的 PNG 和 SVG 文件"],
+      "cta": "创建动态二维码"
+    },
+    "compare": {
+      "title": "对比",
+      "feature": "包含内容",
+      "free": "免费",
+      "single": "单个二维码",
+      "dynamic": "动态",
+      "yes": "包含",
+      "no": "不包含",
+      "rows": {
+        "design": "设计、预览和扫描检查",
+        "download": "PNG 和 SVG 下载",
+        "repeat": "重复下载",
+        "change": "更改二维码的目标链接",
+        "analytics": "扫描统计",
+        "codes": "二维码数量"
+      },
+      "codesSingle": "每次购买 1 个",
+      "codesDynamic": "{limit} 个生效中",
+      "codesFree": "草稿数量不限"
+    },
+    "tax": "价格不含税。Stripe 会在结账时加上相应税费，收据会显示最终金额。",
+    "trial": {
+      "action": "开始 7 天免费试用",
+      "note": "试用：无需银行卡，不会自动扣费。包含一个带真实短链接的测试动态二维码。"
+    }
+  },
+  "auth": {
+    "title": "登录 Hey QR",
+    "lead": "你的设计会保存到账户中，付款后即可下载。",
+    "google": "使用 Google 继续",
+    "legal": "继续即表示你同意《条款》和《隐私政策》。",
+    "failed": "登录失败，请重试。",
+    "canceled": {
+      "draft": "Google 登录已取消。你的设计仍保存在此浏览器中。点击“使用 Google 继续”重试。",
+      "plain": "Google 登录已取消。点击“使用 Google 继续”重试。"
+    },
+    "incomplete": {
+      "draft": "Google 登录未完成。你的设计仍保存在此浏览器中。点击“使用 Google 继续”重试。",
+      "plain": "Google 登录未完成。点击“使用 Google 继续”重试。"
+    },
+    "backToDesign": "返回我的设计"
+  },
+  "contentTypes": {
+    "website": "网站",
+    "text": "文本",
+    "wifi": "Wi-Fi",
+    "contact": "联系人",
+    "email": "电子邮件",
+    "phone": "电话",
+    "sms": "短信",
+    "location": "位置",
+    "event": "活动",
+    "menu": "菜单",
+    "coupon": "优惠券",
+    "social": "社交链接",
+    "business": "商家",
+    "apps": "应用",
+    "pdf": "PDF 文档",
+    "product": "产品"
+  },
+  "fields": {
+    "url": "网址",
+    "text": "文本",
+    "ssid": "网络名称",
+    "security": "安全性",
+    "password": "密码",
+    "hidden": "这是隐藏网络",
+    "firstName": "名",
+    "lastName": "姓",
+    "title": "职位",
+    "company": "公司",
+    "phone": "电话",
+    "email": "电子邮件",
+    "website": "网站",
+    "to": "电子邮件地址",
+    "subject": "主题",
+    "body": "正文",
+    "number": "电话号码",
+    "message": "消息",
+    "name": "地点名称",
+    "address": "地址",
+    "eventTitle": "活动名称",
+    "start": "开始",
+    "end": "结束",
+    "place": "地点",
+    "securityNone": "无密码",
+    "securityWpa": "WPA/WPA2/WPA3",
+    "date": "日期"
+  },
+  "editor": {
+    "openLibrary": "打开我的二维码",
+    "title": "创建二维码",
+    "steps": {
+      "content": "内容",
+      "design": "设计",
+      "frame": "边框",
+      "type": "类型"
+    },
+    "type": "扫码后要打开什么？",
+    "model": {
+      "label": "二维码类型",
+      "static": "静态",
+      "staticHint": "一次付费，永久有效",
+      "dynamic": "动态",
+      "dynamicHint": "印刷后仍可更改链接"
+    },
+    "name": "名称（仅你可见）",
+    "namePlaceholder": "作品集名片",
+    "pattern": "码点",
+    "eyeFrame": "定位角外框",
+    "eyeBall": "定位角中心",
+    "colors": "颜色",
+    "fg": "码点",
+    "bg": "背景",
+    "logo": "中心",
+    "logoNone": "无",
+    "logoUpload": "上传 Logo",
+    "logoSize": "Logo 大小",
+    "layout": "版式",
+    "presets": {
+      "qr": "仅二维码",
+      "caption": "二维码 + 文字说明",
+      "vertical": "竖版卡片",
+      "horizontal": "横版卡片",
+      "frame": "边框"
+    },
+    "frameStyle": "边框样式",
+    "caption": "文字说明",
+    "captionPlaceholder": "扫我",
+    "preview": "预览",
+    "previewNote": "带水印的预览。付款后生成全尺寸文件。",
+    "download": "下载",
+    "saving": "正在保存…",
+    "draftRestored": "已恢复你上次的设计。",
+    "scanOk": "扫描验证通过",
+    "scanFix": "修复",
+    "shapes": {
+      "square": "方形",
+      "rounded": "圆角",
+      "dot": "圆点",
+      "diamond": "菱形",
+      "leaf": "叶形",
+      "fluid": "流体",
+      "vbars": "竖条",
+      "hbars": "横条",
+      "cushion": "柔和",
+      "circle": "圆形"
+    },
+    "frames": {
+      "bar": "底部标签",
+      "tab": "顶部标签",
+      "bubble": "对话气泡",
+      "pill": "胶囊标签",
+      "corners": "取景框",
+      "circle": "徽章",
+      "ticket": "票券",
+      "phone": "手机"
+    },
+    "icons": {
+      "globe": "网站",
+      "link": "链接",
+      "wifi": "Wi-Fi",
+      "phone": "电话",
+      "mail": "邮件",
+      "message": "消息",
+      "pin": "位置",
+      "calendar": "日历",
+      "clock": "营业时间",
+      "user": "个人",
+      "users": "团队",
+      "briefcase": "工作",
+      "home": "主页",
+      "bag": "商店",
+      "cart": "购物车",
+      "coffee": "咖啡",
+      "utensils": "菜单",
+      "wine": "酒吧",
+      "music": "音乐",
+      "play": "视频",
+      "camera": "照片",
+      "image": "相册",
+      "heart": "喜欢",
+      "star": "评价",
+      "gift": "礼物",
+      "ticket": "门票",
+      "tag": "价格",
+      "percent": "折扣",
+      "card": "支付",
+      "download": "下载",
+      "file": "文档",
+      "book": "指南",
+      "leaf": "环保",
+      "sun": "户外",
+      "bike": "骑行",
+      "plane": "旅行",
+      "at": "社交",
+      "smile": "反馈"
+    },
+    "back": "首页",
+    "stepsLabel": "创建二维码",
+    "settings": "设计设置",
+    "scanFailed": "可能无法扫描",
+    "priceOnce": "一次性 {price}",
+    "pricePerMonth": "{price} / 月",
+    "previewFree": "免费预览 · 下载时付款",
+    "draftUnreadable": "无法打开你上次的设计，已为你重新开始。原设计仍保存在此浏览器中。",
+    "mode": {
+      "question": "印刷后链接是否需要更改？",
+      "lead": "请现在决定：已印刷的静态二维码之后无法改为指向其他地方。",
+      "static": {
+        "eyebrow": "不，保持不变",
+        "title": "静态二维码",
+        "text": "内容直接编入码图中，更改内容就需要新的二维码。一次付费：{price}。"
+      },
+      "dynamic": {
+        "eyebrow": "是，我可能会更改",
+        "title": "动态二维码",
+        "text": "二维码包含一个永久短链接。可随时更改目标链接，并查看每日扫描量。{price}/月。"
+      },
+      "unavailable": "{type}二维码始终是静态的：内容直接编入码图中。动态二维码仅适用于网站链接。",
+      "switched": "{type}二维码是静态的，因此此二维码已改为静态。动态二维码仅适用于网站链接。",
+      "adjusted": "你的草稿原为动态，但只有网站链接可以是动态的，因此现已改为静态。你的内容和设计保持不变。"
+    },
+    "backTo": {
+      "home": "首页",
+      "type": "类型",
+      "content": "内容"
+    },
+    "continue": "继续",
+    "export": "导出",
+    "previewFrom": "免费预览 · 下载 {price} 起",
+    "optional": "可选",
+    "frameGroup": {
+      "title": "二维码边框",
+      "count": "{count} 个选项",
+      "none": "无边框",
+      "text": "边框文字",
+      "textHint": "文字会自动调整大小以适应边框。字体和字重在“文字说明”中设置。",
+      "quick": "快捷文字",
+      "phrases": {
+        "scanMe": "扫我",
+        "callMe": "给我打电话",
+        "menu": "菜单",
+        "wifi": "Wi-Fi",
+        "payHere": "在此付款",
+        "reviewUs": "给我们评价",
+        "followUs": "关注我们",
+        "bookNow": "立即预订"
+      },
+      "color": "边框颜色",
+      "textColor": "文字颜色",
+      "presets": "颜色预设",
+      "presetsHint": "边框 · 二维码 · 背景",
+      "preset": "边框 {frame}，二维码 {code}，背景 {bg}",
+      "white": "白色",
+      "graphite": "石墨色",
+      "violetUi": "紫罗兰色"
+    },
+    "typeStep": {
+      "title": "你的二维码要打开什么？",
+      "lead": "所有功能均可免费试用。只有下载最终文件时才需付款。",
+      "groupLabel": "二维码类型",
+      "example": "例如：{example}",
+      "next": "下一步：添加内容",
+      "examples": {
+        "website": "anareyes.studio/portfolio",
+        "text": "“请按两次门铃”",
+        "wifi": "Reyes Studio Guest",
+        "contact": "Ana Reyes · 设计师",
+        "email": "hello@reyes.studio",
+        "phone": "+1 415 555 0142",
+        "sms": "“确认出席”",
+        "location": "21 Pier St, San Francisco",
+        "event": "春季展览 · 12 月 5 日",
+        "menu": "Little Fern Café 菜单",
+        "coupon": "陶艺课 8 折",
+        "social": "@ana.makes、作品集、YouTube",
+        "business": "Reyes Ceramics Studio",
+        "apps": "Fern Rewards 应用",
+        "pdf": "春季课程表",
+        "product": "斑点粗陶马克杯"
+      },
+      "directGroup": "扫码直接打开",
+      "directGroupLabel": "直接打开的二维码类型",
+      "hostedGroup": "托管页面",
+      "hostedNew": "新",
+      "hostedLead": "HeyQR 会为这些类型托管一个移动端页面，二维码中包含一个动态短链接，因此印刷后仍可编辑页面。这些类型需要动态套餐：Starter 每月 {starter} 或 Studio 每月 {studio}，均含 7 天免费试用。",
+      "hostedSummary": "{type} · 托管页面 · 动态"
+    },
+    "contentStep": {
+      "titles": {
+        "website": "要打开哪个页面？",
+        "text": "希望大家看到什么内容？",
+        "wifi": "访客要连接哪个网络？",
+        "contact": "要让大家保存谁的联系方式？",
+        "email": "邮件要发给谁？",
+        "phone": "要拨打哪个号码？",
+        "sms": "短信发给谁？",
+        "location": "要打开哪个地点？",
+        "event": "是什么活动？",
+        "menu": "菜单上有什么？",
+        "coupon": "是什么优惠？",
+        "social": "希望大家找到哪些链接？",
+        "business": "大家如何联系你？",
+        "apps": "在哪里可以获取你的应用？",
+        "pdf": "要打开哪个文档？",
+        "product": "你要展示哪个产品？"
+      },
+      "subs": {
+        "website": "粘贴完整网址。你会看到大家扫码后看到的内容。",
+        "text": "扫码后，纯文本会立即显示在手机上。",
+        "wifi": "扫码后手机即可连接网络，无需输入。",
+        "contact": "扫码后，手机会提示保存此联系人。",
+        "email": "扫码后会打开一封新邮件，已填好收件地址、主题和正文。",
+        "phone": "扫码后会提示拨打该号码，无需输入。",
+        "sms": "扫码后会打开一条短信，可直接发送。",
+        "location": "扫码后会在手机的地图应用中打开该地点。",
+        "event": "扫码后会提示将活动添加到日历。",
+        "menu": "添加分类和菜品。顾客扫码后会看到适合手机浏览的菜单。",
+        "coupon": "大家可以看到折扣，复制优惠码并在截止前兑换。",
+        "social": "一个页面展示你的照片、简短介绍和链接，按你设定的顺序排列。",
+        "business": "添加相应信息后，会显示拨打电话、导航和访问网站的按钮。",
+        "apps": "手机会直接跳转到对应的应用商店。其他设备会看到两个链接。",
+        "pdf": "上传 PDF。大家点一下即可打开或下载。",
+        "product": "照片、价格，以及一个清晰的购买或了解详情按钮。"
+      },
+      "nameLabel": "在“我的二维码”中的名称",
+      "stepOf": "第 2 步，共 3 步",
+      "kept": "返回上一步时，你填写的内容会保留。",
+      "continue": "继续设计",
+      "errorsOne": "请修正标出的字段以继续。其他内容均已保存。",
+      "errorsMany": "请修正 {count} 个标出的字段以继续。其他内容均已保存。",
+      "back": "返回",
+      "urlHint": "此网址会直接编入二维码。如需让已印刷的二维码日后指向其他地方，请在上一步选择动态。",
+      "urlHintDynamic": "你的二维码将包含一个永久短链接。这里是它的目标链接，印刷后也可以更改。",
+      "nameHint": "只有你能看到此名称。",
+      "namePlaceholderType": "{type}二维码"
+    },
+    "errors": {
+      "urlEmpty": "请输入网址，例如 yourname.com。",
+      "urlSpaces": "网址不能包含空格。",
+      "urlInvalid": "请检查网址。网址需要包含域名，例如 yourname.com。",
+      "text": "请输入大家扫码后应看到的文字。",
+      "ssid": "请输入与手机上显示完全一致的网络名称。",
+      "password": "请输入 Wi-Fi 密码，或选择“无密码”。",
+      "passwordShort": "WPA 密码至少需要 8 个字符。",
+      "contactName": "请至少填写名字或姓氏。",
+      "phone": "请使用数字和空格，国家代码前可加 +。",
+      "email": "请检查邮箱地址。地址需要包含用户名、@ 和域名，例如 ana@studio.com。",
+      "emailTo": "请输入邮件的收件地址。",
+      "emailInvalid": "请检查邮箱地址。地址需要包含用户名、@ 和域名。",
+      "phoneNumber": "请输入带国家代码的电话号码，例如 +1 415 555 0142。",
+      "smsTo": "请输入接收短信的号码。",
+      "address": "请输入地图应用要打开的地址。",
+      "eventTitle": "请为活动命名。",
+      "eventStart": "请选择日期。"
+    },
+    "afterScanning": {
+      "label": "扫码后",
+      "toggleHint": "查看大家在手机上看到的内容",
+      "caption": "大家扫码后看到的内容",
+      "websitePlaceholder": "你的网页",
+      "dynamicNote": "先打开你的短链接，再跳转到这里。",
+      "textPlaceholder": "你的文字会显示在这里。",
+      "wifiPlaceholder": "要连接此网络吗？",
+      "security": "安全性",
+      "open": "开放网络",
+      "password": "密码",
+      "join": "连接网络",
+      "contactPlaceholder": "新联系人",
+      "phone": "电话",
+      "email": "邮箱",
+      "company": "公司",
+      "save": "添加到通讯录",
+      "emailPlaceholder": "新邮件",
+      "subject": "主题",
+      "compose": "写邮件",
+      "phonePlaceholder": "电话号码",
+      "call": "拨打",
+      "message": "消息",
+      "text": "发送短信",
+      "locationPlaceholder": "某个地点",
+      "address": "地址",
+      "openMaps": "在地图中打开",
+      "eventPlaceholder": "新活动",
+      "place": "地点",
+      "addToCalendar": "添加到日历",
+      "wifiKicker": "连接 Wi-Fi 网络",
+      "website": "网站",
+      "textKicker": "扫描到的文字",
+      "loading": "正在加载预览",
+      "date": "日期",
+      "addEvent": "添加活动"
+    },
+    "passwordShow": "显示",
+    "passwordHide": "隐藏",
+    "wifiPasswordHint": "预览中会隐藏密码。密码保存在二维码本身中，任何扫码的人都可以连接。",
+    "tooLong": {
+      "title": "内容过长，无法生成二维码",
+      "text": "内容约超出二维码容量的 {over}%。缩短内容后，二维码会立即恢复。你输入的内容不会丢失。",
+      "centerHint": "二维码中间的 Logo 或文字说明会降低容量上限。移除它们也能腾出空间。",
+      "detail": "{bytes} / {max} 字节",
+      "edit": "编辑内容",
+      "badge": "过长",
+      "preview": "未显示二维码：内容过长"
+    },
+    "eyeColor": "定位角外框",
+    "eyeInColor": "定位角中心",
+    "resetColors": "重置颜色",
+    "colorInvalid": "请使用 HEX 颜色，例如 #1F4D3A：# 加 6 个 0–9 或 A–F 字符。",
+    "size": {
+      "title": "尺寸",
+      "unitHint": "适用于屏幕、幻灯片和网页。1 个单位 = 1× 下的 1 像素。",
+      "qr": "二维码尺寸",
+      "qrSlider": "二维码尺寸滑块",
+      "clamped": "此二维码超出了版式范围：已按可容纳的最大尺寸 {shown} {unit} 绘制。请放大版式，或缩小二维码。",
+      "layout": "版式尺寸",
+      "width": "宽度",
+      "height": "高度",
+      "locked": "选择“仅二维码”和“边框”时，版式尺寸跟随二维码。选择“二维码 + 文字说明”或卡片即可单独设置尺寸。",
+      "presets": {
+        "square": "方形 1080",
+        "story": "快拍 1080×1920",
+        "slide": "幻灯片 1920×1080",
+        "card": "名片 90×50",
+        "a6": "A6 105×148",
+        "sticker": "贴纸 50×62"
+      },
+      "invalid": "请输入 {min} 到 {max} {unit} 之间的整数。",
+      "units": "单位",
+      "unitMm": "打印 · mm",
+      "unitPx": "屏幕 · px",
+      "unitHintMm": "用于打印。文件以 300、600 或 1200 dpi 导出。",
+      "invalidMm": "请输入 {min} 到 {max} mm 之间的数字，最多一位小数。",
+      "qrHint": "含静区",
+      "reach": "最远约可在 {cm} cm 外扫描（10 : 1 规则）。二维码越大，扫描距离越远。",
+      "viewNoteMm": "画布已缩放以适应屏幕。在画布上方选择<b>实际尺寸</b>即可按打印尺寸查看。导出：<b>PNG {width} × {height} px</b>。",
+      "viewNotePx": "画布已缩放以适应屏幕。在画布上方选择<b>实际尺寸</b>即可按 1× 查看。导出：<b>PNG {width} × {height} px</b>（2×）。"
+    },
+    "updatingPreview": "正在更新预览…",
+    "captionField": {
+      "label": "文字说明内容",
+      "hint": "按 Enter 键换行。留空则隐藏文字说明。",
+      "tooLong": "最多 {max} 个字符：请删除 {over, plural, other {# 个字符}}。预览会保留你上一次符合要求的文字说明。",
+      "tooManyLines": "最多 {max} 行。预览会保留你上一次符合要求的文字说明。",
+      "count": "{count} / {max} 个字符",
+      "unsupported": "{font} 无法显示 {chars}。请选择其他字体，或修改{count, plural, other {这些字符}}：否则文件中会将{count, plural, other {它们}}显示为空白方框。"
+    },
+    "captionFont": {
+      "title": "字体",
+      "hint": "用于二维码的字体。HeyQR 界面始终使用 DM Sans。",
+      "weight": "字重",
+      "weights": {
+        "400": "常规",
+        "500": "中等",
+        "700": "粗体"
+      },
+      "original": "DM Sans（原始）",
+      "originalHint": "此版式创建于更多字体推出之前。DM Sans 仅支持拉丁字母；如需西里尔字母，请选择其他字体。"
+    },
+    "captionSize": {
+      "label": "尺寸",
+      "invalid": "请输入 {min}–{max} {unit}，最多一位小数。预览会保留上一次有效的尺寸。",
+      "fitted": "已按 {size} {unit} 绘制，以便文字说明适应版式。"
+    },
+    "edit": {
+      "title": "编辑设计 · {layout}",
+      "back": "返回二维码",
+      "save": "保存更改",
+      "saved": "设计已保存",
+      "restored": "我们保留了你重新登录前未保存的更改。请保存以留住这些更改。",
+      "discardRestored": "放弃",
+      "unsaved": "有未保存的更改",
+      "retry": "重试",
+      "failed": "无法保存设计。你的更改仍在这里。",
+      "notFound": "此二维码或版式已不存在。",
+      "hint": "更改仅应用于此版式",
+      "note": "保存会更新此版式。内容、付款和链接保持不变。",
+      "layouts": "此二维码的版式",
+      "newLayout": "新版式",
+      "newName": "版式 {n}",
+      "added": "已基于当前版式创建“{name}”。其他版式保持不变。",
+      "addFailed": "无法添加版式。你的编辑仍在这里，请重试。",
+      "unsavedSwitch": "此版式有未保存的更改。",
+      "discardSwitch": "放弃并切换",
+      "layoutName": "版式名称",
+      "unsavedSwitchText": "要切换到“{name}”并放弃对此版式的更改吗？如需保留，请先保存。",
+      "keepEditing": "继续编辑",
+      "conflictTitle": "此版式已在其他地方保存",
+      "conflictText": "在你打开此版式后，另一个标签页或设备保存了它，因此你的更改未能保存。更改仍在这里：你可以将其另存为新版式，或重新加载已保存的版本（这样会放弃你在这里的更改）。",
+      "conflictNewLayout": "将我的更改另存为新版式",
+      "conflictReload": "重新加载已保存的版本"
+    },
+    "captionStyle": {
+      "align": "对齐",
+      "aligns": {
+        "left": "左对齐",
+        "center": "居中",
+        "right": "右对齐"
+      },
+      "color": "文字说明颜色",
+      "palette": "文字说明颜色预设",
+      "matchCode": "与二维码一致"
+    },
+    "logoFile": {
+      "hint": "支持 PNG、JPG、SVG 或 WebP，最大 {max} MB。选择文件或将其拖放到上传区域。",
+      "reading": "正在读取图片…",
+      "empty": "此文件为空。",
+      "tooLarge": "此文件超过了 {max} MB 的限制。",
+      "unsupported": "无论文件名如何，此文件都不是 PNG、JPG、SVG 或 WebP 图片。",
+      "unreadable": "无法打开此图片，文件可能已损坏。请重新导出后重试。",
+      "kept": "已保留你当前的 Logo。"
+    },
+    "logoPlate": {
+      "label": "底板",
+      "none": "无",
+      "square": "方形",
+      "circle": "圆形"
+    },
+    "logoSizeValue": "{size}% · 最大 {max}% 可扫描",
+    "logoSizeLegacy": "保存值为 {saved}%；按最大值 {max}% 绘制。移动滑块将保存范围内的尺寸。",
+    "groups": {
+      "label": "设计设置",
+      "layout": "版式",
+      "frame": "边框",
+      "size": "尺寸",
+      "pattern": "码点样式",
+      "colors": "颜色",
+      "logo": "Logo",
+      "caption": "文字说明",
+      "brand": "品牌"
+    },
+    "quickStyles": {
+      "title": "快捷样式",
+      "hint": "一键同时设置形状和颜色。撤销即可恢复之前的外观。",
+      "surprise": "随机惊喜",
+      "apply": "应用“{name}”样式",
+      "applied": "已应用“{name}”样式。撤销即可恢复之前的外观。",
+      "surprised": "换了新外观。撤销即可恢复之前的外观。",
+      "names": {
+        "classic": "经典",
+        "soft": "柔和",
+        "dots": "圆点",
+        "fluid": "流体",
+        "lines": "线条",
+        "gem": "宝石"
+      }
+    },
+    "layoutGroup": {
+      "title": "版式",
+      "hint": "元素位置会变，设置保持不变",
+      "border": "版式外框",
+      "borderCards": "卡片始终带有外框。"
+    },
+    "colorsGroup": {
+      "title": "要着色的部分",
+      "targets": "着色对象",
+      "resetAll": "全部重置",
+      "edited": "已修改",
+      "roles": {
+        "fg": "码点",
+        "eye": "定位角外框",
+        "eyeIn": "定位角中心",
+        "bg": "背景",
+        "frame": "边框",
+        "caption": "文字说明"
+      },
+      "editing": "{role}颜色",
+      "swatches": "色板",
+      "reset": "恢复默认",
+      "note": "这些颜色仅用于你的二维码。HeyQR 自身的按钮和菜单保持原有颜色。",
+      "frameHint": "边框、卡片边线以及版式外框。",
+      "captionHint": "二维码下方、上方或内部的文字说明。",
+      "picker": "{role}颜色选择器"
+    },
+    "logoGroup": {
+      "source": "Logo 来源",
+      "icons": "图标库",
+      "upload": "上传 Logo",
+      "count": "{count} 个矢量图标",
+      "search": "搜索图标",
+      "searchPlaceholder": "搜索图标：菜单、Wi-Fi、商店…",
+      "empty": "没有与“{query}”匹配的图标。",
+      "style": "图标样式",
+      "plate": "带底板",
+      "tile": "彩色方块",
+      "vectorNote": "图标在 SVG 和 PDF 中保持矢量格式，任何尺寸下都清晰锐利。图标使用定位角中心的颜色。",
+      "remove": "移除 Logo",
+      "backingHint": "底板会清除 Logo 后面的码点，让 Logo 清晰易辨。",
+      "position": "位置",
+      "positions": {
+        "center": "二维码中心",
+        "top": "卡片顶部"
+      },
+      "positionHint": "“卡片顶部”适用于竖版和横版卡片。",
+      "brandName": "Logo 旁的名称",
+      "brandNameHint": "可选。显示在二维码上方的 Logo 旁边。",
+      "uploadTitle": "上传你的 Logo",
+      "brandedUpload": "请先上传图片",
+      "imageSize": "图片尺寸"
+    },
+    "captionGroup": {
+      "position": "位置",
+      "positions": {
+        "below": "下方",
+        "above": "上方",
+        "inside": "二维码内"
+      },
+      "insideHint": "简短文字会放在二维码中间的底板上。如果遮挡过多，扫描检查会提示你缩短文字。",
+      "hiddenNote": "“{layout}”没有文字说明。选择“二维码 + 文字说明”或卡片即可显示。",
+      "frameNote": "边框文字在“边框”中设置。",
+      "toLayout": "使用“二维码 + 文字说明”",
+      "color": "文字说明颜色",
+      "insideShortened": "二维码内最多可容纳 {max} 个字符，因此显示为“{shown}”。请缩短文字说明，或将其放在二维码下方或上方。"
+    },
+    "stage": {
+      "history": "历史记录",
+      "undo": "撤销",
+      "redo": "重做",
+      "background": "画布背景",
+      "bg": {
+        "light": "浅色",
+        "dark": "深色",
+        "checker": "透明"
+      },
+      "scale": "预览缩放",
+      "fit": "适应",
+      "actual": "实际尺寸",
+      "dims": {
+        "layout": "版式",
+        "qr": "二维码",
+        "file": "文件"
+      },
+      "scaleLabel": "{pct}%",
+      "openFull": "打开全屏预览",
+      "fullTitle": "全屏预览",
+      "done": "完成",
+      "scaledToFit": "已缩放以适应"
+    },
+    "scanChecking": "正在检查扫描",
+    "darkenCorners": "加深定位角",
+    "textCount": "{count} / {max} 个字符。文字越短，二维码越简单、越容易扫描。",
+    "brand": {
+      "step1": "1 · 你的 Logo 或图片",
+      "step1Hint": "PNG、JPG、WebP 或 SVG",
+      "step1Ready": "可随时替换",
+      "drag": "将 Logo 拖到此处",
+      "dropNow": "松开即可上传",
+      "add": "添加你的 Logo 或图片",
+      "formats": "PNG、JPG、WebP 或 SVG，最大 10 MB。透明背景效果最佳。",
+      "choose": "选择图片",
+      "chooseMobile": "从照片或文件中选择",
+      "chooseLabel": "选择 Logo 图片",
+      "sample": "试用示例 Logo",
+      "error": "无法读取该文件。请尝试最大 10 MB 的 PNG、JPG、WebP 或 SVG 文件。",
+      "reading": "正在从图片中读取颜色…",
+      "preview": "已上传的图片",
+      "image": "你的图片",
+      "colorsFound": "{count, plural, other {找到 # 种颜色}}",
+      "replace": "替换图片",
+      "replaceLabel": "替换 Logo 图片",
+      "remove": "移除图片",
+      "step2": "2 · 图片中的颜色",
+      "step2Hint": "已应用到二维码",
+      "roles": "品牌颜色角色",
+      "role": {
+        "primary": "二维码颜色",
+        "bg": "背景",
+        "accent": "强调色"
+      },
+      "roleHint": {
+        "primary": "码点和定位角外框",
+        "bg": "二维码和卡片的背景",
+        "accent": "定位角中心和细节"
+      },
+      "fromImage": "来自你的图片",
+      "found": "在你的图片中找到的颜色",
+      "hexFor": "{role}的 HEX 值",
+      "reset": "重置",
+      "contrast": {
+        "ok": "二维码与背景对比度：{ratio}:1 · 清晰易读。最终以扫描检查结果为准。",
+        "warn": "二维码与背景对比度：{ratio}:1 · 可以识别，但对比度更高会更稳妥。",
+        "err": "二维码与背景对比度：{ratio}:1 · 过低，无法可靠扫描。"
+      },
+      "appColors": "这些颜色仅用于你的二维码。HeyQR 的按钮和菜单保持自身的颜色。",
+      "step3": "3 · 选择风格方向",
+      "step3Hint": "同一个二维码，三种外观",
+      "looks": "品牌外观",
+      "lookCards": {
+        "center": {
+          "title": "Logo 在二维码中",
+          "desc": "你的标志位于中间的底板上。"
+        },
+        "card": {
+          "title": "品牌卡片",
+          "desc": "Logo 和名称位于二维码上方，带边框。"
+        },
+        "art": {
+          "title": "艺术图案",
+          "desc": "你的图片融入码点和定位角。"
+        }
+      },
+      "step4": "4 · 微调",
+      "fine": {
+        "logo": "图片尺寸和底板",
+        "pattern": "码点和定位角",
+        "caption": "文字说明和字体",
+        "size": "尺寸"
+      },
+      "updating": "正在更新品牌设计…可继续编辑",
+      "readingCanvas": "正在读取你的图片…"
+    },
+    "designMode": {
+      "label": "设计模式",
+      "custom": "自定义设计",
+      "branded": "品牌设计",
+      "chooseTitle": "你想如何设计？",
+      "chooseLead": "两种方式都基于同一个二维码。你可以随时切换，内容不会丢失。",
+      "customTitle": "自定义设计",
+      "customText": "自行选择版式、形状、颜色、边框和文字说明。",
+      "brandedTitle": "品牌设计",
+      "brandedBadge": "基于你的 Logo",
+      "brandedText": "上传你的 Logo 或图片。我们会提取其中的颜色，并推荐三种外观。"
+    },
+    "patternHint": "承载数据的码点有 8 种形状",
+    "eyeFrameHint": "3 个定位角的外圈",
+    "eyeBallHint": "3 个定位角的内点",
+    "finderNote": "每种形状都保持 1 : 1 : 3 : 1 : 1 的定位图形比例，因此仍能通过扫描检查。",
+    "colorPicker": "{label}颜色选择器",
+    "scanCheck": {
+      "run": "检查扫描",
+      "retry": "再次检查",
+      "readBack": "在此设备上像手机相机一样读取“{value}”。",
+      "unreadableTitle": "无法扫描",
+      "unreadable": "手机相机无法读取此版式。请提高对比度、缩小 Logo 或使用更简单的形状，然后再次检查。",
+      "mismatch": "读取到的是“{value}”，而不是你的内容。请检查内容后再次检查。",
+      "errorTitle": "扫描检查未运行",
+      "errorText": "扫描检查无法启动。你的设计不受影响，请重试。",
+      "finding": "正在此设备上查找原因…",
+      "multiTitle": "此版式可能无法扫描 · {count} 项修复",
+      "confirmed": "已在此设备上检查：仅更改这一项即可扫描。",
+      "general": "无法确定是哪项设置导致的。请提高对比度、缩小 Logo 或使用更简单的形状，然后再次检查。",
+      "logoSearching": "正在此设备上尝试更小的 Logo 尺寸…",
+      "logoNone": "在此版式下，任何更小的 Logo 尺寸都无法扫描，因此你的设计保持不变。请在 Logo 设置中尝试添加底板、使用更简单的 Logo 或将其移除。",
+      "openLogo": "打开 Logo 设置",
+      "logoApplied": "Logo 已从 {from}% 缩小到 {to}%。正在检查新版式…",
+      "causes": {
+        "invert": {
+          "title": "深色背景上的浅色二维码",
+          "text": "许多手机相机无法读取反色二维码。请让二维码颜色比背景更深。",
+          "fix": "交换颜色"
+        },
+        "contrast": {
+          "title": "对比度不足",
+          "text": "二维码与背景颜色过于接近（{ratio}:1）。建议至少达到 4:1。",
+          "fix": "提高对比度"
+        },
+        "eyes": {
+          "title": "定位角颜色太浅",
+          "text": "扫码器通过三个定位角识别二维码。请将它们加深。",
+          "fix": "加深定位角"
+        },
+        "text": {
+          "title": "二维码中的文字过长",
+          "text": "二维码内的文字请控制在约 8 个字符以内，以便纠错功能恢复被遮挡的部分。",
+          "fix": "缩短文字"
+        },
+        "logo": {
+          "title": "Logo 遮挡了二维码的太多部分",
+          "text": "纠错功能最多可恢复 {max}% 的 Logo 宽度。你的 Logo 为 {size}%。",
+          "critical": "它与定位角或时序线重叠。",
+          "fix": "缩小 Logo"
+        }
+      }
+    },
+    "hosted": {
+      "badge": "托管页面",
+      "notice": "HeyQR 会在 {short} 发布此页面。{needs}更改在发布后生效；已印刷的二维码仍可正常使用。",
+      "noticePreview": "二维码的短链接",
+      "needsPlan": "发布需要动态套餐：Starter 每月 {starter} 可用 5 个二维码，Studio 每月 {studio} 可用 25 个，均含 7 天免费试用。设计和预览始终免费。",
+      "needsSlot": "这会占用你 {plan} 套餐中 {slots} 个动态名额中的一个。",
+      "sample": "从示例开始",
+      "sampleAdded": "已添加示例。请替换为你自己的信息。",
+      "previews": "预览 · 扫码后页面和二维码设计",
+      "previewSwitch": "预览",
+      "afterScan": "扫码后",
+      "qrDesign": "二维码设计",
+      "moveUp": "上移{item}",
+      "moveDown": "下移{item}",
+      "remove": "移除{item}",
+      "optional": "可选",
+      "photoAdd": "添加照片",
+      "photoReplace": "替换照片",
+      "photoRemove": "移除照片",
+      "photoHint": "照片会上传到 HeyQR，并针对手机调整尺寸。支持 JPG 或 PNG，每张最大 5 MB。",
+      "photoType": "“{name}”不是 JPG 或 PNG 文件。",
+      "photoTooLarge": "“{name}”大小为 {size}，上限为 5 MB。",
+      "photoUnreadable": "无法读取“{name}”。请换一张照片试试。",
+      "menu": {
+        "name": "餐厅名称",
+        "namePlaceholder": "Little Fern Café",
+        "note": "备注",
+        "notePlaceholder": "厨房营业时间 8:00–15:00",
+        "currency": "价格货币",
+        "section": "分类 {n}",
+        "sectionPlaceholder": "早餐",
+        "sectionHint": "为此分类命名，例如“早餐”或“饮品”。",
+        "dish": "菜品 {n}",
+        "dishPlaceholder": "牛油果吐司",
+        "descPlaceholder": "描述 · 可选",
+        "price": "价格",
+        "pricePlaceholder": "12",
+        "dishPhoto": "菜品照片",
+        "addDish": "添加菜品",
+        "addSection": "添加分类"
+      },
+      "coupon": {
+        "title": "优惠标题",
+        "titlePlaceholder": "本月任意陶艺课程适用",
+        "discount": "折扣",
+        "discountPlaceholder": "8 折",
+        "discountHint": "简短醒目：“8 折”“立减 $5”“免费咖啡”。",
+        "code": "优惠码",
+        "codePlaceholder": "FERN20",
+        "expires": "截止日期",
+        "expiresHint": "过了此日期后，页面会显示“优惠已结束”并隐藏优惠码。优惠在你所在时区（{zone}）的当天全天有效。",
+        "clearDate": "清除日期",
+        "link": "兑换链接",
+        "linkPlaceholder": "yourshop.com/offer",
+        "terms": "条款",
+        "termsPlaceholder": "每人限用一个优惠码。不可与其他优惠同时使用。",
+        "previewAs": "页面预览状态",
+        "valid": "优惠有效",
+        "expired": "已过期"
+      },
+      "social": {
+        "photo": "头像",
+        "name": "个人资料名称",
+        "namePlaceholder": "Ana Reyes",
+        "bio": "简短介绍",
+        "bioPlaceholder": "产品设计师。周末做陶艺。",
+        "links": "链接（按大家看到的顺序排列）",
+        "link": "链接 {n}",
+        "labelLabel": "标签",
+        "labelPlaceholder": "Instagram",
+        "urlLabel": "网址",
+        "urlPlaceholder": "instagram.com/yourname",
+        "quickAdd": "添加：",
+        "addLink": "添加链接"
+      },
+      "business": {
+        "name": "商家名称",
+        "namePlaceholder": "Reyes Ceramics Studio",
+        "desc": "简短描述",
+        "descPlaceholder": "手工拉坯餐具和陶艺课程。",
+        "hours": "营业时间",
+        "open": "营业",
+        "from": "开门",
+        "to": "关门",
+        "closed": "休息",
+        "copyMonday": "将周一的营业时间复制到周二至周五",
+        "zone": "时间按 {zone} 显示。",
+        "address": "地址",
+        "addressPlaceholder": "21 Pier St, San Francisco",
+        "addressHint": "会添加“导航”按钮。",
+        "phone": "电话",
+        "phonePlaceholder": "+1 415 555 0142",
+        "phoneHint": "会添加“拨打电话”按钮。",
+        "website": "网站",
+        "websitePlaceholder": "yourshop.com",
+        "websiteHint": "会添加“网站”按钮。"
+      },
+      "apps": {
+        "icon": "应用图标",
+        "name": "应用名称",
+        "namePlaceholder": "Fern Rewards",
+        "desc": "描述",
+        "descPlaceholder": "用一句话介绍这个应用的功能。",
+        "ios": "App Store 链接",
+        "iosPlaceholder": "apps.apple.com/app/your-app",
+        "android": "Google Play 链接",
+        "androidPlaceholder": "play.google.com/store/apps/details?id=…",
+        "storesHint": "请至少添加一个应用商店。手机会打开对应的应用商店；其他设备会看到包含两个链接的页面。"
+      },
+      "pdf": {
+        "title": "标题",
+        "titlePlaceholder": "春季课程表",
+        "desc": "简短描述",
+        "descPlaceholder": "日期、价格和需携带的物品。",
+        "file": "PDF 文件",
+        "choose": "选择 PDF",
+        "limits": "最大 25 MB · 最多 300 页",
+        "sample": "使用示例 PDF",
+        "uploading": "正在上传 · {pct}%",
+        "processing": "正在检查 PDF…",
+        "cancel": "取消",
+        "meta": "{pages, plural, other {# 页}} · {size}",
+        "metaNoPages": "{size}",
+        "replace": "替换",
+        "remove": "移除",
+        "hint": "由 HeyQR 存储。替换文件后短链接保持不变，因此发布后已印刷的二维码会打开新版本。",
+        "signIn": "登录后即可上传 PDF。你的草稿会保留。",
+        "notPdf": "“{name}”不是 PDF 文件。请选择以 .pdf 结尾的文件。",
+        "empty": "“{name}”为空。请选择其他文件。",
+        "tooLarge": "“{name}”大小为 {size}，上限为 25 MB。请导出更小的 PDF 后重试。",
+        "tooManyPages": "“{name}”共有 {pages} 页，上限为 300 页。",
+        "failed": "该文件未能上传。请重试。"
+      },
+      "product": {
+        "name": "产品名称",
+        "namePlaceholder": "斑点粗陶马克杯",
+        "photos": "照片",
+        "cover": "封面",
+        "photosHint": "最多 5 张照片，第一张为封面。支持 JPG 或 PNG，每张最大 5 MB。",
+        "photo": "照片 {n}",
+        "desc": "描述",
+        "descPlaceholder": "尺寸、材质、保养方法。",
+        "currency": "货币",
+        "price": "价格",
+        "pricePlaceholder": "38",
+        "cta": "按钮",
+        "ctas": {
+          "buy": "立即购买",
+          "view": "查看产品",
+          "order": "立即订购"
+        },
+        "link": "产品链接",
+        "linkPlaceholder": "yourshop.com/product",
+        "linkHint": "按钮的跳转地址：你的店铺或电商平台的商品页面。"
+      },
+      "signInPhotos": "登录后即可添加照片。你的草稿会保留。",
+      "errors": {
+        "menuName": "请添加顾客在菜单顶部看到的名称。",
+        "menuSections": "请至少添加一个分类。",
+        "sectionName": "为此分类命名，例如“早餐”或“饮品”。",
+        "sectionDishes": "请为此分类至少添加一道菜品。",
+        "dishName": "每道菜品都需要名称。",
+        "price": "价格只能使用数字，例如 12 或 4.50。",
+        "couponTitle": "请说明优惠适用的内容。",
+        "couponDiscount": "请添加折扣，例如“8 折”。",
+        "couponCode": "只能使用字母、数字、- 或 _，不能包含空格。",
+        "dateInvalid": "请选择有效的日期。",
+        "datePassed": "此日期已过。请选择更晚的日期，或清除日期以设置无截止日期的优惠。",
+        "urlEmpty": "请输入网址，例如 yourname.com。",
+        "urlSpaces": "网址不能包含空格。",
+        "urlInvalid": "请检查网址。网址需要包含域名，例如 yourname.com。",
+        "socialName": "请添加大家在页面顶部看到的名称。",
+        "socialLinks": "请至少添加一个链接。",
+        "linkLabel": "此链接需要标签。",
+        "linkUrl": "此链接需要完整网址，例如 instagram.com/yourname。",
+        "businessName": "请添加商家名称。",
+        "businessReach": "请添加地址、电话或网站，方便大家联系你。",
+        "phone": "请使用数字和空格，国家代码前可加 +。",
+        "hoursInvalid": "请使用 09:00 这样的时间格式。",
+        "hoursOrder": "关门时间必须晚于开门时间。",
+        "appName": "请添加应用名称。",
+        "appStores": "请至少添加一个应用商店链接。",
+        "appStoreLink": "App Store 链接以 apps.apple.com/ 开头。",
+        "googlePlayLink": "Google Play 链接以 play.google.com/ 开头。",
+        "pdfTitle": "请为文档添加标题。",
+        "pdfFile": "请上传 PDF 以继续。",
+        "pdfUploading": "请等待上传完成。",
+        "productName": "请添加产品名称。",
+        "productLink": "请添加可以购买或查看该产品的页面。",
+        "productPrice": "只能使用数字，例如 38 或 38.50。请在菜单中选择货币。",
+        "productImages": "最多 5 张照片。"
+      },
+      "previewNote": "HeyQR 将此页面托管在 {short}。编辑内容在发布后生效；已印刷的二维码仍可正常使用。",
+      "qrNote": "二维码包含短链接 {short}，因此印刷后页面仍可更改。"
+    }
+  },
+  "scan": {
+    "invert": "深色背景上的浅色二维码。许多手机相机无法识别反色二维码。",
+    "contrast": "二维码与背景的对比度不足，至少需要 3:1。",
+    "eyes": "定位角必须比背景深，对比度至少 3:1（中心部分至少 2.5:1）。扫码器依靠它们找到二维码。",
+    "logo": "Logo 遮挡了二维码的太多部分，请缩小 Logo。",
+    "text": "二维码中的文字太长，请控制在 8 个字符左右。"
+  },
+  "export": {
+    "title": "下载你的二维码",
+    "shortLinkPreview": {
+      "mark": "预览",
+      "note": "使用示例短链接预览。激活此二维码时会创建你的永久短链接，你下载的每个文件都包含该链接。"
+    },
+    "format": "格式",
+    "png": "PNG",
+    "pngHint": "最高 8K 的图片，适用于网页和文档。",
+    "svg": "SVG",
+    "svgHint": "矢量格式，任意尺寸，可编辑。",
+    "pay": "支付 {price} 并下载",
+    "subscribe": "订阅：{price}/月",
+    "download": "下载 {format}",
+    "paid": "已收到付款，文件已准备就绪。",
+    "pending": "正在确认你的付款…通常只需几秒钟。你的设置已锁定，以确保文件与收据一致。",
+    "cancelled": "<b>已取消结账。</b>你没有被扣费。你的设计和格式已保存，随时可以付款。",
+    "secure": "你将在 Stripe 的安全结账页面完成付款，然后返回这里下载。",
+    "includedNote": "已包含在你的购买中，无需付款。",
+    "resolution": "PNG 尺寸",
+    "scale": "{scale}×",
+    "dpi": "{dpi} dpi",
+    "pixels": "{width} × {height} px",
+    "titleBuy": "下载你的二维码",
+    "titleGuest": "可以下载了",
+    "subGuest": "检查版式和文件，然后使用 Google 登录以付款并下载。你的设计保持不变。",
+    "subPay": "检查版式和格式。付款前你会看到总金额。",
+    "subEntitled": "这个二维码归你所有。任何格式都可以随时下载，次数不限。",
+    "stageLabel": "要下载的版式",
+    "layouts": "此二维码的版式",
+    "backToDesign": "返回设计",
+    "model": {
+      "static": "静态",
+      "dynamic": "动态"
+    },
+    "dims": {
+      "layout": "版式",
+      "file": "文件"
+    },
+    "scanOk": "已验证可扫描",
+    "scanFail": "可能无法扫描",
+    "transparent": "透明背景",
+    "quality": "<b>画质无损。</b>SVG 和 PDF 均为纯矢量格式：码点、图标和文字可放大到广告牌尺寸。PNG 由同一矢量渲染，最高可达 8K。",
+    "returned": "已使用 Google 登录。你的版式和 <b>{format}</b> 都保持原样。",
+    "sessionEnded": "<b>你的会话已结束。</b>请重新登录以继续：此版式和文件选项都会保留。",
+    "signInAgain": "重新登录",
+    "alreadyOwned": "已归你所有。随时可以重新下载，无需再次付款。",
+    "paymentProcessing": "此二维码的付款正在确认中，稍后即可解锁，不会重复扣费。",
+    "signInCanceled": "Google 登录已取消。你的版式和 <b>{format}</b> 仍处于选中状态。点击“使用 Google 继续”重试。",
+    "signInIncomplete": "Google 登录未完成。你的版式和 <b>{format}</b> 仍处于选中状态。点击“使用 Google 继续”重试。",
+    "confirming": "正在确认你的付款…",
+    "preparing": "正在准备你的 {format}…",
+    "ready": "你的 {format} 已准备就绪。",
+    "downloaded": "<b>已下载 {name}。</b>它也保存在“我的二维码”中，可随时重新下载。",
+    "downloadAgain": "重新下载",
+    "tryAgain": "重试",
+    "errors": {
+      "failed": "<b>无法准备你的 {format}。</b>你的付款和设置都安全无虞，请稍后重试。",
+      "scan": "<b>此版式可能无法扫描。</b>请打开设计进行修正；只有通过扫描检查的二维码才会生成文件。",
+      "size": "<b>该尺寸过大，无法生成单个文件。</b>请选择较小的 PNG 尺寸或 SVG。",
+      "payment": "<b>此二维码尚未解锁。</b>未产生任何扣费。请稍后刷新，或付款后下载。"
+    },
+    "checkoutFailed": "无法打开结账页面。未产生任何扣费，请重试。",
+    "continueGoogle": "使用 Google 继续",
+    "guestNote": "设计免费，下载时才需付款。",
+    "receipt": {
+      "title": "收据",
+      "paid": "已支付",
+      "tax": "已含 Stripe 计算的税费。"
+    },
+    "lines": {
+      "single": "单个二维码",
+      "dynamic": "动态二维码",
+      "singleNamed": "单个二维码 · {name}",
+      "unlock": "静态解锁 · {plan} · 剩余 {left}/{limit}",
+      "credit": "静态额度 · 剩余 {left}",
+      "slot": "动态名额 · {plan} · 已用 {used}/{limit}",
+      "starter": "Starter · 按月",
+      "ppIncluded": "Print Pack · {plan} 套餐已包含 · 剩余 {left}/{limit}",
+      "pp": "Print Pack"
+    },
+    "perMonth": "{price}/月",
+    "summary": {
+      "title": "订单摘要",
+      "code": "二维码",
+      "type": "类型",
+      "layout": "版式",
+      "file": "文件",
+      "total": "总计",
+      "tax": "如有税费，将在结账时计算。",
+      "included": "已包含",
+      "includedShort": "已含"
+    },
+    "emptyTitle": "暂无可下载内容",
+    "emptyText": "请先设计一个二维码。下载前，你的草稿会一直保存在此浏览器中。",
+    "emptyAction": "创建二维码",
+    "inspectPrint": "打开印刷预览",
+    "printTitle": "Print Pack",
+    "printPreviewText": "印刷前检查此版式的精确印刷 PDF、出血、裁切标记和颜色值。",
+    "printSetupText": "Print Pack 需要以毫米为单位的印刷版式。请在“编辑设计 → 尺寸”中将此版式切换为“印刷 · mm”。",
+    "printSetup": "设置为印刷版式",
+    "pdf": "PDF",
+    "pdfHint": "适用于印刷厂的矢量文件。",
+    "payTotal": "支付 {price} 并下载",
+    "useUnlock": "使用 1 次解锁并下载",
+    "useCredit": "使用 1 个额度并下载",
+    "unlockNote": "来自你的 {plan} 套餐。使用后本月还剩 {left, plural, other {# 次解锁}}。",
+    "creditNote": "来自你的静态额度。使用后还剩 {left, plural, other {# 个额度}}。",
+    "goLive": "启用并下载",
+    "goLiveNote": "将占用你 {plan} 套餐的一个生效名额：使用后为 {used}/{limit}。",
+    "perMonthShort": "{price}/月",
+    "ppTitle": "Print Pack",
+    "ppOptional": "可选",
+    "ppUnlocked": "已解锁",
+    "ppDownload": "下载",
+    "ppAddTitle": "添加 Print Pack",
+    "ppSub": "印刷 PDF、可编辑 SVG 以及颜色和尺寸规格",
+    "ppUseIncluded": "使用 1 个已包含的 Print Pack",
+    "ppIncludedSub": "本月剩余 {left}/{limit} · 印刷 PDF、SVG 和规格",
+    "ppIncluded": "已包含",
+    "ppAddText": "为此二维码提供带出血和裁切标记的印刷 PDF、可编辑 SVG，以及颜色和尺寸说明表。",
+    "ppAdd": "添加 Print Pack · +{price}",
+    "ppNotForSale": "暂不支持以此货币购买 Print Pack。",
+    "ppRepeat": "包含重复下载。设置：100% 尺寸、3 mm 出血、裁切标记、sRGB。",
+    "inspectPrintFirst": "先检查印刷文件",
+    "incl": {
+      "static1": "此二维码每种版式的 PNG 和 SVG 文件",
+      "static2": "无限次重新下载",
+      "static3": "随时编辑设计",
+      "dyn1": "最多 {limit} 个生效中的动态二维码，可随时更改目标链接",
+      "dyn2": "基础扫描统计",
+      "dyn3": "PNG 和 SVG，无限次重新下载",
+      "pp": "Print Pack：印刷 PDF、可编辑 SVG 和规格"
+    },
+    "catalog": {
+      "not_offered": "暂不支持以所选货币购买。未产生任何扣费。",
+      "price_mismatch": "页面加载后价格已变更。未产生任何扣费；请刷新查看当前价格。",
+      "unavailable": "暂不支持以此货币购买。请在“价格”页面切换货币，或稍后再试。不会产生任何扣费。"
+    },
+    "unlockErrors": {
+      "no_allowance": "本月解锁次数已用完。请在下方选择其他方式。",
+      "no_credits": "静态额度已用完。",
+      "limit": "所有动态生效名额均已占用。",
+      "failed": "操作未成功。未产生任何扣费，请重试。"
+    },
+    "limits": {
+      "staticTitle": "你本月的 {limit} 次静态解锁已全部用完",
+      "staticText": "此二维码还需要一次解锁。请选择适合你的方式；你的设计保持不变。",
+      "staticUsed": "已用 {used}/{limit} 次解锁",
+      "resets": "{date} 重置",
+      "buyOnce": "单独购买此二维码",
+      "buyOnceSub": "Single QR，含 PNG 和 SVG",
+      "credits": "获取 3 个静态额度",
+      "creditsSub": "永不过期",
+      "studio": "升级到 Studio",
+      "studioSub": "每月 40 次解锁和 5 个 Print Pack",
+      "dynTitle": "{limit} 个动态名额已全部占用",
+      "dynText": "名额按当前正在跳转的二维码计算，而不是本月创建的二维码。请释放一个名额，或升级到更高的套餐。",
+      "dynUsed": "{used}/{limit} 个生效中",
+      "live": "实时数量 · 非每月额度",
+      "pause": "暂停或删除一个动态二维码",
+      "pauseSub": "立即释放其名额",
+      "studioDynSub": "25 个动态名额和单码扫描统计",
+      "toStatic": "改为静态二维码",
+      "toStaticSub": "内容固定 · 使用一次静态解锁"
+    },
+    "limit": "更大尺寸超过 {max} px",
+    "subUnlock": "{plan} 套餐已包含：将使用 1 次每月静态解锁。",
+    "subCredit": "将使用 1 个静态额度。"
+  },
+  "dashboard": {
+    "noMatch": {
+      "static": "没有静态二维码",
+      "dynamic": "没有动态二维码",
+      "text": "你的其他二维码在“全部”中。",
+      "all": "显示全部二维码"
+    },
+    "title": "我的二维码",
+    "new": "创建二维码",
+    "empty": {
+      "title": "还没有二维码",
+      "text": "你购买或开始设计的二维码会显示在这里。你可以随时重新下载，或添加新版式。",
+      "cta": "创建你的第一个二维码"
+    },
+    "status": {
+      "draft": "草稿",
+      "active": "生效中",
+      "paused": "已暂停",
+      "archived": "已归档",
+      "purchased": "已购买",
+      "inactive": "未生效"
+    },
+    "model": {
+      "static": "静态",
+      "dynamic": "动态"
+    },
+    "updated": "更新于 {date}",
+    "open": "打开 {name}",
+    "sub": "{count, plural, other {# 个二维码}} · {dynamic} 个动态二维码生效中",
+    "subEmpty": "你购买的二维码和草稿都在这里。",
+    "filterLabel": "筛选",
+    "filters": {
+      "all": "全部 {count}",
+      "static": "静态 {count}",
+      "dynamic": "动态 {count}"
+    },
+    "actions": {
+      "edit": "编辑设计",
+      "download": "下载",
+      "buy": "购买并下载",
+      "reactivate": "重新启用"
+    },
+    "loading": "正在加载你的二维码",
+    "manage": {
+      "select": "选择",
+      "done": "完成",
+      "selectAll": "全选",
+      "selectOne": "选择 {name}",
+      "chooseToDelete": "选择要删除的二维码",
+      "selected": "已选择 {count}/{total} 个",
+      "deleteSelected": "{count, plural, =0 {删除} other {删除 # 个}}",
+      "deleteOne": "删除 {name}",
+      "cancel": "取消",
+      "dialog": {
+        "titleOne": "删除“{name}”？",
+        "titleMany": "删除 {count} 个二维码？",
+        "leadOne": "它将从所有设备上的“我的二维码”中消失。",
+        "leadMany": "它们将从所有设备上的“我的二维码”中消失。",
+        "dynamicTitle": "{count, plural, other {短链接将失效}}",
+        "dynamicText": "{links} 将立即停止跳转。已印刷的二维码将打开“链接未生效”页面。{count, plural, other {将释放 # 个套餐名额。}}",
+        "staticTitle": "已印刷的二维码仍可使用",
+        "staticText": "静态二维码的内容直接编码在图案中，因此已印刷的二维码仍可扫描。你将无法再下载或编辑{count, plural, other {这 # 项购买}}，删除也不会退款。",
+        "draftTitle": "{count, plural, other {将删除 # 个草稿}}",
+        "draftText": "{count, plural, other {这些草稿}}未产生任何付款，因此其他内容不受影响。",
+        "confirmOne": "删除二维码",
+        "confirmMany": "删除 {count} 个二维码",
+        "undoNote": "删除后几秒内可以撤销。",
+        "close": "关闭",
+        "metaDynamic": "动态",
+        "metaStatic": "静态",
+        "metaActive": "生效中",
+        "metaPurchased": "已购买",
+        "metaDraft": "草稿"
+      },
+      "deletedOne": "已删除“{name}”。",
+      "deletedMany": "已删除 {count} 个二维码。",
+      "undo": "撤销",
+      "restoredOne": "二维码已恢复。",
+      "restoredMany": "已恢复 {count} 个二维码。",
+      "deleteFailed": "无法删除，请重试。",
+      "restoreFailed": "无法恢复。删除后几分钟内可以撤销。",
+      "rename": {
+        "action": "重命名",
+        "actionOne": "重命名 {name}",
+        "label": "{name} 的名称",
+        "save": "保存",
+        "cancel": "取消",
+        "saved": "已重命名为“{name}”。",
+        "empty": "请为二维码命名。",
+        "failed": "无法重命名。你输入的文字仍保留在这里，请重试。"
+      }
+    },
+    "printPack": "Print Pack"
+  },
+  "qr": {
+    "back": "全部二维码",
+    "layouts": "版式",
+    "shortLink": "短链接",
+    "destination": "目标链接",
+    "destinationHint": "已印刷的二维码仍然可用，现在会打开这个地址。",
+    "save": "保存",
+    "saved": "已保存",
+    "scans": "扫描次数（最近 14 天）",
+    "scansTotal": "{count, plural, other {# 次扫描}}",
+    "download": "下载",
+    "buy": "购买后下载",
+    "copy": "复制",
+    "copied": "已复制",
+    "editDesign": "编辑设计",
+    "dest": {
+      "title": "目标链接",
+      "saved": "已保存",
+      "new": "新的目标链接",
+      "hint": "已印刷的二维码会在一分钟内打开新地址。短链接仍为 {short}。",
+      "save": "保存目标链接",
+      "cancel": "取消",
+      "goesTo": "扫描 {short} 后跳转到",
+      "previously": "之前为 {url}",
+      "changedAt": "修改于",
+      "history": {
+        "title": "修改记录",
+        "to": "修改为",
+        "from": "原为 {url}"
+      },
+      "change": "修改目标链接",
+      "conflict": {
+        "title": "此目标链接已在其他地方被修改",
+        "text": "它现在指向 {url}。你在下方的修改尚未保存。",
+        "load": "加载最新版本",
+        "loaded": "已加载最新版本：{url}。请检查你的修改，然后保存以替换它。"
+      }
+    },
+    "scansCard": {
+      "title": "扫描次数 · 最近 14 天",
+      "total": "总计",
+      "today": "今天",
+      "emptyTitle": "暂无扫描",
+      "emptyText": "首次扫描会在几分钟内显示在这里。试着扫描一下你印刷的二维码吧。",
+      "periodEmptyTitle": "最近 14 天没有扫描",
+      "periodEmptyText": "更早的扫描记录会保留。新的扫描会在几分钟内显示在这里。"
+    },
+    "details": {
+      "back": "我的二维码",
+      "newLayout": "新版式",
+      "permanent": "永久有效",
+      "shortNote": "这是你印刷的二维码所包含的内容。它永远不会改变，因此已印刷的二维码始终可用。",
+      "noShortLink": "此二维码激活后将通过短链接生效。",
+      "content": "内容",
+      "fixed": "固定在二维码中",
+      "staticNote": "静态二维码将内容直接存储在码图中，因此印刷品始终会打开此内容。设计修改免费且不限次数。",
+      "incl": {
+        "files": "PNG 和 SVG，可不限次数下载",
+        "layouts": "包含新版式和设计修改"
+      },
+      "dimsSquare": "{size} 正方形",
+      "print": "打印 · mm",
+      "screen": "屏幕 · px",
+      "setupPrint": "设置打印",
+      "pack": {
+        "needsMm": "Print Pack 需要以 mm 为单位的打印版式。请在“编辑设计 → 尺寸”中将版式设置为打印用途，然后在打印预览中检查。",
+        "what": "带出血和裁切标记的打印 PDF、可编辑的 SVG，以及此二维码的颜色与尺寸说明表。",
+        "add": "添加 Print Pack · +{price}",
+        "addSub": "将打开打印预览，你可以在付款前检查 PDF 和规格。",
+        "useIncluded": "使用 1 个套餐内含的 Print Pack",
+        "includedSub": "本月 {plan} 套餐内含的 Print Pack 还剩 {left} 个（共 {limit} 个）。如有需要，可先在打印预览中检查文件。",
+        "includedDone": "已使用套餐内含的 Print Pack，文件已准备就绪。",
+        "includedFailed": "无法使用套餐内含的 Print Pack。未消耗任何额度，请重试。",
+        "noneLeft": "本月套餐内含的 Print Pack 已用完。",
+        "inspect": "在打印预览中查看",
+        "notForSale": "打印预览会显示精确的页面和规格。此处暂不支持购买 Print Pack。",
+        "repeat": "可重复下载。“{layout}”的文件，100% 尺寸，3 mm 出血，带裁切标记。"
+      },
+      "layoutNoteDynamic": "修改设计会生成一个新的下载文件。已印刷的二维码仍然可用。",
+      "layoutNoteStatic": "此次购买包含所有版式。每个版式都可下载为 PNG 或 SVG。",
+      "rename": "重命名",
+      "renameFailed": "无法重命名二维码。你输入的文字仍保留在这里，请重试。",
+      "nameLabel": "二维码名称",
+      "save": "保存",
+      "cancel": "取消",
+      "opens": "打开",
+      "downloadAll": "全部下载",
+      "layoutsCount": "{n, plural, other {# 个版式}}",
+      "edit": "编辑",
+      "downloadLayout": "下载 {name}",
+      "downloadFormat": "下载 {name} 的 {format}",
+      "printPreview": "{name} 的打印预览",
+      "newLayoutCard": "新版式",
+      "layoutAdded": "已将“{name}”添加到 {code}。其他版式保持不变。",
+      "layoutAddFailed": "无法添加版式，请重试。",
+      "copy": {
+        "action": "使用其他内容…",
+        "title": "使用其他内容",
+        "text": "静态二维码将内容存储在码图中，因此不同的内容就是一个新的二维码：需要单独设计和购买（{price}）。此二维码及其文件将保持原样。",
+        "start": "创建新的二维码",
+        "keep": "保留此二维码",
+        "close": "关闭"
+      },
+      "ppUnlocked": "已解锁",
+      "ppLocked": "未解锁",
+      "deleteLayout": {
+        "label": "删除版式 {name}",
+        "title": "删除“{name}”？",
+        "text": "“{name}”及其版式专属的下载文件将从你的账户中移除。此操作无法撤销。",
+        "keeps": "二维码及其内容、短链接、目标链接、购买记录和 Print Pack，以及其他版式都将保持不变。",
+        "confirm": "删除版式",
+        "cancel": "取消",
+        "close": "关闭",
+        "done": "已删除“{name}”。",
+        "failed": "无法删除“{name}”。未做任何更改，请重试。",
+        "retry": "重试",
+        "lastTitle": "这是唯一的版式",
+        "lastText": "二维码至少要保留一个版式，因此无法删除“{name}”。请先添加另一个版式，或在“我的二维码”中删除整个二维码。",
+        "lastError": "二维码至少要保留一个版式，因此此版式将被保留。",
+        "ok": "好的"
+      },
+      "pause": {
+        "pause": "暂停",
+        "resume": "恢复",
+        "pausedTitle": "短链接已暂停",
+        "pausedText": "扫描此二维码的用户会看到“不可用”页面。短链接、目标链接和版式都会保留。你现在可以修改目标链接，恢复后即可打开。",
+        "liveText": "暂停后会立即停止跳转。如果你有套餐，还会释放此二维码占用的生效名额。",
+        "paused": "已暂停。短链接现在显示“不可用”页面。",
+        "resumed": "已恢复。短链接会再次跳转到你的目标链接。",
+        "limit": "你套餐中的动态二维码生效名额已全部用完。请暂停或删除另一个动态二维码，然后再恢复此二维码。",
+        "noPlan": "恢复此二维码需要有效的动态套餐。",
+        "failed": "无法更改二维码的状态。未做任何更改，请重试。"
+      },
+      "inactiveNote": "扫描此二维码会显示“当前未激活”页面：它需要有效的动态套餐。其短链接、目标链接和扫描记录都会保留，套餐生效后，同一个已印刷的二维码会再次跳转。",
+      "inactiveCta": "套餐与账单"
+    },
+    "hostedPage": {
+      "title": "托管页面",
+      "live": "已上线 · 版本 {version}",
+      "publishedOn": "发布于 {date}",
+      "never": "尚未发布",
+      "neverNote": "发布页面后，扫描二维码的用户就能看到它。",
+      "changed": "有未发布的更改",
+      "changedNote": "在你再次发布之前，访问者看到的仍是已发布的版本。",
+      "upToDate": "访问者看到的是最新版本。",
+      "notLive": "二维码激活后，页面将在短链接上线。",
+      "edit": "编辑页面",
+      "publish": "发布",
+      "publishing": "正在发布…",
+      "published": "已发布。同一个二维码和短链接现在显示此版本。",
+      "unchanged": "没有新内容需要发布。",
+      "rules": "发布前有些信息需要处理。请编辑页面进行修正。",
+      "failed": "发布失败，请重试。",
+      "open": "打开页面",
+      "takenDown": "由于收到举报，我们已下架此页面，因此其短链接显示“此页面不可用”。你的内容和扫描记录都会保留。如果你认为这是误判，请联系客服。"
+    },
+    "hostedEditor": {
+      "title": "编辑页面",
+      "back": "返回二维码详情",
+      "lead": "更改会保存为草稿。发布后访问者才能看到。",
+      "save": "保存草稿",
+      "saving": "正在保存…",
+      "saved": "草稿已保存。",
+      "saveFailed": "无法保存草稿。请检查照片后重试。",
+      "publish": "保存并发布",
+      "unsaved": "有未保存的更改",
+      "loading": "正在加载页面编辑器"
+    }
+  },
+  "billing": {
+    "title": "套餐与账单",
+    "plan": "动态套餐",
+    "active": "有效期至 {date}",
+    "cancels": "将于 {date} 取消",
+    "none": "暂无订阅。静态二维码一次性付费；Starter 套餐增加动态二维码和每月解锁次数。",
+    "manage": "管理订阅",
+    "purchases": "购买记录",
+    "noPurchases": "暂无购买记录。",
+    "usage": "使用情况",
+    "liveDynamic": "生效中的动态二维码",
+    "liveCount": "{used} / {limit}",
+    "liveHint": "暂停或删除动态二维码即可释放生效名额。",
+    "renews": "{date} 续订",
+    "payment": "付款方式",
+    "paymentManaged": "你的银行卡信息由 Stripe 保管。请在账单门户中管理。",
+    "compare": "比较套餐",
+    "statusActive": "有效",
+    "statusCanceling": "即将取消",
+    "statusNone": "无套餐",
+    "date": "日期",
+    "open": "打开",
+    "receiptNote": "每次付款后 Stripe 都会通过邮件发送收据。",
+    "statuses": {
+      "paid": "已付款",
+      "pending": "处理中",
+      "refunded": "已退款",
+      "failed": "失败"
+    },
+    "liveNoPlan": "{used} 个生效中 · 无套餐",
+    "printPackItem": "Print Pack",
+    "packItem": "静态额度包 · {n} 个额度",
+    "signedIn": "已使用 Google 账户 {email} 登录。",
+    "current": "当前套餐",
+    "planMonthly": "{plan} · 按月",
+    "noPlan": "无套餐",
+    "plans": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "tiles": {
+      "dynamic": "生效中的动态二维码",
+      "live": "生效中",
+      "dynamicNote": "暂停或删除一个二维码即可释放名额",
+      "unlocks": "静态解锁次数",
+      "packs": "内含的 Print Pack",
+      "packsNote": "{resets} · 之后 +{price}",
+      "credits": "静态额度",
+      "oneTime": "一次性",
+      "creditsNote": "永不过期 · 在每月解锁次数用完后使用",
+      "available": "可用 {n} 个",
+      "leftMonth": "本月剩余 {n} 个",
+      "noReset": "套餐于 {date} 结束 · 不再重置"
+    },
+    "of": "共 {limit}",
+    "left": "剩余",
+    "resets": "{date} 重置",
+    "price": "价格",
+    "perMonth": "{price} / 月",
+    "renewsOn": "续订日期",
+    "endsOn": "结束日期",
+    "paymentStripe": "由 Stripe 保管",
+    "upgrade": "升级到 Studio · {price}/月",
+    "choosePlan": "选择套餐",
+    "oneTime": "一次性购买",
+    "item": "项目",
+    "amount": "金额",
+    "receipt": "收据",
+    "credits": "{n} 个静态额度",
+    "items": {
+      "single": "单个二维码",
+      "printPack": "Print Pack"
+    },
+    "portal": {
+      "noCustomer": "目前还没有账单账户。它会在你首次付款时创建。",
+      "unavailable": "你的套餐目前无法使用此功能。",
+      "failed": "无法打开 Stripe。未做任何更改，请重试。"
+    },
+    "updatePayment": "更新付款方式",
+    "card": "{brand} •••• {last4}",
+    "overdue": {
+      "title": "你的续订付款未成功",
+      "pastDue": "付款逾期期间，你的套餐仍保持有效。请更新付款方式以支付未结账单。",
+      "unpaid": "由于续订付款未能补缴，你的套餐已结束。请更新付款方式以支付未结账单并重新启用套餐。",
+      "action": "更新付款方式并付款",
+      "status": "付款逾期",
+      "pending": "付款后，此处的套餐状态可能需要片刻才能更新。"
+    },
+    "canceling": {
+      "title": "你的套餐将于 {date} 结束",
+      "until": "在此之前，一切照常运行：你的动态二维码会正常跳转，名额和每月解锁次数也会保留。",
+      "after": "{count, plural, =0 {该日期之后，动态二维码将显示“当前未激活”页面，而不再跳转。} other {该日期之后，你生效中的 # 个动态二维码将显示“当前未激活”页面，而不再跳转。其短链接、目标链接和设计都会保留。}}你购买的静态二维码仍然可用。",
+      "resume": "保留我的套餐",
+      "resumeNote": "你的套餐将沿用同一订阅，并在原定日期续订。现在不会收取任何费用。",
+      "resumed": "你的套餐将继续，并在原定日期续订。",
+      "notScheduled": "已没有可撤销的取消操作。请刷新页面查看你的套餐。",
+      "failed": "无法保留你的套餐。未做任何更改，请重试。"
+    },
+    "ended": {
+      "title": "你的 {plan} 套餐已于 {date} 结束",
+      "titleNoDate": "你的 {plan} 套餐已结束",
+      "scans": "你的动态二维码显示“当前未激活”页面。其短链接、目标链接、设计和扫描记录都会保留。你购买的静态二维码仍然可用。",
+      "back": "重新激活后，同样的已印刷二维码会再次跳转。已暂停或删除的二维码将保持原状。",
+      "reactivate": "重新激活 {plan} · {price}/月"
+    }
+  },
+  "legal": {
+    "terms": {
+      "title": "服务条款"
+    },
+    "privacy": {
+      "title": "隐私政策"
+    },
+    "draft": "在法律文本获批之前，此页面仅为占位内容。"
+  },
+  "errors": {
+    "notFound": {
+      "title": "页面未找到",
+      "text": "你要查找的页面不存在。",
+      "cta": "返回首页"
+    },
+    "linkUnavailable": {
+      "title": "此链接未激活",
+      "text": "此二维码的所有者已将其暂停，或它已不存在。"
+    },
+    "generic": "出了点问题，请重试。",
+    "invalid": "请检查标出的字段。",
+    "unauthorized": "请登录后继续。",
+    "too_long": "内容太长，无法生成二维码。请缩短后重试。",
+    "linkInactive": {
+      "title": "此链接暂时不可用",
+      "text": "此二维码目前未激活。你的手机没有问题，请稍后再试。"
+    },
+    "draft_limit": "你已保存 {limit} 个草稿，已达到账户上限。请在“我的二维码”中解锁或删除一个，然后再次保存：你的设计会保留在这里。",
+    "page": {
+      "title": "出了点问题",
+      "text": "此页面无法加载。你保存的二维码和草稿都很安全。请重试，或返回起始页。",
+      "retry": "重试",
+      "home": "前往首页",
+      "reference": "参考编号：{ref}"
+    }
+  },
+  "common": {
+    "close": "关闭",
+    "loading": "加载中…",
+    "required": "必填"
+  },
+  "loading": {
+    "page": "加载中",
+    "details": "正在加载二维码",
+    "billing": "正在加载你的套餐和购买记录",
+    "export": "正在加载你的文件",
+    "editor": "正在加载编辑器"
+  },
+  "trial": {
+    "badge": "Starter 试用",
+    "back": "我的二维码",
+    "states": {
+      "active": {
+        "title": "你的试用已开始",
+        "lead": "开始于 {start}。你的测试动态二维码可真实使用至 {end}。",
+        "big": "{days, plural, other {# 天}}",
+        "bigSub": "剩余 · {end} 结束",
+        "status": "未绑定银行卡，因此试用结束时不会收取任何费用。在此之前，你的测试二维码会真实跳转。",
+        "main": "激活 Starter · {price}/月",
+        "second": "打开我的二维码",
+        "foot": "激活后短链接保持不变，已印刷的测试二维码仍然可用。",
+        "endTitle": "试用于 {end} 结束后"
+      },
+      "ending": {
+        "title": "你的试用即将结束",
+        "lead": "{end} 起，你的测试二维码将停止跳转。激活 Starter 即可让它继续生效。",
+        "big": "{days, plural, other {# 天}}",
+        "bigSub": "剩余 · {end} 结束",
+        "status": "未绑定银行卡，因此不会自动扣费。",
+        "main": "激活 Starter · {price}/月",
+        "second": "打开我的二维码",
+        "foot": "激活后短链接保持不变，已印刷的测试二维码仍然可用。",
+        "endTitle": "{end} 时会发生什么"
+      },
+      "expired": {
+        "title": "你的试用已结束",
+        "lead": "试用已于 {end} 结束。你的测试二维码已暂停，设计和扫描记录都会保留。",
+        "big": "已结束",
+        "bigSub": "{end}",
+        "status": "你的测试二维码的短链接现在显示“链接已暂停”页面。激活 Starter 后，它会再次跳转到你的目标链接。",
+        "main": "通过 Starter 重新激活 · {price}/月",
+        "second": "查看所有套餐",
+        "foot": "未收取任何费用，也没有绑定银行卡。",
+        "endTitle": "如何重新启用"
+      },
+      "upgraded": {
+        "title": "你的 Starter 套餐已生效",
+        "lead": "你的试用测试二维码现在是套餐中的普通动态二维码。",
+        "big": "动态",
+        "bigSub": "套餐已生效",
+        "status": "你的测试二维码保留原短链接，并像之前一样跳转。",
+        "main": "打开我的二维码",
+        "second": "套餐与账单",
+        "foot": "每次付款后 Stripe 都会通过邮件发送收据。",
+        "endTitle": "有哪些变化"
+      }
+    },
+    "steps": {
+      "pause": {
+        "t": "你的测试跳转将暂停",
+        "d": "其短链接会显示“链接已暂停”页面，而不是你的目标链接。不会删除任何内容。"
+      },
+      "free": {
+        "t": "不收取任何费用",
+        "d": "未绑定银行卡，也不会自动续订。"
+      },
+      "wake": {
+        "t": "随时激活即可重新启用",
+        "d": "开通 Starter 后，同一个短链接会再次跳转。你的设计和扫描记录都保留在账户中。"
+      },
+      "choose": {
+        "t": "选择 Starter",
+        "d": "每月 {price}。可随时取消。"
+      },
+      "same": {
+        "t": "你的短链接恢复生效",
+        "d": "它会再次跳转到同一个目标链接。"
+      },
+      "room": {
+        "t": "继续使用",
+        "d": "最多 {limit} 个生效中的动态二维码，并提供每日扫描统计。"
+      },
+      "kept": {
+        "t": "短链接不变",
+        "d": "已印刷的测试二维码仍然可用，无需重新印刷。"
+      },
+      "more": {
+        "t": "更多名额",
+        "d": "最多 {limit} 个生效中的动态二维码，以及每日扫描统计。"
+      },
+      "receipt": {
+        "t": "收据通过邮件发送",
+        "d": "可随时在“套餐与账单”中管理或取消套餐。"
+      }
+    },
+    "code": {
+      "title": "你的测试动态二维码",
+      "live": "跳转中",
+      "paused": "跳转已暂停",
+      "plan": "已在套餐中生效",
+      "opens": "打开 {host}",
+      "pausedLine": "已暂停 · 显示“链接已暂停”页面",
+      "scans": "累计扫描",
+      "today": "今天",
+      "chart": "试用期每日扫描：{values}",
+      "change": "修改目标链接",
+      "view": "查看测试二维码",
+      "none": "你还没有创建测试二维码。",
+      "noneText": "创建一个动态网址二维码，并使用试用让它生效：一个可以印刷和测试的真实短链接。",
+      "create": "创建测试动态二维码"
+    },
+    "included": {
+      "title": "试用包含",
+      "kept": "从试用中保留",
+      "points": ["1 个带真实短链接的测试动态二维码", "每日扫描总数", "随时修改跳转地址", "所有版式、形状、颜色、Logo 和文字说明"],
+      "not": "静态二维码仍需购买。"
+    },
+    "start": {
+      "title": "免费试用动态二维码 7 天",
+      "text": "无需银行卡，不会自动扣费。包含 1 个带真实短链接的测试动态二维码。",
+      "action": "开始 7 天免费试用",
+      "used": "你已经使用过免费试用。",
+      "failed": "无法开始试用，请重试。"
+    },
+    "bar": {
+      "active": {
+        "title": "Starter 试用 · 剩余 {days, plural, other {# 天}}。",
+        "text": "你的测试二维码将正常跳转至 {end}。未绑定银行卡。"
+      },
+      "ending": {
+        "title": "试用将于 {end} 结束。",
+        "text": "激活 Starter，让你的测试二维码继续跳转。"
+      },
+      "expired": {
+        "title": "试用已于 {end} 结束。",
+        "text": "你的测试二维码已暂停。激活 Starter 即可重新启用。"
+      },
+      "upgraded": {
+        "title": "你的 Starter 套餐已生效。",
+        "text": "你的测试二维码现在是普通的动态二维码。"
+      },
+      "open": "试用详情",
+      "activate": "激活 Starter…"
+    },
+    "usage": {
+      "title": "试用动态二维码名额",
+      "count": "{used} / 1",
+      "hint": "这是一个生效名额，而不是每月配额。"
+    },
+    "useTrial": "使用免费试用 · 立即生效",
+    "useTrialHint": "试用期间你的唯一一个测试动态二维码。无需银行卡。",
+    "useTrialFailed": "无法为此二维码使用试用。你可能已经有一个测试二维码。",
+    "sample": {
+      "title": "Print Pack 示例",
+      "badge": "演示二维码",
+      "demo": "Print Pack 示例的演示二维码",
+      "text": "准确了解 Print Pack 包含哪些内容。示例使用的是打开 Hey QR 的演示二维码，而不是你的测试二维码。",
+      "pdf": "示例打印 PDF",
+      "pdfSub": "sRGB · 页面 {w} × {h} mm，带出血和裁切标记",
+      "svg": "示例可编辑 SVG",
+      "svgSub": "sRGB · HEX 颜色 · {w} × {h} mm",
+      "spec": "示例规格说明",
+      "specSub": "PDF 说明表 · 尺寸和颜色值"
+    }
+  },
+  "print": {
+    "spec": {
+      "title": "打印规格",
+      "finished": "成品尺寸",
+      "page": "PDF 页面（含出血和标记）",
+      "bleed": "出血",
+      "marks": "裁切标记",
+      "qr": "二维码尺寸（含静区）",
+      "profile": "颜色配置文件",
+      "srgb": "sRGB · 不转换",
+      "logo": "Logo 分辨率",
+      "vector": "矢量，任意尺寸",
+      "colors": "颜色（HEX · sRGB）",
+      "key": "渲染标识",
+      "yes": "是",
+      "no": "否",
+      "role_modules": "码点",
+      "role_corners": "定位角外框",
+      "role_centers": "定位角中心",
+      "role_background": "背景",
+      "role_frame": "边框",
+      "role_caption": "文字说明"
+    },
+    "title": "打印预览",
+    "leadLocked": "购买前请检查精确的 PDF 页面和打印规格。文件将与你在此处看到的内容一致。",
+    "leadUnlocked": "这是生成你的文件所用的 PDF 页面。调整设置后可再次下载，不另收费。",
+    "locked": "Print Pack 未解锁",
+    "unlocked": "Print Pack 已解锁",
+    "back": {
+      "details": "返回二维码详情",
+      "export": "返回导出"
+    },
+    "toDesign": "返回设计",
+    "canvas": "PDF 页面预览",
+    "zoom": "缩放",
+    "fit": "适应窗口",
+    "z100": "100%",
+    "z200": "200%",
+    "guides": "裁切线和安全区",
+    "approx": "屏幕显示为印刷颜色的近似效果",
+    "trimLabel": "裁切尺寸 {size}",
+    "generating": "正在生成打印预览…",
+    "pageLabel": "打印 PDF 页面，{w} × {h} mm",
+    "error": {
+      "title": "无法生成预览。",
+      "text": "你的版式和打印设置都已保留。这通常是暂时的问题。",
+      "retry": "重试"
+    },
+    "foot": {
+      "page": "PDF 页面 {size}",
+      "count": "1 页",
+      "bleed": "出血 {bleed} mm",
+      "noBleed": "无出血",
+      "marks": "裁切标记",
+      "noMarks": "无裁切标记",
+      "pageB": "PDF 页面 <b>{size}</b>"
+    },
+    "specTitle": "打印规格",
+    "keys": {
+      "finished": "成品尺寸",
+      "finishedBleed": "每边 + {bleed} mm 出血",
+      "finishedNoBleed": "无出血",
+      "qr": "二维码尺寸",
+      "qrSmall": "小于 20 mm · 可能无法在所有设备上扫描",
+      "qrOk": "约 {cm} cm 以内可扫描",
+      "profile": "颜色配置文件",
+      "profileSub": "RGB，不转换",
+      "logo": "Logo 分辨率",
+      "logoVector": "矢量",
+      "logoNone": "无 Logo",
+      "logoLow": "此尺寸下低于 300 ppi",
+      "logoOk": "300 ppi 或以上 · 打印清晰",
+      "logoVectorSub": "任意尺寸都清晰",
+      "logoNoneSub": "无需检查",
+      "logoChecking": "正在检查…",
+      "logoCheckingSub": "按此尺寸测量"
+    },
+    "unlock": {
+      "title": "解锁 Print Pack",
+      "text": "获取“{name}”的打印 PDF、可编辑 SVG 和规格说明，按以下设置生成。",
+      "action": "添加 Print Pack · +{price}",
+      "sub": "此二维码一次性付费。付款后你会带着当前设置返回此页面。",
+      "notForSale": "此处暂不支持购买 Print Pack。你仍可检查页面和规格。",
+      "needCode": "请先解锁此二维码：Print Pack 是已购买或生效中二维码的附加项。",
+      "buyCode": "购买此二维码",
+      "failed": "无法打开结账页面。未收取任何费用，请重试。",
+      "cancelled": "已取消结账。未收取任何费用，你的设置已保留。",
+      "pending": "正在确认你的付款…",
+      "pendingSub": "你会停留在此页面，并保留这些设置。",
+      "useIncluded": "使用 1 个套餐内含的 Print Pack",
+      "payInstead": "改为支付 {price}，保留套餐内含额度",
+      "includedLeft": "本月套餐内含的 Print Pack 还剩 {left} 个（共 {limit} 个）· {resets} 重置"
+    },
+    "files": {
+      "title": "Print Pack 已解锁",
+      "badge": "可以下载",
+      "text": "文件使用以下设置生成。修改设置后可再次下载，不另收费。",
+      "pdf": "下载打印 PDF",
+      "pdfSub": "sRGB · 页面 {w} × {h} mm",
+      "svg": "下载可编辑 SVG",
+      "svgSub": "sRGB · HEX 颜色 · {w} × {h} mm",
+      "spec": "下载打印规格",
+      "specSub": "PDF 说明表 · 尺寸和颜色值",
+      "stale": "版式在此预览之后已更改。下载前请再次检查页面。",
+      "pdfTitle": "打印 PDF",
+      "svgTitle": "可编辑 SVG",
+      "specTitle": "打印规格"
+    },
+    "size": {
+      "title": "成品尺寸",
+      "custom": "自定义",
+      "width": "宽度",
+      "height": "高度 · 保持比例",
+      "hint": "宽度为 15 到 600 mm。二维码和文字说明会随版式缩放。"
+    },
+    "warn": {
+      "qrTitle": "二维码宽 {mm} mm",
+      "qrText": "小于 20 mm 的二维码在较旧的手机上可能无法识别。请放大版式，或让二维码至少保持 20 mm。",
+      "logoTitle": "在此尺寸下你的 Logo 为 {ppi} ppi",
+      "logoText": "打印效果可能模糊。请上传宽度至少 {px} px 的 Logo，或按 100% 尺寸打印。",
+      "upload": "上传更高分辨率的 Logo",
+      "use100": "使用 100% 尺寸"
+    },
+    "profiles": {
+      "title": "打印 PDF 的颜色配置文件",
+      "srgb": "sRGB · 不转换",
+      "srgbDesc": "适用于数码印刷机和大多数在线印刷服务。",
+      "fogra39": "铜版纸 FOGRA39",
+      "gracol": "GRACoL 2013",
+      "fogra29": "非涂布纸 FOGRA29",
+      "cmykDesc": "暂不支持 CMYK 转换。",
+      "shop": "<b>请与你的印刷厂确认。</b>询问他们需要哪种颜色配置文件。如果他们不确定，请将 PDF 与规格说明表一起发送。"
+    },
+    "colors": {
+      "title": "颜色",
+      "legendHex": "<b>HEX · sRGB</b> 可编辑 SVG",
+      "legendCmyk": "<b>CMYK</b> 仅适用于 CMYK 配置文件",
+      "none": "—",
+      "note": "两个文件中的颜色均为精确的 sRGB 值。屏幕上显示的是印刷颜色的近似效果。"
+    },
+    "tech": {
+      "title": "技术设置",
+      "bleed": "出血",
+      "bleedDesc": "背景延伸到裁切线之外",
+      "marks": "裁切标记",
+      "k100": "将黑色码点打印为 100% K",
+      "k100Hint": "使用 CMYK 配置文件时可用。",
+      "pdf": "PDF 标准",
+      "pdfV": "PDF 1.7，矢量",
+      "text": "文字",
+      "textV": "已嵌入字体",
+      "logo": "Logo",
+      "logoRaster": "{px} px 位图 · {mm} mm 时为 {ppi} ppi",
+      "logoVector": "矢量",
+      "quiet": "静区",
+      "quietV": "每边 4 个码点",
+      "safe": "安全区",
+      "safeV": "裁切线内 {mm} mm",
+      "intent": "输出意图",
+      "intentV": "sRGB，不转换",
+      "none": "无"
+    },
+    "notPrint": {
+      "title": "此版式用于屏幕",
+      "text": "Print Pack 需要以 mm 为单位的打印版式。请在“设计 → 尺寸”中切换单位来添加。",
+      "action": "设置打印"
+    },
+    "pack": {
+      "title": "Print Pack",
+      "add": "添加 Print Pack，一次下载即可把所需的一切交给印刷厂：带出血和裁切标记的打印 PDF、可编辑的 SVG，以及颜色与尺寸说明表。请先在打印预览中检查页面。",
+      "preview": "打印预览 · {layout}",
+      "defaults": "默认设置：100% 尺寸、3 mm 出血、裁切标记。可在打印预览中修改。",
+      "open": "打开打印预览"
+    },
+    "plan": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "sample": {
+      "pageTitle": "打印预览 · 示例",
+      "name": "Little Fern Coffee",
+      "layout": "品牌卡片示例",
+      "back": "返回首页",
+      "title": "这是一个示例",
+      "text": "演示二维码准确展示了 Print Pack 包含的内容。制作你自己的二维码，然后在购买前在这里检查它的打印文件。",
+      "create": "创建你的二维码",
+      "pricing": "查看 Print Pack 详情"
+    }
+  },
+  "plans": {
+    "title": "少量二维码一次性付费，大量需求选择套餐。",
+    "lead": "设计、预览和扫描检查始终免费。下载时才需付费。",
+    "currencyLabel": "价格显示币种",
+    "localTitle": "以 {currency} 显示的本地价格。",
+    "localText": "整个网站、结账和收据都使用这些金额。税费将在结账时加收。",
+    "pendingTitle": "部分 {currency} 价格尚未设定。",
+    "pendingText": "没有 {currency} 价格的项目暂时无法以 {currency} 购买。我们不会从其他币种换算。",
+    "unavailable": "暂不支持以 {currency} 购买。",
+    "current": "你当前的套餐",
+    "manage": "管理你的套餐",
+    "perMonth": "每月",
+    "live": "可同时生效",
+    "monthly": "每月更新",
+    "dynCodes": "<b>{n}</b> 个动态二维码",
+    "unlocks": "<b>{n}</b> 次静态二维码解锁",
+    "packsIncl": "<b>{n}</b> 个 Print Pack",
+    "once": {
+      "title": "一次性",
+      "sub": "无需订阅。你解锁的二维码永久归你所有。"
+    },
+    "month": {
+      "title": "按月",
+      "sub": "适用于动态二维码和大量静态二维码。可随时取消。"
+    },
+    "free": {
+      "title": "免费",
+      "q": "在花钱之前先设计和测试二维码。",
+      "a": "实时设计和预览",
+      "b": "每次编辑都进行扫描检查",
+      "c": "登录后最多可保存 {limit} 个草稿",
+      "cta": "开始设计"
+    },
+    "single": {
+      "title": "单个二维码",
+      "unit": "一次性",
+      "q": "一个静态二维码及其全部下载。",
+      "a": "PNG 和 SVG 下载",
+      "b": "该二维码的所有版式，可随时再次下载",
+      "c": "可选 Print Pack +{price}",
+      "cta": "创建二维码"
+    },
+    "packs": {
+      "title": "静态额度包",
+      "unit": "含 {n} 个额度",
+      "credits": "{n} 个静态额度",
+      "each": "每个二维码 {price}",
+      "buy": "购买 {n} 个额度",
+      "note": "一个额度可随时解锁一个独立的静态二维码。额度永不过期。"
+    },
+    "pp": {
+      "kicker": "适用于任意二维码的附加项",
+      "title": "Print Pack · 每个二维码 +{price}",
+      "text": "默认不包含。可在结账时添加，或稍后在二维码详情中添加。Studio 每月包含 {n} 个。",
+      "pdf": "矢量打印 PDF",
+      "pdfSub": "sRGB，3 mm 出血和裁切标记，精确尺寸。",
+      "svg": "可编辑 SVG",
+      "svgSub": "用于你自己的设计稿，含 sRGB 和 HEX 颜色。",
+      "spec": "颜色与尺寸说明表",
+      "specSub": "成品尺寸、二维码尺寸、静区和颜色值。"
+    },
+    "starter": {
+      "title": "Starter",
+      "badge": "7 天免费试用",
+      "a": "基础扫描分析：每日总数",
+      "b": "随时修改动态二维码的目标链接",
+      "c": "Print Pack 每个二维码 +{price}",
+      "trial": "开始 7 天免费试用",
+      "openTrial": "打开你的试用",
+      "subscribe": "立即订阅 · {price}/月",
+      "note": "试用：无需银行卡，不会自动扣费。"
+    },
+    "studio": {
+      "title": "Studio",
+      "badge": "适合团队和印刷工作",
+      "a": "按二维码的扫描分析",
+      "b": "随时修改动态二维码的目标链接",
+      "c": "额外 Print Pack 每个二维码 +{price}",
+      "cta": "选择 Studio"
+    },
+    "rules": {
+      "title": "解锁和限额的规则",
+      "1t": "一次解锁，一个独立二维码",
+      "1d": "一个静态额度或一次每月解锁可开通一个二维码。它的所有版式、PNG 和 SVG 文件以及重复下载都使用同一次解锁。",
+      "2t": "每月配额会重置",
+      "2d": "新的静态解锁次数和套餐内含的 Print Pack 会在你的账单日刷新。未使用的不会累积到下月。",
+      "3t": "动态二维码名额按生效计算，而非按月",
+      "3d": "二维码在跳转期间会占用一个名额。暂停或删除动态二维码即可立即释放其名额。",
+      "4t": "取消后仍归你所有",
+      "4d": "你解锁的静态二维码永久归你所有：印刷品仍然可用，文件也可继续下载。付费期结束后，动态短链接将停止跳转，且无法下载或激活。你的二维码会被保留。",
+      "5t": "如果续订付款失败",
+      "5d": "付款逾期且 Stripe 重试期间，你的套餐仍保持有效。如果付款未能补缴且订阅结束，套餐将像取消后一样结束。付款成功后，你的套餐将继续。"
+    },
+    "cmp": {
+      "title": "比较",
+      "what": "功能",
+      "region": "套餐比较",
+      "more": "滚动查看更多套餐",
+      "pick1": "第一个套餐",
+      "pick2": "第二个套餐",
+      "yes": "包含",
+      "no": "不包含",
+      "na": "不适用：非订阅",
+      "model": {
+        "free": "免费",
+        "once": "一次性购买",
+        "credits": "额度",
+        "monthly": "按月订阅"
+      },
+      "once": "一次性",
+      "mo": "/月",
+      "live": "实时设计、预览和扫描检查",
+      "static": "静态二维码解锁",
+      "staticHint": "PNG 和 SVG 文件",
+      "dynamic": "生效中的动态二维码名额",
+      "dynamicHint": "可同时生效",
+      "analytics": "扫描分析",
+      "printPack": "Print Pack",
+      "repeat": "重复下载",
+      "cancel": "取消后",
+      "oneQr": "1 个二维码",
+      "perCredit": "每个额度 1 个二维码",
+      "noExpiry": "额度永不过期",
+      "perMonth": "每月新增 {n} 次",
+      "noRollover": "未使用的不会累积",
+      "atOnce": "可同时生效 {n} 个",
+      "freeSlot": "暂停一个即可释放其名额",
+      "basic": "基础",
+      "daily": "每日总数",
+      "perCode": "按二维码",
+      "ppAdd": "每个二维码 +{price}",
+      "ppStudio": "每月包含 {n} 个",
+      "ppThen": "之后每个二维码 +{price}",
+      "stay": "静态二维码仍可下载",
+      "dynStop": "付费期结束后动态链接停止跳转",
+      "foot": "税费在结账时计算。网址二维码可以是静态或动态的；文本、Wi-Fi 和联系人名片二维码为静态。"
+    },
+    "errors": {
+      "not_offered": "暂不支持以所选币种购买。未收取任何费用。",
+      "price_mismatch": "页面加载后价格已变更。未收取任何费用，请刷新查看当前价格。",
+      "unauthorized": "请登录后继续。",
+      "failed": "无法打开结账页面。未收取任何费用，请重试。"
+    },
+    "terms": "可随时取消：你的套餐将持续到付费期结束。如果续订付款失败，在付款逾期期间套餐仍保持有效。"
+  },
+  "apiKeys": {
+    "title": "API 密钥",
+    "lead": "密钥可让你自己的工具操作此账户的二维码。每个密钥仅属于此账户。",
+    "yourKeys": "你的密钥",
+    "create": "创建 API 密钥",
+    "once": "请立即复制此密钥。为了你的安全，它只显示一次，之后无法再次查看。",
+    "copy": "复制",
+    "copied": "已复制",
+    "done": "完成",
+    "none": "还没有 API 密钥。",
+    "created": "创建于 {date}",
+    "failed": "无法创建密钥。未保存任何内容，请重试。",
+    "active": "有效",
+    "revoked": "已吊销",
+    "revokedOn": "吊销于 {date}",
+    "lastUsed": "上次使用于 {date}",
+    "neverUsed": "从未使用",
+    "revoke": {
+      "action": "吊销",
+      "label": "吊销 {prefix}",
+      "title": "吊销 {prefix}？",
+      "text": "使用此密钥的工具将立即停止工作。你的其他密钥仍可正常使用。此操作无法撤销。",
+      "confirm": "吊销密钥",
+      "cancel": "取消",
+      "done": "{prefix} 已吊销。",
+      "failed": "无法吊销密钥。未做任何更改，请重试。",
+      "close": "关闭"
+    }
+  },
+  "hosted": {
+    "hostedBy": "由 HeyQR 托管",
+    "report": "举报此页面",
+    "unavailableTitle": "此页面不可用",
+    "unavailableText": "所有者已暂停此二维码或移除了该页面。请稍后再试，或直接联系对方。",
+    "loading": "正在加载页面",
+    "menu": {
+      "kicker": "菜单",
+      "sections": "菜单分类"
+    },
+    "coupon": {
+      "kicker": "优惠券",
+      "expiredKicker": "优惠已结束",
+      "copy": "复制优惠码",
+      "copied": "已复制",
+      "redeem": "在线兑换",
+      "expired": "已过期",
+      "ended": "此优惠已结束。请向商家咨询当前的优惠活动。",
+      "ends": "{date} 截止",
+      "endedOn": "已于 {date} 结束",
+      "terms": "条款"
+    },
+    "social": {
+      "links": "链接"
+    },
+    "business": {
+      "kicker": "商家",
+      "openNow": "营业中 · 至 {to}",
+      "closedNow": "已打烊",
+      "closedToday": "今日休息",
+      "call": "致电",
+      "directions": "路线",
+      "website": "网站",
+      "hours": "营业时间",
+      "closed": "休息",
+      "days": {
+        "mon": "周一",
+        "tue": "周二",
+        "wed": "周三",
+        "thu": "周四",
+        "fri": "周五",
+        "sat": "周六",
+        "sun": "周日"
+      },
+      "closedOpens": "已打烊 · {from} 开门"
+    },
+    "apps": {
+      "appStoreTop": "下载于",
+      "appStore": "App Store",
+      "playTop": "立即获取",
+      "play": "Google Play",
+      "phoneNote": "打开适用于你手机应用商店的链接。",
+      "desktopNote": "在电脑上，这些按钮会打开各应用商店的网站。",
+      "scanTitle": "用手机扫码",
+      "scanText": "在 iPhone 上会打开 App Store，在 Android 上会打开 Google Play。",
+      "qrLabel": "此页面的二维码"
+    },
+    "pdf": {
+      "open": "打开 PDF",
+      "download": "下载",
+      "meta": "{pages, plural, other {# 页}} · {size}",
+      "metaNoPages": "{size}",
+      "waiting": "此文档的新版本正在准备中，请稍后再试。",
+      "notReady": "文档仍在准备中。"
+    },
+    "product": {
+      "photos": "产品照片",
+      "photo": "第 {n} 张，共 {count} 张",
+      "prev": "上一张",
+      "next": "下一张",
+      "opens": "打开 {host}"
+    },
+    "reportForm": {
+      "title": "举报此页面",
+      "lead": "告诉我们哪里有问题。HeyQR 会审核每一条举报。",
+      "reason": "原因",
+      "reasons": {
+        "scam": "诈骗或欺诈",
+        "malware": "恶意软件或有害下载",
+        "illegal": "违法或有害内容",
+        "impersonation": "冒充他人",
+        "other": "其他"
+      },
+      "details": "详细信息",
+      "detailsPlaceholder": "你看到了什么？（选填）",
+      "email": "你的邮箱",
+      "emailHint": "选填。仅在我们需要向你询问时使用。",
+      "send": "发送举报",
+      "sending": "正在发送…",
+      "sent": "谢谢。我们会审核此页面。",
+      "failed": "无法发送举报，请重试。",
+      "invalid": "请选择一个原因，并检查邮箱地址。",
+      "back": "返回页面"
+    }
+  },
+  "developers": {
+    "metaTitle": "开发者 API",
+    "metaDescription": "在你自己的代码中生成 HeyQR 二维码：用于静态二维码的 @heyqr/qr-core 包，以及即将推出的动态二维码 REST API。",
+    "docs": {
+      "search": {
+        "label": "搜索文档",
+        "placeholder": "搜索文档",
+        "clear": "清除搜索",
+        "empty": "没有与“{query}”匹配的页面。",
+        "emptyHint": "试试“Logo”“PNG”“扫描”或“Wi-Fi”。",
+        "suggestions": ["Logo", "PNG", "扫描", "Wi-Fi"],
+        "resultOne": "1 个页面",
+        "resultOther": "{count} 个页面"
+      },
+      "groups": {
+        "start": "入门",
+        "guides": "指南",
+        "ref": "参考",
+        "help": "帮助",
+        "rest": "REST API"
+      },
+      "menu": {
+        "open": "打开文档菜单",
+        "close": "关闭文档菜单",
+        "label": "文档"
+      },
+      "breadcrumbRoot": "开发者",
+      "onThisPage": "本页内容",
+      "backToTop": "返回顶部",
+      "previous": "上一页",
+      "next": "下一页",
+      "soon": "即将推出",
+      "preview": "预览",
+      "designPreview": "设计预览",
+      "notPublic": "尚未公开",
+      "env": {
+        "both": "浏览器和 Node.js",
+        "browser": "浏览器",
+        "node": "仅限 Node.js",
+        "shell": "终端",
+        "types": "类型",
+        "http": "HTTP",
+        "json": "JSON"
+      },
+      "copy": "复制",
+      "copied": "已复制",
+      "copiedAnnounce": "已将 {file} 复制到剪贴板",
+      "copyFailed": "无法复制。请手动选择代码。",
+      "required": "必填",
+      "endpoint": {
+        "auth": "授权",
+        "authValue": "Authorization: Bearer <API 密钥>",
+        "method": "方法",
+        "url": "请求 URL",
+        "base": "位于你所使用的 HeyQR 服务器上；公共 API 尚未开放。"
+      },
+      "helpful": {
+        "question": "本页内容对你有帮助吗？",
+        "yes": "有帮助",
+        "no": "没有帮助",
+        "sending": "正在发送…",
+        "thanks": "感谢你的反馈。",
+        "failed": "无法保存，请重试。"
+      },
+      "footer": {
+        "checked": "已对照 @heyqr/qr-core {version} 源码核对。路由：{route}",
+        "restChecked": "已对照此版本的 /api/v1 路由核对。路由：{route}",
+        "proposed": "设计提案，并非已发布的约定。"
+      },
+      "status": {
+        "unpublished": "未发布",
+        "live": "已上线",
+        "liveOnNpm": "已在 npm 发布",
+        "soon": "即将推出"
+      },
+      "products": {
+        "pkgTitle": "npm 包",
+        "pkgText": "免费。在你的设备上渲染静态二维码。无需账户，无需 API 密钥。",
+        "restTitle": "REST API",
+        "restText": "从你的服务器创建和管理二维码，包括动态二维码。"
+      },
+      "install": {
+        "managers": "包管理器",
+        "npmLink": "npmjs.com/package/{name}",
+        "opensNewTab": "（在新标签页中打开）",
+        "unpublishedTitle": "尚未发布到 npm",
+        "unpublishedText": "{name} {version} 尚未发布，因此暂时无法安装。本文档中的所有内容都与其当前源码一致。发布时通过邮件通知我："
+      },
+      "restSoon": {
+        "cardTitle": "从你的服务器生成动态二维码",
+        "cardText": "使用账户中的 API 密钥，你可以创建二维码、更改动态二维码的目标链接并读取扫描次数。开放时，我们将发布包含真实请求和响应的完整参考文档。",
+        "planned": "计划中",
+        "items": ["账户 API 密钥", "创建单个二维码，或一次最多创建 100 个", "更改动态二维码的目标链接", "每日扫描次数"],
+        "npmLink": "立即使用 npm 包"
+      },
+      "waitlist": {
+        "label": "REST API 开放时通过邮件通知我",
+        "placeholder": "you@company.com",
+        "join": "加入候补名单",
+        "joining": "正在加入…",
+        "invalid": "请检查邮箱地址。它需要包含用户名、@ 和域名。",
+        "failed": "暂时无法添加，请重试。",
+        "joined": "你已加入名单。REST API 开放时，我们会发邮件到 {email}。",
+        "hint": "仅在开放时发送一封邮件，不会订阅新闻通讯。"
+      },
+      "notifyPackages": {
+        "label": "包发布时通过邮件通知我",
+        "join": "邮件通知我",
+        "joined": "你已加入名单。发布时，我们会发邮件到 {email}。",
+        "hint": "仅在发布时发送一封邮件，不会订阅新闻通讯。"
+      },
+      "responseNotes": {
+        "created": "二维码已作为草稿创建，请求中的每个版式各对应一个版式 id。",
+        "invalid": "某个字段违反了规则；`details` 会逐一列出这些字段，且绝不回显其值。",
+        "draftLimit": "该账户的草稿数量已达上限。",
+        "reused": "该 Idempotency-Key 已被用于另一个请求；未创建任何内容。",
+        "changed": "已保存。如果地址与已存储的地址相同，`changed` 为 false。",
+        "conflict": "已有人先行修改。`current` 是当前存储的值；请读取后重新决定。",
+        "notDynamic": "静态二维码没有目标链接：其内容就编码在码点图案中。",
+        "rateLimited": "超出了账户的请求配额。请等待 Retry-After 秒，然后重新发送相同的请求。",
+        "unauthorized": "任何未通过验证的密钥都会在读取请求体之前收到此响应。",
+        "bulk202": "轮询 GET /v1/jobs/{job_id}，或等待 webhook。",
+        "bulk400": "只要有任何一项失败，就不会创建任何二维码。",
+        "scans200": "没有扫描的日期也会包含在内，值为 0。"
+      },
+      "pages": {
+        "overview": {
+          "title": "开发者 API",
+          "nav": "概览",
+          "lead": "在你自己的代码中生成 HeyQR 二维码。现在就可以使用免费的 npm 包；动态二维码的 REST API 即将推出。",
+          "blocks": [
+            {
+              "k": "products"
+            },
+            {
+              "k": "h2",
+              "id": "what",
+              "t": "你可以构建什么"
+            },
+            {
+              "k": "list",
+              "items": [
+                "浏览器应用中的风格化二维码：形状、颜色，以及中间的 Logo 或简短文字。",
+                "通过脚本或服务器任务生成可直接打印的 SVG 和 PNG 文件。",
+                "在展示或打印之前进行扫描检查：对比度、反色、Logo 遮挡过多。",
+                "带边框和文字说明的完整版式，与 HeyQR 编辑器导出的版式相同。"
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "entries",
+              "t": "入口"
+            },
+            {
+              "k": "p",
+              "t": "一个包，五个导入入口。主入口可在任何环境使用；其他入口用于 Node.js 或在浏览器中解码。"
+            },
+            {
+              "k": "table",
+              "label": "入口",
+              "cols": ["导入", "运行环境", "提供的功能"],
+              "rows": [
+                {
+                  "cells": [
+                    "`@heyqr/qr-core`",
+                    "浏览器和 Node.js",
+                    "`encodePayload`、`renderQr`、`renderQrSvg`、`composeLayout`，以及颜色和容量辅助函数"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/raster`", "仅限 Node.js", "`rasterizeSvg`：使用 resvg 将 SVG 转为 PNG"],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/verify`", "仅限 Node.js", "`decodeSvg`、`decodeImage`、`verifyScan`：使用 ZXing 读回二维码"],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/verify-browser`", "浏览器", "`decodeSvgInBrowser`：同一个解码器，从你托管的 wasm 文件加载"],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/node`", "仅限 Node.js", "在一个导入中提供 `rasterizeSvg` 和各验证函数"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "该包生成的是静态二维码：内容直接编码在码点图案中。带可编辑短链接和扫描次数统计的动态二维码需要 HeyQR 套餐，并通过 REST API 提供。"
+            },
+            {
+              "k": "h2",
+              "id": "next",
+              "t": "后续步骤"
+            },
+            {
+              "k": "cards",
+              "items": [
+                {
+                  "page": "quickstart",
+                  "title": "快速入门",
+                  "t": "五行代码生成你的第一个二维码。",
+                  "icon": "zap"
+                },
+                {
+                  "page": "content",
+                  "title": "编码内容",
+                  "t": "网站、Wi-Fi、联系人、活动等。",
+                  "icon": "book"
+                },
+                {
+                  "page": "scan",
+                  "title": "检查能否扫描",
+                  "t": "阅读扫描报告并解码结果。",
+                  "icon": "scan"
+                },
+                {
+                  "page": "api",
+                  "title": "函数",
+                  "t": "每个导出项及其签名。",
+                  "icon": "braces"
+                }
+              ]
+            }
+          ]
+        },
+        "install": {
+          "title": "安装",
+          "lead": "将 @heyqr/qr-core 添加到浏览器应用、Node.js 服务或两者之中。",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "add",
+              "t": "添加包"
+            },
+            {
+              "k": "install",
+              "package": "qrCore"
+            },
+            {
+              "k": "h2",
+              "id": "reqs",
+              "t": "环境要求"
+            },
+            {
+              "k": "table",
+              "label": "环境要求",
+              "cols": ["项目", "详情"],
+              "rows": [
+                {
+                  "cells": ["模块格式", "仅支持 ES 模块（该包为 `\"type\": \"module\"`）。请使用 `import`，而不是 `require`。"],
+                  "required": false
+                },
+                {
+                  "cells": ["TypeScript", "类型定义随包提供，无需安装 `@types` 包。"],
+                  "required": false
+                },
+                {
+                  "cells": ["浏览器", "主入口不依赖 Node.js，可与任何现代打包工具配合使用。"],
+                  "required": false
+                },
+                {
+                  "cells": ["Node.js", "`/raster` 和 `/verify` 使用 `@resvg/resvg-js`，这是一个为常见平台提供预编译二进制文件的原生模块。"],
+                  "required": false
+                },
+                {
+                  "cells": ["在浏览器中解码", "`/verify-browser` 从你指定的 URL 加载 `zxing_reader.wasm`，绝不从 CDN 加载。"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "wasm",
+              "t": "为浏览器托管解码器"
+            },
+            {
+              "k": "p",
+              "t": "仅 `decodeSvgInBrowser` 需要。将 wasm 文件从 `zxing-wasm` 依赖复制到你的 public 文件夹，并传入其 URL。该命令通过包解析来查找文件，因此适用于 npm、pnpm 和 Yarn。"
+            },
+            {
+              "k": "code",
+              "example": "wasm"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "在 zxing-wasm 3.1.7（该包当前依赖的版本）中，该文件为 `zxing-wasm/reader/zxing_reader.wasm`。升级后请重新检查。"
+            }
+          ]
+        },
+        "quickstart": {
+          "title": "快速入门",
+          "lead": "编码内容、设置样式、检查扫描并生成 SVG，大约只需一分钟。",
+          "blocks": [
+            {
+              "k": "steps",
+              "items": [
+                {
+                  "title": "安装",
+                  "t": "使用你的包管理器添加 `@heyqr/qr-core`。"
+                },
+                {
+                  "title": "编码内容",
+                  "t": "`encodePayload` 将网站、Wi-Fi 网络或联系人转换为二维码中的文本。"
+                },
+                {
+                  "title": "描述外观",
+                  "t": "`QrStyle` 用于设置码点形状、定位角形状和颜色。"
+                },
+                {
+                  "title": "检查扫描",
+                  "t": "`renderQr` 返回一份扫描报告，并为每个问题提供修复建议。"
+                },
+                {
+                  "title": "获取文件",
+                  "t": "`renderQrSvg` 返回独立的 SVG；在 Node.js 中，`rasterizeSvg` 可将其转为 PNG。"
+                }
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "在浏览器中"
+            },
+            {
+              "k": "code",
+              "example": "quickstartBrowser"
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "在 Node.js 中保存文件"
+            },
+            {
+              "k": "code",
+              "example": "quickstartNode"
+            }
+          ]
+        },
+        "content": {
+          "title": "编码内容",
+          "lead": "encodePayload 将结构化内容转换为手机针对每种二维码所期望的确切文本。",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "types",
+              "t": "内容类型"
+            },
+            {
+              "k": "p",
+              "t": "传入九种 `QrContent` 对象之一。`QR_CONTENT_TYPES` 列出了所有 `type` 值。"
+            },
+            {
+              "k": "table",
+              "label": "内容类型",
+              "cols": ["type", "字段", "二维码包含的内容"],
+              "rows": [
+                {
+                  "cells": ["`website`", "`url`（裸域名会自动加上 https://）", "规范化后的 URL"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "`text`", "原样文本"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`wifi`",
+                    "`ssid`、`security` \"WPA\" | \"WEP\" | \"nopass\"、`password?`、`hidden?`",
+                    "`WIFI:T:WPA;S:…;P:…;;`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`contact`",
+                    "`firstName?`、`lastName?`、`title?`、`company?`、`phone?`、`email?`、`website?`",
+                    "一张 vCard 3.0"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`email`", "`to`、`subject?`、`body?`", "带主题和正文的 `mailto:`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`phone`", "`number`", "带数字和 + 的 `tel:`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`sms`", "`number`、`message?`", "`SMSTO:number:message`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`location`", "`address`、`name?`", "带地址的 `geo:0,0?q=`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`event`", "`title`、`start`、`end?`、`place?`", "一个日历活动（VEVENT）"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "examples",
+              "t": "示例"
+            },
+            {
+              "k": "code",
+              "example": "contentExamples"
+            },
+            {
+              "k": "h2",
+              "id": "contact",
+              "t": "联系人名片"
+            },
+            {
+              "k": "p",
+              "t": "联系人会转换为 vCard 3.0，这是手机相机读取最可靠的版本。空字段会被省略，长行会被折行。"
+            },
+            {
+              "k": "code",
+              "example": "vcard"
+            },
+            {
+              "k": "h2",
+              "id": "events",
+              "t": "活动"
+            },
+            {
+              "k": "p",
+              "t": "`start` 和 `end` 是本地时间，例如 `2026-12-05T19:00`。只有日期而没有时间（例如 `2026-12-05`）会生成全天活动。"
+            },
+            {
+              "k": "code",
+              "example": "event"
+            },
+            {
+              "k": "h2",
+              "id": "urls",
+              "t": "检查网站地址"
+            },
+            {
+              "k": "p",
+              "t": "`parseWebsiteUrl` 与 HeyQR 编辑器使用的检查相同。它会拒绝包含空格、其他协议、凭据以及不含点的主机名的地址。"
+            },
+            {
+              "k": "code",
+              "example": "urlCheck"
+            }
+          ]
+        },
+        "style": {
+          "title": "设置二维码样式",
+          "lead": "QrStyle 描述形状和颜色。每种样式都会按照相同的扫描规则进行检查。",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "shapes",
+              "t": "形状"
+            },
+            {
+              "k": "chips",
+              "t": "pattern · 数据码点",
+              "items": ["square", "rounded", "dot", "diamond", "leaf", "fluid", "vbars", "hbars"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeFrame · 定位角外框",
+              "items": ["square", "rounded", "cushion", "circle", "leaf"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeBall · 定位角中心",
+              "items": ["square", "rounded", "circle", "diamond", "leaf"]
+            },
+            {
+              "k": "h2",
+              "id": "colors",
+              "t": "颜色"
+            },
+            {
+              "k": "p",
+              "t": "`colors` 接受四个十六进制颜色：`fg` 用于数据码点，`eye` 用于定位角外框，`eyeIn` 用于定位角中心，`bg` 用于背景。"
+            },
+            {
+              "k": "table",
+              "label": "最低对比度",
+              "cols": ["部分", "与背景的最低对比度"],
+              "rows": [
+                {
+                  "cells": ["数据码点（`fg`）", "3 : 1（`MIN_CONTRAST.modules`）"],
+                  "required": false
+                },
+                {
+                  "cells": ["定位角外框（`eye`）", "3 : 1（`MIN_CONTRAST.eyeFrame`）"],
+                  "required": false
+                },
+                {
+                  "cells": ["定位角中心（`eyeIn`）", "2.5 : 1（`MIN_CONTRAST.eyeCenter`）"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "二维码必须比背景颜色更深。深色背景上的浅色二维码即使对比度很高，也会因 `invert` 问题而检查失败。"
+            },
+            {
+              "k": "code",
+              "example": "contrast"
+            },
+            {
+              "k": "h2",
+              "id": "center",
+              "t": "中间的简短文字"
+            },
+            {
+              "k": "p",
+              "t": "`centerText` 会在二维码内部放置一个标签。它只显示第一行，最多 14 个字符（`CENTER_TEXT_MAX`）；更长的文本会在完整单词处截断并加上省略号。"
+            },
+            {
+              "k": "code",
+              "example": "centerText"
+            },
+            {
+              "k": "h2",
+              "id": "art",
+              "t": "二维码背后的图案"
+            },
+            {
+              "k": "p",
+              "t": "`art` 会在码点背后用两种浅色绘制柔和的形状，还可以加上一张淡淡的图片。扫描检查会将背景视为带色调的背景。"
+            },
+            {
+              "k": "code",
+              "example": "art"
+            }
+          ]
+        },
+        "logo": {
+          "title": "Logo 和图标",
+          "lead": "在中间放置一张图片或一个 24 × 24 的线条图标。纠错级别会自动提高，确保二维码仍可识别。",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "fields",
+              "t": "Logo 字段"
+            },
+            {
+              "k": "table",
+              "label": "QrLogo",
+              "cols": ["字段", "类型", "说明"],
+              "rows": [
+                {
+                  "cells": ["`href`", "string", "图片 URL 或 data URI。设置了 `iconPath` 时将被忽略。"],
+                  "required": false
+                },
+                {
+                  "cells": ["`iconPath`", "string", "24 × 24 的线条路径，例如 Lucide 图标。"],
+                  "required": false
+                },
+                {
+                  "cells": ["`size`", "number", "Logo 宽度占二维码宽度的比例。绘制范围为 0.10 到 0.46（`CENTER_LOGO_SIZE`）。"],
+                  "required": true
+                },
+                {
+                  "cells": ["`plate`", "\"none\" | \"square\" | \"circle\"", "Logo 背后的底板。"],
+                  "required": true
+                },
+                {
+                  "cells": ["`tile`", "boolean", "将图标放在彩色圆角方块上，而不是底板上。"],
+                  "required": false
+                },
+                {
+                  "cells": ["`plateColor`、`iconColor`", "string", "底板和图标的十六进制颜色。"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "example",
+              "t": "示例"
+            },
+            {
+              "k": "code",
+              "example": "logoStyle"
+            },
+            {
+              "k": "h2",
+              "id": "fit",
+              "t": "最大可以多大？"
+            },
+            {
+              "k": "p",
+              "t": "带 Logo 或中间文字时，二维码使用 H 级纠错，因此容量略多于一半（382 字节，而不是 666 字节）。渲染后，`scan.maxLogoSize` 是仍能解码的最大尺寸；更大的 Logo 会因 `logo` 问题而检查失败。"
+            },
+            {
+              "k": "code",
+              "example": "logoFit"
+            }
+          ]
+        },
+        "layouts": {
+          "title": "边框和文字说明",
+          "lead": "composeLayout 绘制完整的版式：卡片或边框、二维码、文字说明以及可选的 Logo，与 HeyQR 的导出效果完全一致。",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "presets",
+              "t": "版式预设"
+            },
+            {
+              "k": "table",
+              "label": "预设",
+              "cols": ["preset", "绘制内容"],
+              "rows": [
+                {
+                  "cells": ["`qr`", "仅二维码，尺寸为 `qrSize`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`caption`", "二维码加上方或下方的文字说明，或二维码内部的文字"],
+                  "required": false
+                },
+                {
+                  "cells": ["`vertical`", "一张卡片，二维码位于文字说明上方"],
+                  "required": false
+                },
+                {
+                  "cells": ["`horizontal`", "一张卡片，二维码位于文字说明旁边"],
+                  "required": false
+                },
+                {
+                  "cells": ["`frame`", "围绕二维码的边框；尺寸由 `qrSize` 决定"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "chips",
+              "t": "frameStyle",
+              "items": ["bar", "tab", "bubble", "pill", "corners", "circle", "ticket", "phone"]
+            },
+            {
+              "k": "h2",
+              "id": "compose",
+              "t": "组合版式"
+            },
+            {
+              "k": "code",
+              "example": "compose"
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "请在 `composeLayout` 之前调用 `layoutCapacity`，这样过长的内容会变成提示信息，而不是抛出异常。将 `{ transparent: true }` 作为第三个参数传入，即可获得透明背景。"
+            },
+            {
+              "k": "h2",
+              "id": "fonts",
+              "t": "文字说明字体"
+            },
+            {
+              "k": "p",
+              "t": "文字说明是 SVG 文本。在浏览器中，它们使用页面的字体；在 Node.js 中栅格化时，请通过 `fontFiles` 传入字体文件，否则将使用系统已安装的字体。文字说明字体支持拉丁字母和西里尔字母。"
+            }
+          ]
+        },
+        "png": {
+          "title": "保存 PNG",
+          "lead": "rasterizeSvg 使用 resvg 将包生成的任意 SVG 渲染为 PNG Buffer。",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "basic",
+              "t": "渲染 PNG"
+            },
+            {
+              "k": "code",
+              "example": "png"
+            },
+            {
+              "k": "h2",
+              "id": "options",
+              "t": "选项"
+            },
+            {
+              "k": "table",
+              "label": "RasterOptions",
+              "cols": ["选项", "类型", "说明"],
+              "rows": [
+                {
+                  "cells": ["`width`", "number", "输出宽度（像素）。高度随 SVG 比例而定。"],
+                  "required": true
+                },
+                {
+                  "cells": ["`fontFiles`", "string[]", "用于文字说明的字体文件。"],
+                  "required": false
+                },
+                {
+                  "cells": ["`systemFonts`", "boolean", "同时使用已安装的字体。默认为 `true`。"],
+                  "required": false
+                },
+                {
+                  "cells": ["`background`", "string", "透明区域背后的背景颜色。"],
+                  "required": false
+                },
+                {
+                  "cells": ["`dpi`", "number", "写入文件的打印分辨率，使打印软件按实际物理尺寸打开。用于屏幕显示的文件请省略此项。"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "print",
+              "t": "打印尺寸"
+            },
+            {
+              "k": "p",
+              "t": "`pngPixelSize` 给出版式的精确像素尺寸：mm 版式为 300、600 或 1200 dpi（`PNG_DPIS`），px 版式为 1×、2×、4× 或 8×（`PNG_SCALES`）。边长保持在 64 到 8192 px 之间。"
+            },
+            {
+              "k": "code",
+              "example": "printPng"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "不要在浏览器打包产物中导入 `/raster`：resvg 是 Node.js 原生模块。"
+            }
+          ]
+        },
+        "scan": {
+          "title": "检查能否扫描",
+          "lead": "每次渲染都会附带一份扫描报告。在 Node.js 和浏览器中，你还可以解码结果以确保无误。",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "扫描报告"
+            },
+            {
+              "k": "code",
+              "example": "scanReport"
+            },
+            {
+              "k": "table",
+              "label": "问题代码",
+              "cols": ["code", "title", "fix"],
+              "rows": [
+                {
+                  "cells": ["`invert`", "Light code on a dark background", "Swap colors"],
+                  "required": false
+                },
+                {
+                  "cells": ["`contrast`", "Not enough contrast", "Increase contrast"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eyes`", "Corner markers are too light", "Darken corner markers"],
+                  "required": false
+                },
+                {
+                  "cells": ["`logo`", "The logo hides too much of the code", "Reduce logo size"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "The text in the code is too long", "Shorten the text"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "该报告基于规则：它会检查精确的几何形状和颜色，而不进行解码。需要确凿证明时，请进行解码。"
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "在 Node.js 中解码"
+            },
+            {
+              "k": "code",
+              "example": "verifyNode"
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "在浏览器中解码"
+            },
+            {
+              "k": "code",
+              "example": "verifyBrowser"
+            },
+            {
+              "k": "p",
+              "t": "数据不会离开设备：解码器在本地运行，绝不会打开二维码的目标链接。"
+            }
+          ]
+        },
+        "api": {
+          "title": "函数",
+          "lead": "所有公共函数，按入口分组。签名与包中的 TypeScript 类型一致。",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "内容"
+            },
+            {
+              "k": "table",
+              "label": "内容函数",
+              "cols": ["函数", "签名"],
+              "rows": [
+                {
+                  "cells": ["`encodePayload`", "`(content: QrContent) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`encodeVCard`", "`(contact) => string` · vCard 3.0"],
+                  "required": false
+                },
+                {
+                  "cells": ["`normalizeUrl`", "`(input: string) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseWebsiteUrl`", "`(input: string) => { ok: true; url } | { ok: false; problem }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "render",
+              "t": "渲染"
+            },
+            {
+              "k": "table",
+              "label": "渲染函数",
+              "cols": ["函数", "签名"],
+              "rows": [
+                {
+                  "cells": ["`renderQr`", "`(value: string, style: QrStyle) => RenderedQr`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`renderQrSvg`", "`(value: string, style: QrStyle, sizePx = 512) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eclForStyle`", "`(style) => \"M\" | \"H\"` · 当 Logo 或文字覆盖中心时为 H"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerLogoSize`", "`(size: number) => number` · 限制在 0.10–0.46 之间"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerTextLabel`", "`(text: string) => { label; shortened }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "layout",
+              "t": "版式"
+            },
+            {
+              "k": "table",
+              "label": "版式函数",
+              "cols": ["函数", "签名"],
+              "rows": [
+                {
+                  "cells": [
+                    "`composeLayout`",
+                    "`(layout: Layout, value: string, options?: { transparent? }) => { svg, width, height, scan }`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutCapacity`", "`(layout: Layout, value: string) => { ok, bytes, maxBytes, ecl, centerCovered }`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutGeometry`", "`(layout: Layout) => LayoutGeometry`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pngPixelSize`", "`(layout: Layout, { scale?, dpi? }) => { width, height, ok }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "encode",
+              "t": "编码与容量"
+            },
+            {
+              "k": "table",
+              "label": "编码函数",
+              "cols": ["函数", "签名"],
+              "rows": [
+                {
+                  "cells": ["`encodeQr`", "`(text: string, ecl = \"M\") => QrMatrix`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`payloadBytes`", "`(text: string) => number` · UTF-8 字节数"],
+                  "required": false
+                },
+                {
+                  "cells": ["`maxPayloadBytes`", "`(ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pickVersion`", "`(byteLength: number, ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`QrCapacityError`", "带有 `byteLength` 和 `maxBytes` 的错误"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "color",
+              "t": "颜色"
+            },
+            {
+              "k": "table",
+              "label": "颜色函数",
+              "cols": ["函数", "签名"],
+              "rows": [
+                {
+                  "cells": ["`contrastRatio`", "`(a: string, b: string) => number` · WCAG 对比度"],
+                  "required": false
+                },
+                {
+                  "cells": ["`luminance`", "`(hex: string) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`isHexColor`", "`(value: string) => boolean` · 仅限 `#RRGGBB`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseHexColor`", "`(text: string) => string | null`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`mixColors`", "`(a: string, b: string, t: number) => string`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Node.js 和浏览器入口"
+            },
+            {
+              "k": "table",
+              "label": "其他入口",
+              "cols": ["函数", "入口", "签名"],
+              "rows": [
+                {
+                  "cells": ["`rasterizeSvg`", "`/raster`", "`(svg: string, options: RasterOptions) => Buffer`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvg`", "`/verify`", "`(svg: string, width = 720) => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeImage`", "`/verify`", "`(file: Uint8Array, type = \"image/png\") => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`verifyScan`", "`/verify`", "`(svg, expected, widths = [300, 600, 1200]) => Promise<boolean>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvgInBrowser`", "`/verify-browser`", "`(svg, { wasmUrl, size? = 960 }) => Promise<string | null>`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        },
+        "types": {
+          "title": "类型",
+          "lead": "包中出现的主要类型。",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "style",
+              "t": "QrStyle"
+            },
+            {
+              "k": "code",
+              "example": "typesStyle"
+            },
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "RenderedQr 和 ScanReport"
+            },
+            {
+              "k": "code",
+              "example": "typesReport"
+            },
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "QrContent"
+            },
+            {
+              "k": "code",
+              "example": "typesContent"
+            }
+          ]
+        },
+        "limits": {
+          "title": "限制与错误",
+          "lead": "编码器接受哪些内容，以及内容放不下时会发生什么。",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "限制"
+            },
+            {
+              "k": "table",
+              "label": "限制",
+              "cols": ["限制项", "值"],
+              "rows": [
+                {
+                  "cells": ["最大二维码版本", "20（`MAX_VERSION`），97 × 97 个码点"],
+                  "required": false
+                },
+                {
+                  "cells": ["内容", "M 级纠错时 666 字节，H 级时 382 字节"],
+                  "required": false
+                },
+                {
+                  "cells": ["纠错级别", "M；带 Logo 或中间文字时为 H"],
+                  "required": false
+                },
+                {
+                  "cells": ["静区", "每边 4 个码点，包含在 `viewBox` 中"],
+                  "required": false
+                },
+                {
+                  "cells": ["Logo 尺寸", "二维码宽度的 0.10–0.46（`CENTER_LOGO_SIZE`）"],
+                  "required": false
+                },
+                {
+                  "cells": ["中间文字", "14 个字符（`CENTER_TEXT_MAX`）"],
+                  "required": false
+                },
+                {
+                  "cells": ["PNG 边长", "64–8192 px（`PNG_MIN_SIDE`、`PNG_MAX_SIDE`）"],
+                  "required": false
+                },
+                {
+                  "cells": ["对比度", "码点和定位角外框 3 : 1，定位角中心 2.5 : 1"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "capacity",
+              "t": "内容过长"
+            },
+            {
+              "k": "p",
+              "t": "当内容放不下时，渲染会抛出 `QrCapacityError`。它只携带尺寸信息，绝不包含内容本身，因此可以安全地记录到日志。"
+            },
+            {
+              "k": "code",
+              "example": "capacity"
+            },
+            {
+              "k": "h2",
+              "id": "null",
+              "t": "返回 null 的解码器"
+            },
+            {
+              "k": "p",
+              "t": "当无法读取任何二维码时，`decodeSvg`、`decodeImage` 和 `decodeSvgInBrowser` 会返回 `null`。请将其视为检查未通过，而不是错误。"
+            }
+          ]
+        },
+        "faq": {
+          "title": "常见问题",
+          "lead": "常见问题的简短解答。",
+          "blocks": [
+            {
+              "k": "faq",
+              "items": [
+                {
+                  "q": "该包会向 HeyQR 发送任何数据吗？",
+                  "a": "不会。编码、渲染和扫描检查都在你的设备上运行。浏览器解码器从你托管的 URL 加载其 wasm 文件。"
+                },
+                {
+                  "q": "可以用它生成动态二维码吗？",
+                  "a": "暂时不行。动态二维码需要 HeyQR 短链接、套餐以及我们服务器上的扫描统计。这些将随 REST API 一起提供。"
+                },
+                {
+                  "q": "为什么我带 Logo 的二维码检查失败？",
+                  "a": "Logo 会将纠错级别提高到 H，从而降低容量，并且会遮挡码点。请将 Logo 缩小到 `scan.maxLogoSize` 以下，或缩短内容。"
+                },
+                {
+                  "q": "为什么 PNG 导出仅限 Node.js？",
+                  "a": "PNG 使用 resvg 渲染，而 resvg 是原生模块。如果需要在浏览器中获得像素图，请将 SVG 绘制到 canvas 上。"
+                },
+                {
+                  "q": "生成的文件会与 HeyQR 编辑器一致吗？",
+                  "a": "会。编辑器预览和付费导出都使用 `composeLayout`，因此相同的版式会生成相同的 SVG。"
+                },
+                {
+                  "q": "可以在商业产品中使用吗？",
+                  "a": "许可证将随首个公开版本确定，并会在此处和 npm 上公布。"
+                }
+              ]
+            }
+          ]
+        },
+        "changelog": {
+          "title": "更新日志",
+          "lead": "@heyqr/qr-core 的版本发布记录。",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "v010",
+              "t": "0.1.0 · 尚未发布"
+            },
+            {
+              "k": "list",
+              "items": [
+                "首个公开版本正在准备中。本文档中的所有内容都与该包的当前源码一致。",
+                "入口：main、`/raster`、`/verify`、`/verify-browser`、`/node`。"
+              ]
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "版本发布后，其说明和 npm 链接将显示在这里。"
+            }
+          ]
+        },
+        "rest": {
+          "title": "REST API",
+          "lead": "从你的服务器创建二维码、更改动态二维码的目标链接并读取扫描次数。",
+          "blocks": [
+            {
+              "k": "restSoon"
+            }
+          ]
+        },
+        "restAuth": {
+          "title": "身份验证",
+          "lead": "每个请求都携带一个来自你 HeyQR 账户的 API 密钥。",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "尚未公开。本页介绍的是此 HeyQR 版本中的 REST API，已对照其路由核对。它目前尚未在 heyqr.me 上提供，在正式提供之前也不会出现在搜索结果中。"
+            },
+            {
+              "k": "h2",
+              "id": "keys",
+              "t": "API 密钥"
+            },
+            {
+              "k": "list",
+              "items": [
+                "在“账户 → API 密钥”中创建密钥。密钥属于你的账户；该账户的每个密钥都能看到相同的二维码。",
+                "密钥格式为 `hqk_<lookupId>_<secret>`。完整密钥仅在创建时显示一次；HeyQR 只保存一个验证值。",
+                "请从你的服务器在 `Authorization` 请求头中发送密钥。切勿将其放在 URL 或浏览器代码中。",
+                "缺失、错误或已撤销的密钥都会在读取请求体之前收到相同的 `401 unauthorized`。"
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "header",
+              "t": "请求头"
+            },
+            {
+              "k": "code",
+              "example": "restHeader"
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "速率限制"
+            },
+            {
+              "k": "p",
+              "t": "限制以账户为单位：账户的所有密钥共享同一限制，不同账户之间互不影响。时间窗口从第一个请求开始，持续 60 秒。"
+            },
+            {
+              "k": "table",
+              "label": "速率限制",
+              "cols": ["配额", "计入范围", "默认每分钟上限"],
+              "rows": [
+                {
+                  "cells": ["`api`", "每个使用有效密钥的请求", "120"],
+                  "required": false
+                },
+                {
+                  "cells": ["`export`", "文件导出，同时计入 `api`", "30"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "p",
+              "t": "超出配额时，会在创建、更改或渲染任何内容之前返回带有 `Retry-After` 的 `429 rate_limited`。"
+            }
+          ]
+        },
+        "restCreate": {
+          "title": "创建二维码",
+          "lead": "创建一个带有版式的二维码，作为你账户中的草稿。激活、短链接和付款仍在应用内完成。",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "尚未公开。本页介绍的是此 HeyQR 版本中的 REST API，已对照其路由核对。它目前尚未在 heyqr.me 上提供，在正式提供之前也不会出现在搜索结果中。"
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "请求体"
+            },
+            {
+              "k": "table",
+              "label": "请求体",
+              "cols": ["参数", "类型", "示例", "说明"],
+              "rows": [
+                {
+                  "cells": ["`name`", "string", "\"Spring menu\"", "1–80 个字符。显示在“我的二维码”中的名称。"],
+                  "required": true
+                },
+                {
+                  "cells": ["`mode`", "\"static\" | \"dynamic\"", "\"static\"", "`dynamic` 仅适用于 `website` 内容。"],
+                  "required": true
+                },
+                {
+                  "cells": ["`content`", "QrContent", "{ \"type\": \"website\", … }", "二维码打开的内容。结构与 `encodePayload` 相同。"],
+                  "required": true
+                },
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"littlefern.cafe/menu\"",
+                    "仅限 `dynamic`：短链接将用户引导到的地址。默认为网站地址。"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`layouts`",
+                    "array",
+                    "[{ \"name\": \"Sticker\", \"layout\": … }]",
+                    "1–20 个版式：`name`（1–60）、已渲染的 `layout` 以及可选的 `editor` 设置。"
+                  ],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "p",
+              "t": "请求体校验严格：未知字段会被拒绝。发送 `Idempotency-Key` 请求头（1–255 个可见字符，可使用 UUID）可确保重试安全：相同的密钥和请求会返回原来的 `201`。"
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "请求"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateRequest",
+              "label": "请求示例"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "响应"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateResponses",
+              "label": "响应"
+            }
+          ]
+        },
+        "restBulk": {
+          "title": "批量创建",
+          "lead": "一次请求最多创建 100 个二维码。任务在后台运行。",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "设计预览。提议中的端点：本页内容均尚未上线，名称和字段在发布前可能会有变动。"
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes/bulk"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "请求体"
+            },
+            {
+              "k": "table",
+              "label": "请求体",
+              "cols": ["参数", "类型", "示例", "说明"],
+              "rows": [
+                {
+                  "cells": ["`items`", "array", "[{ \"name\": …, \"content\": … }]", "1–100 个二维码，每个与“创建二维码”的格式相同。"],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].name`", "string", "\"Table 12\"", "显示在“我的二维码”中的名称。"],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].content`", "QrContent", "{ \"type\": \"website\", … }", "每个二维码打开的内容。"],
+                  "required": true
+                },
+                {
+                  "cells": ["`style`", "QrStyle", "{ \"pattern\": \"rounded\", … }", "批次中所有二维码共用的一种样式。"],
+                  "required": false
+                },
+                {
+                  "cells": ["`webhook_url`", "string", "\"https://…/heyqr\"", "任务完成时调用一次。"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "响应"
+            },
+            {
+              "k": "tabs",
+              "example": "bulkResponses",
+              "label": "响应"
+            }
+          ]
+        },
+        "restDestination": {
+          "title": "更改目标链接",
+          "lead": "将动态二维码指向其他地址。已印刷的二维码保留其短链接，并立即生效。",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "尚未公开。本页介绍的是此 HeyQR 版本中的 REST API，已对照其路由核对。它目前尚未在 heyqr.me 上提供，在正式提供之前也不会出现在搜索结果中。"
+            },
+            {
+              "k": "h2",
+              "id": "read",
+              "t": "读取当前目标链接"
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "code",
+              "example": "restDestinationRead"
+            },
+            {
+              "k": "p",
+              "t": "请基于你读取到的 `revision` 进行更改：如果此后目标链接已在应用中或被其他请求更改，将返回 `409`，且不会保存任何内容。"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "请求体"
+            },
+            {
+              "k": "endpoint",
+              "method": "PATCH",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "table",
+              "label": "请求体",
+              "cols": ["参数", "类型", "示例", "说明"],
+              "rows": [
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"https://littlefern.cafe/today\"",
+                    "新地址，最多 2048 个字符。裸域名会自动加上 https://。"
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`revision`", "integer", "3", "来自 GET 或上一次 PATCH 的 revision。"],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "请求"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationRequest",
+              "label": "请求示例"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "响应"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationResponses",
+              "label": "响应"
+            }
+          ]
+        },
+        "restScans": {
+          "title": "扫描统计",
+          "lead": "动态二维码的每日扫描次数。",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "设计预览。提议中的端点：本页内容均尚未上线，名称和字段在发布前可能会有变动。"
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{id}/scans?from=2026-11-01&to=2026-11-26"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "响应"
+            },
+            {
+              "k": "tabs",
+              "example": "scansResponses",
+              "label": "响应"
+            }
+          ]
+        },
+        "restErrors": {
+          "title": "错误与速率限制",
+          "lead": "所有错误结构相同。请根据 code 进行分支判断，切勿依赖 message。",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "尚未公开。本页介绍的是此 HeyQR 版本中的 REST API，已对照其路由核对。它目前尚未在 heyqr.me 上提供，在正式提供之前也不会出现在搜索结果中。"
+            },
+            {
+              "k": "h2",
+              "id": "shape",
+              "t": "错误结构"
+            },
+            {
+              "k": "p",
+              "t": "每个错误都是 `{ \"error\": { \"code\", \"message\", …details } }`，并带有 `Cache-Control: no-store`。message 是给人看的；code 是稳定不变的。"
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "状态码"
+            },
+            {
+              "k": "table",
+              "label": "错误",
+              "cols": ["状态", "code", "触发条件"],
+              "rows": [
+                {
+                  "cells": ["400", "`malformed_json`", "请求体不是 JSON。"],
+                  "required": false
+                },
+                {
+                  "cells": ["401", "`unauthorized`", "密钥缺失、格式错误、不正确或已撤销。"],
+                  "required": false
+                },
+                {
+                  "cells": ["402", "`payment_required`", "导出未付款或未上线的二维码；`paymentUrl` 会打开其导出页面。"],
+                  "required": false
+                },
+                {
+                  "cells": ["403", "`draft_limit`", "该账户的草稿数量已达上限。"],
+                  "required": false
+                },
+                {
+                  "cells": ["404", "`not_found`", "不是你的二维码或版式、已删除或不存在：统一返回同一响应。"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "409",
+                    "`revision_conflict`, `idempotency_key_reused`",
+                    "自你的 revision 以来已被更改，或重复使用了 Idempotency-Key。"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["422", "`invalid_request`, `content_too_long`, `not_dynamic`", "违反了某条规则；`details` 会指出相应字段。"],
+                  "required": false
+                },
+                {
+                  "cells": ["429", "`rate_limited`", "超出了账户的请求配额；请等待 `Retry-After` 秒。"],
+                  "required": false
+                },
+                {
+                  "cells": ["500", "`internal_error`", "未做任何更改；请重试。"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "速率限制"
+            },
+            {
+              "k": "tabs",
+              "example": "restRateLimited",
+              "label": "响应示例"
+            },
+            {
+              "k": "p",
+              "t": "默认限制为每个账户每分钟 120 个请求和 30 次导出。被拒绝的请求不会延长等待时间。"
+            }
+          ]
+        },
+        "restSdk": {
+          "title": "TypeScript SDK",
+          "lead": "@heyqr/sdk 是 REST API 的类型化客户端，适用于 Node.js 18 及更高版本。它不负责渲染：渲染由 @heyqr/qr-core 完成。",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "尚未公开。本页介绍的是此 HeyQR 版本中的 REST API，已对照其路由核对。它目前尚未在 heyqr.me 上提供，在正式提供之前也不会出现在搜索结果中。"
+            },
+            {
+              "k": "h2",
+              "id": "install",
+              "t": "安装"
+            },
+            {
+              "k": "install",
+              "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "server",
+              "t": "在你的服务器上"
+            },
+            {
+              "k": "p",
+              "t": "`HeyQrClient` 需要 API 密钥，因此只能在服务器上运行。在浏览器打包产物中，该包会解析到另一个入口，其中的 `HeyQrClient` 会抛出 kind 为 `server_only` 的 `HeyQrError`。如需在浏览器中预览，请使用 `@heyqr/sdk/react`。"
+            },
+            {
+              "k": "code",
+              "example": "sdkInstallNote"
+            },
+            {
+              "k": "h2",
+              "id": "methods",
+              "t": "方法"
+            },
+            {
+              "k": "table",
+              "label": "HeyQrClient",
+              "cols": ["方法", "请求"],
+              "rows": [
+                {
+                  "cells": ["`createQr(request, { idempotencyKey? })`", "`POST /api/v1/qr-codes`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getLayout(qrCodeId, layoutId)`", "`GET …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateLayout(qrCodeId, layoutId, request)`", "`PATCH …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getDestination(qrCodeId)`", "`GET …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateDestination(qrCodeId, request)`", "`PATCH …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`downloadExport(qrCodeId, layoutId, { format })`", "`GET …/export`，并跟随签名链接"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "错误"
+            },
+            {
+              "k": "table",
+              "label": "错误",
+              "cols": ["错误", "触发条件"],
+              "rows": [
+                {
+                  "cells": ["`HeyQrApiError`", "文档中列出的 API 错误，带有 `status`、`code` 和类型化响应"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrRateLimitError`", "429，带有 `retryAfterSeconds` 和 `code`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrTimeoutError`, `HeyQrAbortError`", "已超过截止时间，或你的 `signal` 取消了调用"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrError`", "没有文档化的响应：`kind` 说明原因"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        }
+      },
+      "breadcrumb": "面包屑导航"
+    }
+  }
+}

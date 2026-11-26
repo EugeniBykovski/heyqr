@@ -1,0 +1,4507 @@
+{
+  "meta": {
+    "title": "Hey QR — kode QR yang tampil sesuai merek Anda",
+    "description": "Desain kode QR, pastikan bisa dipindai, lalu unduh file PNG dan SVG yang siap cetak."
+  },
+  "nav": {
+    "create": "Buat",
+    "pricing": "Harga",
+    "myCodes": "Kode QR saya",
+    "billing": "Paket & tagihan",
+    "signIn": "Masuk",
+    "signOut": "Keluar",
+    "account": "Akun dan tagihan, {name}",
+    "language": "Bahasa",
+    "skipToContent": "Langsung ke konten",
+    "home": "Beranda Hey QR",
+    "createCode": "Buat kode QR",
+    "menu": "Menu",
+    "main": "Utama",
+    "languageChoose": "Pilih bahasa",
+    "languageCount": "{count} bahasa",
+    "languageSearch": "Cari bahasa",
+    "languages": "Bahasa",
+    "languageEmpty": "Tidak ada bahasa yang cocok dengan “{query}”.",
+    "trial": "Uji coba gratis",
+    "apiKeys": "Kunci API",
+    "developers": "API untuk developer",
+    "developersShort": "API"
+  },
+  "payment": {
+    "title": "Cara pembayaran",
+    "oneTime": "Single QR adalah pembayaran sekali sebesar {price} per kode, ditambah pajak yang ditambahkan Stripe saat checkout. Ini bukan langganan dan tidak ada yang diperpanjang otomatis.",
+    "where": "Anda membayar di halaman checkout Stripe yang aman. Hey QR tidak pernah melihat detail kartu Anda.",
+    "receipt": "Tanda terima ada di akun Anda pada bagian Tagihan, di samping pembelian.",
+    "support": "Ada pertanyaan tentang pembayaran? Kirim email ke <link>{email}</link>.",
+    "terms": "Ketentuan",
+    "privacy": "Privasi",
+    "supportLink": "Bantuan"
+  },
+  "footer": {
+    "terms": "Ketentuan",
+    "privacy": "Privasi",
+    "support": "Bantuan",
+    "rights": "© {year} Hey QR",
+    "pricing": "Harga",
+    "label": "Kaki halaman",
+    "tagline": "Kode QR yang tampil sesuai merek Anda dan selalu bisa dipindai.",
+    "product": "Produk",
+    "makeFor": "Buat kode untuk",
+    "company": "Perusahaan",
+    "smallPrint": "21 bahasa · Pembayaran oleh Stripe"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Studio QR · desain dan pratinjau gratis",
+      "title": "Kode QR yang benar-benar terlihat milik Anda.",
+      "lead": "Tempel tautan dan atur gayanya di sini. Pratinjau diperbarui saat Anda mengetik, dan mendesain itu gratis.",
+      "reveal": "Hal-hal baik hanya sejauh satu pindaian."
+    },
+    "tool": {
+      "typesLabel": "Apa yang harus dibuka kode ini?",
+      "more": "Lainnya +",
+      "url": "Alamat situs web",
+      "urlPlaceholder": "yourname.com/portfolio",
+      "errors": {
+        "empty": "Masukkan alamat web, misalnya yourname.com.",
+        "spaces": "Alamat web tidak boleh berisi spasi."
+      },
+      "color": "Warna kode",
+      "inks": {
+        "ink": "Tinta",
+        "violet": "Ungu",
+        "forest": "Hutan",
+        "ocean": "Samudra",
+        "berry": "Beri",
+        "clay": "Tanah liat"
+      },
+      "caption": "Keterangan",
+      "captionDefault": "Lihat portofolio",
+      "continue": "Lanjutkan mendesain",
+      "priceNote": "Desain dan pratinjau gratis. Mengunduh PNG dan SVG dikenai biaya <b>{price}</b> per kode, sekali saja.",
+      "seePricing": "Lihat harga",
+      "stageTitle": "{type} · pratinjau langsung",
+      "scans": "Bisa dipindai",
+      "livePreview": "Pratinjau langsung",
+      "realCode": "Kode asli yang bisa dipindai",
+      "previewLabel": "Pratinjau kode QR Anda",
+      "otherType": "Draf Anda adalah kode {type}. Lanjutkan mendesain akan membukanya di editor.",
+      "stageCard": "Kartu nama · 90 mm × 50 mm"
+    },
+    "how": {
+      "label": "Cara kerjanya",
+      "content": {
+        "title": "Tambahkan konten Anda",
+        "text": "Tautan, teks, detail Wi-Fi, atau kartu kontak."
+      },
+      "design": {
+        "title": "Desain",
+        "text": "Tata letak, ukuran, bentuk, warna, logo, dan keterangan, dengan pemeriksaan pindai langsung."
+      },
+      "download": {
+        "title": "Bayar dan unduh",
+        "text": "Masuk dengan Google, bayar sekali, unduh PNG atau SVG lagi kapan saja."
+      }
+    },
+    "models": {
+      "title": "Apakah Anda akan mengubah tautan setelah dicetak?",
+      "lead": "Satu pertanyaan itu menentukan kode mana yang Anda butuhkan.",
+      "static": {
+        "badge": "Tidak · QR Statis",
+        "text": "Tautan tertanam di dalam pola. Satu kali bayar <b>{price}</b> per kode."
+      },
+      "dynamic": {
+        "badge": "Ya · QR Dinamis",
+        "text": "Kode berisi tautan pendek permanen yang bisa Anda arahkan ulang kapan saja. <b>{price}</b>/bulan untuk hingga {limit} kode."
+      }
+    },
+    "examples": {
+      "kicker": "Contoh",
+      "title": "Dibuat untuk cetak dan layar",
+      "lead": "Mulai dari tata letak nyata yang bisa dipindai dan jadikan milik Anda. Setiap contoh terbuka di editor lengkap dengan warna, bentuk, dan bingkainya.",
+      "hint": "Gulir untuk melihat lainnya",
+      "use": "Mulai dari contoh {title}",
+      "useShort": "Pakai",
+      "items": {
+        "businessCard": {
+          "title": "Kartu nama",
+          "kind": "Situs web · statis"
+        },
+        "tableTent": {
+          "title": "Papan meja kafe",
+          "kind": "Wi-Fi · statis"
+        },
+        "menuSticker": {
+          "title": "Stiker menu",
+          "kind": "Situs web · dinamis"
+        },
+        "eventPoster": {
+          "title": "Poster acara",
+          "kind": "Situs web · dinamis"
+        },
+        "contactBadge": {
+          "title": "Lencana kontak",
+          "kind": "Kontak · statis"
+        },
+        "windowSticker": {
+          "title": "Stiker jendela",
+          "kind": "Situs web · statis"
+        }
+      }
+    },
+    "features": {
+      "kicker": "Mengapa HeyQR",
+      "title": "Semua yang dibutuhkan kode cetak",
+      "lead": "Alat desain yang tidak merepotkan, dan pemindai yang memeriksa hasil Anda sebelum Anda membayar.",
+      "scan": {
+        "title": "Pemeriksaan pindai di setiap perubahan",
+        "text": "Kami membaca kode Anda seperti kamera ponsel dan memberi tahu persis apa yang perlu diperbaiki: kontras rendah, warna terbalik, atau logo yang menutupi terlalu banyak."
+      },
+      "style": {
+        "title": "Bentuk dan warna Anda",
+        "text": "Delapan bentuk modul, lima gaya sudut, dan warna apa pun yang Anda suka, dengan kontras tetap terjaga."
+      },
+      "logo": {
+        "title": "Logo atau ikon di tengah",
+        "text": "Unggah logo Anda atau pilih dari {icons} ikon. Kami mengatur ukurannya agar kode tetap terbaca."
+      },
+      "frames": {
+        "title": "Bingkai dan keterangan",
+        "text": "{frames} bingkai dengan ajakan seperti “Pindai untuk melihat menu”, atau teks pendek langsung di dalam kode."
+      },
+      "files": {
+        "title": "File siap cetak",
+        "text": "SVG vektor dan PNG tajam dalam ukuran nyata: kartu nama, poster, papan meja, dan stiker."
+      },
+      "dynamic": {
+        "title": "Ubah setelah dicetak",
+        "text": "Kode dinamis mengarah ke tautan pendek yang bisa Anda arahkan ulang kapan saja, dengan jumlah pindaian harian."
+      }
+    },
+    "types": {
+      "kicker": "Sembilan jenis konten",
+      "title": "Satu studio untuk semua jenis kode",
+      "lead": "Pilih apa yang harus dibuka kode. Formulir hanya meminta yang dibutuhkan jenis tersebut.",
+      "website": {
+        "label": "Situs web",
+        "desc": "Buka halaman, portofolio, atau menu."
+      },
+      "text": {
+        "label": "Teks",
+        "desc": "Tampilkan catatan, jam buka, atau petunjuk."
+      },
+      "wifi": {
+        "label": "Wi-Fi",
+        "desc": "Tamu bergabung ke jaringan Anda tanpa mengetik."
+      },
+      "contact": {
+        "label": "Kartu kontak",
+        "desc": "Simpan nama, telepon, dan email dalam satu ketukan."
+      },
+      "email": {
+        "label": "Email",
+        "desc": "Buka email yang siap dikirim."
+      },
+      "phone": {
+        "label": "Panggilan telepon",
+        "desc": "Hubungi nomor dalam satu ketukan."
+      },
+      "sms": {
+        "label": "Pesan teks",
+        "desc": "Mulai SMS dengan kata-kata Anda."
+      },
+      "location": {
+        "label": "Lokasi",
+        "desc": "Buka tempat di aplikasi peta."
+      },
+      "event": {
+        "label": "Acara",
+        "desc": "Tambahkan acara ke kalender."
+      },
+      "menu": {
+        "label": "Menu",
+        "desc": "Hidangan, bagian, dan harga di halaman yang ramah ponsel."
+      },
+      "coupon": {
+        "label": "Kupon",
+        "desc": "Diskon dengan kode promo dan tanggal berakhir."
+      },
+      "social": {
+        "label": "Tautan sosial",
+        "desc": "Profil dan tautan Anda dalam satu halaman."
+      },
+      "business": {
+        "label": "Bisnis",
+        "desc": "Jam buka, alamat, telepon, dan petunjuk arah."
+      },
+      "apps": {
+        "label": "Aplikasi",
+        "desc": "Satu kode untuk App Store dan Google Play."
+      },
+      "pdf": {
+        "label": "Dokumen PDF",
+        "desc": "Unggah PDF yang bisa dibuka di ponsel mana pun."
+      },
+      "product": {
+        "label": "Produk",
+        "desc": "Foto, harga, dan tombol beli."
+      }
+    },
+    "faq": {
+      "kicker": "Pertanyaan",
+      "title": "Perlu diketahui",
+      "lead": "Jawaban singkat tentang pembayaran, file, dan pemindaian.",
+      "items": {
+        "model": {
+          "q": "Statis atau dinamis: mana yang saya butuhkan?",
+          "a": "Kode statis menyimpan konten di dalam polanya dan berfungsi selamanya setelah satu kali bayar {static}. Kode dinamis berisi tautan pendek yang bisa Anda arahkan ke tempat lain setelah dicetak, seharga {dynamic}/bulan untuk hingga {limit} kode."
+        },
+        "scan": {
+          "q": "Apakah kode saya tetap bisa dipindai dengan logo dan warna?",
+          "a": "Setiap perubahan diperiksa saat Anda mendesain. Jika kontras terlalu rendah, warna terbalik, atau logo menutupi terlalu banyak, kami memberi tahu dan menawarkan perbaikan sekali ketuk sebelum Anda membayar."
+        },
+        "account": {
+          "q": "Apakah saya perlu akun untuk mendesain?",
+          "a": "Tidak. Mendesain dan melihat pratinjau gratis. Anda hanya masuk dengan Google saat mengunduh, dan desain Anda ikut terbawa."
+        },
+        "files": {
+          "q": "File apa saja yang saya dapatkan?",
+          "a": "PNG tajam untuk layar dan printer serta SVG vektor untuk percetakan, untuk setiap tata letak kode yang Anda beli."
+        },
+        "again": {
+          "q": "Bisakah saya mengunduh file lagi nanti?",
+          "a": "Ya. Kode Anda tetap ada di Kode QR saya, dan Anda bisa mengunduhnya lagi dalam format apa pun tanpa biaya tambahan."
+        }
+      }
+    },
+    "cta": {
+      "label": "Mulai",
+      "title": "Kode pertama Anda hanya butuh sekitar satu menit.",
+      "lead": "Desain secara gratis. Bayar {price} hanya saat Anda mengunduh.",
+      "pricing": "Lihat harga"
+    },
+    "studio": {
+      "kicker": "Studio Anda",
+      "welcome": "Selamat datang kembali, {name}",
+      "summaryTop": "{name} dipindai {count, plural, other {# kali}} hari ini. Semua yang Anda buat hanya sejauh satu ketukan.",
+      "summary": "Semua yang Anda buat hanya sejauh satu ketukan: file, tautan, dan pindaian.",
+      "summaryEmpty": "Buat kode pertama Anda dan kode itu akan muncul di sini beserta file dan pindaiannya.",
+      "billing": "Paket & tagihan",
+      "library": "Buka Kode QR saya",
+      "kpi": {
+        "codes": "Kode QR",
+        "codesNote": "{paid} dibayar · {drafts, plural, other {# draf}}",
+        "scans": "Pindaian · 14 hari",
+        "scansNone": "Belum ada pindaian",
+        "scansDelta": "{delta, number, ::sign-always percent} dibanding minggu lalu",
+        "dynamic": "Kode dinamis",
+        "dynamicNote": "Sisa {left, plural, other {# slot}} di paket Anda",
+        "dynamicMeter": "Kode dinamis yang digunakan",
+        "files": "File siap",
+        "filesNote": "{count, plural, other {tata letak}} untuk diunduh sebagai PNG atau SVG"
+      },
+      "chart": {
+        "title": "Pindaian · 14 hari terakhir",
+        "sub": "Semua kode dinamis digabung",
+        "empty": "Pindaian kode dinamis Anda akan muncul di sini.",
+        "today": "Hari ini",
+        "label": "Pindaian harian di semua kode dinamis selama 14 hari terakhir"
+      },
+      "top": "Kode teratas",
+      "topNote": "{count, plural, other {# pindaian}} dalam 14 hari · {link}",
+      "topNone": "Belum ada kode dinamis",
+      "topNoneNote": "Kode dinamis menghitung setiap pindaian.",
+      "recent": "Kode terbaru",
+      "seeAll": "Lihat semua {count}",
+      "recentEmpty": "Kode Anda akan tersimpan di sini, beserta file dan pindaiannya.",
+      "createFirst": "Buat kode pertama Anda",
+      "open": "Buka",
+      "openName": "Buka {name}",
+      "status": {
+        "dynamic": "Dinamis · aktif",
+        "paid": "Dibayar",
+        "draft": "Draf"
+      },
+      "metricScans": "{count, plural, other {# pindaian}}",
+      "metricLayouts": "{count, plural, other {# tata letak}}",
+      "metricFinish": "Selesaikan untuk mengunduh",
+      "perksTitle": "Termasuk dalam akun Anda",
+      "perks": {
+        "again": "Unduh lagi setiap tata letak berbayar, sebagai PNG atau SVG, tanpa biaya",
+        "redirect": "Arahkan kode dinamis ke tujuan baru tanpa mencetak ulang",
+        "scans": "Jumlah pindaian harian untuk setiap kode dinamis",
+        "drafts": "Draf tersimpan di akun Anda di semua perangkat",
+        "billing": "Tanda terima, paket, dan metode pembayaran di Paket & tagihan"
+      },
+      "loading": "Memuat studio Anda",
+      "trial": "Uji coba gratis · sisa {days, plural, other {# hari}}"
+    },
+    "workspace": {
+      "kicker": "Kode QR saya",
+      "title": "Semua kode QR, di satu tempat.",
+      "lead": "Ruang kerja pribadi Anda setelah masuk. Setiap kode yang Anda desain menyimpan tata letak, file, dan, untuk kode Dinamis, pindaiannya.",
+      "points": {
+        "layouts": "Tata letak bernama per kode: kartu nama, poster, situs web",
+        "files": "Unduh PNG dan SVG lagi kapan saja",
+        "edit": "Ubah tujuan kode Dinamis setelah dicetak",
+        "scans": "Pindaian harian untuk kode Dinamis"
+      },
+      "create": "Buat kode QR",
+      "signIn": "Masuk",
+      "sampleOwner": "Contoh ruang kerja",
+      "sampleBadge": "Contoh",
+      "sampleNote": "Contoh kode dan pindaian sebagai ilustrasi. Masuk untuk melihat milik Anda.",
+      "tabs": {
+        "all": "Semua {count}",
+        "static": "Statis {count}",
+        "dynamic": "Dinamis {count}"
+      },
+      "models": {
+        "static": "Statis",
+        "dynamic": "Dinamis"
+      },
+      "samples": {
+        "portfolio": {
+          "name": "Kartu portofolio",
+          "meta": "3 tata letak · dibeli"
+        },
+        "menu": {
+          "name": "Menu kafe",
+          "meta": "Papan meja · 214 pindaian"
+        },
+        "wifi": {
+          "name": "Wi-Fi tamu",
+          "meta": "Draf"
+        }
+      },
+      "scans": "Analitik pindaian · 14 hari terakhir",
+      "startTrial": "Mulai uji coba gratis 7 hari",
+      "trialNote": "Uji coba Starter · tanpa kartu · tanpa tagihan otomatis"
+    },
+    "printPack": {
+      "kicker": "Print Pack",
+      "title": "Dari layar Anda ke percetakan.",
+      "lead": "Tambahkan Print Pack ke QR mana pun dan berikan semua yang dibutuhkan percetakan dalam satu unduhan: ukuran yang tepat, warna yang benar, dan file yang tetap tajam.",
+      "cardTag": "Kartu nama · 90 × 50 mm",
+      "labelTag": "Label kemasan · 50 × 62 mm",
+      "cardLabel": "Tata letak cetak kartu nama",
+      "labelLabel": "Tata letak cetak label kemasan",
+      "panelKicker": "Ekspor · Print Pack",
+      "panelTitle": "Tiga file, siap dicetak",
+      "perQr": "per QR",
+      "files": {
+        "pdf": "PDF cetak vektor",
+        "pdfSub": "Tajam di ukuran berapa pun, dengan bleed 3 mm dan tanda potong, dalam sRGB.",
+        "svg": "SVG yang bisa diedit",
+        "svgSub": "Buka di Illustrator, Figma, atau Inkscape untuk menempatkan QR pada karya Anda sendiri.",
+        "spec": "Spesifikasi warna dan ukuran",
+        "specSub": "Satu halaman berisi ukuran jadi, ukuran QR, zona tenang, dan setiap nilai warna."
+      },
+      "addNote": "Nonaktif sampai Anda mengaktifkannya saat checkout. Tambahkan seharga +{price}, atau nanti dari detail QR.",
+      "single": "Single QR",
+      "withPack": "Dengan Print Pack",
+      "details": "Lihat detail Print Pack",
+      "preview": "Buka Pratinjau Cetak"
+    },
+    "explore": {
+      "kicker": "Jelajahi jenis QR",
+      "title": "Satu studio untuk semua jenis kode",
+      "lead": "Pilih jenis untuk melihat apa yang orang dapatkan di ponsel setelah memindai.",
+      "tabs": "Jenis QR",
+      "legend": "Halaman yang di-hosting: HeyQR menjaga halaman tetap online dan Anda bisa mengeditnya setelah dicetak",
+      "hostedBadge": "Halaman di-hosting · QR Dinamis",
+      "websiteBadge": "QR Statis atau Dinamis",
+      "directBadge": "Langsung terbuka · QR Statis",
+      "hostedExtra": "Edit halaman setelah dicetak. Kodenya tetap sama",
+      "directExtra": "Desain dan pratinjau gratis",
+      "hostedPrice": "Halaman yang di-hosting membutuhkan paket Dinamis: Starter {price}/bulan, uji coba gratis 7 hari.",
+      "directPrice": "Desain gratis. {price} per kode saat Anda mengunduh.",
+      "whatYouGet": "Yang Anda dapatkan",
+      "allTypes": "Lihat semua 16 jenis",
+      "types": {
+        "menu": {
+          "short": "Hidangan dan harga",
+          "use": "Taruh seluruh menu Anda di meja. Tamu memindai, menjelajah per bagian, dan melihat harga tanpa menunggu menu cetak.",
+          "cta": "Buat QR Menu",
+          "points": {
+            "a": "Bagian, hidangan, harga, dan foto opsional",
+            "b": "Ubah harga kapan saja; kode yang sudah dicetak tetap berfungsi"
+          }
+        },
+        "coupon": {
+          "short": "Diskon yang bisa diklaim",
+          "use": "Ubah pindaian menjadi penjualan dengan kode yang disalin pelanggan saat checkout atau ditunjukkan di kasir.",
+          "cta": "Buat QR Kupon",
+          "points": {
+            "a": "Kode promo, tanggal berakhir, dan ketentuan",
+            "b": "Menampilkan halaman “penawaran berakhir” yang jelas setelah kedaluwarsa"
+          }
+        },
+        "social": {
+          "short": "Semua profil Anda",
+          "use": "Satu kode untuk setiap profil yang Anda bagikan: portofolio, akun media sosial, dan lainnya, dalam urutan pilihan Anda.",
+          "cta": "Buat QR Tautan sosial",
+          "points": {
+            "a": "Foto, nama, dan bio singkat",
+            "b": "Ubah urutan tautan kapan saja"
+          }
+        },
+        "business": {
+          "short": "Jam buka, telepon, petunjuk arah",
+          "use": "Semua yang dibutuhkan pengunjung untuk menghubungi Anda: jam buka, tombol telepon, petunjuk arah, dan situs web Anda.",
+          "cta": "Buat QR Bisnis",
+          "points": {
+            "a": "Telepon, Petunjuk arah, dan Situs web muncul saat Anda menambahkan detail tersebut",
+            "b": "Menunjukkan apakah Anda buka hari ini"
+          }
+        },
+        "apps": {
+          "short": "Kedua toko aplikasi",
+          "use": "Arahkan iPhone ke App Store dan ponsel Android ke Google Play dari kode cetak yang sama.",
+          "cta": "Buat QR Aplikasi",
+          "points": {
+            "a": "Berfungsi dengan satu toko atau keduanya",
+            "b": "Komputer mendapat halaman berisi kedua tautan dan kode untuk dipindai"
+          }
+        },
+        "pdf": {
+          "short": "Bagikan dokumen",
+          "use": "Brosur, jadwal, atau manual: unggah PDF dan orang membukanya di ponsel dengan satu ketukan.",
+          "cta": "Buat QR PDF",
+          "points": {
+            "a": "Ganti file nanti tanpa mencetak ulang",
+            "b": "Tombol Buka PDF dan Unduh"
+          }
+        },
+        "product": {
+          "short": "Halaman produk",
+          "use": "Tampilkan produk dengan foto, harga, dan tombol beli, langsung dari kemasan atau rak.",
+          "cta": "Buat QR Produk",
+          "points": {
+            "a": "Hingga 5 foto, harga opsional",
+            "b": "Tombol Anda: Beli sekarang, Lihat produk, atau Pesan sekarang"
+          }
+        },
+        "website": {
+          "short": "Buka halaman web",
+          "use": "Arahkan orang ke halaman mana pun: portofolio, toko, atau formulir pemesanan Anda.",
+          "cta": "Buat QR Situs web",
+          "points": {
+            "a": "Statis, atau Dinamis jika tautan bisa berubah",
+            "b": "Pemeriksaan pindai langsung saat Anda mendesain"
+          }
+        },
+        "wifi": {
+          "short": "Gabung Wi-Fi",
+          "use": "Tamu mengarahkan kamera dan bergabung ke jaringan Anda. Tidak perlu mengeja kata sandi.",
+          "cta": "Buat QR Wi-Fi",
+          "points": {
+            "a": "Jaringan WPA, WEP, atau terbuka",
+            "b": "Berfungsi offline: detailnya ada di dalam kode"
+          }
+        },
+        "contact": {
+          "short": "Simpan kontak",
+          "use": "Kartu nama yang menyimpan nama, telepon, dan email Anda langsung ke kontak mereka.",
+          "cta": "Buat QR Kontak",
+          "points": {
+            "a": "Berfungsi di iPhone dan Android",
+            "b": "Tanpa aplikasi"
+          }
+        }
+      }
+    }
+  },
+  "pricing": {
+    "title": "Harga",
+    "head": "Bayar sekali untuk satu kode, atau bulanan untuk kode yang bisa Anda ubah.",
+    "lead": "Mendesain, melihat pratinjau, dan pemeriksaan pindai selalu gratis. Anda membayar saat mengunduh.",
+    "currency": {
+      "label": "Tampilkan harga dalam",
+      "unavailable": "Harga dalam {chosen} belum tersedia. HeyQR menagih dalam {charged}; bank Anda yang mengonversi jumlahnya. Tanda terima menampilkan {charged} yang Anda bayar."
+    },
+    "once": {
+      "title": "Sekali bayar",
+      "sub": "Tanpa langganan. Kode yang Anda buka tetap menjadi milik Anda."
+    },
+    "monthly": {
+      "title": "Bulanan",
+      "sub": "Untuk kode QR Dinamis yang bisa Anda ubah setelah dicetak. Batalkan kapan saja."
+    },
+    "free": {
+      "name": "Gratis",
+      "price": "{price}",
+      "q": "Desain dan uji kode sebelum Anda mengeluarkan uang.",
+      "points": [
+        "Semua tata letak, bentuk, warna, logo, dan keterangan",
+        "Pemeriksaan pindai langsung di setiap perubahan",
+        "Draf Anda disimpan di browser ini"
+      ],
+      "cta": "Mulai mendesain"
+    },
+    "single": {
+      "name": "Single QR",
+      "price": "{price}",
+      "per": "sekali",
+      "q": "Satu QR statis dengan semua unduhannya.",
+      "points": [
+        "PNG dan SVG dari setiap tata letak",
+        "Ukuran cetak dalam mm dan ukuran layar dalam px",
+        "Unduh lagi kapan saja, selamanya"
+      ],
+      "cta": "Buat QR"
+    },
+    "dynamic": {
+      "name": "Dinamis",
+      "price": "{price}",
+      "per": "per bulan",
+      "q": "Tautan pendek permanen yang bisa Anda arahkan ke mana saja, juga setelah dicetak.",
+      "live": "Kode Dinamis aktif",
+      "liveCount": "Hingga {limit} aktif sekaligus",
+      "liveHint": "Jumlah aktif, bukan kuota bulanan: menjeda atau menghapus kode akan mengosongkan slotnya.",
+      "points": [
+        "Ubah tujuan kapan saja; kode yang dicetak tetap sama",
+        "Pindaian harian selama 14 hari terakhir",
+        "PNG dan SVG dari setiap tata letak"
+      ],
+      "cta": "Buat QR Dinamis"
+    },
+    "compare": {
+      "title": "Bandingkan",
+      "feature": "Yang Anda dapatkan",
+      "free": "Gratis",
+      "single": "Single QR",
+      "dynamic": "Dinamis",
+      "yes": "Termasuk",
+      "no": "Tidak termasuk",
+      "rows": {
+        "design": "Desain, pratinjau, dan pemeriksaan pindai",
+        "download": "Unduhan PNG dan SVG",
+        "repeat": "Unduh ulang",
+        "change": "Ubah tujuan kode",
+        "analytics": "Analitik pindaian",
+        "codes": "Kode"
+      },
+      "codesSingle": "1 per pembelian",
+      "codesDynamic": "{limit} aktif",
+      "codesFree": "Draf tanpa batas"
+    },
+    "tax": "Harga belum termasuk pajak. Stripe menambahkan pajak saat checkout, dan tanda terima Anda menampilkan jumlah akhir.",
+    "trial": {
+      "action": "Mulai uji coba gratis 7 hari",
+      "note": "Uji coba: tanpa kartu, tanpa tagihan otomatis. Satu QR Dinamis uji coba dengan tautan pendek sungguhan."
+    }
+  },
+  "auth": {
+    "title": "Masuk ke Hey QR",
+    "lead": "Desain Anda disimpan ke akun Anda agar bisa diunduh setelah pembayaran.",
+    "google": "Lanjutkan dengan Google",
+    "legal": "Dengan melanjutkan, Anda menyetujui Ketentuan dan Kebijakan Privasi.",
+    "failed": "Gagal masuk. Silakan coba lagi.",
+    "canceled": {
+      "draft": "Masuk dengan Google dibatalkan. Desain Anda masih tersimpan di browser ini. Lanjutkan dengan Google untuk mencoba lagi.",
+      "plain": "Masuk dengan Google dibatalkan. Lanjutkan dengan Google untuk mencoba lagi."
+    },
+    "incomplete": {
+      "draft": "Masuk dengan Google belum selesai. Desain Anda masih tersimpan di browser ini. Lanjutkan dengan Google untuk mencoba lagi.",
+      "plain": "Masuk dengan Google belum selesai. Lanjutkan dengan Google untuk mencoba lagi."
+    },
+    "backToDesign": "Kembali ke desain saya"
+  },
+  "contentTypes": {
+    "website": "Situs web",
+    "text": "Teks",
+    "wifi": "Wi-Fi",
+    "contact": "Kontak",
+    "email": "Email",
+    "phone": "Telepon",
+    "sms": "SMS",
+    "location": "Lokasi",
+    "event": "Acara",
+    "menu": "Menu",
+    "coupon": "Kupon",
+    "social": "Tautan sosial",
+    "business": "Bisnis",
+    "apps": "Aplikasi",
+    "pdf": "Dokumen PDF",
+    "product": "Produk"
+  },
+  "fields": {
+    "url": "Alamat situs web",
+    "text": "Teks",
+    "ssid": "Nama jaringan",
+    "security": "Keamanan",
+    "password": "Kata sandi",
+    "hidden": "Jaringan ini tersembunyi",
+    "firstName": "Nama depan",
+    "lastName": "Nama belakang",
+    "title": "Jabatan",
+    "company": "Perusahaan",
+    "phone": "Telepon",
+    "email": "Email",
+    "website": "Situs web",
+    "to": "Alamat email",
+    "subject": "Subjek",
+    "body": "Pesan",
+    "number": "Nomor telepon",
+    "message": "Pesan",
+    "name": "Nama tempat",
+    "address": "Alamat",
+    "eventTitle": "Nama acara",
+    "start": "Mulai",
+    "end": "Selesai",
+    "place": "Tempat",
+    "securityNone": "Tanpa kata sandi",
+    "securityWpa": "WPA/WPA2/WPA3",
+    "date": "Tanggal"
+  },
+  "editor": {
+    "openLibrary": "Buka Kode QR saya",
+    "title": "Buat kode QR",
+    "steps": {
+      "content": "Konten",
+      "design": "Desain",
+      "frame": "Bingkai",
+      "type": "Jenis"
+    },
+    "type": "Apa yang harus dibuka kode ini?",
+    "model": {
+      "label": "Tipe kode",
+      "static": "Statis",
+      "staticHint": "Sekali bayar, berfungsi selamanya",
+      "dynamic": "Dinamis",
+      "dynamicHint": "Ubah tautan setelah dicetak"
+    },
+    "name": "Nama (hanya Anda yang melihatnya)",
+    "namePlaceholder": "Kartu portofolio",
+    "pattern": "Modul",
+    "eyeFrame": "Bingkai sudut",
+    "eyeBall": "Tengah sudut",
+    "colors": "Warna",
+    "fg": "Modul",
+    "bg": "Latar belakang",
+    "logo": "Tengah",
+    "logoNone": "Tidak ada",
+    "logoUpload": "Unggah logo",
+    "logoSize": "Ukuran logo",
+    "layout": "Tata letak",
+    "presets": {
+      "qr": "Hanya QR",
+      "caption": "QR + keterangan",
+      "vertical": "Kartu vertikal",
+      "horizontal": "Kartu horizontal",
+      "frame": "Bingkai"
+    },
+    "frameStyle": "Gaya bingkai",
+    "caption": "Keterangan",
+    "captionPlaceholder": "Pindai saya",
+    "preview": "Pratinjau",
+    "previewNote": "Pratinjau bertanda air. File ukuran penuh dibuat setelah pembayaran.",
+    "download": "Unduh",
+    "saving": "Menyimpan…",
+    "draftRestored": "Kami memulihkan desain terakhir Anda.",
+    "scanOk": "Pindaian terverifikasi",
+    "scanFix": "Perbaiki",
+    "shapes": {
+      "square": "Persegi",
+      "rounded": "Membulat",
+      "dot": "Titik",
+      "diamond": "Wajik",
+      "leaf": "Daun",
+      "fluid": "Cair",
+      "vbars": "Vertikal",
+      "hbars": "Horizontal",
+      "cushion": "Lembut",
+      "circle": "Lingkaran"
+    },
+    "frames": {
+      "bar": "Label bawah",
+      "tab": "Tab atas",
+      "bubble": "Balon kata",
+      "pill": "Label pil",
+      "corners": "Jendela bidik",
+      "circle": "Lencana",
+      "ticket": "Tiket",
+      "phone": "Ponsel"
+    },
+    "icons": {
+      "globe": "Situs web",
+      "link": "Tautan",
+      "wifi": "Wi-Fi",
+      "phone": "Telepon",
+      "mail": "Email",
+      "message": "Pesan",
+      "pin": "Lokasi",
+      "calendar": "Kalender",
+      "clock": "Jam buka",
+      "user": "Orang",
+      "users": "Tim",
+      "briefcase": "Kerja",
+      "home": "Rumah",
+      "bag": "Toko",
+      "cart": "Keranjang",
+      "coffee": "Kopi",
+      "utensils": "Menu",
+      "wine": "Bar",
+      "music": "Musik",
+      "play": "Video",
+      "camera": "Foto",
+      "image": "Galeri",
+      "heart": "Suka",
+      "star": "Ulasan",
+      "gift": "Hadiah",
+      "ticket": "Tiket",
+      "tag": "Harga",
+      "percent": "Diskon",
+      "card": "Bayar",
+      "download": "Unduh",
+      "file": "Dokumen",
+      "book": "Panduan",
+      "leaf": "Ramah lingkungan",
+      "sun": "Luar ruang",
+      "bike": "Sepeda",
+      "plane": "Perjalanan",
+      "at": "Sosial",
+      "smile": "Masukan"
+    },
+    "back": "Beranda",
+    "stepsLabel": "Buat kode QR",
+    "settings": "Pengaturan desain",
+    "scanFailed": "Mungkin tidak terpindai",
+    "priceOnce": "{price} sekali",
+    "pricePerMonth": "{price} / bulan",
+    "previewFree": "Pratinjau gratis · bayar saat mengunduh",
+    "draftUnreadable": "Kami tidak dapat membuka desain terakhir Anda, jadi Anda mulai dari awal. Desain itu tetap tersimpan di browser ini.",
+    "mode": {
+      "question": "Apakah tautan bisa berubah setelah dicetak?",
+      "lead": "Putuskan sekarang: kode statis yang sudah dicetak tidak bisa diarahkan ke tempat lain nanti.",
+      "static": {
+        "eyebrow": "Tidak, tetap sama",
+        "title": "QR Statis",
+        "text": "Konten tertanam di dalam pola. Mengubahnya berarti kode baru. Sekali bayar: {price}."
+      },
+      "dynamic": {
+        "eyebrow": "Ya, mungkin saya ubah",
+        "title": "QR Dinamis",
+        "text": "Kode berisi tautan pendek permanen. Ubah tujuannya dan lihat pindaian harian. {price}/bulan."
+      },
+      "unavailable": "Kode {type} selalu statis: kontennya langsung masuk ke dalam pola. Dinamis untuk tautan situs web.",
+      "switched": "Kode {type} bersifat statis, jadi kode ini sekarang Statis. Dinamis untuk tautan situs web.",
+      "adjusted": "Draf Anda Dinamis, tetapi hanya tautan situs web yang bisa dinamis, jadi sekarang Statis. Konten dan desain Anda tidak berubah."
+    },
+    "backTo": {
+      "home": "Beranda",
+      "type": "Jenis",
+      "content": "Konten"
+    },
+    "continue": "Lanjutkan",
+    "export": "Ekspor",
+    "previewFrom": "Pratinjau gratis · unduh mulai {price}",
+    "optional": "opsional",
+    "frameGroup": {
+      "title": "Bingkai di sekitar kode",
+      "count": "{count} pilihan",
+      "none": "Tanpa bingkai",
+      "text": "Teks bingkai",
+      "textHint": "Ukuran teks menyesuaikan bingkai. Font dan ketebalan ada di Keterangan.",
+      "quick": "Teks cepat",
+      "phrases": {
+        "scanMe": "Pindai saya",
+        "callMe": "Hubungi saya",
+        "menu": "Menu",
+        "wifi": "Wi-Fi",
+        "payHere": "Bayar di sini",
+        "reviewUs": "Beri ulasan",
+        "followUs": "Ikuti kami",
+        "bookNow": "Pesan sekarang"
+      },
+      "color": "Warna bingkai",
+      "textColor": "Warna teks",
+      "presets": "Preset warna",
+      "presetsHint": "Bingkai · kode · latar belakang",
+      "preset": "Bingkai {frame}, kode {code}, latar belakang {bg}",
+      "white": "Putih",
+      "graphite": "Grafit",
+      "violetUi": "Ungu"
+    },
+    "typeStep": {
+      "title": "Apa yang harus dibuka kode Anda?",
+      "lead": "Semuanya gratis dicoba. Anda hanya membayar saat mengunduh file jadi.",
+      "groupLabel": "Jenis QR",
+      "example": "mis. {example}",
+      "next": "Berikutnya: tambahkan konten Anda",
+      "examples": {
+        "website": "anareyes.studio/portfolio",
+        "text": "“Tekan bel dua kali”",
+        "wifi": "Reyes Studio Guest",
+        "contact": "Ana Reyes · Desainer",
+        "email": "hello@reyes.studio",
+        "phone": "+1 415 555 0142",
+        "sms": "“RSVP ya”",
+        "location": "21 Pier St, San Francisco",
+        "event": "Pameran musim semi · 5 Des",
+        "menu": "Menu Little Fern Café",
+        "coupon": "Diskon 20% kelas tembikar",
+        "social": "@ana.makes, portofolio, YouTube",
+        "business": "Reyes Ceramics Studio",
+        "apps": "Aplikasi Fern Rewards",
+        "pdf": "Jadwal kelas musim semi",
+        "product": "Mug stoneware berbintik"
+      },
+      "directGroup": "Langsung terbuka dari kode",
+      "directGroupLabel": "Jenis QR yang langsung terbuka",
+      "hostedGroup": "Halaman yang di-hosting",
+      "hostedNew": "Baru",
+      "hostedLead": "HeyQR meng-hosting halaman seluler untuk jenis ini dan kodenya berisi tautan pendek Dinamis, jadi Anda bisa mengedit halaman setelah dicetak. Jenis ini membutuhkan paket Dinamis: Starter {starter}/bulan atau Studio {studio}/bulan, dengan uji coba gratis 7 hari.",
+      "hostedSummary": "{type} · Halaman di-hosting · Dinamis"
+    },
+    "contentStep": {
+      "titles": {
+        "website": "Halaman mana yang harus dibuka?",
+        "text": "Apa yang harus dibaca orang?",
+        "wifi": "Jaringan mana yang harus diikuti tamu?",
+        "contact": "Siapa yang harus disimpan orang?",
+        "email": "Ke mana email harus dikirim?",
+        "phone": "Nomor mana yang harus dihubungi?",
+        "sms": "Siapa yang menerima pesan teks?",
+        "location": "Tempat mana yang harus dibuka?",
+        "event": "Acara apa?",
+        "menu": "Apa saja yang ada di menu?",
+        "coupon": "Apa penawarannya?",
+        "social": "Tautan mana yang harus ditemukan orang?",
+        "business": "Bagaimana orang menghubungi Anda?",
+        "apps": "Di mana orang bisa mendapatkan aplikasi Anda?",
+        "pdf": "Dokumen mana yang harus dibuka?",
+        "product": "Produk apa yang Anda tampilkan?"
+      },
+      "subs": {
+        "website": "Tempel alamat lengkapnya. Anda akan melihat apa yang orang dapatkan setelah memindai.",
+        "text": "Teks biasa muncul di ponsel tepat setelah dipindai.",
+        "wifi": "Ponsel bergabung ke jaringan setelah memindai. Tidak perlu mengetik.",
+        "contact": "Ponsel menawarkan untuk menyimpan kontak ini setelah memindai.",
+        "email": "Memindai membuka email baru dengan alamat, subjek, dan pesan yang sudah terisi.",
+        "phone": "Memindai menawarkan untuk menghubungi nomor. Tanpa mengetik.",
+        "sms": "Memindai membuka pesan teks yang siap dikirim.",
+        "location": "Memindai membuka tempat di aplikasi peta ponsel.",
+        "event": "Memindai menawarkan untuk menambahkan acara ke kalender.",
+        "menu": "Tambahkan bagian dan hidangan. Tamu melihat menu yang ramah ponsel setelah memindai.",
+        "coupon": "Orang melihat diskon, menyalin kode, dan menukarkannya sebelum berakhir.",
+        "social": "Satu halaman dengan foto, bio singkat, dan tautan Anda, sesuai urutan Anda.",
+        "business": "Tombol untuk menelepon, petunjuk arah, dan situs web Anda muncul saat Anda menambahkan detail tersebut.",
+        "apps": "Ponsel langsung menuju tokonya masing-masing. Perangkat lain melihat kedua tautan.",
+        "pdf": "Unggah PDF. Orang membuka atau mengunduhnya dengan satu ketukan.",
+        "product": "Foto, harga, dan satu tombol jelas untuk membeli atau mempelajari lebih lanjut."
+      },
+      "nameLabel": "Nama di Kode QR saya",
+      "stepOf": "Langkah 2 dari 3",
+      "kept": "Isian Anda tetap tersimpan jika Anda kembali.",
+      "continue": "Lanjut ke desain",
+      "errorsOne": "Perbaiki kolom yang ditandai untuk melanjutkan. Semua yang lain sudah tersimpan.",
+      "errorsMany": "Perbaiki {count} kolom yang ditandai untuk melanjutkan. Semua yang lain sudah tersimpan.",
+      "back": "Kembali",
+      "urlHint": "Alamat ini tertanam di dalam kode. Untuk mengarahkan kode cetak ke tempat lain nanti, pilih Dinamis di langkah sebelumnya.",
+      "urlHintDynamic": "Kode Anda akan berisi tautan pendek permanen. Di sinilah tautan itu mengarahkan orang, dan Anda bisa mengubahnya setelah dicetak.",
+      "nameHint": "Hanya Anda yang melihat nama ini.",
+      "namePlaceholderType": "QR {type}"
+    },
+    "errors": {
+      "urlEmpty": "Masukkan alamat web, misalnya yourname.com.",
+      "urlSpaces": "Alamat web tidak boleh berisi spasi.",
+      "urlInvalid": "Periksa alamatnya. Alamat membutuhkan domain, misalnya yourname.com.",
+      "text": "Ketik teks yang harus dilihat orang setelah memindai.",
+      "ssid": "Masukkan nama jaringan persis seperti yang tampil di ponsel.",
+      "password": "Masukkan kata sandi Wi-Fi, atau pilih “Tanpa kata sandi”.",
+      "passwordShort": "Kata sandi WPA minimal 8 karakter.",
+      "contactName": "Tambahkan setidaknya nama depan atau nama belakang.",
+      "phone": "Gunakan angka, spasi, dan + opsional untuk kode negara.",
+      "email": "Periksa alamat email. Alamat membutuhkan nama, @, dan domain, misalnya ana@studio.com.",
+      "emailTo": "Masukkan alamat tujuan email.",
+      "emailInvalid": "Periksa alamatnya. Alamat membutuhkan nama, @, dan domain.",
+      "phoneNumber": "Masukkan nomor telepon dengan kode negara, misalnya +1 415 555 0142.",
+      "smsTo": "Masukkan nomor yang akan menerima pesan.",
+      "address": "Masukkan alamat yang harus dibuka aplikasi peta.",
+      "eventTitle": "Beri nama acara.",
+      "eventStart": "Pilih tanggal."
+    },
+    "afterScanning": {
+      "label": "Setelah memindai",
+      "toggleHint": "Lihat apa yang orang dapatkan di ponsel",
+      "caption": "Yang dilihat orang setelah memindai",
+      "websitePlaceholder": "Halaman web Anda",
+      "dynamicNote": "Membuka tautan pendek Anda terlebih dahulu, lalu dialihkan ke sini.",
+      "textPlaceholder": "Teks Anda muncul di sini.",
+      "wifiPlaceholder": "Bergabung ke jaringan?",
+      "security": "Keamanan",
+      "open": "Jaringan terbuka",
+      "password": "Kata sandi",
+      "join": "Gabung jaringan",
+      "contactPlaceholder": "Kontak baru",
+      "phone": "Telepon",
+      "email": "Email",
+      "company": "Perusahaan",
+      "save": "Tambahkan ke kontak",
+      "emailPlaceholder": "Email baru",
+      "subject": "Subjek",
+      "compose": "Tulis email",
+      "phonePlaceholder": "Nomor telepon",
+      "call": "Telepon",
+      "message": "Pesan",
+      "text": "Kirim pesan",
+      "locationPlaceholder": "Sebuah tempat",
+      "address": "Alamat",
+      "openMaps": "Buka di Peta",
+      "eventPlaceholder": "Acara baru",
+      "place": "Tempat",
+      "addToCalendar": "Tambahkan ke kalender",
+      "wifiKicker": "Gabung jaringan Wi-Fi",
+      "website": "Situs web",
+      "textKicker": "Teks yang dipindai",
+      "loading": "Memuat pratinjau",
+      "date": "Tanggal",
+      "addEvent": "Tambahkan acara"
+    },
+    "passwordShow": "Tampilkan",
+    "passwordHide": "Sembunyikan",
+    "wifiPasswordHint": "Pratinjau menyembunyikan kata sandi. Kata sandi disimpan di dalam kode, jadi siapa pun yang memindainya bisa bergabung.",
+    "tooLong": {
+      "title": "Terlalu panjang untuk kode QR",
+      "text": "Sekitar {over}% melebihi kapasitas kode QR. Persingkat konten dan kode akan langsung kembali. Tidak ada yang Anda ketik yang hilang.",
+      "centerHint": "Logo atau keterangan di tengah kode menurunkan batasnya. Menghapusnya juga memberi ruang.",
+      "detail": "{bytes} dari {max} byte",
+      "edit": "Edit konten",
+      "badge": "Terlalu panjang",
+      "preview": "Kode QR tidak ditampilkan: konten terlalu panjang"
+    },
+    "eyeColor": "Bingkai sudut",
+    "eyeInColor": "Tengah sudut",
+    "resetColors": "Atur ulang warna",
+    "colorInvalid": "Gunakan warna HEX seperti #1F4D3A: # dan 6 karakter dari 0–9 dan A–F.",
+    "size": {
+      "title": "Ukuran",
+      "unitHint": "Untuk layar, slide, dan web. 1 unit = 1 piksel pada 1×.",
+      "qr": "Ukuran kode QR",
+      "qrSlider": "Penggeser ukuran kode QR",
+      "clamped": "Kode ini tidak muat di tata letak: kode digambar pada {shown} {unit}, ukuran terbesar yang muat. Perbesar tata letak, atau perkecil kodenya.",
+      "layout": "Ukuran tata letak",
+      "width": "Lebar",
+      "height": "Tinggi",
+      "locked": "Dengan “Hanya QR” dan “Bingkai”, tata letak mengikuti kode. Pilih “QR + keterangan” atau kartu untuk mengatur ukurannya sendiri.",
+      "presets": {
+        "square": "Persegi 1080",
+        "story": "Story 1080×1920",
+        "slide": "Slide 1920×1080",
+        "card": "Kartu nama 90×50",
+        "a6": "A6 105×148",
+        "sticker": "Stiker 50×62"
+      },
+      "invalid": "Masukkan bilangan bulat dari {min} hingga {max} {unit}.",
+      "units": "Satuan",
+      "unitMm": "Cetak · mm",
+      "unitPx": "Layar · px",
+      "unitHintMm": "Untuk cetak. File diekspor pada 300, 600, atau 1200 dpi.",
+      "invalidMm": "Masukkan angka dari {min} hingga {max} mm, dengan paling banyak satu desimal.",
+      "qrHint": "termasuk zona tenang",
+      "reach": "Bisa dipindai dari jarak hingga sekitar {cm} cm (aturan 10 : 1). Kode lebih besar, jangkauan lebih jauh.",
+      "viewNoteMm": "Kanvas diskalakan agar muat di layar Anda. Pilih <b>Ukuran sebenarnya</b> di atas kanvas untuk melihatnya dalam ukuran cetak. Ekspor: <b>PNG {width} × {height} px</b>.",
+      "viewNotePx": "Kanvas diskalakan agar muat di layar Anda. Pilih <b>Ukuran sebenarnya</b> di atas kanvas untuk melihatnya pada 1×. Ekspor: <b>PNG {width} × {height} px</b> (2×)."
+    },
+    "updatingPreview": "Memperbarui pratinjau…",
+    "captionField": {
+      "label": "Teks keterangan",
+      "hint": "Tekan Enter untuk baris kedua. Biarkan kosong untuk menyembunyikan keterangan.",
+      "tooLong": "Gunakan hingga {max} karakter: hapus {over, plural, other {# karakter}}. Pratinjau mempertahankan keterangan terakhir Anda yang muat.",
+      "tooManyLines": "Gunakan hingga {max} baris. Pratinjau mempertahankan keterangan terakhir Anda yang muat.",
+      "count": "{count} dari {max} karakter",
+      "unsupported": "{font} tidak dapat menampilkan {chars}. Pilih font lain, atau ubah {count, plural, other {karakter tersebut}}: file akan menampilkan {count, plural, other {karakter itu}} sebagai kotak kosong."
+    },
+    "captionFont": {
+      "title": "Font",
+      "hint": "Font untuk QR Anda. Antarmuka HeyQR selalu menggunakan DM Sans.",
+      "weight": "Ketebalan",
+      "weights": {
+        "400": "Reguler",
+        "500": "Sedang",
+        "700": "Tebal"
+      },
+      "original": "DM Sans (asli)",
+      "originalHint": "Tata letak ini dibuat sebelum font lain tersedia. DM Sans hanya memiliki huruf Latin; pilih font lain untuk Sirilik."
+    },
+    "captionSize": {
+      "label": "Ukuran",
+      "invalid": "Masukkan {min}–{max} {unit}, dengan paling banyak satu desimal. Pratinjau mempertahankan ukuran valid terakhir.",
+      "fitted": "Digambar pada {size} {unit} agar keterangan muat di tata letak."
+    },
+    "edit": {
+      "title": "Edit desain · {layout}",
+      "back": "Kembali ke kode",
+      "save": "Simpan perubahan",
+      "saved": "Desain tersimpan",
+      "restored": "Kami menyimpan perubahan yang belum Anda simpan sebelum masuk lagi. Simpan untuk mempertahankannya.",
+      "discardRestored": "Buang",
+      "unsaved": "Perubahan belum disimpan",
+      "retry": "Coba lagi",
+      "failed": "Tidak dapat menyimpan desain. Perubahan Anda masih ada di sini.",
+      "notFound": "Kode atau tata letak ini sudah tidak ada.",
+      "hint": "Perubahan hanya berlaku untuk tata letak ini",
+      "note": "Menyimpan akan memperbarui tata letak ini. Konten, pembayaran, dan tautan tetap sama.",
+      "layouts": "Tata letak kode ini",
+      "newLayout": "Tata letak baru",
+      "newName": "Tata letak {n}",
+      "added": "“{name}” dibuat dari tata letak saat ini. Yang lain tetap seperti semula.",
+      "addFailed": "Kami tidak dapat menambahkan tata letak. Perubahan Anda masih ada di sini; coba lagi.",
+      "unsavedSwitch": "Tata letak ini memiliki perubahan yang belum disimpan.",
+      "discardSwitch": "Buang dan beralih",
+      "layoutName": "Nama tata letak",
+      "unsavedSwitchText": "Beralih ke “{name}” dan buang perubahan pada tata letak ini? Simpan dulu untuk mempertahankannya.",
+      "keepEditing": "Lanjutkan mengedit",
+      "conflictTitle": "Tata letak ini disimpan di tempat lain",
+      "conflictText": "Tab atau perangkat lain menyimpan tata letak ini setelah Anda membukanya, jadi perubahan Anda tidak tersimpan. Perubahan itu masih ada di sini: simpan sebagai tata letak baru, atau muat ulang versi yang tersimpan (perubahan Anda di sini akan dibuang).",
+      "conflictNewLayout": "Simpan perubahan saya sebagai tata letak baru",
+      "conflictReload": "Muat ulang versi tersimpan"
+    },
+    "captionStyle": {
+      "align": "Perataan",
+      "aligns": {
+        "left": "Kiri",
+        "center": "Tengah",
+        "right": "Kanan"
+      },
+      "color": "Warna keterangan",
+      "palette": "Preset warna keterangan",
+      "matchCode": "Samakan dengan kode"
+    },
+    "logoFile": {
+      "hint": "PNG, JPG, SVG, atau WebP, hingga {max} MB. Pilih file atau letakkan di petak unggah.",
+      "reading": "Membaca gambar…",
+      "empty": "File ini kosong.",
+      "tooLarge": "File ini melebihi batas {max} MB.",
+      "unsupported": "File ini bukan gambar PNG, JPG, SVG, atau WebP, apa pun nama filenya.",
+      "unreadable": "Gambar ini tidak dapat dibuka. Mungkin rusak; ekspor lagi lalu coba ulang.",
+      "kept": "Logo Anda saat ini tetap dipertahankan."
+    },
+    "logoPlate": {
+      "label": "Alas",
+      "none": "Tidak ada",
+      "square": "Persegi",
+      "circle": "Lingkaran"
+    },
+    "logoSizeValue": "{size}% · hingga {max}% bisa dipindai",
+    "logoSizeLegacy": "Disimpan pada {saved}%; digambar pada maksimum {max}%. Menggeser penggeser akan menyimpan ukuran dalam batas itu.",
+    "groups": {
+      "label": "Pengaturan desain",
+      "layout": "Tata letak",
+      "frame": "Bingkai",
+      "size": "Ukuran",
+      "pattern": "Pola",
+      "colors": "Warna",
+      "logo": "Logo",
+      "caption": "Keterangan",
+      "brand": "Merek"
+    },
+    "quickStyles": {
+      "title": "Gaya cepat",
+      "hint": "Satu ketukan mengatur bentuk dan warna sekaligus. Urungkan mengembalikan tampilan sebelumnya.",
+      "surprise": "Kejutkan saya",
+      "apply": "Terapkan gaya {name}",
+      "applied": "Gaya “{name}” diterapkan. Urungkan mengembalikan tampilan sebelumnya.",
+      "surprised": "Tampilan baru. Urungkan mengembalikan yang sebelumnya.",
+      "names": {
+        "classic": "Klasik",
+        "soft": "Lembut",
+        "dots": "Titik",
+        "fluid": "Cair",
+        "lines": "Garis",
+        "gem": "Permata"
+      }
+    },
+    "layoutGroup": {
+      "title": "Tata letak",
+      "hint": "Elemen berpindah, pengaturan tetap",
+      "border": "Bingkai di sekitar tata letak",
+      "borderCards": "Kartu selalu memiliki bingkai."
+    },
+    "colorsGroup": {
+      "title": "Yang diwarnai",
+      "targets": "Target warna",
+      "resetAll": "Atur ulang semua",
+      "edited": "Diubah",
+      "roles": {
+        "fg": "Modul",
+        "eye": "Bingkai sudut",
+        "eyeIn": "Tengah sudut",
+        "bg": "Latar belakang",
+        "frame": "Bingkai",
+        "caption": "Keterangan"
+      },
+      "editing": "Warna {role}",
+      "swatches": "Contoh warna",
+      "reset": "Kembalikan ke bawaan",
+      "note": "Warna ini hanya untuk QR Anda. Tombol dan menu HeyQR tetap memakai warnanya sendiri.",
+      "frameHint": "Bingkai, tepi kartu, dan bingkai di sekitar tata letak.",
+      "captionHint": "Keterangan di bawah, di atas, atau di dalam kode.",
+      "picker": "Pemilih warna {role}"
+    },
+    "logoGroup": {
+      "source": "Sumber logo",
+      "icons": "Pustaka ikon",
+      "upload": "Unggah logo",
+      "count": "{count} ikon vektor",
+      "search": "Cari ikon",
+      "searchPlaceholder": "Cari ikon: menu, wifi, toko…",
+      "empty": "Tidak ada ikon yang cocok dengan “{query}”.",
+      "style": "Gaya ikon",
+      "plate": "Di atas alas",
+      "tile": "Petak warna",
+      "vectorNote": "Ikon tetap vektor di SVG dan PDF, sehingga tajam di ukuran berapa pun. Ikon memakai warna tengah sudut.",
+      "remove": "Hapus logo",
+      "backingHint": "Alas mengosongkan titik di belakang logo Anda agar terbaca dengan jelas.",
+      "position": "Posisi",
+      "positions": {
+        "center": "Tengah kode",
+        "top": "Atas kartu"
+      },
+      "positionHint": "“Atas kartu” berfungsi dengan kartu vertikal dan horizontal.",
+      "brandName": "Nama di samping logo",
+      "brandNameHint": "Opsional. Ditampilkan di samping logo di atas kode.",
+      "uploadTitle": "Unggah logo Anda",
+      "brandedUpload": "Unggah gambar terlebih dahulu",
+      "imageSize": "Ukuran gambar"
+    },
+    "captionGroup": {
+      "position": "Posisi",
+      "positions": {
+        "below": "Di bawah",
+        "above": "Di atas",
+        "inside": "Di dalam kode"
+      },
+      "insideHint": "Teks pendek berada di atas alas di tengah kode. Pemeriksaan pindai meminta Anda mempersingkatnya jika menutupi terlalu banyak.",
+      "hiddenNote": "“{layout}” tidak memiliki keterangan. Pilih QR + keterangan atau kartu untuk menampilkannya.",
+      "frameNote": "Teks bingkai diatur di Bingkai.",
+      "toLayout": "Gunakan QR + keterangan",
+      "color": "Warna keterangan",
+      "insideShortened": "Di dalam kode ada ruang untuk {max} karakter, jadi yang tampil “{shown}”. Persingkat keterangan, atau letakkan di bawah atau di atas kode."
+    },
+    "stage": {
+      "history": "Riwayat",
+      "undo": "Urungkan",
+      "redo": "Ulangi",
+      "background": "Latar kanvas",
+      "bg": {
+        "light": "Terang",
+        "dark": "Gelap",
+        "checker": "Transparan"
+      },
+      "scale": "Skala pratinjau",
+      "fit": "Sesuaikan",
+      "actual": "Ukuran sebenarnya",
+      "dims": {
+        "layout": "Tata letak",
+        "qr": "QR",
+        "file": "File"
+      },
+      "scaleLabel": "{pct}%",
+      "openFull": "Buka pratinjau layar penuh",
+      "fullTitle": "Pratinjau layar penuh",
+      "done": "Selesai",
+      "scaledToFit": "Diskalakan agar muat"
+    },
+    "scanChecking": "Memeriksa pindaian",
+    "darkenCorners": "Gelapkan penanda sudut",
+    "textCount": "{count} dari {max} karakter. Teks pendek menghasilkan kode yang lebih sederhana dan lebih mudah dipindai.",
+    "brand": {
+      "step1": "1 · Logo atau gambar Anda",
+      "step1Hint": "PNG, JPG, WebP, atau SVG",
+      "step1Ready": "Ganti kapan saja",
+      "drag": "Seret logo Anda ke sini",
+      "dropNow": "Lepaskan untuk mengunggah",
+      "add": "Tambahkan logo atau gambar Anda",
+      "formats": "PNG, JPG, WebP, atau SVG, hingga 10 MB. Latar belakang transparan paling baik.",
+      "choose": "Pilih gambar",
+      "chooseMobile": "Pilih dari foto atau file",
+      "chooseLabel": "Pilih gambar logo",
+      "sample": "Coba logo contoh",
+      "error": "Kami tidak dapat membaca file itu. Coba PNG, JPG, WebP, atau SVG hingga 10 MB.",
+      "reading": "Membaca warna dari gambar Anda…",
+      "preview": "Gambar yang diunggah",
+      "image": "Gambar Anda",
+      "colorsFound": "{count, plural, other {# warna ditemukan}}",
+      "replace": "Ganti gambar",
+      "replaceLabel": "Ganti gambar logo",
+      "remove": "Hapus gambar",
+      "step2": "2 · Warna dari gambar Anda",
+      "step2Hint": "Diterapkan ke QR",
+      "roles": "Peran warna merek",
+      "role": {
+        "primary": "Warna kode",
+        "bg": "Latar belakang",
+        "accent": "Aksen"
+      },
+      "roleHint": {
+        "primary": "Modul dan bingkai sudut",
+        "bg": "Di belakang kode dan kartu",
+        "accent": "Tengah sudut dan detail"
+      },
+      "fromImage": "Dari gambar Anda",
+      "found": "Warna yang ditemukan di gambar Anda",
+      "hexFor": "HEX untuk {role}",
+      "reset": "Atur ulang",
+      "contrast": {
+        "ok": "Kode di atas latar: {ratio}:1 · mudah dibaca. Pemeriksaan pindai yang menentukan.",
+        "warn": "Kode di atas latar: {ratio}:1 · terbaca, tetapi kontras lebih tinggi lebih aman.",
+        "err": "Kode di atas latar: {ratio}:1 · terlalu rendah untuk dipindai dengan andal."
+      },
+      "appColors": "Warna ini hanya untuk QR Anda. Tombol dan menu HeyQR tetap memakai warnanya sendiri.",
+      "step3": "3 · Pilih arah",
+      "step3Hint": "Kode yang sama, tiga tampilan",
+      "looks": "Tampilan bermerek",
+      "lookCards": {
+        "center": {
+          "title": "Logo di dalam kode",
+          "desc": "Tanda Anda berada di atas alas di tengah."
+        },
+        "card": {
+          "title": "Kartu merek",
+          "desc": "Logo dan nama di atas kode, dalam bingkai."
+        },
+        "art": {
+          "title": "Karya seni",
+          "desc": "Gambar Anda mengalir ke titik dan sudut."
+        }
+      },
+      "step4": "4 · Sempurnakan",
+      "fine": {
+        "logo": "Ukuran gambar & alas",
+        "pattern": "Titik & sudut",
+        "caption": "Keterangan & font",
+        "size": "Ukuran"
+      },
+      "updating": "Memperbarui desain bermerek… lanjutkan mengedit",
+      "readingCanvas": "Membaca gambar Anda…"
+    },
+    "designMode": {
+      "label": "Mode desain",
+      "custom": "Desain kustom",
+      "branded": "Desain bermerek",
+      "chooseTitle": "Bagaimana Anda ingin mendesainnya?",
+      "chooseLead": "Keduanya dimulai dari kode yang sama. Anda bisa beralih kapan saja tanpa kehilangan konten.",
+      "customTitle": "Desain kustom",
+      "customText": "Pilih sendiri tata letak, bentuk, warna, bingkai, dan keterangan.",
+      "brandedTitle": "Desain bermerek",
+      "brandedBadge": "Dari logo Anda",
+      "brandedText": "Unggah logo atau gambar Anda. Kami mengambil warnanya dan menyarankan tiga tampilan."
+    },
+    "patternHint": "8 bentuk untuk titik yang menyimpan data Anda",
+    "eyeFrameHint": "Cincin luar dari 3 penanda sudut",
+    "eyeBallHint": "Titik dalam dari 3 penanda sudut",
+    "finderNote": "Setiap bentuk mempertahankan proporsi penanda 1 : 1 : 3 : 1 : 1, sehingga pemeriksaan pindai tetap lolos.",
+    "colorPicker": "Pemilih warna {label}",
+    "scanCheck": {
+      "run": "Periksa pindaian",
+      "retry": "Periksa lagi",
+      "readBack": "Membaca kembali “{value}” di perangkat ini, seperti kamera ponsel.",
+      "unreadableTitle": "Tidak terpindai",
+      "unreadable": "Kamera ponsel tidak dapat membaca tata letak ini. Tingkatkan kontras, perkecil logo, atau gunakan bentuk yang lebih sederhana, lalu periksa lagi.",
+      "mismatch": "Terbaca “{value}”, bukan konten Anda. Periksa konten, lalu periksa lagi.",
+      "errorTitle": "Pemeriksaan pindai tidak berjalan",
+      "errorText": "Pemeriksaan pindai tidak dapat dimulai. Desain Anda aman; coba lagi.",
+      "finding": "Mencari tahu penyebabnya di perangkat ini…",
+      "multiTitle": "Tata letak ini mungkin tidak terpindai · {count} perbaikan",
+      "confirmed": "Diperiksa di perangkat ini: dengan hanya perubahan ini, kode terpindai.",
+      "general": "Kami tidak dapat menentukan satu pengaturan penyebabnya. Tingkatkan kontras, perkecil logo, atau gunakan bentuk yang lebih sederhana, lalu periksa lagi.",
+      "logoSearching": "Mencoba ukuran logo yang lebih kecil di perangkat ini…",
+      "logoNone": "Tidak ada ukuran logo lebih kecil yang terpindai dengan tata letak ini, jadi desain Anda tidak berubah. Coba alas, logo yang lebih sederhana, atau hapus logo di Logo.",
+      "openLogo": "Buka pengaturan Logo",
+      "logoApplied": "Logo diperkecil dari {from}% menjadi {to}%. Memeriksa tata letak baru…",
+      "causes": {
+        "invert": {
+          "title": "Kode terang di atas latar gelap",
+          "text": "Banyak kamera ponsel tidak dapat membaca kode terbalik. Buat kode lebih gelap daripada latarnya.",
+          "fix": "Tukar warna"
+        },
+        "contrast": {
+          "title": "Kontras kurang",
+          "text": "Kode dan latar belakang terlalu mirip ({ratio}:1). Usahakan setidaknya 4:1.",
+          "fix": "Tingkatkan kontras"
+        },
+        "eyes": {
+          "title": "Penanda sudut terlalu terang",
+          "text": "Pemindai menemukan kode dari tiga penanda sudutnya. Buat lebih gelap.",
+          "fix": "Gelapkan penanda sudut"
+        },
+        "text": {
+          "title": "Teks di dalam kode terlalu panjang",
+          "text": "Batasi teks di dalam kode sekitar 8 karakter agar koreksi kesalahan bisa memulihkan bagian yang tertutup.",
+          "fix": "Persingkat teks"
+        },
+        "logo": {
+          "title": "Logo menutupi terlalu banyak bagian kode",
+          "text": "Koreksi kesalahan dapat memulihkan lebar logo hingga {max}%. Milik Anda {size}%.",
+          "critical": "Logo menutupi penanda sudut atau garis timing.",
+          "fix": "Perkecil logo"
+        }
+      }
+    },
+    "hosted": {
+      "badge": "Halaman di-hosting",
+      "notice": "HeyQR menerbitkan halaman ini di {short}. {needs} Perubahan tayang saat Anda menerbitkan; kode yang sudah dicetak tetap berfungsi.",
+      "noticePreview": "tautan pendek kode",
+      "needsPlan": "Penerbitan membutuhkan paket Dinamis: Starter {starter}/bulan untuk 5 kode atau Studio {studio}/bulan untuk 25, dengan uji coba gratis 7 hari. Mendesain dan melihat pratinjau tetap gratis.",
+      "needsSlot": "Ini memakai salah satu dari {slots} slot Dinamis Anda di {plan}.",
+      "sample": "Mulai dari contoh",
+      "sampleAdded": "Contoh ditambahkan. Ganti dengan detail Anda sendiri.",
+      "previews": "Pratinjau · Setelah pindai dan desain QR",
+      "previewSwitch": "Pratinjau",
+      "afterScan": "Setelah pindai",
+      "qrDesign": "Desain QR",
+      "moveUp": "Pindahkan {item} ke atas",
+      "moveDown": "Pindahkan {item} ke bawah",
+      "remove": "Hapus {item}",
+      "optional": "opsional",
+      "photoAdd": "Tambahkan foto",
+      "photoReplace": "Ganti foto",
+      "photoRemove": "Hapus foto",
+      "photoHint": "Foto diunggah ke HeyQR dan diubah ukurannya untuk ponsel. JPG atau PNG, masing-masing hingga 5 MB.",
+      "photoType": "“{name}” bukan JPG atau PNG.",
+      "photoTooLarge": "“{name}” berukuran {size}. Batasnya 5 MB.",
+      "photoUnreadable": "Kami tidak dapat membaca “{name}”. Coba foto lain.",
+      "menu": {
+        "name": "Nama restoran",
+        "namePlaceholder": "Little Fern Café",
+        "note": "Catatan",
+        "notePlaceholder": "Dapur buka 8.00–15.00",
+        "currency": "Harga dalam",
+        "section": "Bagian {n}",
+        "sectionPlaceholder": "Sarapan",
+        "sectionHint": "Beri nama bagian ini, misalnya “Sarapan” atau “Minuman”.",
+        "dish": "Hidangan {n}",
+        "dishPlaceholder": "Roti panggang alpukat",
+        "descPlaceholder": "Deskripsi · opsional",
+        "price": "Harga",
+        "pricePlaceholder": "12",
+        "dishPhoto": "Foto hidangan",
+        "addDish": "Tambahkan hidangan",
+        "addSection": "Tambahkan bagian"
+      },
+      "coupon": {
+        "title": "Judul penawaran",
+        "titlePlaceholder": "Untuk semua kelas tembikar bulan ini",
+        "discount": "Diskon",
+        "discountPlaceholder": "Diskon 20%",
+        "discountHint": "Singkat dan mencolok: “Diskon 20%”, “Potongan $5”, “Kopi gratis”.",
+        "code": "Kode promo",
+        "codePlaceholder": "FERN20",
+        "expires": "Berakhir pada",
+        "expiresHint": "Setelah tanggal ini halaman menampilkan “Penawaran berakhir” dan menyembunyikan kode. Penawaran berlaku sepanjang hari tersebut di zona waktu Anda ({zone}).",
+        "clearDate": "Hapus tanggal",
+        "link": "Tautan penukaran",
+        "linkPlaceholder": "yourshop.com/offer",
+        "terms": "Ketentuan",
+        "termsPlaceholder": "Satu kode per orang. Tidak berlaku dengan penawaran lain.",
+        "previewAs": "Pratinjau halaman sebagai",
+        "valid": "Penawaran berlaku",
+        "expired": "Kedaluwarsa"
+      },
+      "social": {
+        "photo": "Foto profil",
+        "name": "Nama profil",
+        "namePlaceholder": "Ana Reyes",
+        "bio": "Bio singkat",
+        "bioPlaceholder": "Desainer produk. Keramik di akhir pekan.",
+        "links": "Tautan, sesuai urutan yang dilihat orang",
+        "link": "Tautan {n}",
+        "labelLabel": "Label",
+        "labelPlaceholder": "Instagram",
+        "urlLabel": "Alamat",
+        "urlPlaceholder": "instagram.com/yourname",
+        "quickAdd": "Tambah:",
+        "addLink": "Tambahkan tautan"
+      },
+      "business": {
+        "name": "Nama bisnis",
+        "namePlaceholder": "Reyes Ceramics Studio",
+        "desc": "Deskripsi singkat",
+        "descPlaceholder": "Peralatan makan buatan tangan dan kelas tembikar.",
+        "hours": "Jam buka",
+        "open": "Buka",
+        "from": "Buka",
+        "to": "Tutup",
+        "closed": "Tutup",
+        "copyMonday": "Salin jam hari Senin ke Sel–Jum",
+        "zone": "Waktu dalam {zone}.",
+        "address": "Alamat",
+        "addressPlaceholder": "21 Pier St, San Francisco",
+        "addressHint": "Menambahkan tombol Petunjuk arah.",
+        "phone": "Telepon",
+        "phonePlaceholder": "+1 415 555 0142",
+        "phoneHint": "Menambahkan tombol Telepon.",
+        "website": "Situs web",
+        "websitePlaceholder": "yourshop.com",
+        "websiteHint": "Menambahkan tombol Situs web."
+      },
+      "apps": {
+        "icon": "Ikon aplikasi",
+        "name": "Nama aplikasi",
+        "namePlaceholder": "Fern Rewards",
+        "desc": "Deskripsi",
+        "descPlaceholder": "Fungsi aplikasi, dalam satu kalimat.",
+        "ios": "Tautan App Store",
+        "iosPlaceholder": "apps.apple.com/app/your-app",
+        "android": "Tautan Google Play",
+        "androidPlaceholder": "play.google.com/store/apps/details?id=…",
+        "storesHint": "Tambahkan setidaknya satu toko. Ponsel membuka tokonya sendiri; perangkat lain melihat halaman berisi kedua tautan."
+      },
+      "pdf": {
+        "title": "Judul",
+        "titlePlaceholder": "Jadwal kelas musim semi",
+        "desc": "Deskripsi singkat",
+        "descPlaceholder": "Tanggal, harga, dan apa yang perlu dibawa.",
+        "file": "File PDF",
+        "choose": "Pilih PDF",
+        "limits": "Hingga 25 MB · hingga 300 halaman",
+        "sample": "Gunakan PDF contoh",
+        "uploading": "Mengunggah · {pct}%",
+        "processing": "Memeriksa PDF…",
+        "cancel": "Batal",
+        "meta": "{pages, plural, other {# halaman}} · {size}",
+        "metaNoPages": "{size}",
+        "replace": "Ganti",
+        "remove": "Hapus",
+        "hint": "Disimpan oleh HeyQR. Mengganti file tetap memakai tautan pendek yang sama, jadi kode cetak membuka versi baru setelah Anda menerbitkan.",
+        "signIn": "Masuk untuk mengunggah PDF. Draf Anda tetap tersimpan.",
+        "notPdf": "“{name}” bukan PDF. Pilih file yang berakhiran .pdf.",
+        "empty": "“{name}” kosong. Pilih file lain.",
+        "tooLarge": "“{name}” berukuran {size}. Batasnya 25 MB. Ekspor PDF yang lebih kecil lalu coba lagi.",
+        "tooManyPages": "“{name}” memiliki {pages} halaman. Batasnya 300.",
+        "failed": "File itu gagal diunggah. Coba lagi."
+      },
+      "product": {
+        "name": "Nama produk",
+        "namePlaceholder": "Mug stoneware berbintik",
+        "photos": "Foto",
+        "cover": "Sampul",
+        "photosHint": "Hingga 5 foto. Foto pertama menjadi sampul. JPG atau PNG, masing-masing hingga 5 MB.",
+        "photo": "Foto {n}",
+        "desc": "Deskripsi",
+        "descPlaceholder": "Ukuran, bahan, perawatan.",
+        "currency": "Mata uang",
+        "price": "Harga",
+        "pricePlaceholder": "38",
+        "cta": "Tombol",
+        "ctas": {
+          "buy": "Beli sekarang",
+          "view": "Lihat produk",
+          "order": "Pesan sekarang"
+        },
+        "link": "Tautan produk",
+        "linkPlaceholder": "yourshop.com/product",
+        "linkHint": "Tujuan tombol: toko Anda atau listing di marketplace."
+      },
+      "signInPhotos": "Masuk untuk menambahkan foto. Draf Anda tetap tersimpan.",
+      "errors": {
+        "menuName": "Tambahkan nama yang dilihat tamu di bagian atas menu.",
+        "menuSections": "Tambahkan setidaknya satu bagian.",
+        "sectionName": "Beri nama bagian ini, misalnya “Sarapan” atau “Minuman”.",
+        "sectionDishes": "Tambahkan setidaknya satu hidangan ke bagian ini.",
+        "dishName": "Setiap hidangan membutuhkan nama.",
+        "price": "Harga hanya memakai angka, misalnya 12 atau 4.50.",
+        "couponTitle": "Sebutkan untuk apa penawaran ini.",
+        "couponDiscount": "Tambahkan diskon, misalnya “Diskon 20%”.",
+        "couponCode": "Gunakan hanya huruf, angka, - atau _, tanpa spasi.",
+        "dateInvalid": "Pilih tanggal yang valid.",
+        "datePassed": "Tanggal ini sudah lewat. Pilih tanggal yang lebih akhir, atau kosongkan untuk penawaran tanpa tanggal berakhir.",
+        "urlEmpty": "Masukkan alamat web, misalnya yourname.com.",
+        "urlSpaces": "Alamat web tidak boleh berisi spasi.",
+        "urlInvalid": "Periksa alamatnya. Alamat membutuhkan domain, misalnya yourname.com.",
+        "socialName": "Tambahkan nama yang dilihat orang di bagian atas halaman.",
+        "socialLinks": "Tambahkan setidaknya satu tautan.",
+        "linkLabel": "Tautan ini membutuhkan label.",
+        "linkUrl": "Tautan ini membutuhkan alamat web lengkap, misalnya instagram.com/yourname.",
+        "businessName": "Tambahkan nama bisnis Anda.",
+        "businessReach": "Tambahkan alamat, telepon, atau situs web agar orang bisa menghubungi Anda.",
+        "phone": "Gunakan angka, spasi, dan + opsional untuk kode negara.",
+        "hoursInvalid": "Gunakan format waktu seperti 09:00.",
+        "hoursOrder": "Jam tutup harus lebih akhir dari jam buka.",
+        "appName": "Tambahkan nama aplikasi.",
+        "appStores": "Tambahkan setidaknya satu tautan toko.",
+        "appStoreLink": "Tautan App Store diawali dengan apps.apple.com/.",
+        "googlePlayLink": "Tautan Google Play diawali dengan play.google.com/.",
+        "pdfTitle": "Tambahkan judul dokumen.",
+        "pdfFile": "Unggah PDF untuk melanjutkan.",
+        "pdfUploading": "Tunggu hingga unggahan selesai.",
+        "productName": "Tambahkan nama produk.",
+        "productLink": "Tambahkan halaman tempat orang bisa membeli atau melihat produk.",
+        "productPrice": "Gunakan hanya angka, misalnya 38 atau 38.50. Pilih mata uang di menu.",
+        "productImages": "Hingga 5 foto."
+      },
+      "previewNote": "HeyQR meng-hosting halaman ini di {short}. Perubahan tayang saat Anda menerbitkan; kode yang sudah dicetak tetap berfungsi.",
+      "qrNote": "Kode berisi tautan pendek {short}, sehingga halaman bisa berubah setelah dicetak."
+    }
+  },
+  "scan": {
+    "invert": "Kode terang di atas latar gelap. Banyak kamera ponsel tidak dapat membaca kode terbalik.",
+    "contrast": "Kontras antara kode dan latarnya kurang. Dibutuhkan setidaknya 3:1.",
+    "eyes": "Penanda sudut harus lebih gelap dari latar belakang, dengan kontras setidaknya 3:1 (2.5:1 untuk bagian tengah). Pemindai menemukan kode dari penanda ini.",
+    "logo": "Logo menutupi terlalu banyak bagian kode. Perkecil logonya.",
+    "text": "Teks di dalam kode terlalu panjang. Batasi sekitar 8 karakter."
+  },
+  "export": {
+    "title": "Unduh kode Anda",
+    "shortLinkPreview": {
+      "mark": "Pratinjau",
+      "note": "Pratinjau dengan tautan pendek contoh. Tautan pendek permanen Anda dibuat saat Anda mengaktifkan kode ini, dan setiap file yang Anda unduh berisi tautan tersebut."
+    },
+    "format": "Format",
+    "png": "PNG",
+    "pngHint": "Gambar hingga 8K untuk web dan dokumen.",
+    "svg": "SVG",
+    "svgHint": "Vektor, ukuran berapa pun, bisa diedit.",
+    "pay": "Bayar {price} dan unduh",
+    "subscribe": "Berlangganan seharga {price} / bulan",
+    "download": "Unduh {format}",
+    "paid": "Pembayaran diterima. File Anda sudah siap.",
+    "pending": "Mengonfirmasi pembayaran Anda… Biasanya hanya beberapa detik. Pengaturan Anda dikunci agar file sesuai dengan tanda terima.",
+    "cancelled": "<b>Checkout dibatalkan.</b> Anda tidak dikenai biaya. Desain dan format Anda tersimpan, jadi Anda bisa membayar kapan pun Anda siap.",
+    "secure": "Anda akan menyelesaikan pembayaran di checkout Stripe yang aman, lalu kembali ke sini untuk mengunduh.",
+    "includedNote": "Sudah termasuk dalam pembelian Anda. Tidak perlu membayar.",
+    "resolution": "Ukuran PNG",
+    "scale": "{scale}×",
+    "dpi": "{dpi} dpi",
+    "pixels": "{width} × {height} px",
+    "titleBuy": "Unduh kode QR Anda",
+    "titleGuest": "Siap diunduh",
+    "subGuest": "Periksa tata letak dan file, lalu masuk dengan Google untuk membayar dan mengunduh. Desain Anda tetap seperti semula.",
+    "subPay": "Periksa tata letak dan format. Anda akan melihat total sebelum membayar.",
+    "subEntitled": "Kode ini milik Anda. Unduh format apa pun, sesering yang Anda butuhkan.",
+    "stageLabel": "Tata letak untuk diunduh",
+    "layouts": "Tata letak kode ini",
+    "backToDesign": "Kembali ke desain",
+    "model": {
+      "static": "Statis",
+      "dynamic": "Dinamis"
+    },
+    "dims": {
+      "layout": "Tata letak",
+      "file": "File"
+    },
+    "scanOk": "Pindaian terverifikasi",
+    "scanFail": "Mungkin tidak terpindai",
+    "transparent": "Latar belakang transparan",
+    "quality": "<b>Tanpa penurunan kualitas.</b> SVG dan PDF sepenuhnya vektor: modul, ikon, dan teks tetap tajam hingga ukuran baliho. PNG dirender dari vektor yang sama hingga 8K.",
+    "returned": "Masuk dengan Google. Tata letak dan <b>{format}</b> Anda tetap seperti terakhir kali.",
+    "sessionEnded": "<b>Sesi Anda telah berakhir.</b> Masuk lagi untuk melanjutkan: tata letak ini dan opsi file Anda tetap tersimpan.",
+    "signInAgain": "Masuk lagi",
+    "alreadyOwned": "Sudah menjadi milik Anda. Unduh lagi kapan saja, tanpa pembayaran baru.",
+    "paymentProcessing": "Pembayaran kode ini sedang dikonfirmasi. Kode akan terbuka sebentar lagi, tanpa tagihan kedua.",
+    "signInCanceled": "Masuk dengan Google dibatalkan. Tata letak dan <b>{format}</b> Anda masih dipilih. Lanjutkan dengan Google untuk mencoba lagi.",
+    "signInIncomplete": "Masuk dengan Google belum selesai. Tata letak dan <b>{format}</b> Anda masih dipilih. Lanjutkan dengan Google untuk mencoba lagi.",
+    "confirming": "Mengonfirmasi pembayaran Anda…",
+    "preparing": "Menyiapkan {format} Anda…",
+    "ready": "{format} Anda sudah siap.",
+    "downloaded": "<b>{name} telah diunduh.</b> File ini juga ada di Kode QR saya, siap diunduh lagi.",
+    "downloadAgain": "Unduh lagi",
+    "tryAgain": "Coba lagi",
+    "errors": {
+      "failed": "<b>Kami tidak dapat menyiapkan {format} Anda.</b> Pembayaran dan pengaturan Anda aman. Coba lagi sebentar lagi.",
+      "scan": "<b>Tata letak ini mungkin tidak dapat dipindai.</b> Buka desain untuk memperbaikinya; file hanya dibuat untuk kode yang lolos pemeriksaan pindai.",
+      "size": "<b>Ukuran itu terlalu besar untuk satu file.</b> Pilih ukuran PNG yang lebih kecil atau SVG.",
+      "payment": "<b>Kode ini belum terbuka.</b> Tidak ada biaya yang ditagih. Muat ulang sebentar lagi, atau bayar untuk mengunduh."
+    },
+    "checkoutFailed": "Kami tidak dapat membuka checkout. Tidak ada biaya yang ditagih; coba lagi.",
+    "continueGoogle": "Lanjutkan dengan Google",
+    "guestNote": "Gratis untuk mendesain. Anda hanya membayar saat mengunduh.",
+    "receipt": {
+      "title": "Tanda terima",
+      "paid": "Dibayar",
+      "tax": "Termasuk pajak sesuai perhitungan Stripe."
+    },
+    "lines": {
+      "single": "Single QR",
+      "dynamic": "QR Dinamis",
+      "singleNamed": "Single QR · {name}",
+      "unlock": "Buka kunci Statis · {plan} · sisa {left} dari {limit}",
+      "credit": "Kredit Statis · sisa {left}",
+      "slot": "Slot Dinamis · {plan} · {used} dari {limit} terpakai",
+      "starter": "Starter · bulanan",
+      "ppIncluded": "Print Pack · termasuk dalam {plan} · sisa {left} dari {limit}",
+      "pp": "Print Pack"
+    },
+    "perMonth": "{price}/bulan",
+    "summary": {
+      "title": "Ringkasan pesanan",
+      "code": "Kode QR",
+      "type": "Jenis",
+      "layout": "Tata letak",
+      "file": "File",
+      "total": "Total",
+      "tax": "Pajak, jika ada, dihitung saat checkout.",
+      "included": "Termasuk",
+      "includedShort": "Termasuk"
+    },
+    "emptyTitle": "Belum ada yang bisa diunduh",
+    "emptyText": "Desain kode QR terlebih dahulu. Draf Anda tetap tersimpan di browser ini sampai Anda mengunduhnya.",
+    "emptyAction": "Buat kode QR",
+    "inspectPrint": "Buka Pratinjau Cetak",
+    "printTitle": "Print Pack",
+    "printPreviewText": "Periksa PDF cetak, bleed, tanda potong, dan nilai warna tata letak ini secara persis sebelum Anda mencetak.",
+    "printSetupText": "Print Pack memerlukan tata letak cetak yang diukur dalam mm. Ubah tata letak ini ke Cetak · mm di Edit desain → Ukuran.",
+    "printSetup": "Siapkan untuk cetak",
+    "pdf": "PDF",
+    "pdfHint": "Vektor untuk percetakan.",
+    "payTotal": "Bayar {price} dan unduh",
+    "useUnlock": "Gunakan 1 buka kunci dan unduh",
+    "useCredit": "Gunakan 1 kredit dan unduh",
+    "unlockNote": "Dari paket {plan} Anda. Tersisa {left, plural, other {# buka kunci}} bulan ini setelah yang ini.",
+    "creditNote": "Dari kredit statis Anda. Tersisa {left, plural, other {# kredit}} setelah yang ini.",
+    "goLive": "Aktifkan dan unduh",
+    "goLiveNote": "Menggunakan satu slot aktif dari paket {plan} Anda: {used} dari {limit} setelah yang ini.",
+    "perMonthShort": "{price}/bln",
+    "ppTitle": "Print Pack",
+    "ppOptional": "Opsional",
+    "ppUnlocked": "Terbuka",
+    "ppDownload": "Unduh",
+    "ppAddTitle": "Tambahkan Print Pack",
+    "ppSub": "PDF cetak, SVG yang dapat diedit, serta spesifikasi warna dan ukuran",
+    "ppUseIncluded": "Gunakan 1 Print Pack yang termasuk",
+    "ppIncludedSub": "Sisa {left} dari {limit} bulan ini · PDF cetak, SVG, dan spesifikasi",
+    "ppIncluded": "Termasuk",
+    "ppAddText": "PDF cetak dengan bleed dan tanda potong, SVG yang dapat diedit, serta lembar warna dan ukuran untuk QR ini.",
+    "ppAdd": "Tambahkan Print Pack · +{price}",
+    "ppNotForSale": "Print Pack belum dapat dibeli dalam mata uang ini.",
+    "ppRepeat": "Unduhan ulang sudah termasuk. Pengaturan: ukuran 100%, bleed 3 mm, tanda potong, sRGB.",
+    "inspectPrintFirst": "Periksa file cetak terlebih dahulu",
+    "incl": {
+      "static1": "PNG dan SVG dari setiap tata letak kode ini",
+      "static2": "Unduh ulang tanpa batas",
+      "static3": "Edit desain kapan saja",
+      "dyn1": "Hingga {limit} kode QR Dinamis aktif, ubah tujuan kapan saja",
+      "dyn2": "Analitik pindaian dasar",
+      "dyn3": "PNG dan SVG, unduh ulang tanpa batas",
+      "pp": "Print Pack: PDF cetak, SVG yang dapat diedit, dan spesifikasi"
+    },
+    "catalog": {
+      "not_offered": "Ini belum dapat dibeli dalam mata uang yang dipilih. Tidak ada biaya yang ditagih.",
+      "price_mismatch": "Harga berubah sejak halaman ini dimuat. Tidak ada biaya yang ditagih; muat ulang untuk melihat harga terkini.",
+      "unavailable": "Belum tersedia untuk dibeli dalam mata uang ini. Ganti mata uang di halaman Harga, atau periksa lagi nanti. Tidak akan ada biaya yang ditagih."
+    },
+    "unlockErrors": {
+      "no_allowance": "Buka kunci bulanan sudah habis. Pilih opsi lain di bawah.",
+      "no_credits": "Kredit statis sudah habis.",
+      "limit": "Semua slot Dinamis aktif sedang terpakai.",
+      "failed": "Itu tidak berhasil. Tidak ada biaya yang ditagih; coba lagi."
+    },
+    "limits": {
+      "staticTitle": "Anda telah menggunakan semua {limit} buka kunci statis bulan ini",
+      "staticText": "QR ini memerlukan satu buka kunci lagi. Pilih yang cocok untuk Anda; desain Anda tetap seperti semula.",
+      "staticUsed": "{used} dari {limit} buka kunci terpakai",
+      "resets": "Diatur ulang {date}",
+      "buyOnce": "Beli QR ini sekali",
+      "buyOnceSub": "Single QR dengan PNG dan SVG",
+      "credits": "Dapatkan 3 kredit statis",
+      "creditsSub": "Tidak pernah kedaluwarsa",
+      "studio": "Tingkatkan ke Studio",
+      "studioSub": "40 buka kunci dan 5 Print Pack setiap bulan",
+      "dynTitle": "Semua {limit} slot Dinamis sedang terpakai",
+      "dynText": "Slot menghitung kode yang sedang mengalihkan saat ini, bukan kode yang dibuat bulan ini. Kosongkan satu atau pindah ke paket yang lebih besar.",
+      "dynUsed": "{used} dari {limit} aktif",
+      "live": "Hitungan langsung · bukan bulanan",
+      "pause": "Jeda atau hapus kode Dinamis",
+      "pauseSub": "Langsung mengosongkan slotnya",
+      "studioDynSub": "25 slot Dinamis dan analitik per kode",
+      "toStatic": "Jadikan QR statis saja",
+      "toStaticSub": "Konten tetap · menggunakan buka kunci statis"
+    },
+    "limit": "ukuran yang lebih besar melebihi {max} px",
+    "subUnlock": "Termasuk dalam {plan}: ini menggunakan 1 buka kunci statis bulanan Anda.",
+    "subCredit": "Ini menggunakan 1 kredit statis Anda."
+  },
+  "dashboard": {
+    "noMatch": {
+      "static": "Tidak ada kode QR statis",
+      "dynamic": "Tidak ada kode QR dinamis",
+      "text": "Kode Anda yang lain ada di Semua.",
+      "all": "Tampilkan semua kode"
+    },
+    "title": "Kode QR saya",
+    "new": "Buat kode QR",
+    "empty": {
+      "title": "Belum ada kode QR",
+      "text": "Kode yang Anda beli atau mulai desain muncul di sini. Anda dapat mengunduhnya lagi dan menambahkan tata letak baru kapan saja.",
+      "cta": "Buat kode QR pertama Anda"
+    },
+    "status": {
+      "draft": "Draf",
+      "active": "Aktif",
+      "paused": "Dijeda",
+      "archived": "Diarsipkan",
+      "purchased": "Dibeli",
+      "inactive": "Tidak aktif"
+    },
+    "model": {
+      "static": "Statis",
+      "dynamic": "Dinamis"
+    },
+    "updated": "Diperbarui {date}",
+    "open": "Buka {name}",
+    "sub": "{count, plural, other {# kode}} · {dynamic} dinamis aktif",
+    "subEmpty": "Kode yang Anda beli dan draf Anda ada di sini.",
+    "filterLabel": "Filter",
+    "filters": {
+      "all": "Semua {count}",
+      "static": "Statis {count}",
+      "dynamic": "Dinamis {count}"
+    },
+    "actions": {
+      "edit": "Edit desain",
+      "download": "Unduh",
+      "buy": "Beli & unduh",
+      "reactivate": "Aktifkan kembali"
+    },
+    "loading": "Memuat kode QR Anda",
+    "manage": {
+      "select": "Pilih",
+      "done": "Selesai",
+      "selectAll": "Pilih semua",
+      "selectOne": "Pilih {name}",
+      "chooseToDelete": "Pilih kode yang akan dihapus",
+      "selected": "{count} dari {total} dipilih",
+      "deleteSelected": "{count, plural, =0 {Hapus} other {Hapus #}}",
+      "deleteOne": "Hapus {name}",
+      "cancel": "Batal",
+      "dialog": {
+        "titleOne": "Hapus “{name}”?",
+        "titleMany": "Hapus {count} kode QR?",
+        "leadOne": "Kode ini akan hilang dari Kode QR saya di semua perangkat.",
+        "leadMany": "Kode-kode ini akan hilang dari Kode QR saya di semua perangkat.",
+        "dynamicTitle": "{count, plural, other {Tautan pendek akan berhenti berfungsi}}",
+        "dynamicText": "{links} {count, plural, other {langsung berhenti}} mengalihkan. Salinan cetak akan membuka halaman “tautan tidak aktif”. {count, plural, other {# slot paket}} dikosongkan.",
+        "staticTitle": "Salinan cetak tetap berfungsi",
+        "staticText": "Kode statis menyimpan kontennya di dalam pola, jadi salinan cetak tetap dapat dipindai. Anda tidak akan bisa mengunduh atau mengedit {count, plural, other {# pembelian ini}} lagi, dan menghapus tidak memberikan pengembalian dana.",
+        "draftTitle": "{count, plural, other {# draf dihapus}}",
+        "draftText": "Tidak ada pembayaran untuk {count, plural, other {draf ini}}, jadi tidak ada hal lain yang berubah.",
+        "confirmOne": "Hapus kode",
+        "confirmMany": "Hapus {count} kode",
+        "undoNote": "Anda dapat membatalkan selama beberapa detik setelah menghapus.",
+        "close": "Tutup",
+        "metaDynamic": "Dinamis",
+        "metaStatic": "Statis",
+        "metaActive": "aktif",
+        "metaPurchased": "dibeli",
+        "metaDraft": "draf"
+      },
+      "deletedOne": "“{name}” dihapus.",
+      "deletedMany": "{count} kode dihapus.",
+      "undo": "Urungkan",
+      "restoredOne": "Kode dipulihkan.",
+      "restoredMany": "{count} kode dipulihkan.",
+      "deleteFailed": "Tidak dapat menghapus. Coba lagi.",
+      "restoreFailed": "Tidak dapat memulihkannya. Urungkan tersedia selama beberapa menit setelah menghapus.",
+      "rename": {
+        "action": "Ganti nama",
+        "actionOne": "Ganti nama {name}",
+        "label": "Nama {name}",
+        "save": "Simpan",
+        "cancel": "Batal",
+        "saved": "Nama diganti menjadi “{name}”.",
+        "empty": "Beri nama kode ini.",
+        "failed": "Kami tidak dapat mengganti namanya. Teks Anda masih ada di sini; coba lagi."
+      }
+    },
+    "printPack": "Print Pack"
+  },
+  "qr": {
+    "back": "Semua kode",
+    "layouts": "Tata letak",
+    "shortLink": "Tautan pendek",
+    "destination": "Tujuan",
+    "destinationHint": "Kode yang sudah dicetak tetap berfungsi; kini kode tersebut membuka alamat ini.",
+    "save": "Simpan",
+    "saved": "Tersimpan",
+    "scans": "Pindaian, 14 hari terakhir",
+    "scansTotal": "{count, plural, other {# pindaian}}",
+    "download": "Unduh",
+    "buy": "Beli untuk mengunduh",
+    "copy": "Salin",
+    "copied": "Tersalin",
+    "editDesign": "Edit desain",
+    "dest": {
+      "title": "Tujuan",
+      "saved": "Tersimpan",
+      "new": "Tujuan baru",
+      "hint": "Kode yang dicetak membuka alamat baru dalam satu menit. Tautan pendek tetap {short}.",
+      "save": "Simpan tujuan",
+      "cancel": "Batal",
+      "goesTo": "Pindaian {short} menuju ke",
+      "previously": "Sebelumnya {url}",
+      "changedAt": "diubah",
+      "history": {
+        "title": "Riwayat perubahan",
+        "to": "Diubah menjadi",
+        "from": "dari {url}"
+      },
+      "change": "Ubah tujuan",
+      "conflict": {
+        "title": "Tujuan ini telah diubah di tempat lain",
+        "text": "Sekarang menuju ke {url}. Perubahan Anda di bawah belum disimpan.",
+        "load": "Muat versi terbaru",
+        "loaded": "Versi terbaru dimuat: {url}. Tinjau perubahan Anda, lalu simpan untuk menggantinya."
+      }
+    },
+    "scansCard": {
+      "title": "Pindaian · 14 hari terakhir",
+      "total": "Total",
+      "today": "Hari ini",
+      "emptyTitle": "Belum ada pindaian",
+      "emptyText": "Pindaian pertama akan muncul di sini dalam beberapa menit. Coba pindai kode yang sudah Anda cetak.",
+      "periodEmptyTitle": "Tidak ada pindaian dalam 14 hari terakhir",
+      "periodEmptyText": "Pindaian sebelumnya tetap tersimpan. Pindaian baru akan muncul di sini dalam beberapa menit."
+    },
+    "details": {
+      "back": "Kode QR saya",
+      "newLayout": "Tata letak baru",
+      "permanent": "Permanen",
+      "shortNote": "Inilah isi kode cetak Anda. Isinya tidak pernah berubah, jadi kode yang sudah dicetak tetap berfungsi.",
+      "noShortLink": "Kode ini aktif dengan tautan pendek setelah diaktifkan.",
+      "content": "Konten",
+      "fixed": "Tetap di dalam kode",
+      "staticNote": "Kode statis menyimpan kontennya di dalam pola itu sendiri, jadi salinan cetak selalu membuka konten ini. Perubahan desain gratis dan tanpa batas.",
+      "incl": {
+        "files": "PNG dan SVG, unduh sesering yang Anda mau",
+        "layouts": "Tata letak baru dan edit desain sudah termasuk"
+      },
+      "dimsSquare": "{size} persegi",
+      "print": "Cetak · mm",
+      "screen": "Layar · px",
+      "setupPrint": "Siapkan untuk cetak",
+      "pack": {
+        "needsMm": "Print Pack memerlukan tata letak cetak yang diukur dalam mm. Siapkan tata letak untuk cetak di Edit desain → Ukuran, lalu periksa di Pratinjau Cetak.",
+        "what": "PDF cetak dengan bleed dan tanda potong, SVG yang dapat diedit, serta lembar warna dan ukuran untuk QR ini.",
+        "add": "Tambahkan Print Pack · +{price}",
+        "addSub": "Membuka Pratinjau Cetak, sehingga Anda dapat memeriksa PDF dan spesifikasinya sebelum membayar.",
+        "useIncluded": "Gunakan 1 Print Pack yang termasuk",
+        "includedSub": "Sisa {left} dari {limit} Print Pack yang termasuk bulan ini di {plan}. Periksa dulu file di Pratinjau Cetak jika Anda mau.",
+        "includedDone": "Print Pack ditambahkan dari paket Anda. File-nya sudah siap.",
+        "includedFailed": "Kami tidak dapat menggunakan Print Pack yang termasuk. Tidak ada yang terpakai; coba lagi.",
+        "noneLeft": "Tidak ada lagi Print Pack yang termasuk bulan ini.",
+        "inspect": "Periksa di Pratinjau Cetak",
+        "notForSale": "Pratinjau Cetak menampilkan halaman dan spesifikasi yang persis. Pembelian Print Pack belum tersedia di sini.",
+        "repeat": "Unduhan ulang sudah termasuk. File “{layout}” pada ukuran 100%, bleed 3 mm, tanda potong."
+      },
+      "layoutNoteDynamic": "Mengubah desain akan membuat file baru untuk diunduh. Kode yang sudah Anda cetak tetap berfungsi.",
+      "layoutNoteStatic": "Setiap tata letak sudah termasuk dalam pembelian ini. Unduh yang mana saja sebagai PNG atau SVG.",
+      "rename": "Ganti nama",
+      "renameFailed": "Kami tidak dapat mengganti nama kode. Teks Anda masih ada di sini; coba lagi.",
+      "nameLabel": "Nama kode QR",
+      "save": "Simpan",
+      "cancel": "Batal",
+      "opens": "Membuka",
+      "downloadAll": "Unduh semua",
+      "layoutsCount": "{n, plural, other {# tata letak}}",
+      "edit": "Edit",
+      "downloadLayout": "Unduh {name}",
+      "downloadFormat": "Unduh {format} dari {name}",
+      "printPreview": "Pratinjau Cetak {name}",
+      "newLayoutCard": "Tata letak baru",
+      "layoutAdded": "“{name}” ditambahkan ke {code}. Tata letak Anda yang lain tidak berubah.",
+      "layoutAddFailed": "Kami tidak dapat menambahkan tata letak. Coba lagi.",
+      "copy": {
+        "action": "Gunakan konten lain…",
+        "title": "Gunakan konten lain",
+        "text": "Kode statis menyimpan kontennya di dalam polanya, jadi konten yang berbeda berarti kode QR baru: kode itu didesain dan dibeli tersendiri ({price}). Kode ini dan file-filenya tetap persis seperti sekarang.",
+        "start": "Buat kode QR baru",
+        "keep": "Pertahankan kode ini",
+        "close": "Tutup"
+      },
+      "ppUnlocked": "Terbuka",
+      "ppLocked": "Terkunci",
+      "deleteLayout": {
+        "label": "Hapus tata letak {name}",
+        "title": "Hapus “{name}”?",
+        "text": "“{name}” dihapus dari akun Anda, beserta unduhan khusus tata letak tersebut. Tindakan ini tidak dapat dibatalkan.",
+        "keeps": "Kode QR, kontennya, tautan pendek, tujuan, pembelian dan Print Pack, serta tata letak lainnya tetap seperti semula.",
+        "confirm": "Hapus tata letak",
+        "cancel": "Batal",
+        "close": "Tutup",
+        "done": "“{name}” dihapus.",
+        "failed": "Kami tidak dapat menghapus “{name}”. Tidak ada yang berubah; coba lagi.",
+        "retry": "Coba lagi",
+        "lastTitle": "Ini satu-satunya tata letak",
+        "lastText": "Kode QR selalu memiliki setidaknya satu tata letak, jadi “{name}” tidak dapat dihapus. Tambahkan tata letak lain terlebih dahulu, atau hapus seluruh kode dari Kode QR saya.",
+        "lastError": "Kode QR memiliki setidaknya satu tata letak, jadi yang ini tetap ada.",
+        "ok": "OK"
+      },
+      "pause": {
+        "pause": "Jeda",
+        "resume": "Lanjutkan",
+        "pausedTitle": "Tautan pendek dijeda",
+        "pausedText": "Orang yang memindai kode ini melihat halaman tidak tersedia. Tautan pendek, tujuan, dan tata letak tetap tersimpan. Anda dapat mengubah tujuan sekarang; tujuan itu terbuka setelah Anda melanjutkan.",
+        "liveText": "Menjeda langsung menghentikan pengalihan. Pada paket berlangganan, ini juga mengosongkan slot aktif kode ini.",
+        "paused": "Dijeda. Tautan pendek sekarang menampilkan halaman tidak tersedia.",
+        "resumed": "Dilanjutkan. Tautan pendek kembali mengalihkan ke tujuan Anda.",
+        "limit": "Semua slot Dinamis aktif di paket Anda sedang terpakai. Jeda atau hapus kode Dinamis lain, lalu lanjutkan kode ini.",
+        "noPlan": "Melanjutkan kode ini memerlukan paket Dinamis yang aktif.",
+        "failed": "Kami tidak dapat mengubah status kode. Tidak ada yang berubah; coba lagi."
+      },
+      "inactiveNote": "Pindaian kode ini menampilkan halaman “sedang tidak aktif”: kode ini memerlukan paket Dinamis yang aktif. Tautan pendek, tujuan, dan pindaiannya tetap tersimpan, dan kode cetak yang sama akan kembali mengalihkan setelah paket aktif.",
+      "inactiveCta": "Paket & tagihan"
+    },
+    "hostedPage": {
+      "title": "Halaman yang dihosting",
+      "live": "Aktif · versi {version}",
+      "publishedOn": "Dipublikasikan {date}",
+      "never": "Belum dipublikasikan",
+      "neverNote": "Publikasikan halaman agar orang yang memindai kode dapat melihatnya.",
+      "changed": "Perubahan belum dipublikasikan",
+      "changedNote": "Pengunjung masih melihat versi yang dipublikasikan sampai Anda memublikasikan lagi.",
+      "upToDate": "Pengunjung melihat versi terbaru.",
+      "notLive": "Halaman aktif di tautan pendek setelah kode diaktifkan.",
+      "edit": "Edit halaman",
+      "publish": "Publikasikan",
+      "publishing": "Memublikasikan…",
+      "published": "Dipublikasikan. Kode QR dan tautan pendek yang sama kini menampilkan versi ini.",
+      "unchanged": "Tidak ada yang baru untuk dipublikasikan.",
+      "rules": "Beberapa detail perlu diperhatikan sebelum dipublikasikan. Edit halaman untuk memperbaikinya.",
+      "failed": "Tidak dapat memublikasikan. Coba lagi.",
+      "open": "Buka halaman",
+      "takenDown": "Kami menurunkan halaman ini setelah ada laporan, sehingga tautan pendeknya menampilkan “Halaman ini tidak tersedia”. Konten dan pindaian Anda tetap tersimpan. Hubungi dukungan jika menurut Anda ini sebuah kesalahan."
+    },
+    "hostedEditor": {
+      "title": "Edit halaman",
+      "back": "Kembali ke detail QR",
+      "lead": "Perubahan disimpan sebagai draf. Pengunjung melihatnya setelah Anda memublikasikan.",
+      "save": "Simpan draf",
+      "saving": "Menyimpan…",
+      "saved": "Draf tersimpan.",
+      "saveFailed": "Tidak dapat menyimpan draf. Periksa foto dan coba lagi.",
+      "publish": "Simpan dan publikasikan",
+      "unsaved": "Perubahan belum disimpan",
+      "loading": "Memuat editor halaman"
+    }
+  },
+  "billing": {
+    "title": "Paket & tagihan",
+    "plan": "Paket Dinamis",
+    "active": "Aktif hingga {date}",
+    "cancels": "Berakhir pada {date}",
+    "none": "Tidak ada langganan. Kode statis dibayar sekali; Starter menambahkan kode Dinamis dan buka kunci bulanan.",
+    "manage": "Kelola langganan",
+    "purchases": "Pembelian",
+    "noPurchases": "Belum ada pembelian.",
+    "usage": "Penggunaan",
+    "liveDynamic": "Kode Dinamis aktif",
+    "liveCount": "{used} dari {limit}",
+    "liveHint": "Slot aktif menjadi kosong saat Anda menjeda atau menghapus kode Dinamis.",
+    "renews": "Diperpanjang {date}",
+    "payment": "Metode pembayaran",
+    "paymentManaged": "Kartu Anda disimpan oleh Stripe. Kelola di portal tagihan.",
+    "compare": "Bandingkan paket",
+    "statusActive": "Aktif",
+    "statusCanceling": "Akan berakhir",
+    "statusNone": "Tanpa paket",
+    "date": "Tanggal",
+    "open": "Buka",
+    "receiptNote": "Stripe mengirimkan tanda terima melalui email untuk setiap pembayaran.",
+    "statuses": {
+      "paid": "Dibayar",
+      "pending": "Tertunda",
+      "refunded": "Dikembalikan",
+      "failed": "Gagal"
+    },
+    "liveNoPlan": "{used} aktif · tanpa paket",
+    "printPackItem": "Print Pack",
+    "packItem": "Static Pack · {n} kredit",
+    "signedIn": "Masuk dengan Google sebagai {email}.",
+    "current": "Paket saat ini",
+    "planMonthly": "{plan} · bulanan",
+    "noPlan": "Tanpa paket",
+    "plans": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "tiles": {
+      "dynamic": "QR Dinamis aktif",
+      "live": "Aktif",
+      "dynamicNote": "Jeda atau hapus kode untuk mengosongkan slot",
+      "unlocks": "Buka kunci statis",
+      "packs": "Print Pack yang termasuk",
+      "packsNote": "{resets} · lalu +{price}",
+      "credits": "Kredit statis",
+      "oneTime": "Sekali bayar",
+      "creditsNote": "Tidak pernah kedaluwarsa · dipakai setelah buka kunci bulanan",
+      "available": "{n} tersedia",
+      "leftMonth": "Sisa {n} bulan ini",
+      "noReset": "Paket berakhir {date} · tanpa atur ulang"
+    },
+    "of": "dari {limit}",
+    "left": "tersisa",
+    "resets": "Diatur ulang {date}",
+    "price": "Harga",
+    "perMonth": "{price} / bulan",
+    "renewsOn": "Diperpanjang pada",
+    "endsOn": "Berakhir pada",
+    "paymentStripe": "Disimpan oleh Stripe",
+    "upgrade": "Tingkatkan ke Studio · {price}/bulan",
+    "choosePlan": "Pilih paket",
+    "oneTime": "Pembelian sekali bayar",
+    "item": "Item",
+    "amount": "Jumlah",
+    "receipt": "Tanda terima",
+    "credits": "{n} kredit statis",
+    "items": {
+      "single": "Single QR",
+      "printPack": "Print Pack"
+    },
+    "portal": {
+      "noCustomer": "Belum ada akun tagihan. Akun ini dibuat saat pembayaran pertama Anda.",
+      "unavailable": "Itu tidak tersedia untuk paket Anda saat ini.",
+      "failed": "Kami tidak dapat membuka Stripe. Tidak ada yang berubah; coba lagi."
+    },
+    "updatePayment": "Perbarui metode pembayaran",
+    "card": "{brand} •••• {last4}",
+    "overdue": {
+      "title": "Pembayaran perpanjangan Anda tidak berhasil",
+      "pastDue": "Paket Anda tetap aktif selama pembayaran tertunggak. Perbarui metode pembayaran Anda untuk membayar tagihan yang belum lunas.",
+      "unpaid": "Paket Anda telah berakhir karena pembayaran perpanjangan tidak berhasil dipulihkan. Perbarui metode pembayaran Anda untuk membayar tagihan yang belum lunas dan mengaktifkannya kembali.",
+      "action": "Perbarui metode pembayaran dan bayar",
+      "status": "Pembayaran tertunggak",
+      "pending": "Setelah Anda membayar, perlu sedikit waktu hingga paket Anda diperbarui di sini."
+    },
+    "canceling": {
+      "title": "Paket Anda berakhir pada {date}",
+      "until": "Sampai saat itu semuanya berfungsi seperti sekarang: kode Dinamis Anda tetap mengalihkan, dan slot serta buka kunci bulanan Anda tetap ada.",
+      "after": "{count, plural, =0 {Setelah tanggal itu, kode Dinamis menampilkan halaman “sedang tidak aktif” alih-alih mengalihkan.} other {Setelah tanggal itu, # kode Dinamis aktif Anda menampilkan halaman “sedang tidak aktif” alih-alih mengalihkan. Tautan pendek, tujuan, dan desainnya tetap tersimpan.}} Kode statis yang Anda beli tetap berfungsi.",
+      "resume": "Pertahankan paket saya",
+      "resumeNote": "Paket Anda berlanjut dengan langganan yang sama dan diperpanjang pada tanggal biasanya. Tidak ada biaya yang ditagih sekarang.",
+      "resumed": "Paket Anda berlanjut. Paket diperpanjang pada tanggal biasanya.",
+      "notScheduled": "Tidak ada lagi pembatalan yang perlu diurungkan. Muat ulang halaman untuk melihat paket Anda.",
+      "failed": "Kami tidak dapat mempertahankan paket Anda. Tidak ada yang berubah. Coba lagi."
+    },
+    "ended": {
+      "title": "Paket {plan} Anda berakhir pada {date}",
+      "titleNoDate": "Paket {plan} Anda telah berakhir",
+      "scans": "Kode Dinamis Anda menampilkan halaman “sedang tidak aktif”. Tautan pendek, tujuan, desain, dan pindaiannya tetap tersimpan. Kode statis yang Anda beli tetap berfungsi.",
+      "back": "Aktifkan kembali, dan kode cetak yang sama akan kembali mengalihkan. Kode yang Anda jeda atau hapus tetap seperti itu.",
+      "reactivate": "Aktifkan kembali {plan} · {price}/bulan"
+    }
+  },
+  "legal": {
+    "terms": {
+      "title": "Ketentuan Layanan"
+    },
+    "privacy": {
+      "title": "Kebijakan Privasi"
+    },
+    "draft": "Halaman ini hanya sementara sampai teks hukumnya disetujui."
+  },
+  "errors": {
+    "notFound": {
+      "title": "Halaman tidak ditemukan",
+      "text": "Halaman yang Anda cari tidak ada.",
+      "cta": "Ke beranda"
+    },
+    "linkUnavailable": {
+      "title": "Tautan ini tidak aktif",
+      "text": "Pemilik kode QR ini telah menjedanya atau kode ini sudah tidak ada."
+    },
+    "generic": "Terjadi kesalahan. Silakan coba lagi.",
+    "invalid": "Silakan periksa kolom yang ditandai.",
+    "unauthorized": "Silakan masuk untuk melanjutkan.",
+    "too_long": "Konten ini terlalu panjang untuk kode QR. Persingkat lalu coba lagi.",
+    "linkInactive": {
+      "title": "Tautan ini sedang tidak tersedia",
+      "text": "Kode QR ini sedang tidak aktif. Tidak ada masalah dengan ponsel Anda; coba lagi nanti."
+    },
+    "draft_limit": "Anda memiliki {limit} draf tersimpan, jumlah maksimum untuk satu akun. Buka kunci atau hapus salah satunya di Kode QR saya, lalu simpan lagi: desain Anda tetap di sini.",
+    "page": {
+      "title": "Terjadi kesalahan",
+      "text": "Halaman ini tidak dapat dimuat. Kode dan draf tersimpan Anda aman. Coba lagi, atau kembali ke awal.",
+      "retry": "Coba lagi",
+      "home": "Ke beranda",
+      "reference": "Referensi: {ref}"
+    }
+  },
+  "common": {
+    "close": "Tutup",
+    "loading": "Memuat…",
+    "required": "Wajib"
+  },
+  "loading": {
+    "page": "Memuat",
+    "details": "Memuat kode QR",
+    "billing": "Memuat paket dan pembelian Anda",
+    "export": "Memuat file Anda",
+    "editor": "Memuat editor"
+  },
+  "trial": {
+    "badge": "Uji coba Starter",
+    "back": "Kode QR saya",
+    "states": {
+      "active": {
+        "title": "Uji coba Anda sedang berjalan",
+        "lead": "Dimulai {start}. QR Dinamis uji Anda berfungsi sungguhan hingga {end}.",
+        "big": "{days, plural, other {# hari}}",
+        "bigSub": "tersisa · berakhir {end}",
+        "status": "Tidak ada kartu tersimpan, jadi tidak ada biaya saat uji coba berakhir. Kode uji Anda mengalihkan sungguhan sampai saat itu.",
+        "main": "Aktifkan Starter · {price}/bulan",
+        "second": "Buka Kode QR saya",
+        "foot": "Mengaktifkan akan mempertahankan tautan pendek yang sama, jadi kode uji yang sudah dicetak tetap berfungsi.",
+        "endTitle": "Saat uji coba berakhir pada {end}"
+      },
+      "ending": {
+        "title": "Uji coba Anda segera berakhir",
+        "lead": "Pada {end} kode uji Anda berhenti mengalihkan. Aktifkan Starter agar tetap aktif.",
+        "big": "{days, plural, other {# hari}}",
+        "bigSub": "tersisa · berakhir {end}",
+        "status": "Tidak ada kartu tersimpan, jadi tidak ada biaya yang ditagih secara otomatis.",
+        "main": "Aktifkan Starter · {price}/bulan",
+        "second": "Buka Kode QR saya",
+        "foot": "Mengaktifkan akan mempertahankan tautan pendek yang sama, jadi kode uji yang sudah dicetak tetap berfungsi.",
+        "endTitle": "Yang terjadi pada {end}"
+      },
+      "expired": {
+        "title": "Uji coba Anda telah berakhir",
+        "lead": "Berakhir pada {end}. Kode uji Anda dijeda; desain dan pindaian Anda tetap tersimpan.",
+        "big": "Berakhir",
+        "bigSub": "{end}",
+        "status": "Tautan pendek kode uji Anda sekarang menampilkan halaman “tautan dijeda”. Aktifkan Starter dan tautan itu kembali mengalihkan ke tujuan Anda.",
+        "main": "Aktifkan kembali dengan Starter · {price}/bulan",
+        "second": "Lihat semua paket",
+        "foot": "Tidak ada biaya yang ditagih. Tidak ada kartu yang tersimpan.",
+        "endTitle": "Cara mengaktifkannya kembali"
+      },
+      "upgraded": {
+        "title": "Paket Starter Anda aktif",
+        "lead": "Kode uji dari uji coba Anda kini menjadi QR Dinamis biasa di paket Anda.",
+        "big": "Dinamis",
+        "bigSub": "paket aktif",
+        "status": "Kode uji Anda tetap memakai tautan pendeknya dan mengalihkan seperti sebelumnya.",
+        "main": "Buka Kode QR saya",
+        "second": "Paket & tagihan",
+        "foot": "Stripe mengirimkan tanda terima melalui email untuk setiap pembayaran.",
+        "endTitle": "Apa yang berubah"
+      }
+    },
+    "steps": {
+      "pause": {
+        "t": "Pengalihan uji Anda dijeda",
+        "d": "Tautan pendeknya menampilkan halaman “tautan dijeda” alih-alih tujuan Anda. Tidak ada yang dihapus."
+      },
+      "free": {
+        "t": "Tidak ada biaya",
+        "d": "Tidak ada kartu tersimpan dan tidak ada perpanjangan otomatis."
+      },
+      "wake": {
+        "t": "Aktifkan kapan saja untuk menyalakannya kembali",
+        "d": "Pilih Starter dan tautan pendek yang sama kembali mengalihkan. Desain dan pindaian Anda tetap di akun Anda."
+      },
+      "choose": {
+        "t": "Pilih Starter",
+        "d": "{price} per bulan. Batalkan kapan saja."
+      },
+      "same": {
+        "t": "Tautan pendek Anda aktif kembali",
+        "d": "Tautan itu kembali mengalihkan, ke tujuan yang sama."
+      },
+      "room": {
+        "t": "Lanjutkan",
+        "d": "Hingga {limit} kode Dinamis aktif, dengan pindaian harian."
+      },
+      "kept": {
+        "t": "Tautan pendek yang sama",
+        "d": "Kode uji yang sudah dicetak tetap berfungsi. Tidak perlu mencetak ulang."
+      },
+      "more": {
+        "t": "Ruang lebih banyak",
+        "d": "Hingga {limit} kode Dinamis aktif dan pindaian harian."
+      },
+      "receipt": {
+        "t": "Tanda terima melalui email",
+        "d": "Kelola atau batalkan paket kapan saja di Paket & tagihan."
+      }
+    },
+    "code": {
+      "title": "QR Dinamis uji Anda",
+      "live": "Mengalihkan",
+      "paused": "Pengalihan dijeda",
+      "plan": "Aktif di paket Anda",
+      "opens": "Membuka {host}",
+      "pausedLine": "Dijeda · menampilkan halaman “tautan dijeda”",
+      "scans": "Pindaian sejauh ini",
+      "today": "Hari ini",
+      "chart": "Pindaian uji coba per hari: {values}",
+      "change": "Ubah tujuan",
+      "view": "Lihat kode uji",
+      "none": "Anda belum membuat kode uji.",
+      "noneText": "Buat QR situs web Dinamis dan gunakan uji coba Anda untuk mengaktifkannya: tautan pendek sungguhan yang dapat Anda cetak dan uji.",
+      "create": "Buat QR Dinamis uji"
+    },
+    "included": {
+      "title": "Termasuk dalam uji coba Anda",
+      "kept": "Tetap ada dari uji coba Anda",
+      "points": [
+        "1 QR Dinamis uji dengan tautan pendek sungguhan",
+        "Total pindaian harian",
+        "Ubah tujuannya kapan saja",
+        "Semua tata letak, bentuk, warna, logo, dan keterangan"
+      ],
+      "not": "Kode statis tetap perlu dibeli."
+    },
+    "start": {
+      "title": "Coba Dinamis gratis selama 7 hari",
+      "text": "Tanpa kartu, tanpa tagihan otomatis. Satu QR Dinamis uji dengan tautan pendek sungguhan.",
+      "action": "Mulai uji coba gratis 7 hari",
+      "used": "Anda sudah menggunakan uji coba gratis Anda.",
+      "failed": "Kami tidak dapat memulai uji coba. Coba lagi."
+    },
+    "bar": {
+      "active": {
+        "title": "Uji coba Starter · tersisa {days, plural, other {# hari}}.",
+        "text": "Kode uji Anda mengalihkan hingga {end}. Tidak ada kartu tersimpan."
+      },
+      "ending": {
+        "title": "Uji coba berakhir {end}.",
+        "text": "Aktifkan Starter agar kode uji Anda tetap mengalihkan."
+      },
+      "expired": {
+        "title": "Uji coba berakhir pada {end}.",
+        "text": "Kode uji Anda dijeda. Aktifkan Starter untuk menyalakannya kembali."
+      },
+      "upgraded": {
+        "title": "Paket Starter Anda aktif.",
+        "text": "Kode uji Anda kini menjadi QR Dinamis biasa."
+      },
+      "open": "Detail uji coba",
+      "activate": "Aktifkan Starter…"
+    },
+    "usage": {
+      "title": "Slot Dinamis uji coba",
+      "count": "{used} dari 1",
+      "hint": "Slot aktif, bukan jatah bulanan."
+    },
+    "useTrial": "Gunakan uji coba gratis Anda · aktifkan sekarang",
+    "useTrialHint": "Satu QR Dinamis uji Anda selama uji coba. Tidak perlu kartu.",
+    "useTrialFailed": "Kami tidak dapat menggunakan uji coba Anda untuk kode ini. Anda mungkin sudah memiliki kode uji.",
+    "sample": {
+      "title": "Contoh Print Pack",
+      "badge": "QR demo",
+      "demo": "QR demo untuk contoh Print Pack",
+      "text": "Lihat persis apa isi Print Pack. Contoh ini menggunakan QR demo yang membuka Hey QR, bukan kode uji Anda.",
+      "pdf": "Contoh PDF cetak",
+      "pdfSub": "sRGB · halaman {w} × {h} mm dengan bleed dan tanda potong",
+      "svg": "Contoh SVG yang dapat diedit",
+      "svgSub": "sRGB · warna HEX · {w} × {h} mm",
+      "spec": "Contoh spesifikasi",
+      "specSub": "Lembar PDF · ukuran dan nilai warna"
+    }
+  },
+  "print": {
+    "spec": {
+      "title": "Spesifikasi cetak",
+      "finished": "Ukuran jadi",
+      "page": "Halaman PDF (dengan bleed dan tanda)",
+      "bleed": "Bleed",
+      "marks": "Tanda potong",
+      "qr": "Ukuran QR (dengan quiet zone)",
+      "profile": "Profil warna",
+      "srgb": "sRGB · tanpa konversi",
+      "logo": "Resolusi logo",
+      "vector": "Vektor, ukuran berapa pun",
+      "colors": "Warna (HEX · sRGB)",
+      "key": "Kunci render",
+      "yes": "Ya",
+      "no": "Tidak",
+      "role_modules": "Modul",
+      "role_corners": "Bingkai sudut",
+      "role_centers": "Pusat sudut",
+      "role_background": "Latar belakang",
+      "role_frame": "Bingkai",
+      "role_caption": "Keterangan"
+    },
+    "title": "Pratinjau cetak",
+    "leadLocked": "Periksa halaman PDF dan spesifikasi cetak secara persis sebelum Anda membeli. File akan sama dengan yang Anda lihat di sini.",
+    "leadUnlocked": "Ini adalah halaman PDF yang menjadi dasar file Anda. Ubah pengaturan dan unduh lagi tanpa biaya tambahan.",
+    "locked": "Print Pack terkunci",
+    "unlocked": "Print Pack terbuka",
+    "back": {
+      "details": "Kembali ke detail QR",
+      "export": "Kembali ke ekspor"
+    },
+    "toDesign": "Kembali ke desain",
+    "canvas": "Pratinjau halaman PDF",
+    "zoom": "Zoom",
+    "fit": "Pas",
+    "z100": "100%",
+    "z200": "200%",
+    "guides": "Garis potong dan area aman",
+    "approx": "Perkiraan warna cetak di layar",
+    "trimLabel": "Potong {size}",
+    "generating": "Membuat pratinjau cetak…",
+    "pageLabel": "Halaman PDF cetak, {w} × {h} mm",
+    "error": {
+      "title": "Kami tidak dapat membuat pratinjau.",
+      "text": "Tata letak dan pengaturan cetak Anda tetap tersimpan. Biasanya ini hanya sementara.",
+      "retry": "Coba lagi"
+    },
+    "foot": {
+      "page": "Halaman PDF {size}",
+      "count": "1 halaman",
+      "bleed": "Bleed {bleed} mm",
+      "noBleed": "Tanpa bleed",
+      "marks": "Tanda potong",
+      "noMarks": "Tanpa tanda potong",
+      "pageB": "Halaman PDF <b>{size}</b>"
+    },
+    "specTitle": "Spesifikasi cetak",
+    "keys": {
+      "finished": "Ukuran jadi",
+      "finishedBleed": "+ bleed {bleed} mm di setiap sisi",
+      "finishedNoBleed": "Tanpa bleed",
+      "qr": "Ukuran QR",
+      "qrSmall": "Di bawah 20 mm · mungkin tidak dapat dipindai di semua perangkat",
+      "qrOk": "Dapat dipindai dari jarak hingga sekitar {cm} cm",
+      "profile": "Profil warna",
+      "profileSub": "RGB, tanpa konversi",
+      "logo": "Resolusi logo",
+      "logoVector": "Vektor",
+      "logoNone": "Tanpa logo",
+      "logoLow": "Di bawah 300 ppi pada ukuran ini",
+      "logoOk": "300 ppi atau lebih · tercetak tajam",
+      "logoVectorSub": "Tajam di ukuran berapa pun",
+      "logoNoneSub": "Tidak ada yang perlu diperiksa",
+      "logoChecking": "Memeriksa…",
+      "logoCheckingSub": "Diukur pada ukuran ini"
+    },
+    "unlock": {
+      "title": "Buka Print Pack",
+      "text": "Dapatkan PDF cetak, SVG yang dapat diedit, dan spesifikasi untuk “{name}”, dibuat dengan pengaturan di bawah.",
+      "action": "Tambahkan Print Pack · +{price}",
+      "sub": "Sekali bayar untuk QR ini. Anda kembali ke layar ini dengan pengaturan Anda.",
+      "notForSale": "Print Pack belum dapat dibeli di sini. Anda tetap dapat memeriksa halaman dan spesifikasinya.",
+      "needCode": "Buka kunci QR ini terlebih dahulu: Print Pack adalah tambahan untuk kode yang sudah dibeli atau aktif.",
+      "buyCode": "Beli QR ini",
+      "failed": "Kami tidak dapat membuka checkout. Tidak ada biaya yang ditagih; coba lagi.",
+      "cancelled": "Checkout dibatalkan. Anda tidak ditagih; pengaturan Anda tetap tersimpan.",
+      "pending": "Mengonfirmasi pembayaran Anda…",
+      "pendingSub": "Anda tetap di sini, dengan pengaturan ini.",
+      "useIncluded": "Gunakan 1 Print Pack yang termasuk",
+      "payInstead": "Bayar {price} saja dan simpan jatah Anda",
+      "includedLeft": "Sisa {left} dari {limit} Print Pack yang termasuk bulan ini · diatur ulang {resets}"
+    },
+    "files": {
+      "title": "Print Pack terbuka",
+      "badge": "Siap diunduh",
+      "text": "File menggunakan pengaturan di bawah. Ubah salah satunya dan unduh lagi tanpa biaya tambahan.",
+      "pdf": "Unduh PDF cetak",
+      "pdfSub": "sRGB · halaman {w} × {h} mm",
+      "svg": "Unduh SVG yang dapat diedit",
+      "svgSub": "sRGB · warna HEX · {w} × {h} mm",
+      "spec": "Unduh spesifikasi cetak",
+      "specSub": "Lembar PDF · ukuran dan nilai warna",
+      "stale": "Tata letak berubah sejak pratinjau ini. Periksa halaman lagi sebelum Anda mengunduh.",
+      "pdfTitle": "PDF cetak",
+      "svgTitle": "SVG yang dapat diedit",
+      "specTitle": "Spesifikasi cetak"
+    },
+    "size": {
+      "title": "Ukuran jadi",
+      "custom": "Kustom",
+      "width": "Lebar",
+      "height": "Tinggi · menjaga proporsi",
+      "hint": "Lebar 15 hingga 600 mm. QR dan keterangan ikut menyesuaikan dengan tata letak."
+    },
+    "warn": {
+      "qrTitle": "Lebar QR {mm} mm",
+      "qrText": "Kode di bawah 20 mm bisa gagal dipindai di ponsel lama. Perbesar tata letak, atau pertahankan kode minimal 20 mm.",
+      "logoTitle": "Logo Anda {ppi} ppi pada ukuran ini",
+      "logoText": "Hasil cetaknya mungkin kurang tajam. Unggah logo dengan lebar minimal {px} px, atau cetak pada 100%.",
+      "upload": "Unggah logo beresolusi lebih tinggi",
+      "use100": "Gunakan ukuran 100%"
+    },
+    "profiles": {
+      "title": "Profil warna untuk PDF cetak",
+      "srgb": "sRGB · tanpa konversi",
+      "srgbDesc": "Untuk printer digital dan sebagian besar percetakan online.",
+      "fogra39": "Coated FOGRA39",
+      "gracol": "GRACoL 2013",
+      "fogra29": "Uncoated FOGRA29",
+      "cmykDesc": "Konversi CMYK belum tersedia.",
+      "shop": "<b>Konfirmasikan dengan percetakan Anda.</b> Tanyakan profil warna yang mereka perlukan. Jika mereka tidak yakin, kirim PDF bersama lembar spesifikasi."
+    },
+    "colors": {
+      "title": "Warna",
+      "legendHex": "<b>HEX · sRGB</b> SVG yang dapat diedit",
+      "legendCmyk": "<b>CMYK</b> hanya dengan profil CMYK",
+      "none": "—",
+      "note": "Warna adalah nilai sRGB yang persis di kedua file. Layar menampilkan perkiraan warna cetak."
+    },
+    "tech": {
+      "title": "Pengaturan teknis",
+      "bleed": "Bleed",
+      "bleedDesc": "Latar belakang melewati garis potong",
+      "marks": "Tanda potong",
+      "k100": "Cetak modul hitam sebagai 100% K",
+      "k100Hint": "Tersedia dengan profil CMYK.",
+      "pdf": "Standar PDF",
+      "pdfV": "PDF 1.7, vektor",
+      "text": "Teks",
+      "textV": "Font disematkan",
+      "logo": "Logo",
+      "logoRaster": "Raster {px} px · {ppi} ppi pada {mm} mm",
+      "logoVector": "Vektor",
+      "quiet": "Zona tenang",
+      "quietV": "4 modul di setiap sisi",
+      "safe": "Area aman",
+      "safeV": "{mm} mm di dalam garis potong",
+      "intent": "Output intent",
+      "intentV": "sRGB, tanpa konversi",
+      "none": "Tidak ada"
+    },
+    "notPrint": {
+      "title": "Tata letak ini untuk layar",
+      "text": "Print Pack memerlukan tata letak cetak yang diukur dalam mm. Ganti satuan di Desain → Ukuran untuk menambahkannya.",
+      "action": "Siapkan untuk cetak"
+    },
+    "pack": {
+      "title": "Print Pack",
+      "add": "Tambahkan Print Pack dan berikan semua yang dibutuhkan percetakan Anda dalam satu unduhan: PDF cetak dengan bleed dan tanda potong, SVG yang dapat diedit, serta lembar warna dan ukuran. Periksa halamannya dulu di Pratinjau Cetak.",
+      "preview": "Pratinjau Cetak · {layout}",
+      "defaults": "Pengaturan default: ukuran 100%, bleed 3 mm, tanda potong. Ubah di Pratinjau Cetak.",
+      "open": "Buka Pratinjau Cetak"
+    },
+    "plan": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "sample": {
+      "pageTitle": "Pratinjau Cetak · contoh",
+      "name": "Little Fern Coffee",
+      "layout": "Contoh kartu merek",
+      "back": "Kembali ke beranda",
+      "title": "Ini adalah contoh",
+      "text": "QR demo menunjukkan persis apa isi Print Pack. Buat kode Anda sendiri, lalu periksa file cetaknya di sini sebelum Anda membeli.",
+      "create": "Buat kode QR Anda",
+      "pricing": "Lihat detail Print Pack"
+    }
+  },
+  "plans": {
+    "title": "Bayar sekali untuk beberapa kode, atau berlangganan untuk banyak kode.",
+    "lead": "Mendesain, melihat pratinjau, dan pemeriksaan pindai selalu gratis. Anda membayar saat mengunduh.",
+    "currencyLabel": "Tampilkan harga dalam",
+    "localTitle": "Harga lokal dalam {currency}.",
+    "localText": "Seluruh situs, checkout, dan tanda terima menggunakan jumlah ini. Pajak ditambahkan saat checkout.",
+    "pendingTitle": "Beberapa harga dalam {currency} belum ditetapkan.",
+    "pendingText": "Penawaran tanpa harga {currency} untuk saat ini belum dapat dibeli dalam {currency}. Tidak ada konversi dari mata uang lain.",
+    "unavailable": "Belum tersedia untuk dibeli dalam {currency}.",
+    "current": "Paket Anda saat ini",
+    "manage": "Kelola paket Anda",
+    "perMonth": "per bulan",
+    "live": "Aktif bersamaan",
+    "monthly": "Baru setiap bulan",
+    "dynCodes": "<b>{n}</b> kode QR Dinamis",
+    "unlocks": "<b>{n}</b> buka kunci QR statis",
+    "packsIncl": "<b>{n}</b> Print Pack",
+    "once": {
+      "title": "Sekali bayar",
+      "sub": "Tanpa langganan. Kode yang Anda buka tetap menjadi milik Anda."
+    },
+    "month": {
+      "title": "Bulanan",
+      "sub": "Untuk kode QR Dinamis dan banyak kode statis. Batalkan kapan saja."
+    },
+    "free": {
+      "title": "Gratis",
+      "q": "Desain dan uji kode sebelum Anda mengeluarkan biaya apa pun.",
+      "a": "Desain dan pratinjau langsung",
+      "b": "Pemeriksaan pindai di setiap perubahan",
+      "c": "Hingga {limit} draf tersimpan saat masuk",
+      "cta": "Mulai mendesain"
+    },
+    "single": {
+      "title": "Single QR",
+      "unit": "sekali",
+      "q": "Satu QR statis dengan semua unduhannya.",
+      "a": "Unduhan PNG dan SVG",
+      "b": "Setiap tata letak QR tersebut, dapat diunduh lagi kapan saja",
+      "c": "Print Pack opsional +{price}",
+      "cta": "Buat QR"
+    },
+    "packs": {
+      "title": "Static Packs",
+      "unit": "untuk {n} kredit",
+      "credits": "{n} kredit statis",
+      "each": "{price} per QR",
+      "buy": "Beli {n} kredit",
+      "note": "Satu kredit membuka satu QR statis unik, kapan pun Anda siap. Kredit tidak kedaluwarsa."
+    },
+    "pp": {
+      "kicker": "Tambahan untuk QR apa pun",
+      "title": "Print Pack · +{price} per QR",
+      "text": "Nonaktif secara default. Tambahkan saat checkout atau nanti dari detail QR. Studio menyertakan {n} per bulan.",
+      "pdf": "PDF cetak vektor",
+      "pdfSub": "sRGB, bleed 3 mm dan tanda potong, pada ukuran yang persis.",
+      "svg": "SVG yang dapat diedit",
+      "svgSub": "Untuk karya desain Anda sendiri, dengan warna sRGB dan HEX.",
+      "spec": "Lembar warna dan ukuran",
+      "specSub": "Ukuran jadi, ukuran QR, quiet zone, dan nilai warna."
+    },
+    "starter": {
+      "title": "Starter",
+      "badge": "Uji coba gratis 7 hari",
+      "a": "Analitik pindaian dasar: total harian",
+      "b": "Ubah tujuan Dinamis kapan saja",
+      "c": "Print Pack +{price} per QR",
+      "trial": "Mulai uji coba gratis 7 hari",
+      "openTrial": "Buka uji coba Anda",
+      "subscribe": "Berlangganan sekarang · {price}/bulan",
+      "note": "Uji coba: tanpa kartu, tanpa tagihan otomatis."
+    },
+    "studio": {
+      "title": "Studio",
+      "badge": "Untuk tim dan pekerjaan cetak",
+      "a": "Analitik pindaian per kode",
+      "b": "Ubah tujuan Dinamis kapan saja",
+      "c": "Print Pack tambahan +{price} per QR",
+      "cta": "Pilih Studio"
+    },
+    "rules": {
+      "title": "Cara kerja buka kunci dan batas",
+      "1t": "Satu buka kunci, satu QR unik",
+      "1d": "Satu kredit statis atau buka kunci bulanan membuka satu QR. Semua tata letaknya, file PNG dan SVG, serta unduhan ulangnya menggunakan buka kunci yang sama.",
+      "2t": "Jatah bulanan diatur ulang",
+      "2d": "Buka kunci statis baru dan Print Pack yang termasuk diperbarui pada tanggal tagihan Anda. Yang tidak terpakai tidak dibawa ke bulan berikutnya.",
+      "3t": "Slot Dinamis dihitung saat aktif, bukan per bulan",
+      "3d": "Slot terpakai selama kode mengalihkan. Jeda atau hapus kode Dinamis untuk langsung mengosongkan slotnya.",
+      "4t": "Tetap milik Anda setelah membatalkan",
+      "4d": "Kode statis yang Anda buka tetap milik Anda: salinan cetak tetap berfungsi dan file-filenya tetap dapat diunduh. Saat periode berbayar berakhir, tautan pendek Dinamis berhenti mengalihkan dan tidak dapat diunduh atau diaktifkan. Kode Anda tetap tersimpan.",
+      "5t": "Jika pembayaran perpanjangan gagal",
+      "5d": "Paket Anda tetap aktif selama pembayaran tertunggak dan Stripe mencobanya lagi. Jika tidak berhasil dipulihkan dan langganan berakhir, paket berakhir seperti setelah pembatalan. Setelah pembayaran berhasil, paket Anda berlanjut."
+    },
+    "cmp": {
+      "title": "Bandingkan",
+      "what": "Fitur",
+      "region": "Perbandingan paket",
+      "more": "Gulir untuk paket lainnya",
+      "pick1": "Paket pertama",
+      "pick2": "Paket kedua",
+      "yes": "Termasuk",
+      "no": "Tidak termasuk",
+      "na": "Tidak berlaku: bukan langganan",
+      "model": {
+        "free": "Gratis",
+        "once": "Pembelian sekali bayar",
+        "credits": "Kredit",
+        "monthly": "Langganan bulanan"
+      },
+      "once": "sekali",
+      "mo": "/bln",
+      "live": "Desain langsung, pratinjau, dan pemeriksaan pindai",
+      "static": "Buka kunci QR statis",
+      "staticHint": "File PNG dan SVG",
+      "dynamic": "Slot QR Dinamis aktif",
+      "dynamicHint": "Aktif pada saat yang sama",
+      "analytics": "Analitik pindaian",
+      "printPack": "Print Pack",
+      "repeat": "Unduhan ulang",
+      "cancel": "Setelah Anda membatalkan",
+      "oneQr": "1 QR",
+      "perCredit": "1 QR per kredit",
+      "noExpiry": "Kredit tidak kedaluwarsa",
+      "perMonth": "{n} baru setiap bulan",
+      "noRollover": "Yang tidak terpakai tidak dibawa ke bulan berikutnya",
+      "atOnce": "{n} aktif bersamaan",
+      "freeSlot": "Jeda satu kode untuk mengosongkan slotnya",
+      "basic": "Dasar",
+      "daily": "Total harian",
+      "perCode": "Per kode",
+      "ppAdd": "+{price} per QR",
+      "ppStudio": "{n} termasuk setiap bulan",
+      "ppThen": "Lalu +{price} per QR",
+      "stay": "Kode statis tetap dapat diunduh",
+      "dynStop": "Tautan Dinamis berhenti mengalihkan saat periode berbayar berakhir",
+      "foot": "Pajak dihitung saat checkout. Kode situs web bisa statis atau dinamis; kode Teks, Wi-Fi, dan kartu kontak bersifat statis."
+    },
+    "errors": {
+      "not_offered": "Ini belum dapat dibeli dalam mata uang yang dipilih. Tidak ada biaya yang ditagih.",
+      "price_mismatch": "Harga berubah sejak halaman ini dimuat. Tidak ada biaya yang ditagih; muat ulang untuk melihat harga terkini.",
+      "unauthorized": "Masuk untuk melanjutkan.",
+      "failed": "Kami tidak dapat membuka checkout. Tidak ada biaya yang ditagih; coba lagi."
+    },
+    "terms": "Batalkan kapan saja: paket Anda berjalan hingga akhir periode berbayar. Jika pembayaran perpanjangan gagal, paket tetap aktif selama pembayaran tertunggak."
+  },
+  "apiKeys": {
+    "title": "Kunci API",
+    "lead": "Kunci memungkinkan alat Anda sendiri bekerja dengan kode QR di akun ini. Setiap kunci hanya milik akun ini.",
+    "yourKeys": "Kunci Anda",
+    "create": "Buat kunci API",
+    "once": "Salin kunci ini sekarang. Demi keamanan Anda, kunci hanya ditampilkan sekali dan tidak dapat diambil lagi nanti.",
+    "copy": "Salin",
+    "copied": "Tersalin",
+    "done": "Selesai",
+    "none": "Belum ada kunci API.",
+    "created": "Dibuat {date}",
+    "failed": "Kami tidak dapat membuat kunci. Tidak ada yang disimpan; coba lagi.",
+    "active": "Aktif",
+    "revoked": "Dicabut",
+    "revokedOn": "Dicabut {date}",
+    "lastUsed": "Terakhir digunakan {date}",
+    "neverUsed": "Belum pernah digunakan",
+    "revoke": {
+      "action": "Cabut",
+      "label": "Cabut {prefix}",
+      "title": "Cabut {prefix}?",
+      "text": "Alat yang menggunakan kunci ini langsung berhenti berfungsi. Kunci Anda yang lain tetap berfungsi. Tindakan ini tidak dapat dibatalkan.",
+      "confirm": "Cabut kunci",
+      "cancel": "Batal",
+      "done": "{prefix} telah dicabut.",
+      "failed": "Kami tidak dapat mencabut kunci. Tidak ada yang berubah; coba lagi.",
+      "close": "Tutup"
+    }
+  },
+  "hosted": {
+    "hostedBy": "Di-host oleh HeyQR",
+    "report": "Laporkan halaman ini",
+    "unavailableTitle": "Halaman ini tidak tersedia",
+    "unavailableText": "Pemilik menjeda kode QR ini atau menghapus halamannya. Coba lagi nanti atau hubungi pemiliknya langsung.",
+    "loading": "Memuat halaman",
+    "menu": {
+      "kicker": "Menu",
+      "sections": "Bagian menu"
+    },
+    "coupon": {
+      "kicker": "Kupon",
+      "expiredKicker": "Penawaran berakhir",
+      "copy": "Salin kode",
+      "copied": "Disalin",
+      "redeem": "Tukarkan online",
+      "expired": "Kedaluwarsa",
+      "ended": "Penawaran ini sudah berakhir. Tanyakan promo terbaru ke toko.",
+      "ends": "Berakhir {date}",
+      "endedOn": "Berakhir pada {date}",
+      "terms": "Syarat"
+    },
+    "social": {
+      "links": "Tautan"
+    },
+    "business": {
+      "kicker": "Bisnis",
+      "openNow": "Buka sekarang · sampai {to}",
+      "closedNow": "Tutup sekarang",
+      "closedToday": "Tutup hari ini",
+      "call": "Telepon",
+      "directions": "Petunjuk arah",
+      "website": "Situs web",
+      "hours": "Jam buka",
+      "closed": "Tutup",
+      "days": {
+        "mon": "Sen",
+        "tue": "Sel",
+        "wed": "Rab",
+        "thu": "Kam",
+        "fri": "Jum",
+        "sat": "Sab",
+        "sun": "Min"
+      },
+      "closedOpens": "Tutup sekarang · buka {from}"
+    },
+    "apps": {
+      "appStoreTop": "Unduh di",
+      "appStore": "App Store",
+      "playTop": "Dapatkan di",
+      "play": "Google Play",
+      "phoneNote": "Buka tautan untuk toko aplikasi ponsel Anda.",
+      "desktopNote": "Di komputer, tombol ini membuka situs web masing-masing toko.",
+      "scanTitle": "Pindai dengan ponsel Anda",
+      "scanText": "Membuka App Store di iPhone dan Google Play di Android.",
+      "qrLabel": "Kode QR untuk halaman ini"
+    },
+    "pdf": {
+      "open": "Buka PDF",
+      "download": "Unduh",
+      "meta": "{pages, plural, other {# halaman}} · {size}",
+      "metaNoPages": "{size}",
+      "waiting": "Versi baru dokumen ini sedang disiapkan. Coba lagi sebentar lagi.",
+      "notReady": "Dokumen masih disiapkan."
+    },
+    "product": {
+      "photos": "Foto produk",
+      "photo": "Foto {n} dari {count}",
+      "prev": "Foto sebelumnya",
+      "next": "Foto berikutnya",
+      "opens": "Membuka {host}"
+    },
+    "reportForm": {
+      "title": "Laporkan halaman ini",
+      "lead": "Beri tahu kami apa masalahnya. HeyQR meninjau setiap laporan.",
+      "reason": "Alasan",
+      "reasons": {
+        "scam": "Penipuan",
+        "malware": "Malware atau unduhan berbahaya",
+        "illegal": "Konten ilegal atau berbahaya",
+        "impersonation": "Menyamar sebagai orang lain",
+        "other": "Lainnya"
+      },
+      "details": "Detail",
+      "detailsPlaceholder": "Apa yang Anda lihat? (opsional)",
+      "email": "Email Anda",
+      "emailHint": "Opsional. Hanya dipakai jika kami perlu menanyakan sesuatu.",
+      "send": "Kirim laporan",
+      "sending": "Mengirim…",
+      "sent": "Terima kasih. Kami akan meninjau halaman ini.",
+      "failed": "Laporan tidak dapat dikirim. Coba lagi.",
+      "invalid": "Pilih alasan, lalu periksa alamat email.",
+      "back": "Kembali ke halaman"
+    }
+  },
+  "developers": {
+    "metaTitle": "API untuk developer",
+    "metaDescription": "Buat kode HeyQR di kode Anda sendiri: paket @heyqr/qr-core untuk kode statis, dan REST API untuk kode Dinamis yang segera hadir.",
+    "docs": {
+      "search": {
+        "label": "Cari di dokumentasi",
+        "placeholder": "Cari di dokumentasi",
+        "clear": "Hapus pencarian",
+        "empty": "Tidak ada halaman yang cocok dengan “{query}”.",
+        "emptyHint": "Coba “logo”, “PNG”, “pindai” atau “Wi-Fi”.",
+        "suggestions": ["logo", "PNG", "pindai", "Wi-Fi"],
+        "resultOne": "1 halaman",
+        "resultOther": "{count} halaman"
+      },
+      "groups": {
+        "start": "Mulai",
+        "guides": "Panduan",
+        "ref": "Referensi",
+        "help": "Bantuan",
+        "rest": "REST API"
+      },
+      "menu": {
+        "open": "Buka menu dokumentasi",
+        "close": "Tutup menu dokumentasi",
+        "label": "Dokumentasi"
+      },
+      "breadcrumbRoot": "Developer",
+      "onThisPage": "Di halaman ini",
+      "backToTop": "Kembali ke atas",
+      "previous": "Sebelumnya",
+      "next": "Berikutnya",
+      "soon": "Segera",
+      "preview": "Pratinjau",
+      "designPreview": "Pratinjau desain",
+      "notPublic": "Belum publik",
+      "env": {
+        "both": "Browser dan Node.js",
+        "browser": "Browser",
+        "node": "Hanya Node.js",
+        "shell": "Terminal",
+        "types": "Tipe",
+        "http": "HTTP",
+        "json": "JSON"
+      },
+      "copy": "Salin",
+      "copied": "Disalin",
+      "copiedAnnounce": "{file} disalin ke clipboard",
+      "copyFailed": "Tidak dapat menyalin. Pilih kodenya secara manual.",
+      "required": "Wajib",
+      "endpoint": {
+        "auth": "Otorisasi",
+        "authValue": "Authorization: Bearer <kunci API>",
+        "method": "Metode",
+        "url": "URL permintaan",
+        "base": "Di server HeyQR yang Anda gunakan; API publik belum tersedia."
+      },
+      "helpful": {
+        "question": "Apakah halaman ini membantu?",
+        "yes": "Ya",
+        "no": "Tidak",
+        "sending": "Mengirim…",
+        "thanks": "Terima kasih atas masukannya.",
+        "failed": "Tidak dapat menyimpannya. Coba lagi."
+      },
+      "footer": {
+        "checked": "Diperiksa terhadap kode sumber @heyqr/qr-core {version}. Rute: {route}",
+        "restChecked": "Diperiksa terhadap rute /api/v1 build ini. Rute: {route}",
+        "proposed": "Usulan desain. Bukan kontrak yang dipublikasikan."
+      },
+      "status": {
+        "unpublished": "Belum dipublikasikan",
+        "live": "Aktif",
+        "liveOnNpm": "Tersedia di npm",
+        "soon": "Segera hadir"
+      },
+      "products": {
+        "pkgTitle": "Paket npm",
+        "pkgText": "Gratis. Kode QR statis dirender di perangkat Anda. Tanpa akun, tanpa kunci API.",
+        "restTitle": "REST API",
+        "restText": "Buat dan kelola kode, termasuk kode Dinamis, dari server Anda."
+      },
+      "install": {
+        "managers": "Manajer paket",
+        "npmLink": "npmjs.com/package/{name}",
+        "opensNewTab": "(terbuka di tab baru)",
+        "unpublishedTitle": "Belum ada di npm",
+        "unpublishedText": "{name} {version} belum dipublikasikan, jadi belum ada yang bisa diinstal. Semua isi halaman ini sesuai dengan kode sumbernya saat ini. Dapatkan email saat dirilis:"
+      },
+      "restSoon": {
+        "cardTitle": "Kode Dinamis dari server Anda",
+        "cardText": "Dengan kunci API dari akun Anda, Anda bisa membuat kode, mengubah tujuan kode Dinamis, dan membaca jumlah pindaian. Kami akan memublikasikan referensi lengkap dengan permintaan dan respons nyata saat API dibuka.",
+        "planned": "Direncanakan",
+        "items": [
+          "Kunci API untuk akun Anda",
+          "Buat satu kode atau hingga 100 sekaligus",
+          "Ubah tujuan kode Dinamis",
+          "Jumlah pindaian harian"
+        ],
+        "npmLink": "Gunakan paket npm sekarang"
+      },
+      "waitlist": {
+        "label": "Dapatkan email saat REST API dibuka",
+        "placeholder": "you@company.com",
+        "join": "Gabung daftar tunggu",
+        "joining": "Bergabung…",
+        "invalid": "Periksa alamatnya. Harus ada nama, @ dan domain.",
+        "failed": "Kami belum bisa menambahkan Anda. Coba lagi.",
+        "joined": "Anda sudah terdaftar. Kami akan menulis ke {email} saat REST API dibuka.",
+        "hint": "Satu email saat dibuka. Bukan newsletter."
+      },
+      "notifyPackages": {
+        "label": "Dapatkan email saat paket dipublikasikan",
+        "join": "Kirimi saya email",
+        "joined": "Anda sudah terdaftar. Kami akan menulis ke {email} saat paket dipublikasikan.",
+        "hint": "Satu email saat dirilis. Bukan newsletter."
+      },
+      "responseNotes": {
+        "created": "Kode dibuat sebagai draf, dengan satu id layout per layout dalam permintaan.",
+        "invalid": "Ada field yang melanggar aturan; `details` menyebutkan masing-masing dan tidak pernah menampilkan ulang nilainya.",
+        "draftLimit": "Akun sudah memiliki jumlah draf maksimum.",
+        "reused": "Idempotency-Key sudah dipakai untuk permintaan lain; tidak ada yang dibuat.",
+        "changed": "Tersimpan. `changed` bernilai false jika alamatnya sudah sama dengan yang tersimpan.",
+        "conflict": "Seseorang mengubahnya lebih dulu. `current` adalah yang tersimpan sekarang; baca lalu putuskan lagi.",
+        "notDynamic": "Kode statis tidak punya tujuan: kontennya ada di dalam pola.",
+        "rateLimited": "Melebihi batas akun. Tunggu Retry-After detik, lalu kirim permintaan yang sama lagi.",
+        "unauthorized": "Setiap kunci yang tidak terverifikasi mendapat jawaban ini, sebelum body dibaca.",
+        "bulk202": "Polling GET /v1/jobs/{job_id} atau tunggu webhook.",
+        "bulk400": "Tidak ada kode yang dibuat jika ada item yang gagal.",
+        "scans200": "Hari tanpa pindaian disertakan dengan nilai 0."
+      },
+      "pages": {
+        "overview": {
+          "title": "API untuk developer",
+          "nav": "Ikhtisar",
+          "lead": "Buat kode HeyQR di kode Anda sendiri. Mulai hari ini dengan paket npm gratis; REST API untuk kode Dinamis segera hadir.",
+          "blocks": [
+            {
+              "k": "products"
+            },
+            {
+              "k": "h2",
+              "id": "what",
+              "t": "Apa yang bisa Anda buat"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Kode QR bergaya di aplikasi browser: bentuk, warna, logo atau teks pendek di tengah.",
+                "File SVG dan PNG siap cetak dari skrip atau job server.",
+                "Pemeriksaan pindai sebelum apa pun ditampilkan atau dicetak: kontras, warna terbalik, logo yang menutupi terlalu banyak.",
+                "Layout lengkap dengan bingkai dan keterangan, sama seperti yang diekspor editor HeyQR."
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "entries",
+              "t": "Titik masuk"
+            },
+            {
+              "k": "p",
+              "t": "Satu paket, lima import. Gunakan entri utama di mana saja; yang lain untuk Node.js atau untuk decoding di browser."
+            },
+            {
+              "k": "table",
+              "label": "Titik masuk",
+              "cols": ["Import", "Berjalan di", "Yang Anda dapatkan"],
+              "rows": [
+                {
+                  "cells": [
+                    "`@heyqr/qr-core`",
+                    "Browser dan Node.js",
+                    "`encodePayload`, `renderQr`, `renderQrSvg`, `composeLayout`, helper warna dan kapasitas"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/raster`", "Hanya Node.js", "`rasterizeSvg`: SVG ke PNG dengan resvg"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`@heyqr/qr-core/verify`",
+                    "Hanya Node.js",
+                    "`decodeSvg`, `decodeImage`, `verifyScan`: membaca kembali kode dengan ZXing"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`@heyqr/qr-core/verify-browser`",
+                    "Browser",
+                    "`decodeSvgInBrowser`: decoder yang sama, dari file wasm yang Anda host"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/node`", "Hanya Node.js", "`rasterizeSvg` dan fungsi verifikasi dalam satu import"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Paket ini membuat kode statis: kontennya tertanam di dalam pola. Kode Dinamis dengan tautan pendek yang bisa diedit dan jumlah pindaian memerlukan paket HeyQR dan hadir bersama REST API."
+            },
+            {
+              "k": "h2",
+              "id": "next",
+              "t": "Langkah berikutnya"
+            },
+            {
+              "k": "cards",
+              "items": [
+                {
+                  "page": "quickstart",
+                  "title": "Mulai cepat",
+                  "t": "Kode pertama Anda dalam lima baris.",
+                  "icon": "zap"
+                },
+                {
+                  "page": "content",
+                  "title": "Enkode konten",
+                  "t": "Situs web, Wi-Fi, kontak, acara, dan lainnya.",
+                  "icon": "book"
+                },
+                {
+                  "page": "scan",
+                  "title": "Pastikan bisa dipindai",
+                  "t": "Baca laporan pindai dan decode hasilnya.",
+                  "icon": "scan"
+                },
+                {
+                  "page": "api",
+                  "title": "Fungsi",
+                  "t": "Setiap export beserta signature-nya.",
+                  "icon": "braces"
+                }
+              ]
+            }
+          ]
+        },
+        "install": {
+          "title": "Instalasi",
+          "lead": "Tambahkan @heyqr/qr-core ke aplikasi browser, layanan Node.js, atau keduanya.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "add",
+              "t": "Tambahkan paket"
+            },
+            {
+              "k": "install",
+              "package": "qrCore"
+            },
+            {
+              "k": "h2",
+              "id": "reqs",
+              "t": "Persyaratan"
+            },
+            {
+              "k": "table",
+              "label": "Persyaratan",
+              "cols": ["Item", "Detail"],
+              "rows": [
+                {
+                  "cells": ["Format modul", "Hanya ES modules (paketnya `\"type\": \"module\"`). Gunakan `import`, bukan `require`."],
+                  "required": false
+                },
+                {
+                  "cells": ["TypeScript", "Tipe sudah disertakan dalam paket. Tidak perlu paket `@types`."],
+                  "required": false
+                },
+                {
+                  "cells": ["Browser", "Entri utama tidak memiliki dependensi Node.js dan bekerja dengan bundler modern apa pun."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "Node.js",
+                    "`/raster` dan `/verify` memakai `@resvg/resvg-js`, modul native dengan binary prebuilt untuk platform umum."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "Decoding di browser",
+                    "`/verify-browser` memuat `zxing_reader.wasm` dari URL yang Anda pilih, tidak pernah dari CDN."
+                  ],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "wasm",
+              "t": "Host decoder untuk browser"
+            },
+            {
+              "k": "p",
+              "t": "Hanya diperlukan untuk `decodeSvgInBrowser`. Salin file wasm dari dependensi `zxing-wasm` ke folder publik Anda dan berikan URL-nya. Perintah ini menemukan file melalui paket, jadi bekerja dengan npm, pnpm, dan Yarn."
+            },
+            {
+              "k": "code",
+              "example": "wasm"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Filenya adalah `zxing-wasm/reader/zxing_reader.wasm` di zxing-wasm 3.1.7, versi yang menjadi dependensi paket saat ini. Periksa lagi setelah upgrade."
+            }
+          ]
+        },
+        "quickstart": {
+          "title": "Mulai cepat",
+          "lead": "Enkode konten, beri gaya, periksa pindaian, dan dapatkan SVG, dalam sekitar satu menit.",
+          "blocks": [
+            {
+              "k": "steps",
+              "items": [
+                {
+                  "title": "Instal",
+                  "t": "Tambahkan `@heyqr/qr-core` dengan manajer paket Anda."
+                },
+                {
+                  "title": "Enkode konten",
+                  "t": "`encodePayload` mengubah situs web, jaringan Wi-Fi, atau kontak menjadi teks di dalam kode."
+                },
+                {
+                  "title": "Tentukan tampilan",
+                  "t": "`QrStyle` mengatur bentuk modul, bentuk sudut, dan warna."
+                },
+                {
+                  "title": "Periksa pindaian",
+                  "t": "`renderQr` mengembalikan laporan pindai dengan solusi untuk setiap masalah."
+                },
+                {
+                  "title": "Dapatkan file",
+                  "t": "`renderQrSvg` mengembalikan SVG mandiri; di Node.js, `rasterizeSvg` mengubahnya menjadi PNG."
+                }
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "Di browser"
+            },
+            {
+              "k": "code",
+              "example": "quickstartBrowser"
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Simpan file di Node.js"
+            },
+            {
+              "k": "code",
+              "example": "quickstartNode"
+            }
+          ]
+        },
+        "content": {
+          "title": "Enkode konten",
+          "lead": "encodePayload mengubah konten terstruktur menjadi teks persis yang diharapkan ponsel untuk setiap jenis kode.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "types",
+              "t": "Jenis konten"
+            },
+            {
+              "k": "p",
+              "t": "Berikan salah satu dari sembilan objek `QrContent`. `QR_CONTENT_TYPES` mencantumkan nilai `type`."
+            },
+            {
+              "k": "table",
+              "label": "Jenis konten",
+              "cols": ["type", "Field", "Isi kode"],
+              "rows": [
+                {
+                  "cells": ["`website`", "`url` (domain tanpa skema mendapat https://)", "URL yang dinormalisasi"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "`text`", "Teks apa adanya"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`wifi`",
+                    "`ssid`, `security` \"WPA\" | \"WEP\" | \"nopass\", `password?`, `hidden?`",
+                    "`WIFI:T:WPA;S:…;P:…;;`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`contact`", "`firstName?`, `lastName?`, `title?`, `company?`, `phone?`, `email?`, `website?`", "vCard 3.0"],
+                  "required": false
+                },
+                {
+                  "cells": ["`email`", "`to`, `subject?`, `body?`", "`mailto:` dengan subjek dan isi"],
+                  "required": false
+                },
+                {
+                  "cells": ["`phone`", "`number`", "`tel:` dengan angka dan +"],
+                  "required": false
+                },
+                {
+                  "cells": ["`sms`", "`number`, `message?`", "`SMSTO:number:message`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`location`", "`address`, `name?`", "`geo:0,0?q=` dengan alamat"],
+                  "required": false
+                },
+                {
+                  "cells": ["`event`", "`title`, `start`, `end?`, `place?`", "Acara kalender (VEVENT)"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "examples",
+              "t": "Contoh"
+            },
+            {
+              "k": "code",
+              "example": "contentExamples"
+            },
+            {
+              "k": "h2",
+              "id": "contact",
+              "t": "Kartu kontak"
+            },
+            {
+              "k": "p",
+              "t": "Kontak menjadi vCard 3.0, versi yang paling andal dibaca kamera ponsel. Field kosong dihilangkan dan baris panjang dilipat."
+            },
+            {
+              "k": "code",
+              "example": "vcard"
+            },
+            {
+              "k": "h2",
+              "id": "events",
+              "t": "Acara"
+            },
+            {
+              "k": "p",
+              "t": "`start` dan `end` adalah waktu lokal seperti `2026-12-05T19:00`. Tanggal tanpa jam, seperti `2026-12-05`, membuat acara sepanjang hari."
+            },
+            {
+              "k": "code",
+              "example": "event"
+            },
+            {
+              "k": "h2",
+              "id": "urls",
+              "t": "Periksa alamat situs web"
+            },
+            {
+              "k": "p",
+              "t": "`parseWebsiteUrl` adalah pemeriksaan yang sama dengan yang dipakai editor HeyQR. Fungsi ini menolak spasi, skema lain, kredensial, dan host tanpa titik."
+            },
+            {
+              "k": "code",
+              "example": "urlCheck"
+            }
+          ]
+        },
+        "style": {
+          "title": "Beri gaya pada kode",
+          "lead": "QrStyle menjelaskan bentuk dan warna. Setiap gaya diperiksa dengan aturan pindai yang sama.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "shapes",
+              "t": "Bentuk"
+            },
+            {
+              "k": "chips",
+              "t": "pattern · modul data",
+              "items": ["square", "rounded", "dot", "diamond", "leaf", "fluid", "vbars", "hbars"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeFrame · cincin penanda sudut",
+              "items": ["square", "rounded", "cushion", "circle", "leaf"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeBall · pusat penanda sudut",
+              "items": ["square", "rounded", "circle", "diamond", "leaf"]
+            },
+            {
+              "k": "h2",
+              "id": "colors",
+              "t": "Warna"
+            },
+            {
+              "k": "p",
+              "t": "`colors` menerima empat warna hex: `fg` untuk modul data, `eye` untuk cincin sudut, `eyeIn` untuk pusat sudut, dan `bg` untuk latar belakang."
+            },
+            {
+              "k": "table",
+              "label": "Kontras minimum",
+              "cols": ["Bagian", "Kontras minimum dengan latar belakang"],
+              "rows": [
+                {
+                  "cells": ["Modul data (`fg`)", "3 : 1 (`MIN_CONTRAST.modules`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Cincin sudut (`eye`)", "3 : 1 (`MIN_CONTRAST.eyeFrame`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Pusat sudut (`eyeIn`)", "2.5 : 1 (`MIN_CONTRAST.eyeCenter`)"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Kode harus lebih gelap dari latar belakangnya. Kode terang di latar gelap gagal dengan masalah `invert` meskipun kontrasnya tinggi."
+            },
+            {
+              "k": "code",
+              "example": "contrast"
+            },
+            {
+              "k": "h2",
+              "id": "center",
+              "t": "Teks pendek di tengah"
+            },
+            {
+              "k": "p",
+              "t": "`centerText` menaruh label di dalam kode. Yang ditampilkan adalah baris pertama, hingga 14 karakter (`CENTER_TEXT_MAX`); teks yang lebih panjang dipotong per kata utuh dengan elipsis."
+            },
+            {
+              "k": "code",
+              "example": "centerText"
+            },
+            {
+              "k": "h2",
+              "id": "art",
+              "t": "Ilustrasi di belakang kode"
+            },
+            {
+              "k": "p",
+              "t": "`art` menggambar bentuk lembut dalam dua warna di belakang modul, dengan gambar samar opsional. Pemeriksaan pindai membaca latar belakang sebagai berwarna."
+            },
+            {
+              "k": "code",
+              "example": "art"
+            }
+          ]
+        },
+        "logo": {
+          "title": "Logo dan ikon",
+          "lead": "Taruh gambar atau ikon garis 24 × 24 di tengah. Koreksi kesalahan naik otomatis agar kode tetap terbaca.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "fields",
+              "t": "Field logo"
+            },
+            {
+              "k": "table",
+              "label": "QrLogo",
+              "cols": ["Field", "Tipe", "Deskripsi"],
+              "rows": [
+                {
+                  "cells": ["`href`", "string", "URL gambar atau data URI. Diabaikan jika `iconPath` diisi."],
+                  "required": false
+                },
+                {
+                  "cells": ["`iconPath`", "string", "Path garis 24 × 24, misalnya ikon Lucide."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`size`",
+                    "number",
+                    "Lebar logo sebagai porsi dari lebar kode. Digambar antara 0.10 dan 0.46 (`CENTER_LOGO_SIZE`)."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`plate`", "\"none\" | \"square\" | \"circle\"", "Alas di belakang logo."],
+                  "required": true
+                },
+                {
+                  "cells": ["`tile`", "boolean", "Ikon di atas ubin bulat berwarna, bukan alas."],
+                  "required": false
+                },
+                {
+                  "cells": ["`plateColor`, `iconColor`", "string", "Warna hex untuk alas dan ikon."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "example",
+              "t": "Contoh"
+            },
+            {
+              "k": "code",
+              "example": "logoStyle"
+            },
+            {
+              "k": "h2",
+              "id": "fit",
+              "t": "Seberapa besar bisa?"
+            },
+            {
+              "k": "p",
+              "t": "Dengan logo atau teks tengah, kode memakai koreksi kesalahan H, sehingga kapasitasnya sedikit lebih dari setengah (382 byte, bukan 666). Setelah dirender, `scan.maxLogoSize` adalah ukuran terbesar yang masih bisa di-decode; logo yang lebih besar gagal dengan masalah `logo`."
+            },
+            {
+              "k": "code",
+              "example": "logoFit"
+            }
+          ]
+        },
+        "layouts": {
+          "title": "Bingkai dan keterangan",
+          "lead": "composeLayout menggambar layout lengkap: kartu atau bingkai, kode, keterangan, dan logo opsional, persis seperti ekspor HeyQR.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "presets",
+              "t": "Preset layout"
+            },
+            {
+              "k": "table",
+              "label": "Preset",
+              "cols": ["preset", "Yang digambar"],
+              "rows": [
+                {
+                  "cells": ["`qr`", "Hanya kode, pada `qrSize`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`caption`", "Kode dengan keterangan di atas atau di bawah, atau teks di dalam kode"],
+                  "required": false
+                },
+                {
+                  "cells": ["`vertical`", "Kartu dengan kode di atas keterangan"],
+                  "required": false
+                },
+                {
+                  "cells": ["`horizontal`", "Kartu dengan kode di samping keterangan"],
+                  "required": false
+                },
+                {
+                  "cells": ["`frame`", "Bingkai di sekitar kode; ukurannya dari `qrSize`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "chips",
+              "t": "frameStyle",
+              "items": ["bar", "tab", "bubble", "pill", "corners", "circle", "ticket", "phone"]
+            },
+            {
+              "k": "h2",
+              "id": "compose",
+              "t": "Susun layout"
+            },
+            {
+              "k": "code",
+              "example": "compose"
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Panggil `layoutCapacity` sebelum `composeLayout` agar konten yang terlalu panjang menjadi pesan, bukan exception. Berikan `{ transparent: true }` sebagai argumen ketiga untuk latar belakang transparan."
+            },
+            {
+              "k": "h2",
+              "id": "fonts",
+              "t": "Font keterangan"
+            },
+            {
+              "k": "p",
+              "t": "Keterangan berupa teks SVG. Di browser, keterangan memakai font halaman; saat Anda merasterisasi di Node.js, berikan file font dengan `fontFiles`, atau font yang terpasang di mesin akan dipakai. Font keterangan mendukung huruf Latin dan Sirilik."
+            }
+          ]
+        },
+        "png": {
+          "title": "Simpan PNG",
+          "lead": "rasterizeSvg merender SVG apa pun dari paket menjadi Buffer PNG dengan resvg.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "basic",
+              "t": "Render PNG"
+            },
+            {
+              "k": "code",
+              "example": "png"
+            },
+            {
+              "k": "h2",
+              "id": "options",
+              "t": "Opsi"
+            },
+            {
+              "k": "table",
+              "label": "RasterOptions",
+              "cols": ["Opsi", "Tipe", "Deskripsi"],
+              "rows": [
+                {
+                  "cells": ["`width`", "number", "Lebar output dalam piksel. Tingginya mengikuti SVG."],
+                  "required": true
+                },
+                {
+                  "cells": ["`fontFiles`", "string[]", "File font untuk keterangan."],
+                  "required": false
+                },
+                {
+                  "cells": ["`systemFonts`", "boolean", "Juga gunakan font yang terpasang. Default `true`."],
+                  "required": false
+                },
+                {
+                  "cells": ["`background`", "string", "Warna latar di belakang area transparan."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`dpi`",
+                    "number",
+                    "Resolusi cetak yang ditulis ke file, agar software cetak membukanya dalam ukuran fisiknya. Kosongkan untuk file layar."
+                  ],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "print",
+              "t": "Ukuran cetak"
+            },
+            {
+              "k": "p",
+              "t": "`pngPixelSize` memberikan ukuran piksel persis sebuah layout: layout mm pada 300, 600, atau 1200 dpi (`PNG_DPIS`), layout px pada 1×, 2×, 4×, atau 8× (`PNG_SCALES`). Sisi tetap antara 64 dan 8192 px."
+            },
+            {
+              "k": "code",
+              "example": "printPng"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Jangan import `/raster` di bundle browser: resvg adalah modul native Node.js."
+            }
+          ]
+        },
+        "scan": {
+          "title": "Pastikan bisa dipindai",
+          "lead": "Setiap render disertai laporan pindai. Di Node.js dan browser, Anda juga bisa men-decode hasilnya untuk memastikan.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "Laporan pindai"
+            },
+            {
+              "k": "code",
+              "example": "scanReport"
+            },
+            {
+              "k": "table",
+              "label": "Kode masalah",
+              "cols": ["code", "title", "fix"],
+              "rows": [
+                {
+                  "cells": ["`invert`", "Light code on a dark background", "Swap colors"],
+                  "required": false
+                },
+                {
+                  "cells": ["`contrast`", "Not enough contrast", "Increase contrast"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eyes`", "Corner markers are too light", "Darken corner markers"],
+                  "required": false
+                },
+                {
+                  "cells": ["`logo`", "The logo hides too much of the code", "Reduce logo size"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "The text in the code is too long", "Shorten the text"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Laporan ini berbasis aturan: memeriksa geometri dan warna persis tanpa decoding. Lakukan decode jika Anda butuh bukti."
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Decode di Node.js"
+            },
+            {
+              "k": "code",
+              "example": "verifyNode"
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "Decode di browser"
+            },
+            {
+              "k": "code",
+              "example": "verifyBrowser"
+            },
+            {
+              "k": "p",
+              "t": "Tidak ada yang keluar dari perangkat: decoder berjalan secara lokal dan tidak pernah membuka tujuan kode."
+            }
+          ]
+        },
+        "api": {
+          "title": "Fungsi",
+          "lead": "Setiap fungsi publik, dikelompokkan per titik masuk. Signature sesuai dengan tipe TypeScript di paket.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "Konten"
+            },
+            {
+              "k": "table",
+              "label": "Fungsi konten",
+              "cols": ["Fungsi", "Signature"],
+              "rows": [
+                {
+                  "cells": ["`encodePayload`", "`(content: QrContent) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`encodeVCard`", "`(contact) => string` · vCard 3.0"],
+                  "required": false
+                },
+                {
+                  "cells": ["`normalizeUrl`", "`(input: string) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseWebsiteUrl`", "`(input: string) => { ok: true; url } | { ok: false; problem }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "render",
+              "t": "Rendering"
+            },
+            {
+              "k": "table",
+              "label": "Fungsi rendering",
+              "cols": ["Fungsi", "Signature"],
+              "rows": [
+                {
+                  "cells": ["`renderQr`", "`(value: string, style: QrStyle) => RenderedQr`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`renderQrSvg`", "`(value: string, style: QrStyle, sizePx = 512) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eclForStyle`", "`(style) => \"M\" | \"H\"` · H jika logo atau teks menutupi bagian tengah"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerLogoSize`", "`(size: number) => number` · dibatasi ke 0.10–0.46"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerTextLabel`", "`(text: string) => { label; shortened }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "layout",
+              "t": "Layout"
+            },
+            {
+              "k": "table",
+              "label": "Fungsi layout",
+              "cols": ["Fungsi", "Signature"],
+              "rows": [
+                {
+                  "cells": [
+                    "`composeLayout`",
+                    "`(layout: Layout, value: string, options?: { transparent? }) => { svg, width, height, scan }`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutCapacity`", "`(layout: Layout, value: string) => { ok, bytes, maxBytes, ecl, centerCovered }`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutGeometry`", "`(layout: Layout) => LayoutGeometry`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pngPixelSize`", "`(layout: Layout, { scale?, dpi? }) => { width, height, ok }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "encode",
+              "t": "Enkoding dan kapasitas"
+            },
+            {
+              "k": "table",
+              "label": "Fungsi enkoding",
+              "cols": ["Fungsi", "Signature"],
+              "rows": [
+                {
+                  "cells": ["`encodeQr`", "`(text: string, ecl = \"M\") => QrMatrix`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`payloadBytes`", "`(text: string) => number` · byte UTF-8"],
+                  "required": false
+                },
+                {
+                  "cells": ["`maxPayloadBytes`", "`(ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pickVersion`", "`(byteLength: number, ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`QrCapacityError`", "Error dengan `byteLength` dan `maxBytes`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "color",
+              "t": "Warna"
+            },
+            {
+              "k": "table",
+              "label": "Fungsi warna",
+              "cols": ["Fungsi", "Signature"],
+              "rows": [
+                {
+                  "cells": ["`contrastRatio`", "`(a: string, b: string) => number` · rasio WCAG"],
+                  "required": false
+                },
+                {
+                  "cells": ["`luminance`", "`(hex: string) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`isHexColor`", "`(value: string) => boolean` · hanya `#RRGGBB`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseHexColor`", "`(text: string) => string | null`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`mixColors`", "`(a: string, b: string, t: number) => string`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Entri Node.js dan browser"
+            },
+            {
+              "k": "table",
+              "label": "Entri lain",
+              "cols": ["Fungsi", "Entri", "Signature"],
+              "rows": [
+                {
+                  "cells": ["`rasterizeSvg`", "`/raster`", "`(svg: string, options: RasterOptions) => Buffer`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvg`", "`/verify`", "`(svg: string, width = 720) => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeImage`", "`/verify`", "`(file: Uint8Array, type = \"image/png\") => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`verifyScan`", "`/verify`", "`(svg, expected, widths = [300, 600, 1200]) => Promise<boolean>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvgInBrowser`", "`/verify-browser`", "`(svg, { wasmUrl, size? = 960 }) => Promise<string | null>`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        },
+        "types": {
+          "title": "Tipe",
+          "lead": "Tipe-tipe utama, sebagaimana tercantum di paket.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "style",
+              "t": "QrStyle"
+            },
+            {
+              "k": "code",
+              "example": "typesStyle"
+            },
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "RenderedQr dan ScanReport"
+            },
+            {
+              "k": "code",
+              "example": "typesReport"
+            },
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "QrContent"
+            },
+            {
+              "k": "code",
+              "example": "typesContent"
+            }
+          ]
+        },
+        "limits": {
+          "title": "Batas dan error",
+          "lead": "Apa yang diterima encoder, dan apa yang terjadi jika konten tidak muat.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Batas"
+            },
+            {
+              "k": "table",
+              "label": "Batas",
+              "cols": ["Batas", "Nilai"],
+              "rows": [
+                {
+                  "cells": ["Versi QR terbesar", "20 (`MAX_VERSION`), 97 × 97 modul"],
+                  "required": false
+                },
+                {
+                  "cells": ["Konten", "666 byte pada koreksi kesalahan M, 382 pada H"],
+                  "required": false
+                },
+                {
+                  "cells": ["Koreksi kesalahan", "M, atau H dengan logo atau teks tengah"],
+                  "required": false
+                },
+                {
+                  "cells": ["Zona tenang", "4 modul di setiap sisi, termasuk dalam `viewBox`"],
+                  "required": false
+                },
+                {
+                  "cells": ["Ukuran logo", "0.10–0.46 dari lebar kode (`CENTER_LOGO_SIZE`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Teks tengah", "14 karakter (`CENTER_TEXT_MAX`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Sisi PNG", "64–8192 px (`PNG_MIN_SIDE`, `PNG_MAX_SIDE`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Kontras", "3 : 1 untuk modul dan cincin, 2.5 : 1 untuk pusat sudut"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "capacity",
+              "t": "Konten yang terlalu panjang"
+            },
+            {
+              "k": "p",
+              "t": "Rendering melempar `QrCapacityError` jika konten tidak muat. Error ini hanya membawa ukuran, tidak pernah kontennya, jadi aman untuk di-log."
+            },
+            {
+              "k": "code",
+              "example": "capacity"
+            },
+            {
+              "k": "h2",
+              "id": "null",
+              "t": "Decoder yang mengembalikan null"
+            },
+            {
+              "k": "p",
+              "t": "`decodeSvg`, `decodeImage`, dan `decodeSvgInBrowser` mengembalikan `null` jika tidak ada kode yang bisa dibaca. Anggap itu sebagai pemeriksaan yang gagal, bukan error."
+            }
+          ]
+        },
+        "faq": {
+          "title": "FAQ",
+          "lead": "Jawaban singkat untuk pertanyaan umum.",
+          "blocks": [
+            {
+              "k": "faq",
+              "items": [
+                {
+                  "q": "Apakah paket ini mengirim sesuatu ke HeyQR?",
+                  "a": "Tidak. Enkoding, rendering, dan pemeriksaan pindai berjalan di perangkat Anda. Decoder browser memuat file wasm-nya dari URL yang Anda host."
+                },
+                {
+                  "q": "Bisakah saya membuat kode Dinamis dengan paket ini?",
+                  "a": "Belum. Kode Dinamis memerlukan tautan pendek HeyQR, paket langganan, dan penghitungan pindaian di server kami. Itu akan hadir bersama REST API."
+                },
+                {
+                  "q": "Mengapa kode saya yang memakai logo gagal?",
+                  "a": "Logo menaikkan koreksi kesalahan ke H, yang menurunkan kapasitas, dan menutupi modul. Buat logo lebih kecil dari `scan.maxLogoSize` atau persingkat kontennya."
+                },
+                {
+                  "q": "Mengapa ekspor PNG hanya untuk Node.js?",
+                  "a": "PNG dirender dengan resvg, sebuah modul native. Di browser, gambar SVG di canvas jika Anda butuh piksel."
+                },
+                {
+                  "q": "Apakah file-nya akan sama dengan editor HeyQR?",
+                  "a": "Ya. Pratinjau editor dan ekspor berbayar sama-sama memakai `composeLayout`, jadi layout yang sama menghasilkan SVG yang sama."
+                },
+                {
+                  "q": "Bisakah saya memakainya di produk komersial?",
+                  "a": "Lisensi ditetapkan pada rilis publik pertama dan akan ditampilkan di sini dan di npm."
+                }
+              ]
+            }
+          ]
+        },
+        "changelog": {
+          "title": "Catatan perubahan",
+          "lead": "Rilis @heyqr/qr-core.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "v010",
+              "t": "0.1.0 · belum dipublikasikan"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Rilis publik pertama sedang disiapkan. Semua isi halaman ini sesuai dengan kode sumber paket saat ini.",
+                "Titik masuk: main, `/raster`, `/verify`, `/verify-browser`, `/node`."
+              ]
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Saat sebuah versi dipublikasikan, catatan dan tautan npm-nya muncul di sini."
+            }
+          ]
+        },
+        "rest": {
+          "title": "REST API",
+          "lead": "Buat kode, ubah tujuan kode Dinamis, dan baca jumlah pindaian dari server Anda.",
+          "blocks": [
+            {
+              "k": "restSoon"
+            }
+          ]
+        },
+        "restAuth": {
+          "title": "Autentikasi",
+          "lead": "Setiap permintaan membawa kunci API dari akun HeyQR Anda.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Belum publik. Halaman ini menjelaskan REST API di build HeyQR ini, yang diperiksa terhadap rutenya. API ini belum tersedia di heyqr.me, dan tidak muncul di pencarian sampai tersedia."
+            },
+            {
+              "k": "h2",
+              "id": "keys",
+              "t": "Kunci API"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Buat kunci di Akun → Kunci API. Kunci milik akun Anda; setiap kunci di akun melihat kode yang sama.",
+                "Kunci berbentuk `hqk_<lookupId>_<secret>`. Kunci lengkap hanya ditampilkan sekali, saat Anda membuatnya; HeyQR hanya menyimpan verifier.",
+                "Kirim kunci di header `Authorization` dari server Anda. Jangan pernah menaruhnya di URL atau di kode browser.",
+                "Kunci yang tidak ada, salah, atau dicabut mendapat `401 unauthorized` yang sama, sebelum body permintaan dibaca."
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "header",
+              "t": "Header permintaan"
+            },
+            {
+              "k": "code",
+              "example": "restHeader"
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Batas laju"
+            },
+            {
+              "k": "p",
+              "t": "Batas berlaku per akun: semua kuncinya berbagi batas yang sama, dan akun tidak saling memengaruhi. Jendela waktu dimulai dengan permintaan pertama dan berlangsung 60 detik."
+            },
+            {
+              "k": "table",
+              "label": "Batas laju",
+              "cols": ["Kuota", "Yang dihitung", "Default per menit"],
+              "rows": [
+                {
+                  "cells": ["`api`", "Setiap permintaan dengan kunci yang valid", "120"],
+                  "required": false
+                },
+                {
+                  "cells": ["`export`", "Ekspor file, juga dihitung di `api`", "30"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "p",
+              "t": "Jika melebihi kuota, jawabannya `429 rate_limited` dengan `Retry-After`, sebelum apa pun dibuat, diubah, atau dirender."
+            }
+          ]
+        },
+        "restCreate": {
+          "title": "Buat kode QR",
+          "lead": "Membuat satu kode QR beserta layout-nya, sebagai draf di akun Anda. Aktivasi, tautan pendek, dan pembayaran tetap di aplikasi.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Belum publik. Halaman ini menjelaskan REST API di build HeyQR ini, yang diperiksa terhadap rutenya. API ini belum tersedia di heyqr.me, dan tidak muncul di pencarian sampai tersedia."
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Body permintaan"
+            },
+            {
+              "k": "table",
+              "label": "Body permintaan",
+              "cols": ["Parameter", "Tipe", "Contoh", "Deskripsi"],
+              "rows": [
+                {
+                  "cells": ["`name`", "string", "\"Spring menu\"", "1–80 karakter. Nama di Kode QR saya."],
+                  "required": true
+                },
+                {
+                  "cells": ["`mode`", "\"static\" | \"dynamic\"", "\"static\"", "`dynamic` hanya untuk konten `website`."],
+                  "required": true
+                },
+                {
+                  "cells": [
+                    "`content`",
+                    "QrContent",
+                    "{ \"type\": \"website\", … }",
+                    "Yang dibuka oleh kode. Bentuknya sama dengan `encodePayload`."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"littlefern.cafe/menu\"",
+                    "Hanya `dynamic`: tujuan tautan pendek. Default-nya alamat situs web."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`layouts`",
+                    "array",
+                    "[{ \"name\": \"Sticker\", \"layout\": … }]",
+                    "1–20 layout: `name` (1–60), `layout` yang sudah dirender, dan pengaturan `editor` opsional."
+                  ],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "p",
+              "t": "Body bersifat ketat: field yang tidak dikenal ditolak. Kirim header `Idempotency-Key` (1–255 karakter terlihat, UUID bisa dipakai) agar percobaan ulang aman: kunci dan permintaan yang sama mengembalikan `201` yang asli."
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "Permintaan"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateRequest",
+              "label": "Contoh permintaan"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Respons"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateResponses",
+              "label": "Respons"
+            }
+          ]
+        },
+        "restBulk": {
+          "title": "Buat massal",
+          "lead": "Membuat hingga 100 kode dalam satu permintaan. Job berjalan di latar belakang.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "Pratinjau desain. Endpoint yang diusulkan: belum ada yang aktif di halaman ini, dan nama serta field dapat berubah sebelum rilis."
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes/bulk"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Body permintaan"
+            },
+            {
+              "k": "table",
+              "label": "Body permintaan",
+              "cols": ["Parameter", "Tipe", "Contoh", "Deskripsi"],
+              "rows": [
+                {
+                  "cells": ["`items`", "array", "[{ \"name\": …, \"content\": … }]", "1–100 kode, masing-masing seperti Buat kode QR."],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].name`", "string", "\"Table 12\"", "Nama di Kode QR saya."],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].content`", "QrContent", "{ \"type\": \"website\", … }", "Yang dibuka oleh setiap kode."],
+                  "required": true
+                },
+                {
+                  "cells": ["`style`", "QrStyle", "{ \"pattern\": \"rounded\", … }", "Satu gaya untuk semua kode dalam batch."],
+                  "required": false
+                },
+                {
+                  "cells": ["`webhook_url`", "string", "\"https://…/heyqr\"", "Dipanggil sekali saat job selesai."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Respons"
+            },
+            {
+              "k": "tabs",
+              "example": "bulkResponses",
+              "label": "Respons"
+            }
+          ]
+        },
+        "restDestination": {
+          "title": "Ubah tujuan",
+          "lead": "Mengarahkan kode Dinamis ke tempat lain. Kode yang sudah dicetak tetap memakai tautan pendeknya dan langsung mengikuti.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Belum publik. Halaman ini menjelaskan REST API di build HeyQR ini, yang diperiksa terhadap rutenya. API ini belum tersedia di heyqr.me, dan tidak muncul di pencarian sampai tersedia."
+            },
+            {
+              "k": "h2",
+              "id": "read",
+              "t": "Baca tujuan saat ini"
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "code",
+              "example": "restDestinationRead"
+            },
+            {
+              "k": "p",
+              "t": "Ubah berdasarkan `revision` yang Anda baca: jika tujuan diubah di aplikasi atau oleh permintaan lain sejak itu, Anda mendapat `409` dan tidak ada yang disimpan."
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Body permintaan"
+            },
+            {
+              "k": "endpoint",
+              "method": "PATCH",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "table",
+              "label": "Body permintaan",
+              "cols": ["Parameter", "Tipe", "Contoh", "Deskripsi"],
+              "rows": [
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"https://littlefern.cafe/today\"",
+                    "Alamat baru, hingga 2048 karakter. Domain tanpa skema menjadi https://."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`revision`", "integer", "3", "Revisi dari GET atau PATCH terakhir."],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "Permintaan"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationRequest",
+              "label": "Contoh permintaan"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Respons"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationResponses",
+              "label": "Respons"
+            }
+          ]
+        },
+        "restScans": {
+          "title": "Statistik pindaian",
+          "lead": "Jumlah pindaian harian untuk kode Dinamis.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "Pratinjau desain. Endpoint yang diusulkan: belum ada yang aktif di halaman ini, dan nama serta field dapat berubah sebelum rilis."
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{id}/scans?from=2026-11-01&to=2026-11-26"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Respons"
+            },
+            {
+              "k": "tabs",
+              "example": "scansResponses",
+              "label": "Respons"
+            }
+          ]
+        },
+        "restErrors": {
+          "title": "Error dan batas laju",
+          "lead": "Semua error memiliki bentuk yang sama. Bercabanglah berdasarkan code, jangan pernah berdasarkan pesan.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Belum publik. Halaman ini menjelaskan REST API di build HeyQR ini, yang diperiksa terhadap rutenya. API ini belum tersedia di heyqr.me, dan tidak muncul di pencarian sampai tersedia."
+            },
+            {
+              "k": "h2",
+              "id": "shape",
+              "t": "Bentuk error"
+            },
+            {
+              "k": "p",
+              "t": "Setiap error berbentuk `{ \"error\": { \"code\", \"message\", …details } }` dengan `Cache-Control: no-store`. Pesan ditujukan untuk manusia; code bersifat stabil."
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "Kode status"
+            },
+            {
+              "k": "table",
+              "label": "Error",
+              "cols": ["Status", "code", "Kapan"],
+              "rows": [
+                {
+                  "cells": ["400", "`malformed_json`", "Body bukan JSON."],
+                  "required": false
+                },
+                {
+                  "cells": ["401", "`unauthorized`", "Kunci tidak ada, formatnya salah, keliru, atau dicabut."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "402",
+                    "`payment_required`",
+                    "Ekspor kode yang belum dibayar atau belum aktif; `paymentUrl` membuka layar Ekspor-nya."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["403", "`draft_limit`", "Akun sudah memiliki jumlah draf maksimum."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "404",
+                    "`not_found`",
+                    "Bukan kode atau layout Anda, sudah dihapus, atau tidak ada: satu jawaban untuk semuanya."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "409",
+                    "`revision_conflict`, `idempotency_key_reused`",
+                    "Sudah diubah sejak revisi Anda, atau Idempotency-Key dipakai ulang."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "422",
+                    "`invalid_request`, `content_too_long`, `not_dynamic`",
+                    "Ada aturan yang dilanggar; `details` menyebutkan field-nya."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["429", "`rate_limited`", "Melebihi kuota akun; tunggu `Retry-After` detik."],
+                  "required": false
+                },
+                {
+                  "cells": ["500", "`internal_error`", "Tidak ada yang diubah; coba lagi."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Batas laju"
+            },
+            {
+              "k": "tabs",
+              "example": "restRateLimited",
+              "label": "Contoh respons"
+            },
+            {
+              "k": "p",
+              "t": "Default-nya 120 permintaan dan 30 ekspor per menit per akun. Permintaan yang ditolak tidak memperpanjang waktu tunggu."
+            }
+          ]
+        },
+        "restSdk": {
+          "title": "TypeScript SDK",
+          "lead": "@heyqr/sdk adalah klien bertipe untuk REST API, untuk Node.js 18 dan yang lebih baru. Paket ini tidak merender apa pun: itu tugas @heyqr/qr-core.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Belum publik. Halaman ini menjelaskan REST API di build HeyQR ini, yang diperiksa terhadap rutenya. API ini belum tersedia di heyqr.me, dan tidak muncul di pencarian sampai tersedia."
+            },
+            {
+              "k": "h2",
+              "id": "install",
+              "t": "Instal"
+            },
+            {
+              "k": "install",
+              "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "server",
+              "t": "Di server Anda"
+            },
+            {
+              "k": "p",
+              "t": "`HeyQrClient` memerlukan kunci API, jadi hanya berjalan di server. Di bundle browser, paket ini mengarah ke entri yang `HeyQrClient`-nya melempar `HeyQrError` dengan kind `server_only`. Untuk pratinjau di browser, gunakan `@heyqr/sdk/react`."
+            },
+            {
+              "k": "code",
+              "example": "sdkInstallNote"
+            },
+            {
+              "k": "h2",
+              "id": "methods",
+              "t": "Metode"
+            },
+            {
+              "k": "table",
+              "label": "HeyQrClient",
+              "cols": ["Metode", "Permintaan"],
+              "rows": [
+                {
+                  "cells": ["`createQr(request, { idempotencyKey? })`", "`POST /api/v1/qr-codes`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getLayout(qrCodeId, layoutId)`", "`GET …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateLayout(qrCodeId, layoutId, request)`", "`PATCH …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getDestination(qrCodeId)`", "`GET …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateDestination(qrCodeId, request)`", "`PATCH …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`downloadExport(qrCodeId, layoutId, { format })`", "`GET …/export`, mengikuti tautan bertanda tangan"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "Error"
+            },
+            {
+              "k": "table",
+              "label": "Error",
+              "cols": ["Error", "Kapan"],
+              "rows": [
+                {
+                  "cells": ["`HeyQrApiError`", "Error API yang terdokumentasi, dengan `status`, `code`, dan respons bertipe"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrRateLimitError`", "429, dengan `retryAfterSeconds` dan `code`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrTimeoutError`, `HeyQrAbortError`", "Batas waktu terlewati, atau `signal` Anda membatalkan panggilan"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrError`", "Tidak ada jawaban terdokumentasi: `kind` menjelaskan alasannya"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        }
+      },
+      "breadcrumb": "Breadcrumb"
+    }
+  }
+}

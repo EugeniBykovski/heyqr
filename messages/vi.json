@@ -1,0 +1,4503 @@
+{
+  "meta": {
+    "title": "Hey QR — Mã QR mang phong cách thương hiệu của bạn",
+    "description": "Thiết kế mã QR, kiểm tra xem có quét được không và tải xuống tệp PNG và SVG sẵn sàng để in."
+  },
+  "nav": {
+    "create": "Tạo",
+    "pricing": "Bảng giá",
+    "myCodes": "Mã QR của tôi",
+    "billing": "Gói & thanh toán",
+    "signIn": "Đăng nhập",
+    "signOut": "Đăng xuất",
+    "account": "Tài khoản và thanh toán, {name}",
+    "language": "Ngôn ngữ",
+    "skipToContent": "Chuyển đến nội dung",
+    "home": "Trang chủ Hey QR",
+    "createCode": "Tạo mã QR",
+    "menu": "Menu",
+    "main": "Chính",
+    "languageChoose": "Chọn ngôn ngữ",
+    "languageCount": "{count} ngôn ngữ",
+    "languageSearch": "Tìm ngôn ngữ",
+    "languages": "Ngôn ngữ",
+    "languageEmpty": "Không có ngôn ngữ nào khớp với “{query}”.",
+    "trial": "Dùng thử miễn phí",
+    "apiKeys": "Khóa API",
+    "developers": "API cho nhà phát triển",
+    "developersShort": "API"
+  },
+  "payment": {
+    "title": "Cách thanh toán",
+    "oneTime": "Single QR là khoản thanh toán một lần {price} cho mỗi mã, cộng với thuế mà Stripe tính khi thanh toán. Đây không phải gói đăng ký và không có gì tự động gia hạn.",
+    "where": "Bạn thanh toán trên trang thanh toán bảo mật của Stripe. Hey QR không bao giờ thấy thông tin thẻ của bạn.",
+    "receipt": "Biên lai nằm trong tài khoản của bạn, mục Thanh toán, cạnh giao dịch mua.",
+    "support": "Có thắc mắc về thanh toán? Gửi email tới <link>{email}</link>.",
+    "terms": "Điều khoản",
+    "privacy": "Quyền riêng tư",
+    "supportLink": "Hỗ trợ"
+  },
+  "footer": {
+    "terms": "Điều khoản",
+    "privacy": "Quyền riêng tư",
+    "support": "Hỗ trợ",
+    "rights": "© {year} Hey QR",
+    "pricing": "Bảng giá",
+    "label": "Chân trang",
+    "tagline": "Mã QR mang phong cách thương hiệu của bạn và luôn quét được.",
+    "product": "Sản phẩm",
+    "makeFor": "Tạo mã cho",
+    "company": "Công ty",
+    "smallPrint": "21 ngôn ngữ · Thanh toán qua Stripe"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Studio QR · thiết kế và xem trước miễn phí",
+      "title": "Mã QR trông như của riêng bạn.",
+      "lead": "Dán một liên kết và tạo kiểu ngay tại đây. Bản xem trước cập nhật khi bạn gõ, và thiết kế hoàn toàn miễn phí.",
+      "reveal": "Điều tuyệt vời chỉ cách một lần quét."
+    },
+    "tool": {
+      "typesLabel": "Mã sẽ mở gì?",
+      "more": "Thêm +",
+      "url": "Địa chỉ website",
+      "urlPlaceholder": "yourname.com/portfolio",
+      "errors": {
+        "empty": "Nhập địa chỉ web, ví dụ yourname.com.",
+        "spaces": "Địa chỉ web không được chứa dấu cách."
+      },
+      "color": "Màu mã",
+      "inks": {
+        "ink": "Mực",
+        "violet": "Tím",
+        "forest": "Rừng",
+        "ocean": "Đại dương",
+        "berry": "Quả mọng",
+        "clay": "Đất sét"
+      },
+      "caption": "Chú thích",
+      "captionDefault": "Xem portfolio",
+      "continue": "Tiếp tục thiết kế",
+      "priceNote": "Thiết kế và xem trước miễn phí. Tải PNG và SVG có giá <b>{price}</b> cho mỗi mã, trả một lần.",
+      "seePricing": "Xem bảng giá",
+      "stageTitle": "{type} · xem trước trực tiếp",
+      "scans": "Quét được",
+      "livePreview": "Xem trước trực tiếp",
+      "realCode": "Mã thật, quét được",
+      "previewLabel": "Bản xem trước mã QR của bạn",
+      "otherType": "Bản nháp của bạn là mã {type}. Tiếp tục thiết kế sẽ mở nó trong trình chỉnh sửa.",
+      "stageCard": "Danh thiếp · 90 mm × 50 mm"
+    },
+    "how": {
+      "label": "Cách hoạt động",
+      "content": {
+        "title": "Thêm nội dung",
+        "text": "Một liên kết, văn bản, thông tin Wi-Fi hoặc danh thiếp liên hệ."
+      },
+      "design": {
+        "title": "Thiết kế",
+        "text": "Bố cục, kích thước, hình dạng, màu sắc, logo và chú thích, kèm kiểm tra quét trực tiếp."
+      },
+      "download": {
+        "title": "Thanh toán và tải xuống",
+        "text": "Đăng nhập bằng Google, trả một lần, tải lại PNG hoặc SVG bất cứ lúc nào."
+      }
+    },
+    "models": {
+      "title": "Bạn có đổi liên kết sau khi in không?",
+      "lead": "Chỉ câu hỏi đó quyết định bạn cần loại mã nào.",
+      "static": {
+        "badge": "Không · QR Tĩnh",
+        "text": "Liên kết được tích hợp vào họa tiết. Thanh toán một lần <b>{price}</b> cho mỗi mã."
+      },
+      "dynamic": {
+        "badge": "Có · QR Động",
+        "text": "Mã chứa một liên kết rút gọn cố định mà bạn có thể chuyển hướng bất cứ lúc nào. <b>{price}</b>/tháng cho tối đa {limit} mã."
+      }
+    },
+    "examples": {
+      "kicker": "Ví dụ",
+      "title": "Dành cho bản in và màn hình",
+      "lead": "Bắt đầu từ một bố cục thật, quét được và biến nó thành của bạn. Mỗi ví dụ mở trong trình chỉnh sửa với đầy đủ màu sắc, hình dạng và khung.",
+      "hint": "Cuộn để xem thêm",
+      "use": "Bắt đầu từ ví dụ {title}",
+      "useShort": "Dùng",
+      "items": {
+        "businessCard": {
+          "title": "Danh thiếp",
+          "kind": "Website · tĩnh"
+        },
+        "tableTent": {
+          "title": "Bảng để bàn quán cà phê",
+          "kind": "Wi-Fi · tĩnh"
+        },
+        "menuSticker": {
+          "title": "Nhãn dán menu",
+          "kind": "Website · động"
+        },
+        "eventPoster": {
+          "title": "Áp phích sự kiện",
+          "kind": "Website · động"
+        },
+        "contactBadge": {
+          "title": "Thẻ liên hệ",
+          "kind": "Liên hệ · tĩnh"
+        },
+        "windowSticker": {
+          "title": "Nhãn dán cửa kính",
+          "kind": "Website · tĩnh"
+        }
+      }
+    },
+    "features": {
+      "kicker": "Vì sao chọn HeyQR",
+      "title": "Mọi thứ một mã in ấn cần",
+      "lead": "Công cụ thiết kế không làm phiền bạn, và trình quét kiểm tra thành quả trước khi bạn thanh toán.",
+      "scan": {
+        "title": "Kiểm tra quét sau mỗi lần chỉnh sửa",
+        "text": "Chúng tôi đọc mã của bạn như camera điện thoại và cho bạn biết chính xác cần sửa gì: độ tương phản thấp, màu bị đảo hoặc logo che quá nhiều."
+      },
+      "style": {
+        "title": "Hình dạng và màu sắc của bạn",
+        "text": "Tám kiểu module, năm kiểu góc và bất kỳ màu nào bạn thích, độ tương phản luôn được kiểm soát."
+      },
+      "logo": {
+        "title": "Logo hoặc biểu tượng ở giữa",
+        "text": "Tải logo lên hoặc chọn trong {icons} biểu tượng. Chúng tôi chỉnh kích thước để mã vẫn đọc được."
+      },
+      "frames": {
+        "title": "Khung và chú thích",
+        "text": "{frames} khung với lời kêu gọi hành động như “Quét để xem menu”, hoặc văn bản ngắn ngay trong mã."
+      },
+      "files": {
+        "title": "Tệp sẵn sàng để in",
+        "text": "SVG vector và PNG sắc nét ở kích thước thật: danh thiếp, áp phích, bảng để bàn và nhãn dán."
+      },
+      "dynamic": {
+        "title": "Thay đổi sau khi in",
+        "text": "Mã động trỏ đến một liên kết rút gọn mà bạn có thể chuyển hướng bất cứ lúc nào, kèm số lượt quét hằng ngày."
+      }
+    },
+    "types": {
+      "kicker": "Chín loại nội dung",
+      "title": "Một studio cho mọi loại mã",
+      "lead": "Chọn nội dung mã sẽ mở. Biểu mẫu chỉ hỏi những gì loại đó cần.",
+      "website": {
+        "label": "Trang web",
+        "desc": "Mở một trang, portfolio hoặc menu."
+      },
+      "text": {
+        "label": "Văn bản",
+        "desc": "Hiển thị ghi chú, giờ mở cửa hoặc hướng dẫn."
+      },
+      "wifi": {
+        "label": "Wi-Fi",
+        "desc": "Khách vào mạng của bạn mà không cần gõ."
+      },
+      "contact": {
+        "label": "Danh thiếp liên hệ",
+        "desc": "Lưu tên, số điện thoại và email chỉ với một chạm."
+      },
+      "email": {
+        "label": "Email",
+        "desc": "Mở một email soạn sẵn để gửi."
+      },
+      "phone": {
+        "label": "Cuộc gọi",
+        "desc": "Gọi một số điện thoại chỉ với một chạm."
+      },
+      "sms": {
+        "label": "Tin nhắn",
+        "desc": "Bắt đầu một tin SMS với nội dung của bạn."
+      },
+      "location": {
+        "label": "Vị trí",
+        "desc": "Mở một địa điểm trong ứng dụng bản đồ."
+      },
+      "event": {
+        "label": "Sự kiện",
+        "desc": "Thêm sự kiện vào lịch."
+      },
+      "menu": {
+        "label": "Menu",
+        "desc": "Món ăn, danh mục và giá trên một trang thân thiện với điện thoại."
+      },
+      "coupon": {
+        "label": "Phiếu giảm giá",
+        "desc": "Ưu đãi giảm giá với mã khuyến mãi và ngày kết thúc."
+      },
+      "social": {
+        "label": "Liên kết mạng xã hội",
+        "desc": "Hồ sơ và liên kết của bạn trên một trang."
+      },
+      "business": {
+        "label": "Doanh nghiệp",
+        "desc": "Giờ mở cửa, địa chỉ, gọi điện và chỉ đường."
+      },
+      "apps": {
+        "label": "Ứng dụng",
+        "desc": "Một mã cho cả App Store và Google Play."
+      },
+      "pdf": {
+        "label": "Tài liệu PDF",
+        "desc": "Tải lên một tệp PDF mở được trên mọi điện thoại."
+      },
+      "product": {
+        "label": "Sản phẩm",
+        "desc": "Ảnh, giá và nút mua."
+      }
+    },
+    "faq": {
+      "kicker": "Câu hỏi",
+      "title": "Điều nên biết",
+      "lead": "Câu trả lời ngắn về thanh toán, tệp và việc quét mã.",
+      "items": {
+        "model": {
+          "q": "Tĩnh hay Động: tôi cần loại nào?",
+          "a": "Mã tĩnh có nội dung được tích hợp vào họa tiết và dùng mãi mãi sau một lần thanh toán {static}. Mã động chứa một liên kết rút gọn mà bạn có thể trỏ sang nơi khác sau khi in, với giá {dynamic}/tháng cho tối đa {limit} mã."
+        },
+        "scan": {
+          "q": "Mã của tôi có còn quét được khi có logo và màu sắc không?",
+          "a": "Mọi thay đổi đều được kiểm tra khi bạn thiết kế. Nếu độ tương phản quá thấp, màu bị đảo hoặc logo che quá nhiều, chúng tôi sẽ báo và đưa ra cách sửa chỉ với một chạm trước khi bạn thanh toán."
+        },
+        "account": {
+          "q": "Tôi có cần tài khoản để thiết kế không?",
+          "a": "Không. Thiết kế và xem trước đều miễn phí. Bạn chỉ đăng nhập bằng Google khi tải xuống, và thiết kế của bạn sẽ đi cùng bạn."
+        },
+        "files": {
+          "q": "Tôi nhận được những tệp nào?",
+          "a": "Một tệp PNG sắc nét cho màn hình và máy in, và một tệp SVG vector cho nhà in, cho mọi bố cục của mã bạn đã mua."
+        },
+        "again": {
+          "q": "Sau này tôi có tải lại tệp được không?",
+          "a": "Có. Mã của bạn được lưu trong Mã QR của tôi, và bạn có thể tải lại ở bất kỳ định dạng nào mà không mất thêm phí."
+        }
+      }
+    },
+    "cta": {
+      "label": "Bắt đầu",
+      "title": "Mã đầu tiên của bạn chỉ mất khoảng một phút.",
+      "lead": "Thiết kế miễn phí. Chỉ trả {price} khi bạn tải xuống.",
+      "pricing": "Xem bảng giá"
+    },
+    "studio": {
+      "kicker": "Studio của bạn",
+      "welcome": "Chào mừng trở lại, {name}",
+      "summaryTop": "{name} đã được quét {count, plural, other {# lần}} hôm nay. Mọi thứ bạn tạo chỉ cách một chạm.",
+      "summary": "Mọi thứ bạn tạo chỉ cách một chạm: tệp, liên kết và lượt quét.",
+      "summaryEmpty": "Tạo mã đầu tiên và nó sẽ xuất hiện ở đây cùng tệp và lượt quét.",
+      "billing": "Gói & thanh toán",
+      "library": "Mở Mã QR của tôi",
+      "kpi": {
+        "codes": "Mã QR",
+        "codesNote": "{paid} đã thanh toán · {drafts, plural, other {# bản nháp}}",
+        "scans": "Lượt quét · 14 ngày",
+        "scansNone": "Chưa có lượt quét",
+        "scansDelta": "{delta, number, ::sign-always percent} so với tuần trước",
+        "dynamic": "Mã động",
+        "dynamicNote": "Còn {left, plural, other {# suất}} trong gói của bạn",
+        "dynamicMeter": "Mã động đang dùng",
+        "files": "Tệp sẵn sàng",
+        "filesNote": "{count, plural, other {bố cục}} để tải dưới dạng PNG hoặc SVG"
+      },
+      "chart": {
+        "title": "Lượt quét · 14 ngày qua",
+        "sub": "Tất cả mã động",
+        "empty": "Lượt quét mã động của bạn sẽ hiển thị ở đây.",
+        "today": "Hôm nay",
+        "label": "Lượt quét hằng ngày của các mã động trong 14 ngày qua"
+      },
+      "top": "Mã nổi bật",
+      "topNote": "{count, plural, other {# lượt quét}} trong 14 ngày · {link}",
+      "topNone": "Chưa có mã động",
+      "topNoneNote": "Mã động đếm mọi lượt quét.",
+      "recent": "Mã gần đây",
+      "seeAll": "Xem tất cả {count}",
+      "recentEmpty": "Mã của bạn sẽ nằm ở đây, cùng tệp và lượt quét.",
+      "createFirst": "Tạo mã đầu tiên",
+      "open": "Mở",
+      "openName": "Mở {name}",
+      "status": {
+        "dynamic": "Động · đang hoạt động",
+        "paid": "Đã thanh toán",
+        "draft": "Bản nháp"
+      },
+      "metricScans": "{count, plural, other {# lượt quét}}",
+      "metricLayouts": "{count, plural, other {# bố cục}}",
+      "metricFinish": "Hoàn tất để tải xuống",
+      "perksTitle": "Có sẵn trong tài khoản của bạn",
+      "perks": {
+        "again": "Tải lại miễn phí mọi bố cục đã thanh toán, dạng PNG hoặc SVG",
+        "redirect": "Trỏ mã động sang nơi mới mà không cần in lại",
+        "scans": "Số lượt quét hằng ngày cho mọi mã động",
+        "drafts": "Bản nháp được lưu vào tài khoản trên mọi thiết bị",
+        "billing": "Biên lai, gói và phương thức thanh toán trong Gói & thanh toán"
+      },
+      "loading": "Đang tải studio của bạn",
+      "trial": "Dùng thử miễn phí · còn {days, plural, other {# ngày}}"
+    },
+    "workspace": {
+      "kicker": "Mã QR của tôi",
+      "title": "Mọi mã QR ở cùng một nơi.",
+      "lead": "Không gian làm việc riêng tư của bạn khi đăng nhập. Mỗi mã bạn thiết kế đều giữ bố cục, tệp và, với mã Động, cả lượt quét.",
+      "points": {
+        "layouts": "Bố cục có tên cho mỗi mã: danh thiếp, áp phích, website",
+        "files": "Tải lại PNG và SVG bất cứ lúc nào",
+        "edit": "Đổi đích đến của mã Động sau khi in",
+        "scans": "Lượt quét hằng ngày cho mã Động"
+      },
+      "create": "Tạo mã QR",
+      "signIn": "Đăng nhập",
+      "sampleOwner": "Không gian mẫu",
+      "sampleBadge": "Mẫu",
+      "sampleNote": "Mã và lượt quét mẫu chỉ để minh họa. Đăng nhập để xem của bạn.",
+      "tabs": {
+        "all": "Tất cả {count}",
+        "static": "Tĩnh {count}",
+        "dynamic": "Động {count}"
+      },
+      "models": {
+        "static": "Tĩnh",
+        "dynamic": "Động"
+      },
+      "samples": {
+        "portfolio": {
+          "name": "Thẻ portfolio",
+          "meta": "3 bố cục · đã mua"
+        },
+        "menu": {
+          "name": "Menu quán cà phê",
+          "meta": "Bảng để bàn · 214 lượt quét"
+        },
+        "wifi": {
+          "name": "Wi-Fi cho khách",
+          "meta": "Bản nháp"
+        }
+      },
+      "scans": "Phân tích lượt quét · 14 ngày qua",
+      "startTrial": "Bắt đầu dùng thử miễn phí 7 ngày",
+      "trialNote": "Dùng thử Starter · không cần thẻ · không tự động tính phí"
+    },
+    "printPack": {
+      "kicker": "Print Pack",
+      "title": "Từ màn hình của bạn đến nhà in.",
+      "lead": "Thêm Print Pack cho bất kỳ mã QR nào và giao cho nhà in mọi thứ trong một lần tải: đúng kích thước, đúng màu và một tệp luôn sắc nét.",
+      "cardTag": "Danh thiếp · 90 × 50 mm",
+      "labelTag": "Nhãn bao bì · 50 × 62 mm",
+      "cardLabel": "Bố cục in danh thiếp",
+      "labelLabel": "Bố cục in nhãn bao bì",
+      "panelKicker": "Xuất · Print Pack",
+      "panelTitle": "Ba tệp, sẵn sàng để in",
+      "perQr": "mỗi mã QR",
+      "files": {
+        "pdf": "PDF in vector",
+        "pdfSub": "Sắc nét ở mọi kích thước, có lề tràn 3 mm và dấu cắt, hệ màu sRGB.",
+        "svg": "SVG chỉnh sửa được",
+        "svgSub": "Mở trong Illustrator, Figma hoặc Inkscape để đặt mã QR lên thiết kế của riêng bạn.",
+        "spec": "Thông số màu và kích thước",
+        "specSub": "Một trang gồm kích thước thành phẩm, kích thước mã QR, vùng trống và mọi giá trị màu."
+      },
+      "addNote": "Tắt cho đến khi bạn bật lúc thanh toán. Thêm với giá +{price}, hoặc sau này từ trang chi tiết mã QR.",
+      "single": "QR đơn lẻ",
+      "withPack": "Kèm Print Pack",
+      "details": "Xem chi tiết Print Pack",
+      "preview": "Mở Xem trước bản in"
+    },
+    "explore": {
+      "kicker": "Khám phá các loại QR",
+      "title": "Một studio cho mọi loại mã",
+      "lead": "Chọn một loại để xem mọi người nhận được gì trên điện thoại sau khi quét.",
+      "tabs": "Các loại QR",
+      "legend": "Trang lưu trữ: HeyQR giữ trang luôn trực tuyến và bạn có thể chỉnh sửa sau khi in",
+      "hostedBadge": "Trang lưu trữ · QR Động",
+      "websiteBadge": "QR Tĩnh hoặc Động",
+      "directBadge": "Mở trực tiếp · QR Tĩnh",
+      "hostedExtra": "Chỉnh sửa trang sau khi in. Mã vẫn giữ nguyên",
+      "directExtra": "Thiết kế và xem trước miễn phí",
+      "hostedPrice": "Trang lưu trữ cần gói Động: Starter {price}/tháng, dùng thử miễn phí 7 ngày.",
+      "directPrice": "Thiết kế miễn phí. {price} cho mỗi mã khi bạn tải xuống.",
+      "whatYouGet": "Bạn nhận được gì",
+      "allTypes": "Xem cả 16 loại",
+      "types": {
+        "menu": {
+          "short": "Món ăn và giá",
+          "use": "Đặt cả thực đơn lên bàn. Khách quét mã, xem theo từng mục và thấy giá mà không phải chờ bản in.",
+          "cta": "Tạo QR Menu",
+          "points": {
+            "a": "Danh mục, món ăn, giá và ảnh tùy chọn",
+            "b": "Đổi giá bất cứ lúc nào; mã đã in vẫn hoạt động"
+          }
+        },
+        "coupon": {
+          "short": "Ưu đãi khách hàng nhận được",
+          "use": "Biến một lần quét thành đơn hàng với mã mà khách sao chép khi thanh toán hoặc đưa ra tại quầy.",
+          "cta": "Tạo QR Phiếu giảm giá",
+          "points": {
+            "a": "Mã khuyến mãi, ngày kết thúc và điều kiện",
+            "b": "Hiển thị trang “ưu đãi đã kết thúc” rõ ràng sau khi hết hạn"
+          }
+        },
+        "social": {
+          "short": "Tất cả hồ sơ của bạn",
+          "use": "Một mã cho mọi hồ sơ bạn chia sẻ: portfolio, tài khoản mạng xã hội và hơn thế nữa, theo thứ tự bạn chọn.",
+          "cta": "Tạo QR Liên kết mạng xã hội",
+          "points": {
+            "a": "Ảnh, tên và tiểu sử ngắn",
+            "b": "Sắp xếp lại liên kết bất cứ khi nào bạn muốn"
+          }
+        },
+        "business": {
+          "short": "Giờ mở cửa, gọi điện, chỉ đường",
+          "use": "Mọi thứ khách cần để liên hệ bạn: giờ mở cửa, nút gọi, chỉ đường và website của bạn.",
+          "cta": "Tạo QR Doanh nghiệp",
+          "points": {
+            "a": "Nút Gọi, Chỉ đường và Website xuất hiện khi bạn thêm các thông tin đó",
+            "b": "Hiển thị hôm nay bạn có mở cửa hay không"
+          }
+        },
+        "apps": {
+          "short": "Cả hai kho ứng dụng",
+          "use": "Đưa iPhone đến App Store và điện thoại Android đến Google Play từ cùng một mã in.",
+          "cta": "Tạo QR Ứng dụng",
+          "points": {
+            "a": "Dùng được với một hoặc cả hai kho",
+            "b": "Máy tính sẽ thấy trang có cả hai liên kết và một mã để quét"
+          }
+        },
+        "pdf": {
+          "short": "Chia sẻ tài liệu",
+          "use": "Tờ rơi, lịch trình hay sách hướng dẫn: tải lên một tệp PDF và mọi người mở trên điện thoại chỉ với một chạm.",
+          "cta": "Tạo QR PDF",
+          "points": {
+            "a": "Thay tệp sau này mà không cần in lại",
+            "b": "Nút Mở PDF và Tải xuống"
+          }
+        },
+        "product": {
+          "short": "Trang sản phẩm",
+          "use": "Giới thiệu sản phẩm với ảnh, giá và nút mua, ngay từ bao bì hoặc kệ hàng.",
+          "cta": "Tạo QR Sản phẩm",
+          "points": {
+            "a": "Tối đa 5 ảnh, giá tùy chọn",
+            "b": "Nút của bạn: Mua ngay, Xem sản phẩm hoặc Đặt hàng ngay"
+          }
+        },
+        "website": {
+          "short": "Mở trang web",
+          "use": "Đưa mọi người đến bất kỳ trang nào: portfolio, cửa hàng hoặc biểu mẫu đặt lịch.",
+          "cta": "Tạo QR Website",
+          "points": {
+            "a": "Tĩnh, hoặc Động nếu liên kết có thể thay đổi",
+            "b": "Kiểm tra quét trực tiếp khi bạn thiết kế"
+          }
+        },
+        "wifi": {
+          "short": "Kết nối Wi-Fi",
+          "use": "Khách chỉ cần hướng camera là vào được mạng của bạn. Không ai phải đọc mật khẩu.",
+          "cta": "Tạo QR Wi-Fi",
+          "points": {
+            "a": "Mạng WPA, WEP hoặc mạng mở",
+            "b": "Hoạt động ngoại tuyến: thông tin nằm sẵn trong mã"
+          }
+        },
+        "contact": {
+          "short": "Lưu liên hệ",
+          "use": "Danh thiếp lưu tên, số điện thoại và email của bạn thẳng vào danh bạ của họ.",
+          "cta": "Tạo QR Liên hệ",
+          "points": {
+            "a": "Hoạt động trên iPhone và Android",
+            "b": "Không cần ứng dụng"
+          }
+        }
+      }
+    }
+  },
+  "pricing": {
+    "title": "Bảng giá",
+    "head": "Trả một lần cho một mã, hoặc trả hằng tháng cho các mã bạn có thể thay đổi.",
+    "lead": "Thiết kế, xem trước và kiểm tra quét luôn miễn phí. Bạn chỉ trả khi tải xuống.",
+    "currency": {
+      "label": "Hiển thị giá bằng",
+      "unavailable": "Chưa có giá bằng {chosen}. HeyQR tính phí bằng {charged}; ngân hàng của bạn sẽ quy đổi số tiền. Biên lai hiển thị số {charged} bạn đã trả."
+    },
+    "once": {
+      "title": "Một lần",
+      "sub": "Không đăng ký. Mã bạn đã mở khóa thuộc về bạn."
+    },
+    "monthly": {
+      "title": "Hằng tháng",
+      "sub": "Dành cho mã QR Động bạn có thể thay đổi sau khi in. Hủy bất cứ lúc nào."
+    },
+    "free": {
+      "name": "Miễn phí",
+      "price": "{price}",
+      "q": "Thiết kế và thử mã trước khi bạn chi bất kỳ khoản nào.",
+      "points": [
+        "Mọi bố cục, hình dạng, màu sắc, logo và chú thích",
+        "Kiểm tra quét trực tiếp sau mỗi thay đổi",
+        "Bản nháp được lưu trong trình duyệt này"
+      ],
+      "cta": "Bắt đầu thiết kế"
+    },
+    "single": {
+      "name": "QR đơn lẻ",
+      "price": "{price}",
+      "per": "một lần",
+      "q": "Một mã QR tĩnh kèm mọi lượt tải xuống.",
+      "points": ["PNG và SVG của mọi bố cục", "Kích thước in theo mm và kích thước màn hình theo px", "Tải lại bất cứ lúc nào, mãi mãi"],
+      "cta": "Tạo mã QR"
+    },
+    "dynamic": {
+      "name": "Động",
+      "price": "{price}",
+      "per": "mỗi tháng",
+      "q": "Một liên kết rút gọn cố định mà bạn có thể trỏ đến bất kỳ đâu, kể cả sau khi in.",
+      "live": "Mã Động đang hoạt động",
+      "liveCount": "Tối đa {limit} mã hoạt động cùng lúc",
+      "liveHint": "Đây là số mã đang hoạt động, không phải hạn mức hằng tháng: tạm dừng hoặc xóa một mã sẽ giải phóng suất của nó.",
+      "points": [
+        "Đổi đích đến bất cứ lúc nào; mã đã in vẫn giữ nguyên",
+        "Lượt quét hằng ngày trong 14 ngày qua",
+        "PNG và SVG của mọi bố cục"
+      ],
+      "cta": "Tạo QR Động"
+    },
+    "compare": {
+      "title": "So sánh",
+      "feature": "Bạn nhận được gì",
+      "free": "Miễn phí",
+      "single": "QR đơn lẻ",
+      "dynamic": "Động",
+      "yes": "Có",
+      "no": "Không có",
+      "rows": {
+        "design": "Thiết kế, xem trước và kiểm tra quét",
+        "download": "Tải PNG và SVG",
+        "repeat": "Tải lại",
+        "change": "Đổi nơi mã dẫn đến",
+        "analytics": "Phân tích lượt quét",
+        "codes": "Số mã"
+      },
+      "codesSingle": "1 mã mỗi lần mua",
+      "codesDynamic": "{limit} đang hoạt động",
+      "codesFree": "Bản nháp không giới hạn"
+    },
+    "tax": "Giá chưa gồm thuế. Stripe sẽ cộng thuế khi thanh toán và biên lai hiển thị số tiền cuối cùng.",
+    "trial": {
+      "action": "Bắt đầu dùng thử miễn phí 7 ngày",
+      "note": "Dùng thử: không cần thẻ, không tự động tính phí. Một mã QR Động thử nghiệm với liên kết rút gọn thật."
+    }
+  },
+  "auth": {
+    "title": "Đăng nhập Hey QR",
+    "lead": "Thiết kế của bạn được lưu vào tài khoản để bạn có thể tải xuống sau khi thanh toán.",
+    "google": "Tiếp tục với Google",
+    "legal": "Khi tiếp tục, bạn đồng ý với Điều khoản và Chính sách quyền riêng tư.",
+    "failed": "Đăng nhập thất bại. Vui lòng thử lại.",
+    "canceled": {
+      "draft": "Đăng nhập Google đã bị hủy. Thiết kế của bạn vẫn được lưu trong trình duyệt này. Chọn Tiếp tục với Google để thử lại.",
+      "plain": "Đăng nhập Google đã bị hủy. Chọn Tiếp tục với Google để thử lại."
+    },
+    "incomplete": {
+      "draft": "Đăng nhập Google chưa hoàn tất. Thiết kế của bạn vẫn được lưu trong trình duyệt này. Chọn Tiếp tục với Google để thử lại.",
+      "plain": "Đăng nhập Google chưa hoàn tất. Chọn Tiếp tục với Google để thử lại."
+    },
+    "backToDesign": "Quay lại thiết kế của tôi"
+  },
+  "contentTypes": {
+    "website": "Trang web",
+    "text": "Văn bản",
+    "wifi": "Wi-Fi",
+    "contact": "Liên hệ",
+    "email": "Email",
+    "phone": "Điện thoại",
+    "sms": "SMS",
+    "location": "Vị trí",
+    "event": "Sự kiện",
+    "menu": "Menu",
+    "coupon": "Phiếu giảm giá",
+    "social": "Liên kết mạng xã hội",
+    "business": "Doanh nghiệp",
+    "apps": "Ứng dụng",
+    "pdf": "Tài liệu PDF",
+    "product": "Sản phẩm"
+  },
+  "fields": {
+    "url": "Địa chỉ website",
+    "text": "Văn bản",
+    "ssid": "Tên mạng",
+    "security": "Bảo mật",
+    "password": "Mật khẩu",
+    "hidden": "Mạng này bị ẩn",
+    "firstName": "Tên",
+    "lastName": "Họ",
+    "title": "Chức danh",
+    "company": "Công ty",
+    "phone": "Điện thoại",
+    "email": "Email",
+    "website": "Trang web",
+    "to": "Địa chỉ email",
+    "subject": "Tiêu đề",
+    "body": "Nội dung",
+    "number": "Số điện thoại",
+    "message": "Tin nhắn",
+    "name": "Tên địa điểm",
+    "address": "Địa chỉ",
+    "eventTitle": "Tên sự kiện",
+    "start": "Bắt đầu",
+    "end": "Kết thúc",
+    "place": "Địa điểm",
+    "securityNone": "Không mật khẩu",
+    "securityWpa": "WPA/WPA2/WPA3",
+    "date": "Ngày"
+  },
+  "editor": {
+    "openLibrary": "Mở Mã QR của tôi",
+    "title": "Tạo mã QR",
+    "steps": {
+      "content": "Nội dung",
+      "design": "Thiết kế",
+      "frame": "Khung",
+      "type": "Loại"
+    },
+    "type": "Mã sẽ mở gì?",
+    "model": {
+      "label": "Loại mã",
+      "static": "Tĩnh",
+      "staticHint": "Trả một lần, dùng mãi mãi",
+      "dynamic": "Động",
+      "dynamicHint": "Đổi liên kết sau khi in"
+    },
+    "name": "Tên (chỉ bạn thấy)",
+    "namePlaceholder": "Thẻ portfolio",
+    "pattern": "Module",
+    "eyeFrame": "Khung góc",
+    "eyeBall": "Tâm góc",
+    "colors": "Màu sắc",
+    "fg": "Module",
+    "bg": "Nền",
+    "logo": "Ở giữa",
+    "logoNone": "Không có",
+    "logoUpload": "Tải logo lên",
+    "logoSize": "Kích thước logo",
+    "layout": "Bố cục",
+    "presets": {
+      "qr": "Chỉ mã QR",
+      "caption": "QR + chú thích",
+      "vertical": "Thẻ dọc",
+      "horizontal": "Thẻ ngang",
+      "frame": "Khung"
+    },
+    "frameStyle": "Kiểu khung",
+    "caption": "Chú thích",
+    "captionPlaceholder": "Quét tôi",
+    "preview": "Xem trước",
+    "previewNote": "Bản xem trước có hình mờ. Tệp kích thước đầy đủ được tạo sau khi thanh toán.",
+    "download": "Tải xuống",
+    "saving": "Đang lưu…",
+    "draftRestored": "Chúng tôi đã khôi phục thiết kế gần nhất của bạn.",
+    "scanOk": "Đã xác minh quét",
+    "scanFix": "Sửa",
+    "shapes": {
+      "square": "Vuông",
+      "rounded": "Bo tròn",
+      "dot": "Chấm",
+      "diamond": "Kim cương",
+      "leaf": "Lá",
+      "fluid": "Mềm mại",
+      "vbars": "Dọc",
+      "hbars": "Ngang",
+      "cushion": "Mềm",
+      "circle": "Tròn"
+    },
+    "frames": {
+      "bar": "Nhãn dưới",
+      "tab": "Thẻ trên",
+      "bubble": "Bong bóng thoại",
+      "pill": "Nhãn viên thuốc",
+      "corners": "Khung ngắm",
+      "circle": "Huy hiệu",
+      "ticket": "Vé",
+      "phone": "Điện thoại"
+    },
+    "icons": {
+      "globe": "Trang web",
+      "link": "Liên kết",
+      "wifi": "Wi-Fi",
+      "phone": "Điện thoại",
+      "mail": "Email",
+      "message": "Tin nhắn",
+      "pin": "Vị trí",
+      "calendar": "Lịch",
+      "clock": "Giờ mở cửa",
+      "user": "Cá nhân",
+      "users": "Nhóm",
+      "briefcase": "Công việc",
+      "home": "Nhà",
+      "bag": "Cửa hàng",
+      "cart": "Giỏ hàng",
+      "coffee": "Cà phê",
+      "utensils": "Menu",
+      "wine": "Quầy bar",
+      "music": "Âm nhạc",
+      "play": "Video",
+      "camera": "Ảnh",
+      "image": "Thư viện ảnh",
+      "heart": "Thích",
+      "star": "Đánh giá",
+      "gift": "Quà tặng",
+      "ticket": "Vé",
+      "tag": "Giá",
+      "percent": "Giảm giá",
+      "card": "Thanh toán",
+      "download": "Tải xuống",
+      "file": "Tài liệu",
+      "book": "Hướng dẫn",
+      "leaf": "Sinh thái",
+      "sun": "Ngoài trời",
+      "bike": "Xe đạp",
+      "plane": "Du lịch",
+      "at": "Mạng xã hội",
+      "smile": "Góp ý"
+    },
+    "back": "Trang chủ",
+    "stepsLabel": "Tạo mã QR",
+    "settings": "Cài đặt thiết kế",
+    "scanFailed": "Có thể không quét được",
+    "priceOnce": "{price} một lần",
+    "pricePerMonth": "{price} / tháng",
+    "previewFree": "Xem trước miễn phí · trả khi tải xuống",
+    "draftUnreadable": "Chúng tôi không mở được thiết kế gần nhất của bạn, nên bạn sẽ bắt đầu lại từ đầu. Thiết kế đó vẫn được giữ trong trình duyệt này.",
+    "mode": {
+      "question": "Liên kết có thể thay đổi sau khi in không?",
+      "lead": "Hãy quyết định ngay: mã tĩnh đã in không thể trỏ sang nơi khác sau này.",
+      "static": {
+        "eyebrow": "Không, giữ nguyên",
+        "title": "QR Tĩnh",
+        "text": "Nội dung được tích hợp vào họa tiết. Muốn đổi thì cần một mã mới. Trả một lần: {price}."
+      },
+      "dynamic": {
+        "eyebrow": "Có, tôi có thể đổi",
+        "title": "QR Động",
+        "text": "Mã chứa một liên kết rút gọn cố định. Đổi nơi nó dẫn đến và xem lượt quét hằng ngày. {price}/tháng."
+      },
+      "unavailable": "Mã {type} luôn là mã tĩnh: nội dung được đưa thẳng vào họa tiết. Động chỉ dành cho liên kết website.",
+      "switched": "Mã {type} là mã tĩnh, nên mã này giờ là Tĩnh. Động chỉ dành cho liên kết website.",
+      "adjusted": "Bản nháp của bạn là Động, nhưng chỉ liên kết website mới có thể là động, nên giờ nó là Tĩnh. Nội dung và thiết kế của bạn không thay đổi."
+    },
+    "backTo": {
+      "home": "Trang chủ",
+      "type": "Loại",
+      "content": "Nội dung"
+    },
+    "continue": "Tiếp tục",
+    "export": "Xuất",
+    "previewFrom": "Xem trước miễn phí · tải xuống từ {price}",
+    "optional": "tùy chọn",
+    "frameGroup": {
+      "title": "Khung quanh mã",
+      "count": "{count} tùy chọn",
+      "none": "Không khung",
+      "text": "Chữ trên khung",
+      "textHint": "Chữ tự điều chỉnh kích thước cho vừa khung. Phông chữ và độ đậm nằm ở mục Chú thích.",
+      "quick": "Chữ nhanh",
+      "phrases": {
+        "scanMe": "Quét tôi",
+        "callMe": "Gọi tôi",
+        "menu": "Menu",
+        "wifi": "Wi-Fi",
+        "payHere": "Thanh toán tại đây",
+        "reviewUs": "Đánh giá chúng tôi",
+        "followUs": "Theo dõi chúng tôi",
+        "bookNow": "Đặt ngay"
+      },
+      "color": "Màu khung",
+      "textColor": "Màu chữ",
+      "presets": "Bộ màu có sẵn",
+      "presetsHint": "Khung · mã · nền",
+      "preset": "Khung {frame}, mã {code}, nền {bg}",
+      "white": "Trắng",
+      "graphite": "Than chì",
+      "violetUi": "Tím"
+    },
+    "typeStep": {
+      "title": "Mã của bạn sẽ mở gì?",
+      "lead": "Mọi thứ đều có thể dùng thử miễn phí. Bạn chỉ trả khi tải tệp hoàn chỉnh.",
+      "groupLabel": "Loại QR",
+      "example": "vd: {example}",
+      "next": "Tiếp theo: thêm nội dung",
+      "examples": {
+        "website": "anareyes.studio/portfolio",
+        "text": "“Bấm chuông hai lần”",
+        "wifi": "Reyes Studio Guest",
+        "contact": "Ana Reyes · Nhà thiết kế",
+        "email": "hello@reyes.studio",
+        "phone": "+1 415 555 0142",
+        "sms": "“RSVP có”",
+        "location": "21 Pier St, San Francisco",
+        "event": "Triển lãm mùa xuân · 5 thg 12",
+        "menu": "Menu Little Fern Café",
+        "coupon": "Giảm 20% lớp làm gốm",
+        "social": "@ana.makes, portfolio, YouTube",
+        "business": "Reyes Ceramics Studio",
+        "apps": "Ứng dụng Fern Rewards",
+        "pdf": "Lịch học mùa xuân",
+        "product": "Cốc gốm đá lốm đốm"
+      },
+      "directGroup": "Mở thẳng từ mã",
+      "directGroupLabel": "Các loại QR mở trực tiếp",
+      "hostedGroup": "Trang lưu trữ",
+      "hostedNew": "Mới",
+      "hostedLead": "HeyQR lưu trữ một trang di động cho các loại này và mã chứa một liên kết rút gọn Động, nên bạn có thể chỉnh sửa trang sau khi in. Chúng cần gói Động: Starter {starter}/tháng hoặc Studio {studio}/tháng, kèm 7 ngày dùng thử miễn phí.",
+      "hostedSummary": "{type} · Trang lưu trữ · Động"
+    },
+    "contentStep": {
+      "titles": {
+        "website": "Mã sẽ mở trang nào?",
+        "text": "Mọi người sẽ đọc gì?",
+        "wifi": "Khách sẽ kết nối mạng nào?",
+        "contact": "Mọi người sẽ lưu liên hệ của ai?",
+        "email": "Email sẽ gửi đến ai?",
+        "phone": "Mã sẽ gọi số nào?",
+        "sms": "Ai sẽ nhận tin nhắn?",
+        "location": "Mã sẽ mở địa điểm nào?",
+        "event": "Sự kiện là gì?",
+        "menu": "Thực đơn có gì?",
+        "coupon": "Ưu đãi là gì?",
+        "social": "Mọi người sẽ tìm thấy những liên kết nào?",
+        "business": "Mọi người liên hệ bạn bằng cách nào?",
+        "apps": "Mọi người tải ứng dụng của bạn ở đâu?",
+        "pdf": "Tài liệu nào sẽ được mở?",
+        "product": "Bạn đang giới thiệu sản phẩm nào?"
+      },
+      "subs": {
+        "website": "Dán địa chỉ đầy đủ. Bạn sẽ thấy mọi người nhận được gì sau khi quét.",
+        "text": "Văn bản thuần hiển thị trên điện thoại ngay sau khi quét.",
+        "wifi": "Điện thoại kết nối mạng sau khi quét. Không cần gõ.",
+        "contact": "Điện thoại sẽ đề nghị lưu liên hệ này sau khi quét.",
+        "email": "Quét mã sẽ mở một email mới với địa chỉ, tiêu đề và nội dung đã điền sẵn.",
+        "phone": "Quét mã sẽ đề nghị gọi số này. Không cần gõ.",
+        "sms": "Quét mã sẽ mở một tin nhắn, sẵn sàng để gửi.",
+        "location": "Quét mã sẽ mở địa điểm trong ứng dụng bản đồ của điện thoại.",
+        "event": "Quét mã sẽ đề nghị thêm sự kiện vào lịch.",
+        "menu": "Thêm danh mục và món ăn. Khách thấy thực đơn thân thiện với điện thoại sau khi quét.",
+        "coupon": "Mọi người thấy ưu đãi, sao chép mã và sử dụng trước khi hết hạn.",
+        "social": "Một trang có ảnh, tiểu sử ngắn và các liên kết của bạn, theo thứ tự của bạn.",
+        "business": "Nút gọi, chỉ đường và website xuất hiện khi bạn thêm các thông tin đó.",
+        "apps": "Điện thoại chuyển thẳng đến kho ứng dụng của nó. Thiết bị khác thấy cả hai liên kết.",
+        "pdf": "Tải tệp PDF lên. Mọi người mở hoặc tải xuống chỉ với một chạm.",
+        "product": "Ảnh, giá và một nút rõ ràng để mua hoặc tìm hiểu thêm."
+      },
+      "nameLabel": "Tên trong Mã QR của tôi",
+      "stepOf": "Bước 2/3",
+      "kept": "Thông tin bạn nhập vẫn được giữ nếu bạn quay lại.",
+      "continue": "Tiếp tục thiết kế",
+      "errorsOne": "Sửa trường được đánh dấu để tiếp tục. Mọi thứ khác đã được lưu.",
+      "errorsMany": "Sửa {count} trường được đánh dấu để tiếp tục. Mọi thứ khác đã được lưu.",
+      "back": "Quay lại",
+      "urlHint": "Địa chỉ này được tích hợp vào mã. Để sau này trỏ mã đã in sang nơi khác, hãy chọn Động ở bước trước.",
+      "urlHintDynamic": "Mã của bạn sẽ chứa một liên kết rút gọn cố định. Đây là nơi nó đưa mọi người đến, và bạn có thể đổi sau khi in.",
+      "nameHint": "Chỉ bạn thấy tên này.",
+      "namePlaceholderType": "QR {type}"
+    },
+    "errors": {
+      "urlEmpty": "Nhập địa chỉ web, ví dụ yourname.com.",
+      "urlSpaces": "Địa chỉ web không được chứa dấu cách.",
+      "urlInvalid": "Kiểm tra lại địa chỉ. Địa chỉ cần có tên miền, ví dụ yourname.com.",
+      "text": "Nhập văn bản mọi người sẽ thấy sau khi quét.",
+      "ssid": "Nhập tên mạng chính xác như hiển thị trên điện thoại.",
+      "password": "Nhập mật khẩu Wi-Fi, hoặc chọn “Không mật khẩu”.",
+      "passwordShort": "Mật khẩu WPA có ít nhất 8 ký tự.",
+      "contactName": "Thêm ít nhất tên hoặc họ.",
+      "phone": "Dùng chữ số, dấu cách và dấu + tùy chọn cho mã quốc gia.",
+      "email": "Kiểm tra lại địa chỉ email. Địa chỉ cần có tên, @ và tên miền, ví dụ ana@studio.com.",
+      "emailTo": "Nhập địa chỉ sẽ nhận email.",
+      "emailInvalid": "Kiểm tra lại địa chỉ. Địa chỉ cần có tên, @ và tên miền.",
+      "phoneNumber": "Nhập số điện thoại kèm mã quốc gia, ví dụ +1 415 555 0142.",
+      "smsTo": "Nhập số sẽ nhận tin nhắn.",
+      "address": "Nhập địa chỉ ứng dụng bản đồ sẽ mở.",
+      "eventTitle": "Đặt tên cho sự kiện.",
+      "eventStart": "Chọn một ngày."
+    },
+    "afterScanning": {
+      "label": "Sau khi quét",
+      "toggleHint": "Xem mọi người nhận được gì trên điện thoại",
+      "caption": "Những gì mọi người thấy sau khi quét",
+      "websitePlaceholder": "Trang web của bạn",
+      "dynamicNote": "Mở liên kết rút gọn của bạn trước, rồi chuyển hướng đến đây.",
+      "textPlaceholder": "Văn bản của bạn hiển thị ở đây.",
+      "wifiPlaceholder": "Kết nối mạng?",
+      "security": "Bảo mật",
+      "open": "Mạng mở",
+      "password": "Mật khẩu",
+      "join": "Kết nối mạng",
+      "contactPlaceholder": "Liên hệ mới",
+      "phone": "Điện thoại",
+      "email": "Email",
+      "company": "Công ty",
+      "save": "Thêm vào danh bạ",
+      "emailPlaceholder": "Email mới",
+      "subject": "Tiêu đề",
+      "compose": "Soạn email",
+      "phonePlaceholder": "Số điện thoại",
+      "call": "Gọi",
+      "message": "Tin nhắn",
+      "text": "Gửi tin nhắn",
+      "locationPlaceholder": "Một địa điểm",
+      "address": "Địa chỉ",
+      "openMaps": "Mở trong Bản đồ",
+      "eventPlaceholder": "Sự kiện mới",
+      "place": "Địa điểm",
+      "addToCalendar": "Thêm vào lịch",
+      "wifiKicker": "Kết nối mạng Wi-Fi",
+      "website": "Trang web",
+      "textKicker": "Văn bản đã quét",
+      "loading": "Đang tải bản xem trước",
+      "date": "Ngày",
+      "addEvent": "Thêm sự kiện"
+    },
+    "passwordShow": "Hiện",
+    "passwordHide": "Ẩn",
+    "wifiPasswordHint": "Bản xem trước ẩn mật khẩu. Mật khẩu được lưu ngay trong mã, nên bất kỳ ai quét cũng có thể kết nối.",
+    "tooLong": {
+      "title": "Quá dài cho một mã QR",
+      "text": "Nội dung vượt khoảng {over}% so với dung lượng mã QR có thể chứa. Rút ngắn nội dung và mã sẽ hiện lại ngay. Bạn không mất gì đã nhập.",
+      "centerHint": "Logo hoặc chú thích ở giữa mã làm giảm giới hạn. Gỡ chúng đi cũng giúp có thêm chỗ.",
+      "detail": "{bytes}/{max} byte",
+      "edit": "Sửa nội dung",
+      "badge": "Quá dài",
+      "preview": "Không hiển thị mã QR: nội dung quá dài"
+    },
+    "eyeColor": "Khung góc",
+    "eyeInColor": "Tâm góc",
+    "resetColors": "Đặt lại màu",
+    "colorInvalid": "Dùng màu HEX như #1F4D3A: dấu # và 6 ký tự từ 0–9 và A–F.",
+    "size": {
+      "title": "Kích thước",
+      "unitHint": "Dành cho màn hình, trình chiếu và web. 1 đơn vị = 1 pixel ở 1×.",
+      "qr": "Kích thước mã QR",
+      "qrSlider": "Thanh trượt kích thước mã QR",
+      "clamped": "Mã này không vừa bố cục: nó được vẽ ở {shown} {unit}, kích thước lớn nhất vừa được. Hãy làm bố cục lớn hơn hoặc mã nhỏ hơn.",
+      "layout": "Kích thước bố cục",
+      "width": "Chiều rộng",
+      "height": "Chiều cao",
+      "locked": "Với “Chỉ mã QR” và “Khung”, bố cục theo kích thước mã. Chọn “QR + chú thích” hoặc một thẻ để tự đặt kích thước.",
+      "presets": {
+        "square": "Vuông 1080",
+        "story": "Story 1080×1920",
+        "slide": "Trình chiếu 1920×1080",
+        "card": "Danh thiếp 90×50",
+        "a6": "A6 105×148",
+        "sticker": "Nhãn dán 50×62"
+      },
+      "invalid": "Nhập số nguyên từ {min} đến {max} {unit}.",
+      "units": "Đơn vị",
+      "unitMm": "In · mm",
+      "unitPx": "Màn hình · px",
+      "unitHintMm": "Dành cho in ấn. Tệp được xuất ở 300, 600 hoặc 1200 dpi.",
+      "invalidMm": "Nhập số từ {min} đến {max} mm, tối đa một chữ số thập phân.",
+      "qrHint": "gồm vùng trống",
+      "reach": "Quét được từ khoảng cách tối đa {cm} cm (quy tắc 10 : 1). Mã càng lớn, quét càng xa.",
+      "viewNoteMm": "Khung vẽ được thu phóng cho vừa màn hình. Chọn <b>Kích thước thật</b> phía trên khung vẽ để xem ở kích thước in. Xuất: <b>PNG {width} × {height} px</b>.",
+      "viewNotePx": "Khung vẽ được thu phóng cho vừa màn hình. Chọn <b>Kích thước thật</b> phía trên khung vẽ để xem ở 1×. Xuất: <b>PNG {width} × {height} px</b> (2×)."
+    },
+    "updatingPreview": "Đang cập nhật bản xem trước…",
+    "captionField": {
+      "label": "Nội dung chú thích",
+      "hint": "Nhấn Enter để xuống dòng thứ hai. Để trống để ẩn chú thích.",
+      "tooLong": "Dùng tối đa {max} ký tự: xóa {over, plural, other {# ký tự}}. Bản xem trước giữ chú thích vừa vặn gần nhất của bạn.",
+      "tooManyLines": "Dùng tối đa {max} dòng. Bản xem trước giữ chú thích vừa vặn gần nhất của bạn.",
+      "count": "{count}/{max} ký tự",
+      "unsupported": "{font} không hiển thị được {chars}. Chọn phông chữ khác hoặc đổi {count, plural, other {các ký tự này}}: tệp sẽ hiển thị {count, plural, other {chúng}} thành ô trống."
+    },
+    "captionFont": {
+      "title": "Phông chữ",
+      "hint": "Phông chữ cho mã QR của bạn. Giao diện HeyQR luôn dùng DM Sans.",
+      "weight": "Độ đậm",
+      "weights": {
+        "400": "Thường",
+        "500": "Vừa",
+        "700": "Đậm"
+      },
+      "original": "DM Sans (gốc)",
+      "originalHint": "Bố cục này được tạo trước khi có thêm phông chữ. DM Sans chỉ có chữ Latinh; hãy chọn phông khác cho chữ Kirin."
+    },
+    "captionSize": {
+      "label": "Kích thước",
+      "invalid": "Nhập {min}–{max} {unit}, tối đa một chữ số thập phân. Bản xem trước giữ kích thước hợp lệ gần nhất.",
+      "fitted": "Được vẽ ở {size} {unit} để chú thích vừa bố cục."
+    },
+    "edit": {
+      "title": "Sửa thiết kế · {layout}",
+      "back": "Quay lại mã",
+      "save": "Lưu thay đổi",
+      "saved": "Đã lưu thiết kế",
+      "restored": "Chúng tôi đã giữ những thay đổi bạn chưa lưu trước khi đăng nhập lại. Hãy lưu để giữ chúng.",
+      "discardRestored": "Bỏ",
+      "unsaved": "Thay đổi chưa lưu",
+      "retry": "Thử lại",
+      "failed": "Không lưu được thiết kế. Thay đổi của bạn vẫn còn ở đây.",
+      "notFound": "Mã hoặc bố cục này không còn tồn tại.",
+      "hint": "Thay đổi chỉ áp dụng cho bố cục này",
+      "note": "Lưu sẽ cập nhật bố cục này. Nội dung, thanh toán và liên kết vẫn giữ nguyên.",
+      "layouts": "Bố cục của mã này",
+      "newLayout": "Bố cục mới",
+      "newName": "Bố cục {n}",
+      "added": "Đã tạo “{name}” từ bố cục hiện tại. Các bố cục khác vẫn như cũ.",
+      "addFailed": "Chúng tôi không thêm được bố cục. Chỉnh sửa của bạn vẫn còn ở đây; hãy thử lại.",
+      "unsavedSwitch": "Bố cục này có thay đổi chưa lưu.",
+      "discardSwitch": "Bỏ và chuyển",
+      "layoutName": "Tên bố cục",
+      "unsavedSwitchText": "Chuyển sang “{name}” và bỏ các thay đổi của bố cục này? Hãy lưu trước để giữ chúng.",
+      "keepEditing": "Tiếp tục chỉnh sửa",
+      "conflictTitle": "Bố cục này đã được lưu ở nơi khác",
+      "conflictText": "Một thẻ hoặc thiết bị khác đã lưu bố cục này sau khi bạn mở nó, nên thay đổi của bạn chưa được lưu. Chúng vẫn còn ở đây: lưu thành bố cục mới, hoặc tải lại phiên bản đã lưu (khi đó thay đổi của bạn ở đây sẽ bị bỏ).",
+      "conflictNewLayout": "Lưu thay đổi thành bố cục mới",
+      "conflictReload": "Tải lại phiên bản đã lưu"
+    },
+    "captionStyle": {
+      "align": "Căn lề",
+      "aligns": {
+        "left": "Trái",
+        "center": "Giữa",
+        "right": "Phải"
+      },
+      "color": "Màu chú thích",
+      "palette": "Bộ màu chú thích",
+      "matchCode": "Theo màu mã"
+    },
+    "logoFile": {
+      "hint": "PNG, JPG, SVG hoặc WebP, tối đa {max} MB. Chọn tệp hoặc thả vào ô tải lên.",
+      "reading": "Đang đọc hình ảnh…",
+      "empty": "Tệp này trống.",
+      "tooLarge": "Tệp này vượt giới hạn {max} MB.",
+      "unsupported": "Tệp này không phải ảnh PNG, JPG, SVG hay WebP, dù tên tệp ghi gì.",
+      "unreadable": "Không mở được hình ảnh này. Có thể tệp bị hỏng; hãy xuất lại và thử lại.",
+      "kept": "Logo hiện tại của bạn vẫn được giữ."
+    },
+    "logoPlate": {
+      "label": "Nền lót",
+      "none": "Không có",
+      "square": "Vuông",
+      "circle": "Tròn"
+    },
+    "logoSizeValue": "{size}% · quét được đến {max}%",
+    "logoSizeLegacy": "Đã lưu ở {saved}%; được vẽ ở mức tối đa {max}%. Kéo thanh trượt sẽ lưu một kích thước trong giới hạn đó.",
+    "groups": {
+      "label": "Cài đặt thiết kế",
+      "layout": "Bố cục",
+      "frame": "Khung",
+      "size": "Kích thước",
+      "pattern": "Họa tiết",
+      "colors": "Màu sắc",
+      "logo": "Logo",
+      "caption": "Chú thích",
+      "brand": "Thương hiệu"
+    },
+    "quickStyles": {
+      "title": "Kiểu nhanh",
+      "hint": "Một chạm đặt cả hình dạng và màu sắc. Hoàn tác sẽ đưa giao diện trước đó trở lại.",
+      "surprise": "Gây bất ngờ",
+      "apply": "Áp dụng kiểu {name}",
+      "applied": "Đã áp dụng kiểu “{name}”. Hoàn tác sẽ đưa giao diện trước đó trở lại.",
+      "surprised": "Một giao diện mới. Hoàn tác sẽ đưa giao diện trước đó trở lại.",
+      "names": {
+        "classic": "Cổ điển",
+        "soft": "Mềm",
+        "dots": "Chấm",
+        "fluid": "Mềm mại",
+        "lines": "Đường kẻ",
+        "gem": "Đá quý"
+      }
+    },
+    "layoutGroup": {
+      "title": "Bố cục",
+      "hint": "Thành phần di chuyển, cài đặt giữ nguyên",
+      "border": "Khung quanh bố cục",
+      "borderCards": "Thẻ luôn có khung."
+    },
+    "colorsGroup": {
+      "title": "Tô màu phần nào",
+      "targets": "Đối tượng tô màu",
+      "resetAll": "Đặt lại tất cả",
+      "edited": "Đã chỉnh",
+      "roles": {
+        "fg": "Module",
+        "eye": "Khung góc",
+        "eyeIn": "Tâm góc",
+        "bg": "Nền",
+        "frame": "Khung",
+        "caption": "Chú thích"
+      },
+      "editing": "Màu {role}",
+      "swatches": "Mẫu màu",
+      "reset": "Đặt lại mặc định",
+      "note": "Những màu này chỉ áp dụng cho mã QR của bạn. Nút và menu của HeyQR vẫn giữ màu riêng.",
+      "frameHint": "Khung, viền thẻ và khung quanh bố cục.",
+      "captionHint": "Chú thích bên dưới, bên trên hoặc trong mã.",
+      "picker": "Bộ chọn màu {role}"
+    },
+    "logoGroup": {
+      "source": "Nguồn logo",
+      "icons": "Thư viện biểu tượng",
+      "upload": "Tải logo lên",
+      "count": "{count} biểu tượng vector",
+      "search": "Tìm biểu tượng",
+      "searchPlaceholder": "Tìm biểu tượng: menu, wifi, cửa hàng…",
+      "empty": "Không có biểu tượng nào khớp với “{query}”.",
+      "style": "Kiểu biểu tượng",
+      "plate": "Trên nền lót",
+      "tile": "Ô màu",
+      "vectorNote": "Biểu tượng giữ dạng vector trong SVG và PDF, nên sắc nét ở mọi kích thước. Chúng dùng màu của tâm góc.",
+      "remove": "Gỡ logo",
+      "backingHint": "Nền lót xóa các chấm phía sau logo để logo hiển thị rõ ràng.",
+      "position": "Vị trí",
+      "positions": {
+        "center": "Giữa mã",
+        "top": "Đầu thẻ"
+      },
+      "positionHint": "“Đầu thẻ” dùng được với thẻ dọc và thẻ ngang.",
+      "brandName": "Tên cạnh logo",
+      "brandNameHint": "Tùy chọn. Hiển thị cạnh logo phía trên mã.",
+      "uploadTitle": "Tải logo của bạn lên",
+      "brandedUpload": "Tải ảnh lên trước",
+      "imageSize": "Kích thước ảnh"
+    },
+    "captionGroup": {
+      "position": "Vị trí",
+      "positions": {
+        "below": "Bên dưới",
+        "above": "Bên trên",
+        "inside": "Trong mã"
+      },
+      "insideHint": "Văn bản ngắn nằm trên nền lót ở giữa mã. Kiểm tra quét sẽ yêu cầu bạn rút ngắn nếu nó che quá nhiều.",
+      "hiddenNote": "“{layout}” không có chú thích. Chọn QR + chú thích hoặc một thẻ để hiển thị.",
+      "frameNote": "Chữ của khung được đặt ở mục Khung.",
+      "toLayout": "Dùng QR + chú thích",
+      "color": "Màu chú thích",
+      "insideShortened": "Trong mã chỉ có chỗ cho {max} ký tự, nên hiển thị “{shown}”. Hãy rút ngắn chú thích, hoặc đặt nó bên dưới hay bên trên mã."
+    },
+    "stage": {
+      "history": "Lịch sử",
+      "undo": "Hoàn tác",
+      "redo": "Làm lại",
+      "background": "Nền khung vẽ",
+      "bg": {
+        "light": "Sáng",
+        "dark": "Tối",
+        "checker": "Trong suốt"
+      },
+      "scale": "Tỷ lệ xem trước",
+      "fit": "Vừa khung",
+      "actual": "Kích thước thật",
+      "dims": {
+        "layout": "Bố cục",
+        "qr": "QR",
+        "file": "Tệp"
+      },
+      "scaleLabel": "{pct}%",
+      "openFull": "Mở xem trước toàn màn hình",
+      "fullTitle": "Xem trước toàn màn hình",
+      "done": "Xong",
+      "scaledToFit": "Đã thu phóng cho vừa"
+    },
+    "scanChecking": "Đang kiểm tra quét",
+    "darkenCorners": "Làm tối dấu định vị góc",
+    "textCount": "{count}/{max} ký tự. Văn bản ngắn tạo mã đơn giản hơn, dễ quét hơn.",
+    "brand": {
+      "step1": "1 · Logo hoặc hình ảnh của bạn",
+      "step1Hint": "PNG, JPG, WebP hoặc SVG",
+      "step1Ready": "Thay bất cứ lúc nào",
+      "drag": "Kéo logo của bạn vào đây",
+      "dropNow": "Thả để tải lên",
+      "add": "Thêm logo hoặc hình ảnh của bạn",
+      "formats": "PNG, JPG, WebP hoặc SVG, tối đa 10 MB. Nền trong suốt cho kết quả tốt nhất.",
+      "choose": "Chọn ảnh",
+      "chooseMobile": "Chọn từ ảnh hoặc tệp",
+      "chooseLabel": "Chọn ảnh logo",
+      "sample": "Thử logo mẫu",
+      "error": "Chúng tôi không đọc được tệp đó. Hãy thử PNG, JPG, WebP hoặc SVG tối đa 10 MB.",
+      "reading": "Đang lấy màu từ ảnh của bạn…",
+      "preview": "Ảnh đã tải lên",
+      "image": "Ảnh của bạn",
+      "colorsFound": "{count, plural, other {Tìm thấy # màu}}",
+      "replace": "Thay ảnh",
+      "replaceLabel": "Thay ảnh logo",
+      "remove": "Gỡ ảnh",
+      "step2": "2 · Màu từ ảnh của bạn",
+      "step2Hint": "Áp dụng cho mã QR",
+      "roles": "Vai trò màu thương hiệu",
+      "role": {
+        "primary": "Màu mã",
+        "bg": "Nền",
+        "accent": "Điểm nhấn"
+      },
+      "roleHint": {
+        "primary": "Module và khung góc",
+        "bg": "Phía sau mã và thẻ",
+        "accent": "Tâm góc và chi tiết"
+      },
+      "fromImage": "Từ ảnh của bạn",
+      "found": "Màu tìm thấy trong ảnh của bạn",
+      "hexFor": "HEX cho {role}",
+      "reset": "Đặt lại",
+      "contrast": {
+        "ok": "Mã trên nền: {ratio}:1 · dễ đọc. Kiểm tra quét sẽ đưa ra kết luận cuối cùng.",
+        "warn": "Mã trên nền: {ratio}:1 · đọc được, nhưng tương phản cao hơn sẽ an toàn hơn.",
+        "err": "Mã trên nền: {ratio}:1 · quá thấp để quét ổn định."
+      },
+      "appColors": "Những màu này chỉ áp dụng cho mã QR của bạn. Nút và menu của HeyQR vẫn giữ màu riêng.",
+      "step3": "3 · Chọn phong cách",
+      "step3Hint": "Cùng một mã, ba giao diện",
+      "looks": "Giao diện thương hiệu",
+      "lookCards": {
+        "center": {
+          "title": "Logo trong mã",
+          "desc": "Biểu tượng của bạn nằm trên nền lót ở giữa."
+        },
+        "card": {
+          "title": "Thẻ thương hiệu",
+          "desc": "Logo và tên phía trên mã, trong một khung."
+        },
+        "art": {
+          "title": "Tác phẩm nghệ thuật",
+          "desc": "Ảnh của bạn hòa vào các chấm và góc."
+        }
+      },
+      "step4": "4 · Tinh chỉnh",
+      "fine": {
+        "logo": "Kích thước ảnh & nền lót",
+        "pattern": "Chấm & góc",
+        "caption": "Chú thích & phông chữ",
+        "size": "Kích thước"
+      },
+      "updating": "Đang cập nhật thiết kế thương hiệu… bạn cứ tiếp tục chỉnh sửa",
+      "readingCanvas": "Đang đọc ảnh của bạn…"
+    },
+    "designMode": {
+      "label": "Chế độ thiết kế",
+      "custom": "Thiết kế tùy chỉnh",
+      "branded": "Thiết kế thương hiệu",
+      "chooseTitle": "Bạn muốn thiết kế theo cách nào?",
+      "chooseLead": "Cả hai đều bắt đầu từ cùng một mã. Bạn có thể chuyển đổi bất cứ lúc nào mà không mất nội dung.",
+      "customTitle": "Thiết kế tùy chỉnh",
+      "customText": "Tự chọn bố cục, hình dạng, màu sắc, khung và chú thích.",
+      "brandedTitle": "Thiết kế thương hiệu",
+      "brandedBadge": "Từ logo của bạn",
+      "brandedText": "Tải logo hoặc một hình ảnh lên. Chúng tôi lấy màu từ đó và gợi ý ba giao diện."
+    },
+    "patternHint": "8 hình dạng cho các chấm chứa dữ liệu của bạn",
+    "eyeFrameHint": "Vòng ngoài của 3 dấu định vị góc",
+    "eyeBallHint": "Chấm trong của 3 dấu định vị góc",
+    "finderNote": "Mọi hình dạng đều giữ tỷ lệ dấu định vị 1 : 1 : 3 : 1 : 1, nên vẫn qua được kiểm tra quét.",
+    "colorPicker": "Bộ chọn màu {label}",
+    "scanCheck": {
+      "run": "Kiểm tra quét",
+      "retry": "Kiểm tra lại",
+      "readBack": "Đọc lại “{value}” trên thiết bị này, như camera điện thoại.",
+      "unreadableTitle": "Không quét được",
+      "unreadable": "Camera điện thoại không đọc được bố cục này. Hãy tăng độ tương phản, thu nhỏ logo hoặc dùng hình dạng đơn giản hơn, rồi kiểm tra lại.",
+      "mismatch": "Kết quả đọc được là “{value}”, không phải nội dung của bạn. Hãy kiểm tra nội dung rồi kiểm tra lại.",
+      "errorTitle": "Kiểm tra quét chưa chạy",
+      "errorText": "Không thể bắt đầu kiểm tra quét. Thiết kế của bạn vẫn an toàn; hãy thử lại.",
+      "finding": "Đang tìm nguyên nhân trên thiết bị này…",
+      "multiTitle": "Bố cục này có thể không quét được · {count} cách sửa",
+      "confirmed": "Đã kiểm tra trên thiết bị này: chỉ cần đổi điều này là quét được.",
+      "general": "Chúng tôi không xác định được do cài đặt nào. Hãy tăng độ tương phản, thu nhỏ logo hoặc dùng hình dạng đơn giản hơn, rồi kiểm tra lại.",
+      "logoSearching": "Đang thử các kích thước logo nhỏ hơn trên thiết bị này…",
+      "logoNone": "Không có kích thước logo nhỏ hơn nào quét được với bố cục này, nên thiết kế của bạn không thay đổi. Hãy thử nền lót, logo đơn giản hơn hoặc gỡ logo trong mục Logo.",
+      "openLogo": "Mở cài đặt Logo",
+      "logoApplied": "Đã giảm logo từ {from}% xuống {to}%. Đang kiểm tra bố cục mới…",
+      "causes": {
+        "invert": {
+          "title": "Mã sáng trên nền tối",
+          "text": "Nhiều camera điện thoại không đọc được mã bị đảo màu. Hãy giữ mã tối hơn nền.",
+          "fix": "Đảo màu"
+        },
+        "contrast": {
+          "title": "Độ tương phản chưa đủ",
+          "text": "Mã và nền quá giống nhau ({ratio}:1). Hãy nhắm tới ít nhất 4:1.",
+          "fix": "Tăng độ tương phản"
+        },
+        "eyes": {
+          "title": "Dấu định vị góc quá nhạt",
+          "text": "Máy quét tìm mã nhờ ba dấu định vị góc. Hãy làm chúng tối hơn.",
+          "fix": "Làm tối dấu định vị góc"
+        },
+        "text": {
+          "title": "Văn bản trong mã quá dài",
+          "text": "Giữ văn bản trong mã khoảng 8 ký tự để cơ chế sửa lỗi khôi phục được phần bị che.",
+          "fix": "Rút ngắn văn bản"
+        },
+        "logo": {
+          "title": "Logo che quá nhiều mã",
+          "text": "Cơ chế sửa lỗi có thể khôi phục logo rộng tối đa {max}%. Logo của bạn là {size}%.",
+          "critical": "Logo chồng lên dấu định vị góc hoặc đường thời gian.",
+          "fix": "Giảm kích thước logo"
+        }
+      }
+    },
+    "hosted": {
+      "badge": "Trang lưu trữ",
+      "notice": "HeyQR xuất bản trang này tại {short}. {needs} Thay đổi có hiệu lực khi bạn xuất bản; mã đã in vẫn hoạt động.",
+      "noticePreview": "liên kết rút gọn của mã",
+      "needsPlan": "Xuất bản cần gói Động: Starter {starter}/tháng cho 5 mã hoặc Studio {studio}/tháng cho 25 mã, kèm 7 ngày dùng thử miễn phí. Thiết kế và xem trước vẫn miễn phí.",
+      "needsSlot": "Trang dùng một trong {slots} suất Động của gói {plan}.",
+      "sample": "Bắt đầu từ ví dụ",
+      "sampleAdded": "Đã thêm ví dụ. Hãy thay bằng thông tin của bạn.",
+      "previews": "Xem trước · Sau khi quét và thiết kế QR",
+      "previewSwitch": "Xem trước",
+      "afterScan": "Sau khi quét",
+      "qrDesign": "Thiết kế QR",
+      "moveUp": "Chuyển {item} lên",
+      "moveDown": "Chuyển {item} xuống",
+      "remove": "Xóa {item}",
+      "optional": "tùy chọn",
+      "photoAdd": "Thêm ảnh",
+      "photoReplace": "Thay ảnh",
+      "photoRemove": "Gỡ ảnh",
+      "photoHint": "Ảnh được tải lên HeyQR và thu nhỏ cho điện thoại. JPG hoặc PNG, tối đa 5 MB mỗi ảnh.",
+      "photoType": "“{name}” không phải JPG hay PNG.",
+      "photoTooLarge": "“{name}” có dung lượng {size}. Giới hạn là 5 MB.",
+      "photoUnreadable": "Chúng tôi không đọc được “{name}”. Hãy thử ảnh khác.",
+      "menu": {
+        "name": "Tên nhà hàng",
+        "namePlaceholder": "Little Fern Café",
+        "note": "Ghi chú",
+        "notePlaceholder": "Bếp mở cửa 8:00–15:00",
+        "currency": "Giá tính bằng",
+        "section": "Mục {n}",
+        "sectionPlaceholder": "Bữa sáng",
+        "sectionHint": "Đặt tên cho mục này, ví dụ “Bữa sáng” hoặc “Đồ uống”.",
+        "dish": "Món {n}",
+        "dishPlaceholder": "Bánh mì nướng bơ",
+        "descPlaceholder": "Mô tả · tùy chọn",
+        "price": "Giá",
+        "pricePlaceholder": "12",
+        "dishPhoto": "Ảnh món ăn",
+        "addDish": "Thêm món",
+        "addSection": "Thêm mục"
+      },
+      "coupon": {
+        "title": "Tiêu đề ưu đãi",
+        "titlePlaceholder": "Cho mọi lớp làm gốm trong tháng này",
+        "discount": "Giảm giá",
+        "discountPlaceholder": "Giảm 20%",
+        "discountHint": "Ngắn và nổi bật: “Giảm 20%”, “Giảm $5”, “Cà phê miễn phí”.",
+        "code": "Mã khuyến mãi",
+        "codePlaceholder": "FERN20",
+        "expires": "Kết thúc vào",
+        "expiresHint": "Sau ngày này, trang hiển thị “Ưu đãi đã kết thúc” và ẩn mã. Ưu đãi có hiệu lực suốt cả ngày theo múi giờ của bạn ({zone}).",
+        "clearDate": "Xóa ngày",
+        "link": "Liên kết sử dụng ưu đãi",
+        "linkPlaceholder": "yourshop.com/offer",
+        "terms": "Điều kiện",
+        "termsPlaceholder": "Mỗi người một mã. Không áp dụng cùng ưu đãi khác.",
+        "previewAs": "Xem trước trang ở trạng thái",
+        "valid": "Ưu đãi còn hiệu lực",
+        "expired": "Đã hết hạn"
+      },
+      "social": {
+        "photo": "Ảnh hồ sơ",
+        "name": "Tên hồ sơ",
+        "namePlaceholder": "Ana Reyes",
+        "bio": "Tiểu sử ngắn",
+        "bioPlaceholder": "Nhà thiết kế sản phẩm. Làm gốm vào cuối tuần.",
+        "links": "Liên kết, theo thứ tự mọi người nhìn thấy",
+        "link": "Liên kết {n}",
+        "labelLabel": "Nhãn",
+        "labelPlaceholder": "Instagram",
+        "urlLabel": "Địa chỉ",
+        "urlPlaceholder": "instagram.com/yourname",
+        "quickAdd": "Thêm:",
+        "addLink": "Thêm liên kết"
+      },
+      "business": {
+        "name": "Tên doanh nghiệp",
+        "namePlaceholder": "Reyes Ceramics Studio",
+        "desc": "Mô tả ngắn",
+        "descPlaceholder": "Bộ đồ ăn làm thủ công và lớp học làm gốm.",
+        "hours": "Giờ mở cửa",
+        "open": "Mở cửa",
+        "from": "Mở lúc",
+        "to": "Đóng lúc",
+        "closed": "Đóng cửa",
+        "copyMonday": "Sao chép giờ thứ Hai cho thứ Ba–thứ Sáu",
+        "zone": "Thời gian theo múi giờ {zone}.",
+        "address": "Địa chỉ",
+        "addressPlaceholder": "21 Pier St, San Francisco",
+        "addressHint": "Thêm nút Chỉ đường.",
+        "phone": "Điện thoại",
+        "phonePlaceholder": "+1 415 555 0142",
+        "phoneHint": "Thêm nút Gọi.",
+        "website": "Trang web",
+        "websitePlaceholder": "yourshop.com",
+        "websiteHint": "Thêm nút Website."
+      },
+      "apps": {
+        "icon": "Biểu tượng ứng dụng",
+        "name": "Tên ứng dụng",
+        "namePlaceholder": "Fern Rewards",
+        "desc": "Mô tả",
+        "descPlaceholder": "Ứng dụng làm gì, trong một câu.",
+        "ios": "Liên kết App Store",
+        "iosPlaceholder": "apps.apple.com/app/your-app",
+        "android": "Liên kết Google Play",
+        "androidPlaceholder": "play.google.com/store/apps/details?id=…",
+        "storesHint": "Thêm ít nhất một kho ứng dụng. Điện thoại mở kho của riêng nó; thiết bị khác thấy trang có cả hai liên kết."
+      },
+      "pdf": {
+        "title": "Tiêu đề",
+        "titlePlaceholder": "Lịch học mùa xuân",
+        "desc": "Mô tả ngắn",
+        "descPlaceholder": "Ngày, giá và những thứ cần mang theo.",
+        "file": "Tệp PDF",
+        "choose": "Chọn tệp PDF",
+        "limits": "Tối đa 25 MB · tối đa 300 trang",
+        "sample": "Dùng PDF mẫu",
+        "uploading": "Đang tải lên · {pct}%",
+        "processing": "Đang kiểm tra PDF…",
+        "cancel": "Hủy",
+        "meta": "{pages, plural, other {# trang}} · {size}",
+        "metaNoPages": "{size}",
+        "replace": "Thay",
+        "remove": "Gỡ",
+        "hint": "Được HeyQR lưu trữ. Thay tệp vẫn giữ nguyên liên kết rút gọn, nên mã đã in sẽ mở phiên bản mới sau khi bạn xuất bản.",
+        "signIn": "Đăng nhập để tải PDF lên. Bản nháp của bạn vẫn được giữ.",
+        "notPdf": "“{name}” không phải tệp PDF. Hãy chọn tệp có đuôi .pdf.",
+        "empty": "“{name}” trống. Hãy chọn tệp khác.",
+        "tooLarge": "“{name}” có dung lượng {size}. Giới hạn là 25 MB. Hãy xuất PDF nhỏ hơn và thử lại.",
+        "tooManyPages": "“{name}” có {pages} trang. Giới hạn là 300.",
+        "failed": "Tệp đó chưa tải lên được. Hãy thử lại."
+      },
+      "product": {
+        "name": "Tên sản phẩm",
+        "namePlaceholder": "Cốc gốm đá lốm đốm",
+        "photos": "Ảnh",
+        "cover": "Ảnh bìa",
+        "photosHint": "Tối đa 5 ảnh. Ảnh đầu tiên là ảnh bìa. JPG hoặc PNG, tối đa 5 MB mỗi ảnh.",
+        "photo": "Ảnh {n}",
+        "desc": "Mô tả",
+        "descPlaceholder": "Kích thước, chất liệu, cách bảo quản.",
+        "currency": "Tiền tệ",
+        "price": "Giá",
+        "pricePlaceholder": "38",
+        "cta": "Nút",
+        "ctas": {
+          "buy": "Mua ngay",
+          "view": "Xem sản phẩm",
+          "order": "Đặt hàng ngay"
+        },
+        "link": "Liên kết sản phẩm",
+        "linkPlaceholder": "yourshop.com/product",
+        "linkHint": "Nơi nút dẫn đến: cửa hàng của bạn hoặc trang bán trên sàn thương mại."
+      },
+      "signInPhotos": "Đăng nhập để thêm ảnh. Bản nháp của bạn vẫn được giữ.",
+      "errors": {
+        "menuName": "Thêm tên mà khách thấy ở đầu thực đơn.",
+        "menuSections": "Thêm ít nhất một mục.",
+        "sectionName": "Đặt tên cho mục này, ví dụ “Bữa sáng” hoặc “Đồ uống”.",
+        "sectionDishes": "Thêm ít nhất một món vào mục này.",
+        "dishName": "Mỗi món cần có tên.",
+        "price": "Giá chỉ dùng chữ số, ví dụ 12 hoặc 4.50.",
+        "couponTitle": "Cho biết ưu đãi áp dụng cho gì.",
+        "couponDiscount": "Thêm mức giảm giá, ví dụ “Giảm 20%”.",
+        "couponCode": "Chỉ dùng chữ cái, chữ số, - hoặc _, không có dấu cách.",
+        "dateInvalid": "Chọn một ngày hợp lệ.",
+        "datePassed": "Ngày này đã qua. Hãy chọn ngày muộn hơn, hoặc xóa ngày để ưu đãi không có ngày kết thúc.",
+        "urlEmpty": "Nhập địa chỉ web, ví dụ yourname.com.",
+        "urlSpaces": "Địa chỉ web không được chứa dấu cách.",
+        "urlInvalid": "Kiểm tra lại địa chỉ. Địa chỉ cần có tên miền, ví dụ yourname.com.",
+        "socialName": "Thêm tên mà mọi người thấy ở đầu trang.",
+        "socialLinks": "Thêm ít nhất một liên kết.",
+        "linkLabel": "Liên kết này cần có nhãn.",
+        "linkUrl": "Liên kết này cần địa chỉ web đầy đủ, ví dụ instagram.com/yourname.",
+        "businessName": "Thêm tên doanh nghiệp của bạn.",
+        "businessReach": "Thêm địa chỉ, số điện thoại hoặc website để mọi người liên hệ được với bạn.",
+        "phone": "Dùng chữ số, dấu cách và dấu + tùy chọn cho mã quốc gia.",
+        "hoursInvalid": "Dùng định dạng giờ như 09:00.",
+        "hoursOrder": "Giờ đóng cửa phải muộn hơn giờ mở cửa.",
+        "appName": "Thêm tên ứng dụng.",
+        "appStores": "Thêm ít nhất một liên kết kho ứng dụng.",
+        "appStoreLink": "Liên kết App Store bắt đầu bằng apps.apple.com/.",
+        "googlePlayLink": "Liên kết Google Play bắt đầu bằng play.google.com/.",
+        "pdfTitle": "Thêm tiêu đề cho tài liệu.",
+        "pdfFile": "Tải PDF lên để tiếp tục.",
+        "pdfUploading": "Hãy đợi tải lên hoàn tất.",
+        "productName": "Thêm tên sản phẩm.",
+        "productLink": "Thêm trang nơi mọi người có thể mua hoặc xem sản phẩm.",
+        "productPrice": "Chỉ dùng chữ số, ví dụ 38 hoặc 38.50. Chọn tiền tệ trong menu.",
+        "productImages": "Tối đa 5 ảnh."
+      },
+      "previewNote": "HeyQR lưu trữ trang này tại {short}. Chỉnh sửa có hiệu lực khi bạn xuất bản; mã đã in vẫn hoạt động.",
+      "qrNote": "Mã chứa liên kết rút gọn {short}, nên trang có thể thay đổi sau khi in."
+    }
+  },
+  "scan": {
+    "invert": "Mã sáng trên nền tối. Nhiều camera điện thoại không đọc được mã bị đảo màu.",
+    "contrast": "Độ tương phản giữa mã và nền chưa đủ. Cần ít nhất 3:1.",
+    "eyes": "Dấu định vị góc cần tối hơn nền, với độ tương phản ít nhất 3:1 (2.5:1 cho phần tâm). Máy quét tìm mã nhờ chúng.",
+    "logo": "Logo che quá nhiều mã. Hãy thu nhỏ logo.",
+    "text": "Văn bản trong mã quá dài. Hãy giữ khoảng 8 ký tự."
+  },
+  "export": {
+    "title": "Tải mã của bạn",
+    "shortLinkPreview": {
+      "mark": "Xem trước",
+      "note": "Bản xem trước với liên kết rút gọn mẫu. Liên kết rút gọn cố định của bạn được tạo khi bạn kích hoạt mã này, và mọi tệp bạn tải xuống đều chứa liên kết đó."
+    },
+    "format": "Định dạng",
+    "png": "PNG",
+    "pngHint": "Ảnh đến 8K cho web và tài liệu.",
+    "svg": "SVG",
+    "svgHint": "Vector, mọi kích thước, chỉnh sửa được.",
+    "pay": "Thanh toán {price} và tải xuống",
+    "subscribe": "Đăng ký với giá {price} / tháng",
+    "download": "Tải {format}",
+    "paid": "Đã nhận thanh toán. Tệp của bạn đã sẵn sàng.",
+    "pending": "Đang xác nhận thanh toán… Thường chỉ mất vài giây. Cài đặt của bạn bị khóa để tệp khớp với biên lai.",
+    "cancelled": "<b>Đã hủy thanh toán.</b> Bạn không bị tính phí. Thiết kế và định dạng của bạn đã được lưu, bạn có thể thanh toán bất cứ khi nào sẵn sàng.",
+    "secure": "Bạn sẽ hoàn tất trên trang thanh toán bảo mật của Stripe, rồi quay lại đây để tải xuống.",
+    "includedNote": "Đã bao gồm trong giao dịch mua. Không cần trả thêm.",
+    "resolution": "Kích thước PNG",
+    "scale": "{scale}×",
+    "dpi": "{dpi} dpi",
+    "pixels": "{width} × {height} px",
+    "titleBuy": "Tải mã QR của bạn",
+    "titleGuest": "Sẵn sàng tải xuống",
+    "subGuest": "Kiểm tra bố cục và tệp, rồi đăng nhập bằng Google để thanh toán và tải xuống. Thiết kế của bạn vẫn giữ nguyên.",
+    "subPay": "Kiểm tra bố cục và định dạng. Bạn sẽ thấy tổng tiền trước khi thanh toán.",
+    "subEntitled": "Mã này là của bạn. Tải bất kỳ định dạng nào, bao nhiêu lần tùy ý.",
+    "stageLabel": "Bố cục để tải xuống",
+    "layouts": "Bố cục của mã này",
+    "backToDesign": "Quay lại thiết kế",
+    "model": {
+      "static": "Tĩnh",
+      "dynamic": "Động"
+    },
+    "dims": {
+      "layout": "Bố cục",
+      "file": "Tệp"
+    },
+    "scanOk": "Đã xác minh quét",
+    "scanFail": "Có thể không quét được",
+    "transparent": "Nền trong suốt",
+    "quality": "<b>Không giảm chất lượng.</b> SVG và PDF là vector thuần: các ô, biểu tượng và chữ phóng to đến cỡ biển quảng cáo. PNG được xuất từ cùng vector đó, lên đến 8K.",
+    "returned": "Đã đăng nhập bằng Google. Bố cục và <b>{format}</b> của bạn vẫn y như lúc bạn rời đi.",
+    "sessionEnded": "<b>Phiên đăng nhập đã kết thúc.</b> Hãy đăng nhập lại để tiếp tục: bố cục này và các tùy chọn tệp vẫn được giữ.",
+    "signInAgain": "Đăng nhập lại",
+    "alreadyOwned": "Đã là của bạn. Tải lại bất cứ lúc nào, không cần thanh toán thêm.",
+    "paymentProcessing": "Thanh toán cho mã này đang được xác nhận. Mã sẽ mở khóa trong giây lát, không bị trừ tiền lần hai.",
+    "signInCanceled": "Đăng nhập Google đã bị hủy. Bố cục và <b>{format}</b> của bạn vẫn được chọn. Tiếp tục với Google để thử lại.",
+    "signInIncomplete": "Đăng nhập Google chưa hoàn tất. Bố cục và <b>{format}</b> của bạn vẫn được chọn. Tiếp tục với Google để thử lại.",
+    "confirming": "Đang xác nhận thanh toán…",
+    "preparing": "Đang chuẩn bị {format}…",
+    "ready": "{format} của bạn đã sẵn sàng.",
+    "downloaded": "<b>Đã tải xuống {name}.</b> Tệp cũng có trong Mã QR của tôi, sẵn sàng để tải lại.",
+    "downloadAgain": "Tải lại",
+    "tryAgain": "Thử lại",
+    "errors": {
+      "failed": "<b>Chúng tôi không thể chuẩn bị {format} của bạn.</b> Thanh toán và cài đặt của bạn vẫn an toàn. Hãy thử lại sau giây lát.",
+      "scan": "<b>Bố cục này có thể không quét được.</b> Mở thiết kế để sửa; tệp chỉ được tạo cho mã vượt qua kiểm tra quét.",
+      "size": "<b>Kích thước đó quá lớn cho một tệp.</b> Hãy chọn kích thước PNG nhỏ hơn hoặc SVG.",
+      "payment": "<b>Mã này chưa được mở khóa.</b> Bạn chưa bị trừ tiền. Hãy tải lại trang sau giây lát hoặc thanh toán để tải xuống."
+    },
+    "checkoutFailed": "Không thể mở trang thanh toán. Bạn chưa bị trừ tiền; hãy thử lại.",
+    "continueGoogle": "Tiếp tục với Google",
+    "guestNote": "Thiết kế miễn phí. Bạn chỉ trả tiền khi tải xuống.",
+    "receipt": {
+      "title": "Biên lai",
+      "paid": "Đã thanh toán",
+      "tax": "Đã bao gồm thuế do Stripe tính."
+    },
+    "lines": {
+      "single": "QR đơn lẻ",
+      "dynamic": "QR Động",
+      "singleNamed": "QR đơn lẻ · {name}",
+      "unlock": "Mở khóa Tĩnh · {plan} · còn {left}/{limit}",
+      "credit": "Tín dụng Tĩnh · còn {left}",
+      "slot": "Suất Động · {plan} · đang dùng {used}/{limit}",
+      "starter": "Starter · hằng tháng",
+      "ppIncluded": "Print Pack · có trong {plan} · còn {left}/{limit}",
+      "pp": "Print Pack"
+    },
+    "perMonth": "{price}/tháng",
+    "summary": {
+      "title": "Tóm tắt đơn hàng",
+      "code": "Mã QR",
+      "type": "Loại",
+      "layout": "Bố cục",
+      "file": "Tệp",
+      "total": "Tổng",
+      "tax": "Thuế (nếu có) được tính khi thanh toán.",
+      "included": "Đã bao gồm",
+      "includedShort": "Bao gồm"
+    },
+    "emptyTitle": "Chưa có gì để tải xuống",
+    "emptyText": "Hãy thiết kế một mã QR trước. Bản nháp được lưu trong trình duyệt này cho đến khi bạn tải xuống.",
+    "emptyAction": "Tạo mã QR",
+    "inspectPrint": "Mở Xem trước bản in",
+    "printTitle": "Print Pack",
+    "printPreviewText": "Kiểm tra chính xác PDF in, phần tràn lề, dấu cắt và giá trị màu của bố cục này trước khi in.",
+    "printSetupText": "Print Pack cần một bố cục in tính bằng mm. Chuyển bố cục này sang In · mm trong Sửa thiết kế → Kích thước.",
+    "printSetup": "Thiết lập để in",
+    "pdf": "PDF",
+    "pdfHint": "Vector cho nhà in.",
+    "payTotal": "Trả {price} và tải xuống",
+    "useUnlock": "Dùng 1 lượt mở khóa và tải xuống",
+    "useCredit": "Dùng 1 tín dụng và tải xuống",
+    "unlockNote": "Từ gói {plan} của bạn. Sau lần này còn {left, plural, other {# lượt mở khóa}} trong tháng.",
+    "creditNote": "Từ tín dụng Tĩnh của bạn. Sau lần này còn {left, plural, other {# tín dụng}}.",
+    "goLive": "Kích hoạt và tải xuống",
+    "goLiveNote": "Dùng một suất hoạt động trong gói {plan}: {used}/{limit} sau lần này.",
+    "perMonthShort": "{price}/th",
+    "ppTitle": "Print Pack",
+    "ppOptional": "Tùy chọn",
+    "ppUnlocked": "Đã mở khóa",
+    "ppDownload": "Tải xuống",
+    "ppAddTitle": "Thêm Print Pack",
+    "ppSub": "PDF in, SVG chỉnh sửa được, thông số màu và kích thước",
+    "ppUseIncluded": "Dùng 1 Print Pack có sẵn trong gói",
+    "ppIncludedSub": "Còn {left}/{limit} trong tháng này · PDF in, SVG và thông số",
+    "ppIncluded": "Đã bao gồm",
+    "ppAddText": "PDF in có tràn lề và dấu cắt, một SVG chỉnh sửa được và bảng thông số màu, kích thước cho mã QR này.",
+    "ppAdd": "Thêm Print Pack · +{price}",
+    "ppNotForSale": "Hiện chưa thể mua Print Pack bằng loại tiền tệ này.",
+    "ppRepeat": "Tải lại được bao gồm. Cài đặt: kích thước 100%, tràn lề 3 mm, dấu cắt, sRGB.",
+    "inspectPrintFirst": "Kiểm tra tệp in trước",
+    "incl": {
+      "static1": "PNG và SVG của mọi bố cục của mã này",
+      "static2": "Tải lại không giới hạn",
+      "static3": "Sửa thiết kế bất cứ lúc nào",
+      "dyn1": "Tối đa {limit} mã QR Động đang hoạt động, đổi đích đến bất cứ lúc nào",
+      "dyn2": "Phân tích lượt quét cơ bản",
+      "dyn3": "PNG và SVG, tải lại không giới hạn",
+      "pp": "Print Pack: PDF in, SVG chỉnh sửa được và thông số"
+    },
+    "catalog": {
+      "not_offered": "Hiện chưa thể mua mục này bằng loại tiền tệ đã chọn. Bạn chưa bị trừ tiền.",
+      "price_mismatch": "Giá đã thay đổi kể từ khi trang này được tải. Bạn chưa bị trừ tiền; hãy tải lại trang để xem giá hiện tại.",
+      "unavailable": "Hiện chưa có bán bằng loại tiền tệ này. Hãy đổi tiền tệ ở trang Bảng giá hoặc quay lại sau. Bạn sẽ không bị trừ tiền."
+    },
+    "unlockErrors": {
+      "no_allowance": "Đã hết lượt mở khóa trong tháng. Hãy chọn tùy chọn khác bên dưới.",
+      "no_credits": "Đã hết tín dụng Tĩnh.",
+      "limit": "Tất cả suất Động đang hoạt động đều đã được dùng.",
+      "failed": "Không thành công. Bạn chưa bị trừ tiền; hãy thử lại."
+    },
+    "limits": {
+      "staticTitle": "Bạn đã dùng hết {limit} lượt mở khóa Tĩnh trong tháng này",
+      "staticText": "Mã QR này cần thêm một lượt mở khóa. Hãy chọn cách phù hợp với bạn; thiết kế vẫn giữ nguyên.",
+      "staticUsed": "Đã dùng {used}/{limit} lượt mở khóa",
+      "resets": "Đặt lại vào {date}",
+      "buyOnce": "Mua riêng mã QR này",
+      "buyOnceSub": "QR đơn lẻ kèm PNG và SVG",
+      "credits": "Mua 3 tín dụng Tĩnh",
+      "creditsSub": "Không bao giờ hết hạn",
+      "studio": "Nâng cấp lên Studio",
+      "studioSub": "40 lượt mở khóa và 5 Print Pack mỗi tháng",
+      "dynTitle": "Tất cả {limit} suất Động đều đang được dùng",
+      "dynText": "Suất được tính theo số mã đang chuyển hướng lúc này, không phải số mã tạo trong tháng. Hãy giải phóng một suất hoặc chuyển sang gói lớn hơn.",
+      "dynUsed": "{used}/{limit} đang hoạt động",
+      "live": "Đếm theo thời gian thực · không theo tháng",
+      "pause": "Tạm dừng hoặc xóa một mã Động",
+      "pauseSub": "Giải phóng suất ngay lập tức",
+      "studioDynSub": "25 suất Động và phân tích theo từng mã",
+      "toStatic": "Chuyển thành mã QR Tĩnh",
+      "toStaticSub": "Nội dung cố định · dùng một lượt mở khóa Tĩnh"
+    },
+    "limit": "kích thước lớn hơn vượt quá {max} px",
+    "subUnlock": "Có trong {plan}: lần này dùng 1 lượt mở khóa Tĩnh hằng tháng của bạn.",
+    "subCredit": "Lần này dùng 1 tín dụng Tĩnh của bạn."
+  },
+  "dashboard": {
+    "noMatch": {
+      "static": "Không có mã QR Tĩnh",
+      "dynamic": "Không có mã QR Động",
+      "text": "Các mã khác của bạn nằm trong mục Tất cả.",
+      "all": "Hiện tất cả mã"
+    },
+    "title": "Mã QR của tôi",
+    "new": "Tạo mã QR",
+    "empty": {
+      "title": "Chưa có mã QR nào",
+      "text": "Các mã bạn mua hoặc bắt đầu thiết kế sẽ xuất hiện ở đây. Bạn có thể tải lại và thêm bố cục mới bất cứ lúc nào.",
+      "cta": "Tạo mã QR đầu tiên"
+    },
+    "status": {
+      "draft": "Bản nháp",
+      "active": "Đang hoạt động",
+      "paused": "Đã tạm dừng",
+      "archived": "Đã lưu trữ",
+      "purchased": "Đã mua",
+      "inactive": "Không hoạt động"
+    },
+    "model": {
+      "static": "Tĩnh",
+      "dynamic": "Động"
+    },
+    "updated": "Cập nhật {date}",
+    "open": "Mở {name}",
+    "sub": "{count, plural, other {# mã}} · {dynamic} mã Động đang hoạt động",
+    "subEmpty": "Các mã đã mua và bản nháp của bạn nằm ở đây.",
+    "filterLabel": "Lọc",
+    "filters": {
+      "all": "Tất cả {count}",
+      "static": "Tĩnh {count}",
+      "dynamic": "Động {count}"
+    },
+    "actions": {
+      "edit": "Sửa thiết kế",
+      "download": "Tải xuống",
+      "buy": "Mua và tải xuống",
+      "reactivate": "Bật lại"
+    },
+    "loading": "Đang tải mã QR của bạn",
+    "manage": {
+      "select": "Chọn",
+      "done": "Xong",
+      "selectAll": "Chọn tất cả",
+      "selectOne": "Chọn {name}",
+      "chooseToDelete": "Chọn mã cần xóa",
+      "selected": "Đã chọn {count}/{total}",
+      "deleteSelected": "{count, plural, =0 {Xóa} other {Xóa #}}",
+      "deleteOne": "Xóa {name}",
+      "cancel": "Hủy",
+      "dialog": {
+        "titleOne": "Xóa “{name}”?",
+        "titleMany": "Xóa {count} mã QR?",
+        "leadOne": "Mã sẽ biến mất khỏi Mã QR của tôi trên mọi thiết bị.",
+        "leadMany": "Các mã sẽ biến mất khỏi Mã QR của tôi trên mọi thiết bị.",
+        "dynamicTitle": "{count, plural, other {Liên kết rút gọn sẽ ngừng hoạt động}}",
+        "dynamicText": "{links} sẽ ngừng chuyển hướng ngay lập tức. Bản in sẽ mở trang “liên kết không hoạt động”. {count, plural, other {# suất trong gói}} được giải phóng.",
+        "staticTitle": "Bản in vẫn hoạt động",
+        "staticText": "Mã Tĩnh chứa nội dung ngay trong họa tiết, nên bản in vẫn quét được. Bạn sẽ không thể tải lại hoặc chỉnh sửa {count, plural, other {# giao dịch mua này}} nữa, và việc xóa không được hoàn tiền.",
+        "draftTitle": "{count, plural, other {# bản nháp sẽ bị xóa}}",
+        "draftText": "Bạn chưa thanh toán gì cho {count, plural, other {các bản nháp này}}, nên không có gì khác thay đổi.",
+        "confirmOne": "Xóa mã",
+        "confirmMany": "Xóa {count} mã",
+        "undoNote": "Bạn có thể hoàn tác trong vài giây sau khi xóa.",
+        "close": "Đóng",
+        "metaDynamic": "Động",
+        "metaStatic": "Tĩnh",
+        "metaActive": "đang hoạt động",
+        "metaPurchased": "đã mua",
+        "metaDraft": "bản nháp"
+      },
+      "deletedOne": "Đã xóa “{name}”.",
+      "deletedMany": "Đã xóa {count} mã.",
+      "undo": "Hoàn tác",
+      "restoredOne": "Đã khôi phục mã.",
+      "restoredMany": "Đã khôi phục {count} mã.",
+      "deleteFailed": "Không xóa được. Hãy thử lại.",
+      "restoreFailed": "Không khôi phục được. Bạn có thể hoàn tác trong vài phút sau khi xóa.",
+      "rename": {
+        "action": "Đổi tên",
+        "actionOne": "Đổi tên {name}",
+        "label": "Tên của {name}",
+        "save": "Lưu",
+        "cancel": "Hủy",
+        "saved": "Đã đổi tên thành “{name}”.",
+        "empty": "Hãy đặt tên cho mã.",
+        "failed": "Chúng tôi không đổi tên được. Nội dung bạn nhập vẫn còn; hãy thử lại."
+      }
+    },
+    "printPack": "Print Pack"
+  },
+  "qr": {
+    "back": "Tất cả mã",
+    "layouts": "Bố cục",
+    "shortLink": "Liên kết rút gọn",
+    "destination": "Đích đến",
+    "destinationHint": "Mã đã in vẫn hoạt động; giờ chúng mở địa chỉ này.",
+    "save": "Lưu",
+    "saved": "Đã lưu",
+    "scans": "Lượt quét, 14 ngày qua",
+    "scansTotal": "{count, plural, other {# lượt quét}}",
+    "download": "Tải xuống",
+    "buy": "Mua để tải xuống",
+    "copy": "Sao chép",
+    "copied": "Đã sao chép",
+    "editDesign": "Sửa thiết kế",
+    "dest": {
+      "title": "Đích đến",
+      "saved": "Đã lưu",
+      "new": "Đích đến mới",
+      "hint": "Mã đã in sẽ mở địa chỉ mới trong vòng một phút. Liên kết rút gọn vẫn là {short}.",
+      "save": "Lưu đích đến",
+      "cancel": "Hủy",
+      "goesTo": "Lượt quét {short} sẽ đến",
+      "previously": "Trước đây: {url}",
+      "changedAt": "đã đổi",
+      "history": {
+        "title": "Lịch sử thay đổi",
+        "to": "Đổi thành",
+        "from": "từ {url}"
+      },
+      "change": "Đổi đích đến",
+      "conflict": {
+        "title": "Đích đến này đã được đổi ở nơi khác",
+        "text": "Hiện nó dẫn đến {url}. Chỉnh sửa của bạn bên dưới chưa được lưu.",
+        "load": "Tải phiên bản mới nhất",
+        "loaded": "Đã tải phiên bản mới nhất: {url}. Hãy xem lại chỉnh sửa của bạn rồi lưu để thay thế."
+      }
+    },
+    "scansCard": {
+      "title": "Lượt quét · 14 ngày qua",
+      "total": "Tổng",
+      "today": "Hôm nay",
+      "emptyTitle": "Chưa có lượt quét",
+      "emptyText": "Lượt quét đầu tiên sẽ hiện ở đây trong vài phút. Hãy thử quét mã đã in của bạn.",
+      "periodEmptyTitle": "Không có lượt quét trong 14 ngày qua",
+      "periodEmptyText": "Các lượt quét trước đó vẫn được giữ. Lượt quét mới sẽ hiện ở đây trong vài phút."
+    },
+    "details": {
+      "back": "Mã QR của tôi",
+      "newLayout": "Bố cục mới",
+      "permanent": "Vĩnh viễn",
+      "shortNote": "Đây là nội dung mã in của bạn chứa. Nó không bao giờ thay đổi, nên mã đã in luôn hoạt động.",
+      "noShortLink": "Mã này sẽ hoạt động với một liên kết rút gọn sau khi được kích hoạt.",
+      "content": "Nội dung",
+      "fixed": "Cố định trong mã",
+      "staticNote": "Mã Tĩnh lưu nội dung ngay trong họa tiết, nên bản in luôn mở nội dung này. Thay đổi thiết kế miễn phí và không giới hạn.",
+      "incl": {
+        "files": "PNG và SVG, tải xuống bao nhiêu lần tùy thích",
+        "layouts": "Bao gồm bố cục mới và chỉnh sửa thiết kế"
+      },
+      "dimsSquare": "Vuông {size}",
+      "print": "In · mm",
+      "screen": "Màn hình · px",
+      "setupPrint": "Thiết lập để in",
+      "pack": {
+        "needsMm": "Print Pack cần một bố cục in tính bằng mm. Hãy thiết lập bố cục để in trong Sửa thiết kế → Kích thước, rồi kiểm tra trong Xem trước bản in.",
+        "what": "PDF in có tràn lề và dấu cắt, một SVG chỉnh sửa được và bảng thông số màu, kích thước cho mã QR này.",
+        "add": "Thêm Print Pack · +{price}",
+        "addSub": "Mở Xem trước bản in để bạn kiểm tra PDF và thông số trước khi thanh toán.",
+        "useIncluded": "Dùng 1 Print Pack có sẵn trong gói",
+        "includedSub": "Còn {left}/{limit} Print Pack có sẵn trong tháng này với gói {plan}. Bạn có thể kiểm tra tệp trong Xem trước bản in trước.",
+        "includedDone": "Đã thêm Print Pack từ gói của bạn. Các tệp đã sẵn sàng.",
+        "includedFailed": "Không thể dùng Print Pack có sẵn. Chưa có gì bị trừ; hãy thử lại.",
+        "noneLeft": "Tháng này đã hết Print Pack có sẵn.",
+        "inspect": "Kiểm tra trong Xem trước bản in",
+        "notForSale": "Xem trước bản in hiển thị chính xác trang và thông số. Hiện chưa thể mua Print Pack ở đây.",
+        "repeat": "Tải lại được bao gồm. Tệp của “{layout}” ở kích thước 100%, tràn lề 3 mm, dấu cắt."
+      },
+      "layoutNoteDynamic": "Thay đổi thiết kế sẽ tạo một tệp mới để tải xuống. Các mã bạn đã in vẫn hoạt động.",
+      "layoutNoteStatic": "Mọi bố cục đều có trong giao dịch mua này. Tải bất kỳ bố cục nào dưới dạng PNG hoặc SVG.",
+      "rename": "Đổi tên",
+      "renameFailed": "Chúng tôi không đổi tên mã được. Nội dung bạn nhập vẫn còn; hãy thử lại.",
+      "nameLabel": "Tên mã QR",
+      "save": "Lưu",
+      "cancel": "Hủy",
+      "opens": "Mở",
+      "downloadAll": "Tải tất cả",
+      "layoutsCount": "{n, plural, other {# bố cục}}",
+      "edit": "Sửa",
+      "downloadLayout": "Tải xuống {name}",
+      "downloadFormat": "Tải {format} của {name}",
+      "printPreview": "Xem trước bản in của {name}",
+      "newLayoutCard": "Bố cục mới",
+      "layoutAdded": "Đã thêm “{name}” vào {code}. Các bố cục khác của bạn không thay đổi.",
+      "layoutAddFailed": "Chúng tôi không thêm được bố cục. Hãy thử lại.",
+      "copy": {
+        "action": "Dùng nội dung khác…",
+        "title": "Dùng nội dung khác",
+        "text": "Mã Tĩnh lưu nội dung trong họa tiết, nên nội dung khác là một mã QR mới: được thiết kế và mua riêng ({price}). Mã này và các tệp của nó vẫn giữ nguyên.",
+        "start": "Tạo mã QR mới",
+        "keep": "Giữ mã này",
+        "close": "Đóng"
+      },
+      "ppUnlocked": "Đã mở khóa",
+      "ppLocked": "Đã khóa",
+      "deleteLayout": {
+        "label": "Xóa bố cục {name}",
+        "title": "Xóa “{name}”?",
+        "text": "“{name}” sẽ bị xóa khỏi tài khoản của bạn, cùng các tệp tải xuống riêng của bố cục. Không thể hoàn tác.",
+        "keeps": "Mã QR, nội dung, liên kết rút gọn, đích đến, giao dịch mua, Print Pack và các bố cục khác vẫn giữ nguyên.",
+        "confirm": "Xóa bố cục",
+        "cancel": "Hủy",
+        "close": "Đóng",
+        "done": "Đã xóa “{name}”.",
+        "failed": "Chúng tôi không xóa được “{name}”. Không có gì thay đổi; hãy thử lại.",
+        "retry": "Thử lại",
+        "lastTitle": "Đây là bố cục duy nhất",
+        "lastText": "Một mã QR luôn có ít nhất một bố cục, nên không thể xóa “{name}”. Hãy thêm bố cục khác trước, hoặc xóa cả mã trong Mã QR của tôi.",
+        "lastError": "Một mã QR luôn có ít nhất một bố cục, nên bố cục này được giữ lại.",
+        "ok": "OK"
+      },
+      "pause": {
+        "pause": "Tạm dừng",
+        "resume": "Tiếp tục",
+        "pausedTitle": "Liên kết rút gọn đã tạm dừng",
+        "pausedText": "Người quét mã này sẽ thấy trang không khả dụng. Liên kết rút gọn, đích đến và bố cục vẫn được giữ. Bạn có thể đổi đích đến ngay bây giờ; nó sẽ mở khi bạn tiếp tục.",
+        "liveText": "Tạm dừng sẽ ngắt chuyển hướng ngay lập tức. Nếu bạn dùng gói, việc này cũng giải phóng suất hoạt động của mã.",
+        "paused": "Đã tạm dừng. Liên kết rút gọn giờ hiển thị trang không khả dụng.",
+        "resumed": "Đã tiếp tục. Liên kết rút gọn lại chuyển hướng đến đích đến của bạn.",
+        "limit": "Tất cả suất Động đang hoạt động trong gói của bạn đều đã được dùng. Hãy tạm dừng hoặc xóa một mã Động khác rồi tiếp tục mã này.",
+        "noPlan": "Cần có gói Động đang hoạt động để tiếp tục mã này.",
+        "failed": "Chúng tôi không đổi được trạng thái mã. Không có gì thay đổi; hãy thử lại."
+      },
+      "inactiveNote": "Lượt quét mã này hiển thị trang “hiện không hoạt động”: mã cần một gói Động đang hoạt động. Liên kết rút gọn, đích đến và lượt quét vẫn được giữ, và cùng mã đã in đó sẽ chuyển hướng lại khi có gói hoạt động.",
+      "inactiveCta": "Gói và thanh toán"
+    },
+    "hostedPage": {
+      "title": "Trang lưu trữ",
+      "live": "Đang hoạt động · phiên bản {version}",
+      "publishedOn": "Đã xuất bản {date}",
+      "never": "Chưa xuất bản",
+      "neverNote": "Hãy xuất bản trang để người quét mã có thể xem.",
+      "changed": "Thay đổi chưa xuất bản",
+      "changedNote": "Khách truy cập vẫn thấy phiên bản đã xuất bản cho đến khi bạn xuất bản lại.",
+      "upToDate": "Khách truy cập thấy phiên bản mới nhất.",
+      "notLive": "Trang sẽ hoạt động tại liên kết rút gọn khi mã được kích hoạt.",
+      "edit": "Sửa trang",
+      "publish": "Xuất bản",
+      "publishing": "Đang xuất bản…",
+      "published": "Đã xuất bản. Cùng mã QR và liên kết rút gọn giờ hiển thị phiên bản này.",
+      "unchanged": "Không có gì mới để xuất bản.",
+      "rules": "Một số chi tiết cần xem lại trước khi xuất bản. Hãy sửa trang để khắc phục.",
+      "failed": "Không xuất bản được. Hãy thử lại.",
+      "open": "Mở trang",
+      "takenDown": "Chúng tôi đã gỡ trang này sau một báo cáo, nên liên kết rút gọn hiển thị “Trang này không khả dụng”. Nội dung và lượt quét của bạn vẫn được giữ. Hãy liên hệ bộ phận hỗ trợ nếu bạn cho rằng đây là nhầm lẫn."
+    },
+    "hostedEditor": {
+      "title": "Sửa trang",
+      "back": "Quay lại chi tiết QR",
+      "lead": "Thay đổi được lưu dưới dạng bản nháp. Khách truy cập sẽ thấy sau khi bạn xuất bản.",
+      "save": "Lưu bản nháp",
+      "saving": "Đang lưu…",
+      "saved": "Đã lưu bản nháp.",
+      "saveFailed": "Không lưu được bản nháp. Hãy kiểm tra ảnh và thử lại.",
+      "publish": "Lưu và xuất bản",
+      "unsaved": "Thay đổi chưa lưu",
+      "loading": "Đang tải trình sửa trang"
+    }
+  },
+  "billing": {
+    "title": "Gói và thanh toán",
+    "plan": "Gói Động",
+    "active": "Hoạt động đến {date}",
+    "cancels": "Hủy vào {date}",
+    "none": "Không có gói đăng ký. Mã Tĩnh thanh toán một lần; Starter bổ sung mã Động và lượt mở khóa hằng tháng.",
+    "manage": "Quản lý gói đăng ký",
+    "purchases": "Giao dịch mua",
+    "noPurchases": "Chưa có giao dịch mua nào.",
+    "usage": "Mức sử dụng",
+    "liveDynamic": "Mã Động đang hoạt động",
+    "liveCount": "{used}/{limit}",
+    "liveHint": "Suất hoạt động được giải phóng khi bạn tạm dừng hoặc xóa một mã Động.",
+    "renews": "Gia hạn vào {date}",
+    "payment": "Phương thức thanh toán",
+    "paymentManaged": "Thẻ của bạn do Stripe lưu giữ. Quản lý thẻ trong cổng thanh toán.",
+    "compare": "So sánh các gói",
+    "statusActive": "Đang hoạt động",
+    "statusCanceling": "Sắp hủy",
+    "statusNone": "Không có gói",
+    "date": "Ngày",
+    "open": "Mở",
+    "receiptNote": "Stripe gửi biên lai qua email cho mỗi lần thanh toán.",
+    "statuses": {
+      "paid": "Đã thanh toán",
+      "pending": "Đang chờ",
+      "refunded": "Đã hoàn tiền",
+      "failed": "Thất bại"
+    },
+    "liveNoPlan": "{used} đang hoạt động · không có gói",
+    "printPackItem": "Print Pack",
+    "packItem": "Gói Tĩnh · {n} tín dụng",
+    "signedIn": "Đã đăng nhập bằng Google với {email}.",
+    "current": "Gói hiện tại",
+    "planMonthly": "{plan} · hằng tháng",
+    "noPlan": "Không có gói",
+    "plans": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "tiles": {
+      "dynamic": "QR Động đang hoạt động",
+      "live": "Đang hoạt động",
+      "dynamicNote": "Tạm dừng hoặc xóa một mã để giải phóng suất",
+      "unlocks": "Lượt mở khóa Tĩnh",
+      "packs": "Print Pack có sẵn trong gói",
+      "packsNote": "{resets} · sau đó +{price}",
+      "credits": "Tín dụng Tĩnh",
+      "oneTime": "Một lần",
+      "creditsNote": "Không bao giờ hết hạn · dùng sau lượt mở khóa hằng tháng",
+      "available": "Còn {n}",
+      "leftMonth": "Còn {n} trong tháng này",
+      "noReset": "Gói kết thúc {date} · không đặt lại"
+    },
+    "of": "trên {limit}",
+    "left": "còn lại",
+    "resets": "Đặt lại vào {date}",
+    "price": "Giá",
+    "perMonth": "{price} / tháng",
+    "renewsOn": "Gia hạn vào",
+    "endsOn": "Kết thúc vào",
+    "paymentStripe": "Do Stripe lưu giữ",
+    "upgrade": "Nâng cấp lên Studio · {price}/tháng",
+    "choosePlan": "Chọn gói",
+    "oneTime": "Giao dịch mua một lần",
+    "item": "Mục",
+    "amount": "Số tiền",
+    "receipt": "Biên lai",
+    "credits": "{n} tín dụng Tĩnh",
+    "items": {
+      "single": "QR đơn lẻ",
+      "printPack": "Print Pack"
+    },
+    "portal": {
+      "noCustomer": "Chưa có tài khoản thanh toán. Tài khoản sẽ được tạo khi bạn thanh toán lần đầu.",
+      "unavailable": "Tính năng này hiện chưa khả dụng cho gói của bạn.",
+      "failed": "Chúng tôi không mở được Stripe. Không có gì thay đổi; hãy thử lại."
+    },
+    "updatePayment": "Cập nhật phương thức thanh toán",
+    "card": "{brand} •••• {last4}",
+    "overdue": {
+      "title": "Thanh toán gia hạn của bạn không thành công",
+      "pastDue": "Gói của bạn vẫn hoạt động trong khi khoản thanh toán quá hạn. Hãy cập nhật phương thức thanh toán để thanh toán hóa đơn còn mở.",
+      "unpaid": "Gói của bạn đã kết thúc vì không thu được khoản thanh toán gia hạn. Hãy cập nhật phương thức thanh toán để thanh toán hóa đơn còn mở và bật lại gói.",
+      "action": "Cập nhật phương thức thanh toán và trả tiền",
+      "status": "Thanh toán quá hạn",
+      "pending": "Sau khi bạn thanh toán, có thể mất một lúc để gói của bạn được cập nhật ở đây."
+    },
+    "canceling": {
+      "title": "Gói của bạn kết thúc vào {date}",
+      "until": "Cho đến lúc đó mọi thứ vẫn hoạt động như bây giờ: mã Động của bạn vẫn chuyển hướng, suất và lượt mở khóa hằng tháng vẫn được giữ.",
+      "after": "{count, plural, =0 {Sau ngày đó, mã Động sẽ hiển thị trang “hiện không hoạt động” thay vì chuyển hướng.} other {Sau ngày đó, # mã Động đang hoạt động của bạn sẽ hiển thị trang “hiện không hoạt động” thay vì chuyển hướng. Liên kết rút gọn, đích đến và thiết kế vẫn được giữ.}} Các mã Tĩnh bạn đã mua vẫn hoạt động.",
+      "resume": "Giữ gói của tôi",
+      "resumeNote": "Gói của bạn tiếp tục trên cùng gói đăng ký và gia hạn vào ngày thường lệ. Hiện không bị trừ tiền.",
+      "resumed": "Gói của bạn được tiếp tục. Gói sẽ gia hạn vào ngày thường lệ.",
+      "notScheduled": "Không còn lệnh hủy nào để hoàn tác. Hãy tải lại trang để xem gói của bạn.",
+      "failed": "Chúng tôi không giữ được gói của bạn. Không có gì thay đổi. Hãy thử lại."
+    },
+    "ended": {
+      "title": "Gói {plan} của bạn đã kết thúc vào {date}",
+      "titleNoDate": "Gói {plan} của bạn đã kết thúc",
+      "scans": "Mã Động của bạn hiển thị trang “hiện không hoạt động”. Liên kết rút gọn, đích đến, thiết kế và lượt quét vẫn được giữ. Các mã Tĩnh bạn đã mua vẫn hoạt động.",
+      "back": "Kích hoạt lại để các mã đã in đó chuyển hướng trở lại. Các mã bạn đã tạm dừng hoặc xóa vẫn giữ nguyên trạng thái.",
+      "reactivate": "Kích hoạt lại {plan} · {price}/tháng"
+    }
+  },
+  "legal": {
+    "terms": {
+      "title": "Điều khoản dịch vụ"
+    },
+    "privacy": {
+      "title": "Chính sách quyền riêng tư"
+    },
+    "draft": "Trang này là bản tạm thời cho đến khi nội dung pháp lý được phê duyệt."
+  },
+  "errors": {
+    "notFound": {
+      "title": "Không tìm thấy trang",
+      "text": "Trang bạn đang tìm không tồn tại.",
+      "cta": "Về trang chủ"
+    },
+    "linkUnavailable": {
+      "title": "Liên kết này không hoạt động",
+      "text": "Chủ sở hữu mã QR này đã tạm dừng hoặc mã không còn tồn tại."
+    },
+    "generic": "Đã xảy ra lỗi. Vui lòng thử lại.",
+    "invalid": "Vui lòng kiểm tra các trường được đánh dấu.",
+    "unauthorized": "Vui lòng đăng nhập để tiếp tục.",
+    "too_long": "Nội dung này quá dài cho một mã QR. Hãy rút ngắn và thử lại.",
+    "linkInactive": {
+      "title": "Liên kết này hiện không khả dụng",
+      "text": "Mã QR này hiện không hoạt động. Điện thoại của bạn không có vấn đề gì; hãy thử lại sau."
+    },
+    "draft_limit": "Bạn có {limit} bản nháp đã lưu, mức tối đa cho một tài khoản. Hãy mở khóa hoặc xóa một bản trong Mã QR của tôi rồi lưu lại: thiết kế của bạn vẫn ở đây.",
+    "page": {
+      "title": "Đã xảy ra lỗi",
+      "text": "Không tải được trang này. Các mã đã lưu và bản nháp của bạn vẫn an toàn. Hãy thử lại hoặc quay về trang đầu.",
+      "retry": "Thử lại",
+      "home": "Về trang chủ",
+      "reference": "Mã tham chiếu: {ref}"
+    }
+  },
+  "common": {
+    "close": "Đóng",
+    "loading": "Đang tải…",
+    "required": "Bắt buộc"
+  },
+  "loading": {
+    "page": "Đang tải",
+    "details": "Đang tải mã QR",
+    "billing": "Đang tải gói và giao dịch mua của bạn",
+    "export": "Đang tải tệp của bạn",
+    "editor": "Đang tải trình chỉnh sửa"
+  },
+  "trial": {
+    "badge": "Dùng thử Starter",
+    "back": "Mã QR của tôi",
+    "states": {
+      "active": {
+        "title": "Bản dùng thử đang hoạt động",
+        "lead": "Bắt đầu từ {start}. Mã QR Động thử nghiệm của bạn hoạt động thật cho đến {end}.",
+        "big": "{days, plural, other {# ngày}}",
+        "bigSub": "còn lại · kết thúc {end}",
+        "status": "Chưa lưu thẻ nào, nên bạn sẽ không bị trừ tiền khi hết hạn dùng thử. Mã thử nghiệm vẫn chuyển hướng thật cho đến lúc đó.",
+        "main": "Kích hoạt Starter · {price}/tháng",
+        "second": "Mở Mã QR của tôi",
+        "foot": "Khi kích hoạt, liên kết rút gọn vẫn giữ nguyên, nên các bản in thử vẫn hoạt động.",
+        "endTitle": "Khi bản dùng thử kết thúc vào {end}"
+      },
+      "ending": {
+        "title": "Bản dùng thử sắp kết thúc",
+        "lead": "Vào {end}, mã thử nghiệm sẽ ngừng chuyển hướng. Kích hoạt Starter để mã tiếp tục hoạt động.",
+        "big": "{days, plural, other {# ngày}}",
+        "bigSub": "còn lại · kết thúc {end}",
+        "status": "Chưa lưu thẻ nào, nên bạn sẽ không bị trừ tiền tự động.",
+        "main": "Kích hoạt Starter · {price}/tháng",
+        "second": "Mở Mã QR của tôi",
+        "foot": "Khi kích hoạt, liên kết rút gọn vẫn giữ nguyên, nên các bản in thử vẫn hoạt động.",
+        "endTitle": "Điều gì xảy ra vào {end}"
+      },
+      "expired": {
+        "title": "Bản dùng thử đã kết thúc",
+        "lead": "Đã kết thúc vào {end}. Mã thử nghiệm đang tạm dừng; thiết kế và lượt quét vẫn được giữ.",
+        "big": "Đã kết thúc",
+        "bigSub": "{end}",
+        "status": "Liên kết rút gọn của mã thử nghiệm giờ hiển thị trang “liên kết đã tạm dừng”. Kích hoạt Starter để mã chuyển hướng đến đích đến trở lại.",
+        "main": "Kích hoạt lại với Starter · {price}/tháng",
+        "second": "Xem tất cả gói",
+        "foot": "Bạn chưa bị trừ tiền. Không có thẻ nào được lưu.",
+        "endTitle": "Cách bật lại"
+      },
+      "upgraded": {
+        "title": "Gói Starter của bạn đang hoạt động",
+        "lead": "Mã thử nghiệm giờ là một mã QR Động thông thường trong gói của bạn.",
+        "big": "Động",
+        "bigSub": "gói đang hoạt động",
+        "status": "Mã thử nghiệm giữ nguyên liên kết rút gọn và chuyển hướng như trước.",
+        "main": "Mở Mã QR của tôi",
+        "second": "Gói và thanh toán",
+        "foot": "Stripe gửi biên lai qua email cho mỗi lần thanh toán.",
+        "endTitle": "Những gì đã thay đổi"
+      }
+    },
+    "steps": {
+      "pause": {
+        "t": "Chuyển hướng thử nghiệm tạm dừng",
+        "d": "Liên kết rút gọn hiển thị trang “liên kết đã tạm dừng” thay vì đích đến của bạn. Không có gì bị xóa."
+      },
+      "free": {
+        "t": "Không bị trừ tiền",
+        "d": "Không có thẻ nào được lưu và không tự động gia hạn."
+      },
+      "wake": {
+        "t": "Kích hoạt bất cứ lúc nào để bật lại",
+        "d": "Chọn Starter và cùng liên kết rút gọn đó sẽ chuyển hướng trở lại. Thiết kế và lượt quét vẫn ở trong tài khoản của bạn."
+      },
+      "choose": {
+        "t": "Chọn Starter",
+        "d": "{price} mỗi tháng. Hủy bất cứ lúc nào."
+      },
+      "same": {
+        "t": "Liên kết rút gọn hoạt động trở lại",
+        "d": "Nó chuyển hướng lại, đến cùng đích đến."
+      },
+      "room": {
+        "t": "Tiếp tục sử dụng",
+        "d": "Tối đa {limit} mã Động đang hoạt động, kèm số lượt quét hằng ngày."
+      },
+      "kept": {
+        "t": "Cùng liên kết rút gọn",
+        "d": "Các bản in thử vẫn hoạt động. Không cần in lại."
+      },
+      "more": {
+        "t": "Thêm dung lượng",
+        "d": "Tối đa {limit} mã Động đang hoạt động và số lượt quét hằng ngày."
+      },
+      "receipt": {
+        "t": "Biên lai qua email",
+        "d": "Quản lý hoặc hủy gói bất cứ lúc nào trong Gói và thanh toán."
+      }
+    },
+    "code": {
+      "title": "Mã QR Động thử nghiệm của bạn",
+      "live": "Đang chuyển hướng",
+      "paused": "Chuyển hướng đã tạm dừng",
+      "plan": "Hoạt động trong gói của bạn",
+      "opens": "Mở {host}",
+      "pausedLine": "Đã tạm dừng · hiển thị trang “liên kết đã tạm dừng”",
+      "scans": "Lượt quét đến nay",
+      "today": "Hôm nay",
+      "chart": "Lượt quét dùng thử theo ngày: {values}",
+      "change": "Đổi đích đến",
+      "view": "Xem mã thử nghiệm",
+      "none": "Bạn chưa tạo mã thử nghiệm.",
+      "noneText": "Tạo một mã QR Động cho trang web và dùng bản dùng thử để kích hoạt: một liên kết rút gọn thật mà bạn có thể in và thử.",
+      "create": "Tạo mã QR Động thử nghiệm"
+    },
+    "included": {
+      "title": "Có trong bản dùng thử",
+      "kept": "Được giữ lại từ bản dùng thử",
+      "points": [
+        "1 mã QR Động thử nghiệm với liên kết rút gọn thật",
+        "Tổng lượt quét hằng ngày",
+        "Đổi nơi mã dẫn đến bất cứ lúc nào",
+        "Mọi bố cục, hình dạng, màu sắc, logo và chú thích"
+      ],
+      "not": "Mã Tĩnh vẫn cần mua."
+    },
+    "start": {
+      "title": "Dùng thử Động miễn phí 7 ngày",
+      "text": "Không cần thẻ, không tự động trừ tiền. Một mã QR Động thử nghiệm với liên kết rút gọn thật.",
+      "action": "Bắt đầu dùng thử miễn phí 7 ngày",
+      "used": "Bạn đã dùng bản dùng thử miễn phí rồi.",
+      "failed": "Chúng tôi không bắt đầu được bản dùng thử. Hãy thử lại."
+    },
+    "bar": {
+      "active": {
+        "title": "Dùng thử Starter · còn {days, plural, other {# ngày}}.",
+        "text": "Mã thử nghiệm chuyển hướng đến {end}. Chưa lưu thẻ nào."
+      },
+      "ending": {
+        "title": "Bản dùng thử kết thúc {end}.",
+        "text": "Kích hoạt Starter để mã thử nghiệm tiếp tục chuyển hướng."
+      },
+      "expired": {
+        "title": "Bản dùng thử đã kết thúc vào {end}.",
+        "text": "Mã thử nghiệm đang tạm dừng. Kích hoạt Starter để bật lại."
+      },
+      "upgraded": {
+        "title": "Gói Starter của bạn đang hoạt động.",
+        "text": "Mã thử nghiệm giờ là một mã QR Động thông thường."
+      },
+      "open": "Chi tiết dùng thử",
+      "activate": "Kích hoạt Starter…"
+    },
+    "usage": {
+      "title": "Suất Động dùng thử",
+      "count": "{used}/1",
+      "hint": "Một suất hoạt động, không phải hạn mức hằng tháng."
+    },
+    "useTrial": "Dùng bản dùng thử miễn phí · kích hoạt ngay",
+    "useTrialHint": "Một mã QR Động thử nghiệm duy nhất trong thời gian dùng thử. Không cần thẻ.",
+    "useTrialFailed": "Chúng tôi không dùng được bản dùng thử cho mã này. Có thể bạn đã có mã thử nghiệm.",
+    "sample": {
+      "title": "Mẫu Print Pack",
+      "badge": "QR mẫu",
+      "demo": "QR mẫu của Print Pack mẫu",
+      "text": "Xem chính xác một Print Pack gồm những gì. Bản mẫu dùng một QR mẫu mở Hey QR, không phải mã thử nghiệm của bạn.",
+      "pdf": "PDF in mẫu",
+      "pdfSub": "sRGB · trang {w} × {h} mm có tràn lề và dấu cắt",
+      "svg": "SVG chỉnh sửa được mẫu",
+      "svgSub": "sRGB · màu HEX · {w} × {h} mm",
+      "spec": "Thông số mẫu",
+      "specSub": "Bảng PDF · kích thước và giá trị màu"
+    }
+  },
+  "print": {
+    "spec": {
+      "title": "Thông số in",
+      "finished": "Kích thước thành phẩm",
+      "page": "Trang PDF (có tràn lề và dấu)",
+      "bleed": "Tràn lề",
+      "marks": "Dấu cắt",
+      "qr": "Kích thước QR (kèm vùng trống)",
+      "profile": "Hồ sơ màu",
+      "srgb": "sRGB · không chuyển đổi",
+      "logo": "Độ phân giải logo",
+      "vector": "Vector, mọi kích thước",
+      "colors": "Màu (HEX · sRGB)",
+      "key": "Khóa kết xuất",
+      "yes": "Có",
+      "no": "Không",
+      "role_modules": "Ô mã",
+      "role_corners": "Khung góc",
+      "role_centers": "Tâm góc",
+      "role_background": "Nền",
+      "role_frame": "Khung",
+      "role_caption": "Chú thích"
+    },
+    "title": "Xem trước bản in",
+    "leadLocked": "Kiểm tra chính xác trang PDF và thông số in trước khi mua. Các tệp sẽ khớp với những gì bạn thấy ở đây.",
+    "leadUnlocked": "Đây là trang PDF dùng để tạo các tệp của bạn. Điều chỉnh cài đặt và tải lại mà không mất thêm phí.",
+    "locked": "Print Pack đã khóa",
+    "unlocked": "Print Pack đã mở khóa",
+    "back": {
+      "details": "Quay lại chi tiết QR",
+      "export": "Quay lại xuất tệp"
+    },
+    "toDesign": "Quay lại thiết kế",
+    "canvas": "Xem trước trang PDF",
+    "zoom": "Thu phóng",
+    "fit": "Vừa khung",
+    "z100": "100%",
+    "z200": "200%",
+    "guides": "Đường cắt và vùng an toàn",
+    "approx": "Màu in mô phỏng trên màn hình",
+    "trimLabel": "Đường cắt {size}",
+    "generating": "Đang tạo bản xem trước in…",
+    "pageLabel": "Trang PDF in, {w} × {h} mm",
+    "error": {
+      "title": "Chúng tôi không tạo được bản xem trước.",
+      "text": "Bố cục và cài đặt in của bạn vẫn được giữ. Lỗi này thường chỉ là tạm thời.",
+      "retry": "Thử lại"
+    },
+    "foot": {
+      "page": "Trang PDF {size}",
+      "count": "1 trang",
+      "bleed": "Tràn lề {bleed} mm",
+      "noBleed": "Không tràn lề",
+      "marks": "Dấu cắt",
+      "noMarks": "Không có dấu cắt",
+      "pageB": "Trang PDF <b>{size}</b>"
+    },
+    "specTitle": "Thông số in",
+    "keys": {
+      "finished": "Kích thước thành phẩm",
+      "finishedBleed": "+ tràn lề {bleed} mm mỗi cạnh",
+      "finishedNoBleed": "Không tràn lề",
+      "qr": "Kích thước QR",
+      "qrSmall": "Dưới 20 mm · có thể không quét được ở mọi nơi",
+      "qrOk": "Quét được từ khoảng cách tối đa khoảng {cm} cm",
+      "profile": "Hồ sơ màu",
+      "profileSub": "RGB, không chuyển đổi",
+      "logo": "Độ phân giải logo",
+      "logoVector": "Vector",
+      "logoNone": "Không có logo",
+      "logoLow": "Dưới 300 ppi ở kích thước này",
+      "logoOk": "300 ppi trở lên · in sắc nét",
+      "logoVectorSub": "Sắc nét ở mọi kích thước",
+      "logoNoneSub": "Không có gì cần kiểm tra",
+      "logoChecking": "Đang kiểm tra…",
+      "logoCheckingSub": "Đo ở kích thước này"
+    },
+    "unlock": {
+      "title": "Mở khóa Print Pack",
+      "text": "Nhận PDF in, SVG chỉnh sửa được và thông số cho “{name}”, được tạo theo các cài đặt bên dưới.",
+      "action": "Thêm Print Pack · +{price}",
+      "sub": "Thanh toán một lần cho mã QR này. Bạn sẽ quay lại màn hình này với các cài đặt của mình.",
+      "notForSale": "Hiện chưa thể mua Print Pack ở đây. Bạn vẫn có thể kiểm tra trang và thông số.",
+      "needCode": "Hãy mở khóa mã QR này trước: Print Pack là tiện ích bổ sung cho mã đã mua hoặc đang hoạt động.",
+      "buyCode": "Mua mã QR này",
+      "failed": "Không thể mở trang thanh toán. Bạn chưa bị trừ tiền; hãy thử lại.",
+      "cancelled": "Đã hủy thanh toán. Bạn không bị trừ tiền; cài đặt vẫn được giữ.",
+      "pending": "Đang xác nhận thanh toán…",
+      "pendingSub": "Bạn vẫn ở đây, với các cài đặt này.",
+      "useIncluded": "Dùng 1 Print Pack có sẵn trong gói",
+      "payInstead": "Thay vào đó trả {price} và giữ hạn mức",
+      "includedLeft": "Còn {left}/{limit} Print Pack có sẵn trong tháng này · đặt lại {resets}"
+    },
+    "files": {
+      "title": "Print Pack đã mở khóa",
+      "badge": "Sẵn sàng tải xuống",
+      "text": "Các tệp dùng cài đặt bên dưới. Thay đổi một cài đặt và tải lại mà không mất thêm phí.",
+      "pdf": "Tải PDF in",
+      "pdfSub": "sRGB · trang {w} × {h} mm",
+      "svg": "Tải SVG chỉnh sửa được",
+      "svgSub": "sRGB · màu HEX · {w} × {h} mm",
+      "spec": "Tải thông số in",
+      "specSub": "Bảng PDF · kích thước và giá trị màu",
+      "stale": "Bố cục đã thay đổi kể từ bản xem trước này. Hãy kiểm tra lại trang trước khi tải xuống.",
+      "pdfTitle": "PDF in",
+      "svgTitle": "SVG chỉnh sửa được",
+      "specTitle": "Thông số in"
+    },
+    "size": {
+      "title": "Kích thước thành phẩm",
+      "custom": "Tùy chỉnh",
+      "width": "Chiều rộng",
+      "height": "Chiều cao · giữ tỷ lệ",
+      "hint": "Rộng từ 15 đến 600 mm. Mã QR và chú thích co giãn theo bố cục."
+    },
+    "warn": {
+      "qrTitle": "Mã QR rộng {mm} mm",
+      "qrText": "Mã nhỏ hơn 20 mm có thể không quét được trên điện thoại cũ. Hãy phóng to bố cục hoặc giữ mã rộng ít nhất 20 mm.",
+      "logoTitle": "Logo của bạn đạt {ppi} ppi ở kích thước này",
+      "logoText": "Logo có thể in bị mờ. Hãy tải lên logo rộng ít nhất {px} px hoặc in ở 100%.",
+      "upload": "Tải lên logo có độ phân giải cao hơn",
+      "use100": "Dùng kích thước 100%"
+    },
+    "profiles": {
+      "title": "Hồ sơ màu cho PDF in",
+      "srgb": "sRGB · không chuyển đổi",
+      "srgbDesc": "Dành cho máy in kỹ thuật số và hầu hết nhà in trực tuyến.",
+      "fogra39": "Coated FOGRA39",
+      "gracol": "GRACoL 2013",
+      "fogra29": "Uncoated FOGRA29",
+      "cmykDesc": "Chuyển đổi CMYK hiện chưa khả dụng.",
+      "shop": "<b>Hãy xác nhận với nhà in.</b> Hỏi họ cần hồ sơ màu nào. Nếu họ không chắc, hãy gửi PDF kèm bảng thông số."
+    },
+    "colors": {
+      "title": "Màu sắc",
+      "legendHex": "<b>HEX · sRGB</b> SVG chỉnh sửa được",
+      "legendCmyk": "<b>CMYK</b> chỉ với hồ sơ CMYK",
+      "none": "—",
+      "note": "Màu là giá trị sRGB chính xác trong cả hai tệp. Màn hình hiển thị màu in mô phỏng gần đúng."
+    },
+    "tech": {
+      "title": "Cài đặt kỹ thuật",
+      "bleed": "Tràn lề",
+      "bleedDesc": "Nền kéo dài qua đường cắt",
+      "marks": "Dấu cắt",
+      "k100": "In ô mã đen dạng 100% K",
+      "k100Hint": "Khả dụng với hồ sơ CMYK.",
+      "pdf": "Chuẩn PDF",
+      "pdfV": "PDF 1.7, vector",
+      "text": "Chữ",
+      "textV": "Đã nhúng phông chữ",
+      "logo": "Logo",
+      "logoRaster": "Raster {px} px · {ppi} ppi ở {mm} mm",
+      "logoVector": "Vector",
+      "quiet": "Vùng trống",
+      "quietV": "4 ô mã ở mỗi cạnh",
+      "safe": "Vùng an toàn",
+      "safeV": "{mm} mm bên trong đường cắt",
+      "intent": "Mục đích đầu ra",
+      "intentV": "sRGB, không chuyển đổi",
+      "none": "Không có"
+    },
+    "notPrint": {
+      "title": "Bố cục này dành cho màn hình",
+      "text": "Print Pack cần một bố cục in tính bằng mm. Đổi đơn vị trong Thiết kế → Kích thước để thêm.",
+      "action": "Thiết lập để in"
+    },
+    "pack": {
+      "title": "Print Pack",
+      "add": "Thêm Print Pack và gửi cho nhà in mọi thứ trong một lần tải: PDF in có tràn lề và dấu cắt, một SVG chỉnh sửa được và bảng thông số màu, kích thước. Hãy kiểm tra trang trước trong Xem trước bản in.",
+      "preview": "Xem trước bản in · {layout}",
+      "defaults": "Cài đặt mặc định: kích thước 100%, tràn lề 3 mm, dấu cắt. Thay đổi trong Xem trước bản in.",
+      "open": "Mở Xem trước bản in"
+    },
+    "plan": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "sample": {
+      "pageTitle": "Xem trước bản in · mẫu",
+      "name": "Little Fern Coffee",
+      "layout": "Mẫu thẻ thương hiệu",
+      "back": "Về trang chủ",
+      "title": "Đây là bản mẫu",
+      "text": "Một QR mẫu cho thấy chính xác Print Pack gồm những gì. Hãy tạo mã của riêng bạn, rồi kiểm tra tệp in ở đây trước khi mua.",
+      "create": "Tạo mã QR của bạn",
+      "pricing": "Xem chi tiết Print Pack"
+    }
+  },
+  "plans": {
+    "title": "Trả một lần cho vài mã, hoặc chọn gói cho nhiều mã.",
+    "lead": "Thiết kế, xem trước và kiểm tra quét luôn miễn phí. Bạn chỉ trả tiền khi tải xuống.",
+    "currencyLabel": "Hiển thị giá bằng",
+    "localTitle": "Giá địa phương bằng {currency}.",
+    "localText": "Toàn bộ trang web, trang thanh toán và biên lai đều dùng các số tiền này. Thuế được cộng khi thanh toán.",
+    "pendingTitle": "Một số giá bằng {currency} chưa được thiết lập.",
+    "pendingText": "Các ưu đãi chưa có giá bằng {currency} hiện chưa thể mua bằng {currency}. Không có gì được quy đổi từ tiền tệ khác.",
+    "unavailable": "Hiện chưa có bán bằng {currency}.",
+    "current": "Gói hiện tại của bạn",
+    "manage": "Quản lý gói của bạn",
+    "perMonth": "mỗi tháng",
+    "live": "Hoạt động cùng lúc",
+    "monthly": "Mới mỗi tháng",
+    "dynCodes": "<b>{n}</b> mã QR Động",
+    "unlocks": "<b>{n}</b> lượt mở khóa QR Tĩnh",
+    "packsIncl": "<b>{n}</b> Print Pack",
+    "once": {
+      "title": "Một lần",
+      "sub": "Không cần đăng ký. Mã bạn mở khóa vẫn là của bạn."
+    },
+    "month": {
+      "title": "Hằng tháng",
+      "sub": "Cho mã QR Động và nhiều mã Tĩnh. Hủy bất cứ lúc nào."
+    },
+    "free": {
+      "title": "Miễn phí",
+      "q": "Thiết kế và thử mã trước khi chi bất cứ khoản nào.",
+      "a": "Thiết kế và xem trước trực tiếp",
+      "b": "Kiểm tra quét sau mỗi lần chỉnh sửa",
+      "c": "Tối đa {limit} bản nháp đã lưu khi đăng nhập",
+      "cta": "Bắt đầu thiết kế"
+    },
+    "single": {
+      "title": "QR đơn lẻ",
+      "unit": "một lần",
+      "q": "Một mã QR Tĩnh kèm mọi lượt tải xuống.",
+      "a": "Tải xuống PNG và SVG",
+      "b": "Mọi bố cục của mã QR đó, tải lại bất cứ lúc nào",
+      "c": "Print Pack tùy chọn +{price}",
+      "cta": "Tạo mã QR"
+    },
+    "packs": {
+      "title": "Gói Tĩnh",
+      "unit": "cho {n} tín dụng",
+      "credits": "{n} tín dụng Tĩnh",
+      "each": "{price} mỗi QR",
+      "buy": "Mua {n} tín dụng",
+      "note": "Một tín dụng mở khóa một mã QR Tĩnh riêng biệt, bất cứ khi nào bạn sẵn sàng. Tín dụng không hết hạn."
+    },
+    "pp": {
+      "kicker": "Tiện ích bổ sung cho mọi QR",
+      "title": "Print Pack · +{price} mỗi QR",
+      "text": "Tắt theo mặc định. Thêm khi thanh toán hoặc sau đó trong chi tiết mã QR. Studio bao gồm {n} mỗi tháng.",
+      "pdf": "PDF in dạng vector",
+      "pdfSub": "sRGB, tràn lề 3 mm và dấu cắt, đúng kích thước.",
+      "svg": "SVG chỉnh sửa được",
+      "svgSub": "Cho thiết kế riêng của bạn, với màu sRGB và HEX.",
+      "spec": "Bảng màu và kích thước",
+      "specSub": "Kích thước thành phẩm, kích thước QR, vùng trống và giá trị màu."
+    },
+    "starter": {
+      "title": "Starter",
+      "badge": "Dùng thử miễn phí 7 ngày",
+      "a": "Phân tích lượt quét cơ bản: tổng theo ngày",
+      "b": "Đổi đích đến mã Động bất cứ lúc nào",
+      "c": "Print Pack +{price} mỗi QR",
+      "trial": "Bắt đầu dùng thử miễn phí 7 ngày",
+      "openTrial": "Mở bản dùng thử",
+      "subscribe": "Đăng ký ngay · {price}/tháng",
+      "note": "Dùng thử: không cần thẻ, không tự động trừ tiền."
+    },
+    "studio": {
+      "title": "Studio",
+      "badge": "Cho nhóm và công việc in ấn",
+      "a": "Phân tích lượt quét theo từng mã",
+      "b": "Đổi đích đến mã Động bất cứ lúc nào",
+      "c": "Print Pack thêm +{price} mỗi QR",
+      "cta": "Chọn Studio"
+    },
+    "rules": {
+      "title": "Cách hoạt động của lượt mở khóa và giới hạn",
+      "1t": "Một lượt mở khóa, một mã QR riêng biệt",
+      "1d": "Một tín dụng Tĩnh hoặc lượt mở khóa hằng tháng mở một mã QR. Tất cả bố cục, tệp PNG và SVG cùng các lượt tải lại đều dùng chung lượt mở khóa đó.",
+      "2t": "Hạn mức hằng tháng được đặt lại",
+      "2d": "Lượt mở khóa Tĩnh mới và Print Pack có sẵn được làm mới vào ngày thanh toán. Phần chưa dùng không được cộng dồn.",
+      "3t": "Suất Động tính theo thời gian thực, không theo tháng",
+      "3d": "Một suất được dùng khi mã đang chuyển hướng. Tạm dừng hoặc xóa một mã Động để giải phóng suất ngay lập tức.",
+      "4t": "Vẫn là của bạn sau khi hủy",
+      "4d": "Các mã Tĩnh bạn đã mở khóa vẫn là của bạn: bản in vẫn hoạt động và tệp vẫn tải xuống được. Khi hết thời hạn đã thanh toán, liên kết rút gọn Động ngừng chuyển hướng và không thể tải xuống hay kích hoạt. Các mã của bạn vẫn được giữ.",
+      "5t": "Nếu thanh toán gia hạn thất bại",
+      "5d": "Gói của bạn vẫn hoạt động trong khi khoản thanh toán quá hạn và Stripe thử lại. Nếu không thu được và gói đăng ký kết thúc, gói sẽ kết thúc như khi bị hủy. Khi thanh toán thành công, gói của bạn tiếp tục."
+    },
+    "cmp": {
+      "title": "So sánh",
+      "what": "Tính năng",
+      "region": "So sánh các gói",
+      "more": "Cuộn để xem thêm gói",
+      "pick1": "Gói thứ nhất",
+      "pick2": "Gói thứ hai",
+      "yes": "Có",
+      "no": "Không có",
+      "na": "Không áp dụng: không phải gói đăng ký",
+      "model": {
+        "free": "Miễn phí",
+        "once": "Mua một lần",
+        "credits": "Tín dụng",
+        "monthly": "Đăng ký hằng tháng"
+      },
+      "once": "một lần",
+      "mo": "/th",
+      "live": "Thiết kế, xem trước và kiểm tra quét trực tiếp",
+      "static": "Lượt mở khóa QR Tĩnh",
+      "staticHint": "Tệp PNG và SVG",
+      "dynamic": "Suất QR Động đang hoạt động",
+      "dynamicHint": "Hoạt động cùng lúc",
+      "analytics": "Phân tích lượt quét",
+      "printPack": "Print Pack",
+      "repeat": "Tải lại",
+      "cancel": "Sau khi bạn hủy",
+      "oneQr": "1 QR",
+      "perCredit": "1 QR mỗi tín dụng",
+      "noExpiry": "Tín dụng không hết hạn",
+      "perMonth": "{n} mới mỗi tháng",
+      "noRollover": "Phần chưa dùng không được cộng dồn",
+      "atOnce": "{n} hoạt động cùng lúc",
+      "freeSlot": "Tạm dừng một mã để giải phóng suất",
+      "basic": "Cơ bản",
+      "daily": "Tổng theo ngày",
+      "perCode": "Theo từng mã",
+      "ppAdd": "+{price} mỗi QR",
+      "ppStudio": "{n} có sẵn mỗi tháng",
+      "ppThen": "Sau đó +{price} mỗi QR",
+      "stay": "Mã Tĩnh vẫn tải xuống được",
+      "dynStop": "Liên kết Động ngừng chuyển hướng khi hết thời hạn đã thanh toán",
+      "foot": "Thuế được tính khi thanh toán. Mã trang web có thể là Tĩnh hoặc Động; mã Văn bản, Wi-Fi và thẻ liên hệ là mã Tĩnh."
+    },
+    "errors": {
+      "not_offered": "Hiện chưa thể mua mục này bằng loại tiền tệ đã chọn. Bạn chưa bị trừ tiền.",
+      "price_mismatch": "Giá đã thay đổi kể từ khi trang này được tải. Bạn chưa bị trừ tiền; hãy tải lại trang để xem giá hiện tại.",
+      "unauthorized": "Đăng nhập để tiếp tục.",
+      "failed": "Không thể mở trang thanh toán. Bạn chưa bị trừ tiền; hãy thử lại."
+    },
+    "terms": "Hủy bất cứ lúc nào: gói của bạn hoạt động đến hết thời hạn đã thanh toán. Nếu thanh toán gia hạn thất bại, gói vẫn hoạt động trong khi khoản thanh toán quá hạn."
+  },
+  "apiKeys": {
+    "title": "Khóa API",
+    "lead": "Khóa cho phép các công cụ riêng của bạn làm việc với mã QR của tài khoản này. Mỗi khóa chỉ thuộc về tài khoản này.",
+    "yourKeys": "Khóa của bạn",
+    "create": "Tạo khóa API",
+    "once": "Hãy sao chép khóa này ngay. Vì lý do bảo mật, khóa chỉ hiển thị một lần và không thể lấy lại sau.",
+    "copy": "Sao chép",
+    "copied": "Đã sao chép",
+    "done": "Xong",
+    "none": "Chưa có khóa API nào.",
+    "created": "Tạo ngày {date}",
+    "failed": "Chúng tôi không tạo được khóa. Chưa có gì được lưu; hãy thử lại.",
+    "active": "Đang hoạt động",
+    "revoked": "Đã thu hồi",
+    "revokedOn": "Thu hồi ngày {date}",
+    "lastUsed": "Dùng lần cuối {date}",
+    "neverUsed": "Chưa từng dùng",
+    "revoke": {
+      "action": "Thu hồi",
+      "label": "Thu hồi {prefix}",
+      "title": "Thu hồi {prefix}?",
+      "text": "Các công cụ dùng khóa này sẽ ngừng hoạt động ngay lập tức. Các khóa khác vẫn hoạt động. Không thể hoàn tác.",
+      "confirm": "Thu hồi khóa",
+      "cancel": "Hủy",
+      "done": "Đã thu hồi {prefix}.",
+      "failed": "Chúng tôi không thu hồi được khóa. Không có gì thay đổi; hãy thử lại.",
+      "close": "Đóng"
+    }
+  },
+  "hosted": {
+    "hostedBy": "Được lưu trữ bởi HeyQR",
+    "report": "Báo cáo trang này",
+    "unavailableTitle": "Trang này không khả dụng",
+    "unavailableText": "Chủ sở hữu đã tạm dừng mã QR này hoặc đã xóa trang. Hãy thử lại sau hoặc liên hệ trực tiếp với họ.",
+    "loading": "Đang tải trang",
+    "menu": {
+      "kicker": "Thực đơn",
+      "sections": "Các mục thực đơn"
+    },
+    "coupon": {
+      "kicker": "Phiếu giảm giá",
+      "expiredKicker": "Ưu đãi đã kết thúc",
+      "copy": "Sao chép mã",
+      "copied": "Đã sao chép",
+      "redeem": "Dùng trực tuyến",
+      "expired": "Đã hết hạn",
+      "ended": "Ưu đãi này đã kết thúc. Hãy hỏi cửa hàng về các ưu đãi hiện có.",
+      "ends": "Kết thúc {date}",
+      "endedOn": "Đã kết thúc {date}",
+      "terms": "Điều kiện"
+    },
+    "social": {
+      "links": "Liên kết"
+    },
+    "business": {
+      "kicker": "Doanh nghiệp",
+      "openNow": "Đang mở cửa · đến {to}",
+      "closedNow": "Hiện đang đóng cửa",
+      "closedToday": "Hôm nay đóng cửa",
+      "call": "Gọi",
+      "directions": "Chỉ đường",
+      "website": "Trang web",
+      "hours": "Giờ mở cửa",
+      "closed": "Đóng cửa",
+      "days": {
+        "mon": "T2",
+        "tue": "T3",
+        "wed": "T4",
+        "thu": "T5",
+        "fri": "T6",
+        "sat": "T7",
+        "sun": "CN"
+      },
+      "closedOpens": "Hiện đang đóng cửa · mở lúc {from}"
+    },
+    "apps": {
+      "appStoreTop": "Tải về trên",
+      "appStore": "App Store",
+      "playTop": "Tải về trên",
+      "play": "Google Play",
+      "phoneNote": "Mở liên kết đến cửa hàng ứng dụng trên điện thoại của bạn.",
+      "desktopNote": "Trên máy tính, các nút sẽ mở trang web của từng cửa hàng.",
+      "scanTitle": "Quét bằng điện thoại",
+      "scanText": "Mã sẽ mở App Store trên iPhone và Google Play trên Android.",
+      "qrLabel": "Mã QR cho trang này"
+    },
+    "pdf": {
+      "open": "Mở PDF",
+      "download": "Tải xuống",
+      "meta": "{pages, plural, other {# trang}} · {size}",
+      "metaNoPages": "{size}",
+      "waiting": "Phiên bản mới của tài liệu này đang được chuẩn bị. Hãy thử lại sau giây lát.",
+      "notReady": "Tài liệu vẫn đang được chuẩn bị."
+    },
+    "product": {
+      "photos": "Ảnh sản phẩm",
+      "photo": "Ảnh {n}/{count}",
+      "prev": "Ảnh trước",
+      "next": "Ảnh tiếp theo",
+      "opens": "Mở {host}"
+    },
+    "reportForm": {
+      "title": "Báo cáo trang này",
+      "lead": "Hãy cho chúng tôi biết vấn đề. HeyQR xem xét mọi báo cáo.",
+      "reason": "Lý do",
+      "reasons": {
+        "scam": "Lừa đảo hoặc gian lận",
+        "malware": "Phần mềm độc hại hoặc tệp tải xuống nguy hiểm",
+        "illegal": "Nội dung bất hợp pháp hoặc có hại",
+        "impersonation": "Mạo danh người khác",
+        "other": "Lý do khác"
+      },
+      "details": "Chi tiết",
+      "detailsPlaceholder": "Bạn đã thấy gì? (không bắt buộc)",
+      "email": "Email của bạn",
+      "emailHint": "Không bắt buộc. Chỉ dùng nếu chúng tôi cần hỏi bạn thêm.",
+      "send": "Gửi báo cáo",
+      "sending": "Đang gửi…",
+      "sent": "Cảm ơn bạn. Chúng tôi sẽ xem xét trang này.",
+      "failed": "Không thể gửi báo cáo. Hãy thử lại.",
+      "invalid": "Hãy chọn lý do và kiểm tra lại địa chỉ email.",
+      "back": "Quay lại trang"
+    }
+  },
+  "developers": {
+    "metaTitle": "API cho nhà phát triển",
+    "metaDescription": "Tạo mã HeyQR ngay trong code của bạn: gói @heyqr/qr-core cho mã tĩnh và REST API cho mã Động sắp ra mắt.",
+    "docs": {
+      "search": {
+        "label": "Tìm trong tài liệu",
+        "placeholder": "Tìm trong tài liệu",
+        "clear": "Xóa tìm kiếm",
+        "empty": "Không có trang nào khớp với “{query}”.",
+        "emptyHint": "Hãy thử “logo”, “PNG”, “quét” hoặc “Wi-Fi”.",
+        "suggestions": ["logo", "PNG", "quét", "Wi-Fi"],
+        "resultOne": "1 trang",
+        "resultOther": "{count} trang"
+      },
+      "groups": {
+        "start": "Bắt đầu",
+        "guides": "Hướng dẫn",
+        "ref": "Tham chiếu",
+        "help": "Trợ giúp",
+        "rest": "REST API"
+      },
+      "menu": {
+        "open": "Mở menu tài liệu",
+        "close": "Đóng menu tài liệu",
+        "label": "Tài liệu"
+      },
+      "breadcrumbRoot": "Nhà phát triển",
+      "onThisPage": "Trên trang này",
+      "backToTop": "Lên đầu trang",
+      "previous": "Trước",
+      "next": "Tiếp",
+      "soon": "Sắp có",
+      "preview": "Xem trước",
+      "designPreview": "Bản xem trước thiết kế",
+      "notPublic": "Chưa công khai",
+      "env": {
+        "both": "Trình duyệt và Node.js",
+        "browser": "Trình duyệt",
+        "node": "Chỉ Node.js",
+        "shell": "Terminal",
+        "types": "Kiểu",
+        "http": "HTTP",
+        "json": "JSON"
+      },
+      "copy": "Sao chép",
+      "copied": "Đã sao chép",
+      "copiedAnnounce": "Đã sao chép {file} vào bộ nhớ tạm",
+      "copyFailed": "Không thể sao chép. Hãy tự chọn đoạn code.",
+      "required": "Bắt buộc",
+      "endpoint": {
+        "auth": "Xác thực",
+        "authValue": "Authorization: Bearer <khóa API>",
+        "method": "Phương thức",
+        "url": "URL yêu cầu",
+        "base": "Trên máy chủ HeyQR mà bạn dùng; API công khai chưa khả dụng."
+      },
+      "helpful": {
+        "question": "Trang này có hữu ích không?",
+        "yes": "Có",
+        "no": "Không",
+        "sending": "Đang gửi…",
+        "thanks": "Cảm ơn bạn đã góp ý.",
+        "failed": "Không thể lưu. Hãy thử lại."
+      },
+      "footer": {
+        "checked": "Đã đối chiếu với mã nguồn @heyqr/qr-core {version}. Route: {route}",
+        "restChecked": "Đã đối chiếu với các route /api/v1 của bản build này. Route: {route}",
+        "proposed": "Thiết kế đề xuất. Không phải hợp đồng đã công bố."
+      },
+      "status": {
+        "unpublished": "Chưa phát hành",
+        "live": "Đang hoạt động",
+        "liveOnNpm": "Đã có trên npm",
+        "soon": "Sắp ra mắt"
+      },
+      "products": {
+        "pkgTitle": "Gói npm",
+        "pkgText": "Miễn phí. Mã QR tĩnh được tạo ngay trên máy của bạn. Không cần tài khoản, không cần khóa API.",
+        "restTitle": "REST API",
+        "restText": "Tạo và quản lý mã, bao gồm cả mã Động, từ máy chủ của bạn."
+      },
+      "install": {
+        "managers": "Trình quản lý gói",
+        "npmLink": "npmjs.com/package/{name}",
+        "opensNewTab": "(mở trong thẻ mới)",
+        "unpublishedTitle": "Chưa có trên npm",
+        "unpublishedText": "{name} {version} chưa được phát hành nên chưa có gì để cài đặt. Mọi nội dung trên các trang này đều khớp với mã nguồn hiện tại. Nhận email khi gói ra mắt:"
+      },
+      "restSoon": {
+        "cardTitle": "Mã Động từ máy chủ của bạn",
+        "cardText": "Khóa API từ tài khoản sẽ cho phép bạn tạo mã, thay đổi đích đến của mã Động và xem số lượt quét. Chúng tôi sẽ công bố tài liệu tham chiếu đầy đủ với yêu cầu và phản hồi thực tế khi API mở.",
+        "planned": "Dự kiến",
+        "items": [
+          "Khóa API cho tài khoản của bạn",
+          "Tạo một mã hoặc tối đa 100 mã cùng lúc",
+          "Thay đổi đích đến của mã Động",
+          "Số lượt quét theo ngày"
+        ],
+        "npmLink": "Dùng gói npm ngay"
+      },
+      "waitlist": {
+        "label": "Nhận email khi REST API mở",
+        "placeholder": "you@company.com",
+        "join": "Tham gia danh sách chờ",
+        "joining": "Đang tham gia…",
+        "invalid": "Hãy kiểm tra địa chỉ. Địa chỉ cần có tên, @ và tên miền.",
+        "failed": "Hiện chưa thể thêm bạn. Hãy thử lại.",
+        "joined": "Bạn đã có tên trong danh sách. Chúng tôi sẽ gửi thư đến {email} khi REST API mở.",
+        "hint": "Chỉ một email khi API mở. Không có bản tin."
+      },
+      "notifyPackages": {
+        "label": "Nhận email khi gói được phát hành",
+        "join": "Gửi email cho tôi",
+        "joined": "Bạn đã có tên trong danh sách. Chúng tôi sẽ gửi thư đến {email} khi gói được phát hành.",
+        "hint": "Chỉ một email khi gói ra mắt. Không có bản tin."
+      },
+      "responseNotes": {
+        "created": "Mã đã được tạo dưới dạng bản nháp, mỗi bố cục trong yêu cầu có một layout id.",
+        "invalid": "Một trường vi phạm quy tắc; `details` nêu tên từng trường và không bao giờ lặp lại giá trị.",
+        "draftLimit": "Tài khoản đã đạt số bản nháp tối đa.",
+        "reused": "Idempotency-Key đã được dùng cho một yêu cầu khác; không có gì được tạo.",
+        "changed": "Đã lưu. `changed` là false khi địa chỉ trùng với địa chỉ đã lưu.",
+        "conflict": "Có người đã thay đổi trước. `current` là giá trị đang được lưu; hãy đọc nó và quyết định lại.",
+        "notDynamic": "Mã tĩnh không có đích đến: nội dung nằm ngay trong hoa văn.",
+        "rateLimited": "Vượt quá hạn mức của tài khoản. Hãy chờ Retry-After giây rồi gửi lại cùng yêu cầu đó.",
+        "unauthorized": "Mọi khóa không xác minh được đều nhận phản hồi này, trước khi phần body được đọc.",
+        "bulk202": "Thăm dò GET /v1/jobs/{job_id} hoặc chờ webhook.",
+        "bulk400": "Không mã nào được tạo nếu có bất kỳ mục nào lỗi.",
+        "scans200": "Những ngày không có lượt quét vẫn được đưa vào với giá trị 0."
+      },
+      "pages": {
+        "overview": {
+          "title": "API cho nhà phát triển",
+          "nav": "Tổng quan",
+          "lead": "Tạo mã HeyQR ngay trong code của bạn. Bắt đầu ngay hôm nay với gói npm miễn phí; REST API cho mã Động đang được phát triển.",
+          "blocks": [
+            {
+              "k": "products"
+            },
+            {
+              "k": "h2",
+              "id": "what",
+              "t": "Bạn có thể xây dựng gì"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Mã QR có phong cách riêng trong ứng dụng trình duyệt: hình dạng, màu sắc, logo hoặc chữ ngắn ở giữa.",
+                "Tệp SVG và PNG sẵn sàng để in từ script hoặc tác vụ trên máy chủ.",
+                "Kiểm tra khả năng quét trước khi hiển thị hoặc in: độ tương phản, màu đảo ngược, logo che quá nhiều.",
+                "Bố cục đầy đủ với khung và chú thích, giống hệt các bố cục mà trình chỉnh sửa HeyQR xuất ra."
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "entries",
+              "t": "Điểm nhập"
+            },
+            {
+              "k": "p",
+              "t": "Một gói, năm điểm import. Dùng điểm nhập chính ở bất cứ đâu; các điểm còn lại dành cho Node.js hoặc để giải mã trong trình duyệt."
+            },
+            {
+              "k": "table",
+              "label": "Điểm nhập",
+              "cols": ["Import", "Chạy trên", "Cung cấp gì"],
+              "rows": [
+                {
+                  "cells": [
+                    "`@heyqr/qr-core`",
+                    "Trình duyệt và Node.js",
+                    "`encodePayload`, `renderQr`, `renderQrSvg`, `composeLayout`, các hàm hỗ trợ về màu sắc và dung lượng"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/raster`", "Chỉ Node.js", "`rasterizeSvg`: chuyển SVG sang PNG bằng resvg"],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/verify`", "Chỉ Node.js", "`decodeSvg`, `decodeImage`, `verifyScan`: đọc lại mã bằng ZXing"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`@heyqr/qr-core/verify-browser`",
+                    "Trình duyệt",
+                    "`decodeSvgInBrowser`: cùng bộ giải mã đó, từ tệp wasm do bạn tự lưu trữ"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/node`", "Chỉ Node.js", "`rasterizeSvg` và các hàm kiểm tra trong một lần import"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Gói này tạo mã tĩnh: nội dung được tích hợp sẵn vào hoa văn. Mã Động với liên kết ngắn có thể chỉnh sửa và số lượt quét cần gói HeyQR và đi kèm REST API."
+            },
+            {
+              "k": "h2",
+              "id": "next",
+              "t": "Bước tiếp theo"
+            },
+            {
+              "k": "cards",
+              "items": [
+                {
+                  "page": "quickstart",
+                  "title": "Bắt đầu nhanh",
+                  "t": "Mã đầu tiên của bạn chỉ trong năm dòng.",
+                  "icon": "zap"
+                },
+                {
+                  "page": "content",
+                  "title": "Mã hóa nội dung",
+                  "t": "Trang web, Wi-Fi, danh bạ, sự kiện và nhiều hơn nữa.",
+                  "icon": "book"
+                },
+                {
+                  "page": "scan",
+                  "title": "Kiểm tra khả năng quét",
+                  "t": "Đọc báo cáo quét và giải mã kết quả.",
+                  "icon": "scan"
+                },
+                {
+                  "page": "api",
+                  "title": "Hàm",
+                  "t": "Mọi export kèm chữ ký hàm.",
+                  "icon": "braces"
+                }
+              ]
+            }
+          ]
+        },
+        "install": {
+          "title": "Cài đặt",
+          "lead": "Thêm @heyqr/qr-core vào ứng dụng trình duyệt, dịch vụ Node.js hoặc cả hai.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "add",
+              "t": "Thêm gói"
+            },
+            {
+              "k": "install",
+              "package": "qrCore"
+            },
+            {
+              "k": "h2",
+              "id": "reqs",
+              "t": "Yêu cầu"
+            },
+            {
+              "k": "table",
+              "label": "Yêu cầu",
+              "cols": ["Mục", "Chi tiết"],
+              "rows": [
+                {
+                  "cells": ["Định dạng module", "Chỉ ES modules (gói có `\"type\": \"module\"`). Dùng `import`, không dùng `require`."],
+                  "required": false
+                },
+                {
+                  "cells": ["TypeScript", "Kiểu đi kèm sẵn trong gói. Không cần gói `@types`."],
+                  "required": false
+                },
+                {
+                  "cells": ["Trình duyệt", "Điểm nhập chính không phụ thuộc Node.js và hoạt động với mọi bundler hiện đại."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "Node.js",
+                    "`/raster` và `/verify` dùng `@resvg/resvg-js`, một module native có sẵn bản build cho các nền tảng phổ biến."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "Giải mã trong trình duyệt",
+                    "`/verify-browser` tải `zxing_reader.wasm` từ URL do bạn chọn, không bao giờ từ CDN."
+                  ],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "wasm",
+              "t": "Lưu trữ bộ giải mã cho trình duyệt"
+            },
+            {
+              "k": "p",
+              "t": "Chỉ cần cho `decodeSvgInBrowser`. Sao chép tệp wasm từ dependency `zxing-wasm` vào thư mục public và truyền URL của nó. Lệnh tìm tệp thông qua gói nên hoạt động với npm, pnpm và Yarn."
+            },
+            {
+              "k": "code",
+              "example": "wasm"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Tệp là `zxing-wasm/reader/zxing_reader.wasm` trong zxing-wasm 3.1.7, phiên bản mà gói đang phụ thuộc hiện nay. Hãy kiểm tra lại sau khi nâng cấp."
+            }
+          ]
+        },
+        "quickstart": {
+          "title": "Bắt đầu nhanh",
+          "lead": "Mã hóa nội dung, tạo kiểu, kiểm tra khả năng quét và nhận tệp SVG, chỉ trong khoảng một phút.",
+          "blocks": [
+            {
+              "k": "steps",
+              "items": [
+                {
+                  "title": "Cài đặt",
+                  "t": "Thêm `@heyqr/qr-core` bằng trình quản lý gói của bạn."
+                },
+                {
+                  "title": "Mã hóa nội dung",
+                  "t": "`encodePayload` chuyển trang web, mạng Wi-Fi hoặc danh bạ thành văn bản bên trong mã."
+                },
+                {
+                  "title": "Mô tả giao diện",
+                  "t": "`QrStyle` thiết lập hình dạng module, hình dạng góc và màu sắc."
+                },
+                {
+                  "title": "Kiểm tra khả năng quét",
+                  "t": "`renderQr` trả về báo cáo quét kèm cách khắc phục cho từng vấn đề."
+                },
+                {
+                  "title": "Nhận tệp",
+                  "t": "`renderQrSvg` trả về một tệp SVG độc lập; trong Node.js, `rasterizeSvg` chuyển nó thành PNG."
+                }
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "Trong trình duyệt"
+            },
+            {
+              "k": "code",
+              "example": "quickstartBrowser"
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Lưu tệp trong Node.js"
+            },
+            {
+              "k": "code",
+              "example": "quickstartNode"
+            }
+          ]
+        },
+        "content": {
+          "title": "Mã hóa nội dung",
+          "lead": "encodePayload chuyển nội dung có cấu trúc thành đúng văn bản mà điện thoại mong đợi cho từng loại mã.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "types",
+              "t": "Loại nội dung"
+            },
+            {
+              "k": "p",
+              "t": "Truyền vào một trong chín đối tượng `QrContent`. `QR_CONTENT_TYPES` liệt kê các giá trị `type`."
+            },
+            {
+              "k": "table",
+              "label": "Loại nội dung",
+              "cols": ["type", "Trường", "Mã chứa"],
+              "rows": [
+                {
+                  "cells": ["`website`", "`url` (tên miền trần được thêm https://)", "URL đã chuẩn hóa"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "`text`", "Văn bản giữ nguyên"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`wifi`",
+                    "`ssid`, `security` \"WPA\" | \"WEP\" | \"nopass\", `password?`, `hidden?`",
+                    "`WIFI:T:WPA;S:…;P:…;;`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`contact`",
+                    "`firstName?`, `lastName?`, `title?`, `company?`, `phone?`, `email?`, `website?`",
+                    "Một vCard 3.0"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`email`", "`to`, `subject?`, `body?`", "`mailto:` kèm tiêu đề và nội dung"],
+                  "required": false
+                },
+                {
+                  "cells": ["`phone`", "`number`", "`tel:` với chữ số và dấu +"],
+                  "required": false
+                },
+                {
+                  "cells": ["`sms`", "`number`, `message?`", "`SMSTO:number:message`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`location`", "`address`, `name?`", "`geo:0,0?q=` kèm địa chỉ"],
+                  "required": false
+                },
+                {
+                  "cells": ["`event`", "`title`, `start`, `end?`, `place?`", "Một sự kiện lịch (VEVENT)"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "examples",
+              "t": "Ví dụ"
+            },
+            {
+              "k": "code",
+              "example": "contentExamples"
+            },
+            {
+              "k": "h2",
+              "id": "contact",
+              "t": "Danh thiếp liên hệ"
+            },
+            {
+              "k": "p",
+              "t": "Danh bạ được chuyển thành vCard 3.0, phiên bản mà camera điện thoại đọc ổn định nhất. Trường trống bị bỏ qua và dòng dài được ngắt."
+            },
+            {
+              "k": "code",
+              "example": "vcard"
+            },
+            {
+              "k": "h2",
+              "id": "events",
+              "t": "Sự kiện"
+            },
+            {
+              "k": "p",
+              "t": "`start` và `end` là giờ địa phương, ví dụ `2026-12-05T19:00`. Ngày không kèm giờ, ví dụ `2026-12-05`, tạo sự kiện cả ngày."
+            },
+            {
+              "k": "code",
+              "example": "event"
+            },
+            {
+              "k": "h2",
+              "id": "urls",
+              "t": "Kiểm tra địa chỉ trang web"
+            },
+            {
+              "k": "p",
+              "t": "`parseWebsiteUrl` là cùng bước kiểm tra mà trình chỉnh sửa HeyQR sử dụng. Hàm từ chối dấu cách, scheme khác, thông tin đăng nhập và host không có dấu chấm."
+            },
+            {
+              "k": "code",
+              "example": "urlCheck"
+            }
+          ]
+        },
+        "style": {
+          "title": "Tạo kiểu cho mã",
+          "lead": "QrStyle mô tả hình dạng và màu sắc. Mọi kiểu đều được kiểm tra theo cùng các quy tắc quét.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "shapes",
+              "t": "Hình dạng"
+            },
+            {
+              "k": "chips",
+              "t": "pattern · module dữ liệu",
+              "items": ["square", "rounded", "dot", "diamond", "leaf", "fluid", "vbars", "hbars"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeFrame · vòng của điểm đánh dấu góc",
+              "items": ["square", "rounded", "cushion", "circle", "leaf"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeBall · tâm của điểm đánh dấu góc",
+              "items": ["square", "rounded", "circle", "diamond", "leaf"]
+            },
+            {
+              "k": "h2",
+              "id": "colors",
+              "t": "Màu sắc"
+            },
+            {
+              "k": "p",
+              "t": "`colors` nhận bốn màu hex: `fg` cho module dữ liệu, `eye` cho vòng góc, `eyeIn` cho tâm góc và `bg` cho nền."
+            },
+            {
+              "k": "table",
+              "label": "Độ tương phản tối thiểu",
+              "cols": ["Thành phần", "Độ tương phản tối thiểu với nền"],
+              "rows": [
+                {
+                  "cells": ["Module dữ liệu (`fg`)", "3 : 1 (`MIN_CONTRAST.modules`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Vòng góc (`eye`)", "3 : 1 (`MIN_CONTRAST.eyeFrame`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Tâm góc (`eyeIn`)", "2.5 : 1 (`MIN_CONTRAST.eyeCenter`)"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Mã phải tối màu hơn nền. Mã sáng trên nền tối sẽ không đạt với lỗi `invert` ngay cả khi độ tương phản cao."
+            },
+            {
+              "k": "code",
+              "example": "contrast"
+            },
+            {
+              "k": "h2",
+              "id": "center",
+              "t": "Chữ ngắn ở giữa"
+            },
+            {
+              "k": "p",
+              "t": "`centerText` đặt một nhãn bên trong mã. Nhãn hiển thị dòng đầu tiên, tối đa 14 ký tự (`CENTER_TEXT_MAX`); văn bản dài hơn sẽ bị cắt ở ranh giới từ và thêm dấu chấm lửng."
+            },
+            {
+              "k": "code",
+              "example": "centerText"
+            },
+            {
+              "k": "h2",
+              "id": "art",
+              "t": "Hình nền phía sau mã"
+            },
+            {
+              "k": "p",
+              "t": "`art` vẽ các hình mềm mại với hai sắc độ phía sau các module, kèm một hình ảnh mờ tùy chọn. Bước kiểm tra quét coi nền là nền có sắc màu."
+            },
+            {
+              "k": "code",
+              "example": "art"
+            }
+          ]
+        },
+        "logo": {
+          "title": "Logo và biểu tượng",
+          "lead": "Đặt một hình ảnh hoặc biểu tượng nét 24 × 24 ở giữa. Mức sửa lỗi tự động tăng để mã vẫn đọc được.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "fields",
+              "t": "Các trường logo"
+            },
+            {
+              "k": "table",
+              "label": "QrLogo",
+              "cols": ["Trường", "Kiểu", "Mô tả"],
+              "rows": [
+                {
+                  "cells": ["`href`", "string", "URL hình ảnh hoặc data URI. Bị bỏ qua khi đã đặt `iconPath`."],
+                  "required": false
+                },
+                {
+                  "cells": ["`iconPath`", "string", "Một đường nét 24 × 24, ví dụ biểu tượng Lucide."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`size`",
+                    "number",
+                    "Chiều rộng logo theo tỷ lệ chiều rộng mã. Được vẽ trong khoảng 0.10 đến 0.46 (`CENTER_LOGO_SIZE`)."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`plate`", "\"none\" | \"square\" | \"circle\"", "Nền lót phía sau logo."],
+                  "required": true
+                },
+                {
+                  "cells": ["`tile`", "boolean", "Biểu tượng trên ô bo góc có màu thay vì nền lót."],
+                  "required": false
+                },
+                {
+                  "cells": ["`plateColor`, `iconColor`", "string", "Màu hex cho nền lót và biểu tượng."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "example",
+              "t": "Ví dụ"
+            },
+            {
+              "k": "code",
+              "example": "logoStyle"
+            },
+            {
+              "k": "h2",
+              "id": "fit",
+              "t": "Logo có thể lớn đến đâu?"
+            },
+            {
+              "k": "p",
+              "t": "Khi có logo hoặc chữ ở giữa, mã dùng mức sửa lỗi H nên chứa được hơn một nửa dung lượng một chút (382 byte thay vì 666). Sau khi render, `scan.maxLogoSize` là kích thước lớn nhất vẫn giải mã được; logo lớn hơn sẽ không đạt với lỗi `logo`."
+            },
+            {
+              "k": "code",
+              "example": "logoFit"
+            }
+          ]
+        },
+        "layouts": {
+          "title": "Khung và chú thích",
+          "lead": "composeLayout vẽ một bố cục đầy đủ: thẻ hoặc khung, mã, chú thích và logo tùy chọn, giống hệt bản xuất của HeyQR.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "presets",
+              "t": "Bố cục có sẵn"
+            },
+            {
+              "k": "table",
+              "label": "Bố cục có sẵn",
+              "cols": ["preset", "Nội dung được vẽ"],
+              "rows": [
+                {
+                  "cells": ["`qr`", "Chỉ có mã, theo kích thước `qrSize`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`caption`", "Mã kèm chú thích phía trên hoặc phía dưới, hoặc chữ bên trong mã"],
+                  "required": false
+                },
+                {
+                  "cells": ["`vertical`", "Thẻ với mã nằm phía trên chú thích"],
+                  "required": false
+                },
+                {
+                  "cells": ["`horizontal`", "Thẻ với mã nằm cạnh chú thích"],
+                  "required": false
+                },
+                {
+                  "cells": ["`frame`", "Khung bao quanh mã; kích thước lấy từ `qrSize`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "chips",
+              "t": "frameStyle",
+              "items": ["bar", "tab", "bubble", "pill", "corners", "circle", "ticket", "phone"]
+            },
+            {
+              "k": "h2",
+              "id": "compose",
+              "t": "Dựng bố cục"
+            },
+            {
+              "k": "code",
+              "example": "compose"
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Gọi `layoutCapacity` trước `composeLayout` để nội dung quá dài trở thành thông báo thay vì ngoại lệ. Truyền `{ transparent: true }` làm đối số thứ ba để có nền trong suốt."
+            },
+            {
+              "k": "h2",
+              "id": "fonts",
+              "t": "Phông chữ chú thích"
+            },
+            {
+              "k": "p",
+              "t": "Chú thích là văn bản SVG. Trong trình duyệt, chú thích dùng phông chữ của trang; khi rasterize trong Node.js, hãy truyền tệp phông chữ qua `fontFiles`, nếu không sẽ dùng phông chữ đã cài trên máy. Phông chữ chú thích hỗ trợ chữ Latin và Kirin."
+            }
+          ]
+        },
+        "png": {
+          "title": "Lưu tệp PNG",
+          "lead": "rasterizeSvg render mọi SVG từ gói thành PNG Buffer bằng resvg.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "basic",
+              "t": "Render PNG"
+            },
+            {
+              "k": "code",
+              "example": "png"
+            },
+            {
+              "k": "h2",
+              "id": "options",
+              "t": "Tùy chọn"
+            },
+            {
+              "k": "table",
+              "label": "RasterOptions",
+              "cols": ["Tùy chọn", "Kiểu", "Mô tả"],
+              "rows": [
+                {
+                  "cells": ["`width`", "number", "Chiều rộng đầu ra tính bằng pixel. Chiều cao theo tỷ lệ của SVG."],
+                  "required": true
+                },
+                {
+                  "cells": ["`fontFiles`", "string[]", "Tệp phông chữ cho chú thích."],
+                  "required": false
+                },
+                {
+                  "cells": ["`systemFonts`", "boolean", "Dùng thêm phông chữ đã cài. Mặc định `true`."],
+                  "required": false
+                },
+                {
+                  "cells": ["`background`", "string", "Màu nền phía sau các vùng trong suốt."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`dpi`",
+                    "number",
+                    "Độ phân giải in được ghi vào tệp để phần mềm in mở đúng kích thước thực. Bỏ trống với tệp dùng cho màn hình."
+                  ],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "print",
+              "t": "Kích thước in"
+            },
+            {
+              "k": "p",
+              "t": "`pngPixelSize` cho biết chính xác kích thước pixel của một bố cục: bố cục mm ở 300, 600 hoặc 1200 dpi (`PNG_DPIS`), bố cục px ở 1×, 2×, 4× hoặc 8× (`PNG_SCALES`). Mỗi cạnh nằm trong khoảng 64 đến 8192 px."
+            },
+            {
+              "k": "code",
+              "example": "printPng"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Không import `/raster` trong bundle trình duyệt: resvg là module native của Node.js."
+            }
+          ]
+        },
+        "scan": {
+          "title": "Kiểm tra khả năng quét",
+          "lead": "Mỗi lần render đều kèm báo cáo quét. Trong Node.js và trình duyệt, bạn cũng có thể giải mã kết quả để chắc chắn.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "Báo cáo quét"
+            },
+            {
+              "k": "code",
+              "example": "scanReport"
+            },
+            {
+              "k": "table",
+              "label": "Mã lỗi",
+              "cols": ["code", "title", "fix"],
+              "rows": [
+                {
+                  "cells": ["`invert`", "Light code on a dark background", "Swap colors"],
+                  "required": false
+                },
+                {
+                  "cells": ["`contrast`", "Not enough contrast", "Increase contrast"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eyes`", "Corner markers are too light", "Darken corner markers"],
+                  "required": false
+                },
+                {
+                  "cells": ["`logo`", "The logo hides too much of the code", "Reduce logo size"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "The text in the code is too long", "Shorten the text"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Báo cáo dựa trên quy tắc: kiểm tra chính xác hình học và màu sắc mà không cần giải mã. Hãy giải mã khi bạn cần bằng chứng."
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Giải mã trong Node.js"
+            },
+            {
+              "k": "code",
+              "example": "verifyNode"
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "Giải mã trong trình duyệt"
+            },
+            {
+              "k": "code",
+              "example": "verifyBrowser"
+            },
+            {
+              "k": "p",
+              "t": "Không có gì rời khỏi thiết bị: bộ giải mã chạy cục bộ và không bao giờ mở đích đến của mã."
+            }
+          ]
+        },
+        "api": {
+          "title": "Hàm",
+          "lead": "Mọi hàm công khai, được nhóm theo điểm nhập. Chữ ký hàm khớp với các kiểu TypeScript trong gói.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "Nội dung"
+            },
+            {
+              "k": "table",
+              "label": "Hàm nội dung",
+              "cols": ["Hàm", "Chữ ký"],
+              "rows": [
+                {
+                  "cells": ["`encodePayload`", "`(content: QrContent) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`encodeVCard`", "`(contact) => string` · vCard 3.0"],
+                  "required": false
+                },
+                {
+                  "cells": ["`normalizeUrl`", "`(input: string) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseWebsiteUrl`", "`(input: string) => { ok: true; url } | { ok: false; problem }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "render",
+              "t": "Render"
+            },
+            {
+              "k": "table",
+              "label": "Hàm render",
+              "cols": ["Hàm", "Chữ ký"],
+              "rows": [
+                {
+                  "cells": ["`renderQr`", "`(value: string, style: QrStyle) => RenderedQr`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`renderQrSvg`", "`(value: string, style: QrStyle, sizePx = 512) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eclForStyle`", "`(style) => \"M\" | \"H\"` · H khi logo hoặc chữ che phần giữa"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerLogoSize`", "`(size: number) => number` · giới hạn trong khoảng 0.10–0.46"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerTextLabel`", "`(text: string) => { label; shortened }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "layout",
+              "t": "Bố cục"
+            },
+            {
+              "k": "table",
+              "label": "Hàm bố cục",
+              "cols": ["Hàm", "Chữ ký"],
+              "rows": [
+                {
+                  "cells": [
+                    "`composeLayout`",
+                    "`(layout: Layout, value: string, options?: { transparent? }) => { svg, width, height, scan }`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutCapacity`", "`(layout: Layout, value: string) => { ok, bytes, maxBytes, ecl, centerCovered }`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutGeometry`", "`(layout: Layout) => LayoutGeometry`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pngPixelSize`", "`(layout: Layout, { scale?, dpi? }) => { width, height, ok }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "encode",
+              "t": "Mã hóa và dung lượng"
+            },
+            {
+              "k": "table",
+              "label": "Hàm mã hóa",
+              "cols": ["Hàm", "Chữ ký"],
+              "rows": [
+                {
+                  "cells": ["`encodeQr`", "`(text: string, ecl = \"M\") => QrMatrix`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`payloadBytes`", "`(text: string) => number` · số byte UTF-8"],
+                  "required": false
+                },
+                {
+                  "cells": ["`maxPayloadBytes`", "`(ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pickVersion`", "`(byteLength: number, ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`QrCapacityError`", "Lỗi kèm `byteLength` và `maxBytes`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "color",
+              "t": "Màu sắc"
+            },
+            {
+              "k": "table",
+              "label": "Hàm màu sắc",
+              "cols": ["Hàm", "Chữ ký"],
+              "rows": [
+                {
+                  "cells": ["`contrastRatio`", "`(a: string, b: string) => number` · tỷ lệ WCAG"],
+                  "required": false
+                },
+                {
+                  "cells": ["`luminance`", "`(hex: string) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`isHexColor`", "`(value: string) => boolean` · chỉ `#RRGGBB`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseHexColor`", "`(text: string) => string | null`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`mixColors`", "`(a: string, b: string, t: number) => string`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Điểm nhập cho Node.js và trình duyệt"
+            },
+            {
+              "k": "table",
+              "label": "Các điểm nhập khác",
+              "cols": ["Hàm", "Điểm nhập", "Chữ ký"],
+              "rows": [
+                {
+                  "cells": ["`rasterizeSvg`", "`/raster`", "`(svg: string, options: RasterOptions) => Buffer`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvg`", "`/verify`", "`(svg: string, width = 720) => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeImage`", "`/verify`", "`(file: Uint8Array, type = \"image/png\") => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`verifyScan`", "`/verify`", "`(svg, expected, widths = [300, 600, 1200]) => Promise<boolean>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvgInBrowser`", "`/verify-browser`", "`(svg, { wasmUrl, size? = 960 }) => Promise<string | null>`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        },
+        "types": {
+          "title": "Kiểu",
+          "lead": "Các kiểu chính, đúng như trong gói.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "style",
+              "t": "QrStyle"
+            },
+            {
+              "k": "code",
+              "example": "typesStyle"
+            },
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "RenderedQr và ScanReport"
+            },
+            {
+              "k": "code",
+              "example": "typesReport"
+            },
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "QrContent"
+            },
+            {
+              "k": "code",
+              "example": "typesContent"
+            }
+          ]
+        },
+        "limits": {
+          "title": "Giới hạn và lỗi",
+          "lead": "Bộ mã hóa chấp nhận những gì, và điều gì xảy ra khi nội dung không vừa.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Giới hạn"
+            },
+            {
+              "k": "table",
+              "label": "Giới hạn",
+              "cols": ["Giới hạn", "Giá trị"],
+              "rows": [
+                {
+                  "cells": ["Phiên bản QR lớn nhất", "20 (`MAX_VERSION`), 97 × 97 module"],
+                  "required": false
+                },
+                {
+                  "cells": ["Nội dung", "666 byte ở mức sửa lỗi M, 382 byte ở mức H"],
+                  "required": false
+                },
+                {
+                  "cells": ["Mức sửa lỗi", "M, hoặc H khi có logo hoặc chữ ở giữa"],
+                  "required": false
+                },
+                {
+                  "cells": ["Vùng trống", "4 module ở mỗi cạnh, đã bao gồm trong `viewBox`"],
+                  "required": false
+                },
+                {
+                  "cells": ["Kích thước logo", "0.10–0.46 chiều rộng mã (`CENTER_LOGO_SIZE`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Chữ ở giữa", "14 ký tự (`CENTER_TEXT_MAX`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Cạnh PNG", "64–8192 px (`PNG_MIN_SIDE`, `PNG_MAX_SIDE`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Độ tương phản", "3 : 1 cho module và vòng góc, 2.5 : 1 cho tâm góc"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "capacity",
+              "t": "Nội dung quá dài"
+            },
+            {
+              "k": "p",
+              "t": "Khi nội dung không vừa, quá trình render sẽ ném `QrCapacityError`. Lỗi này chứa kích thước, không bao giờ chứa nội dung, nên có thể ghi log an toàn."
+            },
+            {
+              "k": "code",
+              "example": "capacity"
+            },
+            {
+              "k": "h2",
+              "id": "null",
+              "t": "Bộ giải mã trả về null"
+            },
+            {
+              "k": "p",
+              "t": "`decodeSvg`, `decodeImage` và `decodeSvgInBrowser` trả về `null` khi không đọc được mã nào. Hãy coi đó là kiểm tra không đạt, không phải lỗi."
+            }
+          ]
+        },
+        "faq": {
+          "title": "Câu hỏi thường gặp",
+          "lead": "Câu trả lời ngắn cho các câu hỏi phổ biến.",
+          "blocks": [
+            {
+              "k": "faq",
+              "items": [
+                {
+                  "q": "Gói này có gửi dữ liệu gì đến HeyQR không?",
+                  "a": "Không. Việc mã hóa, render và kiểm tra khả năng quét đều chạy trên máy của bạn. Bộ giải mã trong trình duyệt tải tệp wasm từ URL do bạn lưu trữ."
+                },
+                {
+                  "q": "Tôi có thể tạo mã Động bằng gói này không?",
+                  "a": "Chưa được. Mã Động cần liên kết ngắn HeyQR, một gói dịch vụ và việc đếm lượt quét trên máy chủ của chúng tôi. Tính năng này sẽ đi kèm REST API."
+                },
+                {
+                  "q": "Vì sao mã có logo của tôi không đạt?",
+                  "a": "Logo nâng mức sửa lỗi lên H, làm giảm dung lượng, đồng thời che bớt module. Hãy làm logo nhỏ hơn `scan.maxLogoSize` hoặc rút ngắn nội dung."
+                },
+                {
+                  "q": "Vì sao xuất PNG chỉ chạy trên Node.js?",
+                  "a": "PNG được render bằng resvg, một module native. Trong trình duyệt, hãy vẽ SVG lên canvas nếu bạn cần pixel."
+                },
+                {
+                  "q": "Các tệp có khớp với trình chỉnh sửa HeyQR không?",
+                  "a": "Có. Bản xem trước trong trình chỉnh sửa và bản xuất trả phí đều dùng `composeLayout`, nên cùng một bố cục sẽ cho ra cùng một SVG."
+                },
+                {
+                  "q": "Tôi có thể dùng gói này trong sản phẩm thương mại không?",
+                  "a": "Giấy phép sẽ được xác định cùng bản phát hành công khai đầu tiên và được hiển thị tại đây và trên npm."
+                }
+              ]
+            }
+          ]
+        },
+        "changelog": {
+          "title": "Nhật ký thay đổi",
+          "lead": "Các bản phát hành của @heyqr/qr-core.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "v010",
+              "t": "0.1.0 · chưa phát hành"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Bản phát hành công khai đầu tiên đang được chuẩn bị. Mọi nội dung trên các trang này đều khớp với mã nguồn hiện tại của gói.",
+                "Điểm nhập: main, `/raster`, `/verify`, `/verify-browser`, `/node`."
+              ]
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Khi một phiên bản được phát hành, ghi chú và liên kết npm của phiên bản đó sẽ xuất hiện tại đây."
+            }
+          ]
+        },
+        "rest": {
+          "title": "REST API",
+          "lead": "Tạo mã, thay đổi đích đến của mã Động và xem số lượt quét từ máy chủ của bạn.",
+          "blocks": [
+            {
+              "k": "restSoon"
+            }
+          ]
+        },
+        "restAuth": {
+          "title": "Xác thực",
+          "lead": "Mỗi yêu cầu đều mang một khóa API từ tài khoản HeyQR của bạn.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Chưa công khai. Trang này mô tả REST API trong bản build HeyQR này, đã được đối chiếu với các route của nó. API chưa khả dụng trên heyqr.me và sẽ không xuất hiện trong kết quả tìm kiếm cho đến khi khả dụng."
+            },
+            {
+              "k": "h2",
+              "id": "keys",
+              "t": "Khóa API"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Tạo khóa trong Tài khoản → Khóa API. Khóa thuộc về tài khoản của bạn; mọi khóa của tài khoản đều thấy cùng các mã.",
+                "Khóa có dạng `hqk_<lookupId>_<secret>`. Khóa đầy đủ chỉ hiển thị một lần khi bạn tạo; HeyQR chỉ giữ lại một bộ xác minh.",
+                "Gửi khóa trong header `Authorization` từ máy chủ của bạn. Không bao giờ đặt khóa trong URL hoặc trong code trình duyệt.",
+                "Khóa bị thiếu, sai hoặc đã thu hồi đều nhận cùng phản hồi `401 unauthorized`, trước khi phần body của yêu cầu được đọc."
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "header",
+              "t": "Header của yêu cầu"
+            },
+            {
+              "k": "code",
+              "example": "restHeader"
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Giới hạn tần suất"
+            },
+            {
+              "k": "p",
+              "t": "Giới hạn thuộc về tài khoản: mọi khóa của tài khoản dùng chung giới hạn, và các tài khoản không ảnh hưởng lẫn nhau. Một cửa sổ bắt đầu từ yêu cầu đầu tiên và kéo dài 60 giây."
+            },
+            {
+              "k": "table",
+              "label": "Giới hạn tần suất",
+              "cols": ["Hạn mức", "Tính cho", "Mặc định mỗi phút"],
+              "rows": [
+                {
+                  "cells": ["`api`", "Mọi yêu cầu có khóa hợp lệ", "120"],
+                  "required": false
+                },
+                {
+                  "cells": ["`export`", "Lượt xuất tệp, cũng được tính vào `api`", "30"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "p",
+              "t": "Khi vượt hạn mức, phản hồi là `429 rate_limited` kèm `Retry-After`, trước khi bất cứ thứ gì được tạo, thay đổi hoặc render."
+            }
+          ]
+        },
+        "restCreate": {
+          "title": "Tạo mã QR",
+          "lead": "Tạo một mã QR cùng các bố cục của nó, dưới dạng bản nháp trong tài khoản của bạn. Việc kích hoạt, liên kết ngắn và thanh toán vẫn thực hiện trong ứng dụng.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Chưa công khai. Trang này mô tả REST API trong bản build HeyQR này, đã được đối chiếu với các route của nó. API chưa khả dụng trên heyqr.me và sẽ không xuất hiện trong kết quả tìm kiếm cho đến khi khả dụng."
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Body của yêu cầu"
+            },
+            {
+              "k": "table",
+              "label": "Body của yêu cầu",
+              "cols": ["Tham số", "Kiểu", "Ví dụ", "Mô tả"],
+              "rows": [
+                {
+                  "cells": ["`name`", "string", "\"Spring menu\"", "1–80 ký tự. Tên hiển thị trong Mã QR của tôi."],
+                  "required": true
+                },
+                {
+                  "cells": ["`mode`", "\"static\" | \"dynamic\"", "\"static\"", "`dynamic` chỉ dành cho nội dung `website`."],
+                  "required": true
+                },
+                {
+                  "cells": [
+                    "`content`",
+                    "QrContent",
+                    "{ \"type\": \"website\", … }",
+                    "Nội dung mã sẽ mở. Cùng cấu trúc với `encodePayload`."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"littlefern.cafe/menu\"",
+                    "Chỉ cho `dynamic`: nơi liên kết ngắn đưa mọi người đến. Mặc định là địa chỉ trang web."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`layouts`",
+                    "array",
+                    "[{ \"name\": \"Sticker\", \"layout\": … }]",
+                    "1–20 bố cục: `name` (1–60), một `layout` đã render và thiết lập `editor` tùy chọn."
+                  ],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "p",
+              "t": "Body được kiểm tra nghiêm ngặt: trường không xác định sẽ bị từ chối. Gửi header `Idempotency-Key` (1–255 ký tự hiển thị, UUID cũng được) để thử lại an toàn: cùng khóa và cùng yêu cầu sẽ trả về `201` ban đầu."
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "Yêu cầu"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateRequest",
+              "label": "Ví dụ yêu cầu"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Phản hồi"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateResponses",
+              "label": "Phản hồi"
+            }
+          ]
+        },
+        "restBulk": {
+          "title": "Tạo hàng loạt",
+          "lead": "Tạo tối đa 100 mã trong một yêu cầu. Tác vụ chạy ở chế độ nền.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "Bản xem trước thiết kế. Endpoint đề xuất: chưa có gì trên trang này hoạt động, và tên cũng như trường có thể thay đổi trước khi phát hành."
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes/bulk"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Body của yêu cầu"
+            },
+            {
+              "k": "table",
+              "label": "Body của yêu cầu",
+              "cols": ["Tham số", "Kiểu", "Ví dụ", "Mô tả"],
+              "rows": [
+                {
+                  "cells": ["`items`", "array", "[{ \"name\": …, \"content\": … }]", "1–100 mã, mỗi mã giống như trong Tạo mã QR."],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].name`", "string", "\"Table 12\"", "Tên trong Mã QR của tôi."],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].content`", "QrContent", "{ \"type\": \"website\", … }", "Nội dung mà từng mã sẽ mở."],
+                  "required": true
+                },
+                {
+                  "cells": ["`style`", "QrStyle", "{ \"pattern\": \"rounded\", … }", "Một kiểu chung cho mọi mã trong lô."],
+                  "required": false
+                },
+                {
+                  "cells": ["`webhook_url`", "string", "\"https://…/heyqr\"", "Được gọi một lần khi tác vụ hoàn tất."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Phản hồi"
+            },
+            {
+              "k": "tabs",
+              "example": "bulkResponses",
+              "label": "Phản hồi"
+            }
+          ]
+        },
+        "restDestination": {
+          "title": "Thay đổi đích đến",
+          "lead": "Chuyển mã Động sang một đích đến khác. Mã đã in vẫn giữ liên kết ngắn và cập nhật theo ngay lập tức.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Chưa công khai. Trang này mô tả REST API trong bản build HeyQR này, đã được đối chiếu với các route của nó. API chưa khả dụng trên heyqr.me và sẽ không xuất hiện trong kết quả tìm kiếm cho đến khi khả dụng."
+            },
+            {
+              "k": "h2",
+              "id": "read",
+              "t": "Đọc đích đến hiện tại"
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "code",
+              "example": "restDestinationRead"
+            },
+            {
+              "k": "p",
+              "t": "Thay đổi dựa trên `revision` bạn đã đọc: nếu đích đến đã bị thay đổi trong ứng dụng hoặc bởi một yêu cầu khác kể từ đó, bạn sẽ nhận `409` và không có gì được lưu."
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Body của yêu cầu"
+            },
+            {
+              "k": "endpoint",
+              "method": "PATCH",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "table",
+              "label": "Body của yêu cầu",
+              "cols": ["Tham số", "Kiểu", "Ví dụ", "Mô tả"],
+              "rows": [
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"https://littlefern.cafe/today\"",
+                    "Địa chỉ mới, tối đa 2048 ký tự. Tên miền trần sẽ được thêm https://."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`revision`", "integer", "3", "Revision từ GET hoặc PATCH gần nhất."],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "Yêu cầu"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationRequest",
+              "label": "Ví dụ yêu cầu"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Phản hồi"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationResponses",
+              "label": "Phản hồi"
+            }
+          ]
+        },
+        "restScans": {
+          "title": "Thống kê lượt quét",
+          "lead": "Số lượt quét theo ngày của một mã Động.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "Bản xem trước thiết kế. Endpoint đề xuất: chưa có gì trên trang này hoạt động, và tên cũng như trường có thể thay đổi trước khi phát hành."
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{id}/scans?from=2026-11-01&to=2026-11-26"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Phản hồi"
+            },
+            {
+              "k": "tabs",
+              "example": "scansResponses",
+              "label": "Phản hồi"
+            }
+          ]
+        },
+        "restErrors": {
+          "title": "Lỗi và giới hạn tần suất",
+          "lead": "Mọi lỗi có chung một cấu trúc. Hãy rẽ nhánh theo code, không bao giờ theo message.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Chưa công khai. Trang này mô tả REST API trong bản build HeyQR này, đã được đối chiếu với các route của nó. API chưa khả dụng trên heyqr.me và sẽ không xuất hiện trong kết quả tìm kiếm cho đến khi khả dụng."
+            },
+            {
+              "k": "h2",
+              "id": "shape",
+              "t": "Cấu trúc lỗi"
+            },
+            {
+              "k": "p",
+              "t": "Mọi lỗi đều có dạng `{ \"error\": { \"code\", \"message\", …details } }` kèm `Cache-Control: no-store`. Message dành cho con người; code thì ổn định."
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "Mã trạng thái"
+            },
+            {
+              "k": "table",
+              "label": "Lỗi",
+              "cols": ["Trạng thái", "code", "Khi nào"],
+              "rows": [
+                {
+                  "cells": ["400", "`malformed_json`", "Body không phải JSON."],
+                  "required": false
+                },
+                {
+                  "cells": ["401", "`unauthorized`", "Khóa bị thiếu, sai định dạng, sai hoặc đã thu hồi."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "402",
+                    "`payment_required`",
+                    "Xuất một mã chưa thanh toán hoặc chưa hoạt động; `paymentUrl` mở màn hình Xuất của mã đó."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["403", "`draft_limit`", "Tài khoản đã đạt số bản nháp tối đa."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "404",
+                    "`not_found`",
+                    "Không phải mã hoặc bố cục của bạn, đã bị xóa hoặc không tồn tại: cùng một phản hồi cho mọi trường hợp."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "409",
+                    "`revision_conflict`, `idempotency_key_reused`",
+                    "Đã thay đổi kể từ revision của bạn, hoặc Idempotency-Key bị dùng lại."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "422",
+                    "`invalid_request`, `content_too_long`, `not_dynamic`",
+                    "Một quy tắc bị vi phạm; `details` nêu tên trường."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["429", "`rate_limited`", "Vượt quá hạn mức của tài khoản; hãy chờ `Retry-After` giây."],
+                  "required": false
+                },
+                {
+                  "cells": ["500", "`internal_error`", "Không có gì bị thay đổi; hãy thử lại."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Giới hạn tần suất"
+            },
+            {
+              "k": "tabs",
+              "example": "restRateLimited",
+              "label": "Ví dụ phản hồi"
+            },
+            {
+              "k": "p",
+              "t": "Mặc định là 120 yêu cầu và 30 lượt xuất mỗi phút cho mỗi tài khoản. Yêu cầu bị từ chối không kéo dài thời gian chờ."
+            }
+          ]
+        },
+        "restSdk": {
+          "title": "TypeScript SDK",
+          "lead": "@heyqr/sdk là client có kiểu cho REST API, dành cho Node.js 18 trở lên. Gói này không render gì cả: việc đó là của @heyqr/qr-core.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Chưa công khai. Trang này mô tả REST API trong bản build HeyQR này, đã được đối chiếu với các route của nó. API chưa khả dụng trên heyqr.me và sẽ không xuất hiện trong kết quả tìm kiếm cho đến khi khả dụng."
+            },
+            {
+              "k": "h2",
+              "id": "install",
+              "t": "Cài đặt"
+            },
+            {
+              "k": "install",
+              "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "server",
+              "t": "Trên máy chủ của bạn"
+            },
+            {
+              "k": "p",
+              "t": "`HeyQrClient` cần khóa API nên chỉ chạy trên máy chủ. Trong bundle trình duyệt, gói trỏ đến một điểm nhập mà `HeyQrClient` ở đó ném `HeyQrError` loại `server_only`. Để xem trước trong trình duyệt, hãy dùng `@heyqr/sdk/react`."
+            },
+            {
+              "k": "code",
+              "example": "sdkInstallNote"
+            },
+            {
+              "k": "h2",
+              "id": "methods",
+              "t": "Phương thức"
+            },
+            {
+              "k": "table",
+              "label": "HeyQrClient",
+              "cols": ["Phương thức", "Yêu cầu"],
+              "rows": [
+                {
+                  "cells": ["`createQr(request, { idempotencyKey? })`", "`POST /api/v1/qr-codes`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getLayout(qrCodeId, layoutId)`", "`GET …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateLayout(qrCodeId, layoutId, request)`", "`PATCH …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getDestination(qrCodeId)`", "`GET …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateDestination(qrCodeId, request)`", "`PATCH …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`downloadExport(qrCodeId, layoutId, { format })`", "`GET …/export`, theo liên kết đã ký"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "Lỗi"
+            },
+            {
+              "k": "table",
+              "label": "Lỗi",
+              "cols": ["Lỗi", "Khi nào"],
+              "rows": [
+                {
+                  "cells": ["`HeyQrApiError`", "Một lỗi API đã được ghi trong tài liệu, kèm `status`, `code` và phản hồi có kiểu"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrRateLimitError`", "429, kèm `retryAfterSeconds` và `code`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrTimeoutError`, `HeyQrAbortError`", "Đã quá thời hạn, hoặc `signal` của bạn đã hủy lời gọi"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrError`", "Không có phản hồi nào được ghi trong tài liệu: `kind` cho biết lý do"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        }
+      },
+      "breadcrumb": "Đường dẫn"
+    }
+  }
+}
