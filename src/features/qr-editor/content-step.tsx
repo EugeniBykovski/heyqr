@@ -89,7 +89,7 @@ export function ContentStep({
       {qrPreview ? (
         <Segmented
           label={t("hosted.previewSwitch")}
-          className="max-w-[18.75rem]"
+          className="w-full"
           value={tab}
           options={[
             { value: "scan", label: t("hosted.afterScan") },
