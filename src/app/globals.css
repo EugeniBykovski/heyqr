@@ -108,6 +108,8 @@
   --radius-lg: 1rem;
   --radius-xl: 1.25rem;
   --radius-2xl: 1.75rem;
+  /* Pills (buttons, segments). Design tokens.json radius.full; `rounded-full` reads it. */
+  --radius-full: 999px;
 
   /* Depth: shadow-1 cards · shadow-2 hover and pills · shadow-3 dialogs, popovers and toasts. */
   --shadow-*: initial;
@@ -123,6 +125,8 @@
   /* Motion. */
   --ease-out: cubic-bezier(0.2, 0, 0, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  /* HEY-191: the button's progress spinner (design .spin, 0.9 s; 2.4 s with reduced motion, still turning). */
+  --animate-spin-btn: spin-btn 0.9s linear infinite;
 
   /* Breakpoints: phone < 600 · tablet 600 · two panels 1024 · wide 1440 · extra wide 1920.
      768 is the design's 3-column break for marketing grids. */
@@ -148,6 +152,8 @@
   --animate-pulse-neutral: pulse-neutral 1.7s var(--ease-out) infinite;
   --animate-pulse-accent: pulse-accent 1.7s var(--ease-out) infinite;
   --animate-pulse-inverse: pulse-inverse 1.7s var(--ease-out) infinite;
+  /* Solid danger confirm (design .btn--danger-solid --_pulse rgba(194, 38, 30, .32)). */
+  --animate-pulse-danger: pulse-danger 1.7s var(--ease-out) infinite;
   --animate-rise: rise 240ms var(--ease-out) both;
   --animate-fade: fade 200ms var(--ease-out) both;
   --animate-pop: pop 240ms var(--ease-out) both;
@@ -196,6 +202,17 @@
       box-shadow: 0 0 0 0 rgb(110 82 255 / 0);
     }
   }
+  @keyframes pulse-danger {
+    0% {
+      box-shadow: 0 0 0 0 rgb(194 38 30 / 0.32);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgb(194 38 30 / 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgb(194 38 30 / 0);
+    }
+  }
   @keyframes pulse-inverse {
     0% {
       box-shadow: 0 0 0 0 rgb(255 255 255 / 0.14);
@@ -238,6 +255,11 @@
       transform: translateX(100%);
     }
   }
+  @keyframes spin-btn {
+    to {
+      transform: rotate(360deg);
+    }
+  }
   @keyframes indeterminate {
     from {
       transform: translateX(-100%);
@@ -246,6 +268,28 @@
       transform: translateX(250%);
     }
   }
+}
+
+/* Design primitives that Tailwind's theme doesn't own (tokens.css / heyqr.css names), read by tokens.test.ts. */
+:root {
+  --font-family-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-family-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --duration-120: 120ms;
+  --duration-160: 160ms;
+  --duration-200: 200ms;
+  --duration-240: 240ms;
+  --duration-1500: 1500ms;
 }
 
 /* ───────────────────────── 2 · semantic ───────────────────────── */
@@ -288,12 +332,13 @@
   --skeleton-base: var(--color-ink-150);
   --skeleton-highlight: var(--color-ink-50);
   --skeleton-accent: var(--color-violet-100);
-  --motion-fast: 160ms;
-  --motion-base: 200ms;
-  --motion-panel: 240ms;
+  --motion-fast: var(--duration-160);
+  --motion-base: var(--duration-200);
+  --motion-panel: var(--duration-240);
   --motion-pulse: 1700ms;
-  --motion-shimmer: 1500ms;
+  --motion-shimmer: var(--duration-1500);
   --motion-ease: var(--ease-out);
+  --font-ui: var(--font-family-sans);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -355,15 +400,30 @@
   --info-soft: var(--color-status-info-bg);
   --overlay: rgb(13 13 18 / 0.42);
 
-  /* component tokens */
-  --button-radius: 9999px;
+  /* component tokens (design tokens.css / heyqr.css tier 3) */
+  --button-primary-bg: var(--color-action-primary-bg);
+  --button-primary-bg-hover: var(--color-action-primary-bg-hover);
+  --button-primary-bg-pressed: var(--color-action-primary-bg-pressed);
+  --button-primary-fg: var(--color-action-primary-fg);
+  --button-accent-bg: var(--color-accent-bg);
+  --button-accent-fg: var(--color-accent-fg);
+  --button-radius: var(--radius-full);
   --button-height: 2.75rem;
   --button-height-sm: 2.25rem;
   --button-height-lg: 3.25rem;
+  --field-bg: var(--color-bg-surface);
+  --field-border: var(--color-border-control);
+  --field-border-error: var(--color-status-danger-fg);
   --field-radius: var(--radius-md);
   --field-height: 2.75rem;
+  --card-bg: var(--color-bg-surface);
+  --card-border: var(--color-border-subtle);
   --card-radius: var(--radius-xl);
   --swatch-size: 2.25rem;
+  --swatch-ring: var(--color-selected-border);
+  --stage-bg: var(--color-bg-stage);
+  --container-max: 77.5rem;
+  --measure: 62ch;
   --header-height: 3.75rem;
   --panel-width: 25rem;
   --skeleton-radius: var(--radius-sm);
@@ -374,6 +434,7 @@
   /* Wordmark 5.0: the "QR" reply bubble (violet 600 on paper, violet 500 on ink). */
   --logo-tag-bg: var(--color-violet-600);
   --logo-tag-text: var(--color-white);
+  --logo-tag-fg: var(--logo-tag-text);
   --logo-inverse-tag-bg: var(--color-violet-500);
   --google-btn-bg: #ffffff;
   --google-btn-border: #747775;
@@ -381,6 +442,15 @@
 }
 
 @theme inline {
+  /* Design Tailwind names (Tokens · "Tailwind 4 · globals.css"). The design's --color-accent (violet 500) and
+     --color-selected (the ring) collide with this app's shadcn names (accent = soft violet fill, selected = fill), so
+     those two keep the app's meaning; on-accent / selected-border are the design's. */
+  --color-ink: var(--color-text-primary);
+  --color-ink-2: var(--color-text-secondary);
+  --color-ink-3: var(--color-text-muted);
+  --color-action-primary: var(--color-action-primary-bg);
+  --color-on-primary: var(--color-action-primary-fg);
+  --color-on-accent: var(--color-accent-fg);
   --color-background: var(--background);
   --color-page: var(--page);
   --color-surface: var(--surface);
@@ -466,6 +536,11 @@
       animation-duration: 1ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 1ms !important;
+    }
+    /* HEY-191: progress spinners slow down instead of stopping, so a pending action still reads as working. */
+    [data-slot="spinner"] {
+      animation-duration: 2.4s !important;
+      animation-iteration-count: infinite !important;
     }
   }
 }

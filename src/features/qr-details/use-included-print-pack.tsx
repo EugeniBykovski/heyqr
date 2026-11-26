@@ -1,6 +1,6 @@
 "use client";
 
-import { LoaderCircleIcon, PrinterIcon } from "lucide-react";
+import { PrinterIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -28,8 +28,8 @@ export function UseIncludedPrintPack({ qrCodeId }: { qrCodeId: string }) {
       router.refresh();
     });
   return (
-    <Button variant="primary" className="w-full" onClick={run} disabled={pending} aria-busy={pending || undefined}>
-      {pending ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : <PrinterIcon aria-hidden />}
+    <Button variant="primary" className="w-full" onClick={run} loading={pending}>
+      {pending ? null : <PrinterIcon aria-hidden />}
       {t("useIncluded")}
     </Button>
   );

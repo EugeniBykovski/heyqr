@@ -45,12 +45,14 @@ export async function SiteHeader() {
           { href: "/dashboard/billing", label: t("billing") },
           { href: "/dashboard/api-keys", label: t("apiKeys") },
         ]
-      : []),
+      : [{ href: "/sign-in", label: t("signIn") }]),
   ];
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-page/86 backdrop-blur-[14px] backdrop-saturate-160">
-      <div className="relative mx-auto flex h-header max-w-wide items-center gap-3 pr-4 pl-3 sm:gap-4 sm:pr-6 sm:pl-5">
+      {/* HEY-191: at 600–767 the nav and Create QR code share the row, so gaps stay at 12 px until 768 (16 px there
+          overflowed the viewport by 13 px at 600). */}
+      <div className="relative mx-auto flex h-header max-w-wide items-center gap-3 pr-4 pl-3 sm:pr-6 sm:pl-5 md:gap-4">
         <Link href="/" aria-label={t("home")} className="-ml-0.5 flex min-h-11 items-center rounded-sm p-1.5">
           <Logo />
         </Link>
@@ -65,7 +67,7 @@ export async function SiteHeader() {
           </NavLink>
           {user ? <NavLink href="/dashboard">{t("myCodes")}</NavLink> : null}
         </nav>
-        <div className="ml-auto flex items-center gap-3 sm:gap-4 lg:gap-5">
+        <div className="ml-auto flex items-center gap-3 md:gap-4 lg:gap-5">
           <LanguageSwitch />
           {user ? (
             <DropdownMenu>
@@ -108,7 +110,8 @@ export async function SiteHeader() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild variant="ghost" size="sm">
+            // Below 390 px Sign in moves into the menu, so the header fits the design's 320 px phones.
+            <Button asChild variant="ghost" size="sm" className="max-[390px]:hidden">
               <Link href="/sign-in">{t("signIn")}</Link>
             </Button>
           )}

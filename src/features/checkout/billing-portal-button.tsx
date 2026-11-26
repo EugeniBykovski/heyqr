@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLinkIcon, LoaderCircleIcon } from "lucide-react";
+import { ExternalLinkIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -26,8 +26,7 @@ export function BillingPortalButton({
   return (
     <Button
       variant={variant}
-      disabled={pending}
-      aria-busy={pending || undefined}
+      loading={pending}
       data-portal={intent}
       onClick={() =>
         start(async () => {
@@ -46,7 +45,6 @@ export function BillingPortalButton({
         })
       }
     >
-      {pending ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
       {label ?? t("manage")}
       {label || pending ? null : <ExternalLinkIcon aria-hidden />}
     </Button>

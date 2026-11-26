@@ -2,7 +2,7 @@
 
 import { DRAFT_LIMIT } from "@/shared/config/catalog-core";
 import { encodePayload, layoutCapacity, QR_CONTENT_TYPES } from "@heyqr/qr-core";
-import { ArrowLeftIcon, ArrowRightIcon, LoaderCircleIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Tabs as TabsPrimitive } from "radix-ui";
@@ -263,10 +263,19 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
   }, [resume, signedIn, restored]);
 
   const exportButton = (size: "sm" | "md" | "lg", className?: string) => (
-    <Button variant="primary" size={size} className={className} disabled={!canDownload} aria-busy={saving || undefined} onClick={download}>
-      {saving ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
-      {saving ? t("saving") : t("export")}
-      {!saving ? <ArrowRightIcon aria-hidden /> : null}
+    // HEY-191: while the draft saves, the button stays at full strength and focus (design `.is-loading`), and a
+    // second press does nothing; afterwards it's enabled again only when the code can be downloaded.
+    <Button
+      variant="primary"
+      size={size}
+      className={className}
+      disabled={!canDownload && !saving}
+      loading={saving}
+      loadingText={t("saving")}
+      onClick={download}
+    >
+      {t("export")}
+      <ArrowRightIcon aria-hidden />
     </Button>
   );
 

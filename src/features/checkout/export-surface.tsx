@@ -453,8 +453,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
     if (props.mode === "guest") return props.signInAction(settings);
     if (confirming)
       return (
-        <Button variant="primary" size="lg" className="w-full" disabled aria-busy>
-          <LoaderCircleIcon aria-hidden className="animate-spin motion-reduce:animate-none" />
+        <Button variant="primary" size="lg" className="w-full" loading>
           {t("confirming")}
         </Button>
       );
@@ -463,14 +462,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
         <div className="flex flex-col gap-2">
           <UseTrialButton qrCodeId={props.qrCodeId} className="w-full" />
           <span className="text-center text-caption text-muted-foreground">{tTrial("useTrialHint")}</span>
-          <Button
-            variant="secondary"
-            size="md"
-            className="w-full"
-            disabled={paying || !payForSale}
-            aria-busy={paying || undefined}
-            onClick={pay}
-          >
+          <Button variant="secondary" size="md" className="w-full" disabled={!payForSale} loading={paying} onClick={pay}>
             {t("subscribe", { price: amount })}
           </Button>
           {/* HEY-138: the plan's cancellation and failed-renewal rules, before the paid Checkout. */}
@@ -487,11 +479,9 @@ export function ExportSurface(props: ExportSurfaceProps) {
             variant="primary"
             size="lg"
             className="w-full"
-            disabled={paying}
-            aria-busy={paying || undefined}
+            loading={paying}
             onClick={() => unlockFree(offer.path === "unlock" ? "plan" : "credit")}
           >
-            {paying ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
             {offer.path === "unlock" ? t("useUnlock") : t("useCredit")}
           </Button>
           <span className="text-caption text-muted-foreground">
@@ -504,8 +494,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
     if (!entitled && offer?.path === "activate")
       return (
         <div className="flex flex-col gap-2">
-          <Button variant="primary" size="lg" className="w-full" disabled={paying} aria-busy={paying || undefined} onClick={goLive}>
-            {paying ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
+          <Button variant="primary" size="lg" className="w-full" loading={paying} onClick={goLive}>
             {t("goLive")}
           </Button>
           <span className="text-caption text-muted-foreground">
@@ -517,15 +506,8 @@ export function ExportSurface(props: ExportSurfaceProps) {
     if (!entitled)
       return (
         <div className="flex flex-col gap-2">
-          <Button
-            variant="primary"
-            size="lg"
-            className="w-full"
-            disabled={paying || !payForSale}
-            aria-busy={paying || undefined}
-            onClick={pay}
-          >
-            {paying ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : <LockIcon aria-hidden />}
+          <Button variant="primary" size="lg" className="w-full" disabled={!payForSale} loading={paying} onClick={pay}>
+            {paying ? null : <LockIcon aria-hidden />}
             {props.model === "dynamic" ? t("subscribe", { price: amount }) : t("payTotal", { price: money(totalCents) })}
           </Button>
           {props.model === "dynamic" ? (
@@ -538,8 +520,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
       );
     if (file.kind === "preparing")
       return (
-        <Button variant="primary" size="lg" className="w-full" disabled aria-busy>
-          <LoaderCircleIcon aria-hidden className="animate-spin motion-reduce:animate-none" />
+        <Button variant="primary" size="lg" className="w-full" loading>
           {t("preparing", { format: fmt })}
         </Button>
       );
@@ -606,7 +587,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
                     key={l.id}
                     href={l.href}
                     aria-current={l.active ? "page" : undefined}
-                    className="inline-flex min-h-9 max-w-45 flex-none items-center truncate rounded-full border border-border bg-surface px-3 text-[0.8125rem] font-semibold text-secondary-foreground aria-[current=page]:border-violet-300 aria-[current=page]:bg-violet-50 aria-[current=page]:text-violet-800"
+                    className="inline-flex min-h-9 max-w-45 flex-none items-center truncate rounded-full border border-border bg-surface px-3 text-[0.8125rem] font-semibold text-secondary-foreground aria-[current=page]:border-accent-strong-hover aria-[current=page]:bg-accent aria-[current=page]:text-accent-foreground"
                   >
                     {l.name}
                   </Link>

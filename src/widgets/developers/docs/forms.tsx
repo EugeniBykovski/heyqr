@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2Icon, CircleAlertIcon, LoaderCircleIcon } from "lucide-react";
+import { CheckCircle2Icon, CircleAlertIcon } from "lucide-react";
 import { useId, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
@@ -76,15 +76,7 @@ export function SignupForm({ topic, labels }: { topic: "packages" | "rest"; labe
         onChange={(e) => setEmail(e.target.value)}
         className={cn(bad && "border-danger")}
       />
-      <Button
-        type="submit"
-        variant="primary"
-        size="sm"
-        className="self-start"
-        disabled={state === "sending"}
-        aria-busy={state === "sending" || undefined}
-      >
-        {state === "sending" ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
+      <Button type="submit" variant="primary" size="sm" className="self-start" loading={state === "sending"}>
         {state === "sending" ? labels.joining : labels.join}
       </Button>
       {bad ? (

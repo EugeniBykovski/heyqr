@@ -1,6 +1,5 @@
 "use client";
 
-import { LoaderCircleIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useTransition, type ReactNode } from "react";
 import { toast } from "sonner";
@@ -21,8 +20,7 @@ export function StartTrialButton({ size = "lg", variant = "primary", className }
       variant={variant}
       size={size}
       className={className}
-      disabled={pending}
-      aria-busy={pending || undefined}
+      loading={pending}
       onClick={() =>
         start(async () => {
           const result = await startTrialAction().catch(() => ({ ok: false as const, error: "failed" }));
@@ -34,7 +32,6 @@ export function StartTrialButton({ size = "lg", variant = "primary", className }
         })
       }
     >
-      {pending ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
       {t("action")}
     </Button>
   );
@@ -50,8 +47,7 @@ export function UseTrialButton({ qrCodeId, className }: { qrCodeId: string; clas
       variant="primary"
       size="lg"
       className={className}
-      disabled={pending}
-      aria-busy={pending || undefined}
+      loading={pending}
       onClick={() =>
         start(async () => {
           const result = await activateTrial(qrCodeId).catch(() => ({ ok: false as const, error: "failed" }));
@@ -63,7 +59,6 @@ export function UseTrialButton({ qrCodeId, className }: { qrCodeId: string; clas
         })
       }
     >
-      {pending ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
       {t("useTrial")}
     </Button>
   );
@@ -88,8 +83,7 @@ export function ActivatePlanButton({
     <Button
       variant={variant}
       size="lg"
-      disabled={pending}
-      aria-busy={pending || undefined}
+      loading={pending}
       onClick={() =>
         start(async () => {
           const result = await startCheckout({ qrCodeId, layoutId, format: "png", locale }).catch(() => ({
@@ -101,7 +95,6 @@ export function ActivatePlanButton({
         })
       }
     >
-      {pending ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : null}
       {children}
     </Button>
   );

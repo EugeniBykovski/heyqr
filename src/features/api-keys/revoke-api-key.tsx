@@ -1,6 +1,6 @@
 "use client";
 
-import { BanIcon, LoaderCircleIcon } from "lucide-react";
+import { BanIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -38,8 +38,8 @@ export function RevokeApiKey({ keyId, prefix }: { keyId: string; prefix: string 
           <DialogTitle>{t("title", { prefix })}</DialogTitle>
           <DialogDescription>{t("text")}</DialogDescription>
           <div className="flex flex-wrap gap-2">
-            <Button variant="danger-solid" disabled={pending} aria-busy={pending || undefined} onClick={run}>
-              {pending ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : <BanIcon aria-hidden />}
+            <Button variant="danger-solid" loading={pending} onClick={run}>
+              {pending ? null : <BanIcon aria-hidden />}
               {t("confirm")}
             </Button>
             <Button variant="ghost" disabled={pending} onClick={() => setOpen(false)}>

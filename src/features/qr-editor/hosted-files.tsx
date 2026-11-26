@@ -103,11 +103,11 @@ export function PhotoField({
             type="button"
             variant="secondary"
             size="sm"
-            disabled={busy}
+            loading={busy}
             aria-describedby={problem ? `${id}-error` : undefined}
             onClick={() => input.current?.click()}
           >
-            {busy ? <LoaderCircleIcon aria-hidden className="animate-spin" /> : <UploadIcon aria-hidden />}
+            {busy ? null : <UploadIcon aria-hidden />}
             {value ? t("photoReplace") : t("photoAdd")}
           </Button>
           {value ? (

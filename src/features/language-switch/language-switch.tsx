@@ -59,7 +59,7 @@ export function LanguageSwitch() {
           className="group inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-full border border-border bg-surface pr-2.5 pl-2 text-[0.8125rem] font-bold tracking-[0.02em] transition-[border-color,box-shadow] duration-(--motion-fast) hover:border-border-hover hover:shadow-1 disabled:opacity-40 aria-expanded:border-violet-300 aria-expanded:ring-3 aria-expanded:ring-violet-100"
         >
           <Flag className={current.flag} />
-          <span>{current.short}</span>
+          <span className="max-[390px]:hidden">{current.short}</span>
           <ChevronDownIcon
             aria-hidden
             className="size-3.5 text-muted-foreground transition-transform duration-(--motion-base) group-aria-expanded:rotate-180 motion-reduce:transition-none"

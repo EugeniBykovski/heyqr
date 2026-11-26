@@ -41,5 +41,6 @@ export const previewToggle =
 
 /* Type step (design 1.2): the type catalog, shared with its loading skeleton. */
 export const typeStepRoot = "mx-auto w-full max-w-[56.25rem] px-4 pt-6 pb-8 sm:px-6 lg:px-8 lg:pt-10 lg:pb-16";
-export const typeGrid = "grid gap-3 min-[30rem]:grid-cols-2";
+/** One shrinkable column on phones (an implicit auto column grew to the cards' text and overflowed 320 px), two from 480 px. */
+export const typeGrid = "grid grid-cols-[minmax(0,1fr)] gap-3 min-[30rem]:grid-cols-2";
 export const typeCard = "relative flex min-h-28 items-start gap-4 rounded-xl border border-border bg-surface p-4.5 text-left";
