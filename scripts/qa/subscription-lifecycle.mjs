@@ -2,13 +2,14 @@
  * HEY-185: a Starter subscription's cancellation and reactivation, in a real browser against a running HeyQR in test
  * configuration (local or a deployed Preview). One run per fresh account; each starts signed out.
  *
- *   node scripts/qa/subscription-lifecycle.mjs <chromium|firefox|webkit> <390|834|1440> <undo|expire> [tag]
+ *   node scripts/qa/subscription-lifecycle.mjs <chromium|firefox|webkit> <390|834|1440> <undo|keep|expire> [tag]
  *
  * Both: homepage → Website · Dynamic with destination A → Design → Export → Continue with Google → Subscribe (Stripe
  * test Checkout, 4242) → the code goes live → download, decode the file (ZXing) → the permanent short link; a
  * signed-out visitor is sent to A. Then Manage subscription → Stripe's Customer Portal → Cancel subscription (at period
  * end, the Portal's configuration): Plan & billing says "Cancels" and "Ends on <Stripe's period end>", the plan and the
  * short link stay.
+ *   keep    as undo, but with Plan & billing's own "Keep my plan" (no Portal) instead of the Portal's Renew
  *   undo    the Portal's Renew: the same subscription continues (no new subscription, invoice or charge), the link
  *           still redirects; a stale or repeated delivery of the cancellation event changes nothing.
  *   expire  three more codes go live, then are paused (QR details), deleted (My QR codes) and taken down (operator,
@@ -43,7 +44,7 @@ const SECRET = process.env.BETTER_AUTH_SECRET ?? "";
 const STRIPE_KEY = process.env.STRIPE_SECRET_KEY ?? "";
 if (!BASE || !DBURL || !SECRET) throw new Error("BASE, QA_DATABASE_URL and BETTER_AUTH_SECRET are required");
 if (!STRIPE_KEY.startsWith("sk_test_")) throw new Error("STRIPE_SECRET_KEY must be a test-mode key");
-if (!["undo", "expire"].includes(scenario)) throw new Error(`unknown scenario ${scenario}`);
+if (!["undo", "keep", "expire"].includes(scenario)) throw new Error(`unknown scenario ${scenario}`);
 const health = await (await fetch(`${BASE}/api/health`)).json();
 if (health.environment !== "dev" || health.database?.target === "production")
   throw new Error(`refusing to run against ${BASE}: it reports ${health.environment} / ${health.database?.target}`);
@@ -314,6 +315,14 @@ async function portalCancel(p) {
   await wait(2000);
   await shot(p, "portal-cancelled");
 }
+/** HEY-185 Plan & billing "Keep my plan": clears the scheduled cancellation on the same subscription, in the app. */
+async function keepMyPlan(p) {
+  await p.goto(`${BASE}/dashboard/billing`, { waitUntil: "networkidle" });
+  await shot(p, "billing-keep-offered");
+  await p.getByRole("button", { name: /^Keep my plan/ }).click();
+  await wait(3000);
+  await shot(p, "billing-kept");
+}
 async function portalRenew(p) {
   await portal(p);
   const undo = /^(Renew|Don.t cancel|Reactivate)/i;
@@ -540,14 +549,17 @@ async function journey() {
     return `link 302 → A; file ${file.status()}`;
   });
 
-  if (scenario === "undo") {
+  if (scenario === "undo" || scenario === "keep") {
     await check(
-      "Undo with the Portal's Renew: the same subscription continues, no new subscription, invoice or charge",
+      scenario === "keep"
+        ? "Undo with Plan & billing's Keep my plan: the same subscription continues, no new subscription, invoice or charge"
+        : "Undo with the Portal's Renew: the same subscription continues, no new subscription, invoice or charge",
       "stripe-test",
       p,
       async () => {
         const before = ledger(user);
-        await portalRenew(p);
+        if (scenario === "keep") await keepMyPlan(p);
+        else await portalRenew(p);
         await until(() => dbSub(user, subId)?.cancelAtPeriodEnd === false, "the renewal never reached the database (webhook)");
         const after = ledger(user);
         const st = after.stripe.subscriptions;

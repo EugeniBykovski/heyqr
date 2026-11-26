@@ -91,5 +91,6 @@ versions, short link and scans are kept, so `restore` puts the latest published 
    no Resume), shows the neutral "not active right now" page, and counts no slots without a plan. The product behaviour
    matches the pre-payment copy (Pricing rule 4, `plans.terms`, the trial's "the same short link redirects again");
    the handoff should be updated, or the product changed, by a product decision. Related: decision 3.
-6. **No in-app resume.** Undoing a scheduled cancellation happens in Stripe's Portal (its "Don't cancel subscription");
-   Plan & billing offers only Manage subscription while a cancellation is scheduled.
+6. **Resolved (HEY-185): in-app resume.** While a cancellation is scheduled and before its cutoff, Plan & billing offers
+   **Keep my plan** next to Manage subscription; it clears the cancellation on the same Stripe subscription (the
+   Portal's "Don't cancel subscription" does the same). After the cutoff, Reactivate starts a new subscription.
