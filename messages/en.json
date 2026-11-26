@@ -589,7 +589,7 @@
     "title": "Sign in to Hey QR",
     "lead": "Your design is saved to your account so you can download it after payment.",
     "google": "Continue with Google",
-    "legal": "By continuing you agree to the Terms and Privacy Policy.",
+    "legal": "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
     "failed": "Sign-in failed. Please try again.",
     "canceled": {
       "draft": "Google sign-in was canceled. Your design is still saved in this browser. Continue with Google to try again.",
@@ -2087,7 +2087,12 @@
     "privacy": {
       "title": "Privacy Policy"
     },
-    "draft": "This page is a placeholder until the legal text is approved."
+    "draft": "Draft for owner and legal review. This text isn’t in effect yet and may change before it’s published. Highlighted parts still need to be confirmed.",
+    "updated": "Last updated {date}",
+    "effectiveNote": "The effective date is set when this text is approved.",
+    "onThisPage": "On this page",
+    "englishOnly": "This policy is available in English only for now. A translation will follow once the English text is approved.",
+    "placeholder": "To be confirmed"
   },
   "errors": {
     "notFound": {
