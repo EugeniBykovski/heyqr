@@ -351,6 +351,29 @@ describe.skipIf(!url)("versioned design records (real PostgreSQL)", () => {
     await pool?.end();
   });
 
+  it("design 10.3 mode rules: only Website is both; other direct types save as Static only, and a refusal writes nothing", async () => {
+    const layouts = [{ name: "Sticker", layout: designToLayout(design), editor: designSettingsOf(design) }];
+    const count = async () => Number((await pool.query("select count(*)::int as n from qr_code where user_id = $1", [owner.id])).rows[0].n);
+    const before = await count();
+    const direct = [
+      { type: "text", text: "Ring the bell twice" },
+      { type: "wifi", ssid: "Reyes Studio Guest", security: "WPA", password: "linen-orbit-42", hidden: false },
+      { type: "phone", number: "+14155550142" },
+    ] as const;
+    for (const content of direct)
+      expect(await saveQrWithLayouts(db, owner.id, { name: "x", model: "dynamic", content, layouts }), content.type).toEqual({
+        ok: false,
+        error: "invalid",
+      });
+    expect(await count()).toBe(before);
+    for (const content of direct)
+      expect((await saveQrWithLayouts(db, owner.id, { name: "x", model: "static", content, layouts })).ok, content.type).toBe(true);
+    const site = { type: "website", url: "https://littlefern.cafe/menu" } as const;
+    expect((await saveQrWithLayouts(db, owner.id, { name: "x", model: "static", content: site, layouts })).ok).toBe(true);
+    expect((await saveQrWithLayouts(db, owner.id, { name: "x", model: "dynamic", content: site, layouts })).ok).toBe(true);
+    expect(await count()).toBe(before + direct.length + 2);
+  });
+
   it("saves a variant through saveQrWithLayouts as schemaVersion 1 and reads it back unchanged", async () => {
     const result = await saveQrWithLayouts(db, owner.id, {
       name: "Menu sticker",
