@@ -1725,7 +1725,8 @@
       "active": "Active",
       "paused": "Paused",
       "archived": "Archived",
-      "purchased": "Purchased"
+      "purchased": "Purchased",
+      "inactive": "Not active"
     },
     "model": {
       "static": "Static",
@@ -1744,7 +1745,8 @@
     "actions": {
       "edit": "Edit design",
       "download": "Download",
-      "buy": "Buy & download"
+      "buy": "Buy & download",
+      "reactivate": "Turn back on"
     },
     "loading": "Loading your QR codes",
     "manage": {
@@ -1930,7 +1932,9 @@
         "limit": "All live Dynamic slots on your plan are in use. Pause or delete another Dynamic code, then resume this one.",
         "noPlan": "Resuming this code needs an active Dynamic plan.",
         "failed": "We couldn’t change the code’s status. Nothing was changed; try again."
-      }
+      },
+      "inactiveNote": "Scans of this code show a “not active right now” page: it needs an active Dynamic plan. Its short link, destination and scans are kept, and the same printed code redirects again once a plan is active.",
+      "inactiveCta": "Plan & billing"
     },
     "hostedPage": {
       "title": "Hosted page",

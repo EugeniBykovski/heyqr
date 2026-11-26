@@ -24,6 +24,7 @@ import { requireAccount } from "../../../require-account";
 import { getSession } from "@/server/auth";
 import { getCurrency } from "@/server/currency";
 import { accountUsage } from "@/server/billing/allowances";
+import { ownerStatus, scansLive } from "@/server/billing/access";
 import { canDownload, printPackForSale, userTrial } from "@/server/billing/entitlements";
 import { db } from "@/server/db";
 import { loadPrint } from "@/server/print/load";
@@ -101,10 +102,10 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
   // The same address the exported file encodes (server/qr/export.ts).
   const shortLink = qr.shortCode ? shortLinkUrl(env.NEXT_PUBLIC_SHORT_LINK_BASE, qr.shortCode) : null;
   const shortShown = shortLink?.replace(/^https?:\/\//, "") ?? "";
-  // The same status My QR codes shows (a trial test code after its trial is Paused).
-  const trialLive = phase.state === "active" || phase.state === "ending" || phase.state === "upgraded";
-  const live = qr.status === "active" && (!qr.isTrial || trialLive);
-  const status = qr.status === "active" ? (qr.model === "static" ? "purchased" : live ? "active" : "paused") : qr.status;
+  // HEY-185: the same status My QR codes shows, from the short link's own rule (Not active: no plan, or the trial over).
+  const access = { plan: Boolean(usage.plan), trial: phase };
+  const live = scansLive(qr, access);
+  const status = ownerStatus(qr, access);
 
   const printLayouts = qr.layouts.filter((l) => l.design.layout.unit === "mm");
   const printPackOpen = entitled && qr.printPackAt !== null;
@@ -163,7 +164,15 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
           <div className="flex flex-wrap gap-1.5">
             <Badge>{tTypes(qr.content.type)}</Badge>
             <Badge variant={qr.model === "dynamic" ? "info" : "neutral"}>{tDash(`model.${qr.model}`)}</Badge>
-            <Badge variant={status === "active" || status === "purchased" ? "success" : status === "paused" ? "warning" : "neutral"}>
+            <Badge
+              variant={
+                status === "active" || status === "purchased"
+                  ? "success"
+                  : status === "paused" || status === "inactive"
+                    ? "warning"
+                    : "neutral"
+              }
+            >
               {tDash(`status.${status}`)}
             </Badge>
           </div>
@@ -205,6 +214,18 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
                     {/* HEY-127: Pause a live code, Resume a paused one (a trial code after its trial has neither: the
                         plan turns it back on). */}
                     {live || qr.status === "paused" ? <PauseResume qrCodeId={qr.id} paused={qr.status === "paused"} /> : null}
+                    {/* HEY-185: an active code whose scans don't redirect says why, and where to turn it back on. */}
+                    {status === "inactive" ? (
+                      <div
+                        data-slot="scans-inactive"
+                        className="flex flex-col items-start gap-2.5 rounded-lg bg-warning-soft px-3.5 py-3 text-[0.875rem]"
+                      >
+                        <p className="text-secondary-foreground">{tl("inactiveNote")}</p>
+                        <Button asChild size="sm">
+                          <Link href="/dashboard/billing">{tl("inactiveCta")}</Link>
+                        </Button>
+                      </div>
+                    ) : null}
                   </div>
                 ) : (
                   <p className="text-secondary-foreground">{tl("noShortLink")}</p>

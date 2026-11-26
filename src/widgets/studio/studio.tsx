@@ -5,7 +5,10 @@ import { env } from "@/env";
 import { PLANS } from "@/shared/config/catalog-core";
 import { Link } from "@/i18n/navigation";
 import { StartTrialButton } from "@/features/checkout";
+import { scansLive } from "@/server/billing/access";
+import { accountUsage } from "@/server/billing/allowances";
 import { userTrial } from "@/server/billing/entitlements";
+import { db } from "@/server/db";
 import { encodedValue } from "@/server/qr/export";
 import { studioSummary } from "@/server/qr/repository";
 import { cn } from "@/shared/lib/utils";
@@ -20,18 +23,22 @@ const panel = "flex min-w-0 flex-col gap-4 rounded-xl border border-border bg-su
  * the three most recent codes and what the account includes. With no codes yet it invites the first one (6.2).
  */
 export async function Studio({ userId, name }: { userId: string; name: string }) {
-  const [t, format, data, phase] = await Promise.all([
+  const [t, format, data, phase, usage] = await Promise.all([
     getTranslations("home.studio"),
     getFormatter(),
     studioSummary(userId),
     userTrial(userId),
+    accountUsage(db, userId),
   ]);
   const { codes, scans, scansByCode, filesReady, layoutsByCode } = data;
   const shortBase = env.NEXT_PUBLIC_SHORT_LINK_BASE.replace(/\/$/, "").replace(/^https?:\/\//, "");
-  const isPaid = (c: (typeof codes)[number]) => (c.model === "dynamic" ? c.status === "active" : c.purchasedAt !== null);
+  // HEY-185: a Dynamic code counts as live only while its scans redirect (the short link's rule), and the slots are the
+  // plan's own (Starter's 5 are shown for reference without a plan).
+  const access = { plan: Boolean(usage.plan), trial: phase };
+  const isPaid = (c: (typeof codes)[number]) => (c.model === "dynamic" ? scansLive(c, access) : c.purchasedAt !== null);
   const paid = codes.filter(isPaid).length;
-  const dynamicUsed = codes.filter((c) => c.model === "dynamic" && c.status === "active").length;
-  const limit = PLANS.starter.dyn;
+  const dynamicUsed = codes.filter((c) => c.model === "dynamic" && scansLive(c, access)).length;
+  const limit = usage.plan ? usage.dynamic.limit : PLANS.starter.dyn;
   const total = scans.reduce((s, d) => s + d.count, 0);
   const prev = scans.slice(0, 7).reduce((s, d) => s + d.count, 0);
   const last = scans.slice(7).reduce((s, d) => s + d.count, 0);

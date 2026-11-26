@@ -10,9 +10,17 @@ import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { libraryActions, libraryRow, libraryRowSelected, libraryRowSelecting, libraryThumb } from "./layout";
 
-export type QrCardStatus = "purchased" | "active" | "draft" | "paused" | "archived";
+/** HEY-185 `inactive`: a Dynamic code whose scans show "not active right now" (no plan, or the trial is over). */
+export type QrCardStatus = "purchased" | "active" | "inactive" | "draft" | "paused" | "archived";
 
-const STATUS_VARIANT = { purchased: "success", active: "success", draft: "warning", paused: "warning", archived: "neutral" } as const;
+const STATUS_VARIANT = {
+  purchased: "success",
+  active: "success",
+  inactive: "warning",
+  draft: "warning",
+  paused: "warning",
+  archived: "neutral",
+} as const;
 
 /** One saved code: thumbnail, name, type / model / status badges, and the action that fits (download or buy). */
 export function QrCard({

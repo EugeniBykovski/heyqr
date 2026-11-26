@@ -51,6 +51,36 @@ export async function canDownloadCode(db: Db, userId: string, qr: DownloadableCo
   return qr.isTrial === true && trialCovers(await trialFor(db, userId, now), { isTrial: true });
 }
 
+/**
+ * HEY-185: whether scans of this code reach its destination now, for the owner's screens (My QR codes, QR details):
+ * the decision `resolveShortLink` makes, from what those pages already hold. A live Dynamic code redirects while its
+ * owner has paid access (`plan`: `currentPlan`, the same `hasPlanAccess` rule), and the trial's test code also while the
+ * trial runs. Before this, a code whose owner's plan had ended was shown as Active while scanners got "not active".
+ */
+export function scansLive(
+  qr: { model: string; status: string; isTrial: boolean; takenDownAt?: Date | null },
+  access: { plan: boolean; trial: TrialPhase },
+): boolean {
+  if (qr.model !== "dynamic" || qr.status !== "active" || qr.takenDownAt) return false;
+  return access.plan || trialCovers(access.trial, qr);
+}
+
+/**
+ * What the owner's screens call a code: a bought static code is Purchased; a Dynamic code is Active only while scans
+ * redirect, and Not active while they show "not active right now" (no plan, or the trial is over); otherwise its own
+ * status (Draft, Paused).
+ */
+export type OwnerStatus = "purchased" | "active" | "inactive" | "draft" | "paused" | "archived";
+
+export function ownerStatus(
+  qr: { model: string; status: string; isTrial: boolean; takenDownAt?: Date | null },
+  access: { plan: boolean; trial: TrialPhase },
+): OwnerStatus {
+  if (qr.status !== "active") return qr.status === "paused" || qr.status === "archived" ? qr.status : "draft";
+  if (qr.model === "static") return "purchased";
+  return scansLive(qr, access) ? "active" : "inactive";
+}
+
 export type ShortLinkAnswer =
   | { kind: "redirect"; to: string; qrCodeId: string }
   /** A hosted page (design 11.0): its latest published version, shown at /p/<code>. */
