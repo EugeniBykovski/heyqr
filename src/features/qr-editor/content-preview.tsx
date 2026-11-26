@@ -186,22 +186,25 @@ export function ContentPreview({
       body = (
         <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4.5 py-5 text-center">
           <span className="grid size-19 place-items-center rounded-full bg-accent-hover text-accent-foreground">{view.icon}</span>
+          {view.kicker ? <span className="text-caption text-secondary-foreground">{view.kicker}</span> : null}
           <b className="text-h3 [overflow-wrap:anywhere]">{ph(view.title, view.titlePlaceholder, "h-4.5 w-3/5")}</b>
           <div className="mt-2 flex flex-col gap-0.5 self-stretch">
             {view.rows.map((r) => (
               <Row key={r.label} label={r.label} value={ph(r.value, "—", "h-2.5 w-1/2")} />
             ))}
           </div>
-          <span className="mt-2 rounded-full bg-primary px-4 py-2 text-caption font-semibold text-primary-foreground">{view.action}</span>
+          <span className="mt-2 self-stretch rounded-full bg-primary px-4 py-2 text-caption font-semibold text-primary-foreground">
+            {view.action}
+          </span>
         </div>
       );
     }
   }
 
   return (
-    <figure aria-label={t("label")} aria-busy={loading || undefined} className={cn("flex flex-col items-center gap-3", className)}>
+    <figure aria-label={t("label")} aria-busy={loading || undefined} className={cn("flex w-full flex-col items-center gap-3", className)}>
       {/* Design 1.3–1.5 "After scanning" with the content type, above the phone. */}
-      <figcaption className="flex w-full max-w-[23rem] items-center justify-between gap-2">
+      <figcaption className="flex w-full items-center justify-between gap-2">
         <span className="text-[0.8125rem] font-semibold text-secondary-foreground">{t("label")}</span>
         <Badge>{tTypes(content.type)}</Badge>
       </figcaption>
@@ -231,7 +234,8 @@ function Row({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div className="flex min-h-9.5 items-center gap-2.5 border-b border-border px-1 py-2 text-left text-caption">
       <span className="text-muted-foreground">{label}</span>
-      <span className="ml-auto flex min-w-0 justify-end truncate font-medium">{value}</span>
+      {/* Long values (an event's date and times) wrap to a second line instead of overflowing the row. */}
+      <span className="ml-auto min-w-0 text-right font-medium [overflow-wrap:anywhere]">{value}</span>
     </div>
   );
 }
@@ -266,6 +270,8 @@ function centerView(
   titlePlaceholder: string;
   rows: { label: string; value: string }[];
   action: string;
+  /** The line above the title, when the phone shows one (design 1.14 "Add to calendar"). */
+  kicker?: string;
 } {
   const icon = (I: typeof GlobeIcon) => <I aria-hidden className="size-8" strokeWidth={1.7} />;
   switch (type) {
@@ -301,10 +307,11 @@ function centerView(
         title: v("title"),
         titlePlaceholder: t("eventPlaceholder"),
         rows: [
-          { label: t("starts"), value: when(v("start"), v("end")) },
+          { label: t("date"), value: when(v("start"), v("end")) },
           { label: t("place"), value: v("place") },
         ],
-        action: t("addToCalendar"),
+        kicker: t("addToCalendar"),
+        action: t("addEvent"),
       };
   }
 }

@@ -29,8 +29,8 @@ export function HostedPreview({
   const t = useTranslations("editor");
   const tTypes = useTranslations("contentTypes");
   return (
-    <figure aria-label={t("afterScanning.label")} className={cn("flex flex-col items-center gap-3", className)}>
-      <figcaption className="flex w-full max-w-[23rem] items-center justify-between gap-2">
+    <figure aria-label={t("afterScanning.label")} className={cn("flex w-full flex-col items-center gap-3", className)}>
+      <figcaption className="flex w-full items-center justify-between gap-2">
         <span className="text-[0.8125rem] font-semibold text-secondary-foreground">{t("afterScanning.label")}</span>
         <Badge>{tTypes(type)}</Badge>
       </figcaption>

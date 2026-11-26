@@ -21,14 +21,13 @@ import {
   modeFor,
   type EditorDesign,
   directContent,
-  isHostedContent,
   isHostedType,
   QrPreview,
   type AnyQrContent,
   type QrType,
 } from "@/entities/qr";
 import type { PdfState } from "./hosted-files";
-import { HostedPreview } from "./hosted-preview";
+import { AfterScanPreview } from "./after-scan-preview";
 import { Link, useRouter } from "@/i18n/navigation";
 import { saveDraft } from "@/server/actions/qr";
 import { formatMoney } from "@/shared/config/catalog";
@@ -357,7 +356,9 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
             <BottomBarInfo title={t(design.model === "dynamic" ? "pricePerMonth" : "priceOnce", { price })} hint={t("previewFree")} />
           }
           note={t("previewNote")}
-          afterScan={isHostedContent(design.content) ? <HostedPreview content={design.content} shortLabel={shortLabel} /> : undefined}
+          // Design 1.6 / 10.7: the stage's "QR design | After scan" switch, for every type, so people check what a scan
+          // opens while they style the code.
+          afterScan={<AfterScanPreview design={design} shortLabel={shortLabel} />}
         />
       </TabsPrimitive.Content>
     </TabsPrimitive.Root>

@@ -72,7 +72,9 @@ export function ContentForm({
   };
 
   return (
-    <div className={cn("grid gap-x-4 gap-y-5", content.type === "event" ? "sm:grid-cols-4" : "sm:grid-cols-2")}>
+    // Design 1.3 / 1.14 at 390: two columns from the smallest width, so a short pair (first and last name, an event's
+    // start and end times) shares a row; every other field spans both.
+    <div className={cn("grid grid-cols-2 gap-x-4 gap-y-5", content.type === "event" && "sm:grid-cols-4")}>
       {(fields ? fields.flatMap((name) => CONTENT_FIELDS[content.type].filter((f) => f.name === name)) : CONTENT_FIELDS[content.type]).map(
         (field) => {
           const id = `content-${field.name}`;
@@ -88,7 +90,7 @@ export function ContentForm({
           const required = field.required || isWifiPassword || field.kind === "security";
           if (field.kind === "security")
             return (
-              <div key={field.name} className="flex flex-col gap-1.5 sm:col-span-2">
+              <div key={field.name} className="col-span-2 flex flex-col gap-1.5">
                 <span id={`${id}-label`} className="text-label">
                   {label}
                 </span>
@@ -106,7 +108,7 @@ export function ContentForm({
             );
           if (field.kind === "checkbox")
             return (
-              <label key={field.name} className="flex min-h-11 cursor-pointer items-center gap-2.5 text-body sm:col-span-2">
+              <label key={field.name} className="col-span-2 flex min-h-11 cursor-pointer items-center gap-2.5 text-body">
                 <input
                   type="checkbox"
                   className="size-5 accent-primary"
@@ -122,6 +124,9 @@ export function ContentForm({
             content.type === "website" ||
             content.type === "wifi" ||
             (content.type === "contact" && !field.half);
+          const pairOnPhone =
+            (content.type === "contact" && (field.name === "firstName" || field.name === "lastName")) ||
+            (content.type === "event" && field.kind === "time");
           const common = {
             id,
             "aria-invalid": error ? true : undefined,
@@ -133,13 +138,16 @@ export function ContentForm({
               key={field.name}
               className={cn(
                 "flex flex-col gap-1.5",
+                pairOnPhone ? "col-span-1" : "col-span-2",
                 content.type === "event"
                   ? field.kind === "time"
                     ? "sm:col-span-1"
                     : field.half
                       ? "sm:col-span-2"
                       : "sm:col-span-4"
-                  : wide && "sm:col-span-2",
+                  : wide
+                    ? "sm:col-span-2"
+                    : "sm:col-span-1",
               )}
             >
               <Label htmlFor={id}>
