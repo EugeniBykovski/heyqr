@@ -6,7 +6,10 @@ import { CURRENCIES, CURRENCY_COOKIE } from "@/shared/config/catalog";
 import { requireUser } from "../auth";
 import { accountUsage, activateDynamicCode, applyPrintPackAllowance, convertToStatic, unlockStatic } from "../billing/allowances";
 import { createPackCheckout, createPlanCheckout } from "../billing/checkout";
+import { planForPrice } from "../billing/catalog";
 import { pauseDynamicCode, resumeDynamicCode } from "../billing/pause";
+import { stripe } from "../billing/stripe";
+import { clearStripeCancellation, resumeScheduledCancellation } from "../billing/subscriptions";
 import { trialCode } from "../billing/trial";
 import { getCurrency } from "../currency";
 import { db } from "../db";
@@ -60,6 +63,25 @@ export async function startPlanCheckout(input: {
     });
     return { ok: true, data: { url } };
   }, "checkout.create_plan");
+}
+
+/**
+ * HEY-185 Plan & billing "Keep my plan": undoes the owner's scheduled cancellation on Stripe's same subscription while
+ * the paid period still runs. No Checkout and no charge; it renews on its usual date.
+ */
+export async function resumeSubscription(): Promise<ActionResult<{ renewsAt: string | null }>> {
+  return guard(async () => {
+    const user = await requireUser();
+    const result = await resumeScheduledCancellation(
+      db,
+      user.id,
+      { clearCancellation: (id) => clearStripeCancellation(stripe(), id) },
+      planForPrice,
+    );
+    if (!result.ok) return { ok: false, error: "invalid" };
+    revalidatePath("/[locale]/dashboard", "layout");
+    return { ok: true, data: { renewsAt: result.renewsAt?.toISOString() ?? null } };
+  }, "billing.resume_subscription");
 }
 
 /** Design 7.5 "Use 1 included unlock" (plan) / "Use 1 static credit": unlocks a static code without paying. */

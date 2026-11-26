@@ -20,9 +20,41 @@ what this matrix confirms.
 | **4. Scan monitoring threshold** (Starter 10,000, Studio 100,000 monthly scans per code) | **Never suspended** by reaching or passing it.                                                                                                                                                         | No effect; monitoring only.                                                                                                                                                           | `SCAN_MONITOR_THRESHOLDS`; PostgreSQL + HTTP (HEY-135)                                                                        |
 | **5. Plan ends after a static QR was unlocked**                                          | A static code holds its content in the pattern: printed copies keep working with no server involved.                                                                                                   | Its files stay downloadable: the unlock belongs to the code, not the plan.                                                                                                            | `canDownload` static rule; `entitlements.test.ts`; PostgreSQL HEY-138 / HEY-142                                               |
 
+### What the owner sees (HEY-185)
+
+- **My QR codes, QR details and Your studio** call a Dynamic code **Active** only while its scans redirect, by the
+  short link's own rule (`scansLive` / `ownerStatus`, `server/billing/access.ts`). In 1, 2b and 3b it shows as
+  **Not active**, says why on QR details, and its main action leads to Plan & billing.
+- **Plan & billing, 2a:** "Your plan ends on {cutoff}", what stays until then and what happens after, and
+  **Keep my plan**: it clears the cancellation on Stripe's same subscription (no Checkout, no charge now) and is offered
+  only before the cutoff. The webhook that follows re-reads Stripe's current state, so a late or repeated event can't
+  schedule the cancellation again.
+- **Plan & billing, 2b (no plan, an earlier one ended or was canceled):** "Your {plan} plan ended on {cutoff}" with
+  **Reactivate**, which is that plan's Checkout. The new subscription turns the same short links back on. An unpaid
+  renewal (3b, still payable) shows "Payment overdue" with the way to pay it instead (HEY-141).
+
 Manual pauses and deletions are never changed by any of this: a paused or deleted code stays unavailable whatever the
 plan says, and comes back only through Resume or Undo. Scanner-facing pages stay neutral: they never mention the owner's
 plan, trial or payment (`link-unavailable`, HEY-121).
+
+## Cancelling, undoing and subscribing again (HEY-185)
+
+Verified end to end in Stripe test mode ([docs/qa/HEY-185-subscription-lifecycle.md](qa/HEY-185-subscription-lifecycle.md)):
+
+- **Where:** Plan & billing → Manage subscription → Stripe's Customer Portal. Its configuration cancels **at the period
+  end** (Stripe sets `cancel_at` to the period end; `cancel_at_period_end` stays false), with an optional reason.
+- **Scheduled (2a):** Plan & billing shows "Cancels" and "Ends on {Stripe's cutoff}"; the plan, downloads and the short
+  links stay until then.
+- **Undo before the cutoff:** the Portal's "Don't cancel subscription". The **same** subscription continues: no new
+  subscription, invoice or charge; Plan & billing shows "Renews on" again.
+- **After the cutoff (2b):** Stripe ends the subscription (`customer.subscription.deleted`); stored `canceled`; Plan &
+  billing shows "No plan"; the link answers the neutral "not active" page and the files are locked (402). The code
+  keeps its status, short code and destination.
+- **Subscribing again:** Plan & billing → Choose a plan → Subscribe: a **new** subscription (the ended one is never
+  revived, even by a late event). Every Dynamic code still marked live redirects again at the **same** short link, so a
+  file exported before the plan ended works again. Owner pauses, deletions and operator takedowns stay as they were.
+- **Webhooks:** each event id is applied once; what is stored is Stripe's current subscription, so a repeated or stale
+  delivery (e.g. the cancellation event after the undo) changes nothing.
 
 ## Reported pages and takedowns (HEY-182)
 
@@ -53,3 +85,12 @@ versions, short link and scans are kept, so `restore` puts the latest published 
    not decided.
 4. **A cancellation scheduled while its webhook is missing.** The cutoff is known only once the scheduling event has
    been processed; if that event never arrives, access ends when Stripe's final event does.
+5. **The design handoff and this matrix disagree on plan end** (Developer handoff · Commerce, "Entitlement states" and
+   "Usage counters"): the handoff says a Dynamic code is "paused by plan end", shows the "link paused" page, and frees
+   its live slot (`dynamic_active` −1). The product keeps the code's status (so subscribing again brings it back with
+   no Resume), shows the neutral "not active right now" page, and counts no slots without a plan. The product behaviour
+   matches the pre-payment copy (Pricing rule 4, `plans.terms`, the trial's "the same short link redirects again");
+   the handoff should be updated, or the product changed, by a product decision. Related: decision 3.
+6. **Resolved (HEY-185): in-app resume.** While a cancellation is scheduled and before its cutoff, Plan & billing offers
+   **Keep my plan** next to Manage subscription; it clears the cancellation on the same Stripe subscription (the
+   Portal's "Don't cancel subscription" does the same). After the cutoff, Reactivate starts a new subscription.

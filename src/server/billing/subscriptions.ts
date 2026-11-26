@@ -1,10 +1,10 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import type Stripe from "stripe";
 import { isPlanId, type PlanId } from "../../shared/config/catalog-core";
 import { newId } from "../db/ids";
 import * as schema from "../db/schema";
-import { dynamicLimit } from "./allowances";
+import { dynamicLimit, hasPlanAccess } from "./allowances";
 import { accountForCustomer, customerIdOf } from "./customer";
 
 type Db = NodePgDatabase<typeof schema>;
@@ -75,27 +75,78 @@ export async function applySubscriptionEvent(
     const latest = await sync.current(sub.id);
     const state = existing && ENDED.has(existing.status) && !ENDED.has(latest.status) ? { ...latest, status: existing.status } : latest;
 
-    const item = state.items.data[0];
-    const plan = sync.planForPrice(item?.price.id) ?? (isPlanId(state.metadata?.plan) ? state.metadata.plan : "starter");
-    const values = {
-      userId: account.userId,
-      stripeSubscriptionId: sub.id,
-      stripePriceId: item?.price.id ?? "",
-      status: state.status,
-      plan,
-      activeCodeLimit: dynamicLimit(plan),
-      currentPeriodStart: item?.current_period_start ? new Date(item.current_period_start * 1000) : null,
-      currentPeriodEnd: item?.current_period_end ? new Date(item.current_period_end * 1000) : null,
-      // HEY-139: Stripe's Customer Portal schedules a cancellation with cancel_at (cancel_at_period_end stays false).
-      cancelAtPeriodEnd: state.cancel_at_period_end || Boolean(state.cancel_at),
-      cancelAt: state.cancel_at ? new Date(state.cancel_at * 1000) : null,
-    };
+    const values = { userId: account.userId, ...subscriptionValues(state, sync.planForPrice) };
     await tx
       .insert(schema.subscription)
       .values({ id: newId(), ...values })
       .onConflictDoUpdate({ target: schema.subscription.stripeSubscriptionId, set: values });
     return { duplicate: false, outcome: { applied: true, userId: account.userId, status: state.status } } as const;
   });
+}
+
+/** What a subscription row stores of Stripe's subscription (the webhook and Resume write exactly this). */
+export function subscriptionValues(state: SubscriptionEvent, planForPrice: SubscriptionSync["planForPrice"]) {
+  const item = state.items.data[0];
+  const plan = planForPrice(item?.price.id) ?? (isPlanId(state.metadata?.plan) ? state.metadata.plan : "starter");
+  return {
+    stripeSubscriptionId: state.id,
+    stripePriceId: item?.price.id ?? "",
+    status: state.status,
+    plan,
+    activeCodeLimit: dynamicLimit(plan),
+    currentPeriodStart: item?.current_period_start ? new Date(item.current_period_start * 1000) : null,
+    currentPeriodEnd: item?.current_period_end ? new Date(item.current_period_end * 1000) : null,
+    // HEY-139: Stripe's Customer Portal schedules a cancellation with cancel_at (cancel_at_period_end stays false).
+    cancelAtPeriodEnd: state.cancel_at_period_end || Boolean(state.cancel_at),
+    cancelAt: state.cancel_at ? new Date(state.cancel_at * 1000) : null,
+  };
+}
+
+export type ResumeResult = { ok: true; renewsAt: Date | null } | { ok: false; error: "not_scheduled" };
+
+/**
+ * HEY-185 "Keep my plan": undoes the owner's scheduled cancellation while the paid period still runs. Stripe keeps the
+ * same subscription (no new Checkout, no charge now); it renews at the period end as before. Only the owner's own
+ * subscription, only one with a cancellation scheduled and access left (`hasPlanAccess`): after the cutoff the plan has
+ * ended and coming back is a new plan (Reactivate). The row is written from the subscription Stripe returns, so the page
+ * is right at once; the webhook that follows re-reads Stripe's current state, so a late or repeated event can't
+ * re-schedule the cancellation.
+ */
+/**
+ * HEY-185: the update that clears a scheduled cancellation, for the way it was scheduled. Stripe refuses an update that
+ * names both `cancel_at` and `cancel_at_period_end` ("Please pass in only one"), and its Customer Portal schedules with
+ * `cancel_at` (cancel_at_period_end stays false), so the field that is actually set is the one cleared.
+ */
+export function cancellationClearParams(current: {
+  cancel_at: number | null;
+  cancel_at_period_end: boolean;
+}): { cancel_at: "" } | { cancel_at_period_end: false } {
+  return current.cancel_at_period_end ? { cancel_at_period_end: false } : { cancel_at: "" };
+}
+
+/** Clears a scheduled cancellation on Stripe's subscription (Keep my plan). */
+export async function clearStripeCancellation(stripe: Pick<Stripe, "subscriptions">, subscriptionId: string): Promise<Stripe.Subscription> {
+  const current = await stripe.subscriptions.retrieve(subscriptionId);
+  return stripe.subscriptions.update(subscriptionId, cancellationClearParams(current));
+}
+
+export async function resumeScheduledCancellation(
+  db: Db,
+  userId: string,
+  stripe: { clearCancellation: (subscriptionId: string) => Promise<SubscriptionEvent> },
+  planForPrice: SubscriptionSync["planForPrice"],
+  now: Date = new Date(),
+): Promise<ResumeResult> {
+  const subs = await db.query.subscription.findMany({ where: eq(schema.subscription.userId, userId) });
+  const sub = subs.find((s) => s.cancelAtPeriodEnd && hasPlanAccess(s, now));
+  if (!sub) return { ok: false, error: "not_scheduled" };
+  const state = await stripe.clearCancellation(sub.stripeSubscriptionId);
+  const values = subscriptionValues(state, planForPrice);
+  await db
+    .update(schema.subscription)
+    .set(values)
+    .where(and(eq(schema.subscription.stripeSubscriptionId, sub.stripeSubscriptionId), eq(schema.subscription.userId, userId)));
+  return { ok: true, renewsAt: values.currentPeriodEnd };
 }
 
 function refuse(sub: SubscriptionEvent, reason: Exclude<SubscriptionOutcome, { applied: true }>["reason"]) {

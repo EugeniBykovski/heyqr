@@ -4,6 +4,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { resolveLocale } from "@/i18n/server";
 import { requireAccount } from "../require-account";
+import { ownerStatus, scansLive } from "@/server/billing/access";
 import { userTrial } from "@/server/billing/entitlements";
 import { TrialBar } from "@/widgets/trial";
 import { encodedValue } from "@/server/qr/export";
@@ -38,9 +39,10 @@ export default async function DashboardPage({ params, searchParams }: PageProps<
     getCurrency(),
   ]);
   // Design 9.5: the trial's state and its one live test slot, apart from anything monthly.
-  // A trial test code after the trial (no plan) keeps its row but its redirect is paused: it shows as Paused.
-  const trialLive = phase.state === "active" || phase.state === "ending" || phase.state === "upgraded";
-  const live = (c: (typeof codes)[number]) => c.status === "active" && (!c.isTrial || trialLive);
+  // HEY-185: a Dynamic code is live only while its scans redirect (the short link's own rule): with no plan, or after
+  // the trial, it keeps its row and shows as Not active.
+  const access = { plan: Boolean(usage.plan), trial: phase };
+  const live = (c: (typeof codes)[number]) => scansLive(c, access);
   const trialBar = <TrialBar phase={phase} showUsage={phase.state !== "expired"} slotUsed={codes.some((c) => c.isTrial && live(c))} />;
   const filter: Filter = FILTERS.find((f) => f === query.filter) ?? "all";
   const counts = {
@@ -83,15 +85,15 @@ export default async function DashboardPage({ params, searchParams }: PageProps<
   const items: LibraryItem[] = visible.map((qr) => {
     const layout = qr.layouts[0];
     const paid = qr.model === "dynamic" ? live(qr) : qr.purchasedAt !== null;
-    const status: QrCardStatus =
-      qr.status === "active" ? (qr.model === "static" ? "purchased" : live(qr) ? "active" : "paused") : qr.status;
+    const status: QrCardStatus = ownerStatus(qr, access);
     return {
       id: qr.id,
       name: qr.name,
       href: `/dashboard/qr/${qr.id}`,
       // Edit design opens the first layout, the one shown here (HEY-45).
       editHref: layout ? `/edit/${qr.id}?layout=${layout.id}` : `/edit/${qr.id}`,
-      exportHref: layout ? `/create/export?qr=${qr.id}&layout=${layout.id}` : undefined,
+      // HEY-185: a Not active code (its plan ended) isn't bought again: its main action leads to Reactivate.
+      exportHref: status === "inactive" ? "/dashboard/billing" : layout ? `/create/export?qr=${qr.id}&layout=${layout.id}` : undefined,
       layout: layout?.design.layout,
       value: encodedValue(qr),
       typeLabel: tTypes(qr.content.type),
@@ -107,7 +109,7 @@ export default async function DashboardPage({ params, searchParams }: PageProps<
         open: t("open", { name: qr.name }),
         edit: t("actions.edit"),
         download: t("actions.download"),
-        buy: t("actions.buy"),
+        buy: status === "inactive" ? t("actions.reactivate") : t("actions.buy"),
       },
     };
   });

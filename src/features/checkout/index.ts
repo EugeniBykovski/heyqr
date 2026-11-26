@@ -1,4 +1,5 @@
 export { BillingPortalButton } from "./billing-portal-button";
+export { ResumeSubscriptionButton } from "./resume-subscription-button";
 export {
   defaultResolution,
   ExportSurface,
