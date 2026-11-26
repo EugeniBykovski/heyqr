@@ -9,7 +9,7 @@ import { createPackCheckout, createPlanCheckout } from "../billing/checkout";
 import { planForPrice } from "../billing/catalog";
 import { pauseDynamicCode, resumeDynamicCode } from "../billing/pause";
 import { stripe } from "../billing/stripe";
-import { resumeScheduledCancellation } from "../billing/subscriptions";
+import { clearStripeCancellation, resumeScheduledCancellation } from "../billing/subscriptions";
 import { trialCode } from "../billing/trial";
 import { getCurrency } from "../currency";
 import { db } from "../db";
@@ -75,7 +75,7 @@ export async function resumeSubscription(): Promise<ActionResult<{ renewsAt: str
     const result = await resumeScheduledCancellation(
       db,
       user.id,
-      { clearCancellation: (id) => stripe().subscriptions.update(id, { cancel_at_period_end: false, cancel_at: "" }) },
+      { clearCancellation: (id) => clearStripeCancellation(stripe(), id) },
       planForPrice,
     );
     if (!result.ok) return { ok: false, error: "invalid" };

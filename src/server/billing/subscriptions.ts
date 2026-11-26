@@ -112,6 +112,24 @@ export type ResumeResult = { ok: true; renewsAt: Date | null } | { ok: false; er
  * is right at once; the webhook that follows re-reads Stripe's current state, so a late or repeated event can't
  * re-schedule the cancellation.
  */
+/**
+ * HEY-185: the update that clears a scheduled cancellation, for the way it was scheduled. Stripe refuses an update that
+ * names both `cancel_at` and `cancel_at_period_end` ("Please pass in only one"), and its Customer Portal schedules with
+ * `cancel_at` (cancel_at_period_end stays false), so the field that is actually set is the one cleared.
+ */
+export function cancellationClearParams(current: {
+  cancel_at: number | null;
+  cancel_at_period_end: boolean;
+}): { cancel_at: "" } | { cancel_at_period_end: false } {
+  return current.cancel_at_period_end ? { cancel_at_period_end: false } : { cancel_at: "" };
+}
+
+/** Clears a scheduled cancellation on Stripe's subscription (Keep my plan). */
+export async function clearStripeCancellation(stripe: Pick<Stripe, "subscriptions">, subscriptionId: string): Promise<Stripe.Subscription> {
+  const current = await stripe.subscriptions.retrieve(subscriptionId);
+  return stripe.subscriptions.update(subscriptionId, cancellationClearParams(current));
+}
+
 export async function resumeScheduledCancellation(
   db: Db,
   userId: string,
