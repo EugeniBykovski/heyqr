@@ -26,7 +26,7 @@ export function QrLibrarySkeleton({ label, rows = 4 }: { label: string; rows?: n
             <Skeleton className="size-9 rounded-full" />
             <Skeleton className="h-9 w-11.5 rounded-full sm:w-27" />
             <Skeleton className="h-9 w-26 rounded-full" />
-            <Skeleton className="ml-auto h-9 w-40 rounded-full lg:ml-0" />
+            <Skeleton className="ms-auto h-9 w-40 rounded-full lg:ms-0" />
           </div>
         </li>
       ))}

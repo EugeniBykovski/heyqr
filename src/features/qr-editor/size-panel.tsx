@@ -91,9 +91,9 @@ function SizeField({
           aria-describedby={showError ? `${id}-error` : undefined}
           onChange={(e) => edit(e.target.value)}
           onBlur={() => !valid && setTouched(true)}
-          className="rounded-r-none text-right tabular-nums"
+          className="rounded-e-none text-end tabular-nums"
         />
-        <span className="grid min-w-12 place-items-center rounded-r-md border border-l-0 border-border bg-subtle px-3 text-caption text-muted-foreground">
+        <span className="grid min-w-12 place-items-center rounded-e-md border border-s-0 border-border bg-subtle px-3 text-caption text-muted-foreground">
           {unit}
         </span>
       </div>

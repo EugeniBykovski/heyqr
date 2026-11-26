@@ -165,7 +165,7 @@ export function ContentPreview({
           )}
           <div className="mt-2 flex flex-col gap-0.5 self-stretch">
             {rows.map(({ icon: I, label, value, shape }) => (
-              <div key={label} className="flex min-h-9.5 items-center gap-2.5 border-b border-border px-1 py-2 text-left text-caption">
+              <div key={label} className="flex min-h-9.5 items-center gap-2.5 border-b border-border px-1 py-2 text-start text-caption">
                 <I aria-hidden className="size-4 shrink-0 text-muted-foreground" />
                 <span className="sr-only">{label}</span>
                 {value ? (
@@ -232,10 +232,10 @@ function Shape({ loading, className, label }: { loading: boolean; className?: st
 
 function Row({ label, value }: { label: string; value: ReactNode }) {
   return (
-    <div className="flex min-h-9.5 items-center gap-2.5 border-b border-border px-1 py-2 text-left text-caption">
+    <div className="flex min-h-9.5 items-center gap-2.5 border-b border-border px-1 py-2 text-start text-caption">
       <span className="text-muted-foreground">{label}</span>
       {/* Long values (an event's date and times) wrap to a second line instead of overflowing the row. */}
-      <span className="ml-auto min-w-0 text-right font-medium [overflow-wrap:anywhere]">{value}</span>
+      <span className="ms-auto min-w-0 text-end font-medium [overflow-wrap:anywhere]">{value}</span>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import type { ReactNode } from "react";
 import { env } from "@/env";
-import { RTL_LOCALES } from "@/i18n/locales";
+import { textDirection } from "@/i18n/locales";
 import { applyVisitorLocale } from "./locale";
 import "../globals.css";
 
@@ -29,7 +29,7 @@ export default async function HostedRootLayout({ children }: { children: ReactNo
   const all = await getMessages({ locale });
   const messages = { hosted: all.hosted };
   return (
-    <html lang={locale} dir={RTL_LOCALES.includes(locale) ? "rtl" : "ltr"} className={`${dmSans.variable} ${plexMono.variable}`}>
+    <html lang={locale} dir={textDirection(locale)} className={`${dmSans.variable} ${plexMono.variable}`}>
       <body className="min-h-dvh bg-page text-foreground">
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}

@@ -1,0 +1,4511 @@
+{
+  "meta": {
+    "title": "Hey QR — markanıza benzeyen QR kodlar",
+    "description": "Bir QR kod tasarlayın, tarandığını kontrol edin ve baskıya hazır PNG ve SVG dosyalarını indirin."
+  },
+  "nav": {
+    "create": "Oluştur",
+    "pricing": "Fiyatlar",
+    "myCodes": "QR kodlarım",
+    "billing": "Plan ve faturalandırma",
+    "signIn": "Giriş yap",
+    "signOut": "Çıkış yap",
+    "account": "Hesap ve faturalandırma, {name}",
+    "language": "Dil",
+    "skipToContent": "İçeriğe geç",
+    "home": "Hey QR ana sayfa",
+    "createCode": "QR kod oluştur",
+    "menu": "Menü",
+    "main": "Ana",
+    "languageChoose": "Dil seçin",
+    "languageCount": "{count} dil",
+    "languageSearch": "Dil arayın",
+    "languages": "Diller",
+    "languageEmpty": "“{query}” ile eşleşen dil yok.",
+    "languageNote": "Fiyatlar para biriminizde kalır. Arapça, düzeni sağdan sola çevirir.",
+    "trial": "Ücretsiz deneme",
+    "apiKeys": "API anahtarları",
+    "developers": "Geliştiriciler için API",
+    "developersShort": "API"
+  },
+  "payment": {
+    "title": "Ödeme nasıl işler",
+    "oneTime": "Single QR, kod başına {price} tutarında tek seferlik bir ödemedir; buna Stripe’ın ödeme sırasında eklediği vergi dahil değildir. Abonelik değildir ve hiçbir şey yenilenmez.",
+    "where": "Ödemeyi Stripe’ın güvenli ödeme sayfasında yaparsınız. Hey QR kart bilgilerinizi asla görmez.",
+    "receipt": "Makbuzunuz hesabınızda, Faturalandırma bölümünde satın alımın yanında yer alır.",
+    "support": "Bir ödemeyle ilgili sorunuz mu var? <link>{email}</link> adresine e-posta gönderin.",
+    "terms": "Koşullar",
+    "privacy": "Gizlilik",
+    "supportLink": "Destek"
+  },
+  "footer": {
+    "terms": "Koşullar",
+    "privacy": "Gizlilik",
+    "support": "Destek",
+    "rights": "© {year} Hey QR",
+    "pricing": "Fiyatlar",
+    "label": "Alt bilgi",
+    "tagline": "Markanıza benzeyen ve her zaman taranan QR kodlar.",
+    "product": "Ürün",
+    "makeFor": "Şunun için kod oluşturun",
+    "company": "Şirket",
+    "smallPrint": "21 dil · Ödemeler Stripe ile"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "QR stüdyosu · tasarlamak ve önizlemek ücretsiz",
+      "title": "Size ait gibi görünen bir QR kod.",
+      "lead": "Bir bağlantı yapıştırın ve burada biçimlendirin. Önizleme siz yazdıkça güncellenir ve tasarım ücretsizdir.",
+      "reveal": "Güzel şeyler bir tarama uzağınızda."
+    },
+    "tool": {
+      "typesLabel": "Kod neyi açmalı?",
+      "more": "Daha fazla +",
+      "url": "Web sitesi adresi",
+      "urlPlaceholder": "yourname.com/portfolio",
+      "errors": {
+        "empty": "yourname.com gibi bir web adresi girin.",
+        "spaces": "Web adresleri boşluk içeremez."
+      },
+      "color": "Kod rengi",
+      "inks": {
+        "ink": "Mürekkep",
+        "violet": "Mor",
+        "forest": "Orman",
+        "ocean": "Okyanus",
+        "berry": "Böğürtlen",
+        "clay": "Kil"
+      },
+      "caption": "Alt yazı",
+      "captionDefault": "Portfolyoyu görüntüle",
+      "continue": "Tasarlamaya devam edin",
+      "priceNote": "Tasarlamak ve önizlemek ücretsiz. PNG ve SVG’yi indirmek kod başına bir kez <b>{price}</b> tutar.",
+      "seePricing": "Fiyatları görün",
+      "stageTitle": "{type} · canlı önizleme",
+      "scans": "Taranıyor",
+      "livePreview": "Canlı önizleme",
+      "realCode": "Gerçek, taranabilir kod",
+      "previewLabel": "QR kodunuzun önizlemesi",
+      "otherType": "Taslağınız bir {type} kodu. Tasarlamaya devam ederseniz düzenleyicide açılır.",
+      "stageCard": "Kartvizit · 90 mm × 50 mm"
+    },
+    "how": {
+      "label": "Nasıl çalışır",
+      "content": {
+        "title": "İçeriğinizi ekleyin",
+        "text": "Bir bağlantı, metin, Wi-Fi bilgileri veya bir kişi kartı."
+      },
+      "design": {
+        "title": "Tasarlayın",
+        "text": "Canlı tarama kontrolüyle düzen, boyut, şekiller, renkler, logo ve alt yazı."
+      },
+      "download": {
+        "title": "Ödeyin ve indirin",
+        "text": "Google ile giriş yapın, bir kez ödeyin, PNG veya SVG’yi istediğiniz zaman yeniden indirin."
+      }
+    },
+    "models": {
+      "title": "Baskıdan sonra bağlantıyı değiştirecek misiniz?",
+      "lead": "Hangi koda ihtiyacınız olduğunu bu tek soru belirler.",
+      "static": {
+        "badge": "Hayır · Statik QR",
+        "text": "Bağlantı desenin içine işlenir. Kod başına tek ödeme: <b>{price}</b>."
+      },
+      "dynamic": {
+        "badge": "Evet · Dinamik QR",
+        "text": "Kod, istediğiniz zaman yönlendirebileceğiniz kalıcı bir kısa bağlantı taşır. {limit} koda kadar aylık <b>{price}</b>."
+      }
+    },
+    "examples": {
+      "kicker": "Örnekler",
+      "title": "Baskı ve ekran için tasarlandı",
+      "lead": "Gerçek, taranabilir bir düzenle başlayın ve kendinize göre uyarlayın. Her örnek renkleri, şekilleri ve çerçevesiyle düzenleyicide açılır.",
+      "hint": "Daha fazlası için kaydırın",
+      "use": "{title} örneğiyle başlayın",
+      "useShort": "Kullan",
+      "items": {
+        "businessCard": {
+          "title": "Kartvizit",
+          "kind": "Web sitesi · statik"
+        },
+        "tableTent": {
+          "title": "Kafe masa kartı",
+          "kind": "Wi-Fi · statik"
+        },
+        "menuSticker": {
+          "title": "Menü etiketi",
+          "kind": "Web sitesi · dinamik"
+        },
+        "eventPoster": {
+          "title": "Etkinlik afişi",
+          "kind": "Web sitesi · dinamik"
+        },
+        "contactBadge": {
+          "title": "Kişi rozeti",
+          "kind": "Kişi · statik"
+        },
+        "windowSticker": {
+          "title": "Vitrin etiketi",
+          "kind": "Web sitesi · statik"
+        }
+      }
+    },
+    "features": {
+      "kicker": "Neden HeyQR",
+      "title": "Basılı bir kodun ihtiyaç duyduğu her şey",
+      "lead": "Sizi yormayan tasarım araçları ve ödeme yapmadan önce işinizi kontrol eden bir tarayıcı.",
+      "scan": {
+        "title": "Her düzenlemede tarama kontrolü",
+        "text": "Kodunuzu bir telefon kamerası gibi okuruz ve neyi düzeltmeniz gerektiğini tam olarak söyleriz: düşük kontrast, ters renkler veya çok fazla alan kaplayan bir logo."
+      },
+      "style": {
+        "title": "Sizin şekilleriniz ve renkleriniz",
+        "text": "Sekiz modül şekli, beş köşe stili ve dilediğiniz her renk; kontrast her zaman kontrol altında."
+      },
+      "logo": {
+        "title": "Ortada logo veya simge",
+        "text": "Logonuzu yükleyin veya {icons} simge arasından seçin. Kodun okunmaya devam etmesi için boyutunu biz ayarlarız."
+      },
+      "frames": {
+        "title": "Çerçeveler ve alt yazılar",
+        "text": "“Menü için tarayın” gibi bir harekete geçirici mesaj içeren {frames} çerçeve veya doğrudan kodun içinde kısa bir metin."
+      },
+      "files": {
+        "title": "Baskıya hazır dosyalar",
+        "text": "Gerçek boyutlarda vektör SVG ve net PNG: kartvizitler, afişler, masa kartları ve etiketler."
+      },
+      "dynamic": {
+        "title": "Baskıdan sonra değiştirin",
+        "text": "Dinamik kodlar, istediğiniz zaman yönlendirebileceğiniz bir kısa bağlantıya işaret eder ve günlük tarama sayıları sunar."
+      }
+    },
+    "types": {
+      "kicker": "Dokuz içerik türü",
+      "title": "Her tür kod için tek bir stüdyo",
+      "lead": "Kodun neyi açacağını seçin. Form yalnızca o türün ihtiyaç duyduğu bilgileri ister.",
+      "website": {
+        "label": "Web sitesi",
+        "desc": "Bir sayfa, portfolyo veya menü açın."
+      },
+      "text": {
+        "label": "Metin",
+        "desc": "Bir not, çalışma saatleri veya talimatlar gösterin."
+      },
+      "wifi": {
+        "label": "Wi-Fi",
+        "desc": "Misafirler yazmadan ağınıza katılır."
+      },
+      "contact": {
+        "label": "Kişi kartı",
+        "desc": "Ad, telefon ve e-postayı tek dokunuşla kaydedin."
+      },
+      "email": {
+        "label": "E-posta",
+        "desc": "Gönderilmeye hazır bir e-posta açın."
+      },
+      "phone": {
+        "label": "Telefon araması",
+        "desc": "Bir numarayı tek dokunuşla arayın."
+      },
+      "sms": {
+        "label": "Kısa mesaj",
+        "desc": "Kendi sözlerinizle bir SMS başlatın."
+      },
+      "location": {
+        "label": "Konum",
+        "desc": "Harita uygulamasında bir yer açın."
+      },
+      "event": {
+        "label": "Etkinlik",
+        "desc": "Takvime bir etkinlik ekleyin."
+      },
+      "menu": {
+        "label": "Menü",
+        "desc": "Telefon dostu bir sayfada yemekler, bölümler ve fiyatlar."
+      },
+      "coupon": {
+        "label": "Kupon",
+        "desc": "Promosyon kodu ve bitiş tarihi olan bir indirim."
+      },
+      "social": {
+        "label": "Sosyal bağlantılar",
+        "desc": "Profilleriniz ve bağlantılarınız tek sayfada."
+      },
+      "business": {
+        "label": "İşletme",
+        "desc": "Çalışma saatleri, adres, arama ve yol tarifi."
+      },
+      "apps": {
+        "label": "Uygulamalar",
+        "desc": "App Store ve Google Play için tek kod."
+      },
+      "pdf": {
+        "label": "PDF belgesi",
+        "desc": "Her telefonda açılan bir PDF yükleyin."
+      },
+      "product": {
+        "label": "Ürün",
+        "desc": "Fotoğraflar, fiyat ve satın alma düğmesi."
+      }
+    },
+    "faq": {
+      "kicker": "Sorular",
+      "title": "Bilmekte fayda var",
+      "lead": "Ödeme, dosyalar ve tarama hakkında kısa yanıtlar.",
+      "items": {
+        "model": {
+          "q": "Statik mi dinamik mi: hangisine ihtiyacım var?",
+          "a": "Statik bir kodda içerik desenin içine işlenmiştir ve {static} tutarındaki tek ödemeden sonra sonsuza kadar çalışır. Dinamik bir kod ise baskıdan sonra başka bir yere yönlendirebileceğiniz kısa bir bağlantı taşır; {limit} koda kadar aylık {dynamic}."
+        },
+        "scan": {
+          "q": "Kodum logo ve renklerle de taranır mı?",
+          "a": "Her değişiklik siz tasarlarken kontrol edilir. Kontrast çok düşükse, renkler ters çevrilmişse veya logo çok fazla alan kaplıyorsa bunu söyler ve ödeme yapmadan önce tek dokunuşla düzeltme sunarız."
+        },
+        "account": {
+          "q": "Tasarlamak için hesaba ihtiyacım var mı?",
+          "a": "Hayır. Tasarlamak ve önizlemek ücretsizdir. Yalnızca indirirken Google ile giriş yaparsınız ve tasarımınız sizinle gelir."
+        },
+        "files": {
+          "q": "Hangi dosyaları alırım?",
+          "a": "Satın aldığınız kodun her düzeni için ekranlar ve yazıcılar için net bir PNG ve matbaalar için bir vektör SVG."
+        },
+        "again": {
+          "q": "Dosyaları daha sonra yeniden indirebilir miyim?",
+          "a": "Evet. Kodlarınız QR kodlarım bölümünde kalır ve bunları ek ücret ödemeden istediğiniz biçimde yeniden indirebilirsiniz."
+        }
+      }
+    },
+    "cta": {
+      "label": "Başlayın",
+      "title": "İlk kodunuz yaklaşık bir dakika sürer.",
+      "lead": "Ücretsiz tasarlayın. Yalnızca indirirken {price} ödeyin.",
+      "pricing": "Fiyatları görün"
+    },
+    "studio": {
+      "kicker": "Stüdyonuz",
+      "welcome": "Tekrar hoş geldiniz, {name}",
+      "summaryTop": "{name} bugün {count, plural, one {# kez} other {# kez}} tarandı. Oluşturduğunuz her şey bir dokunuş uzağınızda.",
+      "summary": "Oluşturduğunuz her şey bir dokunuş uzağınızda: dosyalar, bağlantılar ve taramalar.",
+      "summaryEmpty": "İlk kodunuzu oluşturun; dosyaları ve taramalarıyla birlikte burada görünecek.",
+      "billing": "Plan ve faturalandırma",
+      "library": "QR kodlarımı aç",
+      "kpi": {
+        "codes": "QR kodlar",
+        "codesNote": "{paid} ücretli · {drafts, plural, one {# taslak} other {# taslak}}",
+        "scans": "Taramalar · 14 gün",
+        "scansNone": "Henüz tarama yok",
+        "scansDelta": "Önceki haftaya göre {delta, number, ::sign-always percent}",
+        "dynamic": "Dinamik kodlar",
+        "dynamicNote": "Planınızda {left, plural, one {# yer} other {# yer}} kaldı",
+        "dynamicMeter": "Kullanımdaki dinamik kodlar",
+        "files": "Hazır dosyalar",
+        "filesNote": "PNG veya SVG olarak indirilecek {count, plural, one {düzen} other {düzen}}"
+      },
+      "chart": {
+        "title": "Taramalar · son 14 gün",
+        "sub": "Tüm dinamik kodlar birlikte",
+        "empty": "Dinamik kodlarınızın taramaları burada görünecek.",
+        "today": "Bugün",
+        "label": "Son 14 gün için dinamik kodlardaki günlük taramalar"
+      },
+      "top": "En iyi kod",
+      "topNote": "14 günde {count, plural, one {# tarama} other {# tarama}} · {link}",
+      "topNone": "Henüz dinamik kod yok",
+      "topNoneNote": "Dinamik kodlar her taramayı sayar.",
+      "recent": "Son kodlar",
+      "seeAll": "{count} kodun tümünü görün",
+      "recentEmpty": "Kodlarınız dosyaları ve taramalarıyla birlikte burada yer alacak.",
+      "createFirst": "İlk kodunuzu oluşturun",
+      "open": "Aç",
+      "openName": "{name} kodunu aç",
+      "status": {
+        "dynamic": "Dinamik · etkin",
+        "paid": "Ücretli",
+        "draft": "Taslak"
+      },
+      "metricScans": "{count, plural, one {# tarama} other {# tarama}}",
+      "metricLayouts": "{count, plural, one {# düzen} other {# düzen}}",
+      "metricFinish": "İndirmek için tamamlayın",
+      "perksTitle": "Hesabınıza dahil",
+      "perks": {
+        "again": "Ücretli her düzeni PNG veya SVG olarak ücretsiz yeniden indirin",
+        "redirect": "Dinamik kodları yeniden basmadan yeni bir yere yönlendirin",
+        "scans": "Her dinamik kod için günlük tarama sayıları",
+        "drafts": "Taslaklar her cihazda hesabınıza kaydedilir",
+        "billing": "Makbuzlar, plan ve ödeme yöntemi Plan ve faturalandırma bölümünde"
+      },
+      "loading": "Stüdyonuz yükleniyor",
+      "trial": "Ücretsiz deneme · {days, plural, one {# gün} other {# gün}} kaldı"
+    },
+    "workspace": {
+      "kicker": "QR kodlarım",
+      "title": "Tüm QR kodlarınız tek bir yerde.",
+      "lead": "Giriş yaptığınızda size özel çalışma alanınız. Tasarladığınız her kod düzenlerini, dosyalarını ve Dinamik kodlarda taramalarını saklar.",
+      "points": {
+        "layouts": "Kod başına adlandırılmış düzenler: kartvizit, afiş, web sitesi",
+        "files": "PNG ve SVG’yi istediğiniz zaman yeniden indirin",
+        "edit": "Dinamik bir kodun hedefini baskıdan sonra değiştirin",
+        "scans": "Dinamik kodlar için günlük taramalar"
+      },
+      "create": "QR kod oluştur",
+      "signIn": "Giriş yap",
+      "sampleOwner": "Örnek çalışma alanı",
+      "sampleBadge": "Örnek",
+      "sampleNote": "Gösterim amaçlı örnek kodlar ve taramalar. Kendi kodlarınızı görmek için giriş yapın.",
+      "tabs": {
+        "all": "Tümü {count}",
+        "static": "Statik {count}",
+        "dynamic": "Dinamik {count}"
+      },
+      "models": {
+        "static": "Statik",
+        "dynamic": "Dinamik"
+      },
+      "samples": {
+        "portfolio": {
+          "name": "Portfolyo kartı",
+          "meta": "3 düzen · satın alındı"
+        },
+        "menu": {
+          "name": "Kafe menüsü",
+          "meta": "Masa kartı · 214 tarama"
+        },
+        "wifi": {
+          "name": "Misafir Wi-Fi",
+          "meta": "Taslak"
+        }
+      },
+      "scans": "Tarama analizi · son 14 gün",
+      "startTrial": "7 günlük ücretsiz denemeyi başlatın",
+      "trialNote": "Starter denemesi · kart yok · otomatik ödeme yok"
+    },
+    "printPack": {
+      "kicker": "Print Pack",
+      "title": "Ekranınızdan matbaaya.",
+      "lead": "Herhangi bir QR’a Print Pack ekleyin ve matbaanıza her şeyi tek bir indirmede verin: tam boyut, doğru renkler ve net kalan bir dosya.",
+      "cardTag": "Kartvizit · 90 × 50 mm",
+      "labelTag": "Ambalaj etiketi · 50 × 62 mm",
+      "cardLabel": "Kartvizit baskı düzeni",
+      "labelLabel": "Ambalaj etiketi baskı düzeni",
+      "panelKicker": "Dışa aktar · Print Pack",
+      "panelTitle": "Baskıya hazır üç dosya",
+      "perQr": "QR başına",
+      "files": {
+        "pdf": "Vektör baskı PDF’i",
+        "pdfSub": "Her boyutta net; 3 mm taşma payı ve kesim işaretleriyle, sRGB’de.",
+        "svg": "Düzenlenebilir SVG",
+        "svgSub": "QR’ı kendi çizimlerinize yerleştirmek için Illustrator, Figma veya Inkscape’te açın.",
+        "spec": "Renk ve boyut özellikleri",
+        "specSub": "Bitmiş boyut, QR boyutu, sessiz alan ve tüm renk değerlerini içeren tek bir sayfa."
+      },
+      "addNote": "Ödeme sırasında açana kadar kapalıdır. +{price} karşılığında ekleyin ya da daha sonra QR’ın ayrıntılarından ekleyin.",
+      "single": "Single QR",
+      "withPack": "Print Pack ile",
+      "details": "Print Pack ayrıntılarını görün",
+      "preview": "Baskı Önizlemesini aç"
+    },
+    "explore": {
+      "kicker": "QR türlerini keşfedin",
+      "title": "Her tür kod için tek bir stüdyo",
+      "lead": "İnsanların taradıktan sonra telefonlarında ne göreceğini görmek için bir tür seçin.",
+      "tabs": "QR türleri",
+      "legend": "Barındırılan sayfa: HeyQR sayfayı çevrimiçi tutar ve baskıdan sonra düzenleyebilirsiniz",
+      "hostedBadge": "Barındırılan sayfa · Dinamik QR",
+      "websiteBadge": "Statik veya Dinamik QR",
+      "directBadge": "Doğrudan açılır · Statik QR",
+      "hostedExtra": "Sayfayı baskıdan sonra düzenleyin. Kod aynı kalır",
+      "directExtra": "Tasarlamak ve önizlemek ücretsiz",
+      "hostedPrice": "Barındırılan sayfalar Dinamik plan gerektirir: Starter aylık {price}, 7 günlük ücretsiz deneme.",
+      "directPrice": "Tasarlamak ücretsiz. İndirirken kod başına {price}.",
+      "whatYouGet": "Neler elde edersiniz",
+      "allTypes": "16 türün tümünü görün",
+      "types": {
+        "menu": {
+          "short": "Yemekler ve fiyatlar",
+          "use": "Tüm menünüzü masaya koyun. Misafirler tarar, bölümlere göre göz atar ve basılı bir nüsha beklemeden fiyatları görür.",
+          "cta": "Menü QR’ı oluştur",
+          "points": {
+            "a": "Bölümler, yemekler, fiyatlar ve isteğe bağlı fotoğraflar",
+            "b": "Fiyatları istediğiniz zaman değiştirin; basılı kodlar çalışmaya devam eder"
+          }
+        },
+        "coupon": {
+          "short": "İnsanların kullandığı indirimler",
+          "use": "Müşterilerin ödeme sırasında kopyaladığı veya kasada gösterdiği bir kodla taramayı satışa dönüştürün.",
+          "cta": "Kupon QR’ı oluştur",
+          "points": {
+            "a": "Promosyon kodu, bitiş tarihi ve koşullar",
+            "b": "Süresi dolduktan sonra net bir “kampanya sona erdi” sayfası gösterir"
+          }
+        },
+        "social": {
+          "short": "Tüm profilleriniz",
+          "use": "Paylaştığınız her profil için tek kod: portfolyo, sosyal hesaplar ve daha fazlası, seçtiğiniz sırayla.",
+          "cta": "Sosyal bağlantılar QR’ı oluştur",
+          "points": {
+            "a": "Fotoğraf, ad ve kısa bir biyografi",
+            "b": "Bağlantıları istediğiniz zaman yeniden sıralayın"
+          }
+        },
+        "business": {
+          "short": "Saatler, aramalar, yol tarifi",
+          "use": "Bir ziyaretçinin size ulaşmak için ihtiyaç duyduğu her şey: çalışma saatleri, arama düğmesi, yol tarifi ve web siteniz.",
+          "cta": "İşletme QR’ı oluştur",
+          "points": {
+            "a": "Bu bilgileri eklediğinizde Ara, Yol tarifi ve Web sitesi görünür",
+            "b": "Bugün açık olup olmadığınızı gösterir"
+          }
+        },
+        "apps": {
+          "short": "Her iki uygulama mağazası",
+          "use": "Aynı basılı koddan iPhone’ları App Store’a, Android telefonları Google Play’e gönderin.",
+          "cta": "Uygulamalar QR’ı oluştur",
+          "points": {
+            "a": "Tek mağazayla veya ikisiyle çalışır",
+            "b": "Bilgisayarlarda her iki bağlantıyı ve taranacak bir kodu içeren bir sayfa açılır"
+          }
+        },
+        "pdf": {
+          "short": "Bir belge paylaşın",
+          "use": "Broşürler, programlar veya kılavuzlar: bir PDF yükleyin, insanlar tek dokunuşla telefonlarında açsın.",
+          "cta": "PDF QR’ı oluştur",
+          "points": {
+            "a": "Dosyayı daha sonra yeniden basmadan değiştirin",
+            "b": "PDF’i aç ve İndir düğmeleri"
+          }
+        },
+        "product": {
+          "short": "Bir ürün sayfası",
+          "use": "Bir ürünü fotoğraflar, fiyat ve satın alma düğmesiyle doğrudan ambalajdan veya raftan gösterin.",
+          "cta": "Ürün QR’ı oluştur",
+          "points": {
+            "a": "En fazla 5 fotoğraf, fiyat isteğe bağlı",
+            "b": "Düğmeniz: Hemen satın al, Ürünü görüntüle veya Hemen sipariş ver"
+          }
+        },
+        "website": {
+          "short": "Bir web sayfası açın",
+          "use": "İnsanları herhangi bir sayfaya gönderin: portfolyonuz, mağazanız veya rezervasyon formunuz.",
+          "cta": "Web sitesi QR’ı oluştur",
+          "points": {
+            "a": "Statik ya da bağlantı değişebilecekse Dinamik",
+            "b": "Siz tasarlarken canlı tarama kontrolü"
+          }
+        },
+        "wifi": {
+          "short": "Wi-Fi’a katılın",
+          "use": "Misafirler kamerayı tutar ve ağınıza katılır. Kimsenin şifreyi harf harf söylemesine gerek kalmaz.",
+          "cta": "Wi-Fi QR’ı oluştur",
+          "points": {
+            "a": "WPA, WEP veya açık ağlar",
+            "b": "Çevrimdışı çalışır: bilgiler kodun içindedir"
+          }
+        },
+        "contact": {
+          "short": "Bir kişiyi kaydedin",
+          "use": "Adınızı, telefonunuzu ve e-postanızı doğrudan rehbere kaydeden bir kartvizit.",
+          "cta": "Kişi QR’ı oluştur",
+          "points": {
+            "a": "iPhone ve Android’de çalışır",
+            "b": "Uygulama gerekmez"
+          }
+        }
+      }
+    }
+  },
+  "pricing": {
+    "title": "Fiyatlar",
+    "head": "Bir kod için bir kez ödeyin ya da değiştirebileceğiniz kodlar için aylık ödeyin.",
+    "lead": "Tasarlamak, önizlemek ve tarama kontrolü her zaman ücretsizdir. İndirirken ödersiniz.",
+    "currency": {
+      "label": "Fiyatları şu para biriminde göster",
+      "unavailable": "{chosen} cinsinden fiyatlar henüz kullanılamıyor. HeyQR {charged} cinsinden tahsilat yapar; tutarı bankanız dönüştürür. Makbuzlarda ödediğiniz {charged} tutarı gösterilir."
+    },
+    "once": {
+      "title": "Tek seferlik",
+      "sub": "Abonelik yok. Açtığınız kodlar sizin kalır."
+    },
+    "monthly": {
+      "title": "Aylık",
+      "sub": "Baskıdan sonra değiştirebileceğiniz Dinamik QR kodlar için. İstediğiniz zaman iptal edin."
+    },
+    "free": {
+      "name": "Ücretsiz",
+      "price": "{price}",
+      "q": "Hiç para harcamadan bir kod tasarlayın ve test edin.",
+      "points": [
+        "Tüm düzenler, şekiller, renkler, logolar ve alt yazılar",
+        "Her değişiklikte canlı tarama kontrolü",
+        "Taslağınız bu tarayıcıda saklanır"
+      ],
+      "cta": "Tasarlamaya başlayın"
+    },
+    "single": {
+      "name": "Single QR",
+      "price": "{price}",
+      "per": "bir kez",
+      "q": "Tüm indirmeleriyle birlikte bir statik QR.",
+      "points": [
+        "Her düzenin PNG ve SVG’si",
+        "mm cinsinden baskı boyutları ve px cinsinden ekran boyutları",
+        "İstediğiniz zaman, sonsuza kadar yeniden indirin"
+      ],
+      "cta": "QR oluştur"
+    },
+    "dynamic": {
+      "name": "Dinamik",
+      "price": "{price}",
+      "per": "aylık",
+      "q": "Baskıdan sonra da istediğiniz yere yönlendirebileceğiniz kalıcı bir kısa bağlantı.",
+      "live": "Etkin Dinamik kodlar",
+      "liveCount": "Aynı anda en fazla {limit} etkin kod",
+      "liveHint": "Aylık bir kota değil, anlık bir sayı: bir kodu duraklatmak veya silmek yerini boşaltır.",
+      "points": [
+        "Hedefi istediğiniz zaman değiştirin; basılı kod aynı kalır",
+        "Son 14 gün için günlük taramalar",
+        "Her düzenin PNG ve SVG’si"
+      ],
+      "cta": "Dinamik QR oluştur"
+    },
+    "compare": {
+      "title": "Karşılaştır",
+      "feature": "Neler elde edersiniz",
+      "free": "Ücretsiz",
+      "single": "Single QR",
+      "dynamic": "Dinamik",
+      "yes": "Dahil",
+      "no": "Dahil değil",
+      "rows": {
+        "design": "Tasarım, önizleme ve tarama kontrolü",
+        "download": "PNG ve SVG indirmeleri",
+        "repeat": "Tekrar indirmeler",
+        "change": "Kodun yönlendirdiği yeri değiştirme",
+        "analytics": "Tarama analizi",
+        "codes": "Kodlar"
+      },
+      "codesSingle": "Satın alma başına 1",
+      "codesDynamic": "{limit} etkin",
+      "codesFree": "Sınırsız taslak"
+    },
+    "tax": "Fiyatlara vergi dahil değildir. Stripe vergiyi ödeme sırasında ekler ve makbuzunuz son tutarı gösterir.",
+    "trial": {
+      "action": "7 günlük ücretsiz denemeyi başlatın",
+      "note": "Deneme: kart yok, otomatik ödeme yok. Gerçek bir kısa bağlantıya sahip bir test Dinamik QR."
+    }
+  },
+  "auth": {
+    "title": "Hey QR’a giriş yapın",
+    "lead": "Tasarımınız hesabınıza kaydedilir, böylece ödemeden sonra indirebilirsiniz.",
+    "google": "Google ile devam et",
+    "legal": "Devam ederek Koşulları ve Gizlilik Politikasını kabul etmiş olursunuz.",
+    "failed": "Giriş başarısız oldu. Lütfen tekrar deneyin.",
+    "canceled": {
+      "draft": "Google ile giriş iptal edildi. Tasarımınız bu tarayıcıda hâlâ kayıtlı. Tekrar denemek için Google ile devam edin.",
+      "plain": "Google ile giriş iptal edildi. Tekrar denemek için Google ile devam edin."
+    },
+    "incomplete": {
+      "draft": "Google ile giriş tamamlanmadı. Tasarımınız bu tarayıcıda hâlâ kayıtlı. Tekrar denemek için Google ile devam edin.",
+      "plain": "Google ile giriş tamamlanmadı. Tekrar denemek için Google ile devam edin."
+    },
+    "backToDesign": "Tasarımıma dön"
+  },
+  "contentTypes": {
+    "website": "Web sitesi",
+    "text": "Metin",
+    "wifi": "Wi-Fi",
+    "contact": "Kişi",
+    "email": "E-posta",
+    "phone": "Telefon",
+    "sms": "SMS",
+    "location": "Konum",
+    "event": "Etkinlik",
+    "menu": "Menü",
+    "coupon": "Kupon",
+    "social": "Sosyal bağlantılar",
+    "business": "İşletme",
+    "apps": "Uygulamalar",
+    "pdf": "PDF belgesi",
+    "product": "Ürün"
+  },
+  "fields": {
+    "url": "Web sitesi adresi",
+    "text": "Metin",
+    "ssid": "Ağ adı",
+    "security": "Güvenlik",
+    "password": "Şifre",
+    "hidden": "Bu ağ gizli",
+    "firstName": "Ad",
+    "lastName": "Soyad",
+    "title": "Unvan",
+    "company": "Şirket",
+    "phone": "Telefon",
+    "email": "E-posta",
+    "website": "Web sitesi",
+    "to": "E-posta adresi",
+    "subject": "Konu",
+    "body": "Mesaj",
+    "number": "Telefon numarası",
+    "message": "Mesaj",
+    "name": "Yer adı",
+    "address": "Adres",
+    "eventTitle": "Etkinlik adı",
+    "start": "Başlangıç",
+    "end": "Bitiş",
+    "place": "Yer",
+    "securityNone": "Şifre yok",
+    "securityWpa": "WPA/WPA2/WPA3",
+    "date": "Tarih"
+  },
+  "editor": {
+    "openLibrary": "QR kodlarımı aç",
+    "title": "QR kod oluştur",
+    "steps": {
+      "content": "İçerik",
+      "design": "Tasarım",
+      "frame": "Çerçeve",
+      "type": "Tür"
+    },
+    "type": "Kod neyi açmalı?",
+    "model": {
+      "label": "Kod türü",
+      "static": "Statik",
+      "staticHint": "Tek ödeme, sonsuza kadar çalışır",
+      "dynamic": "Dinamik",
+      "dynamicHint": "Bağlantıyı baskıdan sonra değiştirin"
+    },
+    "name": "Ad (yalnızca siz görürsünüz)",
+    "namePlaceholder": "Portfolyo kartı",
+    "pattern": "Modüller",
+    "eyeFrame": "Köşe çerçevesi",
+    "eyeBall": "Köşe merkezi",
+    "colors": "Renkler",
+    "fg": "Modüller",
+    "bg": "Arka plan",
+    "logo": "Merkez",
+    "logoNone": "Yok",
+    "logoUpload": "Logo yükle",
+    "logoSize": "Logo boyutu",
+    "layout": "Düzen",
+    "presets": {
+      "qr": "Yalnızca QR",
+      "caption": "QR + alt yazı",
+      "vertical": "Dikey kart",
+      "horizontal": "Yatay kart",
+      "frame": "Çerçeve"
+    },
+    "frameStyle": "Çerçeve stili",
+    "caption": "Alt yazı",
+    "captionPlaceholder": "Tara beni",
+    "preview": "Önizleme",
+    "previewNote": "Filigranlı önizleme. Tam boyutlu dosyalar ödemeden sonra oluşturulur.",
+    "download": "İndir",
+    "saving": "Kaydediliyor…",
+    "draftRestored": "Son tasarımınızı geri yükledik.",
+    "scanOk": "Tarama doğrulandı",
+    "scanFix": "Düzelt",
+    "shapes": {
+      "square": "Kare",
+      "rounded": "Yuvarlak",
+      "dot": "Noktalar",
+      "diamond": "Elmas",
+      "leaf": "Yaprak",
+      "fluid": "Akışkan",
+      "vbars": "Dikey",
+      "hbars": "Yatay",
+      "cushion": "Yumuşak",
+      "circle": "Daire"
+    },
+    "frames": {
+      "bar": "Alt etiket",
+      "tab": "Üst sekme",
+      "bubble": "Konuşma balonu",
+      "pill": "Hap etiket",
+      "corners": "Vizör",
+      "circle": "Rozet",
+      "ticket": "Bilet",
+      "phone": "Telefon"
+    },
+    "icons": {
+      "globe": "Web sitesi",
+      "link": "Bağlantı",
+      "wifi": "Wi-Fi",
+      "phone": "Telefon",
+      "mail": "E-posta",
+      "message": "Mesaj",
+      "pin": "Konum",
+      "calendar": "Takvim",
+      "clock": "Saatler",
+      "user": "Kişi",
+      "users": "Ekip",
+      "briefcase": "İş",
+      "home": "Ev",
+      "bag": "Mağaza",
+      "cart": "Sepet",
+      "coffee": "Kahve",
+      "utensils": "Menü",
+      "wine": "Bar",
+      "music": "Müzik",
+      "play": "Video",
+      "camera": "Fotoğraf",
+      "image": "Galeri",
+      "heart": "Beğeni",
+      "star": "Değerlendirme",
+      "gift": "Hediye",
+      "ticket": "Bilet",
+      "tag": "Fiyat",
+      "percent": "İndirim",
+      "card": "Ödeme",
+      "download": "İndir",
+      "file": "Belge",
+      "book": "Rehber",
+      "leaf": "Eko",
+      "sun": "Açık hava",
+      "bike": "Bisiklet",
+      "plane": "Seyahat",
+      "at": "Sosyal",
+      "smile": "Geri bildirim"
+    },
+    "back": "Ana sayfa",
+    "stepsLabel": "QR kod oluştur",
+    "settings": "Tasarım ayarları",
+    "scanFailed": "Taranmayabilir",
+    "priceOnce": "Bir kez {price}",
+    "pricePerMonth": "{price} / ay",
+    "previewFree": "Önizleme ücretsiz · indirirken ödeyin",
+    "draftUnreadable": "Son tasarımınızı açamadık, bu yüzden sıfırdan başlıyorsunuz. Tasarım bu tarayıcıda saklanıyor.",
+    "mode": {
+      "question": "Bağlantı baskıdan sonra değişebilir mi?",
+      "lead": "Şimdi karar verin: basılı bir statik kod daha sonra başka bir yere yönlendirilemez.",
+      "static": {
+        "eyebrow": "Hayır, aynı kalacak",
+        "title": "Statik QR",
+        "text": "İçerik desenin içine işlenir. Değiştirmek yeni bir kod demektir. Bir kez ödeyin: {price}."
+      },
+      "dynamic": {
+        "eyebrow": "Evet, değiştirebilirim",
+        "title": "Dinamik QR",
+        "text": "Kod kalıcı bir kısa bağlantı taşır. Nereye gittiğini değiştirin ve günlük taramaları görün. Aylık {price}."
+      },
+      "unavailable": "{type} kodları her zaman statiktir: içerik doğrudan desene işlenir. Dinamik, web sitesi bağlantıları içindir.",
+      "switched": "{type} kodları statiktir, bu yüzden bu kod artık Statik. Dinamik, web sitesi bağlantıları içindir.",
+      "adjusted": "Taslağınız Dinamikti, ancak yalnızca web sitesi bağlantıları dinamik olabilir; bu yüzden artık Statik. İçeriğiniz ve tasarımınız değişmedi."
+    },
+    "backTo": {
+      "home": "Ana sayfa",
+      "type": "Tür",
+      "content": "İçerik"
+    },
+    "continue": "Devam",
+    "export": "Dışa aktar",
+    "previewFrom": "Önizleme ücretsiz · {price} tutarından itibaren indirin",
+    "optional": "isteğe bağlı",
+    "frameGroup": {
+      "title": "Kodun etrafındaki çerçeve",
+      "count": "{count} seçenek",
+      "none": "Çerçeve yok",
+      "text": "Çerçeve metni",
+      "textHint": "Metin, çerçeveye sığacak şekilde boyutunu kendisi ayarlar. Yazı tipi ve kalınlık Alt yazı bölümündedir.",
+      "quick": "Hızlı metin",
+      "phrases": {
+        "scanMe": "Tara beni",
+        "callMe": "Beni ara",
+        "menu": "Menü",
+        "wifi": "Wi-Fi",
+        "payHere": "Buradan öde",
+        "reviewUs": "Bizi değerlendirin",
+        "followUs": "Bizi takip edin",
+        "bookNow": "Hemen rezervasyon"
+      },
+      "color": "Çerçeve rengi",
+      "textColor": "Metin rengi",
+      "presets": "Renk hazır ayarları",
+      "presetsHint": "Çerçeve · kod · arka plan",
+      "preset": "Çerçeve {frame}, kod {code}, arka plan {bg}",
+      "white": "Beyaz",
+      "graphite": "Grafit",
+      "violetUi": "Mor"
+    },
+    "typeStep": {
+      "title": "Kodunuz neyi açmalı?",
+      "lead": "Her şeyi denemek ücretsiz. Yalnızca bitmiş dosyayı indirirken ödersiniz.",
+      "groupLabel": "QR türü",
+      "example": "ör. {example}",
+      "next": "Sonraki: içeriğinizi ekleyin",
+      "examples": {
+        "website": "anareyes.studio/portfolio",
+        "text": "“Zili iki kez çalın”",
+        "wifi": "Reyes Studio Guest",
+        "contact": "Ana Reyes · Tasarımcı",
+        "email": "hello@reyes.studio",
+        "phone": "+1 415 555 0142",
+        "sms": "“Katılıyorum”",
+        "location": "21 Pier St, San Francisco",
+        "event": "Bahar sergisi · 5 Aralık",
+        "menu": "Little Fern Café menüsü",
+        "coupon": "Seramik derslerinde %20 indirim",
+        "social": "@ana.makes, portfolyo, YouTube",
+        "business": "Reyes Ceramics Studio",
+        "apps": "Fern Rewards uygulaması",
+        "pdf": "Bahar dersleri programı",
+        "product": "Benekli taş kupa"
+      },
+      "directGroup": "Doğrudan koddan açılır",
+      "directGroupLabel": "Doğrudan açılan QR türleri",
+      "hostedGroup": "Barındırılan sayfalar",
+      "hostedNew": "Yeni",
+      "hostedLead": "HeyQR bunlar için bir mobil sayfa barındırır ve kod Dinamik bir kısa bağlantı taşır; böylece sayfayı baskıdan sonra düzenleyebilirsiniz. Dinamik plan gerektirir: aylık {starter} ile Starter veya aylık {studio} ile Studio, 7 günlük ücretsiz denemeyle.",
+      "hostedSummary": "{type} · Barındırılan sayfa · Dinamik"
+    },
+    "contentStep": {
+      "titles": {
+        "website": "Hangi sayfayı açmalı?",
+        "text": "İnsanlar ne okumalı?",
+        "wifi": "Misafirler hangi ağa katılmalı?",
+        "contact": "İnsanlar kimi kaydetmeli?",
+        "email": "E-posta kime gitmeli?",
+        "phone": "Hangi numarayı aramalı?",
+        "sms": "Kısa mesajı kim alacak?",
+        "location": "Hangi yeri açmalı?",
+        "event": "Etkinlik nedir?",
+        "menu": "Menüde neler var?",
+        "coupon": "Kampanya nedir?",
+        "social": "İnsanlar hangi bağlantıları bulmalı?",
+        "business": "İnsanlar size nasıl ulaşır?",
+        "apps": "İnsanlar uygulamanızı nereden edinebilir?",
+        "pdf": "Hangi belge açılmalı?",
+        "product": "Hangi ürünü gösteriyorsunuz?"
+      },
+      "subs": {
+        "website": "Tam adresi yapıştırın. İnsanların taradıktan sonra ne göreceğini göreceksiniz.",
+        "text": "Düz metin, taramanın hemen ardından telefonda görünür.",
+        "wifi": "Telefonlar taradıktan sonra ağa katılır. Yazmaya gerek yok.",
+        "contact": "Telefonlar taradıktan sonra bu kişiyi kaydetmeyi önerir.",
+        "email": "Tarama; adres, konu ve mesajı doldurulmuş yeni bir e-posta açar.",
+        "phone": "Tarama numarayı aramayı önerir. Yazmaya gerek yok.",
+        "sms": "Tarama, gönderilmeye hazır bir kısa mesaj açar.",
+        "location": "Tarama, yeri telefonun harita uygulamasında açar.",
+        "event": "Tarama, etkinliği takvime eklemeyi önerir.",
+        "menu": "Bölümler ve yemekler ekleyin. Misafirler taradıktan sonra telefon dostu bir menü görür.",
+        "coupon": "İnsanlar indirimi görür, kodu kopyalar ve süresi dolmadan kullanır.",
+        "social": "Fotoğrafınız, kısa bir biyografi ve bağlantılarınızla, sizin sıranızda tek bir sayfa.",
+        "business": "Bu bilgileri eklediğinizde arama, yol tarifi ve web siteniz için düğmeler görünür.",
+        "apps": "Telefonlar doğrudan kendi mağazalarına gider. Diğer cihazlar her iki bağlantıyı görür.",
+        "pdf": "PDF’i yükleyin. İnsanlar tek dokunuşla açar veya indirir.",
+        "product": "Fotoğraflar, fiyat ve satın almak ya da daha fazla bilgi almak için tek bir net düğme."
+      },
+      "nameLabel": "QR kodlarım’daki ad",
+      "stepOf": "Adım 2/3",
+      "kept": "Geri dönerseniz girdileriniz korunur.",
+      "continue": "Tasarıma devam et",
+      "errorsOne": "Devam etmek için vurgulanan alanı düzeltin. Diğer her şey kaydedildi.",
+      "errorsMany": "Devam etmek için vurgulanan {count} alanı düzeltin. Diğer her şey kaydedildi.",
+      "back": "Geri",
+      "urlHint": "Bu adres koda işlenir. Basılı kodları daha sonra başka bir yere yönlendirmek için önceki adımda Dinamik’i seçin.",
+      "urlHintDynamic": "Kodunuz kalıcı bir kısa bağlantı içerecek. İnsanları buraya gönderir ve bunu baskıdan sonra değiştirebilirsiniz.",
+      "nameHint": "Bu adı yalnızca siz görürsünüz.",
+      "namePlaceholderType": "{type} QR"
+    },
+    "errors": {
+      "urlEmpty": "yourname.com gibi bir web adresi girin.",
+      "urlSpaces": "Web adresleri boşluk içeremez.",
+      "urlInvalid": "Adresi kontrol edin. yourname.com gibi bir alan adı gerekir.",
+      "text": "İnsanların taradıktan sonra görmesi gereken metni yazın.",
+      "ssid": "Ağ adını telefonlarda göründüğü şekliyle tam olarak girin.",
+      "password": "Wi-Fi şifresini girin veya “Şifre yok”u seçin.",
+      "passwordShort": "WPA şifreleri en az 8 karakterden oluşur.",
+      "contactName": "En azından bir ad veya soyad ekleyin.",
+      "phone": "Rakam, boşluk ve ülke kodu için isteğe bağlı bir + kullanın.",
+      "email": "E-posta adresini kontrol edin. ana@studio.com gibi bir ad, @ ve alan adı gerekir.",
+      "emailTo": "E-postanın gideceği adresi girin.",
+      "emailInvalid": "Adresi kontrol edin. Bir ad, @ ve alan adı gerekir.",
+      "phoneNumber": "+1 415 555 0142 gibi ülke koduyla birlikte bir telefon numarası girin.",
+      "smsTo": "Mesajı alacak numarayı girin.",
+      "address": "Harita uygulamasının açacağı adresi girin.",
+      "eventTitle": "Etkinliğe bir ad verin.",
+      "eventStart": "Bir tarih seçin."
+    },
+    "afterScanning": {
+      "label": "Taradıktan sonra",
+      "toggleHint": "İnsanların telefonlarında ne gördüğünü görün",
+      "caption": "İnsanların taradıktan sonra gördükleri",
+      "websitePlaceholder": "Web sayfanız",
+      "dynamicNote": "Önce kısa bağlantınızı açar, sonra buraya yönlendirir.",
+      "textPlaceholder": "Metniniz burada görünür.",
+      "wifiPlaceholder": "Ağa katılınsın mı?",
+      "security": "Güvenlik",
+      "open": "Açık ağ",
+      "password": "Şifre",
+      "join": "Ağa katıl",
+      "contactPlaceholder": "Yeni kişi",
+      "phone": "Telefon",
+      "email": "E-posta",
+      "company": "Şirket",
+      "save": "Kişilere ekle",
+      "emailPlaceholder": "Yeni e-posta",
+      "subject": "Konu",
+      "compose": "E-posta yaz",
+      "phonePlaceholder": "Telefon numarası",
+      "call": "Ara",
+      "message": "Mesaj",
+      "text": "Mesaj gönder",
+      "locationPlaceholder": "Bir yer",
+      "address": "Adres",
+      "openMaps": "Haritalar’da aç",
+      "eventPlaceholder": "Yeni etkinlik",
+      "place": "Yer",
+      "addToCalendar": "Takvime ekle",
+      "wifiKicker": "Wi-Fi ağına katıl",
+      "website": "Web sitesi",
+      "textKicker": "Taranan metin",
+      "loading": "Önizleme yükleniyor",
+      "date": "Tarih",
+      "addEvent": "Etkinlik ekle"
+    },
+    "passwordShow": "Göster",
+    "passwordHide": "Gizle",
+    "wifiPasswordHint": "Önizleme şifreyi gizler. Şifre kodun içinde saklanır, bu yüzden kodu tarayan herkes ağa katılabilir.",
+    "tooLong": {
+      "title": "QR kod için çok uzun",
+      "text": "Bir QR kodun taşıyabileceğinden yaklaşık %{over} fazla. İçeriği kısaltın, kod hemen geri gelir. Yazdığınız hiçbir şey kaybolmaz.",
+      "centerHint": "Kodun ortasındaki bir logo veya alt yazı sınırı düşürür. Kaldırmak da yer açar.",
+      "detail": "{bytes} / {max} bayt",
+      "edit": "İçeriği düzenle",
+      "badge": "Çok uzun",
+      "preview": "QR kod gösterilmiyor: içerik çok uzun"
+    },
+    "eyeColor": "Köşe çerçeveleri",
+    "eyeInColor": "Köşe merkezleri",
+    "resetColors": "Renkleri sıfırla",
+    "colorInvalid": "#1F4D3A gibi bir HEX renk kullanın: # ve 0–9 ile A–F arasından 6 karakter.",
+    "size": {
+      "title": "Boyut",
+      "unitHint": "Ekranlar, slaytlar ve web için. 1 birim = 1× ölçekte 1 piksel.",
+      "qr": "QR kod boyutu",
+      "qrSlider": "QR kod boyutu kaydırıcısı",
+      "clamped": "Bu kod düzene sığmıyor: sığan en büyük boyut olan {shown} {unit} ile çiziliyor. Düzeni büyütün veya kodu küçültün.",
+      "layout": "Düzen boyutu",
+      "width": "Genişlik",
+      "height": "Yükseklik",
+      "locked": "“Yalnızca QR” ve “Çerçeve” seçeneklerinde düzen kodu izler. Kendi boyutunu ayarlamak için “QR + alt yazı” veya bir kart seçin.",
+      "presets": {
+        "square": "Kare 1080",
+        "story": "Hikâye 1080×1920",
+        "slide": "Slayt 1920×1080",
+        "card": "Kartvizit 90×50",
+        "a6": "A6 105×148",
+        "sticker": "Etiket 50×62"
+      },
+      "invalid": "{min} ile {max} {unit} arasında bir tam sayı girin.",
+      "units": "Birimler",
+      "unitMm": "Baskı · mm",
+      "unitPx": "Ekran · px",
+      "unitHintMm": "Baskı için. Dosyalar 300, 600 veya 1200 dpi olarak dışa aktarılır.",
+      "invalidMm": "{min} ile {max} mm arasında, en fazla bir ondalık basamaklı bir sayı girin.",
+      "qrHint": "sessiz alan dahil",
+      "reach": "Yaklaşık {cm} cm uzaklığa kadar taranır (10 : 1 kuralı). Kod büyüdükçe erişim artar.",
+      "viewNoteMm": "Tuval ekranınıza sığacak şekilde ölçeklenir. Baskı boyutunda görmek için tuvalin üstünden <b>Gerçek boyut</b>’u seçin. Dışa aktarma: <b>PNG {width} × {height} px</b>.",
+      "viewNotePx": "Tuval ekranınıza sığacak şekilde ölçeklenir. 1× ölçekte görmek için tuvalin üstünden <b>Gerçek boyut</b>’u seçin. Dışa aktarma: <b>PNG {width} × {height} px</b> (2×)."
+    },
+    "updatingPreview": "Önizleme güncelleniyor…",
+    "captionField": {
+      "label": "Alt yazı metni",
+      "hint": "İkinci satır için Enter’a basın. Alt yazıyı gizlemek için boş bırakın.",
+      "tooLong": "En fazla {max} karakter kullanın: {over, plural, one {# karakter} other {# karakter}} silin. Önizleme, sığan son alt yazınızı korur.",
+      "tooManyLines": "En fazla {max} satır kullanın. Önizleme, sığan son alt yazınızı korur.",
+      "count": "{count} / {max} karakter",
+      "unsupported": "{font} {chars} karakterlerini çizemiyor. Başka bir yazı tipi seçin veya {count, plural, one {bu karakteri} other {bu karakterleri}} değiştirin: dosyalar {count, plural, one {onu} other {onları}} boş kutular olarak gösterir."
+    },
+    "captionFont": {
+      "title": "Yazı tipi",
+      "hint": "QR’ınız için yazı tipleri. HeyQR arayüzü her zaman DM Sans kullanır.",
+      "weight": "Kalınlık",
+      "weights": {
+        "400": "Normal",
+        "500": "Orta",
+        "700": "Kalın"
+      },
+      "original": "DM Sans (orijinal)",
+      "originalHint": "Bu düzen, yeni yazı tipleri gelmeden önce oluşturuldu. DM Sans yalnızca Latin harfleri içerir; Kiril için başka bir yazı tipi seçin."
+    },
+    "captionSize": {
+      "label": "Boyut",
+      "invalid": "En fazla bir ondalık basamakla {min}–{max} {unit} girin. Önizleme son geçerli boyutu korur.",
+      "fitted": "Alt yazı düzene sığsın diye {size} {unit} olarak çiziliyor."
+    },
+    "edit": {
+      "title": "Tasarımı düzenle · {layout}",
+      "back": "Koda dön",
+      "save": "Değişiklikleri kaydet",
+      "saved": "Tasarım kaydedildi",
+      "restored": "Yeniden giriş yapmadan önce kaydetmediğiniz değişiklikleri koruduk. Saklamak için kaydedin.",
+      "discardRestored": "Vazgeç",
+      "unsaved": "Kaydedilmemiş değişiklikler",
+      "retry": "Tekrar dene",
+      "failed": "Tasarım kaydedilemedi. Değişiklikleriniz hâlâ burada.",
+      "notFound": "Bu kod veya düzen artık mevcut değil.",
+      "hint": "Değişiklikler yalnızca bu düzene uygulanır",
+      "note": "Kaydetmek bu düzeni günceller. İçerik, ödeme ve bağlantılar aynı kalır.",
+      "layouts": "Bu kodun düzenleri",
+      "newLayout": "Yeni düzen",
+      "newName": "Düzen {n}",
+      "added": "“{name}” mevcut düzenden oluşturuldu. Diğerleri olduğu gibi kaldı.",
+      "addFailed": "Düzeni ekleyemedik. Düzenlemeleriniz hâlâ burada; tekrar deneyin.",
+      "unsavedSwitch": "Bu düzende kaydedilmemiş değişiklikler var.",
+      "discardSwitch": "Vazgeç ve geçiş yap",
+      "layoutName": "Düzen adı",
+      "unsavedSwitchText": "“{name}” düzenine geçilsin ve bu düzendeki değişikliklerden vazgeçilsin mi? Saklamak için önce kaydedin.",
+      "keepEditing": "Düzenlemeye devam et",
+      "conflictTitle": "Bu düzen başka bir yerde kaydedildi",
+      "conflictText": "Siz açtıktan sonra başka bir sekme veya cihaz bu düzeni kaydetti, bu yüzden değişiklikleriniz kaydedilmedi. Hâlâ buradalar: yeni bir düzen olarak kaydedin veya kaydedilmiş sürümü yeniden yükleyin (bu durumda buradaki değişiklikleriniz silinir).",
+      "conflictNewLayout": "Değişikliklerimi yeni bir düzen olarak kaydet",
+      "conflictReload": "Kaydedilmiş sürümü yeniden yükle"
+    },
+    "captionStyle": {
+      "align": "Hizala",
+      "aligns": {
+        "left": "Sol",
+        "center": "Orta",
+        "right": "Sağ"
+      },
+      "color": "Alt yazı rengi",
+      "palette": "Alt yazı rengi hazır ayarları",
+      "matchCode": "Kodla eşleştir"
+    },
+    "logoFile": {
+      "hint": "En fazla {max} MB boyutunda PNG, JPG, SVG veya WebP. Bir dosya seçin veya yükleme kutusuna bırakın.",
+      "reading": "Görsel okunuyor…",
+      "empty": "Bu dosya boş.",
+      "tooLarge": "Bu dosya {max} MB sınırını aşıyor.",
+      "unsupported": "Bu dosya, adı ne derse desin, PNG, JPG, SVG veya WebP görseli değil.",
+      "unreadable": "Bu görsel açılamıyor. Hasarlı olabilir; yeniden dışa aktarıp tekrar deneyin.",
+      "kept": "Mevcut logonuz korunuyor."
+    },
+    "logoPlate": {
+      "label": "Zemin",
+      "none": "Yok",
+      "square": "Kare",
+      "circle": "Daire"
+    },
+    "logoSizeValue": "%{size} · %{max}’a kadar taranır",
+    "logoSizeLegacy": "%{saved} olarak kaydedildi; %{max} üst sınırında çiziliyor. Kaydırıcıyı hareket ettirmek sınır içinde bir boyut kaydeder.",
+    "groups": {
+      "label": "Tasarım ayarları",
+      "layout": "Düzen",
+      "frame": "Çerçeve",
+      "size": "Boyut",
+      "pattern": "Desen",
+      "colors": "Renkler",
+      "logo": "Logo",
+      "caption": "Alt yazı",
+      "brand": "Marka"
+    },
+    "quickStyles": {
+      "title": "Hızlı stiller",
+      "hint": "Tek dokunuş şekilleri ve renkleri birlikte ayarlar. Geri al önceki görünümü geri getirir.",
+      "surprise": "Beni şaşırt",
+      "apply": "{name} stilini uygula",
+      "applied": "“{name}” stili uygulandı. Geri al önceki görünümü geri getirir.",
+      "surprised": "Yeni bir görünüm. Geri al öncekini geri getirir.",
+      "names": {
+        "classic": "Klasik",
+        "soft": "Yumuşak",
+        "dots": "Noktalar",
+        "fluid": "Akışkan",
+        "lines": "Çizgiler",
+        "gem": "Mücevher"
+      }
+    },
+    "layoutGroup": {
+      "title": "Düzen",
+      "hint": "Öğeler yer değiştirir, ayarlar kalır",
+      "border": "Düzenin etrafındaki çerçeve",
+      "borderCards": "Kartların her zaman bir çerçevesi vardır."
+    },
+    "colorsGroup": {
+      "title": "Neyi renklendirmeli",
+      "targets": "Renk hedefleri",
+      "resetAll": "Tümünü sıfırla",
+      "edited": "Düzenlendi",
+      "roles": {
+        "fg": "Modüller",
+        "eye": "Köşe çerçeveleri",
+        "eyeIn": "Köşe merkezleri",
+        "bg": "Arka plan",
+        "frame": "Çerçeve",
+        "caption": "Alt yazı"
+      },
+      "editing": "{role} rengi",
+      "swatches": "Renk örnekleri",
+      "reset": "Varsayılana sıfırla",
+      "note": "Bu renkler yalnızca QR’ınızı biçimlendirir. HeyQR’ın kendi düğmeleri ve menüleri renklerini korur.",
+      "frameHint": "Çerçeveler, kart kenarlıkları ve bir düzenin etrafındaki çerçeve.",
+      "captionHint": "Kodun altında, üstünde veya içinde alt yazılar.",
+      "picker": "{role} renk seçici"
+    },
+    "logoGroup": {
+      "source": "Logo kaynağı",
+      "icons": "Simge kitaplığı",
+      "upload": "Logo yükle",
+      "count": "{count} vektör simge",
+      "search": "Simge ara",
+      "searchPlaceholder": "Simge ara: menü, wifi, mağaza…",
+      "empty": "“{query}” ile eşleşen simge yok.",
+      "style": "Simge stili",
+      "plate": "Plaka üzerinde",
+      "tile": "Renkli kutu",
+      "vectorNote": "Simgeler SVG ve PDF’te vektör olarak kalır, böylece her boyutta nettir. Köşe merkezi rengini alırlar.",
+      "remove": "Logoyu kaldır",
+      "backingHint": "Zemin, logonuzun arkasındaki noktaları temizler, böylece net okunur.",
+      "position": "Konum",
+      "positions": {
+        "center": "Kodun ortası",
+        "top": "Kartın üstü"
+      },
+      "positionHint": "“Kartın üstü” dikey ve yatay kartlarla çalışır.",
+      "brandName": "Logonun yanındaki ad",
+      "brandNameHint": "İsteğe bağlı. Kodun üstünde logonun yanında gösterilir.",
+      "uploadTitle": "Logonuzu yükleyin",
+      "brandedUpload": "Önce bir görsel yükleyin",
+      "imageSize": "Görsel boyutu"
+    },
+    "captionGroup": {
+      "position": "Konum",
+      "positions": {
+        "below": "Altta",
+        "above": "Üstte",
+        "inside": "Kodun içinde"
+      },
+      "insideHint": "Kısa metin, kodun ortasında bir plaka üzerinde durur. Çok fazla alanı gizlerse tarama kontrolü kısaltmanızı ister.",
+      "hiddenNote": "“{layout}” düzeninde alt yazı yok. Göstermek için QR + alt yazı veya bir kart seçin.",
+      "frameNote": "Çerçevenin metni Çerçeve bölümünde ayarlanır.",
+      "toLayout": "QR + alt yazı kullan",
+      "color": "Alt yazı rengi",
+      "insideShortened": "Kodun içinde {max} karakterlik yer var, bu yüzden “{shown}” gösteriliyor. Alt yazıyı kısaltın veya kodun altına ya da üstüne yerleştirin."
+    },
+    "stage": {
+      "history": "Geçmiş",
+      "undo": "Geri al",
+      "redo": "Yinele",
+      "background": "Tuval arka planı",
+      "bg": {
+        "light": "Açık",
+        "dark": "Koyu",
+        "checker": "Şeffaf"
+      },
+      "scale": "Önizleme ölçeği",
+      "fit": "Sığdır",
+      "actual": "Gerçek boyut",
+      "dims": {
+        "layout": "Düzen",
+        "qr": "QR",
+        "file": "Dosya"
+      },
+      "scaleLabel": "%{pct}",
+      "openFull": "Tam ekran önizlemeyi aç",
+      "fullTitle": "Tam ekran önizleme",
+      "done": "Bitti",
+      "scaledToFit": "Sığacak şekilde ölçeklendi"
+    },
+    "scanChecking": "Tarama kontrol ediliyor",
+    "darkenCorners": "Köşe işaretlerini koyulaştır",
+    "textCount": "{count} / {max} karakter. Kısa metin daha sade ve daha kolay taranan bir kod oluşturur.",
+    "brand": {
+      "step1": "1 · Logonuz veya görseliniz",
+      "step1Hint": "PNG, JPG, WebP veya SVG",
+      "step1Ready": "İstediğiniz zaman değiştirin",
+      "drag": "Logonuzu buraya sürükleyin",
+      "dropNow": "Yüklemek için bırakın",
+      "add": "Logonuzu veya görselinizi ekleyin",
+      "formats": "En fazla 10 MB boyutunda PNG, JPG, WebP veya SVG. Şeffaf arka plan en iyi sonucu verir.",
+      "choose": "Görsel seç",
+      "chooseMobile": "Fotoğraflardan veya dosyalardan seçin",
+      "chooseLabel": "Bir logo görseli seçin",
+      "sample": "Örnek bir logo deneyin",
+      "error": "Bu dosyayı okuyamadık. En fazla 10 MB boyutunda bir PNG, JPG, WebP veya SVG deneyin.",
+      "reading": "Görselinizdeki renkler okunuyor…",
+      "preview": "Yüklenen görsel",
+      "image": "Görseliniz",
+      "colorsFound": "{count, plural, one {# renk bulundu} other {# renk bulundu}}",
+      "replace": "Görseli değiştir",
+      "replaceLabel": "Logo görselini değiştir",
+      "remove": "Görseli kaldır",
+      "step2": "2 · Görselinizden renkler",
+      "step2Hint": "QR’a uygulandı",
+      "roles": "Marka renk rolleri",
+      "role": {
+        "primary": "Kod rengi",
+        "bg": "Arka plan",
+        "accent": "Vurgu"
+      },
+      "roleHint": {
+        "primary": "Modüller ve köşe çerçeveleri",
+        "bg": "Kodun ve kartın arkası",
+        "accent": "Köşe merkezleri ve ayrıntılar"
+      },
+      "fromImage": "Görselinizden",
+      "found": "Görselinizde bulunan renkler",
+      "hexFor": "{role} için HEX",
+      "reset": "Sıfırla",
+      "contrast": {
+        "ok": "Arka plan üzerinde kod: {ratio}:1 · kolay okunur. Son sözü tarama kontrolü söyler.",
+        "warn": "Arka plan üzerinde kod: {ratio}:1 · okunabilir, ancak daha fazla kontrast daha güvenli.",
+        "err": "Arka plan üzerinde kod: {ratio}:1 · güvenilir tarama için çok düşük."
+      },
+      "appColors": "Bu renkler yalnızca QR’ınızı biçimlendirir. HeyQR’ın düğmeleri ve menüleri kendi renklerini korur.",
+      "step3": "3 · Bir yön seçin",
+      "step3Hint": "Aynı kod, üç görünüm",
+      "looks": "Markalı görünümler",
+      "lookCards": {
+        "center": {
+          "title": "Kodun içinde logo",
+          "desc": "İşaretiniz ortada bir plaka üzerinde durur."
+        },
+        "card": {
+          "title": "Marka kartı",
+          "desc": "Kodun üstünde, bir çerçeve içinde logo ve ad."
+        },
+        "art": {
+          "title": "Sanat eseri",
+          "desc": "Görseliniz noktalara ve köşelere akar."
+        }
+      },
+      "step4": "4 · İnce ayar",
+      "fine": {
+        "logo": "Görsel boyutu ve zemin",
+        "pattern": "Noktalar ve köşeler",
+        "caption": "Alt yazı ve yazı tipi",
+        "size": "Boyut"
+      },
+      "updating": "Markalı tasarım güncelleniyor… düzenlemeye devam edin",
+      "readingCanvas": "Görseliniz okunuyor…"
+    },
+    "designMode": {
+      "label": "Tasarım modu",
+      "custom": "Özel tasarım",
+      "branded": "Markalı tasarım",
+      "chooseTitle": "Nasıl tasarlamak istersiniz?",
+      "chooseLead": "İkisi de aynı koddan başlar. İçeriğinizi kaybetmeden istediğiniz zaman geçiş yapabilirsiniz.",
+      "customTitle": "Özel tasarım",
+      "customText": "Düzeni, şekilleri, renkleri, çerçeveyi ve alt yazıyı kendiniz seçin.",
+      "brandedTitle": "Markalı tasarım",
+      "brandedBadge": "Logonuzdan",
+      "brandedText": "Logonuzu veya bir görsel yükleyin. Renklerini alır ve üç görünüm öneririz."
+    },
+    "patternHint": "Verilerinizi taşıyan noktalar için 8 şekil",
+    "eyeFrameHint": "3 köşe işaretinin dış halkası",
+    "eyeBallHint": "3 köşe işaretinin iç noktası",
+    "finderNote": "Her şekil 1 : 1 : 3 : 1 : 1 bulucu oranlarını korur, böylece tarama kontrolü yine geçer.",
+    "colorPicker": "{label} renk seçici",
+    "scanCheck": {
+      "run": "Taramayı kontrol et",
+      "retry": "Tekrar kontrol et",
+      "readBack": "Bu cihazda, bir telefon kamerası gibi “{value}” geri okundu.",
+      "unreadableTitle": "Taranmadı",
+      "unreadable": "Bir telefon kamerası bu düzeni okuyamadı. Kontrastı artırın, logoyu küçültün veya daha sade şekiller kullanın, sonra tekrar kontrol edin.",
+      "mismatch": "İçeriğiniz yerine “{value}” okundu. İçeriği kontrol edin, sonra tekrar kontrol edin.",
+      "errorTitle": "Tarama kontrolü çalışmadı",
+      "errorText": "Tarama kontrolü başlatılamadı. Tasarımınız güvende; tekrar deneyin.",
+      "finding": "Nedeni bu cihazda araştırılıyor…",
+      "multiTitle": "Bu düzen taranmayabilir · {count} düzeltme",
+      "confirmed": "Bu cihazda kontrol edildi: yalnızca bu değiştirildiğinde taranıyor.",
+      "general": "Sorunu tek bir ayara bağlayamadık. Kontrastı artırın, logoyu küçültün veya daha sade şekiller kullanın, sonra tekrar kontrol edin.",
+      "logoSearching": "Bu cihazda daha küçük logo boyutları deneniyor…",
+      "logoNone": "Bu düzenle taranan daha küçük bir logo boyutu yok, bu yüzden tasarımınız değişmedi. Logo bölümünde bir zemin, daha sade bir logo deneyin veya logoyu kaldırın.",
+      "openLogo": "Logo ayarlarını aç",
+      "logoApplied": "Logo %{from}’dan %{to}’a küçültüldü. Yeni düzen kontrol ediliyor…",
+      "causes": {
+        "invert": {
+          "title": "Koyu arka planda açık renkli kod",
+          "text": "Birçok telefon kamerası ters renkli kodları okuyamaz. Kodu arka planından koyu tutun.",
+          "fix": "Renkleri değiştir"
+        },
+        "contrast": {
+          "title": "Yeterli kontrast yok",
+          "text": "Kod ve arka plan birbirine çok yakın ({ratio}:1). En az 4:1 hedefleyin.",
+          "fix": "Kontrastı artır"
+        },
+        "eyes": {
+          "title": "Köşe işaretleri çok açık",
+          "text": "Tarayıcılar kodu üç köşe işaretinden bulur. Bunları koyulaştırın.",
+          "fix": "Köşe işaretlerini koyulaştır"
+        },
+        "text": {
+          "title": "Koddaki metin çok uzun",
+          "text": "Hata düzeltmenin kapattığı alanı kurtarabilmesi için kodun içindeki metni yaklaşık 8 karakterde tutun.",
+          "fix": "Metni kısalt"
+        },
+        "logo": {
+          "title": "Logo kodun çok fazlasını gizliyor",
+          "text": "Hata düzeltme en fazla %{max} logo genişliğini kurtarabilir. Sizinki %{size}.",
+          "critical": "Bir köşe işaretiyle veya zamanlama çizgisiyle çakışıyor.",
+          "fix": "Logo boyutunu küçült"
+        }
+      }
+    },
+    "hosted": {
+      "badge": "Barındırılan sayfa",
+      "notice": "HeyQR bu sayfayı {short} adresinde yayınlar. {needs} Değişiklikler yayınladığınızda canlıya alınır; basılı kodlar çalışmaya devam eder.",
+      "noticePreview": "kodun kısa bağlantısı",
+      "needsPlan": "Yayınlamak için Dinamik plan gerekir: 5 kod için aylık {starter} ile Starter veya 25 kod için aylık {studio} ile Studio, 7 günlük ücretsiz denemeyle. Tasarlamak ve önizlemek ücretsiz kalır.",
+      "needsSlot": "{plan} planındaki {slots} Dinamik yerinizden birini kullanır.",
+      "sample": "Örnekten başla",
+      "sampleAdded": "Örnek eklendi. Kendi bilgilerinizle değiştirin.",
+      "previews": "Önizlemeler · Tarama sonrası ve QR tasarımı",
+      "previewSwitch": "Önizleme",
+      "afterScan": "Tarama sonrası",
+      "qrDesign": "QR tasarımı",
+      "moveUp": "{item} öğesini yukarı taşı",
+      "moveDown": "{item} öğesini aşağı taşı",
+      "remove": "{item} öğesini kaldır",
+      "optional": "isteğe bağlı",
+      "photoAdd": "Fotoğraf ekle",
+      "photoReplace": "Fotoğrafı değiştir",
+      "photoRemove": "Fotoğrafı kaldır",
+      "photoHint": "Fotoğraflar HeyQR’a yüklenir ve telefonlar için yeniden boyutlandırılır. Her biri en fazla 5 MB, JPG veya PNG.",
+      "photoType": "“{name}” bir JPG veya PNG değil.",
+      "photoTooLarge": "“{name}” {size}. Sınır 5 MB.",
+      "photoUnreadable": "“{name}” okunamadı. Başka bir fotoğraf deneyin.",
+      "menu": {
+        "name": "Restoran adı",
+        "namePlaceholder": "Little Fern Café",
+        "note": "Not",
+        "notePlaceholder": "Mutfak 8:00–15:00 arası açık",
+        "currency": "Fiyat para birimi",
+        "section": "Bölüm {n}",
+        "sectionPlaceholder": "Kahvaltı",
+        "sectionHint": "Bu bölüme “Kahvaltı” veya “İçecekler” gibi bir ad verin.",
+        "dish": "Yemek {n}",
+        "dishPlaceholder": "Avokadolu tost",
+        "descPlaceholder": "Açıklama · isteğe bağlı",
+        "price": "Fiyat",
+        "pricePlaceholder": "12",
+        "dishPhoto": "Yemek fotoğrafı",
+        "addDish": "Yemek ekle",
+        "addSection": "Bölüm ekle"
+      },
+      "coupon": {
+        "title": "Kampanya başlığı",
+        "titlePlaceholder": "Bu ay tüm seramik derslerinde",
+        "discount": "İndirim",
+        "discountPlaceholder": "%20 indirim",
+        "discountHint": "Kısa ve büyük: “%20 indirim”, “5 $ indirim”, “Ücretsiz kahve”.",
+        "code": "Promosyon kodu",
+        "codePlaceholder": "FERN20",
+        "expires": "Bitiş tarihi",
+        "expiresHint": "Bu tarihten sonra sayfa “Kampanya sona erdi” gösterir ve kodu gizler. Kampanya, saat diliminizde ({zone}) günün sonuna kadar geçerlidir.",
+        "clearDate": "Tarihi temizle",
+        "link": "Kullanım bağlantısı",
+        "linkPlaceholder": "yourshop.com/offer",
+        "terms": "Koşullar",
+        "termsPlaceholder": "Kişi başına bir kod. Diğer kampanyalarla birleştirilemez.",
+        "previewAs": "Sayfayı şu şekilde önizle",
+        "valid": "Geçerli kampanya",
+        "expired": "Süresi doldu"
+      },
+      "social": {
+        "photo": "Profil fotoğrafı",
+        "name": "Profil adı",
+        "namePlaceholder": "Ana Reyes",
+        "bio": "Kısa biyografi",
+        "bioPlaceholder": "Ürün tasarımcısı. Hafta sonları seramik.",
+        "links": "Bağlantılar, insanların gördüğü sırayla",
+        "link": "Bağlantı {n}",
+        "labelLabel": "Etiket",
+        "labelPlaceholder": "Instagram",
+        "urlLabel": "Adres",
+        "urlPlaceholder": "instagram.com/yourname",
+        "quickAdd": "Ekle:",
+        "addLink": "Bağlantı ekle"
+      },
+      "business": {
+        "name": "İşletme adı",
+        "namePlaceholder": "Reyes Ceramics Studio",
+        "desc": "Kısa açıklama",
+        "descPlaceholder": "El yapımı sofra eşyaları ve seramik dersleri.",
+        "hours": "Çalışma saatleri",
+        "open": "Açık",
+        "from": "Açılış",
+        "to": "Kapanış",
+        "closed": "Kapalı",
+        "copyMonday": "Pazartesi saatlerini Salı–Cuma’ya kopyala",
+        "zone": "Saatler {zone} saat dilimindedir.",
+        "address": "Adres",
+        "addressPlaceholder": "21 Pier St, San Francisco",
+        "addressHint": "Yol tarifi düğmesi ekler.",
+        "phone": "Telefon",
+        "phonePlaceholder": "+1 415 555 0142",
+        "phoneHint": "Ara düğmesi ekler.",
+        "website": "Web sitesi",
+        "websitePlaceholder": "yourshop.com",
+        "websiteHint": "Web sitesi düğmesi ekler."
+      },
+      "apps": {
+        "icon": "Uygulama simgesi",
+        "name": "Uygulama adı",
+        "namePlaceholder": "Fern Rewards",
+        "desc": "Açıklama",
+        "descPlaceholder": "Uygulamanın ne yaptığı, tek cümleyle.",
+        "ios": "App Store bağlantısı",
+        "iosPlaceholder": "apps.apple.com/app/your-app",
+        "android": "Google Play bağlantısı",
+        "androidPlaceholder": "play.google.com/store/apps/details?id=…",
+        "storesHint": "En az bir mağaza ekleyin. Telefonlar kendi mağazalarını açar; diğer cihazlar her iki bağlantıyı içeren bir sayfa görür."
+      },
+      "pdf": {
+        "title": "Başlık",
+        "titlePlaceholder": "Bahar dersleri programı",
+        "desc": "Kısa açıklama",
+        "descPlaceholder": "Tarihler, fiyatlar ve yanınızda getirmeniz gerekenler.",
+        "file": "PDF dosyası",
+        "choose": "Bir PDF seçin",
+        "limits": "En fazla 25 MB · en fazla 300 sayfa",
+        "sample": "Örnek PDF’i kullan",
+        "uploading": "Yükleniyor · %{pct}",
+        "processing": "PDF kontrol ediliyor…",
+        "cancel": "İptal",
+        "meta": "{pages, plural, one {# sayfa} other {# sayfa}} · {size}",
+        "metaNoPages": "{size}",
+        "replace": "Değiştir",
+        "remove": "Kaldır",
+        "hint": "HeyQR tarafından saklanır. Dosyayı değiştirmek aynı kısa bağlantıyı korur, böylece basılı kodlar siz yayınladıktan sonra yeni sürümü açar.",
+        "signIn": "PDF yüklemek için giriş yapın. Taslağınız korunur.",
+        "notPdf": "“{name}” bir PDF değil. .pdf ile biten bir dosya seçin.",
+        "empty": "“{name}” boş. Başka bir dosya seçin.",
+        "tooLarge": "“{name}” {size}. Sınır 25 MB. Daha küçük bir PDF dışa aktarıp tekrar deneyin.",
+        "tooManyPages": "“{name}” {pages} sayfa içeriyor. Sınır 300.",
+        "failed": "Bu dosya yüklenmedi. Tekrar deneyin."
+      },
+      "product": {
+        "name": "Ürün adı",
+        "namePlaceholder": "Benekli taş kupa",
+        "photos": "Fotoğraflar",
+        "cover": "Kapak",
+        "photosHint": "En fazla 5 fotoğraf. İlki kapak olur. Her biri en fazla 5 MB, JPG veya PNG.",
+        "photo": "Fotoğraf {n}",
+        "desc": "Açıklama",
+        "descPlaceholder": "Boyut, malzeme, bakım.",
+        "currency": "Para birimi",
+        "price": "Fiyat",
+        "pricePlaceholder": "38",
+        "cta": "Düğme",
+        "ctas": {
+          "buy": "Hemen satın al",
+          "view": "Ürünü görüntüle",
+          "order": "Hemen sipariş ver"
+        },
+        "link": "Ürün bağlantısı",
+        "linkPlaceholder": "yourshop.com/product",
+        "linkHint": "Düğmenin gittiği yer: mağazanız veya bir pazar yeri ilanı."
+      },
+      "signInPhotos": "Fotoğraf eklemek için giriş yapın. Taslağınız korunur.",
+      "errors": {
+        "menuName": "Misafirlerin menünün üstünde gördüğü adı ekleyin.",
+        "menuSections": "En az bir bölüm ekleyin.",
+        "sectionName": "Bu bölüme “Kahvaltı” veya “İçecekler” gibi bir ad verin.",
+        "sectionDishes": "Bu bölüme en az bir yemek ekleyin.",
+        "dishName": "Her yemeğin bir adı olmalı.",
+        "price": "Fiyatlarda yalnızca rakam kullanın, 12 veya 4.50 gibi.",
+        "couponTitle": "Kampanyanın ne için olduğunu belirtin.",
+        "couponDiscount": "“%20 indirim” gibi indirimi ekleyin.",
+        "couponCode": "Yalnızca harf, rakam, - veya _ kullanın; boşluk olmadan.",
+        "dateInvalid": "Geçerli bir tarih seçin.",
+        "datePassed": "Bu tarih geçti. Daha sonraki bir tarih seçin veya bitiş tarihi olmayan bir kampanya için temizleyin.",
+        "urlEmpty": "yourname.com gibi bir web adresi girin.",
+        "urlSpaces": "Web adresleri boşluk içeremez.",
+        "urlInvalid": "Adresi kontrol edin. yourname.com gibi bir alan adı gerekir.",
+        "socialName": "İnsanların sayfanın üstünde gördüğü adı ekleyin.",
+        "socialLinks": "En az bir bağlantı ekleyin.",
+        "linkLabel": "Bu bağlantının bir etiketi olmalı.",
+        "linkUrl": "Bu bağlantı instagram.com/yourname gibi tam bir web adresi gerektirir.",
+        "businessName": "İşletmenizin adını ekleyin.",
+        "businessReach": "İnsanların size ulaşabilmesi için bir adres, telefon veya web sitesi ekleyin.",
+        "phone": "Rakam, boşluk ve ülke kodu için isteğe bağlı bir + kullanın.",
+        "hoursInvalid": "09:00 gibi saatler kullanın.",
+        "hoursOrder": "Kapanış saati açılış saatinden sonra olmalı.",
+        "appName": "Uygulama adını ekleyin.",
+        "appStores": "En az bir mağaza bağlantısı ekleyin.",
+        "appStoreLink": "App Store bağlantıları apps.apple.com/ ile başlar.",
+        "googlePlayLink": "Google Play bağlantıları play.google.com/ ile başlar.",
+        "pdfTitle": "Belge için bir başlık ekleyin.",
+        "pdfFile": "Devam etmek için bir PDF yükleyin.",
+        "pdfUploading": "Yüklemenin bitmesini bekleyin.",
+        "productName": "Ürün adını ekleyin.",
+        "productLink": "İnsanların ürünü satın alabileceği veya görebileceği sayfayı ekleyin.",
+        "productPrice": "38 veya 38.50 gibi yalnızca rakam kullanın. Para birimini menüden seçin.",
+        "productImages": "En fazla 5 fotoğraf."
+      },
+      "previewNote": "HeyQR bu sayfayı {short} adresinde barındırır. Düzenlemeler yayınladığınızda canlıya alınır; basılı kodlar çalışmaya devam eder.",
+      "qrNote": "Kod {short} kısa bağlantısını taşır, böylece sayfa baskıdan sonra değişebilir."
+    }
+  },
+  "scan": {
+    "invert": "Koyu arka planda açık renkli kod. Birçok telefon kamerası ters renkli kodları okuyamaz.",
+    "contrast": "Kod ile arka planı arasında yeterli kontrast yok. En az 3:1 olmalı.",
+    "eyes": "Köşe işaretleri arka plandan koyu olmalı ve en az 3:1 kontrasta sahip olmalı (merkezler için 2.5:1). Tarayıcılar kodu onlar sayesinde bulur.",
+    "logo": "Logo kodun çok fazlasını gizliyor. Küçültün.",
+    "text": "Koddaki metin çok uzun. Yaklaşık 8 karakterde tutun."
+  },
+  "export": {
+    "title": "Kodunuzu indirin",
+    "shortLinkPreview": {
+      "mark": "Önizleme",
+      "note": "Örnek bir kısa bağlantıyla önizleme. Kalıcı kısa bağlantınız bu kodu etkinleştirdiğinizde oluşturulur ve indirdiğiniz her dosya onu içerir."
+    },
+    "format": "Biçim",
+    "png": "PNG",
+    "pngHint": "Web ve belgeler için 8K’ya kadar görsel.",
+    "svg": "SVG",
+    "svgHint": "Vektör, her boyutta, düzenlenebilir.",
+    "pay": "{price} öde ve indir",
+    "subscribe": "Aylık {price} ile abone ol",
+    "download": "{format} indir",
+    "paid": "Ödeme alındı. Dosyalarınız hazır.",
+    "pending": "Ödemeniz onaylanıyor… Bu genellikle birkaç saniye sürer. Dosyanın makbuzla eşleşmesi için ayarlarınız kilitlendi.",
+    "cancelled": "<b>Ödeme iptal edildi.</b> Sizden ücret alınmadı. Tasarımınız ve biçiminiz kaydedildi, hazır olduğunuzda ödeyebilirsiniz.",
+    "secure": "İşlemi Stripe’ın güvenli ödeme sayfasında tamamlayacak, ardından indirmek için buraya döneceksiniz.",
+    "includedNote": "Satın alımınıza dahil. Ödenecek bir şey yok.",
+    "resolution": "PNG boyutu",
+    "scale": "{scale}×",
+    "dpi": "{dpi} dpi",
+    "pixels": "{width} × {height} px",
+    "titleBuy": "QR kodunuzu indirin",
+    "titleGuest": "İndirmeye hazır",
+    "subGuest": "Düzeni ve dosyayı kontrol edin, ardından ödemek ve indirmek için Google ile giriş yapın. Tasarımınız olduğu gibi kalır.",
+    "subPay": "Düzeni ve biçimi kontrol edin. Ödemeden önce toplam tutarı göreceksiniz.",
+    "subEntitled": "Bu kod sizin. İstediğiniz biçimi, istediğiniz sıklıkta indirin.",
+    "stageLabel": "İndirilecek düzen",
+    "layouts": "Bu kodun düzenleri",
+    "backToDesign": "Tasarıma dön",
+    "model": {
+      "static": "Statik",
+      "dynamic": "Dinamik"
+    },
+    "dims": {
+      "layout": "Düzen",
+      "file": "Dosya"
+    },
+    "scanOk": "Tarama doğrulandı",
+    "scanFail": "Taranmayabilir",
+    "transparent": "Şeffaf arka plan",
+    "quality": "<b>Kalite kaybı yok.</b> SVG ve PDF tamamen vektördür: modüller, simgeler ve metin reklam panosu boyutuna kadar ölçeklenir. PNG aynı vektörden 8K’ya kadar oluşturulur.",
+    "returned": "Google ile giriş yapıldı. Düzeniniz ve <b>{format}</b> biçiminiz bıraktığınız gibi.",
+    "sessionEnded": "<b>Oturumunuz sona erdi.</b> Devam etmek için tekrar giriş yapın: bu düzen ve dosya seçenekleriniz korunur.",
+    "signInAgain": "Tekrar giriş yap",
+    "alreadyOwned": "Zaten sizin. İstediğiniz zaman yeni bir ödeme olmadan yeniden indirin.",
+    "paymentProcessing": "Bu kodun ödemesi onaylanıyor. Birazdan, ikinci bir ücret alınmadan açılacak.",
+    "signInCanceled": "Google ile giriş iptal edildi. Düzeniniz ve <b>{format}</b> biçiminiz hâlâ seçili. Tekrar denemek için Google ile devam edin.",
+    "signInIncomplete": "Google ile giriş tamamlanmadı. Düzeniniz ve <b>{format}</b> biçiminiz hâlâ seçili. Tekrar denemek için Google ile devam edin.",
+    "confirming": "Ödemeniz onaylanıyor…",
+    "preparing": "{format} dosyanız hazırlanıyor…",
+    "ready": "{format} dosyanız hazır.",
+    "downloaded": "<b>{name} indirildi.</b> Ayrıca QR kodlarım bölümünde, yeniden indirmeye hazır.",
+    "downloadAgain": "Yeniden indir",
+    "tryAgain": "Tekrar dene",
+    "errors": {
+      "failed": "<b>{format} dosyanızı hazırlayamadık.</b> Ödemeniz ve ayarlarınız güvende. Birazdan tekrar deneyin.",
+      "scan": "<b>Bu düzen taranmayabilir.</b> Düzeltmek için tasarımı açın; dosyalar yalnızca tarama kontrolünü geçen kodlar için oluşturulur.",
+      "size": "<b>Bu boyut tek bir dosya için çok büyük.</b> Daha küçük bir PNG boyutu veya SVG seçin.",
+      "payment": "<b>Bu kodun kilidi henüz açılmadı.</b> Ücret alınmadı. Birazdan sayfayı yenileyin veya indirmek için ödeme yapın."
+    },
+    "checkoutFailed": "Ödeme sayfasını açamadık. Ücret alınmadı; tekrar deneyin.",
+    "continueGoogle": "Google ile devam et",
+    "guestNote": "Tasarlamak ücretsiz. Yalnızca indirirken ödersiniz.",
+    "receipt": {
+      "title": "Makbuz",
+      "paid": "Ödendi",
+      "tax": "Vergi, Stripe’ın hesapladığı şekilde dahildir."
+    },
+    "lines": {
+      "single": "Single QR",
+      "dynamic": "Dinamik QR",
+      "singleNamed": "Single QR · {name}",
+      "unlock": "Statik kilit açma · {plan} · {limit} haktan {left} kaldı",
+      "credit": "Statik kredi · {left} kaldı",
+      "slot": "Dinamik yer · {plan} · {limit} yerden {used} kullanımda",
+      "starter": "Starter · aylık",
+      "ppIncluded": "Print Pack · {plan} planına dahil · {limit} haktan {left} kaldı",
+      "pp": "Print Pack"
+    },
+    "perMonth": "{price}/ay",
+    "summary": {
+      "title": "Sipariş özeti",
+      "code": "QR kod",
+      "type": "Tür",
+      "layout": "Düzen",
+      "file": "Dosya",
+      "total": "Toplam",
+      "tax": "Varsa vergi, ödeme sırasında hesaplanır.",
+      "included": "Dahil",
+      "includedShort": "Dahil"
+    },
+    "emptyTitle": "Henüz indirilecek bir şey yok",
+    "emptyText": "Önce bir QR kod tasarlayın. Taslağınız siz indirene kadar bu tarayıcıda kalır.",
+    "emptyAction": "QR kod oluştur",
+    "inspectPrint": "Baskı Önizlemesini aç",
+    "printTitle": "Print Pack",
+    "printPreviewText": "Baskıdan önce bu düzenin tam baskı PDF’ini, taşma payını, kesim işaretlerini ve renk değerlerini kontrol edin.",
+    "printSetupText": "Print Pack, mm cinsinden ölçülen bir baskı düzeni gerektirir. Bu düzeni Tasarımı düzenle → Boyut bölümünden Baskı · mm’ye geçirin.",
+    "printSetup": "Baskı için ayarla",
+    "pdf": "PDF",
+    "pdfHint": "Matbaalar için vektör.",
+    "payTotal": "{price} öde ve indir",
+    "useUnlock": "1 kilit açma kullan ve indir",
+    "useCredit": "1 kredi kullan ve indir",
+    "unlockNote": "{plan} planınızdan. Bundan sonra bu ay {left, plural, one {# kilit açma} other {# kilit açma}} kaldı.",
+    "creditNote": "Statik kredilerinizden. Bundan sonra {left, plural, one {# kredi} other {# kredi}} kaldı.",
+    "goLive": "Yayına al ve indir",
+    "goLiveNote": "{plan} planınızın bir etkin yerini kullanır: bundan sonra {limit} yerden {used} dolu.",
+    "perMonthShort": "{price}/ay",
+    "ppTitle": "Print Pack",
+    "ppOptional": "İsteğe bağlı",
+    "ppUnlocked": "Kilidi açık",
+    "ppDownload": "İndir",
+    "ppAddTitle": "Print Pack ekle",
+    "ppSub": "Baskı PDF’i, düzenlenebilir SVG ve renk ile boyut özellikleri",
+    "ppUseIncluded": "Dahil olan 1 Print Pack’i kullan",
+    "ppIncludedSub": "Bu ay {limit} haktan {left} kaldı · baskı PDF’i, SVG ve özellikler",
+    "ppIncluded": "Dahil",
+    "ppAddText": "Bu QR için taşma payı ve kesim işaretli baskı PDF’i, düzenlenebilir bir SVG ve renk ile boyut sayfası.",
+    "ppAdd": "Print Pack ekle · +{price}",
+    "ppNotForSale": "Print Pack henüz bu para biriminde satın alınamıyor.",
+    "ppRepeat": "Tekrar indirmeler dahildir. Ayarlar: %100 boyut, 3 mm taşma payı, kesim işaretleri, sRGB.",
+    "inspectPrintFirst": "Önce baskı dosyalarını inceleyin",
+    "incl": {
+      "static1": "Bu kodun her düzeninin PNG ve SVG’si",
+      "static2": "Sınırsız yeniden indirme",
+      "static3": "İstediğiniz zaman tasarım düzenlemeleri",
+      "dyn1": "En fazla {limit} etkin Dinamik QR kod, hedefleri istediğiniz zaman değiştirin",
+      "dyn2": "Temel tarama analizi",
+      "dyn3": "PNG ve SVG, sınırsız yeniden indirme",
+      "pp": "Print Pack: baskı PDF’i, düzenlenebilir SVG ve özellikler"
+    },
+    "catalog": {
+      "not_offered": "Bu, seçili para biriminde henüz satın alınamıyor. Ücret alınmadı.",
+      "price_mismatch": "Bu sayfa yüklendiğinden beri fiyat değişti. Ücret alınmadı; güncel fiyatı görmek için sayfayı yenileyin.",
+      "unavailable": "Bu para biriminde henüz satın alınamıyor. Fiyatlar sayfasında para birimini değiştirin veya daha sonra tekrar bakın. Ücret alınmayacak."
+    },
+    "unlockErrors": {
+      "no_allowance": "Aylık kilit açma hakkınız kalmadı. Aşağıdan başka bir seçenek belirleyin.",
+      "no_credits": "Statik krediniz kalmadı.",
+      "limit": "Tüm etkin Dinamik yerler kullanımda.",
+      "failed": "Bu işe yaramadı. Ücret alınmadı; tekrar deneyin."
+    },
+    "limits": {
+      "staticTitle": "Bu ayki {limit} statik kilit açma hakkınızın tümünü kullandınız",
+      "staticText": "Bu QR bir kilit açma daha gerektiriyor. Size uygun olanı seçin; tasarımınız olduğu gibi kalır.",
+      "staticUsed": "{limit} kilit açmadan {used} kullanıldı",
+      "resets": "{date} tarihinde sıfırlanır",
+      "buyOnce": "Bu QR’ı bir kez satın al",
+      "buyOnceSub": "PNG ve SVG ile Single QR",
+      "credits": "3 statik kredi al",
+      "creditsSub": "Süresi dolmaz",
+      "studio": "Studio’ya yükselt",
+      "studioSub": "Her ay 40 kilit açma ve 5 Print Pack",
+      "dynTitle": "{limit} Dinamik yerin tümü kullanımda",
+      "dynText": "Yerler, bu ay oluşturulan kodları değil, şu anda yönlendirme yapan kodları sayar. Birini boşaltın veya daha büyük bir plana geçin.",
+      "dynUsed": "{limit} yerden {used} etkin",
+      "live": "Anlık sayı · aylık değil",
+      "pause": "Bir Dinamik kodu duraklatın veya silin",
+      "pauseSub": "Yerini hemen boşaltır",
+      "studioDynSub": "25 Dinamik yer ve kod başına analiz",
+      "toStatic": "Bunun yerine statik QR yap",
+      "toStaticSub": "Sabit içerik · bir statik kilit açma kullanır"
+    },
+    "limit": "daha büyük boyutlar {max} px’i aşar",
+    "subUnlock": "{plan} planına dahil: bu, aylık statik kilit açma haklarınızdan 1’ini kullanır.",
+    "subCredit": "Bu, statik kredilerinizden 1’ini kullanır."
+  },
+  "dashboard": {
+    "noMatch": {
+      "static": "Statik QR kod yok",
+      "dynamic": "Dinamik QR kod yok",
+      "text": "Diğer kodlarınız Tümü altında.",
+      "all": "Tüm kodları göster"
+    },
+    "title": "QR kodlarım",
+    "new": "QR kod oluştur",
+    "empty": {
+      "title": "Henüz QR kod yok",
+      "text": "Satın aldığınız veya tasarlamaya başladığınız kodlar burada görünür. Bunları istediğiniz zaman yeniden indirebilir ve yeni düzenler ekleyebilirsiniz.",
+      "cta": "İlk QR kodunuzu oluşturun"
+    },
+    "status": {
+      "draft": "Taslak",
+      "active": "Etkin",
+      "paused": "Duraklatıldı",
+      "archived": "Arşivlendi",
+      "purchased": "Satın alındı",
+      "inactive": "Etkin değil"
+    },
+    "model": {
+      "static": "Statik",
+      "dynamic": "Dinamik"
+    },
+    "updated": "{date} tarihinde güncellendi",
+    "open": "{name} kodunu aç",
+    "sub": "{count, plural, one {# kod} other {# kod}} · {dynamic} dinamik etkin",
+    "subEmpty": "Satın aldığınız ve taslak kodlarınız burada.",
+    "filterLabel": "Filtre",
+    "filters": {
+      "all": "Tümü {count}",
+      "static": "Statik {count}",
+      "dynamic": "Dinamik {count}"
+    },
+    "actions": {
+      "edit": "Tasarımı düzenle",
+      "download": "İndir",
+      "buy": "Satın al ve indir",
+      "reactivate": "Yeniden aç"
+    },
+    "loading": "QR kodlarınız yükleniyor",
+    "manage": {
+      "select": "Seç",
+      "done": "Bitti",
+      "selectAll": "Tümünü seç",
+      "selectOne": "{name} kodunu seç",
+      "chooseToDelete": "Silinecek kodları seçin",
+      "selected": "{total} koddan {count} seçildi",
+      "deleteSelected": "{count, plural, =0 {Sil} other {# kodu sil}}",
+      "deleteOne": "{name} kodunu sil",
+      "cancel": "İptal",
+      "dialog": {
+        "titleOne": "“{name}” silinsin mi?",
+        "titleMany": "{count} QR kod silinsin mi?",
+        "leadOne": "Her cihazda QR kodlarım’dan kaldırılır.",
+        "leadMany": "Her cihazda QR kodlarım’dan kaldırılırlar.",
+        "dynamicTitle": "{count, plural, one {Kısa bağlantısı çalışmayı durdurur} other {Kısa bağlantıları çalışmayı durdurur}}",
+        "dynamicText": "{links} {count, plural, one {hemen yönlendirmeyi durdurur} other {hemen yönlendirmeyi durdurur}}. Basılı kopyalar “bağlantı etkin değil” sayfası açar. {count, plural, one {Bir plan yeri} other {# plan yeri}} boşalır.",
+        "staticTitle": "Basılı kopyalar çalışmaya devam eder",
+        "staticText": "Statik bir kod içeriğini desende taşır, bu yüzden basılı kopyalar taranmaya devam eder. {count, plural, one {Bu satın alımı} other {Bu # satın alımı}} artık indiremez veya düzenleyemezsiniz ve silmek ücret iadesi sağlamaz.",
+        "draftTitle": "{count, plural, one {Taslak kaldırılır} other {# taslak kaldırılır}}",
+        "draftText": "{count, plural, one {Bunun} other {Bunların}} için ödeme yapılmadı, bu yüzden başka hiçbir şey değişmez.",
+        "confirmOne": "Kodu sil",
+        "confirmMany": "{count} kodu sil",
+        "undoNote": "Sildikten sonra birkaç saniye boyunca geri alabilirsiniz.",
+        "close": "Kapat",
+        "metaDynamic": "Dinamik",
+        "metaStatic": "Statik",
+        "metaActive": "etkin",
+        "metaPurchased": "satın alındı",
+        "metaDraft": "taslak"
+      },
+      "deletedOne": "“{name}” silindi.",
+      "deletedMany": "{count} kod silindi.",
+      "undo": "Geri al",
+      "restoredOne": "Kod geri yüklendi.",
+      "restoredMany": "{count} kod geri yüklendi.",
+      "deleteFailed": "Silinemedi. Tekrar deneyin.",
+      "restoreFailed": "Geri yüklenemedi. Geri alma, sildikten sonra birkaç dakika kullanılabilir.",
+      "rename": {
+        "action": "Yeniden adlandır",
+        "actionOne": "{name} kodunu yeniden adlandır",
+        "label": "{name} kodunun adı",
+        "save": "Kaydet",
+        "cancel": "İptal",
+        "saved": "“{name}” olarak yeniden adlandırıldı.",
+        "empty": "Koda bir ad verin.",
+        "failed": "Yeniden adlandıramadık. Metniniz hâlâ burada; tekrar deneyin."
+      }
+    },
+    "printPack": "Print Pack"
+  },
+  "qr": {
+    "back": "Tüm kodlar",
+    "layouts": "Düzenler",
+    "shortLink": "Kısa bağlantı",
+    "destination": "Hedef",
+    "destinationHint": "Basılı kodlar çalışmaya devam eder; artık bu adresi açarlar.",
+    "save": "Kaydet",
+    "saved": "Kaydedildi",
+    "scans": "Taramalar, son 14 gün",
+    "scansTotal": "{count, plural, one {# tarama} other {# tarama}}",
+    "download": "İndir",
+    "buy": "İndirmek için satın al",
+    "copy": "Kopyala",
+    "copied": "Kopyalandı",
+    "editDesign": "Tasarımı düzenle",
+    "dest": {
+      "title": "Hedef",
+      "saved": "Kaydedildi",
+      "new": "Yeni hedef",
+      "hint": "Basılı kodlar bir dakika içinde yeni adresi açar. Kısa bağlantı {short} olarak kalır.",
+      "save": "Hedefi kaydet",
+      "cancel": "İptal",
+      "goesTo": "{short} taramalarının gittiği yer",
+      "previously": "Önceki: {url}",
+      "changedAt": "değiştirildi",
+      "history": {
+        "title": "Değişiklik geçmişi",
+        "to": "Yeni değer",
+        "from": "önceki: {url}"
+      },
+      "change": "Hedefi değiştir",
+      "conflict": {
+        "title": "Bu hedef başka bir yerde değiştirildi",
+        "text": "Artık {url} adresine gidiyor. Aşağıdaki düzenlemeniz kaydedilmedi.",
+        "load": "En son sürümü yükle",
+        "loaded": "En son sürüm yüklendi: {url}. Düzenlemenizi gözden geçirin, ardından değiştirmek için kaydedin."
+      }
+    },
+    "scansCard": {
+      "title": "Taramalar · son 14 gün",
+      "total": "Toplam",
+      "today": "Bugün",
+      "emptyTitle": "Henüz tarama yok",
+      "emptyText": "İlk tarama birkaç dakika içinde burada görünür. Basılı kodunuzu taramayı deneyin.",
+      "periodEmptyTitle": "Son 14 günde tarama yok",
+      "periodEmptyText": "Önceki taramalar saklanır. Yeni taramalar birkaç dakika içinde burada görünür."
+    },
+    "details": {
+      "back": "QR kodlarım",
+      "newLayout": "Yeni düzen",
+      "permanent": "Kalıcı",
+      "shortNote": "Basılı kodunuzun içerdiği budur. Asla değişmez, bu yüzden basılı kodlar çalışmaya devam eder.",
+      "noShortLink": "Bu kod etkinleştirildiğinde bir kısa bağlantıyla yayına girer.",
+      "content": "İçerik",
+      "fixed": "Koda sabitlenmiş",
+      "staticNote": "Statik bir kod içeriğini desenin kendisinde saklar, bu yüzden basılı kopyalar her zaman bunu açar. Tasarım değişiklikleri ücretsiz ve sınırsızdır.",
+      "incl": {
+        "files": "PNG ve SVG, dilediğiniz sıklıkta indirilir",
+        "layouts": "Yeni düzenler ve tasarım düzenlemeleri dahil"
+      },
+      "dimsSquare": "{size} kare",
+      "print": "Baskı · mm",
+      "screen": "Ekran · px",
+      "setupPrint": "Baskı için ayarla",
+      "pack": {
+        "needsMm": "Print Pack, mm cinsinden ölçülen bir baskı düzeni gerektirir. Tasarımı düzenle → Boyut bölümünden bir düzeni baskı için ayarlayın, ardından Baskı Önizlemesinde kontrol edin.",
+        "what": "Bu QR için taşma payı ve kesim işaretli baskı PDF’i, düzenlenebilir bir SVG ve renk ile boyut sayfası.",
+        "add": "Print Pack ekle · +{price}",
+        "addSub": "Baskı Önizlemesini açar, böylece ödemeden önce PDF’i ve özellikleri kontrol edebilirsiniz.",
+        "useIncluded": "Dahil olan 1 Print Pack’i kullan",
+        "includedSub": "{plan} planında bu ay {limit} dahil Print Pack’ten {left} kaldı. İsterseniz önce dosyaları Baskı Önizlemesinde kontrol edin.",
+        "includedDone": "Print Pack planınızdan eklendi. Dosyaları hazır.",
+        "includedFailed": "Dahil olan bir Print Pack kullanılamadı. Hiçbir şey kullanılmadı; tekrar deneyin.",
+        "noneLeft": "Bu ay dahil Print Pack kalmadı.",
+        "inspect": "Baskı Önizlemesinde incele",
+        "notForSale": "Baskı Önizlemesi tam sayfayı ve özellikleri gösterir. Print Pack satın almak burada henüz mümkün değil.",
+        "repeat": "Tekrar indirmeler dahildir. “{layout}” dosyaları %100 boyutta, 3 mm taşma payı ve kesim işaretleriyle."
+      },
+      "layoutNoteDynamic": "Bir tasarımı değiştirmek indirilecek yeni bir dosya oluşturur. Daha önce bastığınız kodlar çalışmaya devam eder.",
+      "layoutNoteStatic": "Her düzen bu satın alıma dahildir. Herhangi birini PNG veya SVG olarak indirin.",
+      "rename": "Yeniden adlandır",
+      "renameFailed": "Kodu yeniden adlandıramadık. Metniniz hâlâ burada; tekrar deneyin.",
+      "nameLabel": "QR kod adı",
+      "save": "Kaydet",
+      "cancel": "İptal",
+      "opens": "Açar",
+      "downloadAll": "Tümünü indir",
+      "layoutsCount": "{n, plural, one {# düzen} other {# düzen}}",
+      "edit": "Düzenle",
+      "downloadLayout": "{name} indir",
+      "downloadFormat": "{name} için {format} indir",
+      "printPreview": "{name} için Baskı Önizlemesi",
+      "newLayoutCard": "Yeni düzen",
+      "layoutAdded": "“{name}” {code} koduna eklendi. Diğer düzenleriniz değişmedi.",
+      "layoutAddFailed": "Düzeni ekleyemedik. Tekrar deneyin.",
+      "copy": {
+        "action": "Farklı içerik kullan…",
+        "title": "Farklı içerik kullan",
+        "text": "Statik bir kod içeriğini deseninde saklar, bu yüzden farklı içerik yeni bir QR kod demektir: ayrı olarak tasarlanır ve satın alınır ({price}). Bu kod ve dosyaları tam olarak olduğu gibi kalır.",
+        "start": "Yeni bir QR kod oluştur",
+        "keep": "Bu kodu koru",
+        "close": "Kapat"
+      },
+      "ppUnlocked": "Kilidi açık",
+      "ppLocked": "Kilitli",
+      "deleteLayout": {
+        "label": "{name} düzenini sil",
+        "title": "“{name}” silinsin mi?",
+        "text": "“{name}”, düzene özel indirmeleriyle birlikte hesabınızdan kaldırılır. Bu işlem geri alınamaz.",
+        "keeps": "QR kod, içeriği, kısa bağlantısı, hedefi, satın alımı ve Print Pack’i ile diğer düzenleri olduğu gibi kalır.",
+        "confirm": "Düzeni sil",
+        "cancel": "İptal",
+        "close": "Kapat",
+        "done": "“{name}” silindi.",
+        "failed": "“{name}” silinemedi. Hiçbir şey değişmedi; tekrar deneyin.",
+        "retry": "Tekrar dene",
+        "lastTitle": "Bu tek düzen",
+        "lastText": "Bir QR kodun her zaman en az bir düzeni olur, bu yüzden “{name}” silinemez. Önce başka bir düzen ekleyin veya tüm kodu QR kodlarım’dan silin.",
+        "lastError": "Bir QR kodun en az bir düzeni olur, bu yüzden bu düzen kalır.",
+        "ok": "Tamam"
+      },
+      "pause": {
+        "pause": "Duraklat",
+        "resume": "Sürdür",
+        "pausedTitle": "Kısa bağlantı duraklatıldı",
+        "pausedText": "Bu kodu tarayanlar kullanılamıyor sayfası görür. Kısa bağlantı, hedef ve düzenler korunur. Hedefi şimdi değiştirebilirsiniz; sürdürdüğünüzde açılır.",
+        "liveText": "Duraklatmak yönlendirmeyi hemen durdurur. Bir planda, bu kodun etkin yerini de boşaltır.",
+        "paused": "Duraklatıldı. Kısa bağlantı artık kullanılamıyor sayfası gösteriyor.",
+        "resumed": "Sürdürüldü. Kısa bağlantı yeniden hedefinize yönlendiriyor.",
+        "limit": "Planınızdaki tüm etkin Dinamik yerler kullanımda. Başka bir Dinamik kodu duraklatın veya silin, sonra bunu sürdürün.",
+        "noPlan": "Bu kodu sürdürmek için etkin bir Dinamik plan gerekir.",
+        "failed": "Kodun durumunu değiştiremedik. Hiçbir şey değişmedi; tekrar deneyin."
+      },
+      "inactiveNote": "Bu kodun taramaları “şu anda etkin değil” sayfası gösterir: etkin bir Dinamik plan gerekir. Kısa bağlantısı, hedefi ve taramaları korunur; bir plan etkin olduğunda aynı basılı kod yeniden yönlendirir.",
+      "inactiveCta": "Plan ve faturalandırma"
+    },
+    "hostedPage": {
+      "title": "Barındırılan sayfa",
+      "live": "Yayında · sürüm {version}",
+      "publishedOn": "{date} tarihinde yayınlandı",
+      "never": "Henüz yayınlanmadı",
+      "neverNote": "Kodu tarayanların görmesi için sayfayı yayınlayın.",
+      "changed": "Yayınlanmamış değişiklikler",
+      "changedNote": "Siz yeniden yayınlayana kadar ziyaretçiler yayınlanmış sürümü görmeye devam eder.",
+      "upToDate": "Ziyaretçiler en son sürümü görür.",
+      "notLive": "Kod etkin olduğunda sayfa kısa bağlantıda yayına girer.",
+      "edit": "Sayfayı düzenle",
+      "publish": "Yayınla",
+      "publishing": "Yayınlanıyor…",
+      "published": "Yayınlandı. Aynı QR kod ve kısa bağlantı artık bu sürümü gösteriyor.",
+      "unchanged": "Yayınlanacak yeni bir şey yok.",
+      "rules": "Yayınlamadan önce bazı ayrıntılara dikkat edilmesi gerekiyor. Düzeltmek için sayfayı düzenleyin.",
+      "failed": "Yayınlanamadı. Tekrar deneyin.",
+      "open": "Sayfayı aç",
+      "takenDown": "Bir şikâyet üzerine bu sayfayı kaldırdık, bu yüzden kısa bağlantısı “Bu sayfa kullanılamıyor” gösteriyor. İçeriğiniz ve taramalarınız korunur. Bunun bir hata olduğunu düşünüyorsanız destek ekibine yazın."
+    },
+    "hostedEditor": {
+      "title": "Sayfayı düzenle",
+      "back": "QR ayrıntılarına dön",
+      "lead": "Değişiklikler taslak olarak kaydedilir. Ziyaretçiler bunları siz yayınladıktan sonra görür.",
+      "save": "Taslağı kaydet",
+      "saving": "Kaydediliyor…",
+      "saved": "Taslak kaydedildi.",
+      "saveFailed": "Taslak kaydedilemedi. Fotoğrafları kontrol edip tekrar deneyin.",
+      "publish": "Kaydet ve yayınla",
+      "unsaved": "Kaydedilmemiş değişiklikler",
+      "loading": "Sayfa düzenleyicisi yükleniyor"
+    }
+  },
+  "billing": {
+    "title": "Plan ve faturalandırma",
+    "plan": "Dinamik plan",
+    "active": "{date} tarihine kadar etkin",
+    "cancels": "{date} tarihinde iptal ediliyor",
+    "none": "Abonelik yok. Statik kodlar bir kez ödenir; Starter, Dinamik kodlar ve aylık kilit açma hakları ekler.",
+    "manage": "Aboneliği yönet",
+    "purchases": "Satın alımlar",
+    "noPurchases": "Henüz satın alım yok.",
+    "usage": "Kullanım",
+    "liveDynamic": "Etkin Dinamik kodlar",
+    "liveCount": "{used} / {limit}",
+    "liveHint": "Bir Dinamik kodu duraklattığınızda veya sildiğinizde etkin yerler boşalır.",
+    "renews": "{date} tarihinde yenilenir",
+    "payment": "Ödeme yöntemi",
+    "paymentManaged": "Kartınız Stripe tarafından saklanır. Faturalandırma portalından yönetin.",
+    "compare": "Planları karşılaştır",
+    "statusActive": "Etkin",
+    "statusCanceling": "İptal ediliyor",
+    "statusNone": "Plan yok",
+    "date": "Tarih",
+    "open": "Aç",
+    "receiptNote": "Stripe her ödeme için bir makbuz e-postası gönderir.",
+    "statuses": {
+      "paid": "Ödendi",
+      "pending": "Beklemede",
+      "refunded": "İade edildi",
+      "failed": "Başarısız"
+    },
+    "liveNoPlan": "{used} etkin · plan yok",
+    "printPackItem": "Print Pack",
+    "packItem": "Statik Paket · {n} kredi",
+    "signedIn": "Google ile {email} olarak giriş yapıldı.",
+    "current": "Mevcut plan",
+    "planMonthly": "{plan} · aylık",
+    "noPlan": "Plan yok",
+    "plans": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "tiles": {
+      "dynamic": "Etkin Dinamik QR",
+      "live": "Anlık",
+      "dynamicNote": "Yer açmak için bir kodu duraklatın veya silin",
+      "unlocks": "Statik kilit açmalar",
+      "packs": "Dahil Print Pack’ler",
+      "packsNote": "{resets} · ardından +{price}",
+      "credits": "Statik krediler",
+      "oneTime": "Tek seferlik",
+      "creditsNote": "Süresi dolmaz · aylık kilit açmalardan sonra kullanılır",
+      "available": "{n} kullanılabilir",
+      "leftMonth": "Bu ay {n} kaldı",
+      "noReset": "Plan {date} tarihinde sona eriyor · sıfırlama yok"
+    },
+    "of": "/ {limit}",
+    "left": "kaldı",
+    "resets": "{date} tarihinde sıfırlanır",
+    "price": "Fiyat",
+    "perMonth": "{price} / ay",
+    "renewsOn": "Yenilenme tarihi",
+    "endsOn": "Bitiş tarihi",
+    "paymentStripe": "Stripe tarafından saklanır",
+    "upgrade": "Studio’ya yükselt · {price}/ay",
+    "choosePlan": "Bir plan seçin",
+    "oneTime": "Tek seferlik satın alımlar",
+    "item": "Ürün",
+    "amount": "Tutar",
+    "receipt": "Makbuz",
+    "credits": "{n} statik kredi",
+    "items": {
+      "single": "Single QR",
+      "printPack": "Print Pack"
+    },
+    "portal": {
+      "noCustomer": "Henüz bir faturalandırma hesabı yok. İlk ödemenizle oluşturulur.",
+      "unavailable": "Bu şu anda planınız için kullanılamıyor.",
+      "failed": "Stripe’ı açamadık. Hiçbir şey değişmedi; tekrar deneyin."
+    },
+    "updatePayment": "Ödeme yöntemini güncelle",
+    "card": "{brand} •••• {last4}",
+    "overdue": {
+      "title": "Yenileme ödemeniz gerçekleşmedi",
+      "pastDue": "Ödeme gecikmişken planınız etkin kalır. Açık faturayı ödemek için ödeme yönteminizi güncelleyin.",
+      "unpaid": "Yenileme ödemesi tahsil edilemediği için planınız sona erdi. Açık faturayı ödemek ve planı yeniden açmak için ödeme yönteminizi güncelleyin.",
+      "action": "Ödeme yöntemini güncelle ve öde",
+      "status": "Ödeme gecikti",
+      "pending": "Ödedikten sonra planınızın burada güncellenmesi biraz sürebilir."
+    },
+    "canceling": {
+      "title": "Planınız {date} tarihinde sona eriyor",
+      "until": "O zamana kadar her şey şimdiki gibi çalışır: Dinamik kodlarınız yönlendirir, yerleriniz ve aylık kilit açma haklarınız kalır.",
+      "after": "{count, plural, =0 {Bu tarihten sonra Dinamik kodlar yönlendirmek yerine “şu anda etkin değil” sayfası gösterir.} one {Bu tarihten sonra # etkin Dinamik kodunuz yönlendirmek yerine “şu anda etkin değil” sayfası gösterir. Kısa bağlantısı, hedefi ve tasarımı korunur.} other {Bu tarihten sonra # etkin Dinamik kodunuz yönlendirmek yerine “şu anda etkin değil” sayfası gösterir. Kısa bağlantıları, hedefleri ve tasarımları korunur.}} Satın aldığınız Statik kodlar çalışmaya devam eder.",
+      "resume": "Planımı koru",
+      "resumeNote": "Planınız aynı abonelikle devam eder ve her zamanki tarihinde yenilenir. Şimdi ücret alınmaz.",
+      "resumed": "Planınız devam ediyor. Her zamanki tarihinde yenilenir.",
+      "notScheduled": "Artık geri alınacak bir iptal yok. Planınızı görmek için sayfayı yenileyin.",
+      "failed": "Planınızı koruyamadık. Hiçbir şey değişmedi. Tekrar deneyin."
+    },
+    "ended": {
+      "title": "{plan} planınız {date} tarihinde sona erdi",
+      "titleNoDate": "{plan} planınız sona erdi",
+      "scans": "Dinamik kodlarınız “şu anda etkin değil” sayfası gösterir. Kısa bağlantıları, hedefleri, tasarımları ve taramaları korunur. Satın aldığınız Statik kodlar çalışmaya devam eder.",
+      "back": "Yeniden etkinleştirin, aynı basılı kodlar yeniden yönlendirsin. Duraklattığınız veya sildiğiniz kodlar öyle kalır.",
+      "reactivate": "{plan} planını yeniden etkinleştir · {price}/ay"
+    }
+  },
+  "legal": {
+    "terms": {
+      "title": "Hizmet Koşulları"
+    },
+    "privacy": {
+      "title": "Gizlilik Politikası"
+    },
+    "draft": "Bu sayfa, yasal metin onaylanana kadar yer tutucudur."
+  },
+  "errors": {
+    "notFound": {
+      "title": "Sayfa bulunamadı",
+      "text": "Aradığınız sayfa mevcut değil.",
+      "cta": "Ana sayfaya git"
+    },
+    "linkUnavailable": {
+      "title": "Bu bağlantı etkin değil",
+      "text": "Bu QR kodun sahibi kodu duraklattı veya kod artık mevcut değil."
+    },
+    "generic": "Bir sorun oluştu. Lütfen tekrar deneyin.",
+    "invalid": "Lütfen vurgulanan alanları kontrol edin.",
+    "unauthorized": "Devam etmek için lütfen giriş yapın.",
+    "too_long": "Bu içerik bir QR kod için çok uzun. Kısaltıp tekrar deneyin.",
+    "linkInactive": {
+      "title": "Bu bağlantı şu anda kullanılamıyor",
+      "text": "Bu QR kod şu anda etkin değil. Telefonunuzda bir sorun yok; daha sonra tekrar deneyin."
+    },
+    "draft_limit": "Bir hesabın saklayabileceği en fazla taslak sayısı olan {limit} kayıtlı taslağınız var. QR kodlarım’da birinin kilidini açın veya birini silin, sonra tekrar kaydedin: tasarımınız burada kalır.",
+    "page": {
+      "title": "Bir sorun oluştu",
+      "text": "Bu sayfa yüklenemedi. Kayıtlı kodlarınız ve taslaklarınız güvende. Tekrar deneyin veya başa dönün.",
+      "retry": "Tekrar dene",
+      "home": "Ana sayfaya git",
+      "reference": "Referans: {ref}"
+    }
+  },
+  "common": {
+    "close": "Kapat",
+    "loading": "Yükleniyor…",
+    "required": "Zorunlu"
+  },
+  "loading": {
+    "page": "Yükleniyor",
+    "details": "QR kod yükleniyor",
+    "billing": "Planınız ve satın alımlarınız yükleniyor",
+    "export": "Dosyanız yükleniyor",
+    "editor": "Düzenleyici yükleniyor"
+  },
+  "trial": {
+    "badge": "Starter denemesi",
+    "back": "QR kodlarım",
+    "states": {
+      "active": {
+        "title": "Denemeniz başladı",
+        "lead": "{start} tarihinde başladı. Test Dinamik QR’ınız {end} tarihine kadar gerçekten çalışır.",
+        "big": "{days, plural, one {# gün} other {# gün}}",
+        "bigSub": "kaldı · {end} tarihinde bitiyor",
+        "status": "Kayıtlı kart yok, bu yüzden deneme bittiğinde ücret alınmaz. Test kodunuz o zamana kadar gerçekten yönlendirir.",
+        "main": "Starter’ı etkinleştir · {price}/ay",
+        "second": "QR kodlarımı aç",
+        "foot": "Etkinleştirmek aynı kısa bağlantıyı korur, böylece basılı testler çalışmaya devam eder.",
+        "endTitle": "Deneme {end} tarihinde bittiğinde"
+      },
+      "ending": {
+        "title": "Denemeniz yakında bitiyor",
+        "lead": "{end} tarihinde test kodunuz yönlendirmeyi durdurur. Yayında tutmak için Starter’ı etkinleştirin.",
+        "big": "{days, plural, one {# gün} other {# gün}}",
+        "bigSub": "kaldı · {end} tarihinde bitiyor",
+        "status": "Kayıtlı kart yok, bu yüzden otomatik olarak ücret alınmaz.",
+        "main": "Starter’ı etkinleştir · {price}/ay",
+        "second": "QR kodlarımı aç",
+        "foot": "Etkinleştirmek aynı kısa bağlantıyı korur, böylece basılı testler çalışmaya devam eder.",
+        "endTitle": "{end} tarihinde neler olur"
+      },
+      "expired": {
+        "title": "Denemeniz sona erdi",
+        "lead": "{end} tarihinde sona erdi. Test kodunuz duraklatıldı; tasarımınız ve taramalarınız korunuyor.",
+        "big": "Sona erdi",
+        "bigSub": "{end}",
+        "status": "Test kodunuzun kısa bağlantısı artık “bağlantı duraklatıldı” sayfası gösteriyor. Starter’ı etkinleştirin, yeniden hedefinize yönlendirsin.",
+        "main": "Starter ile yeniden etkinleştir · {price}/ay",
+        "second": "Tüm planları görün",
+        "foot": "Ücret alınmadı. Kayıtlı kart yoktu.",
+        "endTitle": "Yeniden nasıl açılır"
+      },
+      "upgraded": {
+        "title": "Starter planınız etkin",
+        "lead": "Deneme test kodunuz artık planınızda normal bir Dinamik QR.",
+        "big": "Dinamik",
+        "bigSub": "plan etkin",
+        "status": "Test kodunuz kısa bağlantısını korur ve eskisi gibi yönlendirir.",
+        "main": "QR kodlarımı aç",
+        "second": "Plan ve faturalandırma",
+        "foot": "Stripe her ödeme için bir makbuz e-postası gönderir.",
+        "endTitle": "Neler değişti"
+      }
+    },
+    "steps": {
+      "pause": {
+        "t": "Test yönlendirmeniz duraklar",
+        "d": "Kısa bağlantısı hedefiniz yerine “bağlantı duraklatıldı” sayfası gösterir. Hiçbir şey silinmez."
+      },
+      "free": {
+        "t": "Ücret alınmaz",
+        "d": "Kayıtlı kart ve otomatik yenileme yok."
+      },
+      "wake": {
+        "t": "Yeniden açmak için istediğiniz zaman etkinleştirin",
+        "d": "Starter’ı alın, aynı kısa bağlantı yeniden yönlendirsin. Tasarımınız ve taramalarınız hesabınızda kalır."
+      },
+      "choose": {
+        "t": "Starter’ı seç",
+        "d": "Aylık {price}. İstediğiniz zaman iptal edin."
+      },
+      "same": {
+        "t": "Kısa bağlantınız uyanır",
+        "d": "Aynı hedefe yeniden yönlendirir."
+      },
+      "room": {
+        "t": "Devam edin",
+        "d": "Günlük taramalarla en fazla {limit} etkin Dinamik kod."
+      },
+      "kept": {
+        "t": "Aynı kısa bağlantı",
+        "d": "Basılı testler çalışmaya devam eder. Yeniden basılacak bir şey yok."
+      },
+      "more": {
+        "t": "Daha fazla alan",
+        "d": "En fazla {limit} etkin Dinamik kod ve günlük taramalar."
+      },
+      "receipt": {
+        "t": "E-postayla makbuzlar",
+        "d": "Planı istediğiniz zaman Plan ve faturalandırma bölümünden yönetin veya iptal edin."
+      }
+    },
+    "code": {
+      "title": "Test Dinamik QR’ınız",
+      "live": "Yönlendiriyor",
+      "paused": "Yönlendirme duraklatıldı",
+      "plan": "Planınızda yayında",
+      "opens": "{host} adresini açar",
+      "pausedLine": "Duraklatıldı · “bağlantı duraklatıldı” sayfası gösterir",
+      "scans": "Şu ana kadarki taramalar",
+      "today": "Bugün",
+      "chart": "Güne göre deneme taramaları: {values}",
+      "change": "Hedefi değiştir",
+      "view": "Test kodunu görüntüle",
+      "none": "Test kodunuzu henüz oluşturmadınız.",
+      "noneText": "Bir Dinamik web sitesi QR’ı oluşturun ve denemenizi kullanarak yayına alın: basıp test edebileceğiniz gerçek bir kısa bağlantı.",
+      "create": "Test Dinamik QR’ı oluştur"
+    },
+    "included": {
+      "title": "Denemenize dahil",
+      "kept": "Denemenizden kalanlar",
+      "points": [
+        "Gerçek bir kısa bağlantıya sahip 1 test Dinamik QR",
+        "Günlük tarama toplamları",
+        "Nereye yönlendirdiğini istediğiniz zaman değiştirin",
+        "Tüm düzenler, şekiller, renkler, logolar ve alt yazılar"
+      ],
+      "not": "Statik kodlar için yine satın alma gerekir."
+    },
+    "start": {
+      "title": "Dinamik’i 7 gün ücretsiz deneyin",
+      "text": "Kart yok, otomatik ödeme yok. Gerçek bir kısa bağlantıya sahip bir test Dinamik QR.",
+      "action": "7 günlük ücretsiz denemeyi başlatın",
+      "used": "Ücretsiz denemenizi zaten kullandınız.",
+      "failed": "Denemeyi başlatamadık. Tekrar deneyin."
+    },
+    "bar": {
+      "active": {
+        "title": "Starter denemesi · {days, plural, one {# gün} other {# gün}} kaldı.",
+        "text": "Test kodunuz {end} tarihine kadar yönlendirir. Kayıtlı kart yok."
+      },
+      "ending": {
+        "title": "Deneme {end} tarihinde bitiyor.",
+        "text": "Test kodunuzun yönlendirmeye devam etmesi için Starter’ı etkinleştirin."
+      },
+      "expired": {
+        "title": "Deneme {end} tarihinde sona erdi.",
+        "text": "Test kodunuz duraklatıldı. Yeniden açmak için Starter’ı etkinleştirin."
+      },
+      "upgraded": {
+        "title": "Starter planınız etkin.",
+        "text": "Test kodunuz artık normal bir Dinamik QR."
+      },
+      "open": "Deneme ayrıntıları",
+      "activate": "Starter’ı etkinleştir…"
+    },
+    "usage": {
+      "title": "Deneme Dinamik yeri",
+      "count": "{used} / 1",
+      "hint": "Aylık bir kota değil, etkin bir yer."
+    },
+    "useTrial": "Ücretsiz denemenizi kullanın · şimdi yayına alın",
+    "useTrialHint": "Deneme süresince tek test Dinamik QR’ınız. Kart gerekmez.",
+    "useTrialFailed": "Denemenizi bu kod için kullanamadık. Zaten bir test kodunuz olabilir.",
+    "sample": {
+      "title": "Print Pack örneği",
+      "badge": "Demo QR",
+      "demo": "Print Pack örneğinin demo QR’ı",
+      "text": "Bir Print Pack’in tam olarak neler içerdiğini görün. Örnek, test kodunuzu değil, Hey QR’ı açan bir demo QR kullanır.",
+      "pdf": "Örnek baskı PDF’i",
+      "pdfSub": "sRGB · taşma payı ve kesim işaretli {w} × {h} mm sayfa",
+      "svg": "Örnek düzenlenebilir SVG",
+      "svgSub": "sRGB · HEX renkler · {w} × {h} mm",
+      "spec": "Örnek özellikler",
+      "specSub": "PDF sayfası · boyutlar ve renk değerleri"
+    }
+  },
+  "print": {
+    "spec": {
+      "title": "Baskı özellikleri",
+      "finished": "Bitmiş boyut",
+      "page": "PDF sayfası (taşma payı ve işaretlerle)",
+      "bleed": "Taşma payı",
+      "marks": "Kesim işaretleri",
+      "qr": "QR boyutu (sessiz alanla)",
+      "profile": "Renk profili",
+      "srgb": "sRGB · dönüştürme yok",
+      "logo": "Logo çözünürlüğü",
+      "vector": "Vektör, her boyutta",
+      "colors": "Renkler (HEX · sRGB)",
+      "key": "Çizim anahtarı",
+      "yes": "Evet",
+      "no": "Hayır",
+      "role_modules": "Modüller",
+      "role_corners": "Köşe çerçeveleri",
+      "role_centers": "Köşe merkezleri",
+      "role_background": "Arka plan",
+      "role_frame": "Çerçeve",
+      "role_caption": "Alt yazı"
+    },
+    "title": "Baskı önizlemesi",
+    "leadLocked": "Satın almadan önce tam PDF sayfasını ve baskı özelliklerini kontrol edin. Dosyalar burada gördüğünüzle aynı olacak.",
+    "leadUnlocked": "Dosyalarınızın oluşturulduğu PDF sayfası budur. Bir ayarı değiştirin ve ek ücret ödemeden yeniden indirin.",
+    "locked": "Print Pack kilitli",
+    "unlocked": "Print Pack kilidi açık",
+    "back": {
+      "details": "QR ayrıntılarına dön",
+      "export": "Dışa aktarmaya dön"
+    },
+    "toDesign": "Tasarıma dön",
+    "canvas": "PDF sayfası önizlemesi",
+    "zoom": "Yakınlaştır",
+    "fit": "Sığdır",
+    "z100": "%100",
+    "z200": "%200",
+    "guides": "Kesim ve güvenli alan",
+    "approx": "Basılı rengin ekrandaki yaklaşık görünümü",
+    "trimLabel": "Kesim {size}",
+    "generating": "Baskı önizlemesi oluşturuluyor…",
+    "pageLabel": "Baskı PDF sayfası, {w} × {h} mm",
+    "error": {
+      "title": "Önizlemeyi oluşturamadık.",
+      "text": "Düzeniniz ve baskı ayarlarınız korunuyor. Bu genellikle geçicidir.",
+      "retry": "Tekrar dene"
+    },
+    "foot": {
+      "page": "PDF sayfası {size}",
+      "count": "1 sayfa",
+      "bleed": "Taşma payı {bleed} mm",
+      "noBleed": "Taşma payı yok",
+      "marks": "Kesim işaretleri",
+      "noMarks": "Kesim işareti yok",
+      "pageB": "PDF sayfası <b>{size}</b>"
+    },
+    "specTitle": "Baskı özellikleri",
+    "keys": {
+      "finished": "Bitmiş boyut",
+      "finishedBleed": "Her kenarda + {bleed} mm taşma payı",
+      "finishedNoBleed": "Taşma payı yok",
+      "qr": "QR boyutu",
+      "qrSmall": "20 mm’nin altında · her yerde taranmayabilir",
+      "qrOk": "Yaklaşık {cm} cm uzaklığa kadar taranır",
+      "profile": "Renk profili",
+      "profileSub": "RGB, dönüştürme yok",
+      "logo": "Logo çözünürlüğü",
+      "logoVector": "Vektör",
+      "logoNone": "Logo yok",
+      "logoLow": "Bu boyutta 300 ppi’nin altında",
+      "logoOk": "300 ppi veya üzeri · net basılır",
+      "logoVectorSub": "Her boyutta net",
+      "logoNoneSub": "Kontrol edilecek bir şey yok",
+      "logoChecking": "Kontrol ediliyor…",
+      "logoCheckingSub": "Bu boyutta ölçüldü"
+    },
+    "unlock": {
+      "title": "Print Pack kilidini açın",
+      "text": "Aşağıdaki ayarlarla oluşturulan “{name}” için baskı PDF’ini, düzenlenebilir SVG’yi ve özellikleri alın.",
+      "action": "Print Pack ekle · +{price}",
+      "sub": "Bu QR için tek seferlik. Ayarlarınızla bu ekrana geri dönersiniz.",
+      "notForSale": "Print Pack henüz burada satın alınamıyor. Sayfayı ve özellikleri yine de kontrol edebilirsiniz.",
+      "needCode": "Önce bu QR’ın kilidini açın: Print Pack, satın alınmış veya yayındaki bir kod için bir eklentidir.",
+      "buyCode": "Bu QR’ı satın al",
+      "failed": "Ödeme sayfasını açamadık. Ücret alınmadı; tekrar deneyin.",
+      "cancelled": "Ödeme iptal edildi. Sizden ücret alınmadı; ayarlarınız korunuyor.",
+      "pending": "Ödemeniz onaylanıyor…",
+      "pendingSub": "Bu ayarlarla burada kalırsınız.",
+      "useIncluded": "Dahil olan 1 Print Pack’i kullan",
+      "payInstead": "Bunun yerine {price} ödeyin ve hakkınızı koruyun",
+      "includedLeft": "Bu ay {limit} dahil Print Pack’ten {left} kaldı · {resets} tarihinde sıfırlanır"
+    },
+    "files": {
+      "title": "Print Pack kilidi açıldı",
+      "badge": "İndirmeye hazır",
+      "text": "Dosyalar aşağıdaki ayarları kullanır. Birini değiştirin ve ek ücret ödemeden yeniden indirin.",
+      "pdf": "Baskı PDF’ini indir",
+      "pdfSub": "sRGB · sayfa {w} × {h} mm",
+      "svg": "Düzenlenebilir SVG’yi indir",
+      "svgSub": "sRGB · HEX renkler · {w} × {h} mm",
+      "spec": "Baskı özelliklerini indir",
+      "specSub": "PDF sayfası · boyutlar ve renk değerleri",
+      "stale": "Bu önizlemeden sonra düzen değişti. İndirmeden önce sayfayı tekrar kontrol edin.",
+      "pdfTitle": "Baskı PDF’i",
+      "svgTitle": "Düzenlenebilir SVG",
+      "specTitle": "Baskı özellikleri"
+    },
+    "size": {
+      "title": "Bitmiş boyut",
+      "custom": "Özel",
+      "width": "Genişlik",
+      "height": "Yükseklik · oranları korur",
+      "hint": "15 ile 600 mm genişlik arası. QR ve alt yazı düzenle birlikte ölçeklenir."
+    },
+    "warn": {
+      "qrTitle": "QR {mm} mm genişliğinde",
+      "qrText": "20 mm’nin altındaki kodlar eski telefonlarda okunamayabilir. Düzeni büyütün veya kodu en az 20 mm tutun.",
+      "logoTitle": "Logonuz bu boyutta {ppi} ppi",
+      "logoText": "Bulanık basılabilir. En az {px} px genişliğinde bir logo yükleyin veya %100 boyutta basın.",
+      "upload": "Daha yüksek çözünürlüklü bir logo yükleyin",
+      "use100": "%100 boyutu kullan"
+    },
+    "profiles": {
+      "title": "Baskı PDF’i için renk profili",
+      "srgb": "sRGB · dönüştürme yok",
+      "srgbDesc": "Dijital baskı makineleri ve çoğu çevrimiçi matbaa için.",
+      "fogra39": "Coated FOGRA39",
+      "gracol": "GRACoL 2013",
+      "fogra29": "Uncoated FOGRA29",
+      "cmykDesc": "CMYK dönüştürme henüz kullanılamıyor.",
+      "shop": "<b>Matbaanızla teyit edin.</b> Hangi renk profiline ihtiyaç duyduklarını sorun. Emin değillerse PDF’i özellikler sayfasıyla birlikte gönderin."
+    },
+    "colors": {
+      "title": "Renkler",
+      "legendHex": "<b>HEX · sRGB</b> düzenlenebilir SVG",
+      "legendCmyk": "<b>CMYK</b> yalnızca CMYK profiliyle",
+      "none": "—",
+      "note": "Renkler her iki dosyada da tam sRGB değerleridir. Ekran, basılı rengin yaklaşık bir görünümünü gösterir."
+    },
+    "tech": {
+      "title": "Teknik ayarlar",
+      "bleed": "Taşma payı",
+      "bleedDesc": "Arka plan kesim çizgisinin ötesine uzanır",
+      "marks": "Kesim işaretleri",
+      "k100": "Siyah modülleri %100 K olarak bas",
+      "k100Hint": "CMYK profiliyle kullanılabilir.",
+      "pdf": "PDF standardı",
+      "pdfV": "PDF 1.7, vektör",
+      "text": "Metin",
+      "textV": "Yazı tipleri gömülü",
+      "logo": "Logo",
+      "logoRaster": "{px} px raster · {mm} mm’de {ppi} ppi",
+      "logoVector": "Vektör",
+      "quiet": "Sessiz alan",
+      "quietV": "Her kenarda 4 modül",
+      "safe": "Güvenli alan",
+      "safeV": "Kesimin {mm} mm içinde",
+      "intent": "Çıktı amacı",
+      "intentV": "sRGB, dönüştürme yok",
+      "none": "Yok"
+    },
+    "notPrint": {
+      "title": "Bu düzen ekranlar için",
+      "text": "Print Pack, mm cinsinden ölçülen bir baskı düzeni gerektirir. Eklemek için Tasarım → Boyut bölümünde birimi değiştirin.",
+      "action": "Baskı için ayarla"
+    },
+    "pack": {
+      "title": "Print Pack",
+      "add": "Bir Print Pack ekleyin ve matbaanıza her şeyi tek bir indirmede verin: taşma payı ve kesim işaretli baskı PDF’i, düzenlenebilir bir SVG ve renk ile boyut sayfası. Önce sayfayı Baskı Önizlemesinde kontrol edin.",
+      "preview": "Baskı Önizlemesi · {layout}",
+      "defaults": "Varsayılan ayarlar: %100 boyut, 3 mm taşma payı, kesim işaretleri. Bunları Baskı Önizlemesinde değiştirin.",
+      "open": "Baskı Önizlemesini aç"
+    },
+    "plan": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "sample": {
+      "pageTitle": "Baskı Önizlemesi · örnek",
+      "name": "Little Fern Coffee",
+      "layout": "Marka kartı örneği",
+      "back": "Ana sayfaya dön",
+      "title": "Bu bir örnektir",
+      "text": "Demo bir QR, bir Print Pack’in tam olarak neler içerdiğini gösterir. Kendi kodunuzu oluşturun, ardından satın almadan önce baskı dosyalarını burada kontrol edin.",
+      "create": "QR kodunuzu oluşturun",
+      "pricing": "Print Pack ayrıntılarını görün"
+    }
+  },
+  "plans": {
+    "title": "Birkaç kod için bir kez ödeyin ya da çok sayıda kod için bir plan seçin.",
+    "lead": "Tasarlamak, önizlemek ve tarama kontrolü her zaman ücretsizdir. İndirirken ödersiniz.",
+    "currencyLabel": "Fiyatları şu para biriminde göster",
+    "localTitle": "{currency} cinsinden yerel fiyatlar.",
+    "localText": "Tüm site, ödeme sayfası ve makbuzlar bu tutarları kullanır. Vergiler ödeme sırasında eklenir.",
+    "pendingTitle": "{currency} cinsinden bazı fiyatlar henüz belirlenmedi.",
+    "pendingText": "{currency} fiyatı olmayan teklifler şimdilik {currency} ile satın alınamaz. Başka bir para biriminden dönüştürme yapılmaz.",
+    "unavailable": "Henüz {currency} ile satın alınamıyor.",
+    "current": "Mevcut planınız",
+    "manage": "Planınızı yönetin",
+    "perMonth": "aylık",
+    "live": "Aynı anda etkin",
+    "monthly": "Her ay yeni",
+    "dynCodes": "<b>{n}</b> Dinamik QR kod",
+    "unlocks": "<b>{n}</b> statik QR kilit açma",
+    "packsIncl": "<b>{n}</b> Print Pack",
+    "once": {
+      "title": "Tek seferlik",
+      "sub": "Abonelik yok. Açtığınız kodlar sizin kalır."
+    },
+    "month": {
+      "title": "Aylık",
+      "sub": "Dinamik QR kodlar ve çok sayıda statik kod için. İstediğiniz zaman iptal edin."
+    },
+    "free": {
+      "title": "Ücretsiz",
+      "q": "Hiç para harcamadan bir kod tasarlayın ve test edin.",
+      "a": "Canlı tasarım ve önizleme",
+      "b": "Her düzenlemede tarama kontrolü",
+      "c": "Giriş yaptığınızda en fazla {limit} kayıtlı taslak",
+      "cta": "Tasarlamaya başlayın"
+    },
+    "single": {
+      "title": "Single QR",
+      "unit": "bir kez",
+      "q": "Tüm indirmeleriyle birlikte bir statik QR.",
+      "a": "PNG ve SVG indirmeleri",
+      "b": "O QR’ın her düzeni, istediğiniz zaman yeniden indirilebilir",
+      "c": "İsteğe bağlı Print Pack +{price}",
+      "cta": "QR oluştur"
+    },
+    "packs": {
+      "title": "Statik Paketler",
+      "unit": "{n} kredi için",
+      "credits": "{n} statik kredi",
+      "each": "QR başına {price}",
+      "buy": "{n} kredi satın al",
+      "note": "Bir kredi, hazır olduğunuzda benzersiz bir statik QR’ın kilidini açar. Kredilerin süresi dolmaz."
+    },
+    "pp": {
+      "kicker": "Her QR için eklenti",
+      "title": "Print Pack · QR başına +{price}",
+      "text": "Varsayılan olarak kapalı. Ödeme sırasında veya daha sonra QR’ın ayrıntılarından ekleyin. Studio her ay {n} adet içerir.",
+      "pdf": "Vektör baskı PDF’i",
+      "pdfSub": "Tam boyutta, sRGB, 3 mm taşma payı ve kesim işaretleri.",
+      "svg": "Düzenlenebilir SVG",
+      "svgSub": "Kendi çizimleriniz için, sRGB ve HEX renklerle.",
+      "spec": "Renk ve boyut sayfası",
+      "specSub": "Bitmiş boyut, QR boyutu, sessiz alan ve renk değerleri."
+    },
+    "starter": {
+      "title": "Starter",
+      "badge": "7 günlük ücretsiz deneme",
+      "a": "Temel tarama analizi: günlük toplamlar",
+      "b": "Dinamik hedefleri istediğiniz zaman değiştirin",
+      "c": "Print Pack QR başına +{price}",
+      "trial": "7 günlük ücretsiz denemeyi başlatın",
+      "openTrial": "Denemenizi açın",
+      "subscribe": "Şimdi abone olun · {price}/ay",
+      "note": "Deneme: kart yok, otomatik ödeme yok."
+    },
+    "studio": {
+      "title": "Studio",
+      "badge": "Ekipler ve baskı işleri için",
+      "a": "Kod başına tarama analizi",
+      "b": "Dinamik hedefleri istediğiniz zaman değiştirin",
+      "c": "Ek Print Pack’ler QR başına +{price}",
+      "cta": "Studio’yu seç"
+    },
+    "rules": {
+      "title": "Kilit açmalar ve sınırlar nasıl çalışır",
+      "1t": "Bir kilit açma, benzersiz bir QR",
+      "1d": "Bir statik kredi veya aylık kilit açma bir QR’ı açar. Tüm düzenleri, PNG ve SVG dosyaları ve tekrar indirmeleri aynı kilit açmayı kullanır.",
+      "2t": "Aylık haklar sıfırlanır",
+      "2d": "Yeni statik kilit açmalar ve dahil Print Pack’ler fatura tarihinizde yenilenir. Kullanılmayanlar devretmez.",
+      "3t": "Dinamik yerler anlıktır, aylık değil",
+      "3d": "Kod yönlendirdiği sürece yer kullanımdadır. Yerini hemen boşaltmak için bir Dinamik kodu duraklatın veya silin.",
+      "4t": "İptal ettikten sonra da sizin",
+      "4d": "Kilidini açtığınız Statik kodlar sizin kalır: basılı kopyalar çalışmaya devam eder ve dosyaları indirilebilir kalır. Ücretli dönem sona erdiğinde Dinamik kısa bağlantılar yönlendirmeyi durdurur ve indirilemez ya da etkinleştirilemez. Kodlarınız korunur.",
+      "5t": "Bir yenileme ödemesi başarısız olursa",
+      "5d": "Ödeme gecikmişken ve Stripe yeniden denerken planınız etkin kalır. Ödeme tahsil edilemez ve abonelik sona ererse plan, bir iptalden sonraki gibi sona erer. Ödeme gerçekleştiğinde planınız devam eder."
+    },
+    "cmp": {
+      "title": "Karşılaştır",
+      "what": "Özellik",
+      "region": "Plan karşılaştırması",
+      "more": "Daha fazla plan için kaydırın",
+      "pick1": "Birinci plan",
+      "pick2": "İkinci plan",
+      "yes": "Dahil",
+      "no": "Dahil değil",
+      "na": "Geçerli değil: abonelik değil",
+      "model": {
+        "free": "Ücretsiz",
+        "once": "Tek seferlik satın alma",
+        "credits": "Krediler",
+        "monthly": "Aylık abonelik"
+      },
+      "once": "bir kez",
+      "mo": "/ay",
+      "live": "Canlı tasarım, önizleme ve tarama kontrolü",
+      "static": "Statik QR kilit açmaları",
+      "staticHint": "PNG ve SVG dosyaları",
+      "dynamic": "Etkin Dinamik QR yerleri",
+      "dynamicHint": "Aynı anda yayında",
+      "analytics": "Tarama analizi",
+      "printPack": "Print Pack",
+      "repeat": "Tekrar indirmeler",
+      "cancel": "İptal ettikten sonra",
+      "oneQr": "1 QR",
+      "perCredit": "Kredi başına 1 QR",
+      "noExpiry": "Kredilerin süresi dolmaz",
+      "perMonth": "Her ay {n} yeni",
+      "noRollover": "Kullanılmayanlar devretmez",
+      "atOnce": "Aynı anda {n} etkin",
+      "freeSlot": "Yerini boşaltmak için birini duraklatın",
+      "basic": "Temel",
+      "daily": "Günlük toplamlar",
+      "perCode": "Kod başına",
+      "ppAdd": "QR başına +{price}",
+      "ppStudio": "Her ay {n} dahil",
+      "ppThen": "Sonrasında QR başına +{price}",
+      "stay": "Statik kodlar indirilebilir kalır",
+      "dynStop": "Ücretli dönem sona erdiğinde Dinamik bağlantılar yönlendirmeyi durdurur",
+      "foot": "Vergiler ödeme sırasında hesaplanır. Web sitesi kodları statik veya dinamik olabilir; Metin, Wi-Fi ve kişi kartı kodları statiktir."
+    },
+    "errors": {
+      "not_offered": "Bu, seçili para biriminde henüz satın alınamıyor. Ücret alınmadı.",
+      "price_mismatch": "Bu sayfa yüklendiğinden beri fiyat değişti. Ücret alınmadı; güncel fiyatı görmek için sayfayı yenileyin.",
+      "unauthorized": "Devam etmek için giriş yapın.",
+      "failed": "Ödeme sayfasını açamadık. Ücret alınmadı; tekrar deneyin."
+    },
+    "terms": "İstediğiniz zaman iptal edin: planınız ücretli dönemin sonuna kadar devam eder. Bir yenileme ödemesi başarısız olursa, ödeme gecikmişken plan etkin kalır."
+  },
+  "apiKeys": {
+    "title": "API anahtarları",
+    "lead": "Anahtarlar, kendi araçlarınızın bu hesabın QR kodlarıyla çalışmasını sağlar. Her anahtar yalnızca bu hesaba aittir.",
+    "yourKeys": "Anahtarlarınız",
+    "create": "API anahtarı oluştur",
+    "once": "Bu anahtarı şimdi kopyalayın. Güvenliğiniz için yalnızca bir kez gösterilir ve daha sonra alınamaz.",
+    "copy": "Kopyala",
+    "copied": "Kopyalandı",
+    "done": "Bitti",
+    "none": "Henüz API anahtarı yok.",
+    "created": "{date} tarihinde oluşturuldu",
+    "failed": "Anahtar oluşturamadık. Hiçbir şey kaydedilmedi; tekrar deneyin.",
+    "active": "Etkin",
+    "revoked": "İptal edildi",
+    "revokedOn": "{date} tarihinde iptal edildi",
+    "lastUsed": "Son kullanım {date}",
+    "neverUsed": "Hiç kullanılmadı",
+    "revoke": {
+      "action": "İptal et",
+      "label": "{prefix} anahtarını iptal et",
+      "title": "{prefix} iptal edilsin mi?",
+      "text": "Bu anahtarı kullanan araçlar hemen çalışmayı durdurur. Diğer anahtarlarınız çalışmaya devam eder. Bu işlem geri alınamaz.",
+      "confirm": "Anahtarı iptal et",
+      "cancel": "İptal",
+      "done": "{prefix} iptal edildi.",
+      "failed": "Anahtarı iptal edemedik. Hiçbir şey değişmedi; tekrar deneyin.",
+      "close": "Kapat"
+    }
+  },
+  "hosted": {
+    "hostedBy": "HeyQR tarafından barındırılıyor",
+    "report": "Bu sayfayı şikâyet et",
+    "unavailableTitle": "Bu sayfa kullanılamıyor",
+    "unavailableText": "Sahibi bu QR kodu duraklattı veya sayfayı kaldırdı. Daha sonra tekrar deneyin veya doğrudan sahibiyle iletişime geçin.",
+    "loading": "Sayfa yükleniyor",
+    "menu": {
+      "kicker": "Menü",
+      "sections": "Menü bölümleri"
+    },
+    "coupon": {
+      "kicker": "Kupon",
+      "expiredKicker": "Kampanya sona erdi",
+      "copy": "Kodu kopyala",
+      "copied": "Kopyalandı",
+      "redeem": "Çevrimiçi kullan",
+      "expired": "Süresi doldu",
+      "ended": "Bu kampanya sona erdi. Güncel fırsatları mağazaya sorun.",
+      "ends": "{date} tarihinde bitiyor",
+      "endedOn": "{date} tarihinde sona erdi",
+      "terms": "Koşullar"
+    },
+    "social": {
+      "links": "Bağlantılar"
+    },
+    "business": {
+      "kicker": "İşletme",
+      "openNow": "Şu anda açık · {to} saatine kadar",
+      "closedNow": "Şu anda kapalı",
+      "closedToday": "Bugün kapalı",
+      "call": "Ara",
+      "directions": "Yol tarifi",
+      "website": "Web sitesi",
+      "hours": "Çalışma saatleri",
+      "closed": "Kapalı",
+      "days": {
+        "mon": "Pzt",
+        "tue": "Sal",
+        "wed": "Çar",
+        "thu": "Per",
+        "fri": "Cum",
+        "sat": "Cmt",
+        "sun": "Paz"
+      },
+      "closedOpens": "Şu anda kapalı · {from} saatinde açılır"
+    },
+    "apps": {
+      "appStoreTop": "Şuradan indirin",
+      "appStore": "App Store",
+      "playTop": "Şuradan edinin",
+      "play": "Google Play",
+      "phoneNote": "Telefonunuzun mağazası için bağlantıyı açın.",
+      "desktopNote": "Bilgisayarda düğmeler her mağazanın web sitesini açar.",
+      "scanTitle": "Telefonunuzla tarayın",
+      "scanText": "iPhone’da App Store’u, Android’de Google Play’i açar.",
+      "qrLabel": "Bu sayfanın QR kodu"
+    },
+    "pdf": {
+      "open": "PDF’i aç",
+      "download": "İndir",
+      "meta": "{pages, plural, one {# sayfa} other {# sayfa}} · {size}",
+      "metaNoPages": "{size}",
+      "waiting": "Bu belgenin yeni bir sürümü hazırlanıyor. Birazdan tekrar deneyin.",
+      "notReady": "Belge hâlâ hazırlanıyor."
+    },
+    "product": {
+      "photos": "Ürün fotoğrafları",
+      "photo": "Fotoğraf {n} / {count}",
+      "prev": "Önceki fotoğraf",
+      "next": "Sonraki fotoğraf",
+      "opens": "{host} adresini açar"
+    },
+    "reportForm": {
+      "title": "Bu sayfayı şikâyet et",
+      "lead": "Neyin yanlış olduğunu bize anlatın. HeyQR her şikâyeti inceler.",
+      "reason": "Neden",
+      "reasons": {
+        "scam": "Dolandırıcılık",
+        "malware": "Kötü amaçlı yazılım veya zararlı bir indirme",
+        "illegal": "Yasa dışı veya zararlı içerik",
+        "impersonation": "Başka biri gibi davranıyor",
+        "other": "Başka bir şey"
+      },
+      "details": "Ayrıntılar",
+      "detailsPlaceholder": "Ne gördünüz? (isteğe bağlı)",
+      "email": "E-postanız",
+      "emailHint": "İsteğe bağlı. Yalnızca size bir şey sormamız gerekirse kullanılır.",
+      "send": "Şikâyeti gönder",
+      "sending": "Gönderiliyor…",
+      "sent": "Teşekkürler. Bu sayfayı inceleyeceğiz.",
+      "failed": "Şikâyeti gönderemedik. Tekrar deneyin.",
+      "invalid": "Bir neden seçin ve e-posta adresini kontrol edin.",
+      "back": "Sayfaya dön"
+    }
+  },
+  "developers": {
+    "metaTitle": "Geliştiriciler için API",
+    "metaDescription": "HeyQR kodlarını kendi kodunuzda oluşturun: statik kodlar için @heyqr/qr-core paketi ve yolda olan, Dinamik kodlar için bir REST API.",
+    "docs": {
+      "search": {
+        "label": "Belgelerde ara",
+        "placeholder": "Belgelerde ara",
+        "clear": "Aramayı temizle",
+        "empty": "“{query}” ile eşleşen sayfa yok.",
+        "emptyHint": "“logo”, “PNG”, “tarama” veya “Wi-Fi” deneyin.",
+        "suggestions": ["logo", "PNG", "tarama", "Wi-Fi"],
+        "resultOne": "1 sayfa",
+        "resultOther": "{count} sayfa"
+      },
+      "groups": {
+        "start": "Başlarken",
+        "guides": "Kılavuzlar",
+        "ref": "Başvuru",
+        "help": "Yardım",
+        "rest": "REST API"
+      },
+      "menu": {
+        "open": "Belge menüsünü aç",
+        "close": "Belge menüsünü kapat",
+        "label": "Belgeler"
+      },
+      "breadcrumbRoot": "Geliştiriciler",
+      "onThisPage": "Bu sayfada",
+      "backToTop": "Başa dön",
+      "previous": "Önceki",
+      "next": "Sonraki",
+      "soon": "Yakında",
+      "preview": "Önizleme",
+      "designPreview": "Tasarım önizlemesi",
+      "notPublic": "Henüz herkese açık değil",
+      "env": {
+        "both": "Tarayıcı ve Node.js",
+        "browser": "Tarayıcı",
+        "node": "Yalnızca Node.js",
+        "shell": "Terminal",
+        "types": "Türler",
+        "http": "HTTP",
+        "json": "JSON"
+      },
+      "copy": "Kopyala",
+      "copied": "Kopyalandı",
+      "copiedAnnounce": "{file} panoya kopyalandı",
+      "copyFailed": "Kopyalanamadı. Bunun yerine kodu seçin.",
+      "required": "Zorunlu",
+      "endpoint": {
+        "auth": "Yetkilendirme",
+        "authValue": "Authorization: Bearer <API key>",
+        "method": "Yöntem",
+        "url": "İstek URL’si",
+        "base": "Kullandığınız HeyQR sunucusunda; herkese açık API henüz kullanılamıyor."
+      },
+      "helpful": {
+        "question": "Bu sayfa yardımcı oldu mu?",
+        "yes": "Evet",
+        "no": "Hayır",
+        "sending": "Gönderiliyor…",
+        "thanks": "Geri bildiriminiz için teşekkürler.",
+        "failed": "Bunu kaydedemedik. Tekrar deneyin."
+      },
+      "footer": {
+        "checked": "@heyqr/qr-core {version} kaynağına göre kontrol edildi. Rota: {route}",
+        "restChecked": "Bu derlemenin /api/v1 rotalarına göre kontrol edildi. Rota: {route}",
+        "proposed": "Önerilen tasarım. Yayınlanmış bir sözleşme değildir."
+      },
+      "status": {
+        "unpublished": "Yayınlanmadı",
+        "live": "Yayında",
+        "liveOnNpm": "npm’de yayında",
+        "soon": "Çok yakında"
+      },
+      "products": {
+        "pkgTitle": "npm paketi",
+        "pkgText": "Ücretsiz. Statik QR kodlar kendi makinenizde oluşturulur. Hesap yok, API anahtarı yok.",
+        "restTitle": "REST API",
+        "restText": "Dinamik kodlar dahil kodları sunucunuzdan oluşturun ve yönetin."
+      },
+      "install": {
+        "managers": "Paket yöneticisi",
+        "npmLink": "npmjs.com/package/{name}",
+        "opensNewTab": "(yeni sekmede açılır)",
+        "unpublishedTitle": "Henüz npm’de değil",
+        "unpublishedText": "{name} {version} henüz yayınlanmadı, bu yüzden kurulacak bir şey yok. Bu sayfalardaki her şey mevcut kaynağıyla eşleşir. Çıktığında e-posta alın:"
+      },
+      "restSoon": {
+        "cardTitle": "Sunucunuzdan Dinamik kodlar",
+        "cardText": "Hesabınızdan alacağınız bir API anahtarı; kod oluşturmanıza, Dinamik kodların yönlendirdiği yeri değiştirmenize ve tarama sayılarını okumanıza olanak tanıyacak. API açıldığında gerçek istek ve yanıtlarla tam başvuru belgesini yayınlayacağız.",
+        "planned": "Planlanan",
+        "items": [
+          "Hesabınız için API anahtarları",
+          "Tek kod veya bir seferde 100’e kadar kod oluşturun",
+          "Bir Dinamik kodun hedefini değiştirin",
+          "Günlük tarama sayıları"
+        ],
+        "npmLink": "npm paketini şimdi kullanın"
+      },
+      "waitlist": {
+        "label": "REST API açıldığında e-posta alın",
+        "placeholder": "you@company.com",
+        "join": "Bekleme listesine katıl",
+        "joining": "Katılınıyor…",
+        "invalid": "Adresi kontrol edin. Bir ad, @ ve alan adı gerekir.",
+        "failed": "Sizi şu anda ekleyemedik. Tekrar deneyin.",
+        "joined": "Listedesiniz. REST API açıldığında {email} adresine yazacağız.",
+        "hint": "Açıldığında tek bir e-posta. Bülten yok."
+      },
+      "notifyPackages": {
+        "label": "Paket yayınlandığında e-posta alın",
+        "join": "Bana e-posta gönder",
+        "joined": "Listedesiniz. Yayınlandığında {email} adresine yazacağız.",
+        "hint": "Çıktığında tek bir e-posta. Bülten yok."
+      },
+      "responseNotes": {
+        "created": "Kod, istekteki her düzen için bir düzen kimliğiyle taslak olarak oluşturuldu.",
+        "invalid": "Bir alan bir kuralı ihlal ediyor; `details` her birini adlandırır ve değerleri asla geri yansıtmaz.",
+        "draftLimit": "Hesapta zaten azami sayıda taslak var.",
+        "reused": "Idempotency-Key farklı bir istek için kullanıldı; hiçbir şey oluşturulmadı.",
+        "changed": "Kaydedildi. Adres zaten kayıtlı olanla aynıysa `changed` false olur.",
+        "conflict": "Önce başka biri değiştirdi. `current` şu anda kayıtlı olandır; okuyun ve yeniden karar verin.",
+        "notDynamic": "Statik kodların hedefi yoktur: içerikleri desendedir.",
+        "rateLimited": "Hesabın bütçesi aşıldı. Retry-After saniye bekleyin, ardından aynı isteği tekrar gönderin.",
+        "unauthorized": "Doğrulanmayan her anahtar, gövde okunmadan önce bu yanıtı alır.",
+        "bulk202": "GET /v1/jobs/{job_id} adresini yoklayın veya webhook’u bekleyin.",
+        "bulk400": "Herhangi bir öğe başarısız olursa hiçbir kod oluşturulmaz.",
+        "scans200": "Taramasız günler 0 ile dahil edilir."
+      },
+      "pages": {
+        "overview": {
+          "title": "Geliştiriciler için API",
+          "nav": "Genel bakış",
+          "lead": "HeyQR kodlarını kendi kodunuzda oluşturun. Bugün ücretsiz npm paketiyle başlayın; Dinamik kodlar için bir REST API yolda.",
+          "blocks": [
+            {
+              "k": "products"
+            },
+            {
+              "k": "h2",
+              "id": "what",
+              "t": "Neler oluşturabilirsiniz"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Bir tarayıcı uygulamasında biçimlendirilmiş QR kodlar: şekiller, renkler, ortada bir logo veya kısa metin.",
+                "Bir betikten veya sunucu işinden baskıya hazır SVG ve PNG dosyaları.",
+                "Herhangi bir şey gösterilmeden veya basılmadan önce tarama kontrolü: kontrast, ters renkler, çok fazla alan kaplayan bir logo.",
+                "HeyQR düzenleyicisinin dışa aktardıklarıyla aynı, çerçeve ve alt yazılı tam düzenler."
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "entries",
+              "t": "Giriş noktaları"
+            },
+            {
+              "k": "p",
+              "t": "Tek paket, beş içe aktarma. Ana girişi her yerde kullanın; diğerleri Node.js için veya tarayıcıda kod çözme içindir."
+            },
+            {
+              "k": "table",
+              "label": "Giriş noktaları",
+              "cols": ["İçe aktarma", "Çalıştığı yer", "Size sağladığı"],
+              "rows": [
+                {
+                  "cells": [
+                    "`@heyqr/qr-core`",
+                    "Tarayıcı ve Node.js",
+                    "`encodePayload`, `renderQr`, `renderQrSvg`, `composeLayout`, renk ve kapasite yardımcıları"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/raster`", "Yalnızca Node.js", "`rasterizeSvg`: resvg ile SVG’den PNG’ye"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`@heyqr/qr-core/verify`",
+                    "Yalnızca Node.js",
+                    "`decodeSvg`, `decodeImage`, `verifyScan`: kodu ZXing ile geri okuyun"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`@heyqr/qr-core/verify-browser`",
+                    "Tarayıcı",
+                    "`decodeSvgInBrowser`: aynı kod çözücü, sizin barındırdığınız bir wasm dosyasından"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/node`", "Yalnızca Node.js", "`rasterizeSvg` ve doğrulama işlevleri tek bir içe aktarmada"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Paket statik kodlar oluşturur: içerik desenin içine işlenir. Düzenlenebilir kısa bağlantı ve tarama sayılarına sahip Dinamik kodlar bir HeyQR planı gerektirir ve REST API ile gelir."
+            },
+            {
+              "k": "h2",
+              "id": "next",
+              "t": "Sonraki adımlar"
+            },
+            {
+              "k": "cards",
+              "items": [
+                {
+                  "page": "quickstart",
+                  "title": "Hızlı başlangıç",
+                  "t": "Beş satırda ilk kodunuz.",
+                  "icon": "zap"
+                },
+                {
+                  "page": "content",
+                  "title": "İçeriği kodlayın",
+                  "t": "Web siteleri, Wi-Fi, kişiler, etkinlikler ve daha fazlası.",
+                  "icon": "book"
+                },
+                {
+                  "page": "scan",
+                  "title": "Tarandığını kontrol edin",
+                  "t": "Tarama raporunu okuyun ve sonucu çözün.",
+                  "icon": "scan"
+                },
+                {
+                  "page": "api",
+                  "title": "İşlevler",
+                  "t": "Her dışa aktarma, imzasıyla birlikte.",
+                  "icon": "braces"
+                }
+              ]
+            }
+          ]
+        },
+        "install": {
+          "title": "Kurulum",
+          "lead": "@heyqr/qr-core’u bir tarayıcı uygulamasına, bir Node.js hizmetine veya her ikisine ekleyin.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "add",
+              "t": "Paketi ekleyin"
+            },
+            {
+              "k": "install",
+              "package": "qrCore"
+            },
+            {
+              "k": "h2",
+              "id": "reqs",
+              "t": "Gereksinimler"
+            },
+            {
+              "k": "table",
+              "label": "Gereksinimler",
+              "cols": ["Öğe", "Ayrıntılar"],
+              "rows": [
+                {
+                  "cells": [
+                    "Modül biçimi",
+                    "Yalnızca ES modülleri (paket `\"type\": \"module\"` şeklindedir). `require` yerine `import` kullanın."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["TypeScript", "Türler paketle birlikte gelir. `@types` paketine gerek yok."],
+                  "required": false
+                },
+                {
+                  "cells": ["Tarayıcı", "Ana girişin Node.js bağımlılığı yoktur ve her modern paketleyiciyle çalışır."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "Node.js",
+                    "`/raster` ve `/verify`, yaygın platformlar için önceden derlenmiş ikili dosyalara sahip yerel bir modül olan `@resvg/resvg-js` kullanır."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "Tarayıcıda kod çözme",
+                    "`/verify-browser`, `zxing_reader.wasm` dosyasını asla bir CDN’den değil, sizin seçtiğiniz bir URL’den yükler."
+                  ],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "wasm",
+              "t": "Kod çözücüyü tarayıcı için barındırın"
+            },
+            {
+              "k": "p",
+              "t": "Yalnızca `decodeSvgInBrowser` için gereklidir. wasm dosyasını `zxing-wasm` bağımlılığından genel klasörünüze kopyalayın ve URL’sini iletin. Komut dosyayı paket üzerinden bulur, bu yüzden npm, pnpm ve Yarn ile çalışır."
+            },
+            {
+              "k": "code",
+              "example": "wasm"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Dosya, paketin bugün bağlı olduğu sürüm olan zxing-wasm 3.1.7’de `zxing-wasm/reader/zxing_reader.wasm` konumundadır. Yükseltmeden sonra tekrar kontrol edin."
+            }
+          ]
+        },
+        "quickstart": {
+          "title": "Hızlı başlangıç",
+          "lead": "Yaklaşık bir dakikada içeriği kodlayın, biçimlendirin, taramayı kontrol edin ve bir SVG alın.",
+          "blocks": [
+            {
+              "k": "steps",
+              "items": [
+                {
+                  "title": "Kurun",
+                  "t": "`@heyqr/qr-core` paketini paket yöneticinizle ekleyin."
+                },
+                {
+                  "title": "İçeriği kodlayın",
+                  "t": "`encodePayload` bir web sitesini, Wi-Fi ağını veya kişiyi kodun içindeki metne dönüştürür."
+                },
+                {
+                  "title": "Görünümü tanımlayın",
+                  "t": "Bir `QrStyle` modül şeklini, köşe şekillerini ve renkleri ayarlar."
+                },
+                {
+                  "title": "Taramayı kontrol edin",
+                  "t": "`renderQr` her sorun için bir düzeltme içeren bir tarama raporu döndürür."
+                },
+                {
+                  "title": "Dosyayı alın",
+                  "t": "`renderQrSvg` bağımsız bir SVG döndürür; Node.js’te `rasterizeSvg` onu PNG’ye dönüştürür."
+                }
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "Tarayıcıda"
+            },
+            {
+              "k": "code",
+              "example": "quickstartBrowser"
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Node.js’te dosyaları kaydedin"
+            },
+            {
+              "k": "code",
+              "example": "quickstartNode"
+            }
+          ]
+        },
+        "content": {
+          "title": "İçeriği kodlayın",
+          "lead": "encodePayload yapılandırılmış içeriği, telefonların her kod türü için beklediği tam metne dönüştürür.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "types",
+              "t": "İçerik türleri"
+            },
+            {
+              "k": "p",
+              "t": "Dokuz `QrContent` nesnesinden birini iletin. `QR_CONTENT_TYPES` `type` değerlerini listeler."
+            },
+            {
+              "k": "table",
+              "label": "İçerik türleri",
+              "cols": ["type", "Alanlar", "Kodun içerdiği"],
+              "rows": [
+                {
+                  "cells": ["`website`", "`url` (yalın alan adlarına https:// eklenir)", "Normalleştirilmiş URL"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "`text`", "Metin olduğu gibi"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`wifi`",
+                    "`ssid`, `security` \"WPA\" | \"WEP\" | \"nopass\", `password?`, `hidden?`",
+                    "`WIFI:T:WPA;S:…;P:…;;`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`contact`",
+                    "`firstName?`, `lastName?`, `title?`, `company?`, `phone?`, `email?`, `website?`",
+                    "Bir vCard 3.0"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`email`", "`to`, `subject?`, `body?`", "Konu ve gövdeyle `mailto:`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`phone`", "`number`", "Rakamlar ve + ile `tel:`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`sms`", "`number`, `message?`", "`SMSTO:number:message`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`location`", "`address`, `name?`", "Adresle birlikte `geo:0,0?q=`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`event`", "`title`, `start`, `end?`, `place?`", "Bir takvim etkinliği (VEVENT)"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "examples",
+              "t": "Örnekler"
+            },
+            {
+              "k": "code",
+              "example": "contentExamples"
+            },
+            {
+              "k": "h2",
+              "id": "contact",
+              "t": "Kişi kartları"
+            },
+            {
+              "k": "p",
+              "t": "Kişiler, telefon kameralarının en güvenilir şekilde okuduğu sürüm olan vCard 3.0’a dönüşür. Boş alanlar çıkarılır ve uzun satırlar katlanır."
+            },
+            {
+              "k": "code",
+              "example": "vcard"
+            },
+            {
+              "k": "h2",
+              "id": "events",
+              "t": "Etkinlikler"
+            },
+            {
+              "k": "p",
+              "t": "`start` ve `end`, `2026-12-05T19:00` gibi yerel saatlerdir. `2026-12-05` gibi saatsiz bir tarih tüm gün süren bir etkinlik oluşturur."
+            },
+            {
+              "k": "code",
+              "example": "event"
+            },
+            {
+              "k": "h2",
+              "id": "urls",
+              "t": "Bir web sitesi adresini kontrol edin"
+            },
+            {
+              "k": "p",
+              "t": "`parseWebsiteUrl`, HeyQR düzenleyicisinin kullandığı kontrolün aynısıdır. Boşlukları, diğer şemaları, kimlik bilgilerini ve nokta içermeyen ana bilgisayarları reddeder."
+            },
+            {
+              "k": "code",
+              "example": "urlCheck"
+            }
+          ]
+        },
+        "style": {
+          "title": "Bir kodu biçimlendirin",
+          "lead": "Bir QrStyle şekilleri ve renkleri tanımlar. Her stil aynı tarama kurallarına göre kontrol edilir.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "shapes",
+              "t": "Şekiller"
+            },
+            {
+              "k": "chips",
+              "t": "pattern · veri modülleri",
+              "items": ["square", "rounded", "dot", "diamond", "leaf", "fluid", "vbars", "hbars"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeFrame · köşe işareti halkaları",
+              "items": ["square", "rounded", "cushion", "circle", "leaf"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeBall · köşe işareti merkezleri",
+              "items": ["square", "rounded", "circle", "diamond", "leaf"]
+            },
+            {
+              "k": "h2",
+              "id": "colors",
+              "t": "Renkler"
+            },
+            {
+              "k": "p",
+              "t": "`colors` dört hex renk alır: veri modülleri için `fg`, köşe halkaları için `eye`, köşe merkezleri için `eyeIn` ve arka plan için `bg`."
+            },
+            {
+              "k": "table",
+              "label": "Minimum kontrast",
+              "cols": ["Bölüm", "Arka planla minimum kontrast"],
+              "rows": [
+                {
+                  "cells": ["Veri modülleri (`fg`)", "3 : 1 (`MIN_CONTRAST.modules`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Köşe halkaları (`eye`)", "3 : 1 (`MIN_CONTRAST.eyeFrame`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Köşe merkezleri (`eyeIn`)", "2.5 : 1 (`MIN_CONTRAST.eyeCenter`)"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Kodlar arka planlarından koyu olmalıdır. Koyu arka planda açık renkli bir kod, kontrast yüksek olsa bile `invert` sorunuyla başarısız olur."
+            },
+            {
+              "k": "code",
+              "example": "contrast"
+            },
+            {
+              "k": "h2",
+              "id": "center",
+              "t": "Ortada kısa metin"
+            },
+            {
+              "k": "p",
+              "t": "`centerText` kodun içine bir etiket koyar. İlk satırı en fazla 14 karakterle (`CENTER_TEXT_MAX`) gösterir; daha uzun metin tam bir kelimede üç noktayla kesilir."
+            },
+            {
+              "k": "code",
+              "example": "centerText"
+            },
+            {
+              "k": "h2",
+              "id": "art",
+              "t": "Kodun arkasında görsel"
+            },
+            {
+              "k": "p",
+              "t": "`art`, modüllerin arkasına iki tonda yumuşak şekiller ve isteğe bağlı soluk bir görsel çizer. Tarama kontrolü arka planı renklendirilmiş olarak okur."
+            },
+            {
+              "k": "code",
+              "example": "art"
+            }
+          ]
+        },
+        "logo": {
+          "title": "Logolar ve simgeler",
+          "lead": "Ortaya bir görsel veya 24 × 24 çizgi simge koyun. Kodun okunmaya devam etmesi için hata düzeltme otomatik olarak artar.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "fields",
+              "t": "Logo alanları"
+            },
+            {
+              "k": "table",
+              "label": "QrLogo",
+              "cols": ["Alan", "Tür", "Açıklama"],
+              "rows": [
+                {
+                  "cells": ["`href`", "string", "Görsel URL’si veya data URI. `iconPath` ayarlandığında yok sayılır."],
+                  "required": false
+                },
+                {
+                  "cells": ["`iconPath`", "string", "24 × 24 çizgi yolu, örneğin bir Lucide simgesi."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`size`",
+                    "number",
+                    "Kod genişliğinin bir oranı olarak logo genişliği. 0.10 ile 0.46 arasında çizilir (`CENTER_LOGO_SIZE`)."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`plate`", "\"none\" | \"square\" | \"circle\"", "Logonun arkasındaki zemin."],
+                  "required": true
+                },
+                {
+                  "cells": ["`tile`", "boolean", "Plaka yerine renkli, yuvarlatılmış bir kutu üzerinde simge."],
+                  "required": false
+                },
+                {
+                  "cells": ["`plateColor`, `iconColor`", "string", "Plaka ve simge için hex renkler."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "example",
+              "t": "Örnek"
+            },
+            {
+              "k": "code",
+              "example": "logoStyle"
+            },
+            {
+              "k": "h2",
+              "id": "fit",
+              "t": "Ne kadar büyük olabilir?"
+            },
+            {
+              "k": "p",
+              "t": "Logo veya orta metin varken kod H hata düzeltmesini kullanır, bu yüzden yarısından biraz fazlasını taşır (666 yerine 382 bayt). Çizimden sonra `scan.maxLogoSize` hâlâ çözülebilen en büyük boyuttur; daha büyük bir logo `logo` sorunuyla başarısız olur."
+            },
+            {
+              "k": "code",
+              "example": "logoFit"
+            }
+          ]
+        },
+        "layouts": {
+          "title": "Çerçeveler ve alt yazılar",
+          "lead": "composeLayout tam bir düzen çizer: bir kart veya çerçeve, kod, bir alt yazı ve isteğe bağlı bir logo; tıpkı HeyQR dışa aktarması gibi.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "presets",
+              "t": "Düzen hazır ayarları"
+            },
+            {
+              "k": "table",
+              "label": "Hazır ayarlar",
+              "cols": ["preset", "Çizdiği"],
+              "rows": [
+                {
+                  "cells": ["`qr`", "Yalnızca kod, `qrSize` boyutunda"],
+                  "required": false
+                },
+                {
+                  "cells": ["`caption`", "Üstünde veya altında alt yazı olan kod ya da kodun içinde metin"],
+                  "required": false
+                },
+                {
+                  "cells": ["`vertical`", "Kodun alt yazının üstünde olduğu bir kart"],
+                  "required": false
+                },
+                {
+                  "cells": ["`horizontal`", "Kodun alt yazının yanında olduğu bir kart"],
+                  "required": false
+                },
+                {
+                  "cells": ["`frame`", "Kodun etrafında bir çerçeve; boyut `qrSize` değerinden gelir"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "chips",
+              "t": "frameStyle",
+              "items": ["bar", "tab", "bubble", "pill", "corners", "circle", "ticket", "phone"]
+            },
+            {
+              "k": "h2",
+              "id": "compose",
+              "t": "Bir düzen oluşturun"
+            },
+            {
+              "k": "code",
+              "example": "compose"
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Çok uzun içeriğin istisna yerine bir mesaja dönüşmesi için `composeLayout` öncesinde `layoutCapacity` çağırın. Şeffaf arka plan için üçüncü bağımsız değişken olarak `{ transparent: true }` iletin."
+            },
+            {
+              "k": "h2",
+              "id": "fonts",
+              "t": "Alt yazı yazı tipleri"
+            },
+            {
+              "k": "p",
+              "t": "Alt yazılar SVG metnidir. Tarayıcıda sayfanın yazı tiplerini kullanırlar; Node.js’te rasterleştirirken yazı tipi dosyalarını `fontFiles` ile iletin, aksi halde makinede yüklü yazı tipleri kullanılır. Alt yazı yazı tipleri Latin ve Kiril alfabelerini kapsar."
+            }
+          ]
+        },
+        "png": {
+          "title": "PNG kaydedin",
+          "lead": "rasterizeSvg, paketten gelen herhangi bir SVG’yi resvg ile bir PNG Buffer’a dönüştürür.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "basic",
+              "t": "PNG oluşturun"
+            },
+            {
+              "k": "code",
+              "example": "png"
+            },
+            {
+              "k": "h2",
+              "id": "options",
+              "t": "Seçenekler"
+            },
+            {
+              "k": "table",
+              "label": "RasterOptions",
+              "cols": ["Seçenek", "Tür", "Açıklama"],
+              "rows": [
+                {
+                  "cells": ["`width`", "number", "Piksel cinsinden çıktı genişliği. Yükseklik SVG’yi izler."],
+                  "required": true
+                },
+                {
+                  "cells": ["`fontFiles`", "string[]", "Alt yazılar için yazı tipi dosyaları."],
+                  "required": false
+                },
+                {
+                  "cells": ["`systemFonts`", "boolean", "Yüklü yazı tiplerini de kullanır. Varsayılan `true`."],
+                  "required": false
+                },
+                {
+                  "cells": ["`background`", "string", "Şeffaf alanların arkasındaki arka plan rengi."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`dpi`",
+                    "number",
+                    "Dosyaya yazılan baskı çözünürlüğü; baskı yazılımı dosyayı fiziksel boyutunda açar. Ekran dosyaları için belirtmeyin."
+                  ],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "print",
+              "t": "Baskı boyutları"
+            },
+            {
+              "k": "p",
+              "t": "`pngPixelSize` bir düzenin tam piksel boyutunu verir: mm düzenleri 300, 600 veya 1200 dpi’de (`PNG_DPIS`), px düzenleri 1×, 2×, 4× veya 8× ölçekte (`PNG_SCALES`). Kenarlar 64 ile 8192 px arasında kalır."
+            },
+            {
+              "k": "code",
+              "example": "printPng"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "`/raster` modülünü tarayıcı paketlerine içe aktarmayın: resvg yerel bir Node.js modülüdür."
+            }
+          ]
+        },
+        "scan": {
+          "title": "Tarandığını kontrol edin",
+          "lead": "Her çizim bir tarama raporuyla gelir. Emin olmak için Node.js’te ve tarayıcıda sonucu çözebilirsiniz de.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "Tarama raporu"
+            },
+            {
+              "k": "code",
+              "example": "scanReport"
+            },
+            {
+              "k": "table",
+              "label": "Sorun kodları",
+              "cols": ["code", "title", "fix"],
+              "rows": [
+                {
+                  "cells": ["`invert`", "Light code on a dark background", "Swap colors"],
+                  "required": false
+                },
+                {
+                  "cells": ["`contrast`", "Not enough contrast", "Increase contrast"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eyes`", "Corner markers are too light", "Darken corner markers"],
+                  "required": false
+                },
+                {
+                  "cells": ["`logo`", "The logo hides too much of the code", "Reduce logo size"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "The text in the code is too long", "Shorten the text"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Rapor kurala dayalıdır: kod çözmeden tam geometriyi ve renkleri kontrol eder. Kanıt gerektiğinde kodu çözün."
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Node.js’te kod çözme"
+            },
+            {
+              "k": "code",
+              "example": "verifyNode"
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "Tarayıcıda kod çözme"
+            },
+            {
+              "k": "code",
+              "example": "verifyBrowser"
+            },
+            {
+              "k": "p",
+              "t": "Cihazdan hiçbir şey çıkmaz: kod çözücü yerel olarak çalışır ve kodun hedefini asla açmaz."
+            }
+          ]
+        },
+        "api": {
+          "title": "İşlevler",
+          "lead": "Tüm genel işlevler, giriş noktasına göre gruplandırılmış. İmzalar paketteki TypeScript türleriyle eşleşir.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "İçerik"
+            },
+            {
+              "k": "table",
+              "label": "İçerik işlevleri",
+              "cols": ["İşlev", "İmza"],
+              "rows": [
+                {
+                  "cells": ["`encodePayload`", "`(content: QrContent) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`encodeVCard`", "`(contact) => string` · vCard 3.0"],
+                  "required": false
+                },
+                {
+                  "cells": ["`normalizeUrl`", "`(input: string) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseWebsiteUrl`", "`(input: string) => { ok: true; url } | { ok: false; problem }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "render",
+              "t": "Çizim"
+            },
+            {
+              "k": "table",
+              "label": "Çizim işlevleri",
+              "cols": ["İşlev", "İmza"],
+              "rows": [
+                {
+                  "cells": ["`renderQr`", "`(value: string, style: QrStyle) => RenderedQr`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`renderQrSvg`", "`(value: string, style: QrStyle, sizePx = 512) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eclForStyle`", "`(style) => \"M\" | \"H\"` · bir logo veya metin ortayı kapladığında H"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerLogoSize`", "`(size: number) => number` · 0.10–0.46 aralığına sınırlar"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerTextLabel`", "`(text: string) => { label; shortened }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "layout",
+              "t": "Düzenler"
+            },
+            {
+              "k": "table",
+              "label": "Düzen işlevleri",
+              "cols": ["İşlev", "İmza"],
+              "rows": [
+                {
+                  "cells": [
+                    "`composeLayout`",
+                    "`(layout: Layout, value: string, options?: { transparent? }) => { svg, width, height, scan }`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutCapacity`", "`(layout: Layout, value: string) => { ok, bytes, maxBytes, ecl, centerCovered }`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutGeometry`", "`(layout: Layout) => LayoutGeometry`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pngPixelSize`", "`(layout: Layout, { scale?, dpi? }) => { width, height, ok }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "encode",
+              "t": "Kodlama ve kapasite"
+            },
+            {
+              "k": "table",
+              "label": "Kodlama işlevleri",
+              "cols": ["İşlev", "İmza"],
+              "rows": [
+                {
+                  "cells": ["`encodeQr`", "`(text: string, ecl = \"M\") => QrMatrix`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`payloadBytes`", "`(text: string) => number` · UTF-8 bayt"],
+                  "required": false
+                },
+                {
+                  "cells": ["`maxPayloadBytes`", "`(ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pickVersion`", "`(byteLength: number, ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`QrCapacityError`", "`byteLength` ve `maxBytes` içeren hata"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "color",
+              "t": "Renk"
+            },
+            {
+              "k": "table",
+              "label": "Renk işlevleri",
+              "cols": ["İşlev", "İmza"],
+              "rows": [
+                {
+                  "cells": ["`contrastRatio`", "`(a: string, b: string) => number` · WCAG oranı"],
+                  "required": false
+                },
+                {
+                  "cells": ["`luminance`", "`(hex: string) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`isHexColor`", "`(value: string) => boolean` · yalnızca `#RRGGBB`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseHexColor`", "`(text: string) => string | null`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`mixColors`", "`(a: string, b: string, t: number) => string`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Node.js ve tarayıcı girişleri"
+            },
+            {
+              "k": "table",
+              "label": "Diğer girişler",
+              "cols": ["İşlev", "Giriş", "İmza"],
+              "rows": [
+                {
+                  "cells": ["`rasterizeSvg`", "`/raster`", "`(svg: string, options: RasterOptions) => Buffer`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvg`", "`/verify`", "`(svg: string, width = 720) => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeImage`", "`/verify`", "`(file: Uint8Array, type = \"image/png\") => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`verifyScan`", "`/verify`", "`(svg, expected, widths = [300, 600, 1200]) => Promise<boolean>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvgInBrowser`", "`/verify-browser`", "`(svg, { wasmUrl, size? = 960 }) => Promise<string | null>`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        },
+        "types": {
+          "title": "Türler",
+          "lead": "Ana türler, pakette göründükleri şekliyle.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "style",
+              "t": "QrStyle"
+            },
+            {
+              "k": "code",
+              "example": "typesStyle"
+            },
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "RenderedQr ve ScanReport"
+            },
+            {
+              "k": "code",
+              "example": "typesReport"
+            },
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "QrContent"
+            },
+            {
+              "k": "code",
+              "example": "typesContent"
+            }
+          ]
+        },
+        "limits": {
+          "title": "Sınırlar ve hatalar",
+          "lead": "Kodlayıcının neyi kabul ettiği ve içerik sığmadığında ne olduğu.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Sınırlar"
+            },
+            {
+              "k": "table",
+              "label": "Sınırlar",
+              "cols": ["Sınır", "Değer"],
+              "rows": [
+                {
+                  "cells": ["En büyük QR sürümü", "20 (`MAX_VERSION`), 97 × 97 modül"],
+                  "required": false
+                },
+                {
+                  "cells": ["İçerik", "M hata düzeltmesinde 666 bayt, H’de 382"],
+                  "required": false
+                },
+                {
+                  "cells": ["Hata düzeltme", "M ya da logo veya orta metinle H"],
+                  "required": false
+                },
+                {
+                  "cells": ["Sessiz alan", "Her kenarda 4 modül, `viewBox` içine dahil"],
+                  "required": false
+                },
+                {
+                  "cells": ["Logo boyutu", "Kod genişliğinin 0.10–0.46’sı (`CENTER_LOGO_SIZE`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Orta metin", "14 karakter (`CENTER_TEXT_MAX`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["PNG kenarı", "64–8192 px (`PNG_MIN_SIDE`, `PNG_MAX_SIDE`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Kontrast", "Modüller ve halkalar için 3 : 1, köşe merkezleri için 2.5 : 1"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "capacity",
+              "t": "Çok uzun içerik"
+            },
+            {
+              "k": "p",
+              "t": "İçerik sığmadığında çizim `QrCapacityError` fırlatır. Hata içeriği değil yalnızca boyutları taşır, bu yüzden günlüğe kaydetmek güvenlidir."
+            },
+            {
+              "k": "code",
+              "example": "capacity"
+            },
+            {
+              "k": "h2",
+              "id": "null",
+              "t": "null döndüren kod çözücüler"
+            },
+            {
+              "k": "p",
+              "t": "`decodeSvg`, `decodeImage` ve `decodeSvgInBrowser`, hiçbir kod okunamadığında `null` döndürür. Bunu bir hata olarak değil, başarısız bir kontrol olarak değerlendirin."
+            }
+          ]
+        },
+        "faq": {
+          "title": "SSS",
+          "lead": "Sık sorulan sorulara kısa yanıtlar.",
+          "blocks": [
+            {
+              "k": "faq",
+              "items": [
+                {
+                  "q": "Paket HeyQR’a bir şey gönderiyor mu?",
+                  "a": "Hayır. Kodlama, çizim ve tarama kontrolü sizin makinenizde çalışır. Tarayıcı kod çözücüsü wasm dosyasını sizin barındırdığınız bir URL’den yükler."
+                },
+                {
+                  "q": "Bununla Dinamik kodlar oluşturabilir miyim?",
+                  "a": "Henüz değil. Bir Dinamik kod; HeyQR kısa bağlantısı, bir plan ve sunucularımızda tarama sayımı gerektirir. Bu, REST API ile gelir."
+                },
+                {
+                  "q": "Logolu kodum neden başarısız oluyor?",
+                  "a": "Bir logo hata düzeltmeyi H’ye yükseltir, bu da kapasiteyi düşürür ve modülleri gizler. Logoyu `scan.maxLogoSize` değerinden küçük yapın veya içeriği kısaltın."
+                },
+                {
+                  "q": "PNG dışa aktarma neden yalnızca Node.js’te?",
+                  "a": "PNG’ler yerel bir modül olan resvg ile oluşturulur. Tarayıcıda piksellere ihtiyacınız varsa SVG’yi bir canvas üzerine çizin."
+                },
+                {
+                  "q": "Dosyalar HeyQR düzenleyicisiyle eşleşecek mi?",
+                  "a": "Evet. Düzenleyici önizlemesi ve ücretli dışa aktarma ikisi de `composeLayout` kullanır, bu yüzden aynı düzen aynı SVG’yi verir."
+                },
+                {
+                  "q": "Bunu ticari bir üründe kullanabilir miyim?",
+                  "a": "Lisans ilk herkese açık sürümle belirlenecek ve burada ve npm’de gösterilecek."
+                }
+              ]
+            }
+          ]
+        },
+        "changelog": {
+          "title": "Değişiklik günlüğü",
+          "lead": "@heyqr/qr-core sürümleri.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "v010",
+              "t": "0.1.0 · henüz yayınlanmadı"
+            },
+            {
+              "k": "list",
+              "items": [
+                "İlk herkese açık sürüm hazırlanıyor. Bu sayfalardaki her şey paketin mevcut kaynağıyla eşleşir.",
+                "Giriş noktaları: ana, `/raster`, `/verify`, `/verify-browser`, `/node`."
+              ]
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Bir sürüm yayınlandığında notları ve npm bağlantısı burada görünür."
+            }
+          ]
+        },
+        "rest": {
+          "title": "REST API",
+          "lead": "Sunucunuzdan kod oluşturun, Dinamik kodların yönlendirdiği yeri değiştirin ve tarama sayılarını okuyun.",
+          "blocks": [
+            {
+              "k": "restSoon"
+            }
+          ]
+        },
+        "restAuth": {
+          "title": "Kimlik doğrulama",
+          "lead": "Her istek, HeyQR hesabınızdan bir API anahtarı taşır.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Henüz herkese açık değil. Bu sayfa, HeyQR’ın bu derlemesindeki REST API’yi rotalarına göre kontrol edilmiş şekilde açıklar. Henüz heyqr.me üzerinde kullanılamaz ve kullanılabilir olana kadar aramalarda görünmez."
+            },
+            {
+              "k": "h2",
+              "id": "keys",
+              "t": "API anahtarları"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Anahtarları Hesap → API anahtarları bölümünde oluşturun. Bir anahtar hesabınıza aittir; hesabın her anahtarı aynı kodları görür.",
+                "Anahtarlar `hqk_<lookupId>_<secret>` biçimindedir. Tam anahtar yalnızca oluşturduğunuzda bir kez gösterilir; HeyQR yalnızca bir doğrulayıcı saklar.",
+                "Anahtarı sunucunuzdan `Authorization` başlığında gönderin. Asla bir URL’ye veya tarayıcı koduna koymayın.",
+                "Eksik, yanlış veya iptal edilmiş bir anahtar, istek gövdesi okunmadan önce aynı `401 unauthorized` yanıtını alır."
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "header",
+              "t": "İstek başlıkları"
+            },
+            {
+              "k": "code",
+              "example": "restHeader"
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Hız sınırları"
+            },
+            {
+              "k": "p",
+              "t": "Sınırlar hesaba aittir: tüm anahtarları bunları paylaşır ve hesaplar birbirini etkilemez. Bir pencere ilk istekle başlar ve 60 saniye sürer."
+            },
+            {
+              "k": "table",
+              "label": "Hız sınırları",
+              "cols": ["Bütçe", "Saydıkları", "Dakika başına varsayılan"],
+              "rows": [
+                {
+                  "cells": ["`api`", "Geçerli bir anahtarla yapılan her istek", "120"],
+                  "required": false
+                },
+                {
+                  "cells": ["`export`", "Dosya dışa aktarmaları, `api` içinde de sayılır", "30"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "p",
+              "t": "Bütçe aşıldığında yanıt, herhangi bir şey oluşturulmadan, değiştirilmeden veya çizilmeden önce `Retry-After` ile `429 rate_limited` olur."
+            }
+          ]
+        },
+        "restCreate": {
+          "title": "QR kod oluşturun",
+          "lead": "Hesabınızın bir taslağı olarak, düzenleriyle birlikte bir QR kod oluşturur. Etkinleştirme, kısa bağlantılar ve ödeme uygulamada kalır.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Henüz herkese açık değil. Bu sayfa, HeyQR’ın bu derlemesindeki REST API’yi rotalarına göre kontrol edilmiş şekilde açıklar. Henüz heyqr.me üzerinde kullanılamaz ve kullanılabilir olana kadar aramalarda görünmez."
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "İstek gövdesi"
+            },
+            {
+              "k": "table",
+              "label": "İstek gövdesi",
+              "cols": ["Parametre", "Tür", "Örnek", "Açıklama"],
+              "rows": [
+                {
+                  "cells": ["`name`", "string", "\"Spring menu\"", "1–80 karakter. QR kodlarım’daki ad."],
+                  "required": true
+                },
+                {
+                  "cells": ["`mode`", "\"static\" | \"dynamic\"", "\"static\"", "`dynamic` yalnızca `website` içeriği içindir."],
+                  "required": true
+                },
+                {
+                  "cells": [
+                    "`content`",
+                    "QrContent",
+                    "{ \"type\": \"website\", … }",
+                    "Kodun açtığı şey. `encodePayload` ile aynı yapılar."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"littlefern.cafe/menu\"",
+                    "Yalnızca `dynamic`: kısa bağlantının insanları gönderdiği yer. Varsayılan olarak web sitesi adresidir."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`layouts`",
+                    "array",
+                    "[{ \"name\": \"Sticker\", \"layout\": … }]",
+                    "1–20 düzen: `name` (1–60), çizilmiş bir `layout` ve isteğe bağlı `editor` ayarları."
+                  ],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "p",
+              "t": "Gövde katıdır: bilinmeyen bir alan reddedilir. Yeniden denemeleri güvenli hale getirmek için bir `Idempotency-Key` başlığı gönderin (1–255 görünür karakter, bir UUID olur): aynı anahtar ve istek orijinal `201` yanıtını döndürür."
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "İstek"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateRequest",
+              "label": "İstek örneği"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Yanıtlar"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateResponses",
+              "label": "Yanıtlar"
+            }
+          ]
+        },
+        "restBulk": {
+          "title": "Toplu oluşturma",
+          "lead": "Tek bir istekte en fazla 100 kod oluşturur. İş arka planda çalışır.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "Tasarım önizlemesi. Önerilen uç nokta: bu sayfadaki hiçbir şey henüz yayında değil; adlar ve alanlar yayından önce değişebilir."
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes/bulk"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "İstek gövdesi"
+            },
+            {
+              "k": "table",
+              "label": "İstek gövdesi",
+              "cols": ["Parametre", "Tür", "Örnek", "Açıklama"],
+              "rows": [
+                {
+                  "cells": ["`items`", "array", "[{ \"name\": …, \"content\": … }]", "1–100 kod, her biri QR kod oluşturun’daki gibi."],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].name`", "string", "\"Table 12\"", "QR kodlarım’daki ad."],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].content`", "QrContent", "{ \"type\": \"website\", … }", "Her kodun açtığı şey."],
+                  "required": true
+                },
+                {
+                  "cells": ["`style`", "QrStyle", "{ \"pattern\": \"rounded\", … }", "Toplu işteki her kod için tek bir stil."],
+                  "required": false
+                },
+                {
+                  "cells": ["`webhook_url`", "string", "\"https://…/heyqr\"", "İş bittiğinde bir kez çağrılır."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Yanıtlar"
+            },
+            {
+              "k": "tabs",
+              "example": "bulkResponses",
+              "label": "Yanıtlar"
+            }
+          ]
+        },
+        "restDestination": {
+          "title": "Bir hedefi değiştirin",
+          "lead": "Bir Dinamik kodu başka bir yere yönlendirir. Basılı kodlar kısa bağlantılarını korur ve hemen yeni hedefi izler.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Henüz herkese açık değil. Bu sayfa, HeyQR’ın bu derlemesindeki REST API’yi rotalarına göre kontrol edilmiş şekilde açıklar. Henüz heyqr.me üzerinde kullanılamaz ve kullanılabilir olana kadar aramalarda görünmez."
+            },
+            {
+              "k": "h2",
+              "id": "read",
+              "t": "Mevcut hedefi okuyun"
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "code",
+              "example": "restDestinationRead"
+            },
+            {
+              "k": "p",
+              "t": "Okuduğunuz `revision` üzerinden değiştirin: o zamandan beri uygulamada veya başka bir istekle değiştirilen bir hedef `409` alır ve hiçbir şey kaydedilmez."
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "İstek gövdesi"
+            },
+            {
+              "k": "endpoint",
+              "method": "PATCH",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "table",
+              "label": "İstek gövdesi",
+              "cols": ["Parametre", "Tür", "Örnek", "Açıklama"],
+              "rows": [
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"https://littlefern.cafe/today\"",
+                    "En fazla 2048 karakterlik yeni adres. Yalın bir alan adı https:// olur."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`revision`", "integer", "3", "GET veya son PATCH’ten gelen revizyon."],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "İstek"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationRequest",
+              "label": "İstek örneği"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Yanıtlar"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationResponses",
+              "label": "Yanıtlar"
+            }
+          ]
+        },
+        "restScans": {
+          "title": "Tarama istatistikleri",
+          "lead": "Bir Dinamik kod için günlük tarama sayıları.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "Tasarım önizlemesi. Önerilen uç nokta: bu sayfadaki hiçbir şey henüz yayında değil; adlar ve alanlar yayından önce değişebilir."
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{id}/scans?from=2026-11-01&to=2026-11-26"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Yanıtlar"
+            },
+            {
+              "k": "tabs",
+              "example": "scansResponses",
+              "label": "Yanıtlar"
+            }
+          ]
+        },
+        "restErrors": {
+          "title": "Hatalar ve hız sınırları",
+          "lead": "Hatalar tek bir yapıyı paylaşır. Mesaja göre değil, her zaman code değerine göre dallanın.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Henüz herkese açık değil. Bu sayfa, HeyQR’ın bu derlemesindeki REST API’yi rotalarına göre kontrol edilmiş şekilde açıklar. Henüz heyqr.me üzerinde kullanılamaz ve kullanılabilir olana kadar aramalarda görünmez."
+            },
+            {
+              "k": "h2",
+              "id": "shape",
+              "t": "Hata yapısı"
+            },
+            {
+              "k": "p",
+              "t": "Her hata `Cache-Control: no-store` ile `{ \"error\": { \"code\", \"message\", …details } }` biçimindedir. Mesajlar insanlar içindir; kodlar kararlıdır."
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "Durum kodları"
+            },
+            {
+              "k": "table",
+              "label": "Hatalar",
+              "cols": ["Durum", "code", "Ne zaman"],
+              "rows": [
+                {
+                  "cells": ["400", "`malformed_json`", "Gövde JSON değil."],
+                  "required": false
+                },
+                {
+                  "cells": ["401", "`unauthorized`", "Eksik, hatalı biçimlendirilmiş, yanlış veya iptal edilmiş anahtar."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "402",
+                    "`payment_required`",
+                    "Ödenmemiş veya yayında olmayan bir kodun dışa aktarılması; `paymentUrl` onun Dışa aktar ekranını açar."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["403", "`draft_limit`", "Hesapta azami sayıda taslak var."],
+                  "required": false
+                },
+                {
+                  "cells": ["404", "`not_found`", "Sizin olmayan, silinmiş veya mevcut olmayan kod ya da düzen: hepsi için tek yanıt."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "409",
+                    "`revision_conflict`, `idempotency_key_reused`",
+                    "Revizyonunuzdan sonra değiştirilmiş veya yeniden kullanılmış bir Idempotency-Key."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "422",
+                    "`invalid_request`, `content_too_long`, `not_dynamic`",
+                    "Bir kural ihlal edildi; `details` alanı adlandırır."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["429", "`rate_limited`", "Hesabın bütçesi aşıldı; `Retry-After` saniye bekleyin."],
+                  "required": false
+                },
+                {
+                  "cells": ["500", "`internal_error`", "Hiçbir şey değişmedi; tekrar deneyin."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Hız sınırları"
+            },
+            {
+              "k": "tabs",
+              "example": "restRateLimited",
+              "label": "Örnek yanıtlar"
+            },
+            {
+              "k": "p",
+              "t": "Varsayılanlar, hesap başına dakikada 120 istek ve 30 dışa aktarmadır. Reddedilen istekler bekleme süresini uzatmaz."
+            }
+          ]
+        },
+        "restSdk": {
+          "title": "TypeScript SDK",
+          "lead": "@heyqr/sdk, Node.js 18 ve sonrası için REST API’ye yönelik türlendirilmiş bir istemcidir. Hiçbir şey çizmez: o iş @heyqr/qr-core’undur.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Henüz herkese açık değil. Bu sayfa, HeyQR’ın bu derlemesindeki REST API’yi rotalarına göre kontrol edilmiş şekilde açıklar. Henüz heyqr.me üzerinde kullanılamaz ve kullanılabilir olana kadar aramalarda görünmez."
+            },
+            {
+              "k": "h2",
+              "id": "install",
+              "t": "Kurulum"
+            },
+            {
+              "k": "install",
+              "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "server",
+              "t": "Sunucunuzda"
+            },
+            {
+              "k": "p",
+              "t": "`HeyQrClient` bir API anahtarı gerektirir, bu yüzden yalnızca sunucuda çalışır. Bir tarayıcı paketinde paket, `HeyQrClient` öğesinin `server_only` türünde bir `HeyQrError` fırlattığı bir girişe çözümlenir. Tarayıcıdaki önizlemeler için `@heyqr/sdk/react` kullanın."
+            },
+            {
+              "k": "code",
+              "example": "sdkInstallNote"
+            },
+            {
+              "k": "h2",
+              "id": "methods",
+              "t": "Yöntemler"
+            },
+            {
+              "k": "table",
+              "label": "HeyQrClient",
+              "cols": ["Yöntem", "İstek"],
+              "rows": [
+                {
+                  "cells": ["`createQr(request, { idempotencyKey? })`", "`POST /api/v1/qr-codes`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getLayout(qrCodeId, layoutId)`", "`GET …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateLayout(qrCodeId, layoutId, request)`", "`PATCH …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getDestination(qrCodeId)`", "`GET …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateDestination(qrCodeId, request)`", "`PATCH …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`downloadExport(qrCodeId, layoutId, { format })`", "`GET …/export`, imzalı bağlantıyı izleyerek"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "Hatalar"
+            },
+            {
+              "k": "table",
+              "label": "Hatalar",
+              "cols": ["Hata", "Ne zaman"],
+              "rows": [
+                {
+                  "cells": ["`HeyQrApiError`", "`status`, `code` ve türlendirilmiş yanıtla belgelenmiş bir API hatası"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrRateLimitError`", "429, `retryAfterSeconds` ve `code` ile"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrTimeoutError`, `HeyQrAbortError`", "Süre doldu veya `signal` çağrıyı iptal etti"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrError`", "Belgelenmiş bir yanıt yok: `kind` nedenini söyler"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        }
+      },
+      "breadcrumb": "İçerik haritası"
+    }
+  }
+}

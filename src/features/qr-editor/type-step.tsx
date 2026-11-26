@@ -52,14 +52,14 @@ export function TypeStep({
         )}
       >
         {selected ? (
-          <span className="absolute top-3 right-3 grid size-5 place-items-center rounded-full bg-selected-mark text-inverse-foreground">
+          <span className="absolute end-3 top-3 grid size-5 place-items-center rounded-full bg-selected-mark text-inverse-foreground">
             <CheckIcon aria-hidden strokeWidth={3.2} className="size-3" />
           </span>
         ) : null}
         <span className="grid size-12 shrink-0 place-items-center rounded-md bg-subtle transition-colors duration-(--motion-fast) group-aria-pressed:bg-selected-mark group-aria-pressed:text-inverse-foreground">
           <Icon aria-hidden className="size-6" strokeWidth={1.9} />
         </span>
-        <span className="flex min-w-0 flex-col gap-1 pr-5">
+        <span className="flex min-w-0 flex-col gap-1 pe-5">
           <span className="text-h3">{tTypes(`${value}.label`)}</span>
           <span className="text-secondary-foreground">{tTypes(`${value}.desc`)}</span>
           <span className="truncate text-caption text-muted-foreground">

@@ -170,10 +170,11 @@ export function DestinationForm({
             hint={t("hint", { short: shortLink })}
             error={problem ? tUrl(PROBLEM_KEY[problem]) : undefined}
           >
-            <div className="flex items-stretch">
+            {/* HEY-192: scheme + address is one web address, read left to right in every language. */}
+            <div dir="ltr" className="flex items-stretch">
               <span
                 data-slot="destination-scheme"
-                className="border-border-control grid place-items-center rounded-l-md border border-r-0 bg-subtle px-2.5 text-caption text-secondary-foreground"
+                className="border-border-control grid place-items-center rounded-s-md border border-e-0 bg-subtle px-2.5 text-caption text-secondary-foreground"
               >
                 {scheme}://
               </span>
@@ -187,7 +188,7 @@ export function DestinationForm({
                 aria-invalid={problem !== null}
                 aria-describedby={problem ? "destination-error" : "destination-hint"}
                 onChange={(e) => type(e.target.value)}
-                className="min-w-0 rounded-l-none"
+                className="min-w-0 rounded-s-none"
               />
             </div>
           </Field>

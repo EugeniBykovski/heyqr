@@ -33,7 +33,7 @@ describe("design 1 · Create: previews and form rows (HEY-184)", () => {
     // The value sat in a right-aligned flex box with `truncate`: a value wider than the row overflowed to the left and
     // lost its first letters ("ec 5, 2026"). It now wraps.
     const value = within(fig).getByText(/Dec 5, 2026/);
-    const box = value.closest("span.ml-auto") ?? value;
+    const box = value.closest("span.ms-auto") ?? value;
     expect(box.className).toContain("[overflow-wrap:anywhere]");
     expect(box.className).not.toContain("truncate");
     expect(box.className).not.toContain("justify-end");

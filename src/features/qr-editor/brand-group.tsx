@@ -251,7 +251,7 @@ export function BrandGroup({
                   type="button"
                   aria-pressed={role === r}
                   onClick={() => setRole(r)}
-                  className="flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-md border border-border bg-surface px-2.5 py-1.5 text-left hover:border-border-hover aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]"
+                  className="flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-md border border-border bg-surface px-2.5 py-1.5 text-start hover:border-border-hover aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]"
                 >
                   <span
                     aria-hidden
@@ -377,7 +377,7 @@ function LookCard({
       type="button"
       aria-pressed={selected}
       onClick={onPick}
-      className="relative flex min-w-0 cursor-pointer flex-col gap-1.5 rounded-lg border border-border bg-surface p-2 text-left hover:border-border-hover aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]"
+      className="relative flex min-w-0 cursor-pointer flex-col gap-1.5 rounded-lg border border-border bg-surface p-2 text-start hover:border-border-hover aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]"
     >
       <span className="grid aspect-[4/3] place-items-center overflow-hidden rounded-md bg-subtle p-1.5">
         <QrPreview layout={layout} value={value} label="" className="size-full" />

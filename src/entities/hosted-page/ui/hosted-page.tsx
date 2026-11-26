@@ -87,7 +87,7 @@ export function HostedPage(props: HostedPageProps) {
       break;
   }
   return (
-    <div className={cn("flex min-h-full flex-col gap-4 text-left", mode === "preview" ? "py-1 text-[0.8125rem]" : "text-body")}>
+    <div className={cn("flex min-h-full flex-col gap-4 text-start", mode === "preview" ? "py-1 text-[0.8125rem]" : "text-body")}>
       {body}
       <p className="mt-auto pt-3 text-center text-micro text-muted-foreground">
         {t("hostedBy")}
@@ -265,7 +265,7 @@ function CouponPage({ content, mode, forceExpired, now }: HostedPageProps & { co
         <div aria-hidden className="mx-3.5 border-t-2 border-dashed border-current opacity-40" />
         <div className="flex flex-col items-start gap-2.5 px-4.5 pt-3.5 pb-4.5">
           {!expired && content.code ? (
-            <div className="flex items-center justify-between gap-2 self-stretch rounded-[0.625rem] border-[1.5px] border-dashed border-current py-1.5 pr-1.5 pl-3">
+            <div className="flex items-center justify-between gap-2 self-stretch rounded-[0.625rem] border-[1.5px] border-dashed border-current py-1.5 ps-3 pe-1.5">
               <span className="font-mono text-[0.9375rem] font-bold tracking-[0.06em] [overflow-wrap:anywhere]">{content.code}</span>
               {mode === "public" ? (
                 <CopyCode code={content.code} copyLabel={t("copy")} copiedLabel={t("copied")} />
@@ -336,7 +336,7 @@ function SocialPage({ content, mode }: HostedPageProps & { content: SocialConten
             <Action
               mode={mode}
               href={hostedHref(l.url)}
-              className="flex min-h-12 items-center gap-2.5 rounded-[0.875rem] border border-border bg-surface py-1.5 pr-3 pl-1.5 shadow-1 transition-colors hover:border-border-hover"
+              className="flex min-h-12 items-center gap-2.5 rounded-[0.875rem] border border-border bg-surface py-1.5 ps-1.5 pe-3 shadow-1 transition-colors hover:border-border-hover"
             >
               <span className="grid size-8.5 shrink-0 place-items-center rounded-[0.625rem] bg-accent text-accent-text">
                 <LinkIcon aria-hidden className="size-4" />
@@ -522,7 +522,7 @@ function AppsPage({ content, mode, desktop, desktopQr }: HostedPageProps & { con
   if (desktop)
     return (
       <div className="grid items-center gap-6 p-4 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
-        <div className="flex flex-col items-start gap-2 text-left">
+        <div className="flex flex-col items-start gap-2 text-start">
           {head}
           {stores}
           <span className="text-caption text-muted-foreground">{t("desktopNote")}</span>
@@ -564,7 +564,7 @@ function PdfPage({ content, mode, pdfWaiting }: HostedPageProps & { content: Pdf
           <i className="block h-1.5 rounded-full bg-border" />
           <i className="block h-1.5 rounded-full bg-border" />
           <i className="block h-1.5 w-2/3 rounded-full bg-border" />
-          <em className="absolute bottom-4 -left-2 rounded-[0.3125rem] bg-danger px-1.5 py-0.5 text-[0.625rem] font-extrabold text-inverse-foreground not-italic">
+          <em className="absolute -start-2 bottom-4 rounded-[0.3125rem] bg-danger px-1.5 py-0.5 text-[0.625rem] font-extrabold text-inverse-foreground not-italic">
             PDF
           </em>
         </span>

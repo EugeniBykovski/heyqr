@@ -56,14 +56,14 @@ export async function PrintPackShowcase({
       </div>
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-stretch">
         <div className="relative grid min-h-80 place-items-center overflow-hidden rounded-2xl bg-stage p-8">
-          <Badge className="absolute top-4 left-4">{t("cardTag")}</Badge>
+          <Badge className="absolute start-4 top-4">{t("cardTag")}</Badge>
           <div className="w-[min(78%,26rem)] -rotate-6 drop-shadow-[0_18px_30px_rgb(13_13_18/0.22)]">
             <QrPreview layout={designToLayout(CARD)} value="https://anareyes.studio/portfolio" label={t("cardLabel")} />
           </div>
-          <div className="absolute right-[8%] bottom-[8%] w-[min(30%,10rem)] rotate-3 drop-shadow-[0_14px_24px_rgb(13_13_18/0.25)]">
+          <div className="absolute end-[8%] bottom-[8%] w-[min(30%,10rem)] rotate-3 drop-shadow-[0_14px_24px_rgb(13_13_18/0.25)]">
             <QrPreview layout={designToLayout(LABEL)} value="https://littlefern.coffee/menu" label={t("labelLabel")} />
           </div>
-          <Badge className="absolute right-4 bottom-4">{t("labelTag")}</Badge>
+          <Badge className="absolute end-4 bottom-4">{t("labelTag")}</Badge>
         </div>
         <div className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5 shadow-1 sm:p-6">
           <div className="flex items-baseline justify-between gap-3">
@@ -71,7 +71,7 @@ export async function PrintPackShowcase({
               <span className="text-caption text-muted-foreground">{t("panelKicker")}</span>
               <b className="text-h3">{t("panelTitle")}</b>
             </span>
-            <span className="text-right">
+            <span className="text-end">
               <b className="text-h2 tabular-nums">+{price}</b> <span className="text-caption text-muted-foreground">{t("perQr")}</span>
             </span>
           </div>

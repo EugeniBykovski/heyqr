@@ -4,6 +4,7 @@ import { layoutCapacity } from "@heyqr/qr-core";
 import { ArrowLeftIcon, CheckIcon, LoaderCircleIcon, PlusIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import { useCarriedState } from "@/shared/lib/locale-carry";
 import { toast } from "sonner";
 import { composeShared, designSettingsOf, designToLayout, type EditorDesign } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
@@ -58,9 +59,10 @@ export function LayoutEditor({
   const tEdit = useTranslations("editor.edit");
   const tErrors = useTranslations("errors");
   const router = useRouter();
-  const [design, setDesign] = useState(initialDesign);
+  // HEY-192: unsaved edits survive a language change of this page (the editor remounts under the new locale).
+  const [design, setDesign] = useCarriedState(`layout:${layoutId}:design`, initialDesign);
   const [saved, setSaved] = useState(initialDesign);
-  const [name, setName] = useState(layoutName);
+  const [name, setName] = useCarriedState(`layout:${layoutId}:name`, layoutName);
   const [adding, startAdding] = useTransition();
   const [saving, startSaving] = useTransition();
   const [revision, setRevision] = useState(openedRevision);
@@ -85,7 +87,7 @@ export function LayoutEditor({
     // Already saved (e.g. the save succeeded but its response was lost): nothing to restore.
     const same = JSON.stringify(designSettingsOf(held.design)) === JSON.stringify(designSettingsOf(initialDesign));
     if (same && (!held.name || held.name === layoutName)) return dropEdits(layoutId);
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- restoring browser-only storage after hydration
+
     setDesign(held.design);
     if (held.name) setName(held.name);
     toast.info(tEdit("restored"), {
@@ -314,7 +316,7 @@ export function LayoutEditor({
           </div>
           <p className="min-w-0 truncate text-label">
             {tEdit("title", { layout: layoutName })}
-            {changed ? <span className="ml-2 text-caption text-muted-foreground">{tEdit("unsaved")}</span> : null}
+            {changed ? <span className="ms-2 text-caption text-muted-foreground">{tEdit("unsaved")}</span> : null}
           </p>
           <div className="flex min-w-0 flex-1 items-center justify-end">{saveButton("sm", "max-sm:hidden")}</div>
         </div>

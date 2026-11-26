@@ -65,7 +65,7 @@ export function PlanCompare({ plans, rows, initialPair, labels }: PlanComparePro
                   value={pair[slot]}
                   onChange={(e) => pick(slot, e.target.value)}
                   className={cn(
-                    "min-h-11 w-full cursor-pointer appearance-none rounded-md border border-border bg-surface py-2 pr-9 pl-3 text-body font-semibold",
+                    "min-h-11 w-full cursor-pointer appearance-none rounded-md border border-border bg-surface py-2 ps-3 pe-9 text-body font-semibold",
                     "hover:border-border-strong focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring-soft",
                   )}
                 >
@@ -77,7 +77,7 @@ export function PlanCompare({ plans, rows, initialPair, labels }: PlanComparePro
                 </select>
                 <ChevronDownIcon
                   aria-hidden
-                  className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground"
+                  className="pointer-events-none absolute end-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
                 />
               </div>
             </div>
@@ -148,7 +148,7 @@ function ScrollTable(props: TableProps) {
         <div
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-y-0 right-0 w-12 bg-linear-to-l from-surface to-transparent transition-opacity",
+            "pointer-events-none absolute inset-y-0 end-0 w-12 bg-linear-to-l from-surface to-transparent transition-opacity",
             more ? "opacity-100" : "opacity-0",
           )}
         />
@@ -161,7 +161,7 @@ type TableProps = Omit<PlanCompareProps, "initialPair"> & { columns: number[]; c
 
 function Table({ plans, rows, columns, labels, compact }: TableProps) {
   const pad = compact ? "px-2.5 py-3" : "px-4 py-3.5";
-  const sticky = !compact && "sticky left-0 z-1 bg-surface";
+  const sticky = !compact && "sticky start-0 z-1 bg-surface";
   return (
     <table className={cn("w-full table-fixed border-separate border-spacing-0 text-[0.875rem]", compact ? "" : "min-w-[64rem]")}>
       <colgroup>
@@ -172,7 +172,7 @@ function Table({ plans, rows, columns, labels, compact }: TableProps) {
       </colgroup>
       <thead>
         <tr>
-          <th scope="col" className={cn(pad, sticky, "text-left align-bottom text-caption font-semibold text-muted-foreground")}>
+          <th scope="col" className={cn(pad, sticky, "text-start align-bottom text-caption font-semibold text-muted-foreground")}>
             {labels.feature}
           </th>
           {columns.map((c) => {
@@ -184,7 +184,7 @@ function Table({ plans, rows, columns, labels, compact }: TableProps) {
                 scope="col"
                 className={cn(
                   compact ? "px-2.5 pt-3.5 pb-3" : "px-4 pt-5 pb-4",
-                  "text-left align-top font-normal",
+                  "text-start align-top font-normal",
                   plan.highlight && "bg-accent",
                 )}
               >
@@ -213,14 +213,14 @@ function Table({ plans, rows, columns, labels, compact }: TableProps) {
       <tbody>
         {rows.map((row) => (
           <tr key={row.id}>
-            <th scope="row" className={cn(pad, sticky, "border-t border-border text-left align-top font-semibold")}>
+            <th scope="row" className={cn(pad, sticky, "border-t border-border text-start align-top font-semibold")}>
               {row.label}
               {row.hint ? <span className="mt-0.5 block text-caption font-normal text-muted-foreground">{row.hint}</span> : null}
             </th>
             {columns.map((c) => (
               <td
                 key={plans[c]?.id}
-                className={cn(pad, "border-t border-border text-left align-top break-words", plans[c]?.highlight && "bg-accent/45")}
+                className={cn(pad, "border-t border-border text-start align-top break-words", plans[c]?.highlight && "bg-accent/45")}
               >
                 <Cell cell={row.cells[c] ?? { kind: "no" }} labels={labels} />
               </td>

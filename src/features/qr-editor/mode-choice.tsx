@@ -41,14 +41,14 @@ export function ModeChoice({ type, value, onChange }: { type: QrContentType; val
               aria-describedby={disabled ? "mode-unavailable" : undefined}
               onClick={() => onChange(mode)}
               className={cn(
-                "relative flex min-h-11 cursor-pointer flex-col items-start gap-1 rounded-lg border border-border bg-surface p-3.5 pr-9 text-left",
+                "relative flex min-h-11 cursor-pointer flex-col items-start gap-1 rounded-lg border border-border bg-surface p-3.5 pe-9 text-start",
                 "transition-[border-color,box-shadow,background-color] duration-(--motion-fast) hover:border-border-hover",
                 "aria-pressed:border-selected-border aria-pressed:bg-selected aria-pressed:shadow-[0_0_0_1px_var(--color-selected-border)]",
                 "disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border",
               )}
             >
               {selected ? (
-                <span className="absolute top-2.5 right-2.5 grid size-5 place-items-center rounded-full bg-selected-mark text-inverse-foreground">
+                <span className="absolute end-2.5 top-2.5 grid size-5 place-items-center rounded-full bg-selected-mark text-inverse-foreground">
                   <CheckIcon aria-hidden strokeWidth={3.2} className="size-3" />
                 </span>
               ) : null}

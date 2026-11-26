@@ -6,6 +6,7 @@ import { Popover } from "radix-ui";
 import { useState, useTransition } from "react";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { LOCALES, localeMeta, type Locale } from "@/i18n/locales";
+import { announceLocaleChange } from "@/shared/lib/locale-carry";
 import { cn } from "@/shared/lib/utils";
 
 function Flag({ className }: { className: string }) {
@@ -40,7 +41,11 @@ export function LanguageSwitch() {
   const choose = (next: Locale) => {
     setOpen(false);
     if (next === locale) return;
-    startTransition(() => router.replace(pathname, { locale: next }));
+    // HEY-192: the same page in the other language: its query (editor step, plan, currency, filters) and hash stay, and
+    // the page hands its unsaved state over before it remounts. A plain navigation: nothing is submitted or bought.
+    const { search, hash } = window.location;
+    announceLocaleChange();
+    startTransition(() => router.replace(`${pathname}${search}${hash}`, { locale: next, scroll: false }));
   };
 
   return (
@@ -56,7 +61,7 @@ export function LanguageSwitch() {
           type="button"
           aria-label={`${t("language")}: ${current.native}`}
           disabled={pending}
-          className="group inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-full border border-border bg-surface pr-2.5 pl-2 text-[0.8125rem] font-bold tracking-[0.02em] transition-[border-color,box-shadow] duration-(--motion-fast) hover:border-border-hover hover:shadow-1 disabled:opacity-40 aria-expanded:border-violet-300 aria-expanded:ring-3 aria-expanded:ring-violet-100"
+          className="group inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-full border border-border bg-surface ps-2 pe-2.5 text-[0.8125rem] font-bold tracking-[0.02em] transition-[border-color,box-shadow] duration-(--motion-fast) hover:border-border-hover hover:shadow-1 disabled:opacity-40 aria-expanded:border-violet-300 aria-expanded:ring-3 aria-expanded:ring-violet-100"
         >
           <Flag className={current.flag} />
           <span className="max-[390px]:hidden">{current.short}</span>
@@ -125,6 +130,7 @@ export function LanguageSwitch() {
               {t("languageEmpty", { query: query.trim() })}
             </p>
           ) : null}
+          <p className="text-caption text-muted-foreground">{t("languageNote")}</p>
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

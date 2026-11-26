@@ -194,7 +194,7 @@ export function QrCard({
             <Link href={editHref}>{labels.edit}</Link>
           </Button>
           {exportHref ? (
-            <Button asChild size="sm" variant={paid ? "secondary" : "primary"} className={cn(!paid && "ml-auto lg:ml-0")}>
+            <Button asChild size="sm" variant={paid ? "secondary" : "primary"} className={cn(!paid && "ms-auto lg:ms-0")}>
               <Link href={exportHref}>
                 <DownloadIcon aria-hidden />
                 {paid ? labels.download : labels.buy}

@@ -1,0 +1,4483 @@
+{
+  "meta": {
+    "title": "Hey QR — 브랜드에 어울리는 QR 코드",
+    "description": "QR 코드를 디자인하고, 스캔되는지 확인한 뒤, 인쇄용 PNG와 SVG 파일을 다운로드하세요."
+  },
+  "nav": {
+    "create": "만들기",
+    "pricing": "요금",
+    "myCodes": "내 QR 코드",
+    "billing": "요금제 및 결제 관리",
+    "signIn": "로그인",
+    "signOut": "로그아웃",
+    "account": "계정 및 결제 관리, {name}",
+    "language": "언어",
+    "skipToContent": "본문으로 건너뛰기",
+    "home": "Hey QR 홈",
+    "createCode": "QR 코드 만들기",
+    "menu": "메뉴",
+    "main": "주 메뉴",
+    "languageChoose": "언어 선택",
+    "languageCount": "{count}개 언어",
+    "languageSearch": "언어 검색",
+    "languages": "언어",
+    "languageEmpty": "“{query}”와(과) 일치하는 언어가 없어요.",
+    "languageNote": "가격은 사용 중인 통화로 그대로 표시돼요. 아랍어를 선택하면 레이아웃이 오른쪽에서 왼쪽으로 바뀌어요.",
+    "trial": "무료 체험",
+    "apiKeys": "API 키",
+    "developers": "개발자용 API",
+    "developersShort": "API"
+  },
+  "payment": {
+    "title": "결제 방식 안내",
+    "oneTime": "Single QR은 코드당 {price}의 일회성 결제이며, 결제 시 Stripe가 부과하는 세금이 추가될 수 있어요. 구독이 아니며 자동으로 갱신되지 않아요.",
+    "where": "결제는 Stripe의 안전한 결제 페이지에서 진행돼요. Hey QR은 카드 정보를 절대 볼 수 없어요.",
+    "receipt": "영수증은 계정의 결제 관리에서 구매 내역 옆에 있어요.",
+    "support": "결제 관련 문의는 <link>{email}</link>로 이메일을 보내 주세요.",
+    "terms": "이용약관",
+    "privacy": "개인정보처리방침",
+    "supportLink": "고객 지원"
+  },
+  "footer": {
+    "terms": "이용약관",
+    "privacy": "개인정보처리방침",
+    "support": "고객 지원",
+    "rights": "© {year} Hey QR",
+    "pricing": "요금",
+    "label": "푸터",
+    "tagline": "브랜드에 어울리고 언제나 스캔되는 QR 코드.",
+    "product": "제품",
+    "makeFor": "용도별 코드 만들기",
+    "company": "회사",
+    "smallPrint": "21개 언어 · Stripe 결제"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "QR 스튜디오 · 디자인과 미리보기는 무료",
+      "title": "나만의 느낌을 담은 QR 코드.",
+      "lead": "링크를 붙여 넣고 여기서 꾸며 보세요. 입력하는 대로 미리보기가 바뀌며, 디자인은 무료예요.",
+      "reveal": "좋은 일은 스캔 한 번이면 시작돼요."
+    },
+    "tool": {
+      "typesLabel": "코드로 무엇을 열까요?",
+      "more": "더 보기 +",
+      "url": "웹사이트 주소",
+      "urlPlaceholder": "yourname.com/portfolio",
+      "errors": {
+        "empty": "yourname.com처럼 웹 주소를 입력하세요.",
+        "spaces": "웹 주소에는 공백을 넣을 수 없어요."
+      },
+      "color": "코드 색상",
+      "inks": {
+        "ink": "잉크",
+        "violet": "바이올렛",
+        "forest": "포레스트",
+        "ocean": "오션",
+        "berry": "베리",
+        "clay": "클레이"
+      },
+      "caption": "캡션",
+      "captionDefault": "포트폴리오 보기",
+      "continue": "계속 디자인하기",
+      "priceNote": "디자인과 미리보기는 무료예요. PNG와 SVG 다운로드는 코드당 한 번 <b>{price}</b>예요.",
+      "seePricing": "요금 보기",
+      "stageTitle": "{type} · 실시간 미리보기",
+      "scans": "스캔됨",
+      "livePreview": "실시간 미리보기",
+      "realCode": "실제로 스캔되는 코드",
+      "previewLabel": "QR 코드 미리보기",
+      "otherType": "초안은 {type} 코드예요. 계속 디자인하기를 누르면 편집기에서 열려요.",
+      "stageCard": "명함 · 90 mm × 50 mm"
+    },
+    "how": {
+      "label": "이용 방법",
+      "content": {
+        "title": "콘텐츠 추가",
+        "text": "링크, 텍스트, Wi-Fi 정보 또는 연락처 카드."
+      },
+      "design": {
+        "title": "디자인하기",
+        "text": "레이아웃, 크기, 모양, 색상, 로고, 캡션을 실시간 스캔 확인과 함께."
+      },
+      "download": {
+        "title": "결제하고 다운로드",
+        "text": "Google로 로그인하고 한 번 결제하면, PNG나 SVG를 언제든 다시 다운로드할 수 있어요."
+      }
+    },
+    "models": {
+      "title": "인쇄 후에 링크를 바꿀 건가요?",
+      "lead": "이 질문 하나로 필요한 코드가 정해져요.",
+      "static": {
+        "badge": "아니요 · 정적 QR",
+        "text": "링크가 패턴에 직접 담겨요. 코드당 <b>{price}</b> 한 번 결제."
+      },
+      "dynamic": {
+        "badge": "예 · 동적 QR",
+        "text": "코드에 언제든 연결 주소를 바꿀 수 있는 영구 단축 링크가 담겨요. 최대 {limit}개 코드에 월 <b>{price}</b>."
+      }
+    },
+    "examples": {
+      "kicker": "예시",
+      "title": "인쇄와 화면 모두를 위해",
+      "lead": "실제로 스캔되는 레이아웃에서 시작해 나만의 코드로 만들어 보세요. 모든 예시는 색상, 모양, 프레임이 적용된 채로 편집기에서 열려요.",
+      "hint": "스크롤해서 더 보기",
+      "use": "{title} 예시로 시작하기",
+      "useShort": "사용",
+      "items": {
+        "businessCard": {
+          "title": "명함",
+          "kind": "웹사이트 · 정적"
+        },
+        "tableTent": {
+          "title": "카페 테이블 텐트",
+          "kind": "Wi-Fi · 정적"
+        },
+        "menuSticker": {
+          "title": "메뉴 스티커",
+          "kind": "웹사이트 · 동적"
+        },
+        "eventPoster": {
+          "title": "행사 포스터",
+          "kind": "웹사이트 · 동적"
+        },
+        "contactBadge": {
+          "title": "연락처 배지",
+          "kind": "연락처 · 정적"
+        },
+        "windowSticker": {
+          "title": "창문 스티커",
+          "kind": "웹사이트 · 정적"
+        }
+      }
+    },
+    "features": {
+      "kicker": "HeyQR을 선택하는 이유",
+      "title": "인쇄용 코드에 필요한 모든 것",
+      "lead": "방해되지 않는 디자인 도구, 그리고 결제 전에 결과물을 확인해 주는 스캐너.",
+      "scan": {
+        "title": "편집할 때마다 스캔 확인",
+        "text": "휴대폰 카메라처럼 코드를 읽고, 낮은 대비, 반전된 색상, 너무 많이 가리는 로고 등 무엇을 고쳐야 하는지 정확히 알려 드려요."
+      },
+      "style": {
+        "title": "원하는 모양과 색상",
+        "text": "8가지 모듈 모양, 5가지 모서리 스타일, 원하는 어떤 색상이든. 대비는 항상 확인돼요."
+      },
+      "logo": {
+        "title": "가운데에 로고나 아이콘",
+        "text": "로고를 업로드하거나 {icons}개 아이콘 중에서 고르세요. 코드가 계속 읽히도록 크기를 맞춰 드려요."
+      },
+      "frames": {
+        "title": "프레임과 캡션",
+        "text": "“스캔해서 메뉴 보기” 같은 행동 유도 문구가 들어간 {frames}가지 프레임, 또는 코드 안에 짧은 텍스트."
+      },
+      "files": {
+        "title": "인쇄용 파일",
+        "text": "실제 크기의 벡터 SVG와 선명한 PNG: 명함, 포스터, 테이블 텐트, 스티커."
+      },
+      "dynamic": {
+        "title": "인쇄 후에도 변경 가능",
+        "text": "동적 코드는 언제든 연결 주소를 바꿀 수 있는 단축 링크를 가리키며, 일별 스캔 수를 제공해요."
+      }
+    },
+    "types": {
+      "kicker": "9가지 콘텐츠 유형",
+      "title": "모든 종류의 코드를 하나의 스튜디오에서",
+      "lead": "코드로 열 항목을 고르세요. 양식은 해당 유형에 필요한 정보만 물어봐요.",
+      "website": {
+        "label": "웹사이트",
+        "desc": "페이지, 포트폴리오, 메뉴를 열어요."
+      },
+      "text": {
+        "label": "텍스트",
+        "desc": "메모, 영업시간, 안내문을 보여 줘요."
+      },
+      "wifi": {
+        "label": "Wi-Fi",
+        "desc": "손님이 입력 없이 네트워크에 연결해요."
+      },
+      "contact": {
+        "label": "연락처 카드",
+        "desc": "이름, 전화번호, 이메일을 한 번에 저장해요."
+      },
+      "email": {
+        "label": "이메일",
+        "desc": "바로 보낼 수 있는 이메일을 열어요."
+      },
+      "phone": {
+        "label": "전화 걸기",
+        "desc": "한 번 탭으로 전화를 걸어요."
+      },
+      "sms": {
+        "label": "문자 메시지",
+        "desc": "원하는 문구로 SMS를 시작해요."
+      },
+      "location": {
+        "label": "위치",
+        "desc": "지도 앱에서 장소를 열어요."
+      },
+      "event": {
+        "label": "일정",
+        "desc": "캘린더에 일정을 추가해요."
+      },
+      "menu": {
+        "label": "메뉴",
+        "desc": "휴대폰에 맞춘 페이지에 요리, 섹션, 가격을 담아요."
+      },
+      "coupon": {
+        "label": "쿠폰",
+        "desc": "프로모션 코드와 종료일이 있는 할인."
+      },
+      "social": {
+        "label": "소셜 링크",
+        "desc": "프로필과 링크를 한 페이지에."
+      },
+      "business": {
+        "label": "비즈니스",
+        "desc": "영업시간, 주소, 전화, 길찾기."
+      },
+      "apps": {
+        "label": "앱",
+        "desc": "App Store와 Google Play를 위한 하나의 코드."
+      },
+      "pdf": {
+        "label": "PDF 문서",
+        "desc": "어떤 휴대폰에서도 열리는 PDF를 업로드해요."
+      },
+      "product": {
+        "label": "제품",
+        "desc": "사진, 가격, 구매 버튼."
+      }
+    },
+    "faq": {
+      "kicker": "질문",
+      "title": "알아 두면 좋아요",
+      "lead": "결제, 파일, 스캔에 관한 짧은 답변.",
+      "items": {
+        "model": {
+          "q": "정적과 동적, 어떤 게 필요한가요?",
+          "a": "정적 코드는 콘텐츠가 패턴에 직접 담겨 있으며 {static} 한 번 결제로 영구히 작동해요. 동적 코드는 인쇄 후에도 다른 곳으로 연결할 수 있는 단축 링크를 담고 있으며, 최대 {limit}개 코드에 월 {dynamic}이에요."
+        },
+        "scan": {
+          "q": "로고와 색상을 넣어도 코드가 스캔되나요?",
+          "a": "디자인하는 동안 모든 변경 사항을 확인해요. 대비가 너무 낮거나, 색상이 반전되었거나, 로고가 너무 많이 가리면 알려 드리고 결제 전에 탭 한 번으로 고칠 수 있게 해 드려요."
+        },
+        "account": {
+          "q": "디자인하려면 계정이 필요한가요?",
+          "a": "아니요. 디자인과 미리보기는 무료예요. 다운로드할 때만 Google로 로그인하면 되고, 디자인도 그대로 이어져요."
+        },
+        "files": {
+          "q": "어떤 파일을 받나요?",
+          "a": "구매한 코드의 모든 레이아웃에 대해 화면과 프린터용 선명한 PNG, 인쇄소용 벡터 SVG를 받아요."
+        },
+        "again": {
+          "q": "나중에 파일을 다시 다운로드할 수 있나요?",
+          "a": "네. 코드는 내 QR 코드에 보관되며, 추가 비용 없이 어떤 형식으로든 다시 다운로드할 수 있어요."
+        }
+      }
+    },
+    "cta": {
+      "label": "시작하기",
+      "title": "첫 코드는 1분이면 충분해요.",
+      "lead": "디자인은 무료. 다운로드할 때만 {price}를 결제하세요.",
+      "pricing": "요금 보기"
+    },
+    "studio": {
+      "kicker": "내 스튜디오",
+      "welcome": "다시 오신 걸 환영해요, {name}님",
+      "summaryTop": "오늘 {name}이(가) {count, plural, other {#번}} 스캔됐어요. 만든 모든 것을 탭 한 번으로 열 수 있어요.",
+      "summary": "만든 모든 것을 탭 한 번으로 열 수 있어요: 파일, 링크, 스캔.",
+      "summaryEmpty": "첫 코드를 만들면 파일, 스캔과 함께 여기에 표시돼요.",
+      "billing": "요금제 및 결제 관리",
+      "library": "내 QR 코드 열기",
+      "kpi": {
+        "codes": "QR 코드",
+        "codesNote": "결제 {paid}개 · {drafts, plural, other {초안 #개}}",
+        "scans": "스캔 · 14일",
+        "scansNone": "아직 스캔 없음",
+        "scansDelta": "지난주 대비 {delta, number, ::sign-always percent}",
+        "dynamic": "동적 코드",
+        "dynamicNote": "요금제에 {left, plural, other {#개 자리}} 남음",
+        "dynamicMeter": "사용 중인 동적 코드",
+        "files": "준비된 파일",
+        "filesNote": "PNG 또는 SVG로 다운로드할 {count, plural, other {레이아웃}}"
+      },
+      "chart": {
+        "title": "스캔 · 최근 14일",
+        "sub": "모든 동적 코드 합계",
+        "empty": "동적 코드의 스캔이 여기에 표시돼요.",
+        "today": "오늘",
+        "label": "최근 14일간 동적 코드 전체의 일별 스캔 수"
+      },
+      "top": "인기 코드",
+      "topNote": "14일간 {count, plural, other {#회 스캔}} · {link}",
+      "topNone": "아직 동적 코드가 없어요",
+      "topNoneNote": "동적 코드는 모든 스캔을 집계해요.",
+      "recent": "최근 코드",
+      "seeAll": "전체 {count}개 보기",
+      "recentEmpty": "코드가 파일, 스캔과 함께 여기에 모여요.",
+      "createFirst": "첫 코드 만들기",
+      "open": "열기",
+      "openName": "{name} 열기",
+      "status": {
+        "dynamic": "동적 · 활성",
+        "paid": "결제됨",
+        "draft": "초안"
+      },
+      "metricScans": "{count, plural, other {#회 스캔}}",
+      "metricLayouts": "{count, plural, other {레이아웃 #개}}",
+      "metricFinish": "완료하고 다운로드",
+      "perksTitle": "계정에 포함된 혜택",
+      "perks": {
+        "again": "결제한 모든 레이아웃을 PNG 또는 SVG로 무료로 다시 다운로드",
+        "redirect": "다시 인쇄하지 않고 동적 코드의 연결 주소 변경",
+        "scans": "모든 동적 코드의 일별 스캔 수",
+        "drafts": "모든 기기에서 계정에 저장되는 초안",
+        "billing": "요금제 및 결제 관리에서 영수증, 요금제, 결제 수단 확인"
+      },
+      "loading": "스튜디오를 불러오는 중",
+      "trial": "무료 체험 · {days, plural, other {#일}} 남음"
+    },
+    "workspace": {
+      "kicker": "내 QR 코드",
+      "title": "모든 QR 코드를 한곳에.",
+      "lead": "로그인하면 나만의 비공개 작업 공간이 생겨요. 디자인한 모든 코드는 레이아웃과 파일, 그리고 동적 코드의 경우 스캔 기록까지 보관돼요.",
+      "points": {
+        "layouts": "코드별 이름 있는 레이아웃: 명함, 포스터, 웹사이트",
+        "files": "언제든 PNG와 SVG 다시 다운로드",
+        "edit": "인쇄 후에도 동적 코드의 연결 주소 변경",
+        "scans": "동적 코드의 일별 스캔 수"
+      },
+      "create": "QR 코드 만들기",
+      "signIn": "로그인",
+      "sampleOwner": "샘플 작업 공간",
+      "sampleBadge": "샘플",
+      "sampleNote": "설명을 위한 샘플 코드와 스캔이에요. 로그인하면 내 코드를 볼 수 있어요.",
+      "tabs": {
+        "all": "전체 {count}",
+        "static": "정적 {count}",
+        "dynamic": "동적 {count}"
+      },
+      "models": {
+        "static": "정적",
+        "dynamic": "동적"
+      },
+      "samples": {
+        "portfolio": {
+          "name": "포트폴리오 카드",
+          "meta": "레이아웃 3개 · 구매함"
+        },
+        "menu": {
+          "name": "카페 메뉴",
+          "meta": "테이블 텐트 · 214회 스캔"
+        },
+        "wifi": {
+          "name": "게스트 Wi-Fi",
+          "meta": "초안"
+        }
+      },
+      "scans": "스캔 분석 · 최근 14일",
+      "startTrial": "7일 무료 체험 시작",
+      "trialNote": "Starter 체험 · 카드 불필요 · 자동 결제 없음"
+    },
+    "printPack": {
+      "kicker": "Print Pack",
+      "title": "화면에서 인쇄소까지.",
+      "lead": "어떤 QR에든 Print Pack을 추가하고, 정확한 크기와 올바른 색상, 선명하게 유지되는 파일까지 한 번의 다운로드로 인쇄소에 전달하세요.",
+      "cardTag": "명함 · 90 × 50 mm",
+      "labelTag": "포장 라벨 · 50 × 62 mm",
+      "cardLabel": "명함 인쇄 레이아웃",
+      "labelLabel": "포장 라벨 인쇄 레이아웃",
+      "panelKicker": "내보내기 · Print Pack",
+      "panelTitle": "바로 인쇄할 수 있는 파일 3개",
+      "perQr": "QR당",
+      "files": {
+        "pdf": "벡터 인쇄용 PDF",
+        "pdfSub": "어떤 크기에서도 선명하며, 3 mm 재단 여백과 재단선, sRGB 포함.",
+        "svg": "편집 가능한 SVG",
+        "svgSub": "Illustrator, Figma, Inkscape에서 열어 내 아트워크에 QR을 배치하세요.",
+        "spec": "색상 및 크기 사양",
+        "specSub": "완성 크기, QR 크기, 여백 영역, 모든 색상 값을 담은 한 페이지."
+      },
+      "addNote": "결제 시 켜기 전까지는 꺼져 있어요. +{price}에 추가하거나, 나중에 QR 상세 정보에서 추가하세요.",
+      "single": "단일 QR 코드",
+      "withPack": "Print Pack 포함",
+      "details": "Print Pack 자세히 보기",
+      "preview": "인쇄 미리보기 열기"
+    },
+    "explore": {
+      "kicker": "QR 유형 살펴보기",
+      "title": "모든 종류의 코드를 하나의 스튜디오에서",
+      "lead": "유형을 골라 스캔 후 휴대폰에 무엇이 표시되는지 확인하세요.",
+      "tabs": "QR 유형",
+      "legend": "호스팅 페이지: HeyQR이 페이지를 온라인으로 유지하며, 인쇄 후에도 편집할 수 있어요",
+      "hostedBadge": "호스팅 페이지 · 동적 QR",
+      "websiteBadge": "정적 또는 동적 QR",
+      "directBadge": "바로 열림 · 정적 QR",
+      "hostedExtra": "인쇄 후에도 페이지 편집 가능. 코드는 그대로예요",
+      "directExtra": "디자인과 미리보기는 무료",
+      "hostedPrice": "호스팅 페이지에는 동적 요금제가 필요해요: Starter 월 {price}, 7일 무료 체험.",
+      "directPrice": "디자인은 무료. 다운로드할 때 코드당 {price}.",
+      "whatYouGet": "제공 내용",
+      "allTypes": "16가지 유형 모두 보기",
+      "types": {
+        "menu": {
+          "short": "요리와 가격",
+          "use": "메뉴 전체를 테이블 위에 올려 두세요. 손님은 스캔해서 섹션별로 둘러보고, 인쇄된 메뉴판을 기다리지 않고 가격을 확인해요.",
+          "cta": "메뉴 QR 만들기",
+          "points": {
+            "a": "섹션, 요리, 가격, 선택 사항인 사진",
+            "b": "언제든 가격 변경, 인쇄된 코드는 계속 작동"
+          }
+        },
+        "coupon": {
+          "short": "고객이 받는 할인",
+          "use": "고객이 결제 시 복사하거나 계산대에서 보여 주는 코드로 스캔을 매출로 바꿔 보세요.",
+          "cta": "쿠폰 QR 만들기",
+          "points": {
+            "a": "프로모션 코드, 종료일, 이용 조건",
+            "b": "만료 후에는 ‘행사 종료’ 페이지를 명확하게 표시"
+          }
+        },
+        "social": {
+          "short": "모든 프로필을 한곳에",
+          "use": "공유하는 모든 프로필을 위한 하나의 코드: 포트폴리오, 소셜 계정 등을 원하는 순서로.",
+          "cta": "소셜 링크 QR 만들기",
+          "points": {
+            "a": "사진, 이름, 짧은 소개",
+            "b": "언제든 링크 순서 변경"
+          }
+        },
+        "business": {
+          "short": "영업시간, 전화, 길찾기",
+          "use": "방문자가 연락하는 데 필요한 모든 것: 영업시간, 전화 버튼, 길찾기, 웹사이트.",
+          "cta": "비즈니스 QR 만들기",
+          "points": {
+            "a": "해당 정보를 추가하면 전화, 길찾기, 웹사이트 버튼이 표시돼요",
+            "b": "오늘 영업 중인지 표시"
+          }
+        },
+        "apps": {
+          "short": "두 앱 스토어 모두",
+          "use": "하나의 인쇄된 코드로 iPhone은 App Store로, Android 휴대폰은 Google Play로 보내세요.",
+          "cta": "앱 QR 만들기",
+          "points": {
+            "a": "스토어 하나만 또는 둘 다 지원",
+            "b": "컴퓨터에서는 두 링크와 스캔용 코드가 있는 페이지 표시"
+          }
+        },
+        "pdf": {
+          "short": "문서 공유",
+          "use": "브로슈어, 일정표, 설명서: PDF를 업로드하면 탭 한 번으로 휴대폰에서 열려요.",
+          "cta": "PDF QR 만들기",
+          "points": {
+            "a": "다시 인쇄하지 않고 나중에 파일 교체",
+            "b": "PDF 열기 및 다운로드 버튼"
+          }
+        },
+        "product": {
+          "short": "제품 페이지",
+          "use": "포장이나 진열대에서 바로 사진, 가격, 구매 버튼이 있는 제품을 보여 주세요.",
+          "cta": "제품 QR 만들기",
+          "points": {
+            "a": "사진 최대 5장, 가격은 선택 사항",
+            "b": "버튼 문구: 지금 구매, 제품 보기, 지금 주문"
+          }
+        },
+        "website": {
+          "short": "웹 페이지 열기",
+          "use": "포트폴리오, 쇼핑몰, 예약 양식 등 어떤 페이지로든 안내하세요.",
+          "cta": "웹사이트 QR 만들기",
+          "points": {
+            "a": "정적, 또는 링크가 바뀔 수 있다면 동적",
+            "b": "디자인하는 동안 실시간 스캔 확인"
+          }
+        },
+        "wifi": {
+          "short": "Wi-Fi 연결",
+          "use": "손님이 카메라를 대기만 하면 네트워크에 연결돼요. 비밀번호를 불러 줄 필요가 없어요.",
+          "cta": "Wi-Fi QR 만들기",
+          "points": {
+            "a": "WPA, WEP 또는 개방형 네트워크",
+            "b": "오프라인에서도 작동: 정보가 코드에 담겨 있어요"
+          }
+        },
+        "contact": {
+          "short": "연락처 저장",
+          "use": "이름, 전화번호, 이메일을 상대방 연락처에 바로 저장하는 명함.",
+          "cta": "연락처 QR 만들기",
+          "points": {
+            "a": "iPhone과 Android에서 작동",
+            "b": "앱 불필요"
+          }
+        }
+      }
+    }
+  },
+  "pricing": {
+    "title": "요금",
+    "head": "코드 하나는 한 번만 결제하고, 변경 가능한 코드는 월 단위로 이용하세요.",
+    "lead": "디자인, 미리보기, 스캔 확인은 언제나 무료예요. 다운로드할 때만 결제해요.",
+    "currency": {
+      "label": "가격 표시 통화",
+      "unavailable": "{chosen}(으)로는 아직 가격을 표시할 수 없어요. HeyQR은 {charged}(으)로 청구하며, 금액은 은행에서 환산해요. 영수증에는 결제한 {charged} 금액이 표시돼요."
+    },
+    "once": {
+      "title": "일회성",
+      "sub": "구독 없음. 잠금 해제한 코드는 계속 내 것이에요."
+    },
+    "monthly": {
+      "title": "월간",
+      "sub": "인쇄 후에도 변경할 수 있는 동적 QR 코드용이에요. 언제든 해지할 수 있어요."
+    },
+    "free": {
+      "name": "무료",
+      "price": "{price}",
+      "q": "비용을 쓰기 전에 코드를 디자인하고 테스트해 보세요.",
+      "points": ["모든 레이아웃, 모양, 색상, 로고, 캡션", "변경할 때마다 실시간 스캔 확인", "초안은 이 브라우저에 저장돼요"],
+      "cta": "디자인 시작하기"
+    },
+    "single": {
+      "name": "단일 QR 코드",
+      "price": "{price}",
+      "per": "1회",
+      "q": "모든 다운로드가 포함된 정적 QR 하나.",
+      "points": ["모든 레이아웃의 PNG 및 SVG", "mm 단위 인쇄 크기와 px 단위 화면 크기", "언제든, 평생 다시 다운로드"],
+      "cta": "QR 만들기"
+    },
+    "dynamic": {
+      "name": "동적",
+      "price": "{price}",
+      "per": "월",
+      "q": "인쇄 후에도 어디로든 연결할 수 있는 영구 단축 링크.",
+      "live": "활성 동적 코드",
+      "liveCount": "동시에 최대 {limit}개 활성",
+      "liveHint": "월간 허용량이 아니라 현재 활성 개수예요. 코드를 일시 중지하거나 삭제하면 자리가 비어요.",
+      "points": ["연결 주소는 언제든 변경, 인쇄된 코드는 그대로", "최근 14일간 일별 스캔 수", "모든 레이아웃의 PNG 및 SVG"],
+      "cta": "동적 QR 만들기"
+    },
+    "compare": {
+      "title": "비교",
+      "feature": "제공 내용",
+      "free": "무료",
+      "single": "단일 QR 코드",
+      "dynamic": "동적",
+      "yes": "포함",
+      "no": "미포함",
+      "rows": {
+        "design": "디자인, 미리보기, 스캔 확인",
+        "download": "PNG 및 SVG 다운로드",
+        "repeat": "재다운로드",
+        "change": "코드 연결 주소 변경",
+        "analytics": "스캔 분석",
+        "codes": "코드"
+      },
+      "codesSingle": "구매당 1개",
+      "codesDynamic": "{limit}개 활성",
+      "codesFree": "초안 무제한"
+    },
+    "tax": "가격은 세금 별도예요. Stripe가 결제 시 세금을 추가하며, 영수증에 최종 금액이 표시돼요.",
+    "trial": {
+      "action": "7일 무료 체험 시작",
+      "note": "체험: 카드 불필요, 자동 결제 없음. 실제 단축 링크가 있는 테스트용 동적 QR 1개."
+    }
+  },
+  "auth": {
+    "title": "Hey QR에 로그인",
+    "lead": "디자인이 계정에 저장되어 결제 후 다운로드할 수 있어요.",
+    "google": "Google로 계속하기",
+    "legal": "계속하면 이용약관 및 개인정보처리방침에 동의하게 돼요.",
+    "failed": "로그인에 실패했어요. 다시 시도해 주세요.",
+    "canceled": {
+      "draft": "Google 로그인이 취소됐어요. 디자인은 이 브라우저에 그대로 저장되어 있어요. 다시 시도하려면 Google로 계속하세요.",
+      "plain": "Google 로그인이 취소됐어요. 다시 시도하려면 Google로 계속하세요."
+    },
+    "incomplete": {
+      "draft": "Google 로그인이 완료되지 않았어요. 디자인은 이 브라우저에 그대로 저장되어 있어요. 다시 시도하려면 Google로 계속하세요.",
+      "plain": "Google 로그인이 완료되지 않았어요. 다시 시도하려면 Google로 계속하세요."
+    },
+    "backToDesign": "내 디자인으로 돌아가기"
+  },
+  "contentTypes": {
+    "website": "웹사이트",
+    "text": "텍스트",
+    "wifi": "Wi-Fi",
+    "contact": "연락처",
+    "email": "이메일",
+    "phone": "전화",
+    "sms": "문자(SMS)",
+    "location": "위치",
+    "event": "일정",
+    "menu": "메뉴",
+    "coupon": "쿠폰",
+    "social": "소셜 링크",
+    "business": "비즈니스",
+    "apps": "앱",
+    "pdf": "PDF 문서",
+    "product": "제품"
+  },
+  "fields": {
+    "url": "웹사이트 주소",
+    "text": "텍스트",
+    "ssid": "네트워크 이름",
+    "security": "보안",
+    "password": "비밀번호",
+    "hidden": "숨겨진 네트워크예요",
+    "firstName": "이름",
+    "lastName": "성",
+    "title": "직함",
+    "company": "회사",
+    "phone": "전화",
+    "email": "이메일",
+    "website": "웹사이트",
+    "to": "이메일 주소",
+    "subject": "제목",
+    "body": "메시지",
+    "number": "전화번호",
+    "message": "메시지",
+    "name": "장소 이름",
+    "address": "주소",
+    "eventTitle": "일정 이름",
+    "start": "시작",
+    "end": "종료",
+    "place": "장소",
+    "securityNone": "비밀번호 없음",
+    "securityWpa": "WPA/WPA2/WPA3",
+    "date": "날짜"
+  },
+  "editor": {
+    "openLibrary": "내 QR 코드 열기",
+    "title": "QR 코드 만들기",
+    "steps": {
+      "content": "콘텐츠",
+      "design": "디자인",
+      "frame": "프레임",
+      "type": "유형"
+    },
+    "type": "코드로 무엇을 열까요?",
+    "model": {
+      "label": "코드 유형",
+      "static": "정적",
+      "staticHint": "한 번 결제, 영구 사용",
+      "dynamic": "동적",
+      "dynamicHint": "인쇄 후에도 링크 변경 가능"
+    },
+    "name": "이름(나만 볼 수 있어요)",
+    "namePlaceholder": "포트폴리오 카드",
+    "pattern": "모듈",
+    "eyeFrame": "모서리 테두리",
+    "eyeBall": "모서리 중앙",
+    "colors": "색상",
+    "fg": "모듈",
+    "bg": "배경",
+    "logo": "중앙",
+    "logoNone": "없음",
+    "logoUpload": "로고 업로드",
+    "logoSize": "로고 크기",
+    "layout": "레이아웃",
+    "presets": {
+      "qr": "QR만",
+      "caption": "QR + 캡션",
+      "vertical": "세로 카드",
+      "horizontal": "가로 카드",
+      "frame": "프레임"
+    },
+    "frameStyle": "프레임 스타일",
+    "caption": "캡션",
+    "captionPlaceholder": "스캔해 주세요",
+    "preview": "미리보기",
+    "previewNote": "워터마크가 있는 미리보기예요. 원본 크기 파일은 결제 후 생성돼요.",
+    "download": "다운로드",
+    "saving": "저장 중…",
+    "draftRestored": "마지막 디자인을 복원했어요.",
+    "scanOk": "스캔 확인됨",
+    "scanFix": "수정",
+    "shapes": {
+      "square": "사각형",
+      "rounded": "둥근 모서리",
+      "dot": "점",
+      "diamond": "다이아몬드",
+      "leaf": "잎",
+      "fluid": "유선형",
+      "vbars": "세로",
+      "hbars": "가로",
+      "cushion": "부드럽게",
+      "circle": "원형"
+    },
+    "frames": {
+      "bar": "하단 라벨",
+      "tab": "상단 탭",
+      "bubble": "말풍선",
+      "pill": "알약형 라벨",
+      "corners": "뷰파인더",
+      "circle": "배지",
+      "ticket": "티켓",
+      "phone": "휴대폰"
+    },
+    "icons": {
+      "globe": "웹사이트",
+      "link": "링크",
+      "wifi": "Wi-Fi",
+      "phone": "전화",
+      "mail": "이메일",
+      "message": "메시지",
+      "pin": "위치",
+      "calendar": "캘린더",
+      "clock": "영업시간",
+      "user": "사람",
+      "users": "팀",
+      "briefcase": "업무",
+      "home": "홈",
+      "bag": "쇼핑",
+      "cart": "장바구니",
+      "coffee": "커피",
+      "utensils": "메뉴",
+      "wine": "바",
+      "music": "음악",
+      "play": "동영상",
+      "camera": "사진",
+      "image": "갤러리",
+      "heart": "좋아요",
+      "star": "리뷰",
+      "gift": "선물",
+      "ticket": "티켓",
+      "tag": "가격",
+      "percent": "할인",
+      "card": "결제",
+      "download": "다운로드",
+      "file": "문서",
+      "book": "가이드",
+      "leaf": "친환경",
+      "sun": "야외",
+      "bike": "자전거",
+      "plane": "여행",
+      "at": "소셜",
+      "smile": "피드백"
+    },
+    "back": "홈",
+    "stepsLabel": "QR 코드 만들기",
+    "settings": "디자인 설정",
+    "scanFailed": "스캔되지 않을 수 있음",
+    "priceOnce": "{price} 1회",
+    "pricePerMonth": "{price} / 월",
+    "previewFree": "미리보기 무료 · 다운로드할 때 결제",
+    "draftUnreadable": "마지막 디자인을 열 수 없어서 새로 시작해요. 이전 디자인은 이 브라우저에 보관돼 있어요.",
+    "mode": {
+      "question": "인쇄 후에 링크가 바뀔 수 있나요?",
+      "lead": "지금 결정하세요. 인쇄된 정적 코드는 나중에 다른 곳으로 연결할 수 없어요.",
+      "static": {
+        "eyebrow": "아니요, 그대로예요",
+        "title": "정적 QR",
+        "text": "콘텐츠가 패턴에 직접 담겨요. 바꾸려면 새 코드가 필요해요. 한 번 결제: {price}."
+      },
+      "dynamic": {
+        "eyebrow": "네, 바꿀 수도 있어요",
+        "title": "동적 QR",
+        "text": "코드에 영구 단축 링크가 담겨요. 연결 주소를 바꾸고 일별 스캔 수를 확인할 수 있어요. 월 {price}."
+      },
+      "unavailable": "{type} 코드는 항상 정적이에요. 콘텐츠가 패턴에 바로 담기기 때문이에요. 동적은 웹사이트 링크용이에요.",
+      "switched": "{type} 코드는 정적이라서 이 코드가 정적으로 바뀌었어요. 동적은 웹사이트 링크용이에요.",
+      "adjusted": "초안이 동적이었지만 웹사이트 링크만 동적으로 만들 수 있어서 정적으로 바뀌었어요. 콘텐츠와 디자인은 그대로예요."
+    },
+    "backTo": {
+      "home": "홈",
+      "type": "유형",
+      "content": "콘텐츠"
+    },
+    "continue": "계속",
+    "export": "내보내기",
+    "previewFrom": "미리보기 무료 · {price}부터 다운로드",
+    "optional": "선택 사항",
+    "frameGroup": {
+      "title": "코드 주변 프레임",
+      "count": "옵션 {count}개",
+      "none": "프레임 없음",
+      "text": "프레임 텍스트",
+      "textHint": "텍스트 크기는 프레임에 맞게 자동 조정돼요. 글꼴과 굵기는 캡션에서 설정해요.",
+      "quick": "빠른 텍스트",
+      "phrases": {
+        "scanMe": "스캔해 주세요",
+        "callMe": "전화 주세요",
+        "menu": "메뉴",
+        "wifi": "Wi-Fi",
+        "payHere": "여기서 결제",
+        "reviewUs": "리뷰 남기기",
+        "followUs": "팔로우하기",
+        "bookNow": "지금 예약"
+      },
+      "color": "프레임 색상",
+      "textColor": "텍스트 색상",
+      "presets": "색상 프리셋",
+      "presetsHint": "프레임 · 코드 · 배경",
+      "preset": "프레임 {frame}, 코드 {code}, 배경 {bg}",
+      "white": "흰색",
+      "graphite": "그래파이트",
+      "violetUi": "보라색"
+    },
+    "typeStep": {
+      "title": "코드로 무엇을 열까요?",
+      "lead": "모든 기능을 무료로 써 볼 수 있어요. 완성된 파일을 다운로드할 때만 결제해요.",
+      "groupLabel": "QR 유형",
+      "example": "예: {example}",
+      "next": "다음: 콘텐츠 추가",
+      "examples": {
+        "website": "anareyes.studio/portfolio",
+        "text": "“벨을 두 번 눌러 주세요”",
+        "wifi": "Reyes Studio Guest",
+        "contact": "Ana Reyes · 디자이너",
+        "email": "hello@reyes.studio",
+        "phone": "+1 415 555 0142",
+        "sms": "“참석할게요”",
+        "location": "21 Pier St, San Francisco",
+        "event": "봄 전시회 · 12월 5일",
+        "menu": "Little Fern Café 메뉴",
+        "coupon": "도예 수업 20% 할인",
+        "social": "@ana.makes, 포트폴리오, YouTube",
+        "business": "Reyes Ceramics Studio",
+        "apps": "Fern Rewards 앱",
+        "pdf": "봄 학기 수업 일정",
+        "product": "얼룩무늬 석기 머그잔"
+      },
+      "directGroup": "코드에서 바로 열기",
+      "directGroupLabel": "바로 열리는 QR 유형",
+      "hostedGroup": "호스팅 페이지",
+      "hostedNew": "신규",
+      "hostedLead": "HeyQR이 이 유형의 모바일 페이지를 호스팅하고, 코드에는 동적 단축 링크가 담겨서 인쇄 후에도 페이지를 수정할 수 있어요. 동적 요금제가 필요해요: Starter 월 {starter} 또는 Studio 월 {studio}, 7일 무료 체험 포함.",
+      "hostedSummary": "{type} · 호스팅 페이지 · 동적"
+    },
+    "contentStep": {
+      "titles": {
+        "website": "어떤 페이지를 열까요?",
+        "text": "사람들이 어떤 내용을 읽게 할까요?",
+        "wifi": "손님이 어떤 네트워크에 연결할까요?",
+        "contact": "어떤 연락처를 저장하게 할까요?",
+        "email": "이메일을 누구에게 보낼까요?",
+        "phone": "어떤 번호로 전화할까요?",
+        "sms": "문자 메시지를 누가 받을까요?",
+        "location": "어떤 장소를 열까요?",
+        "event": "어떤 이벤트인가요?",
+        "menu": "메뉴에 무엇이 있나요?",
+        "coupon": "어떤 혜택인가요?",
+        "social": "어떤 링크를 보여 줄까요?",
+        "business": "사람들이 어떻게 연락할 수 있나요?",
+        "apps": "앱을 어디서 받을 수 있나요?",
+        "pdf": "어떤 문서를 열까요?",
+        "product": "어떤 제품을 보여 줄까요?"
+      },
+      "subs": {
+        "website": "전체 주소를 붙여 넣으세요. 스캔 후 사람들에게 보이는 화면을 확인할 수 있어요.",
+        "text": "스캔하면 휴대폰에 일반 텍스트가 바로 표시돼요.",
+        "wifi": "스캔하면 휴대폰이 네트워크에 연결돼요. 입력할 필요가 없어요.",
+        "contact": "스캔하면 휴대폰에서 이 연락처를 저장하도록 안내해요.",
+        "email": "스캔하면 주소, 제목, 내용이 채워진 새 이메일이 열려요.",
+        "phone": "스캔하면 이 번호로 전화를 걸 수 있어요. 입력할 필요가 없어요.",
+        "sms": "스캔하면 바로 보낼 수 있는 문자 메시지가 열려요.",
+        "location": "스캔하면 휴대폰의 지도 앱에서 장소가 열려요.",
+        "event": "스캔하면 캘린더에 이벤트를 추가하도록 안내해요.",
+        "menu": "섹션과 요리를 추가하세요. 손님은 스캔 후 휴대폰에 맞는 메뉴를 볼 수 있어요.",
+        "coupon": "사람들이 할인 내용을 보고, 코드를 복사해 종료 전에 사용할 수 있어요.",
+        "social": "사진, 짧은 소개, 링크를 원하는 순서로 담은 하나의 페이지예요.",
+        "business": "전화, 길찾기, 웹사이트 정보를 추가하면 해당 버튼이 표시돼요.",
+        "apps": "휴대폰은 자체 스토어로 바로 이동해요. 다른 기기에서는 두 링크가 모두 보여요.",
+        "pdf": "PDF를 업로드하세요. 사람들이 한 번 탭으로 열거나 다운로드할 수 있어요.",
+        "product": "사진, 가격, 그리고 구매하거나 자세히 볼 수 있는 명확한 버튼 하나."
+      },
+      "nameLabel": "내 QR 코드에 표시될 이름",
+      "stepOf": "3단계 중 2단계",
+      "kept": "뒤로 가도 입력한 내용은 유지돼요.",
+      "continue": "디자인으로 계속",
+      "errorsOne": "계속하려면 강조 표시된 항목을 수정하세요. 나머지는 모두 저장돼 있어요.",
+      "errorsMany": "계속하려면 강조 표시된 {count}개 항목을 수정하세요. 나머지는 모두 저장돼 있어요.",
+      "back": "뒤로",
+      "urlHint": "이 주소는 코드에 직접 담겨요. 나중에 인쇄된 코드의 연결 주소를 바꾸려면 이전 단계에서 동적을 선택하세요.",
+      "urlHintDynamic": "코드에는 영구 단축 링크가 담겨요. 여기가 사람들이 이동할 곳이며, 인쇄 후에도 바꿀 수 있어요.",
+      "nameHint": "이 이름은 나만 볼 수 있어요.",
+      "namePlaceholderType": "{type} QR"
+    },
+    "errors": {
+      "urlEmpty": "yourname.com처럼 웹 주소를 입력하세요.",
+      "urlSpaces": "웹 주소에는 공백을 넣을 수 없어요.",
+      "urlInvalid": "주소를 확인하세요. yourname.com처럼 도메인이 필요해요.",
+      "text": "스캔 후 사람들에게 보여 줄 텍스트를 입력하세요.",
+      "ssid": "휴대폰에 표시되는 그대로 네트워크 이름을 입력하세요.",
+      "password": "Wi-Fi 비밀번호를 입력하거나 ‘비밀번호 없음’을 선택하세요.",
+      "passwordShort": "WPA 비밀번호는 8자 이상이어야 해요.",
+      "contactName": "이름이나 성 중 하나 이상을 입력하세요.",
+      "phone": "숫자, 공백, 그리고 국가 번호용 +(선택)를 사용하세요.",
+      "email": "이메일 주소를 확인하세요. ana@studio.com처럼 이름, @, 도메인이 필요해요.",
+      "emailTo": "이메일을 받을 주소를 입력하세요.",
+      "emailInvalid": "주소를 확인하세요. 이름, @, 도메인이 필요해요.",
+      "phoneNumber": "+1 415 555 0142처럼 국가 번호를 포함한 전화번호를 입력하세요.",
+      "smsTo": "메시지를 받을 번호를 입력하세요.",
+      "address": "지도 앱에서 열 주소를 입력하세요.",
+      "eventTitle": "이벤트 이름을 입력하세요.",
+      "eventStart": "날짜를 선택하세요."
+    },
+    "afterScanning": {
+      "label": "스캔 후",
+      "toggleHint": "사람들의 휴대폰에 보이는 화면 확인",
+      "caption": "스캔 후 사람들에게 보이는 화면",
+      "websitePlaceholder": "내 웹 페이지",
+      "dynamicNote": "먼저 단축 링크가 열린 후 여기로 이동해요.",
+      "textPlaceholder": "텍스트가 여기에 표시돼요.",
+      "wifiPlaceholder": "네트워크에 연결할까요?",
+      "security": "보안",
+      "open": "개방형 네트워크",
+      "password": "비밀번호",
+      "join": "네트워크 연결",
+      "contactPlaceholder": "새 연락처",
+      "phone": "전화",
+      "email": "이메일",
+      "company": "회사",
+      "save": "연락처에 추가",
+      "emailPlaceholder": "새 이메일",
+      "subject": "제목",
+      "compose": "이메일 작성",
+      "phonePlaceholder": "전화번호",
+      "call": "전화 걸기",
+      "message": "메시지",
+      "text": "문자 보내기",
+      "locationPlaceholder": "장소",
+      "address": "주소",
+      "openMaps": "지도에서 열기",
+      "eventPlaceholder": "새 이벤트",
+      "place": "장소",
+      "addToCalendar": "캘린더에 추가",
+      "wifiKicker": "Wi-Fi 네트워크 연결",
+      "website": "웹사이트",
+      "textKicker": "스캔한 텍스트",
+      "loading": "미리보기 불러오는 중",
+      "date": "날짜",
+      "addEvent": "이벤트 추가"
+    },
+    "passwordShow": "보기",
+    "passwordHide": "숨기기",
+    "wifiPasswordHint": "미리보기에서는 비밀번호가 숨겨져요. 비밀번호는 코드 자체에 저장되므로 스캔하는 누구나 연결할 수 있어요.",
+    "tooLong": {
+      "title": "QR 코드에 담기엔 너무 길어요",
+      "text": "QR 코드에 담을 수 있는 양보다 약 {over}% 많아요. 콘텐츠를 줄이면 코드가 바로 다시 나타나요. 입력한 내용은 사라지지 않아요.",
+      "centerHint": "코드 중앙의 로고나 캡션은 한도를 낮춰요. 제거하면 공간이 늘어나요.",
+      "detail": "{bytes} / {max}바이트",
+      "edit": "콘텐츠 편집",
+      "badge": "너무 김",
+      "preview": "QR 코드가 표시되지 않음: 콘텐츠가 너무 길어요"
+    },
+    "eyeColor": "모서리 테두리",
+    "eyeInColor": "모서리 중앙",
+    "resetColors": "색상 초기화",
+    "colorInvalid": "#1F4D3A처럼 HEX 색상을 사용하세요. #과 0–9, A–F로 된 6자리 문자예요.",
+    "size": {
+      "title": "크기",
+      "unitHint": "화면, 슬라이드, 웹용이에요. 1단위 = 1× 기준 1픽셀.",
+      "qr": "QR 코드 크기",
+      "qrSlider": "QR 코드 크기 슬라이더",
+      "clamped": "이 코드는 레이아웃에 맞지 않아서 들어갈 수 있는 최대 크기인 {shown} {unit}(으)로 그려져요. 레이아웃을 키우거나 코드를 줄이세요.",
+      "layout": "레이아웃 크기",
+      "width": "너비",
+      "height": "높이",
+      "locked": "‘QR만’과 ‘프레임’에서는 레이아웃이 코드 크기를 따라요. 크기를 따로 정하려면 ‘QR + 캡션’이나 카드를 선택하세요.",
+      "presets": {
+        "square": "정사각형 1080",
+        "story": "스토리 1080×1920",
+        "slide": "슬라이드 1920×1080",
+        "card": "명함 90×50",
+        "a6": "A6 105×148",
+        "sticker": "스티커 50×62"
+      },
+      "invalid": "{min}~{max} {unit} 사이의 정수를 입력하세요.",
+      "units": "단위",
+      "unitMm": "인쇄 · mm",
+      "unitPx": "화면 · px",
+      "unitHintMm": "인쇄용이에요. 파일은 300, 600 또는 1200dpi로 내보내져요.",
+      "invalidMm": "{min}~{max}mm 사이의 숫자를 소수점 한 자리까지 입력하세요.",
+      "qrHint": "여백 포함",
+      "reach": "최대 약 {cm}cm 거리에서 스캔돼요(10 : 1 규칙). 코드가 클수록 더 멀리서 스캔돼요.",
+      "viewNoteMm": "캔버스는 화면에 맞게 축소돼 있어요. 캔버스 위의 <b>실제 크기</b>를 선택하면 인쇄 크기로 볼 수 있어요. 내보내기: <b>PNG {width} × {height} px</b>.",
+      "viewNotePx": "캔버스는 화면에 맞게 축소돼 있어요. 캔버스 위의 <b>실제 크기</b>를 선택하면 1×로 볼 수 있어요. 내보내기: <b>PNG {width} × {height} px</b>(2×)."
+    },
+    "updatingPreview": "미리보기 업데이트 중…",
+    "captionField": {
+      "label": "캡션 텍스트",
+      "hint": "Enter를 누르면 두 번째 줄을 쓸 수 있어요. 비워 두면 캡션이 숨겨져요.",
+      "tooLong": "최대 {max}자까지 쓸 수 있어요. {over, plural, other {#자}}를 지우세요. 미리보기에는 마지막으로 들어맞은 캡션이 유지돼요.",
+      "tooManyLines": "최대 {max}줄까지 쓸 수 있어요. 미리보기에는 마지막으로 들어맞은 캡션이 유지돼요.",
+      "count": "{count} / {max}자",
+      "unsupported": "{font} 글꼴은 {chars}을(를) 표시할 수 없어요. 다른 글꼴을 선택하거나 {count, plural, other {이 문자}}를 바꾸세요. 그대로 두면 파일에서 {count, plural, other {해당 문자}}가 빈 상자로 표시돼요."
+    },
+    "captionFont": {
+      "title": "글꼴",
+      "hint": "QR에 쓸 글꼴이에요. HeyQR 인터페이스는 항상 DM Sans를 사용해요.",
+      "weight": "굵기",
+      "weights": {
+        "400": "보통",
+        "500": "중간",
+        "700": "굵게"
+      },
+      "original": "DM Sans(기존)",
+      "originalHint": "이 레이아웃은 글꼴이 추가되기 전에 만들어졌어요. DM Sans는 라틴 문자만 지원하므로 키릴 문자에는 다른 글꼴을 선택하세요."
+    },
+    "captionSize": {
+      "label": "크기",
+      "invalid": "{min}~{max} {unit}을(를) 소수점 한 자리까지 입력하세요. 미리보기에는 마지막으로 유효한 크기가 유지돼요.",
+      "fitted": "캡션이 레이아웃에 맞도록 {size} {unit}(으)로 그려졌어요."
+    },
+    "edit": {
+      "title": "디자인 편집 · {layout}",
+      "back": "코드로 돌아가기",
+      "save": "변경 사항 저장",
+      "saved": "디자인이 저장됐어요",
+      "restored": "다시 로그인하기 전에 저장하지 않은 변경 사항을 보관해 두었어요. 유지하려면 저장하세요.",
+      "discardRestored": "삭제",
+      "unsaved": "저장되지 않은 변경 사항",
+      "retry": "다시 시도",
+      "failed": "디자인을 저장하지 못했어요. 변경 사항은 그대로 남아 있어요.",
+      "notFound": "이 코드나 레이아웃이 더 이상 존재하지 않아요.",
+      "hint": "변경 사항은 이 레이아웃에만 적용돼요",
+      "note": "저장하면 이 레이아웃이 업데이트돼요. 콘텐츠, 결제, 링크는 그대로예요.",
+      "layouts": "이 코드의 레이아웃",
+      "newLayout": "새 레이아웃",
+      "newName": "레이아웃 {n}",
+      "added": "현재 레이아웃으로 “{name}”을(를) 만들었어요. 다른 레이아웃은 그대로예요.",
+      "addFailed": "레이아웃을 추가하지 못했어요. 편집 내용은 그대로 있으니 다시 시도하세요.",
+      "unsavedSwitch": "이 레이아웃에 저장되지 않은 변경 사항이 있어요.",
+      "discardSwitch": "삭제하고 전환",
+      "layoutName": "레이아웃 이름",
+      "unsavedSwitchText": "“{name}”(으)로 전환하고 이 레이아웃의 변경 사항을 삭제할까요? 유지하려면 먼저 저장하세요.",
+      "keepEditing": "계속 편집",
+      "conflictTitle": "이 레이아웃이 다른 곳에서 저장됐어요",
+      "conflictText": "이 레이아웃을 연 후 다른 탭이나 기기에서 저장해서 변경 사항이 저장되지 않았어요. 변경 사항은 그대로 있어요. 새 레이아웃으로 저장하거나, 저장된 버전을 다시 불러오세요(이 경우 여기의 변경 사항은 삭제돼요).",
+      "conflictNewLayout": "내 변경 사항을 새 레이아웃으로 저장",
+      "conflictReload": "저장된 버전 다시 불러오기"
+    },
+    "captionStyle": {
+      "align": "정렬",
+      "aligns": {
+        "left": "왼쪽",
+        "center": "가운데",
+        "right": "오른쪽"
+      },
+      "color": "캡션 색상",
+      "palette": "캡션 색상 프리셋",
+      "matchCode": "코드와 같게"
+    },
+    "logoFile": {
+      "hint": "PNG, JPG, SVG 또는 WebP, 최대 {max}MB. 파일을 선택하거나 업로드 타일에 끌어다 놓으세요.",
+      "reading": "이미지 읽는 중…",
+      "empty": "빈 파일이에요.",
+      "tooLarge": "이 파일은 {max}MB 한도를 초과해요.",
+      "unsupported": "파일 이름과 관계없이 이 파일은 PNG, JPG, SVG 또는 WebP 이미지가 아니에요.",
+      "unreadable": "이 이미지를 열 수 없어요. 손상됐을 수 있으니 다시 내보낸 후 시도하세요.",
+      "kept": "현재 로고는 유지돼요."
+    },
+    "logoPlate": {
+      "label": "배경판",
+      "none": "없음",
+      "square": "사각형",
+      "circle": "원형"
+    },
+    "logoSizeValue": "{size}% · 최대 {max}%까지 스캔 가능",
+    "logoSizeLegacy": "{saved}%로 저장됐지만 최대치인 {max}%로 그려져요. 슬라이더를 움직이면 한도 내 크기로 저장돼요.",
+    "groups": {
+      "label": "디자인 설정",
+      "layout": "레이아웃",
+      "frame": "프레임",
+      "size": "크기",
+      "pattern": "패턴",
+      "colors": "색상",
+      "logo": "로고",
+      "caption": "캡션",
+      "brand": "브랜드"
+    },
+    "quickStyles": {
+      "title": "빠른 스타일",
+      "hint": "한 번 탭으로 모양과 색상을 함께 설정해요. 실행 취소하면 이전 모습으로 돌아가요.",
+      "surprise": "랜덤 스타일",
+      "apply": "{name} 스타일 적용",
+      "applied": "“{name}” 스타일을 적용했어요. 실행 취소하면 이전 모습으로 돌아가요.",
+      "surprised": "새로운 모습이에요. 실행 취소하면 이전 모습으로 돌아가요.",
+      "names": {
+        "classic": "클래식",
+        "soft": "부드러움",
+        "dots": "점",
+        "fluid": "유선형",
+        "lines": "선",
+        "gem": "보석"
+      }
+    },
+    "layoutGroup": {
+      "title": "레이아웃",
+      "hint": "요소는 이동하고 설정은 유지돼요",
+      "border": "레이아웃 주변 프레임",
+      "borderCards": "카드에는 항상 프레임이 있어요."
+    },
+    "colorsGroup": {
+      "title": "색상 적용 대상",
+      "targets": "색상 대상",
+      "resetAll": "모두 초기화",
+      "edited": "편집됨",
+      "roles": {
+        "fg": "모듈",
+        "eye": "모서리 테두리",
+        "eyeIn": "모서리 중앙",
+        "bg": "배경",
+        "frame": "프레임",
+        "caption": "캡션"
+      },
+      "editing": "{role} 색상",
+      "swatches": "색상 견본",
+      "reset": "기본값으로 초기화",
+      "note": "이 색상은 QR에만 적용돼요. HeyQR 자체의 버튼과 메뉴 색상은 바뀌지 않아요.",
+      "frameHint": "프레임, 카드 테두리, 레이아웃 주변 프레임.",
+      "captionHint": "코드 아래, 위 또는 안의 캡션.",
+      "picker": "{role} 색상 선택기"
+    },
+    "logoGroup": {
+      "source": "로고 소스",
+      "icons": "아이콘 라이브러리",
+      "upload": "로고 업로드",
+      "count": "벡터 아이콘 {count}개",
+      "search": "아이콘 검색",
+      "searchPlaceholder": "아이콘 검색: 메뉴, wifi, 쇼핑…",
+      "empty": "“{query}”와(과) 일치하는 아이콘이 없어요.",
+      "style": "아이콘 스타일",
+      "plate": "배경판 위",
+      "tile": "컬러 타일",
+      "vectorNote": "아이콘은 SVG와 PDF에서 벡터로 유지되어 어떤 크기에서도 선명해요. 아이콘에는 모서리 중앙 색상이 적용돼요.",
+      "remove": "로고 제거",
+      "backingHint": "배경판이 로고 뒤의 점을 지워서 로고가 깔끔하게 보여요.",
+      "position": "위치",
+      "positions": {
+        "center": "코드 중앙",
+        "top": "카드 상단"
+      },
+      "positionHint": "‘카드 상단’은 세로 카드와 가로 카드에서 사용할 수 있어요.",
+      "brandName": "로고 옆 이름",
+      "brandNameHint": "선택 사항이에요. 코드 위 로고 옆에 표시돼요.",
+      "uploadTitle": "로고 업로드",
+      "brandedUpload": "먼저 이미지를 업로드하세요",
+      "imageSize": "이미지 크기"
+    },
+    "captionGroup": {
+      "position": "위치",
+      "positions": {
+        "below": "아래",
+        "above": "위",
+        "inside": "코드 안"
+      },
+      "insideHint": "짧은 텍스트가 코드 중앙의 배경판 위에 놓여요. 너무 많이 가리면 스캔 확인에서 줄이라고 안내해요.",
+      "hiddenNote": "“{layout}”에는 캡션이 없어요. 캡션을 표시하려면 QR + 캡션이나 카드를 선택하세요.",
+      "frameNote": "프레임 텍스트는 프레임에서 설정해요.",
+      "toLayout": "QR + 캡션 사용",
+      "color": "캡션 색상",
+      "insideShortened": "코드 안에는 {max}자까지 들어가서 “{shown}”(으)로 표시돼요. 캡션을 줄이거나 코드 아래 또는 위에 배치하세요."
+    },
+    "stage": {
+      "history": "기록",
+      "undo": "실행 취소",
+      "redo": "다시 실행",
+      "background": "캔버스 배경",
+      "bg": {
+        "light": "밝게",
+        "dark": "어둡게",
+        "checker": "투명"
+      },
+      "scale": "미리보기 배율",
+      "fit": "맞춤",
+      "actual": "실제 크기",
+      "dims": {
+        "layout": "레이아웃",
+        "qr": "QR",
+        "file": "파일"
+      },
+      "scaleLabel": "{pct}%",
+      "openFull": "전체 화면 미리보기 열기",
+      "fullTitle": "전체 화면 미리보기",
+      "done": "완료",
+      "scaledToFit": "화면에 맞게 조정됨"
+    },
+    "scanChecking": "스캔 확인 중",
+    "darkenCorners": "모서리 마커 어둡게",
+    "textCount": "{count} / {max}자. 텍스트가 짧을수록 코드가 단순해져 스캔하기 쉬워요.",
+    "brand": {
+      "step1": "1 · 로고 또는 이미지",
+      "step1Hint": "PNG, JPG, WebP 또는 SVG",
+      "step1Ready": "언제든지 교체할 수 있어요",
+      "drag": "로고를 여기로 끌어다 놓으세요",
+      "dropNow": "놓아서 업로드",
+      "add": "로고 또는 이미지 추가",
+      "formats": "PNG, JPG, WebP 또는 SVG, 최대 10MB. 투명 배경이 가장 좋아요.",
+      "choose": "이미지 선택",
+      "chooseMobile": "사진 또는 파일에서 선택",
+      "chooseLabel": "로고 이미지 선택",
+      "sample": "샘플 로고 사용해 보기",
+      "error": "파일을 읽지 못했어요. 최대 10MB의 PNG, JPG, WebP 또는 SVG로 시도하세요.",
+      "reading": "이미지에서 색상을 읽는 중…",
+      "preview": "업로드한 이미지",
+      "image": "내 이미지",
+      "colorsFound": "{count, plural, other {색상 #개 발견}}",
+      "replace": "이미지 교체",
+      "replaceLabel": "로고 이미지 교체",
+      "remove": "이미지 제거",
+      "step2": "2 · 이미지의 색상",
+      "step2Hint": "QR에 적용됨",
+      "roles": "브랜드 색상 역할",
+      "role": {
+        "primary": "코드 색상",
+        "bg": "배경",
+        "accent": "강조"
+      },
+      "roleHint": {
+        "primary": "모듈과 모서리 테두리",
+        "bg": "코드와 카드 뒤",
+        "accent": "모서리 중앙과 세부 요소"
+      },
+      "fromImage": "내 이미지에서",
+      "found": "이미지에서 찾은 색상",
+      "hexFor": "{role}의 HEX",
+      "reset": "초기화",
+      "contrast": {
+        "ok": "배경 대비 코드: {ratio}:1 · 읽기 쉬워요. 최종 판단은 스캔 확인으로 해요.",
+        "warn": "배경 대비 코드: {ratio}:1 · 읽을 수 있지만 대비가 더 높으면 안전해요.",
+        "err": "배경 대비 코드: {ratio}:1 · 대비가 너무 낮아 안정적으로 스캔되지 않아요."
+      },
+      "appColors": "이 색상은 QR에만 적용돼요. HeyQR의 버튼과 메뉴 색상은 바뀌지 않아요.",
+      "step3": "3 · 방향 선택",
+      "step3Hint": "같은 코드, 세 가지 스타일",
+      "looks": "브랜드 스타일",
+      "lookCards": {
+        "center": {
+          "title": "코드 안 로고",
+          "desc": "로고가 중앙의 배경판 위에 놓여요."
+        },
+        "card": {
+          "title": "브랜드 카드",
+          "desc": "프레임 안에서 코드 위에 로고와 이름이 표시돼요."
+        },
+        "art": {
+          "title": "아트워크",
+          "desc": "이미지가 점과 모서리에 자연스럽게 녹아들어요."
+        }
+      },
+      "step4": "4 · 세부 조정",
+      "fine": {
+        "logo": "이미지 크기 및 배경판",
+        "pattern": "점 및 모서리",
+        "caption": "캡션 및 글꼴",
+        "size": "크기"
+      },
+      "updating": "브랜드 디자인 업데이트 중… 계속 편집하세요",
+      "readingCanvas": "이미지 읽는 중…"
+    },
+    "designMode": {
+      "label": "디자인 모드",
+      "custom": "맞춤 디자인",
+      "branded": "브랜드 디자인",
+      "chooseTitle": "어떻게 디자인할까요?",
+      "chooseLead": "두 방식 모두 같은 코드에서 시작해요. 콘텐츠를 잃지 않고 언제든지 전환할 수 있어요.",
+      "customTitle": "맞춤 디자인",
+      "customText": "레이아웃, 모양, 색상, 프레임, 캡션을 직접 선택하세요.",
+      "brandedTitle": "브랜드 디자인",
+      "brandedBadge": "내 로고에서",
+      "brandedText": "로고나 이미지를 업로드하세요. 색상을 추출해서 세 가지 스타일을 제안해 드려요."
+    },
+    "patternHint": "데이터를 담는 점의 모양 8가지",
+    "eyeFrameHint": "3개 모서리 마커의 바깥 테두리",
+    "eyeBallHint": "3개 모서리 마커의 안쪽 점",
+    "finderNote": "모든 모양은 파인더 비율 1 : 1 : 3 : 1 : 1을 유지하므로 스캔 확인을 계속 통과해요.",
+    "colorPicker": "{label} 색상 선택기",
+    "scanCheck": {
+      "run": "스캔 확인",
+      "retry": "다시 확인",
+      "readBack": "휴대폰 카메라처럼 이 기기에서 “{value}”을(를) 읽었어요.",
+      "unreadableTitle": "스캔되지 않음",
+      "unreadable": "휴대폰 카메라가 이 레이아웃을 읽지 못했어요. 대비를 높이거나, 로고를 줄이거나, 더 단순한 모양을 사용한 후 다시 확인하세요.",
+      "mismatch": "콘텐츠가 아닌 “{value}”(으)로 읽혔어요. 콘텐츠를 확인한 후 다시 확인하세요.",
+      "errorTitle": "스캔 확인이 실행되지 않았어요",
+      "errorText": "스캔 확인을 시작하지 못했어요. 디자인은 안전하니 다시 시도하세요.",
+      "finding": "이 기기에서 원인을 찾는 중…",
+      "multiTitle": "이 레이아웃은 스캔되지 않을 수 있어요 · 수정 {count}개",
+      "confirmed": "이 기기에서 확인함: 이것만 바꾸면 스캔돼요.",
+      "general": "원인을 한 가지 설정으로 특정하지 못했어요. 대비를 높이거나, 로고를 줄이거나, 더 단순한 모양을 사용한 후 다시 확인하세요.",
+      "logoSearching": "이 기기에서 더 작은 로고 크기를 시도하는 중…",
+      "logoNone": "이 레이아웃에서 스캔되는 더 작은 로고 크기가 없어서 디자인은 그대로예요. 로고에서 배경판을 추가하거나, 더 단순한 로고를 쓰거나, 로고를 제거해 보세요.",
+      "openLogo": "로고 설정 열기",
+      "logoApplied": "로고를 {from}%에서 {to}%로 줄였어요. 새 레이아웃을 확인하는 중…",
+      "causes": {
+        "invert": {
+          "title": "어두운 배경에 밝은 코드",
+          "text": "많은 휴대폰 카메라가 반전된 코드를 읽지 못해요. 코드를 배경보다 어둡게 유지하세요.",
+          "fix": "색상 바꾸기"
+        },
+        "contrast": {
+          "title": "대비 부족",
+          "text": "코드와 배경이 너무 비슷해요({ratio}:1). 최소 4:1을 목표로 하세요.",
+          "fix": "대비 높이기"
+        },
+        "eyes": {
+          "title": "모서리 마커가 너무 밝아요",
+          "text": "스캐너는 세 개의 모서리 마커로 코드를 찾아요. 더 어둡게 만드세요.",
+          "fix": "모서리 마커 어둡게"
+        },
+        "text": {
+          "title": "코드 안의 텍스트가 너무 길어요",
+          "text": "오류 정정이 가려진 부분을 복구할 수 있도록 코드 안 텍스트는 약 8자로 유지하세요.",
+          "fix": "텍스트 줄이기"
+        },
+        "logo": {
+          "title": "로고가 코드를 너무 많이 가려요",
+          "text": "오류 정정으로 로고 너비 {max}%까지 복구할 수 있어요. 현재 로고는 {size}%예요.",
+          "critical": "모서리 마커나 타이밍 선과 겹쳐요.",
+          "fix": "로고 크기 줄이기"
+        }
+      }
+    },
+    "hosted": {
+      "badge": "호스팅 페이지",
+      "notice": "HeyQR이 이 페이지를 {short}에 게시해요. {needs} 변경 사항은 게시할 때 반영되며, 인쇄된 코드는 계속 작동해요.",
+      "noticePreview": "코드의 단축 링크",
+      "needsPlan": "게시하려면 동적 요금제가 필요해요: 코드 5개용 Starter 월 {starter} 또는 25개용 Studio 월 {studio}, 7일 무료 체험 포함. 디자인과 미리보기는 계속 무료예요.",
+      "needsSlot": "{plan}의 동적 슬롯 {slots}개 중 하나를 사용해요.",
+      "sample": "예시로 시작하기",
+      "sampleAdded": "예시를 추가했어요. 내 정보로 바꿔 주세요.",
+      "previews": "미리보기 · 스캔 후 화면 및 QR 디자인",
+      "previewSwitch": "미리보기",
+      "afterScan": "스캔 후",
+      "qrDesign": "QR 디자인",
+      "moveUp": "{item} 위로 이동",
+      "moveDown": "{item} 아래로 이동",
+      "remove": "{item} 제거",
+      "optional": "선택 사항",
+      "photoAdd": "사진 추가",
+      "photoReplace": "사진 교체",
+      "photoRemove": "사진 제거",
+      "photoHint": "사진은 HeyQR에 업로드되고 휴대폰에 맞게 크기가 조정돼요. JPG 또는 PNG, 각 최대 5MB.",
+      "photoType": "“{name}”은(는) JPG나 PNG가 아니에요.",
+      "photoTooLarge": "“{name}”의 크기는 {size}예요. 한도는 5MB예요.",
+      "photoUnreadable": "“{name}”을(를) 읽지 못했어요. 다른 사진으로 시도하세요.",
+      "menu": {
+        "name": "레스토랑 이름",
+        "namePlaceholder": "Little Fern Café",
+        "note": "메모",
+        "notePlaceholder": "주방 운영 8:00–15:00",
+        "currency": "가격 통화",
+        "section": "섹션 {n}",
+        "sectionPlaceholder": "아침 식사",
+        "sectionHint": "‘아침 식사’나 ‘음료’처럼 섹션 이름을 입력하세요.",
+        "dish": "요리 {n}",
+        "dishPlaceholder": "아보카도 토스트",
+        "descPlaceholder": "설명 · 선택 사항",
+        "price": "가격",
+        "pricePlaceholder": "12",
+        "dishPhoto": "요리 사진",
+        "addDish": "요리 추가",
+        "addSection": "섹션 추가"
+      },
+      "coupon": {
+        "title": "혜택 제목",
+        "titlePlaceholder": "이번 달 모든 도예 수업",
+        "discount": "할인",
+        "discountPlaceholder": "20% 할인",
+        "discountHint": "짧고 크게: ‘20% 할인’, ‘5달러 할인’, ‘커피 무료’.",
+        "code": "프로모션 코드",
+        "codePlaceholder": "FERN20",
+        "expires": "종료일",
+        "expiresHint": "이 날짜가 지나면 페이지에 ‘종료된 혜택’이 표시되고 코드가 숨겨져요. 혜택은 사용자의 시간대({zone}) 기준으로 해당 날짜 하루 종일 유효해요.",
+        "clearDate": "날짜 지우기",
+        "link": "사용 링크",
+        "linkPlaceholder": "yourshop.com/offer",
+        "terms": "이용 조건",
+        "termsPlaceholder": "1인당 코드 1개. 다른 혜택과 중복 사용 불가.",
+        "previewAs": "페이지 미리보기 상태",
+        "valid": "유효한 혜택",
+        "expired": "만료됨"
+      },
+      "social": {
+        "photo": "프로필 사진",
+        "name": "프로필 이름",
+        "namePlaceholder": "Ana Reyes",
+        "bio": "짧은 소개",
+        "bioPlaceholder": "프로덕트 디자이너. 주말엔 도예를 해요.",
+        "links": "링크(사람들에게 보이는 순서대로)",
+        "link": "링크 {n}",
+        "labelLabel": "라벨",
+        "labelPlaceholder": "Instagram",
+        "urlLabel": "주소",
+        "urlPlaceholder": "instagram.com/yourname",
+        "quickAdd": "추가:",
+        "addLink": "링크 추가"
+      },
+      "business": {
+        "name": "비즈니스 이름",
+        "namePlaceholder": "Reyes Ceramics Studio",
+        "desc": "짧은 설명",
+        "descPlaceholder": "핸드메이드 식기와 도예 수업.",
+        "hours": "영업시간",
+        "open": "영업",
+        "from": "시작",
+        "to": "종료",
+        "closed": "휴무",
+        "copyMonday": "월요일 영업시간을 화–금에 복사",
+        "zone": "시간은 {zone} 기준이에요.",
+        "address": "주소",
+        "addressPlaceholder": "21 Pier St, San Francisco",
+        "addressHint": "길찾기 버튼이 추가돼요.",
+        "phone": "전화",
+        "phonePlaceholder": "+1 415 555 0142",
+        "phoneHint": "전화 버튼이 추가돼요.",
+        "website": "웹사이트",
+        "websitePlaceholder": "yourshop.com",
+        "websiteHint": "웹사이트 버튼이 추가돼요."
+      },
+      "apps": {
+        "icon": "앱 아이콘",
+        "name": "앱 이름",
+        "namePlaceholder": "Fern Rewards",
+        "desc": "설명",
+        "descPlaceholder": "앱이 하는 일을 한 문장으로.",
+        "ios": "App Store 링크",
+        "iosPlaceholder": "apps.apple.com/app/your-app",
+        "android": "Google Play 링크",
+        "androidPlaceholder": "play.google.com/store/apps/details?id=…",
+        "storesHint": "스토어를 하나 이상 추가하세요. 휴대폰은 자체 스토어를 열고, 다른 기기에서는 두 링크가 모두 있는 페이지가 보여요."
+      },
+      "pdf": {
+        "title": "제목",
+        "titlePlaceholder": "봄 학기 수업 일정",
+        "desc": "짧은 설명",
+        "descPlaceholder": "일정, 가격, 준비물.",
+        "file": "PDF 파일",
+        "choose": "PDF 선택",
+        "limits": "최대 25MB · 최대 300페이지",
+        "sample": "샘플 PDF 사용",
+        "uploading": "업로드 중 · {pct}%",
+        "processing": "PDF 확인 중…",
+        "cancel": "취소",
+        "meta": "{pages, plural, other {#페이지}} · {size}",
+        "metaNoPages": "{size}",
+        "replace": "교체",
+        "remove": "제거",
+        "hint": "HeyQR에 저장돼요. 파일을 교체해도 단축 링크는 그대로라서 게시 후 인쇄된 코드에서 새 버전이 열려요.",
+        "signIn": "PDF를 업로드하려면 로그인하세요. 초안은 유지돼요.",
+        "notPdf": "“{name}”은(는) PDF가 아니에요. .pdf로 끝나는 파일을 선택하세요.",
+        "empty": "“{name}”은(는) 빈 파일이에요. 다른 파일을 선택하세요.",
+        "tooLarge": "“{name}”의 크기는 {size}예요. 한도는 25MB예요. 더 작은 PDF로 내보낸 후 다시 시도하세요.",
+        "tooManyPages": "“{name}”은(는) {pages}페이지예요. 한도는 300페이지예요.",
+        "failed": "파일이 업로드되지 않았어요. 다시 시도하세요."
+      },
+      "product": {
+        "name": "제품 이름",
+        "namePlaceholder": "얼룩무늬 석기 머그잔",
+        "photos": "사진",
+        "cover": "커버",
+        "photosHint": "사진은 최대 5장이에요. 첫 번째 사진이 커버가 돼요. JPG 또는 PNG, 각 최대 5MB.",
+        "photo": "사진 {n}",
+        "desc": "설명",
+        "descPlaceholder": "크기, 소재, 관리 방법.",
+        "currency": "통화",
+        "price": "가격",
+        "pricePlaceholder": "38",
+        "cta": "버튼",
+        "ctas": {
+          "buy": "지금 구매",
+          "view": "제품 보기",
+          "order": "지금 주문"
+        },
+        "link": "제품 링크",
+        "linkPlaceholder": "yourshop.com/product",
+        "linkHint": "버튼을 누르면 이동할 곳: 내 쇼핑몰이나 마켓플레이스 상품 페이지."
+      },
+      "signInPhotos": "사진을 추가하려면 로그인하세요. 초안은 유지돼요.",
+      "errors": {
+        "menuName": "메뉴 상단에 손님에게 보일 이름을 입력하세요.",
+        "menuSections": "섹션을 하나 이상 추가하세요.",
+        "sectionName": "‘아침 식사’나 ‘음료’처럼 섹션 이름을 입력하세요.",
+        "sectionDishes": "이 섹션에 요리를 하나 이상 추가하세요.",
+        "dishName": "모든 요리에는 이름이 필요해요.",
+        "price": "가격은 12나 4.50처럼 숫자만 사용하세요.",
+        "couponTitle": "어떤 혜택인지 입력하세요.",
+        "couponDiscount": "‘20% 할인’처럼 할인 내용을 입력하세요.",
+        "couponCode": "공백 없이 영문자, 숫자, - 또는 _만 사용하세요.",
+        "dateInvalid": "올바른 날짜를 선택하세요.",
+        "datePassed": "이미 지난 날짜예요. 이후 날짜를 선택하거나, 종료일 없는 혜택이라면 날짜를 지우세요.",
+        "urlEmpty": "yourname.com처럼 웹 주소를 입력하세요.",
+        "urlSpaces": "웹 주소에는 공백을 넣을 수 없어요.",
+        "urlInvalid": "주소를 확인하세요. yourname.com처럼 도메인이 필요해요.",
+        "socialName": "페이지 상단에 보일 이름을 입력하세요.",
+        "socialLinks": "링크를 하나 이상 추가하세요.",
+        "linkLabel": "이 링크에 라벨이 필요해요.",
+        "linkUrl": "이 링크에는 instagram.com/yourname처럼 전체 웹 주소가 필요해요.",
+        "businessName": "비즈니스 이름을 입력하세요.",
+        "businessReach": "사람들이 연락할 수 있도록 주소, 전화번호 또는 웹사이트를 추가하세요.",
+        "phone": "숫자, 공백, 그리고 국가 번호용 +(선택)를 사용하세요.",
+        "hoursInvalid": "09:00처럼 시간을 입력하세요.",
+        "hoursOrder": "종료 시간은 시작 시간보다 늦어야 해요.",
+        "appName": "앱 이름을 입력하세요.",
+        "appStores": "스토어 링크를 하나 이상 추가하세요.",
+        "appStoreLink": "App Store 링크는 apps.apple.com/으로 시작해요.",
+        "googlePlayLink": "Google Play 링크는 play.google.com/으로 시작해요.",
+        "pdfTitle": "문서 제목을 입력하세요.",
+        "pdfFile": "계속하려면 PDF를 업로드하세요.",
+        "pdfUploading": "업로드가 끝날 때까지 기다려 주세요.",
+        "productName": "제품 이름을 입력하세요.",
+        "productLink": "사람들이 제품을 구매하거나 볼 수 있는 페이지를 추가하세요.",
+        "productPrice": "38이나 38.50처럼 숫자만 사용하세요. 통화는 메뉴에서 선택하세요.",
+        "productImages": "사진은 최대 5장이에요."
+      },
+      "previewNote": "HeyQR이 이 페이지를 {short}에서 호스팅해요. 수정 사항은 게시할 때 반영되며, 인쇄된 코드는 계속 작동해요.",
+      "qrNote": "코드에 단축 링크 {short}이(가) 담겨 있어서 인쇄 후에도 페이지를 바꿀 수 있어요."
+    }
+  },
+  "scan": {
+    "invert": "어두운 배경에 밝은 코드예요. 많은 휴대폰 카메라가 반전된 코드를 읽지 못해요.",
+    "contrast": "코드와 배경의 대비가 충분하지 않아요. 최소 3:1 이상이어야 해요.",
+    "eyes": "모서리 표시는 배경보다 어두워야 하며, 대비가 최소 3:1(중앙은 2.5:1) 이상이어야 해요. 스캐너는 이 표시로 코드를 찾아요.",
+    "logo": "로고가 코드를 너무 많이 가려요. 크기를 줄여 주세요.",
+    "text": "코드 안의 텍스트가 너무 길어요. 8자 정도로 줄여 주세요."
+  },
+  "export": {
+    "title": "코드 다운로드",
+    "shortLinkPreview": {
+      "mark": "미리보기",
+      "note": "샘플 단축 링크로 표시한 미리보기예요. 영구 단축 링크는 이 코드를 활성화할 때 만들어지며, 다운로드하는 모든 파일에 포함돼요."
+    },
+    "format": "형식",
+    "png": "PNG",
+    "pngHint": "웹과 문서용 최대 8K 이미지.",
+    "svg": "SVG",
+    "svgHint": "벡터, 모든 크기, 편집 가능.",
+    "pay": "{price} 결제하고 다운로드",
+    "subscribe": "월 {price}에 구독",
+    "download": "{format} 다운로드",
+    "paid": "결제가 완료됐어요. 파일이 준비됐어요.",
+    "pending": "결제를 확인하는 중… 보통 몇 초면 끝나요. 파일이 영수증과 일치하도록 설정이 잠겨 있어요.",
+    "cancelled": "<b>결제가 취소됐어요.</b> 요금이 청구되지 않았어요. 디자인과 형식은 저장되어 있으니 준비되면 언제든 결제하세요.",
+    "secure": "Stripe의 안전한 결제 페이지에서 결제를 마친 뒤, 이곳으로 돌아와 다운로드하세요.",
+    "includedNote": "구매에 포함되어 있어요. 결제할 금액이 없어요.",
+    "resolution": "PNG 크기",
+    "scale": "{scale}×",
+    "dpi": "{dpi} dpi",
+    "pixels": "{width} × {height} px",
+    "titleBuy": "QR 코드 다운로드",
+    "titleGuest": "다운로드 준비 완료",
+    "subGuest": "레이아웃과 파일을 확인한 뒤 Google로 로그인해 결제하고 다운로드하세요. 디자인은 그대로 유지돼요.",
+    "subPay": "레이아웃과 형식을 확인하세요. 결제 전에 총액을 확인할 수 있어요.",
+    "subEntitled": "이 코드는 내 것이에요. 원하는 형식으로 필요한 만큼 다운로드하세요.",
+    "stageLabel": "다운로드할 레이아웃",
+    "layouts": "이 코드의 레이아웃",
+    "backToDesign": "디자인으로 돌아가기",
+    "model": {
+      "static": "정적",
+      "dynamic": "동적"
+    },
+    "dims": {
+      "layout": "레이아웃",
+      "file": "파일"
+    },
+    "scanOk": "스캔 확인됨",
+    "scanFail": "스캔되지 않을 수 있음",
+    "transparent": "투명 배경",
+    "quality": "<b>품질 손실 없음.</b> SVG와 PDF는 순수 벡터라서 모듈, 아이콘, 텍스트를 광고판 크기까지 확대할 수 있어요. PNG는 같은 벡터에서 최대 8K로 렌더링돼요.",
+    "returned": "Google로 로그인했어요. 레이아웃과 <b>{format}</b> 설정이 그대로 유지돼요.",
+    "sessionEnded": "<b>세션이 종료됐어요.</b> 계속하려면 다시 로그인하세요. 이 레이아웃과 파일 옵션은 유지돼요.",
+    "signInAgain": "다시 로그인",
+    "alreadyOwned": "이미 구매한 코드예요. 추가 결제 없이 언제든 다시 다운로드하세요.",
+    "paymentProcessing": "이 코드의 결제를 확인하는 중이에요. 잠시 후 잠금 해제되며, 중복 청구되지 않아요.",
+    "signInCanceled": "Google 로그인이 취소됐어요. 레이아웃과 <b>{format}</b>은(는) 그대로 선택되어 있어요. 다시 시도하려면 Google로 계속하세요.",
+    "signInIncomplete": "Google 로그인이 완료되지 않았어요. 레이아웃과 <b>{format}</b>은(는) 그대로 선택되어 있어요. 다시 시도하려면 Google로 계속하세요.",
+    "confirming": "결제를 확인하는 중…",
+    "preparing": "{format} 준비 중…",
+    "ready": "{format} 파일이 준비됐어요.",
+    "downloaded": "<b>{name}을(를) 다운로드했어요.</b> 내 QR 코드에도 있으니 언제든 다시 다운로드할 수 있어요.",
+    "downloadAgain": "다시 다운로드",
+    "tryAgain": "다시 시도",
+    "errors": {
+      "failed": "<b>{format} 파일을 준비하지 못했어요.</b> 결제와 설정은 안전해요. 잠시 후 다시 시도해 주세요.",
+      "scan": "<b>이 레이아웃은 스캔되지 않을 수 있어요.</b> 디자인을 열어 수정하세요. 파일은 스캔 확인을 통과한 코드만 만들 수 있어요.",
+      "size": "<b>파일 하나로 만들기에는 크기가 너무 커요.</b> 더 작은 PNG 크기나 SVG를 선택하세요.",
+      "payment": "<b>이 코드는 아직 잠금 해제되지 않았어요.</b> 요금이 청구되지 않았어요. 잠시 후 새로고침하거나 결제 후 다운로드하세요."
+    },
+    "checkoutFailed": "결제 페이지를 열지 못했어요. 요금이 청구되지 않았으니 다시 시도해 주세요.",
+    "continueGoogle": "Google로 계속하기",
+    "guestNote": "디자인은 무료예요. 다운로드할 때만 결제해요.",
+    "receipt": {
+      "title": "영수증",
+      "paid": "결제 금액",
+      "tax": "Stripe가 계산한 세금이 포함되어 있어요."
+    },
+    "lines": {
+      "single": "단일 QR 코드",
+      "dynamic": "동적 QR 코드",
+      "singleNamed": "단일 QR 코드 · {name}",
+      "unlock": "정적 잠금 해제 · {plan} · {limit}개 중 {left}개 남음",
+      "credit": "정적 크레딧 · {left}개 남음",
+      "slot": "동적 자리 · {plan} · {limit}개 중 {used}개 사용 중",
+      "starter": "Starter · 월간",
+      "ppIncluded": "Print Pack · {plan}에 포함 · {limit}개 중 {left}개 남음",
+      "pp": "Print Pack"
+    },
+    "perMonth": "{price}/월",
+    "summary": {
+      "title": "주문 요약",
+      "code": "QR 코드",
+      "type": "유형",
+      "layout": "레이아웃",
+      "file": "파일",
+      "total": "합계",
+      "tax": "세금이 있는 경우 결제 시 계산돼요.",
+      "included": "포함됨",
+      "includedShort": "포함"
+    },
+    "emptyTitle": "아직 다운로드할 항목이 없어요",
+    "emptyText": "먼저 QR 코드를 디자인하세요. 초안은 다운로드할 때까지 이 브라우저에 저장돼요.",
+    "emptyAction": "QR 코드 만들기",
+    "inspectPrint": "인쇄 미리보기 열기",
+    "printTitle": "Print Pack",
+    "printPreviewText": "인쇄하기 전에 이 레이아웃의 실제 인쇄용 PDF, 재단 여백, 재단선, 색상 값을 확인하세요.",
+    "printSetupText": "Print Pack에는 mm 단위의 인쇄 레이아웃이 필요해요. 디자인 편집 → 크기에서 이 레이아웃을 인쇄 · mm로 바꾸세요.",
+    "printSetup": "인쇄용으로 설정",
+    "pdf": "PDF",
+    "pdfHint": "인쇄소용 벡터.",
+    "payTotal": "{price} 결제하고 다운로드",
+    "useUnlock": "잠금 해제 1회 사용하고 다운로드",
+    "useCredit": "크레딧 1개 사용하고 다운로드",
+    "unlockNote": "{plan} 요금제에서 사용해요. 이번 사용 후 이번 달 잠금 해제가 {left, plural, other {#회}} 남아요.",
+    "creditNote": "정적 크레딧에서 사용해요. 이번 사용 후 {left, plural, other {크레딧 #개}}가 남아요.",
+    "goLive": "활성화하고 다운로드",
+    "goLiveNote": "{plan} 요금제의 활성 자리 1개를 사용해요. 사용 후 {limit}개 중 {used}개.",
+    "perMonthShort": "{price}/월",
+    "ppTitle": "Print Pack",
+    "ppOptional": "선택 사항",
+    "ppUnlocked": "잠금 해제됨",
+    "ppDownload": "다운로드",
+    "ppAddTitle": "Print Pack 추가",
+    "ppSub": "인쇄용 PDF, 편집 가능한 SVG, 색상 및 크기 사양",
+    "ppUseIncluded": "포함된 Print Pack 1개 사용",
+    "ppIncludedSub": "이번 달 {limit}개 중 {left}개 남음 · 인쇄용 PDF, SVG, 사양",
+    "ppIncluded": "포함",
+    "ppAddText": "재단 여백과 재단선이 있는 인쇄용 PDF, 편집 가능한 SVG, 이 QR의 색상 및 크기 사양서.",
+    "ppAdd": "Print Pack 추가 · +{price}",
+    "ppNotForSale": "이 통화로는 아직 Print Pack을 구매할 수 없어요.",
+    "ppRepeat": "재다운로드가 포함돼요. 설정: 100% 크기, 3 mm 재단 여백, 재단선, sRGB.",
+    "inspectPrintFirst": "먼저 인쇄 파일을 확인하세요",
+    "incl": {
+      "static1": "이 코드의 모든 레이아웃 PNG 및 SVG",
+      "static2": "무제한 재다운로드",
+      "static3": "언제든 디자인 편집",
+      "dyn1": "최대 {limit}개의 활성 동적 QR 코드, 언제든 연결 주소 변경",
+      "dyn2": "기본 스캔 분석",
+      "dyn3": "PNG 및 SVG, 무제한 재다운로드",
+      "pp": "Print Pack: 인쇄용 PDF, 편집 가능한 SVG, 사양"
+    },
+    "catalog": {
+      "not_offered": "선택한 통화로는 아직 구매할 수 없어요. 요금이 청구되지 않았어요.",
+      "price_mismatch": "이 페이지를 불러온 후 가격이 변경됐어요. 요금이 청구되지 않았으니 새로고침해서 현재 가격을 확인하세요.",
+      "unavailable": "이 통화로는 아직 구매할 수 없어요. 요금 페이지에서 통화를 바꾸거나 나중에 다시 확인하세요. 요금은 청구되지 않아요."
+    },
+    "unlockErrors": {
+      "no_allowance": "이번 달 남은 잠금 해제가 없어요. 아래에서 다른 옵션을 선택하세요.",
+      "no_credits": "남은 정적 크레딧이 없어요.",
+      "limit": "활성 동적 자리를 모두 사용 중이에요.",
+      "failed": "처리하지 못했어요. 요금이 청구되지 않았으니 다시 시도해 주세요."
+    },
+    "limits": {
+      "staticTitle": "이번 달 정적 잠금 해제 {limit}회를 모두 사용했어요",
+      "staticText": "이 QR에는 잠금 해제가 1회 더 필요해요. 원하는 방법을 선택하세요. 디자인은 그대로 유지돼요.",
+      "staticUsed": "잠금 해제 {limit}회 중 {used}회 사용",
+      "resets": "{date}에 초기화",
+      "buyOnce": "이 QR 한 번만 구매",
+      "buyOnceSub": "PNG 및 SVG가 포함된 Single QR",
+      "credits": "정적 크레딧 3개 받기",
+      "creditsSub": "만료 없음",
+      "studio": "Studio로 업그레이드",
+      "studioSub": "매월 잠금 해제 40회와 Print Pack 5개",
+      "dynTitle": "동적 자리 {limit}개를 모두 사용 중이에요",
+      "dynText": "자리는 이번 달에 만든 코드가 아니라 지금 리디렉션 중인 코드를 기준으로 세요. 자리를 비우거나 더 큰 요금제로 변경하세요.",
+      "dynUsed": "{limit}개 중 {used}개 활성",
+      "live": "현재 개수 · 월간 아님",
+      "pause": "동적 코드 일시 중지 또는 삭제",
+      "pauseSub": "즉시 자리가 비워져요",
+      "studioDynSub": "동적 자리 25개와 코드별 분석",
+      "toStatic": "대신 정적 QR로 만들기",
+      "toStaticSub": "고정 콘텐츠 · 정적 잠금 해제 1회 사용"
+    },
+    "limit": "더 큰 크기는 {max} px를 초과해요",
+    "subUnlock": "{plan}에 포함: 월간 정적 잠금 해제 중 1회를 사용해요.",
+    "subCredit": "정적 크레딧 1개를 사용해요."
+  },
+  "dashboard": {
+    "noMatch": {
+      "static": "정적 QR 코드가 없어요",
+      "dynamic": "동적 QR 코드가 없어요",
+      "text": "다른 코드는 ‘전체’에 있어요.",
+      "all": "모든 코드 보기"
+    },
+    "title": "내 QR 코드",
+    "new": "QR 코드 만들기",
+    "empty": {
+      "title": "아직 QR 코드가 없어요",
+      "text": "구매했거나 디자인을 시작한 코드가 여기에 표시돼요. 언제든 다시 다운로드하고 새 레이아웃을 추가할 수 있어요.",
+      "cta": "첫 QR 코드 만들기"
+    },
+    "status": {
+      "draft": "초안",
+      "active": "활성",
+      "paused": "일시 중지됨",
+      "archived": "보관됨",
+      "purchased": "구매함",
+      "inactive": "비활성"
+    },
+    "model": {
+      "static": "정적",
+      "dynamic": "동적"
+    },
+    "updated": "{date} 업데이트",
+    "open": "{name} 열기",
+    "sub": "{count, plural, other {코드 #개}} · 동적 {dynamic}개 활성",
+    "subEmpty": "구매한 코드와 초안이 여기에 모여요.",
+    "filterLabel": "필터",
+    "filters": {
+      "all": "전체 {count}",
+      "static": "정적 {count}",
+      "dynamic": "동적 {count}"
+    },
+    "actions": {
+      "edit": "디자인 편집",
+      "download": "다운로드",
+      "buy": "구매 및 다운로드",
+      "reactivate": "다시 켜기"
+    },
+    "loading": "QR 코드를 불러오는 중",
+    "manage": {
+      "select": "선택",
+      "done": "완료",
+      "selectAll": "모두 선택",
+      "selectOne": "{name} 선택",
+      "chooseToDelete": "삭제할 코드를 선택하세요",
+      "selected": "{total}개 중 {count}개 선택됨",
+      "deleteSelected": "{count, plural, =0 {삭제} other {#개 삭제}}",
+      "deleteOne": "{name} 삭제",
+      "cancel": "취소",
+      "dialog": {
+        "titleOne": "“{name}”을(를) 삭제할까요?",
+        "titleMany": "QR 코드 {count}개를 삭제할까요?",
+        "leadOne": "모든 기기의 내 QR 코드에서 사라져요.",
+        "leadMany": "모든 기기의 내 QR 코드에서 사라져요.",
+        "dynamicTitle": "{count, plural, other {단축 링크가 더 이상 작동하지 않아요}}",
+        "dynamicText": "{links}{count, plural, other {의 리디렉션이}} 즉시 중지돼요. 인쇄된 코드를 스캔하면 ‘링크가 활성 상태가 아님’ 페이지가 열려요. {count, plural, other {요금제 자리 #개가}} 비워져요.",
+        "staticTitle": "인쇄된 코드는 계속 작동해요",
+        "staticText": "정적 코드는 패턴 자체에 콘텐츠를 담고 있어서 인쇄된 코드는 계속 스캔돼요. 다만 {count, plural, other {이 구매 #건은}} 다시 다운로드하거나 편집할 수 없으며, 삭제해도 환불되지 않아요.",
+        "draftTitle": "{count, plural, other {초안 #개가 삭제돼요}}",
+        "draftText": "{count, plural, other {결제한 내역이 없으므로}} 다른 변경 사항은 없어요.",
+        "confirmOne": "코드 삭제",
+        "confirmMany": "코드 {count}개 삭제",
+        "undoNote": "삭제 후 몇 초 동안 실행 취소할 수 있어요.",
+        "close": "닫기",
+        "metaDynamic": "동적",
+        "metaStatic": "정적",
+        "metaActive": "활성",
+        "metaPurchased": "구매함",
+        "metaDraft": "초안"
+      },
+      "deletedOne": "“{name}”을(를) 삭제했어요.",
+      "deletedMany": "코드 {count}개를 삭제했어요.",
+      "undo": "실행 취소",
+      "restoredOne": "코드를 복원했어요.",
+      "restoredMany": "코드 {count}개를 복원했어요.",
+      "deleteFailed": "삭제하지 못했어요. 다시 시도해 주세요.",
+      "restoreFailed": "복원하지 못했어요. 삭제 후 몇 분 동안은 실행 취소할 수 있어요.",
+      "rename": {
+        "action": "이름 변경",
+        "actionOne": "{name} 이름 변경",
+        "label": "{name}의 이름",
+        "save": "저장",
+        "cancel": "취소",
+        "saved": "“{name}”(으)로 이름을 변경했어요.",
+        "empty": "코드 이름을 입력하세요.",
+        "failed": "이름을 변경하지 못했어요. 입력한 텍스트는 그대로 있으니 다시 시도해 주세요."
+      }
+    },
+    "printPack": "Print Pack"
+  },
+  "qr": {
+    "back": "모든 코드",
+    "layouts": "레이아웃",
+    "shortLink": "단축 링크",
+    "destination": "연결 주소",
+    "destinationHint": "인쇄된 코드는 계속 작동하며 이제 이 주소로 연결돼요.",
+    "save": "저장",
+    "saved": "저장됨",
+    "scans": "스캔, 최근 14일",
+    "scansTotal": "{count, plural, other {스캔 #회}}",
+    "download": "다운로드",
+    "buy": "구매 후 다운로드",
+    "copy": "복사",
+    "copied": "복사됨",
+    "editDesign": "디자인 편집",
+    "dest": {
+      "title": "연결 주소",
+      "saved": "저장됨",
+      "new": "새 연결 주소",
+      "hint": "인쇄된 코드는 1분 이내에 새 주소로 연결돼요. 단축 링크는 {short}(으)로 유지돼요.",
+      "save": "연결 주소 저장",
+      "cancel": "취소",
+      "goesTo": "{short} 스캔 시 연결되는 주소",
+      "previously": "이전 주소: {url}",
+      "changedAt": "변경됨",
+      "history": {
+        "title": "변경 기록",
+        "to": "변경된 주소",
+        "from": "이전: {url}"
+      },
+      "change": "연결 주소 변경",
+      "conflict": {
+        "title": "다른 곳에서 연결 주소가 변경되었어요",
+        "text": "현재 {url}(으)로 연결돼요. 아래에서 수정한 내용은 저장되지 않았어요.",
+        "load": "최신 버전 불러오기",
+        "loaded": "최신 버전을 불러왔어요: {url}. 수정한 내용을 확인한 후 저장하면 대체돼요."
+      }
+    },
+    "scansCard": {
+      "title": "스캔 · 최근 14일",
+      "total": "전체",
+      "today": "오늘",
+      "emptyTitle": "아직 스캔이 없어요",
+      "emptyText": "첫 스캔은 몇 분 이내에 여기에 표시돼요. 인쇄한 코드를 스캔해 보세요.",
+      "periodEmptyTitle": "최근 14일 동안 스캔이 없어요",
+      "periodEmptyText": "이전 스캔 기록은 보관돼요. 새 스캔은 몇 분 이내에 여기에 표시돼요."
+    },
+    "details": {
+      "back": "내 QR 코드",
+      "newLayout": "새 레이아웃",
+      "permanent": "영구",
+      "shortNote": "인쇄된 코드에 담긴 내용이에요. 절대 바뀌지 않으므로 인쇄된 코드는 계속 작동해요.",
+      "noShortLink": "이 코드는 활성화되면 단축 링크와 함께 사용할 수 있어요.",
+      "content": "콘텐츠",
+      "fixed": "코드에 고정됨",
+      "staticNote": "정적 코드는 콘텐츠를 패턴 자체에 저장하므로 인쇄된 코드는 항상 이 내용을 열어요. 디자인 변경은 무료이며 횟수 제한이 없어요.",
+      "incl": {
+        "files": "PNG 및 SVG, 원하는 만큼 다운로드",
+        "layouts": "새 레이아웃 및 디자인 수정 포함"
+      },
+      "dimsSquare": "{size} 정사각형",
+      "print": "인쇄 · mm",
+      "screen": "화면 · px",
+      "setupPrint": "인쇄용으로 설정",
+      "pack": {
+        "needsMm": "Print Pack을 사용하려면 mm 단위의 인쇄 레이아웃이 필요해요. 디자인 편집 → 크기에서 레이아웃을 인쇄용으로 설정한 후 인쇄 미리보기에서 확인하세요.",
+        "what": "이 QR의 재단 여백과 재단선이 포함된 인쇄용 PDF, 편집 가능한 SVG, 색상 및 크기 안내서를 제공해요.",
+        "add": "Print Pack 추가 · +{price}",
+        "addSub": "인쇄 미리보기가 열려 결제 전에 PDF와 사양을 확인할 수 있어요.",
+        "useIncluded": "포함된 Print Pack 1개 사용",
+        "includedSub": "이번 달 {plan}에 포함된 Print Pack {limit}개 중 {left}개가 남았어요. 원하면 먼저 인쇄 미리보기에서 파일을 확인하세요.",
+        "includedDone": "요금제에서 Print Pack이 추가되었어요. 파일이 준비되었어요.",
+        "includedFailed": "포함된 Print Pack을 사용하지 못했어요. 사용된 것은 없으니 다시 시도해 주세요.",
+        "noneLeft": "이번 달에 남은 포함 Print Pack이 없어요.",
+        "inspect": "인쇄 미리보기에서 확인",
+        "notForSale": "인쇄 미리보기에서 정확한 페이지와 사양을 볼 수 있어요. 아직 여기에서는 Print Pack을 구매할 수 없어요.",
+        "repeat": "다시 다운로드는 무료로 포함돼요. ‘{layout}’ 파일, 100% 크기, 재단 여백 3 mm, 재단선 포함."
+      },
+      "layoutNoteDynamic": "디자인을 변경하면 다운로드할 새 파일이 만들어져요. 이미 인쇄한 코드는 계속 작동해요.",
+      "layoutNoteStatic": "모든 레이아웃이 이 구매에 포함돼요. 원하는 레이아웃을 PNG 또는 SVG로 다운로드하세요.",
+      "rename": "이름 변경",
+      "renameFailed": "코드 이름을 변경하지 못했어요. 입력한 내용은 그대로 있으니 다시 시도해 주세요.",
+      "nameLabel": "QR 코드 이름",
+      "save": "저장",
+      "cancel": "취소",
+      "opens": "연결",
+      "downloadAll": "모두 다운로드",
+      "layoutsCount": "{n, plural, other {레이아웃 #개}}",
+      "edit": "편집",
+      "downloadLayout": "{name} 다운로드",
+      "downloadFormat": "{name} {format} 다운로드",
+      "printPreview": "{name} 인쇄 미리보기",
+      "newLayoutCard": "새 레이아웃",
+      "layoutAdded": "‘{name}’ 레이아웃이 {code}에 추가되었어요. 다른 레이아웃은 변경되지 않았어요.",
+      "layoutAddFailed": "레이아웃을 추가하지 못했어요. 다시 시도해 주세요.",
+      "copy": {
+        "action": "다른 콘텐츠 사용…",
+        "title": "다른 콘텐츠 사용",
+        "text": "정적 코드는 콘텐츠를 패턴에 저장하므로 콘텐츠가 다르면 새 QR 코드가 돼요. 별도로 디자인하고 구매해야 해요({price}). 이 코드와 파일은 그대로 유지돼요.",
+        "start": "새 QR 코드 만들기",
+        "keep": "이 코드 유지",
+        "close": "닫기"
+      },
+      "ppUnlocked": "잠금 해제됨",
+      "ppLocked": "잠김",
+      "deleteLayout": {
+        "label": "{name} 레이아웃 삭제",
+        "title": "‘{name}’ 레이아웃을 삭제할까요?",
+        "text": "‘{name}’ 레이아웃과 해당 레이아웃의 다운로드 파일이 계정에서 삭제돼요. 이 작업은 되돌릴 수 없어요.",
+        "keeps": "QR 코드, 콘텐츠, 단축 링크, 연결 주소, 구매 내역, Print Pack 및 다른 레이아웃은 그대로 유지돼요.",
+        "confirm": "레이아웃 삭제",
+        "cancel": "취소",
+        "close": "닫기",
+        "done": "‘{name}’ 레이아웃이 삭제되었어요.",
+        "failed": "‘{name}’ 레이아웃을 삭제하지 못했어요. 변경된 내용은 없으니 다시 시도해 주세요.",
+        "retry": "다시 시도",
+        "lastTitle": "유일한 레이아웃이에요",
+        "lastText": "QR 코드에는 항상 레이아웃이 하나 이상 있어야 하므로 ‘{name}’ 레이아웃은 삭제할 수 없어요. 먼저 다른 레이아웃을 추가하거나 내 QR 코드에서 코드 전체를 삭제하세요.",
+        "lastError": "QR 코드에는 레이아웃이 하나 이상 있어야 하므로 이 레이아웃은 유지돼요.",
+        "ok": "확인"
+      },
+      "pause": {
+        "pause": "일시 중지",
+        "resume": "다시 시작",
+        "pausedTitle": "단축 링크 일시 중지됨",
+        "pausedText": "이 코드를 스캔하면 사용할 수 없음 페이지가 표시돼요. 단축 링크, 연결 주소, 레이아웃은 보관돼요. 지금 연결 주소를 변경할 수 있으며, 다시 시작하면 적용돼요.",
+        "liveText": "일시 중지하면 즉시 연결이 중단돼요. 요금제를 사용 중이면 이 코드의 활성 슬롯도 비워져요.",
+        "paused": "일시 중지했어요. 이제 단축 링크에 사용할 수 없음 페이지가 표시돼요.",
+        "resumed": "다시 시작했어요. 단축 링크가 다시 연결 주소로 연결돼요.",
+        "limit": "요금제의 활성 동적 슬롯을 모두 사용 중이에요. 다른 동적 코드를 일시 중지하거나 삭제한 후 이 코드를 다시 시작하세요.",
+        "noPlan": "이 코드를 다시 시작하려면 활성 동적 요금제가 필요해요.",
+        "failed": "코드 상태를 변경하지 못했어요. 변경된 내용은 없으니 다시 시도해 주세요."
+      },
+      "inactiveNote": "이 코드를 스캔하면 ‘현재 활성 상태가 아님’ 페이지가 표시돼요. 활성 동적 요금제가 필요해요. 단축 링크, 연결 주소, 스캔 기록은 보관되며, 요금제가 활성화되면 같은 인쇄 코드가 다시 연결돼요.",
+      "inactiveCta": "요금제 및 결제 관리"
+    },
+    "hostedPage": {
+      "title": "호스팅 페이지",
+      "live": "게시 중 · 버전 {version}",
+      "publishedOn": "{date} 게시",
+      "never": "아직 게시되지 않음",
+      "neverNote": "코드를 스캔한 사람이 볼 수 있도록 페이지를 게시하세요.",
+      "changed": "게시되지 않은 변경 사항",
+      "changedNote": "다시 게시할 때까지 방문자에게는 게시된 버전이 표시돼요.",
+      "upToDate": "방문자에게 최신 버전이 표시돼요.",
+      "notLive": "코드가 활성화되면 단축 링크에서 페이지가 게시돼요.",
+      "edit": "페이지 편집",
+      "publish": "게시",
+      "publishing": "게시하는 중…",
+      "published": "게시되었어요. 같은 QR 코드와 단축 링크에서 이제 이 버전이 표시돼요.",
+      "unchanged": "새로 게시할 내용이 없어요.",
+      "rules": "게시하기 전에 확인이 필요한 항목이 있어요. 페이지를 편집해 수정하세요.",
+      "failed": "게시하지 못했어요. 다시 시도해 주세요.",
+      "open": "페이지 열기",
+      "takenDown": "신고에 따라 이 페이지를 내렸으며, 단축 링크에는 ‘이 페이지를 사용할 수 없어요’가 표시돼요. 콘텐츠와 스캔 기록은 보관돼요. 잘못된 조치라고 생각되면 고객 지원팀에 문의해 주세요."
+    },
+    "hostedEditor": {
+      "title": "페이지 편집",
+      "back": "QR 세부 정보로 돌아가기",
+      "lead": "변경 사항은 초안으로 저장돼요. 게시한 후에 방문자에게 표시돼요.",
+      "save": "초안 저장",
+      "saving": "저장하는 중…",
+      "saved": "초안이 저장되었어요.",
+      "saveFailed": "초안을 저장하지 못했어요. 사진을 확인하고 다시 시도해 주세요.",
+      "publish": "저장 및 게시",
+      "unsaved": "저장되지 않은 변경 사항",
+      "loading": "페이지 편집기를 불러오는 중"
+    }
+  },
+  "billing": {
+    "title": "요금제 및 결제 관리",
+    "plan": "동적 요금제",
+    "active": "{date}까지 활성",
+    "cancels": "{date}에 해지",
+    "none": "구독이 없어요. 정적 코드는 한 번만 결제하면 되고, Starter에서는 동적 코드와 매월 잠금 해제가 추가돼요.",
+    "manage": "구독 관리",
+    "purchases": "구매 내역",
+    "noPurchases": "아직 구매 내역이 없어요.",
+    "usage": "사용량",
+    "liveDynamic": "활성 동적 코드",
+    "liveCount": "{used}/{limit}",
+    "liveHint": "동적 코드를 일시 중지하거나 삭제하면 활성 슬롯이 비워져요.",
+    "renews": "{date} 갱신",
+    "payment": "결제 수단",
+    "paymentManaged": "카드 정보는 Stripe에서 보관해요. 결제 포털에서 관리하세요.",
+    "compare": "요금제 비교",
+    "statusActive": "활성",
+    "statusCanceling": "해지 예정",
+    "statusNone": "요금제 없음",
+    "date": "날짜",
+    "open": "열기",
+    "receiptNote": "결제할 때마다 Stripe가 영수증을 이메일로 보내요.",
+    "statuses": {
+      "paid": "결제 완료",
+      "pending": "대기 중",
+      "refunded": "환불됨",
+      "failed": "실패"
+    },
+    "liveNoPlan": "{used}개 활성 · 요금제 없음",
+    "printPackItem": "Print Pack",
+    "packItem": "정적 팩 · 크레딧 {n}개",
+    "signedIn": "Google 계정 {email}(으)로 로그인했어요.",
+    "current": "현재 요금제",
+    "planMonthly": "{plan} · 월간",
+    "noPlan": "요금제 없음",
+    "plans": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "tiles": {
+      "dynamic": "활성 동적 QR",
+      "live": "활성",
+      "dynamicNote": "코드를 일시 중지하거나 삭제하면 슬롯이 비워져요",
+      "unlocks": "정적 코드 잠금 해제",
+      "packs": "포함된 Print Pack",
+      "packsNote": "{resets} · 이후 +{price}",
+      "credits": "정적 크레딧",
+      "oneTime": "일회성",
+      "creditsNote": "만료 없음 · 매월 잠금 해제를 다 쓴 후 사용",
+      "available": "{n}개 사용 가능",
+      "leftMonth": "이번 달 {n}개 남음",
+      "noReset": "{date}에 요금제 종료 · 초기화 없음"
+    },
+    "of": "/{limit}",
+    "left": "남음",
+    "resets": "{date} 초기화",
+    "price": "가격",
+    "perMonth": "월 {price}",
+    "renewsOn": "갱신일",
+    "endsOn": "종료일",
+    "paymentStripe": "Stripe에서 보관",
+    "upgrade": "Studio로 업그레이드 · 월 {price}",
+    "choosePlan": "요금제 선택",
+    "oneTime": "일회성 구매",
+    "item": "항목",
+    "amount": "금액",
+    "receipt": "영수증",
+    "credits": "정적 크레딧 {n}개",
+    "items": {
+      "single": "단일 QR 코드",
+      "printPack": "Print Pack"
+    },
+    "portal": {
+      "noCustomer": "아직 결제 계정이 없어요. 첫 결제 시 만들어져요.",
+      "unavailable": "현재 요금제에서는 지금 사용할 수 없어요.",
+      "failed": "Stripe를 열지 못했어요. 변경된 내용은 없으니 다시 시도해 주세요."
+    },
+    "updatePayment": "결제 수단 업데이트",
+    "card": "{brand} •••• {last4}",
+    "overdue": {
+      "title": "갱신 결제가 처리되지 않았어요",
+      "pastDue": "결제가 연체된 동안에도 요금제는 활성 상태로 유지돼요. 결제 수단을 업데이트해 미결제 청구서를 결제하세요.",
+      "unpaid": "갱신 결제가 처리되지 않아 요금제가 종료되었어요. 결제 수단을 업데이트하고 미결제 청구서를 결제하면 다시 활성화돼요.",
+      "action": "결제 수단 업데이트 및 결제",
+      "status": "결제 연체",
+      "pending": "결제 후 여기에서 요금제가 업데이트되기까지 잠시 걸릴 수 있어요."
+    },
+    "canceling": {
+      "title": "요금제가 {date}에 종료돼요",
+      "until": "그때까지는 지금처럼 모든 기능이 작동해요. 동적 코드는 계속 연결되고 슬롯과 매월 잠금 해제도 유지돼요.",
+      "after": "{count, plural, =0 {그날 이후 동적 코드는 연결되는 대신 ‘현재 활성 상태가 아님’ 페이지를 표시해요.} other {그날 이후 활성 동적 코드 #개는 연결되는 대신 ‘현재 활성 상태가 아님’ 페이지를 표시해요. 단축 링크, 연결 주소, 디자인은 그대로 보관돼요.}} 구매한 정적 코드는 계속 작동해요.",
+      "resume": "요금제 유지",
+      "resumeNote": "같은 구독으로 요금제가 계속되며 평소 갱신일에 갱신돼요. 지금 청구되는 금액은 없어요.",
+      "resumed": "요금제가 계속돼요. 평소 갱신일에 갱신돼요.",
+      "notScheduled": "취소할 해지 예약이 더 이상 없어요. 페이지를 새로고침해 요금제를 확인하세요.",
+      "failed": "요금제를 유지하지 못했어요. 변경된 내용은 없어요. 다시 시도해 주세요."
+    },
+    "ended": {
+      "title": "{plan} 요금제가 {date}에 종료되었어요",
+      "titleNoDate": "{plan} 요금제가 종료되었어요",
+      "scans": "동적 코드에는 ‘현재 활성 상태가 아님’ 페이지가 표시돼요. 단축 링크, 연결 주소, 디자인, 스캔 기록은 그대로 보관돼요. 구매한 정적 코드는 계속 작동해요.",
+      "back": "다시 활성화하면 이미 인쇄한 코드가 다시 연결돼요. 일시 중지하거나 삭제한 코드는 그 상태로 유지돼요.",
+      "reactivate": "{plan} 다시 활성화 · 월 {price}"
+    }
+  },
+  "legal": {
+    "terms": {
+      "title": "서비스 약관"
+    },
+    "privacy": {
+      "title": "개인정보 처리방침"
+    },
+    "draft": "법률 문구가 승인될 때까지 이 페이지는 임시로 표시돼요."
+  },
+  "errors": {
+    "notFound": {
+      "title": "페이지를 찾을 수 없어요",
+      "text": "찾으시는 페이지가 존재하지 않아요.",
+      "cta": "홈으로"
+    },
+    "linkUnavailable": {
+      "title": "이 링크는 활성 상태가 아니에요",
+      "text": "이 QR 코드의 소유자가 코드를 일시 중지했거나 더 이상 존재하지 않아요."
+    },
+    "generic": "문제가 발생했어요. 다시 시도해 주세요.",
+    "invalid": "표시된 항목을 확인해 주세요.",
+    "unauthorized": "계속하려면 로그인해 주세요.",
+    "too_long": "QR 코드에 담기에는 내용이 너무 길어요. 줄인 후 다시 시도해 주세요.",
+    "linkInactive": {
+      "title": "지금은 이 링크를 사용할 수 없어요",
+      "text": "이 QR 코드는 현재 활성 상태가 아니에요. 휴대폰에는 문제가 없으니 나중에 다시 시도해 주세요."
+    },
+    "draft_limit": "저장된 초안이 {limit}개로, 계정당 보관할 수 있는 최대 개수예요. 내 QR 코드에서 하나를 잠금 해제하거나 삭제한 후 다시 저장해 주세요. 디자인은 그대로 유지돼요.",
+    "page": {
+      "title": "문제가 발생했어요",
+      "text": "이 페이지를 불러오지 못했어요. 저장된 코드와 초안은 안전해요. 다시 시도하거나 처음으로 돌아가 주세요.",
+      "retry": "다시 시도",
+      "home": "홈페이지로 이동",
+      "reference": "참조: {ref}"
+    }
+  },
+  "common": {
+    "close": "닫기",
+    "loading": "불러오는 중…",
+    "required": "필수"
+  },
+  "loading": {
+    "page": "불러오는 중",
+    "details": "QR 코드를 불러오는 중",
+    "billing": "요금제와 구매 내역을 불러오는 중",
+    "export": "파일을 불러오는 중",
+    "editor": "편집기를 불러오는 중"
+  },
+  "trial": {
+    "badge": "Starter 체험",
+    "back": "내 QR 코드",
+    "states": {
+      "active": {
+        "title": "체험이 진행 중이에요",
+        "lead": "{start}에 시작했어요. 테스트용 동적 QR은 {end}까지 실제로 작동해요.",
+        "big": "{days, plural, other {#일}}",
+        "bigSub": "남음 · {end} 종료",
+        "status": "등록된 카드가 없으므로 체험이 끝나도 요금이 청구되지 않아요. 그때까지 테스트 코드는 실제로 연결돼요.",
+        "main": "Starter 활성화 · 월 {price}",
+        "second": "내 QR 코드 열기",
+        "foot": "활성화해도 같은 단축 링크가 유지되므로 인쇄한 테스트 코드는 계속 작동해요.",
+        "endTitle": "{end}에 체험이 끝나면"
+      },
+      "ending": {
+        "title": "체험이 곧 끝나요",
+        "lead": "{end}에 테스트 코드의 연결이 중단돼요. 계속 사용하려면 Starter를 활성화하세요.",
+        "big": "{days, plural, other {#일}}",
+        "bigSub": "남음 · {end} 종료",
+        "status": "등록된 카드가 없으므로 자동으로 청구되는 요금은 없어요.",
+        "main": "Starter 활성화 · 월 {price}",
+        "second": "내 QR 코드 열기",
+        "foot": "활성화해도 같은 단축 링크가 유지되므로 인쇄한 테스트 코드는 계속 작동해요.",
+        "endTitle": "{end}에 일어나는 일"
+      },
+      "expired": {
+        "title": "체험이 종료되었어요",
+        "lead": "{end}에 종료되었어요. 테스트 코드는 일시 중지되었고 디자인과 스캔 기록은 보관돼요.",
+        "big": "종료됨",
+        "bigSub": "{end}",
+        "status": "테스트 코드의 단축 링크에 이제 ‘링크 일시 중지됨’ 페이지가 표시돼요. Starter를 활성화하면 다시 연결 주소로 연결돼요.",
+        "main": "Starter로 다시 활성화 · 월 {price}",
+        "second": "모든 요금제 보기",
+        "foot": "청구된 요금은 없어요. 등록된 카드가 없었어요.",
+        "endTitle": "다시 활성화하는 방법"
+      },
+      "upgraded": {
+        "title": "Starter 요금제가 활성화되었어요",
+        "lead": "체험용 테스트 코드가 이제 요금제의 일반 동적 QR이 되었어요.",
+        "big": "동적",
+        "bigSub": "요금제 활성",
+        "status": "테스트 코드는 단축 링크를 그대로 유지하며 이전처럼 연결돼요.",
+        "main": "내 QR 코드 열기",
+        "second": "요금제 및 결제 관리",
+        "foot": "결제할 때마다 Stripe가 영수증을 이메일로 보내요.",
+        "endTitle": "달라진 점"
+      }
+    },
+    "steps": {
+      "pause": {
+        "t": "테스트 연결이 일시 중지돼요",
+        "d": "단축 링크에 연결 주소 대신 ‘링크 일시 중지됨’ 페이지가 표시돼요. 삭제되는 것은 없어요."
+      },
+      "free": {
+        "t": "요금이 청구되지 않아요",
+        "d": "등록된 카드가 없고 자동 갱신도 없어요."
+      },
+      "wake": {
+        "t": "언제든 활성화해 다시 켤 수 있어요",
+        "d": "Starter를 선택하면 같은 단축 링크가 다시 연결돼요. 디자인과 스캔 기록은 계정에 그대로 남아요."
+      },
+      "choose": {
+        "t": "Starter 선택",
+        "d": "월 {price}. 언제든 해지할 수 있어요."
+      },
+      "same": {
+        "t": "단축 링크가 다시 작동해요",
+        "d": "같은 연결 주소로 다시 연결돼요."
+      },
+      "room": {
+        "t": "계속 사용하기",
+        "d": "활성 동적 코드 최대 {limit}개, 일별 스캔 통계 제공."
+      },
+      "kept": {
+        "t": "같은 단축 링크",
+        "d": "인쇄한 테스트 코드가 계속 작동해요. 다시 인쇄할 필요가 없어요."
+      },
+      "more": {
+        "t": "더 넉넉하게",
+        "d": "활성 동적 코드 최대 {limit}개와 일별 스캔 통계."
+      },
+      "receipt": {
+        "t": "이메일 영수증",
+        "d": "요금제 및 결제 관리에서 언제든 요금제를 관리하거나 해지하세요."
+      }
+    },
+    "code": {
+      "title": "테스트용 동적 QR",
+      "live": "연결 중",
+      "paused": "연결 일시 중지됨",
+      "plan": "요금제에서 활성",
+      "opens": "{host} 열기",
+      "pausedLine": "일시 중지됨 · ‘링크 일시 중지됨’ 페이지 표시",
+      "scans": "지금까지 스캔",
+      "today": "오늘",
+      "chart": "체험 기간 일별 스캔: {values}",
+      "change": "연결 주소 변경",
+      "view": "테스트 코드 보기",
+      "none": "아직 테스트 코드를 만들지 않았어요.",
+      "noneText": "동적 웹사이트 QR을 만들고 체험을 사용해 활성화하세요. 인쇄해서 테스트할 수 있는 실제 단축 링크가 생겨요.",
+      "create": "테스트용 동적 QR 만들기"
+    },
+    "included": {
+      "title": "체험에 포함된 항목",
+      "kept": "체험에서 유지되는 항목",
+      "points": [
+        "실제 단축 링크가 있는 테스트용 동적 QR 1개",
+        "일별 스캔 합계",
+        "언제든 연결 주소 변경",
+        "모든 레이아웃, 모양, 색상, 로고, 캡션"
+      ],
+      "not": "정적 코드는 여전히 구매가 필요해요."
+    },
+    "start": {
+      "title": "동적 QR을 7일간 무료로 체험하세요",
+      "text": "카드 등록도, 자동 결제도 없어요. 실제 단축 링크가 있는 테스트용 동적 QR 1개를 제공해요.",
+      "action": "7일 무료 체험 시작",
+      "used": "이미 무료 체험을 사용했어요.",
+      "failed": "체험을 시작하지 못했어요. 다시 시도해 주세요."
+    },
+    "bar": {
+      "active": {
+        "title": "Starter 체험 · {days, plural, other {#일}} 남음.",
+        "text": "테스트 코드는 {end}까지 연결돼요. 등록된 카드가 없어요."
+      },
+      "ending": {
+        "title": "체험이 {end}에 종료돼요.",
+        "text": "테스트 코드를 계속 연결하려면 Starter를 활성화하세요."
+      },
+      "expired": {
+        "title": "체험이 {end}에 종료되었어요.",
+        "text": "테스트 코드가 일시 중지되었어요. 다시 켜려면 Starter를 활성화하세요."
+      },
+      "upgraded": {
+        "title": "Starter 요금제가 활성화되었어요.",
+        "text": "테스트 코드가 이제 일반 동적 QR이 되었어요."
+      },
+      "open": "체험 세부 정보",
+      "activate": "Starter 활성화…"
+    },
+    "usage": {
+      "title": "체험용 동적 슬롯",
+      "count": "{used}/1",
+      "hint": "매월 제공량이 아닌 활성 슬롯이에요."
+    },
+    "useTrial": "무료 체험 사용 · 지금 활성화",
+    "useTrialHint": "체험 기간 동안 사용하는 테스트용 동적 QR 1개예요. 카드가 필요 없어요.",
+    "useTrialFailed": "이 코드에 체험을 사용하지 못했어요. 이미 테스트 코드가 있을 수 있어요.",
+    "sample": {
+      "title": "Print Pack 샘플",
+      "badge": "데모 QR",
+      "demo": "Print Pack 샘플의 데모 QR",
+      "text": "Print Pack에 무엇이 들어 있는지 정확히 확인하세요. 샘플에는 테스트 코드가 아닌 Hey QR로 연결되는 데모 QR이 사용돼요.",
+      "pdf": "샘플 인쇄용 PDF",
+      "pdfSub": "sRGB · 재단 여백과 재단선 포함 {w} × {h} mm 페이지",
+      "svg": "샘플 편집용 SVG",
+      "svgSub": "sRGB · HEX 색상 · {w} × {h} mm",
+      "spec": "샘플 사양",
+      "specSub": "PDF 시트 · 크기 및 색상 값"
+    }
+  },
+  "print": {
+    "spec": {
+      "title": "인쇄 사양",
+      "finished": "완성 크기",
+      "page": "PDF 페이지(재단 여백 및 재단선 포함)",
+      "bleed": "재단 여백",
+      "marks": "재단선",
+      "qr": "QR 크기(여백 영역 포함)",
+      "profile": "색상 프로필",
+      "srgb": "sRGB · 변환 없음",
+      "logo": "로고 해상도",
+      "vector": "벡터, 모든 크기",
+      "colors": "색상(HEX · sRGB)",
+      "key": "렌더링 키",
+      "yes": "예",
+      "no": "아니요",
+      "role_modules": "모듈",
+      "role_corners": "모서리 프레임",
+      "role_centers": "모서리 중앙",
+      "role_background": "배경",
+      "role_frame": "프레임",
+      "role_caption": "캡션"
+    },
+    "title": "인쇄 미리보기",
+    "leadLocked": "구매하기 전에 정확한 PDF 페이지와 인쇄 사양을 확인하세요. 파일은 여기에서 보이는 것과 동일해요.",
+    "leadUnlocked": "파일을 만드는 기준이 되는 PDF 페이지예요. 설정을 조정하고 추가 비용 없이 다시 다운로드하세요.",
+    "locked": "Print Pack 잠김",
+    "unlocked": "Print Pack 잠금 해제됨",
+    "back": {
+      "details": "QR 세부 정보로 돌아가기",
+      "export": "내보내기로 돌아가기"
+    },
+    "toDesign": "디자인으로 돌아가기",
+    "canvas": "PDF 페이지 미리보기",
+    "zoom": "확대/축소",
+    "fit": "맞추기",
+    "z100": "100%",
+    "z200": "200%",
+    "guides": "재단선 및 안전 영역",
+    "approx": "인쇄 색상을 화면에서 근사치로 표시",
+    "trimLabel": "재단 크기 {size}",
+    "generating": "인쇄 미리보기를 생성하는 중…",
+    "pageLabel": "인쇄용 PDF 페이지, {w} × {h} mm",
+    "error": {
+      "title": "미리보기를 생성하지 못했어요.",
+      "text": "레이아웃과 인쇄 설정은 유지돼요. 보통 일시적인 문제예요.",
+      "retry": "다시 시도"
+    },
+    "foot": {
+      "page": "PDF 페이지 {size}",
+      "count": "1페이지",
+      "bleed": "재단 여백 {bleed} mm",
+      "noBleed": "재단 여백 없음",
+      "marks": "재단선",
+      "noMarks": "재단선 없음",
+      "pageB": "PDF 페이지 <b>{size}</b>"
+    },
+    "specTitle": "인쇄 사양",
+    "keys": {
+      "finished": "완성 크기",
+      "finishedBleed": "+ 각 면에 재단 여백 {bleed} mm",
+      "finishedNoBleed": "재단 여백 없음",
+      "qr": "QR 크기",
+      "qrSmall": "20 mm 미만 · 일부 환경에서 스캔되지 않을 수 있음",
+      "qrOk": "최대 약 {cm} cm 거리에서 스캔 가능",
+      "profile": "색상 프로필",
+      "profileSub": "RGB, 변환 없음",
+      "logo": "로고 해상도",
+      "logoVector": "벡터",
+      "logoNone": "로고 없음",
+      "logoLow": "이 크기에서 300 ppi 미만",
+      "logoOk": "300 ppi 이상 · 선명하게 인쇄됨",
+      "logoVectorSub": "모든 크기에서 선명함",
+      "logoNoneSub": "확인할 항목 없음",
+      "logoChecking": "확인하는 중…",
+      "logoCheckingSub": "이 크기 기준으로 측정"
+    },
+    "unlock": {
+      "title": "Print Pack 잠금 해제",
+      "text": "아래 설정으로 만든 ‘{name}’의 인쇄용 PDF, 편집 가능한 SVG, 사양서를 받으세요.",
+      "action": "Print Pack 추가 · +{price}",
+      "sub": "이 QR에 대한 일회성 결제예요. 결제 후 설정이 유지된 채로 이 화면으로 돌아와요.",
+      "notForSale": "아직 여기에서는 Print Pack을 구매할 수 없어요. 페이지와 사양은 계속 확인할 수 있어요.",
+      "needCode": "먼저 이 QR을 잠금 해제하세요. Print Pack은 구매했거나 활성 상태인 코드에 추가하는 옵션이에요.",
+      "buyCode": "이 QR 구매",
+      "failed": "결제 페이지를 열지 못했어요. 청구된 요금은 없으니 다시 시도해 주세요.",
+      "cancelled": "결제가 취소되었어요. 요금은 청구되지 않았고 설정은 유지돼요.",
+      "pending": "결제를 확인하는 중…",
+      "pendingSub": "이 설정 그대로 이 화면에 머물러요.",
+      "useIncluded": "포함된 Print Pack 1개 사용",
+      "payInstead": "대신 {price} 결제하고 제공량 아끼기",
+      "includedLeft": "이번 달 포함된 Print Pack {limit}개 중 {left}개 남음 · {resets} 초기화"
+    },
+    "files": {
+      "title": "Print Pack 잠금 해제됨",
+      "badge": "다운로드 준비 완료",
+      "text": "파일에는 아래 설정이 적용돼요. 설정을 바꾸고 추가 비용 없이 다시 다운로드하세요.",
+      "pdf": "인쇄용 PDF 다운로드",
+      "pdfSub": "sRGB · {w} × {h} mm 페이지",
+      "svg": "편집 가능한 SVG 다운로드",
+      "svgSub": "sRGB · HEX 색상 · {w} × {h} mm",
+      "spec": "인쇄 사양 다운로드",
+      "specSub": "PDF 시트 · 크기 및 색상 값",
+      "stale": "이 미리보기 이후 레이아웃이 변경되었어요. 다운로드하기 전에 페이지를 다시 확인하세요.",
+      "pdfTitle": "인쇄용 PDF",
+      "svgTitle": "편집 가능한 SVG",
+      "specTitle": "인쇄 사양"
+    },
+    "size": {
+      "title": "완성 크기",
+      "custom": "사용자 지정",
+      "width": "너비",
+      "height": "높이 · 비율 유지",
+      "hint": "너비 15~600 mm. QR과 캡션은 레이아웃에 맞춰 크기가 조정돼요."
+    },
+    "warn": {
+      "qrTitle": "QR 너비가 {mm} mm예요",
+      "qrText": "20 mm 미만의 코드는 오래된 휴대폰에서 인식되지 않을 수 있어요. 레이아웃을 키우거나 코드를 20 mm 이상으로 유지하세요.",
+      "logoTitle": "이 크기에서 로고 해상도는 {ppi} ppi예요",
+      "logoText": "흐릿하게 인쇄될 수 있어요. 너비 {px} px 이상의 로고를 업로드하거나 100% 크기로 인쇄하세요.",
+      "upload": "더 높은 해상도의 로고 업로드",
+      "use100": "100% 크기 사용"
+    },
+    "profiles": {
+      "title": "인쇄용 PDF의 색상 프로필",
+      "srgb": "sRGB · 변환 없음",
+      "srgbDesc": "디지털 인쇄기와 대부분의 온라인 인쇄소에 적합해요.",
+      "fogra39": "Coated FOGRA39",
+      "gracol": "GRACoL 2013",
+      "fogra29": "Uncoated FOGRA29",
+      "cmykDesc": "CMYK 변환은 아직 지원되지 않아요.",
+      "shop": "<b>인쇄소에 확인하세요.</b> 어떤 색상 프로필이 필요한지 문의하세요. 잘 모른다면 PDF와 사양서를 함께 보내세요."
+    },
+    "colors": {
+      "title": "색상",
+      "legendHex": "<b>HEX · sRGB</b> 편집 가능한 SVG",
+      "legendCmyk": "<b>CMYK</b> CMYK 프로필에서만",
+      "none": "—",
+      "note": "두 파일 모두 색상은 정확한 sRGB 값이에요. 화면에는 인쇄 색상의 근사치가 표시돼요."
+    },
+    "tech": {
+      "title": "기술 설정",
+      "bleed": "재단 여백",
+      "bleedDesc": "배경이 재단선 바깥까지 확장돼요",
+      "marks": "재단선",
+      "k100": "검은색 모듈을 100% K로 인쇄",
+      "k100Hint": "CMYK 프로필에서 사용할 수 있어요.",
+      "pdf": "PDF 표준",
+      "pdfV": "PDF 1.7, 벡터",
+      "text": "텍스트",
+      "textV": "글꼴 포함",
+      "logo": "로고",
+      "logoRaster": "{px} px 래스터 · {mm} mm에서 {ppi} ppi",
+      "logoVector": "벡터",
+      "quiet": "여백 영역",
+      "quietV": "모든 면에 4모듈",
+      "safe": "안전 영역",
+      "safeV": "재단선 안쪽 {mm} mm",
+      "intent": "출력 인텐트",
+      "intentV": "sRGB, 변환 없음",
+      "none": "없음"
+    },
+    "notPrint": {
+      "title": "화면용 레이아웃이에요",
+      "text": "Print Pack을 사용하려면 mm 단위의 인쇄 레이아웃이 필요해요. 디자인 → 크기에서 단위를 바꿔 추가하세요.",
+      "action": "인쇄용으로 설정"
+    },
+    "pack": {
+      "title": "Print Pack",
+      "add": "Print Pack을 추가하면 인쇄소에 필요한 모든 파일을 한 번에 다운로드할 수 있어요. 재단 여백과 재단선이 포함된 인쇄용 PDF, 편집 가능한 SVG, 색상 및 크기 안내서가 들어 있어요. 먼저 인쇄 미리보기에서 페이지를 확인하세요.",
+      "preview": "인쇄 미리보기 · {layout}",
+      "defaults": "기본 설정: 100% 크기, 재단 여백 3 mm, 재단선. 인쇄 미리보기에서 변경할 수 있어요.",
+      "open": "인쇄 미리보기 열기"
+    },
+    "plan": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "sample": {
+      "pageTitle": "인쇄 미리보기 · 샘플",
+      "name": "Little Fern Coffee",
+      "layout": "브랜드 카드 샘플",
+      "back": "홈으로 돌아가기",
+      "title": "샘플이에요",
+      "text": "데모 QR로 Print Pack에 무엇이 들어 있는지 정확히 보여 드려요. 나만의 코드를 만든 후 구매하기 전에 여기에서 인쇄 파일을 확인하세요.",
+      "create": "QR 코드 만들기",
+      "pricing": "Print Pack 자세히 보기"
+    }
+  },
+  "plans": {
+    "title": "코드 몇 개는 한 번만 결제하고, 많이 필요하면 요금제를 선택하세요.",
+    "lead": "디자인, 미리보기, 스캔 확인은 언제나 무료예요. 다운로드할 때 결제해요.",
+    "currencyLabel": "가격 표시 통화",
+    "localTitle": "{currency} 현지 가격이에요.",
+    "localText": "사이트 전체, 결제, 영수증에 이 금액이 사용돼요. 세금은 결제 시 추가돼요.",
+    "pendingTitle": "일부 {currency} 가격이 아직 설정되지 않았어요.",
+    "pendingText": "{currency} 가격이 없는 상품은 현재 {currency}(으)로 구매할 수 없어요. 다른 통화에서 환산되지 않아요.",
+    "unavailable": "아직 {currency}(으)로 구매할 수 없어요.",
+    "current": "현재 요금제",
+    "manage": "요금제 관리",
+    "perMonth": "월",
+    "live": "동시 활성",
+    "monthly": "매월 새로 제공",
+    "dynCodes": "동적 QR 코드 <b>{n}</b>개",
+    "unlocks": "정적 QR 잠금 해제 <b>{n}</b>개",
+    "packsIncl": "Print Pack <b>{n}</b>개",
+    "once": {
+      "title": "일회성",
+      "sub": "구독이 없어요. 잠금 해제한 코드는 계속 내 것이에요."
+    },
+    "month": {
+      "title": "월간",
+      "sub": "동적 QR 코드와 많은 정적 코드가 필요할 때. 언제든 해지할 수 있어요."
+    },
+    "free": {
+      "title": "무료",
+      "q": "비용을 내기 전에 코드를 디자인하고 테스트하세요.",
+      "a": "실시간 디자인 및 미리보기",
+      "b": "수정할 때마다 스캔 확인",
+      "c": "로그인 시 초안 최대 {limit}개 저장",
+      "cta": "디자인 시작"
+    },
+    "single": {
+      "title": "단일 QR 코드",
+      "unit": "1회",
+      "q": "모든 다운로드가 포함된 정적 QR 1개.",
+      "a": "PNG 및 SVG 다운로드",
+      "b": "해당 QR의 모든 레이아웃, 언제든 다시 다운로드",
+      "c": "선택 사항: Print Pack +{price}",
+      "cta": "QR 만들기"
+    },
+    "packs": {
+      "title": "정적 팩",
+      "unit": "크레딧 {n}개",
+      "credits": "정적 크레딧 {n}개",
+      "each": "QR당 {price}",
+      "buy": "크레딧 {n}개 구매",
+      "note": "크레딧 1개로 원하는 때에 고유한 정적 QR 1개를 잠금 해제할 수 있어요. 크레딧은 만료되지 않아요."
+    },
+    "pp": {
+      "kicker": "모든 QR에 추가 가능",
+      "title": "Print Pack · QR당 +{price}",
+      "text": "기본적으로 꺼져 있어요. 결제할 때 또는 나중에 QR 세부 정보에서 추가하세요. Studio에는 매월 {n}개가 포함돼요.",
+      "pdf": "벡터 인쇄용 PDF",
+      "pdfSub": "sRGB, 재단 여백 3 mm, 재단선, 정확한 크기.",
+      "svg": "편집 가능한 SVG",
+      "svgSub": "직접 작업하는 아트워크용, sRGB 및 HEX 색상.",
+      "spec": "색상 및 크기 안내서",
+      "specSub": "완성 크기, QR 크기, 여백 영역, 색상 값."
+    },
+    "starter": {
+      "title": "Starter",
+      "badge": "7일 무료 체험",
+      "a": "기본 스캔 분석: 일별 합계",
+      "b": "언제든 동적 연결 주소 변경",
+      "c": "Print Pack QR당 +{price}",
+      "trial": "7일 무료 체험 시작",
+      "openTrial": "체험 열기",
+      "subscribe": "지금 구독 · 월 {price}",
+      "note": "체험: 카드 등록 없음, 자동 결제 없음."
+    },
+    "studio": {
+      "title": "Studio",
+      "badge": "팀 및 인쇄 작업용",
+      "a": "코드별 스캔 분석",
+      "b": "언제든 동적 연결 주소 변경",
+      "c": "추가 Print Pack QR당 +{price}",
+      "cta": "Studio 선택"
+    },
+    "rules": {
+      "title": "잠금 해제와 한도 안내",
+      "1t": "잠금 해제 1회, 고유 QR 1개",
+      "1d": "정적 크레딧 또는 매월 잠금 해제 1회로 QR 1개를 열어요. 해당 QR의 모든 레이아웃, PNG 및 SVG 파일, 다시 다운로드는 같은 잠금 해제를 사용해요.",
+      "2t": "매월 제공량은 초기화돼요",
+      "2d": "새 정적 잠금 해제와 포함된 Print Pack은 결제일에 새로 제공돼요. 사용하지 않은 제공량은 이월되지 않아요.",
+      "3t": "동적 슬롯은 월 단위가 아닌 활성 기준이에요",
+      "3d": "코드가 연결되는 동안 슬롯이 사용돼요. 동적 코드를 일시 중지하거나 삭제하면 즉시 슬롯이 비워져요.",
+      "4t": "해지 후에도 내 것",
+      "4d": "잠금 해제한 정적 코드는 계속 내 것이에요. 인쇄한 코드는 계속 작동하고 파일도 계속 다운로드할 수 있어요. 결제 기간이 끝나면 동적 단축 링크의 연결이 중단되며 다운로드나 활성화를 할 수 없어요. 코드는 보관돼요.",
+      "5t": "갱신 결제가 실패하면",
+      "5d": "결제가 연체되어 Stripe가 재시도하는 동안 요금제는 활성 상태로 유지돼요. 결제가 처리되지 않아 구독이 종료되면 해지했을 때와 마찬가지로 요금제가 종료돼요. 결제가 처리되면 요금제가 계속돼요."
+    },
+    "cmp": {
+      "title": "비교",
+      "what": "기능",
+      "region": "요금제 비교",
+      "more": "스크롤해서 더 많은 요금제 보기",
+      "pick1": "첫 번째 요금제",
+      "pick2": "두 번째 요금제",
+      "yes": "포함",
+      "no": "포함되지 않음",
+      "na": "해당 없음: 구독이 아님",
+      "model": {
+        "free": "무료",
+        "once": "일회성 구매",
+        "credits": "크레딧",
+        "monthly": "월간 구독"
+      },
+      "once": "1회",
+      "mo": "/월",
+      "live": "실시간 디자인, 미리보기, 스캔 확인",
+      "static": "정적 QR 잠금 해제",
+      "staticHint": "PNG 및 SVG 파일",
+      "dynamic": "활성 동적 QR 슬롯",
+      "dynamicHint": "동시에 활성",
+      "analytics": "스캔 분석",
+      "printPack": "Print Pack",
+      "repeat": "다시 다운로드",
+      "cancel": "해지 후",
+      "oneQr": "QR 1개",
+      "perCredit": "크레딧당 QR 1개",
+      "noExpiry": "크레딧 만료 없음",
+      "perMonth": "매월 {n}개 새로 제공",
+      "noRollover": "사용하지 않은 제공량은 이월되지 않음",
+      "atOnce": "동시에 {n}개 활성",
+      "freeSlot": "일시 중지하면 슬롯이 비워짐",
+      "basic": "기본",
+      "daily": "일별 합계",
+      "perCode": "코드별",
+      "ppAdd": "QR당 +{price}",
+      "ppStudio": "매월 {n}개 포함",
+      "ppThen": "이후 QR당 +{price}",
+      "stay": "정적 코드는 계속 다운로드 가능",
+      "dynStop": "결제 기간이 끝나면 동적 링크 연결 중단",
+      "foot": "세금은 결제 시 계산돼요. 웹사이트 코드는 정적 또는 동적으로 만들 수 있으며, 텍스트, Wi-Fi, 연락처 카드 코드는 정적이에요."
+    },
+    "errors": {
+      "not_offered": "선택한 통화로는 아직 구매할 수 없어요. 청구된 요금은 없어요.",
+      "price_mismatch": "페이지를 불러온 후 가격이 변경되었어요. 청구된 요금은 없으니 새로고침해 현재 가격을 확인하세요.",
+      "unauthorized": "계속하려면 로그인하세요.",
+      "failed": "결제 페이지를 열지 못했어요. 청구된 요금은 없으니 다시 시도해 주세요."
+    },
+    "terms": "언제든 해지할 수 있으며, 요금제는 결제 기간이 끝날 때까지 유지돼요. 갱신 결제가 실패해도 연체 기간 동안에는 활성 상태로 유지돼요."
+  },
+  "apiKeys": {
+    "title": "API 키",
+    "lead": "키를 사용하면 자체 도구에서 이 계정의 QR 코드를 다룰 수 있어요. 각 키는 이 계정에만 속해요.",
+    "yourKeys": "내 키",
+    "create": "API 키 만들기",
+    "once": "지금 이 키를 복사하세요. 보안을 위해 한 번만 표시되며 나중에 다시 확인할 수 없어요.",
+    "copy": "복사",
+    "copied": "복사됨",
+    "done": "완료",
+    "none": "아직 API 키가 없어요.",
+    "created": "{date} 생성",
+    "failed": "키를 만들지 못했어요. 저장된 내용은 없으니 다시 시도해 주세요.",
+    "active": "활성",
+    "revoked": "폐기됨",
+    "revokedOn": "{date} 폐기",
+    "lastUsed": "마지막 사용 {date}",
+    "neverUsed": "사용한 적 없음",
+    "revoke": {
+      "action": "폐기",
+      "label": "{prefix} 폐기",
+      "title": "{prefix} 키를 폐기할까요?",
+      "text": "이 키를 사용하는 도구는 즉시 작동을 멈춰요. 다른 키는 계속 작동해요. 이 작업은 되돌릴 수 없어요.",
+      "confirm": "키 폐기",
+      "cancel": "취소",
+      "done": "{prefix} 키가 폐기되었어요.",
+      "failed": "키를 폐기하지 못했어요. 변경된 내용은 없으니 다시 시도해 주세요.",
+      "close": "닫기"
+    }
+  },
+  "hosted": {
+    "hostedBy": "HeyQR에서 호스팅",
+    "report": "이 페이지 신고",
+    "unavailableTitle": "이 페이지를 사용할 수 없어요",
+    "unavailableText": "소유자가 이 QR 코드를 일시 중지했거나 페이지를 삭제했어요. 나중에 다시 시도하거나 소유자에게 직접 문의해 주세요.",
+    "loading": "페이지를 불러오는 중",
+    "menu": {
+      "kicker": "메뉴",
+      "sections": "메뉴 섹션"
+    },
+    "coupon": {
+      "kicker": "쿠폰",
+      "expiredKicker": "종료된 혜택",
+      "copy": "코드 복사",
+      "copied": "복사됨",
+      "redeem": "온라인에서 사용",
+      "expired": "만료됨",
+      "ended": "이 혜택은 종료되었어요. 진행 중인 혜택은 매장에 문의해 주세요.",
+      "ends": "{date} 종료",
+      "endedOn": "{date} 종료됨",
+      "terms": "이용 조건"
+    },
+    "social": {
+      "links": "링크"
+    },
+    "business": {
+      "kicker": "비즈니스",
+      "openNow": "영업 중 · {to}까지",
+      "closedNow": "영업 종료",
+      "closedToday": "오늘 휴무",
+      "call": "전화",
+      "directions": "길찾기",
+      "website": "웹사이트",
+      "hours": "영업시간",
+      "closed": "휴무",
+      "days": {
+        "mon": "월",
+        "tue": "화",
+        "wed": "수",
+        "thu": "목",
+        "fri": "금",
+        "sat": "토",
+        "sun": "일"
+      },
+      "closedOpens": "영업 종료 · {from}에 영업 시작"
+    },
+    "apps": {
+      "appStoreTop": "다운로드하기",
+      "appStore": "App Store",
+      "playTop": "다운로드하기",
+      "play": "Google Play",
+      "phoneNote": "휴대폰에 맞는 스토어 링크를 여세요.",
+      "desktopNote": "컴퓨터에서는 버튼을 누르면 각 스토어의 웹사이트가 열려요.",
+      "scanTitle": "휴대폰으로 스캔하세요",
+      "scanText": "iPhone에서는 App Store, Android에서는 Google Play가 열려요.",
+      "qrLabel": "이 페이지의 QR 코드"
+    },
+    "pdf": {
+      "open": "PDF 열기",
+      "download": "다운로드",
+      "meta": "{pages, plural, other {#페이지}} · {size}",
+      "metaNoPages": "{size}",
+      "waiting": "이 문서의 새 버전을 준비하고 있어요. 잠시 후 다시 시도해 주세요.",
+      "notReady": "문서를 아직 준비하고 있어요."
+    },
+    "product": {
+      "photos": "제품 사진",
+      "photo": "사진 {n}/{count}",
+      "prev": "이전 사진",
+      "next": "다음 사진",
+      "opens": "{host} 열기"
+    },
+    "reportForm": {
+      "title": "이 페이지 신고",
+      "lead": "무엇이 문제인지 알려 주세요. HeyQR이 모든 신고를 검토해요.",
+      "reason": "사유",
+      "reasons": {
+        "scam": "사기 또는 부정 행위",
+        "malware": "악성 코드 또는 유해한 다운로드",
+        "illegal": "불법적이거나 유해한 콘텐츠",
+        "impersonation": "다른 사람을 사칭함",
+        "other": "기타"
+      },
+      "details": "세부 내용",
+      "detailsPlaceholder": "무엇을 보셨나요? (선택 사항)",
+      "email": "이메일",
+      "emailHint": "선택 사항이에요. 문의할 내용이 있을 때만 사용해요.",
+      "send": "신고 보내기",
+      "sending": "보내는 중…",
+      "sent": "감사합니다. 이 페이지를 검토할게요.",
+      "failed": "신고를 보내지 못했어요. 다시 시도해 주세요.",
+      "invalid": "사유를 선택하고 이메일 주소를 확인해 주세요.",
+      "back": "페이지로 돌아가기"
+    }
+  },
+  "developers": {
+    "metaTitle": "개발자용 API",
+    "metaDescription": "직접 작성한 코드에서 HeyQR 코드를 만드세요. 정적 코드는 @heyqr/qr-core 패키지로, 동적 코드는 곧 출시될 REST API로 만들 수 있어요.",
+    "docs": {
+      "search": {
+        "label": "문서 검색",
+        "placeholder": "문서 검색",
+        "clear": "검색 지우기",
+        "empty": "“{query}”와(과) 일치하는 페이지가 없어요.",
+        "emptyHint": "“로고”, “PNG”, “스캔”, “Wi-Fi”로 검색해 보세요.",
+        "suggestions": ["로고", "PNG", "스캔", "Wi-Fi"],
+        "resultOne": "페이지 1개",
+        "resultOther": "페이지 {count}개"
+      },
+      "groups": {
+        "start": "시작하기",
+        "guides": "가이드",
+        "ref": "레퍼런스",
+        "help": "도움말",
+        "rest": "REST API"
+      },
+      "menu": {
+        "open": "문서 메뉴 열기",
+        "close": "문서 메뉴 닫기",
+        "label": "문서"
+      },
+      "breadcrumbRoot": "개발자",
+      "onThisPage": "이 페이지의 내용",
+      "backToTop": "맨 위로",
+      "previous": "이전",
+      "next": "다음",
+      "soon": "곧 출시",
+      "preview": "미리보기",
+      "designPreview": "디자인 미리보기",
+      "notPublic": "아직 비공개",
+      "env": {
+        "both": "브라우저 및 Node.js",
+        "browser": "브라우저",
+        "node": "Node.js 전용",
+        "shell": "터미널",
+        "types": "타입",
+        "http": "HTTP",
+        "json": "JSON"
+      },
+      "copy": "복사",
+      "copied": "복사됨",
+      "copiedAnnounce": "{file}을(를) 클립보드에 복사했어요",
+      "copyFailed": "복사하지 못했어요. 코드를 직접 선택해 주세요.",
+      "required": "필수",
+      "endpoint": {
+        "auth": "인증",
+        "authValue": "Authorization: Bearer <API 키>",
+        "method": "메서드",
+        "url": "요청 URL",
+        "base": "사용하는 HeyQR 서버 기준이에요. 공개 API는 아직 제공되지 않아요."
+      },
+      "helpful": {
+        "question": "이 페이지가 도움이 되었나요?",
+        "yes": "예",
+        "no": "아니요",
+        "sending": "보내는 중…",
+        "thanks": "의견을 보내 주셔서 감사해요.",
+        "failed": "저장하지 못했어요. 다시 시도해 주세요."
+      },
+      "footer": {
+        "checked": "@heyqr/qr-core {version} 소스와 대조해 확인했어요. 경로: {route}",
+        "restChecked": "이 빌드의 /api/v1 경로와 대조해 확인했어요. 경로: {route}",
+        "proposed": "제안된 설계예요. 공개된 계약이 아니에요."
+      },
+      "status": {
+        "unpublished": "미게시",
+        "live": "출시됨",
+        "liveOnNpm": "npm에 게시됨",
+        "soon": "곧 출시"
+      },
+      "products": {
+        "pkgTitle": "npm 패키지",
+        "pkgText": "무료예요. 정적 QR 코드를 내 컴퓨터에서 렌더링해요. 계정도 API 키도 필요 없어요.",
+        "restTitle": "REST API",
+        "restText": "서버에서 동적 코드를 포함한 코드를 만들고 관리하세요."
+      },
+      "install": {
+        "managers": "패키지 매니저",
+        "npmLink": "npmjs.com/package/{name}",
+        "opensNewTab": "(새 탭에서 열림)",
+        "unpublishedTitle": "아직 npm에 없어요",
+        "unpublishedText": "{name} {version}은(는) 아직 게시되지 않아서 설치할 수 없어요. 이 페이지의 모든 내용은 현재 소스와 일치해요. 출시되면 이메일로 알려 드릴게요:"
+      },
+      "restSoon": {
+        "cardTitle": "서버에서 만드는 동적 코드",
+        "cardText": "계정의 API 키로 코드를 만들고, 동적 코드의 연결 주소를 바꾸고, 스캔 수를 확인할 수 있게 될 거예요. API가 열리면 실제 요청과 응답이 담긴 전체 레퍼런스를 공개할게요.",
+        "planned": "예정",
+        "items": ["계정용 API 키", "코드 1개 또는 최대 100개를 한 번에 생성", "동적 코드의 연결 주소 변경", "일별 스캔 수"],
+        "npmLink": "지금 npm 패키지 사용하기"
+      },
+      "waitlist": {
+        "label": "REST API가 열리면 이메일 받기",
+        "placeholder": "you@company.com",
+        "join": "대기자 명단에 등록",
+        "joining": "등록 중…",
+        "invalid": "주소를 확인해 주세요. 이름, @, 도메인이 필요해요.",
+        "failed": "지금은 등록하지 못했어요. 다시 시도해 주세요.",
+        "joined": "명단에 등록됐어요. REST API가 열리면 {email}(으)로 연락드릴게요.",
+        "hint": "열릴 때 이메일 한 통만 보내요. 뉴스레터는 없어요."
+      },
+      "notifyPackages": {
+        "label": "패키지가 게시되면 이메일 받기",
+        "join": "이메일 받기",
+        "joined": "명단에 등록됐어요. 게시되면 {email}(으)로 연락드릴게요.",
+        "hint": "출시될 때 이메일 한 통만 보내요. 뉴스레터는 없어요."
+      },
+      "responseNotes": {
+        "created": "코드가 초안으로 생성됐고, 요청의 레이아웃마다 레이아웃 id가 하나씩 붙어요.",
+        "invalid": "필드가 규칙을 어겼어요. `details`에 각 필드 이름이 나오며 값은 절대 그대로 돌려주지 않아요.",
+        "draftLimit": "계정의 초안 수가 이미 최대치예요.",
+        "reused": "이 Idempotency-Key는 다른 요청에 사용됐어요. 아무것도 생성되지 않았어요.",
+        "changed": "저장됐어요. 주소가 이미 저장된 것과 같으면 `changed`가 false예요.",
+        "conflict": "다른 사람이 먼저 변경했어요. `current`는 현재 저장된 값이에요. 확인한 뒤 다시 결정하세요.",
+        "notDynamic": "정적 코드에는 연결 주소가 없어요. 콘텐츠가 패턴 안에 들어 있어요.",
+        "rateLimited": "계정 한도를 넘었어요. Retry-After초만큼 기다린 뒤 같은 요청을 다시 보내세요.",
+        "unauthorized": "검증되지 않는 키는 본문을 읽기 전에 모두 이 응답을 받아요.",
+        "bulk202": "GET /v1/jobs/{job_id}를 폴링하거나 웹후크를 기다리세요.",
+        "bulk400": "항목 하나라도 실패하면 코드가 하나도 생성되지 않아요.",
+        "scans200": "스캔이 없는 날도 0으로 포함돼요."
+      },
+      "pages": {
+        "overview": {
+          "title": "개발자용 API",
+          "nav": "개요",
+          "lead": "직접 작성한 코드에서 HeyQR 코드를 만드세요. 무료 npm 패키지로 오늘 바로 시작할 수 있고, 동적 코드용 REST API도 곧 나와요.",
+          "blocks": [
+            {
+              "k": "products"
+            },
+            {
+              "k": "h2",
+              "id": "what",
+              "t": "만들 수 있는 것"
+            },
+            {
+              "k": "list",
+              "items": [
+                "브라우저 앱의 스타일 QR 코드: 모양, 색상, 가운데에 로고나 짧은 텍스트.",
+                "스크립트나 서버 작업에서 만드는 인쇄용 SVG 및 PNG 파일.",
+                "표시하거나 인쇄하기 전의 스캔 점검: 대비, 반전된 색상, 너무 많이 가리는 로고.",
+                "프레임과 캡션이 있는 전체 레이아웃. HeyQR 편집기에서 내보내는 것과 같아요."
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "entries",
+              "t": "진입점"
+            },
+            {
+              "k": "p",
+              "t": "패키지 하나, import 다섯 개. 메인 진입점은 어디서나 쓸 수 있고, 나머지는 Node.js용이거나 브라우저에서 디코딩할 때 써요."
+            },
+            {
+              "k": "table",
+              "label": "진입점",
+              "cols": ["import 경로", "실행 환경", "제공 기능"],
+              "rows": [
+                {
+                  "cells": [
+                    "`@heyqr/qr-core`",
+                    "브라우저 및 Node.js",
+                    "`encodePayload`, `renderQr`, `renderQrSvg`, `composeLayout`, 색상 및 용량 도우미"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/raster`", "Node.js 전용", "`rasterizeSvg`: resvg로 SVG를 PNG로 변환"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`@heyqr/qr-core/verify`",
+                    "Node.js 전용",
+                    "`decodeSvg`, `decodeImage`, `verifyScan`: ZXing으로 코드를 다시 읽기"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`@heyqr/qr-core/verify-browser`",
+                    "브라우저",
+                    "`decodeSvgInBrowser`: 같은 디코더를 직접 호스팅하는 wasm 파일로 실행"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/node`", "Node.js 전용", "`rasterizeSvg`와 검증 함수를 한 번에 import"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "이 패키지는 정적 코드를 만들어요. 콘텐츠가 패턴 안에 들어가요. 수정 가능한 단축 링크와 스캔 수를 제공하는 동적 코드는 HeyQR 요금제가 필요하며 REST API와 함께 제공돼요."
+            },
+            {
+              "k": "h2",
+              "id": "next",
+              "t": "다음 단계"
+            },
+            {
+              "k": "cards",
+              "items": [
+                {
+                  "page": "quickstart",
+                  "title": "빠른 시작",
+                  "t": "다섯 줄로 만드는 첫 코드.",
+                  "icon": "zap"
+                },
+                {
+                  "page": "content",
+                  "title": "콘텐츠 인코딩",
+                  "t": "웹사이트, Wi-Fi, 연락처, 일정 등.",
+                  "icon": "book"
+                },
+                {
+                  "page": "scan",
+                  "title": "스캔 가능 여부 확인",
+                  "t": "스캔 보고서를 읽고 결과를 디코딩해요.",
+                  "icon": "scan"
+                },
+                {
+                  "page": "api",
+                  "title": "함수",
+                  "t": "모든 export와 시그니처.",
+                  "icon": "braces"
+                }
+              ]
+            }
+          ]
+        },
+        "install": {
+          "title": "설치",
+          "lead": "브라우저 앱, Node.js 서비스 또는 둘 다에 @heyqr/qr-core를 추가하세요.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "add",
+              "t": "패키지 추가"
+            },
+            {
+              "k": "install",
+              "package": "qrCore"
+            },
+            {
+              "k": "h2",
+              "id": "reqs",
+              "t": "요구 사항"
+            },
+            {
+              "k": "table",
+              "label": "요구 사항",
+              "cols": ["항목", "세부 정보"],
+              "rows": [
+                {
+                  "cells": [
+                    "모듈 형식",
+                    "ES 모듈만 지원해요(패키지가 `\"type\": \"module\"`이에요). `require`가 아니라 `import`를 쓰세요."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["TypeScript", "타입이 패키지에 포함돼 있어요. `@types` 패키지는 필요 없어요."],
+                  "required": false
+                },
+                {
+                  "cells": ["브라우저", "메인 진입점은 Node.js 의존성이 없고 최신 번들러라면 어디서나 동작해요."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "Node.js",
+                    "`/raster`와 `/verify`는 `@resvg/resvg-js`를 사용해요. 주요 플랫폼용 사전 빌드 바이너리가 있는 네이티브 모듈이에요."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["브라우저에서 디코딩", "`/verify-browser`는 `zxing_reader.wasm`을 CDN이 아니라 직접 지정한 URL에서 불러와요."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "wasm",
+              "t": "브라우저용 디코더 호스팅"
+            },
+            {
+              "k": "p",
+              "t": "`decodeSvgInBrowser`를 쓸 때만 필요해요. `zxing-wasm` 의존성에서 wasm 파일을 public 폴더로 복사하고 그 URL을 전달하세요. 이 명령은 패키지를 통해 파일을 찾으므로 npm, pnpm, Yarn 모두에서 동작해요."
+            },
+            {
+              "k": "code",
+              "example": "wasm"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "zxing-wasm 3.1.7(현재 패키지가 의존하는 버전)에서 파일 경로는 `zxing-wasm/reader/zxing_reader.wasm`이에요. 업그레이드한 뒤에는 다시 확인하세요."
+            }
+          ]
+        },
+        "quickstart": {
+          "title": "빠른 시작",
+          "lead": "콘텐츠를 인코딩하고, 스타일을 입히고, 스캔을 확인하고, SVG를 받기까지 1분이면 충분해요.",
+          "blocks": [
+            {
+              "k": "steps",
+              "items": [
+                {
+                  "title": "설치",
+                  "t": "패키지 매니저로 `@heyqr/qr-core`를 추가하세요."
+                },
+                {
+                  "title": "콘텐츠 인코딩",
+                  "t": "`encodePayload`는 웹사이트, Wi-Fi 네트워크, 연락처를 코드 안에 들어갈 텍스트로 바꿔요."
+                },
+                {
+                  "title": "모양 정하기",
+                  "t": "`QrStyle`로 모듈 모양, 모서리 모양, 색상을 설정해요."
+                },
+                {
+                  "title": "스캔 확인",
+                  "t": "`renderQr`는 모든 문제에 대한 해결 방법이 담긴 스캔 보고서를 반환해요."
+                },
+                {
+                  "title": "파일 받기",
+                  "t": "`renderQrSvg`는 독립형 SVG를 반환해요. Node.js에서는 `rasterizeSvg`로 PNG로 바꿀 수 있어요."
+                }
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "브라우저에서"
+            },
+            {
+              "k": "code",
+              "example": "quickstartBrowser"
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Node.js에서 파일 저장"
+            },
+            {
+              "k": "code",
+              "example": "quickstartNode"
+            }
+          ]
+        },
+        "content": {
+          "title": "콘텐츠 인코딩",
+          "lead": "encodePayload는 구조화된 콘텐츠를 코드 종류마다 휴대폰이 기대하는 정확한 텍스트로 바꿔요.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "types",
+              "t": "콘텐츠 유형"
+            },
+            {
+              "k": "p",
+              "t": "아홉 가지 `QrContent` 객체 중 하나를 전달하세요. `QR_CONTENT_TYPES`에 `type` 값이 나열돼 있어요."
+            },
+            {
+              "k": "table",
+              "label": "콘텐츠 유형",
+              "cols": ["type", "필드", "코드에 들어가는 내용"],
+              "rows": [
+                {
+                  "cells": ["`website`", "`url` (도메인만 쓰면 https://가 붙어요)", "정규화된 URL"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "`text`", "텍스트 그대로"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`wifi`",
+                    "`ssid`, `security` \"WPA\" | \"WEP\" | \"nopass\", `password?`, `hidden?`",
+                    "`WIFI:T:WPA;S:…;P:…;;`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`contact`", "`firstName?`, `lastName?`, `title?`, `company?`, `phone?`, `email?`, `website?`", "vCard 3.0"],
+                  "required": false
+                },
+                {
+                  "cells": ["`email`", "`to`, `subject?`, `body?`", "제목과 본문이 포함된 `mailto:`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`phone`", "`number`", "숫자와 +로 된 `tel:`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`sms`", "`number`, `message?`", "`SMSTO:number:message`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`location`", "`address`, `name?`", "주소가 포함된 `geo:0,0?q=`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`event`", "`title`, `start`, `end?`, `place?`", "캘린더 일정(VEVENT)"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "examples",
+              "t": "예시"
+            },
+            {
+              "k": "code",
+              "example": "contentExamples"
+            },
+            {
+              "k": "h2",
+              "id": "contact",
+              "t": "연락처 카드"
+            },
+            {
+              "k": "p",
+              "t": "연락처는 휴대폰 카메라가 가장 안정적으로 읽는 버전인 vCard 3.0으로 변환돼요. 빈 필드는 빠지고 긴 줄은 접혀요."
+            },
+            {
+              "k": "code",
+              "example": "vcard"
+            },
+            {
+              "k": "h2",
+              "id": "events",
+              "t": "일정"
+            },
+            {
+              "k": "p",
+              "t": "`start`와 `end`는 `2026-12-05T19:00` 같은 현지 시간이에요. `2026-12-05`처럼 시간 없이 날짜만 쓰면 종일 일정이 돼요."
+            },
+            {
+              "k": "code",
+              "example": "event"
+            },
+            {
+              "k": "h2",
+              "id": "urls",
+              "t": "웹사이트 주소 확인"
+            },
+            {
+              "k": "p",
+              "t": "`parseWebsiteUrl`은 HeyQR 편집기가 쓰는 것과 같은 검사예요. 공백, 다른 스킴, 자격 증명, 점이 없는 호스트를 거부해요."
+            },
+            {
+              "k": "code",
+              "example": "urlCheck"
+            }
+          ]
+        },
+        "style": {
+          "title": "코드 스타일 지정",
+          "lead": "QrStyle은 모양과 색상을 정의해요. 모든 스타일은 같은 스캔 규칙으로 검사돼요.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "shapes",
+              "t": "모양"
+            },
+            {
+              "k": "chips",
+              "t": "pattern · 데이터 모듈",
+              "items": ["square", "rounded", "dot", "diamond", "leaf", "fluid", "vbars", "hbars"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeFrame · 모서리 마커 링",
+              "items": ["square", "rounded", "cushion", "circle", "leaf"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeBall · 모서리 마커 중앙",
+              "items": ["square", "rounded", "circle", "diamond", "leaf"]
+            },
+            {
+              "k": "h2",
+              "id": "colors",
+              "t": "색상"
+            },
+            {
+              "k": "p",
+              "t": "`colors`는 hex 색상 네 개를 받아요. `fg`는 데이터 모듈, `eye`는 모서리 링, `eyeIn`은 모서리 중앙, `bg`는 배경 색상이에요."
+            },
+            {
+              "k": "table",
+              "label": "최소 대비",
+              "cols": ["부분", "배경과의 최소 대비"],
+              "rows": [
+                {
+                  "cells": ["데이터 모듈(`fg`)", "3 : 1 (`MIN_CONTRAST.modules`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["모서리 링(`eye`)", "3 : 1 (`MIN_CONTRAST.eyeFrame`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["모서리 중앙(`eyeIn`)", "2.5 : 1 (`MIN_CONTRAST.eyeCenter`)"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "코드는 배경보다 어두워야 해요. 어두운 배경 위의 밝은 코드는 대비가 높아도 `invert` 문제로 실패해요."
+            },
+            {
+              "k": "code",
+              "example": "contrast"
+            },
+            {
+              "k": "h2",
+              "id": "center",
+              "t": "가운데 짧은 텍스트"
+            },
+            {
+              "k": "p",
+              "t": "`centerText`는 코드 안에 라벨을 넣어요. 첫 줄만 최대 14자(`CENTER_TEXT_MAX`)까지 표시하고, 더 긴 텍스트는 단어 단위로 잘라 말줄임표를 붙여요."
+            },
+            {
+              "k": "code",
+              "example": "centerText"
+            },
+            {
+              "k": "h2",
+              "id": "art",
+              "t": "코드 뒤의 아트워크"
+            },
+            {
+              "k": "p",
+              "t": "`art`는 모듈 뒤에 두 가지 색조의 부드러운 모양을 그리고, 원하면 흐릿한 이미지도 넣을 수 있어요. 스캔 검사는 배경을 색조가 있는 것으로 읽어요."
+            },
+            {
+              "k": "code",
+              "example": "art"
+            }
+          ]
+        },
+        "logo": {
+          "title": "로고와 아이콘",
+          "lead": "가운데에 이미지나 24 × 24 선 아이콘을 넣으세요. 오류 정정 수준이 자동으로 올라가서 코드가 계속 읽혀요.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "fields",
+              "t": "로고 필드"
+            },
+            {
+              "k": "table",
+              "label": "QrLogo",
+              "cols": ["필드", "타입", "설명"],
+              "rows": [
+                {
+                  "cells": ["`href`", "string", "이미지 URL 또는 data URI. `iconPath`가 설정되면 무시돼요."],
+                  "required": false
+                },
+                {
+                  "cells": ["`iconPath`", "string", "24 × 24 선 경로. 예: Lucide 아이콘."],
+                  "required": false
+                },
+                {
+                  "cells": ["`size`", "number", "코드 너비 대비 로고 너비의 비율. 0.10에서 0.46 사이로 그려져요(`CENTER_LOGO_SIZE`)."],
+                  "required": true
+                },
+                {
+                  "cells": ["`plate`", "\"none\" | \"square\" | \"circle\"", "로고 뒤의 받침."],
+                  "required": true
+                },
+                {
+                  "cells": ["`tile`", "boolean", "받침 대신 색이 있는 둥근 타일 위에 아이콘을 표시해요."],
+                  "required": false
+                },
+                {
+                  "cells": ["`plateColor`, `iconColor`", "string", "받침과 아이콘의 hex 색상."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "example",
+              "t": "예시"
+            },
+            {
+              "k": "code",
+              "example": "logoStyle"
+            },
+            {
+              "k": "h2",
+              "id": "fit",
+              "t": "얼마나 크게 넣을 수 있나요?"
+            },
+            {
+              "k": "p",
+              "t": "로고나 가운데 텍스트가 있으면 코드는 오류 정정 수준 H를 사용하므로 담을 수 있는 양이 절반을 조금 넘는 수준으로 줄어요(666바이트 대신 382바이트). 렌더링 후 `scan.maxLogoSize`가 여전히 디코딩되는 최대 크기예요. 이보다 큰 로고는 `logo` 문제로 실패해요."
+            },
+            {
+              "k": "code",
+              "example": "logoFit"
+            }
+          ]
+        },
+        "layouts": {
+          "title": "프레임과 캡션",
+          "lead": "composeLayout은 카드나 프레임, 코드, 캡션, 선택적 로고까지 전체 레이아웃을 HeyQR 내보내기와 똑같이 그려요.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "presets",
+              "t": "레이아웃 프리셋"
+            },
+            {
+              "k": "table",
+              "label": "프리셋",
+              "cols": ["preset", "그리는 내용"],
+              "rows": [
+                {
+                  "cells": ["`qr`", "`qrSize` 크기의 코드만"],
+                  "required": false
+                },
+                {
+                  "cells": ["`caption`", "위나 아래에 캡션이 있는 코드 또는 코드 안의 텍스트"],
+                  "required": false
+                },
+                {
+                  "cells": ["`vertical`", "코드가 캡션 위에 있는 카드"],
+                  "required": false
+                },
+                {
+                  "cells": ["`horizontal`", "코드가 캡션 옆에 있는 카드"],
+                  "required": false
+                },
+                {
+                  "cells": ["`frame`", "코드를 감싸는 프레임. 크기는 `qrSize`로 정해져요."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "chips",
+              "t": "frameStyle",
+              "items": ["bar", "tab", "bubble", "pill", "corners", "circle", "ticket", "phone"]
+            },
+            {
+              "k": "h2",
+              "id": "compose",
+              "t": "레이아웃 구성"
+            },
+            {
+              "k": "code",
+              "example": "compose"
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "`composeLayout`보다 먼저 `layoutCapacity`를 호출하면 너무 긴 콘텐츠가 예외 대신 메시지로 처리돼요. 투명 배경이 필요하면 세 번째 인수로 `{ transparent: true }`를 전달하세요."
+            },
+            {
+              "k": "h2",
+              "id": "fonts",
+              "t": "캡션 글꼴"
+            },
+            {
+              "k": "p",
+              "t": "캡션은 SVG 텍스트예요. 브라우저에서는 페이지의 글꼴을 사용하고, Node.js에서 래스터화할 때는 `fontFiles`로 글꼴 파일을 전달하지 않으면 컴퓨터에 설치된 글꼴을 사용해요. 캡션 글꼴은 라틴 문자와 키릴 문자를 지원해요."
+            }
+          ]
+        },
+        "png": {
+          "title": "PNG 저장",
+          "lead": "rasterizeSvg는 패키지의 모든 SVG를 resvg로 PNG Buffer로 렌더링해요.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "basic",
+              "t": "PNG 렌더링"
+            },
+            {
+              "k": "code",
+              "example": "png"
+            },
+            {
+              "k": "h2",
+              "id": "options",
+              "t": "옵션"
+            },
+            {
+              "k": "table",
+              "label": "RasterOptions",
+              "cols": ["옵션", "타입", "설명"],
+              "rows": [
+                {
+                  "cells": ["`width`", "number", "출력 너비(픽셀). 높이는 SVG 비율을 따라요."],
+                  "required": true
+                },
+                {
+                  "cells": ["`fontFiles`", "string[]", "캡션용 글꼴 파일."],
+                  "required": false
+                },
+                {
+                  "cells": ["`systemFonts`", "boolean", "설치된 글꼴도 사용해요. 기본값 `true`."],
+                  "required": false
+                },
+                {
+                  "cells": ["`background`", "string", "투명한 영역 뒤의 배경색."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`dpi`",
+                    "number",
+                    "파일에 기록되는 인쇄 해상도로, 인쇄 소프트웨어가 실제 크기로 열 수 있게 해요. 화면용 파일에서는 생략하세요."
+                  ],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "print",
+              "t": "인쇄 크기"
+            },
+            {
+              "k": "p",
+              "t": "`pngPixelSize`는 레이아웃의 정확한 픽셀 크기를 알려 줘요. mm 레이아웃은 300, 600, 1200dpi(`PNG_DPIS`), px 레이아웃은 1×, 2×, 4×, 8×(`PNG_SCALES`)예요. 각 변은 64~8192px 범위를 유지해요."
+            },
+            {
+              "k": "code",
+              "example": "printPng"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "브라우저 번들에서 `/raster`를 import하지 마세요. resvg는 네이티브 Node.js 모듈이에요."
+            }
+          ]
+        },
+        "scan": {
+          "title": "스캔 가능 여부 확인",
+          "lead": "모든 렌더링에는 스캔 보고서가 함께 제공돼요. Node.js와 브라우저에서는 결과를 직접 디코딩해서 확실히 확인할 수도 있어요.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "스캔 보고서"
+            },
+            {
+              "k": "code",
+              "example": "scanReport"
+            },
+            {
+              "k": "table",
+              "label": "문제 코드",
+              "cols": ["code", "title", "fix"],
+              "rows": [
+                {
+                  "cells": ["`invert`", "Light code on a dark background", "Swap colors"],
+                  "required": false
+                },
+                {
+                  "cells": ["`contrast`", "Not enough contrast", "Increase contrast"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eyes`", "Corner markers are too light", "Darken corner markers"],
+                  "required": false
+                },
+                {
+                  "cells": ["`logo`", "The logo hides too much of the code", "Reduce logo size"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "The text in the code is too long", "Shorten the text"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "이 보고서는 규칙 기반이에요. 디코딩하지 않고 정확한 형태와 색상을 검사해요. 확실한 증거가 필요하면 디코딩하세요."
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Node.js에서 디코딩"
+            },
+            {
+              "k": "code",
+              "example": "verifyNode"
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "브라우저에서 디코딩"
+            },
+            {
+              "k": "code",
+              "example": "verifyBrowser"
+            },
+            {
+              "k": "p",
+              "t": "기기 밖으로 아무것도 나가지 않아요. 디코더는 로컬에서 실행되며 코드의 연결 주소를 열지 않아요."
+            }
+          ]
+        },
+        "api": {
+          "title": "함수",
+          "lead": "진입점별로 묶은 모든 공개 함수예요. 시그니처는 패키지의 TypeScript 타입과 일치해요.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "콘텐츠"
+            },
+            {
+              "k": "table",
+              "label": "콘텐츠 함수",
+              "cols": ["함수", "시그니처"],
+              "rows": [
+                {
+                  "cells": ["`encodePayload`", "`(content: QrContent) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`encodeVCard`", "`(contact) => string` · vCard 3.0"],
+                  "required": false
+                },
+                {
+                  "cells": ["`normalizeUrl`", "`(input: string) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseWebsiteUrl`", "`(input: string) => { ok: true; url } | { ok: false; problem }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "render",
+              "t": "렌더링"
+            },
+            {
+              "k": "table",
+              "label": "렌더링 함수",
+              "cols": ["함수", "시그니처"],
+              "rows": [
+                {
+                  "cells": ["`renderQr`", "`(value: string, style: QrStyle) => RenderedQr`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`renderQrSvg`", "`(value: string, style: QrStyle, sizePx = 512) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eclForStyle`", "`(style) => \"M\" | \"H\"` · 로고나 텍스트가 가운데를 덮으면 H"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerLogoSize`", "`(size: number) => number` · 0.10–0.46 범위로 제한"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerTextLabel`", "`(text: string) => { label; shortened }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "layout",
+              "t": "레이아웃"
+            },
+            {
+              "k": "table",
+              "label": "레이아웃 함수",
+              "cols": ["함수", "시그니처"],
+              "rows": [
+                {
+                  "cells": [
+                    "`composeLayout`",
+                    "`(layout: Layout, value: string, options?: { transparent? }) => { svg, width, height, scan }`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutCapacity`", "`(layout: Layout, value: string) => { ok, bytes, maxBytes, ecl, centerCovered }`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutGeometry`", "`(layout: Layout) => LayoutGeometry`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pngPixelSize`", "`(layout: Layout, { scale?, dpi? }) => { width, height, ok }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "encode",
+              "t": "인코딩과 용량"
+            },
+            {
+              "k": "table",
+              "label": "인코딩 함수",
+              "cols": ["함수", "시그니처"],
+              "rows": [
+                {
+                  "cells": ["`encodeQr`", "`(text: string, ecl = \"M\") => QrMatrix`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`payloadBytes`", "`(text: string) => number` · UTF-8 바이트"],
+                  "required": false
+                },
+                {
+                  "cells": ["`maxPayloadBytes`", "`(ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pickVersion`", "`(byteLength: number, ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`QrCapacityError`", "`byteLength`와 `maxBytes`가 있는 Error"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "color",
+              "t": "색상"
+            },
+            {
+              "k": "table",
+              "label": "색상 함수",
+              "cols": ["함수", "시그니처"],
+              "rows": [
+                {
+                  "cells": ["`contrastRatio`", "`(a: string, b: string) => number` · WCAG 비율"],
+                  "required": false
+                },
+                {
+                  "cells": ["`luminance`", "`(hex: string) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`isHexColor`", "`(value: string) => boolean` · `#RRGGBB`만"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseHexColor`", "`(text: string) => string | null`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`mixColors`", "`(a: string, b: string, t: number) => string`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Node.js 및 브라우저 진입점"
+            },
+            {
+              "k": "table",
+              "label": "기타 진입점",
+              "cols": ["함수", "진입점", "시그니처"],
+              "rows": [
+                {
+                  "cells": ["`rasterizeSvg`", "`/raster`", "`(svg: string, options: RasterOptions) => Buffer`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvg`", "`/verify`", "`(svg: string, width = 720) => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeImage`", "`/verify`", "`(file: Uint8Array, type = \"image/png\") => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`verifyScan`", "`/verify`", "`(svg, expected, widths = [300, 600, 1200]) => Promise<boolean>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvgInBrowser`", "`/verify-browser`", "`(svg, { wasmUrl, size? = 960 }) => Promise<string | null>`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        },
+        "types": {
+          "title": "타입",
+          "lead": "패키지에 정의된 그대로의 주요 타입이에요.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "style",
+              "t": "QrStyle"
+            },
+            {
+              "k": "code",
+              "example": "typesStyle"
+            },
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "RenderedQr 및 ScanReport"
+            },
+            {
+              "k": "code",
+              "example": "typesReport"
+            },
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "QrContent"
+            },
+            {
+              "k": "code",
+              "example": "typesContent"
+            }
+          ]
+        },
+        "limits": {
+          "title": "제한과 오류",
+          "lead": "인코더가 받아들이는 범위와 콘텐츠가 맞지 않을 때 일어나는 일이에요.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "제한"
+            },
+            {
+              "k": "table",
+              "label": "제한",
+              "cols": ["제한 항목", "값"],
+              "rows": [
+                {
+                  "cells": ["최대 QR 버전", "20(`MAX_VERSION`), 97 × 97 모듈"],
+                  "required": false
+                },
+                {
+                  "cells": ["콘텐츠", "오류 정정 M에서 666바이트, H에서 382바이트"],
+                  "required": false
+                },
+                {
+                  "cells": ["오류 정정", "M, 로고나 가운데 텍스트가 있으면 H"],
+                  "required": false
+                },
+                {
+                  "cells": ["여백(quiet zone)", "사방 4모듈, `viewBox`에 포함"],
+                  "required": false
+                },
+                {
+                  "cells": ["로고 크기", "코드 너비의 0.10–0.46(`CENTER_LOGO_SIZE`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["가운데 텍스트", "14자(`CENTER_TEXT_MAX`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["PNG 변 길이", "64–8192px(`PNG_MIN_SIDE`, `PNG_MAX_SIDE`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["대비", "모듈과 링 3 : 1, 모서리 중앙 2.5 : 1"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "capacity",
+              "t": "너무 긴 콘텐츠"
+            },
+            {
+              "k": "p",
+              "t": "콘텐츠가 맞지 않으면 렌더링 시 `QrCapacityError`가 발생해요. 콘텐츠가 아닌 크기 정보만 담고 있어서 로그에 남겨도 안전해요."
+            },
+            {
+              "k": "code",
+              "example": "capacity"
+            },
+            {
+              "k": "h2",
+              "id": "null",
+              "t": "null을 반환하는 디코더"
+            },
+            {
+              "k": "p",
+              "t": "`decodeSvg`, `decodeImage`, `decodeSvgInBrowser`는 코드를 읽을 수 없으면 `null`을 반환해요. 오류가 아니라 검사 실패로 처리하세요."
+            }
+          ]
+        },
+        "faq": {
+          "title": "자주 묻는 질문",
+          "lead": "자주 묻는 질문에 대한 짧은 답변이에요.",
+          "blocks": [
+            {
+              "k": "faq",
+              "items": [
+                {
+                  "q": "패키지가 HeyQR로 무언가를 전송하나요?",
+                  "a": "아니요. 인코딩, 렌더링, 스캔 검사는 모두 내 컴퓨터에서 실행돼요. 브라우저 디코더는 직접 호스팅하는 URL에서 wasm 파일을 불러와요."
+                },
+                {
+                  "q": "이 패키지로 동적 코드를 만들 수 있나요?",
+                  "a": "아직은 안 돼요. 동적 코드에는 HeyQR 단축 링크, 요금제, 그리고 저희 서버의 스캔 집계가 필요해요. REST API와 함께 제공될 예정이에요."
+                },
+                {
+                  "q": "로고를 넣은 코드가 실패하는 이유는 무엇인가요?",
+                  "a": "로고를 넣으면 오류 정정 수준이 H로 올라가 용량이 줄고, 모듈도 가려져요. 로고를 `scan.maxLogoSize`보다 작게 하거나 콘텐츠를 줄이세요."
+                },
+                {
+                  "q": "PNG 내보내기가 Node.js 전용인 이유는 무엇인가요?",
+                  "a": "PNG는 네이티브 모듈인 resvg로 렌더링돼요. 브라우저에서 픽셀이 필요하면 SVG를 canvas에 그리세요."
+                },
+                {
+                  "q": "파일이 HeyQR 편집기와 똑같이 나오나요?",
+                  "a": "네. 편집기 미리보기와 유료 내보내기 모두 `composeLayout`을 사용하므로 같은 레이아웃이면 같은 SVG가 나와요."
+                },
+                {
+                  "q": "상용 제품에 사용할 수 있나요?",
+                  "a": "라이선스는 첫 공개 릴리스 때 정해지며 이곳과 npm에 표시될 예정이에요."
+                }
+              ]
+            }
+          ]
+        },
+        "changelog": {
+          "title": "변경 기록",
+          "lead": "@heyqr/qr-core 릴리스 목록이에요.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "v010",
+              "t": "0.1.0 · 아직 게시되지 않음"
+            },
+            {
+              "k": "list",
+              "items": [
+                "첫 공개 릴리스를 준비 중이에요. 이 페이지의 모든 내용은 패키지의 현재 소스와 일치해요.",
+                "진입점: main, `/raster`, `/verify`, `/verify-browser`, `/node`."
+              ]
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "버전이 게시되면 릴리스 노트와 npm 링크가 여기에 표시돼요."
+            }
+          ]
+        },
+        "rest": {
+          "title": "REST API",
+          "lead": "서버에서 코드를 만들고, 동적 코드의 연결 주소를 바꾸고, 스캔 수를 확인하세요.",
+          "blocks": [
+            {
+              "k": "restSoon"
+            }
+          ]
+        },
+        "restAuth": {
+          "title": "인증",
+          "lead": "모든 요청에는 HeyQR 계정의 API 키가 포함돼요.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "아직 비공개예요. 이 페이지는 이 HeyQR 빌드의 REST API를 설명하며, 해당 경로와 대조해 확인했어요. 아직 heyqr.me에서는 사용할 수 없고, 공개될 때까지 검색에 노출되지 않아요."
+            },
+            {
+              "k": "h2",
+              "id": "keys",
+              "t": "API 키"
+            },
+            {
+              "k": "list",
+              "items": [
+                "계정 → API 키에서 키를 만드세요. 키는 계정에 속하며, 같은 계정의 모든 키는 같은 코드를 볼 수 있어요.",
+                "키는 `hqk_<lookupId>_<secret>` 형식이에요. 전체 키는 만들 때 한 번만 표시되며, HeyQR은 검증용 값만 보관해요.",
+                "서버에서 `Authorization` 헤더로 키를 보내세요. URL이나 브라우저 코드에는 절대 넣지 마세요.",
+                "키가 없거나, 틀리거나, 폐기된 경우 모두 요청 본문을 읽기 전에 같은 `401 unauthorized`를 받아요."
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "header",
+              "t": "요청 헤더"
+            },
+            {
+              "k": "code",
+              "example": "restHeader"
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "요청 한도"
+            },
+            {
+              "k": "p",
+              "t": "한도는 계정 단위예요. 계정의 모든 키가 한도를 공유하며, 다른 계정끼리는 서로 영향을 주지 않아요. 한도 구간은 첫 요청부터 시작해 60초 동안 이어져요."
+            },
+            {
+              "k": "table",
+              "label": "요청 한도",
+              "cols": ["한도", "집계 대상", "기본값(분당)"],
+              "rows": [
+                {
+                  "cells": ["`api`", "유효한 키를 사용한 모든 요청", "120"],
+                  "required": false
+                },
+                {
+                  "cells": ["`export`", "파일 내보내기(`api`에도 집계됨)", "30"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "p",
+              "t": "한도를 넘으면 무언가를 생성, 변경, 렌더링하기 전에 `Retry-After`와 함께 `429 rate_limited` 응답을 받아요."
+            }
+          ]
+        },
+        "restCreate": {
+          "title": "QR 코드 만들기",
+          "lead": "레이아웃이 포함된 QR 코드 하나를 계정의 초안으로 만들어요. 활성화, 단축 링크, 결제는 앱에서 처리해요.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "아직 비공개예요. 이 페이지는 이 HeyQR 빌드의 REST API를 설명하며, 해당 경로와 대조해 확인했어요. 아직 heyqr.me에서는 사용할 수 없고, 공개될 때까지 검색에 노출되지 않아요."
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "요청 본문"
+            },
+            {
+              "k": "table",
+              "label": "요청 본문",
+              "cols": ["매개변수", "타입", "예시", "설명"],
+              "rows": [
+                {
+                  "cells": ["`name`", "string", "\"Spring menu\"", "1–80자. 내 QR 코드에 표시되는 이름이에요."],
+                  "required": true
+                },
+                {
+                  "cells": ["`mode`", "\"static\" | \"dynamic\"", "\"static\"", "`dynamic`은 `website` 콘텐츠에만 사용할 수 있어요."],
+                  "required": true
+                },
+                {
+                  "cells": ["`content`", "QrContent", "{ \"type\": \"website\", … }", "코드가 여는 대상. `encodePayload`와 같은 형태예요."],
+                  "required": true
+                },
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"littlefern.cafe/menu\"",
+                    "`dynamic` 전용: 단축 링크가 사람들을 보내는 곳. 기본값은 웹사이트 주소예요."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`layouts`",
+                    "array",
+                    "[{ \"name\": \"Sticker\", \"layout\": … }]",
+                    "레이아웃 1–20개: `name`(1–60자), 렌더링된 `layout`, 선택적 `editor` 설정."
+                  ],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "p",
+              "t": "본문은 엄격하게 검사돼요. 알 수 없는 필드는 거부돼요. 재시도를 안전하게 하려면 `Idempotency-Key` 헤더(눈에 보이는 문자 1–255자, UUID도 가능)를 보내세요. 같은 키와 요청이면 원래의 `201`이 반환돼요."
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "요청"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateRequest",
+              "label": "요청 예시"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "응답"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateResponses",
+              "label": "응답"
+            }
+          ]
+        },
+        "restBulk": {
+          "title": "일괄 생성",
+          "lead": "요청 한 번으로 코드를 최대 100개까지 만들어요. 작업은 백그라운드에서 실행돼요.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "디자인 미리보기예요. 제안된 엔드포인트로, 이 페이지의 어떤 기능도 아직 출시되지 않았으며 이름과 필드는 출시 전에 바뀔 수 있어요."
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes/bulk"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "요청 본문"
+            },
+            {
+              "k": "table",
+              "label": "요청 본문",
+              "cols": ["매개변수", "타입", "예시", "설명"],
+              "rows": [
+                {
+                  "cells": [
+                    "`items`",
+                    "array",
+                    "[{ \"name\": …, \"content\": … }]",
+                    "코드 1–100개. 각각 QR 코드 만들기와 같은 형식이에요."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].name`", "string", "\"Table 12\"", "내 QR 코드에 표시되는 이름."],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].content`", "QrContent", "{ \"type\": \"website\", … }", "각 코드가 여는 대상."],
+                  "required": true
+                },
+                {
+                  "cells": ["`style`", "QrStyle", "{ \"pattern\": \"rounded\", … }", "배치의 모든 코드에 적용할 하나의 스타일."],
+                  "required": false
+                },
+                {
+                  "cells": ["`webhook_url`", "string", "\"https://…/heyqr\"", "작업이 끝나면 한 번 호출돼요."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "응답"
+            },
+            {
+              "k": "tabs",
+              "example": "bulkResponses",
+              "label": "응답"
+            }
+          ]
+        },
+        "restDestination": {
+          "title": "연결 주소 변경",
+          "lead": "동적 코드가 다른 곳을 가리키게 해요. 인쇄된 코드는 단축 링크를 그대로 유지하며 즉시 새 주소를 따라가요.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "아직 비공개예요. 이 페이지는 이 HeyQR 빌드의 REST API를 설명하며, 해당 경로와 대조해 확인했어요. 아직 heyqr.me에서는 사용할 수 없고, 공개될 때까지 검색에 노출되지 않아요."
+            },
+            {
+              "k": "h2",
+              "id": "read",
+              "t": "현재 연결 주소 읽기"
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "code",
+              "example": "restDestinationRead"
+            },
+            {
+              "k": "p",
+              "t": "읽어 온 `revision`을 기준으로 변경하세요. 그 이후 앱이나 다른 요청에서 연결 주소가 바뀌었다면 `409`를 받고 아무것도 저장되지 않아요."
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "요청 본문"
+            },
+            {
+              "k": "endpoint",
+              "method": "PATCH",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "table",
+              "label": "요청 본문",
+              "cols": ["매개변수", "타입", "예시", "설명"],
+              "rows": [
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"https://littlefern.cafe/today\"",
+                    "새 주소(최대 2048자). 도메인만 쓰면 https://가 붙어요."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`revision`", "integer", "3", "GET 또는 마지막 PATCH에서 받은 revision."],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "요청"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationRequest",
+              "label": "요청 예시"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "응답"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationResponses",
+              "label": "응답"
+            }
+          ]
+        },
+        "restScans": {
+          "title": "스캔 통계",
+          "lead": "동적 코드의 일별 스캔 수예요.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "디자인 미리보기예요. 제안된 엔드포인트로, 이 페이지의 어떤 기능도 아직 출시되지 않았으며 이름과 필드는 출시 전에 바뀔 수 있어요."
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{id}/scans?from=2026-11-01&to=2026-11-26"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "응답"
+            },
+            {
+              "k": "tabs",
+              "example": "scansResponses",
+              "label": "응답"
+            }
+          ]
+        },
+        "restErrors": {
+          "title": "오류와 요청 한도",
+          "lead": "모든 오류는 같은 형태예요. 메시지가 아니라 code로 분기하세요.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "아직 비공개예요. 이 페이지는 이 HeyQR 빌드의 REST API를 설명하며, 해당 경로와 대조해 확인했어요. 아직 heyqr.me에서는 사용할 수 없고, 공개될 때까지 검색에 노출되지 않아요."
+            },
+            {
+              "k": "h2",
+              "id": "shape",
+              "t": "오류 형태"
+            },
+            {
+              "k": "p",
+              "t": "모든 오류는 `Cache-Control: no-store`와 함께 `{ \"error\": { \"code\", \"message\", …details } }` 형태로 와요. 메시지는 사람을 위한 것이고, 코드는 바뀌지 않아요."
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "상태 코드"
+            },
+            {
+              "k": "table",
+              "label": "오류",
+              "cols": ["상태", "code", "발생 조건"],
+              "rows": [
+                {
+                  "cells": ["400", "`malformed_json`", "본문이 JSON이 아니에요."],
+                  "required": false
+                },
+                {
+                  "cells": ["401", "`unauthorized`", "키가 없거나, 형식이 잘못됐거나, 틀렸거나, 폐기됐어요."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "402",
+                    "`payment_required`",
+                    "결제되지 않았거나 활성화되지 않은 코드를 내보내려고 했어요. `paymentUrl`로 해당 코드의 내보내기 화면이 열려요."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["403", "`draft_limit`", "계정의 초안 수가 최대치예요."],
+                  "required": false
+                },
+                {
+                  "cells": ["404", "`not_found`", "내 코드나 레이아웃이 아니거나, 삭제됐거나, 존재하지 않아요. 모두 같은 응답이에요."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "409",
+                    "`revision_conflict`, `idempotency_key_reused`",
+                    "내 revision 이후에 변경됐거나, Idempotency-Key를 재사용했어요."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "422",
+                    "`invalid_request`, `content_too_long`, `not_dynamic`",
+                    "규칙을 어겼어요. `details`에 해당 필드가 나와요."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["429", "`rate_limited`", "계정 한도를 넘었어요. `Retry-After`초만큼 기다리세요."],
+                  "required": false
+                },
+                {
+                  "cells": ["500", "`internal_error`", "아무것도 변경되지 않았어요. 다시 시도하세요."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "요청 한도"
+            },
+            {
+              "k": "tabs",
+              "example": "restRateLimited",
+              "label": "응답 예시"
+            },
+            {
+              "k": "p",
+              "t": "기본값은 계정당 분당 요청 120회, 내보내기 30회예요. 거부된 요청은 대기 시간을 늘리지 않아요."
+            }
+          ]
+        },
+        "restSdk": {
+          "title": "TypeScript SDK",
+          "lead": "@heyqr/sdk는 Node.js 18 이상용 REST API 타입 클라이언트예요. 렌더링은 하지 않아요. 렌더링은 @heyqr/qr-core가 담당해요.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "아직 비공개예요. 이 페이지는 이 HeyQR 빌드의 REST API를 설명하며, 해당 경로와 대조해 확인했어요. 아직 heyqr.me에서는 사용할 수 없고, 공개될 때까지 검색에 노출되지 않아요."
+            },
+            {
+              "k": "h2",
+              "id": "install",
+              "t": "설치"
+            },
+            {
+              "k": "install",
+              "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "server",
+              "t": "서버에서"
+            },
+            {
+              "k": "p",
+              "t": "`HeyQrClient`는 API 키가 필요하므로 서버에서만 실행돼요. 브라우저 번들에서는 패키지가 `HeyQrClient`가 kind `server_only`인 `HeyQrError`를 던지는 진입점으로 연결돼요. 브라우저 미리보기에는 `@heyqr/sdk/react`를 사용하세요."
+            },
+            {
+              "k": "code",
+              "example": "sdkInstallNote"
+            },
+            {
+              "k": "h2",
+              "id": "methods",
+              "t": "메서드"
+            },
+            {
+              "k": "table",
+              "label": "HeyQrClient",
+              "cols": ["메서드", "요청"],
+              "rows": [
+                {
+                  "cells": ["`createQr(request, { idempotencyKey? })`", "`POST /api/v1/qr-codes`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getLayout(qrCodeId, layoutId)`", "`GET …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateLayout(qrCodeId, layoutId, request)`", "`PATCH …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getDestination(qrCodeId)`", "`GET …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateDestination(qrCodeId, request)`", "`PATCH …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`downloadExport(qrCodeId, layoutId, { format })`", "`GET …/export`, 서명된 링크를 따라감"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "오류"
+            },
+            {
+              "k": "table",
+              "label": "오류",
+              "cols": ["오류", "발생 조건"],
+              "rows": [
+                {
+                  "cells": ["`HeyQrApiError`", "문서화된 API 오류. `status`, `code`, 타입이 지정된 응답 포함"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrRateLimitError`", "429. `retryAfterSeconds`와 `code` 포함"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrTimeoutError`, `HeyQrAbortError`", "기한이 지났거나 `signal`이 호출을 취소했어요"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrError`", "문서화된 응답이 없어요. `kind`에 이유가 나와요."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        }
+      },
+      "breadcrumb": "탐색 경로"
+    }
+  }
+}

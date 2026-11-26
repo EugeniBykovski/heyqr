@@ -100,7 +100,7 @@ export function DocsNav({
   const groups = (Object.keys(labels.groups) as DocsGroup[]).map((g) => ({ g, items: items.filter((i) => i.group === g) }));
   const searchBox = (
     <div className="relative">
-      <SearchIcon aria-hidden className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+      <SearchIcon aria-hidden className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
       <input
         type="search"
         value={query}
@@ -108,14 +108,14 @@ export function DocsNav({
         aria-label={labels.search}
         placeholder={labels.search}
         aria-controls={`${panelId}-results`}
-        className="border-border-control h-10 w-full rounded-lg border bg-surface pr-9 pl-9 text-body outline-offset-2 placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden"
+        className="border-border-control h-10 w-full rounded-lg border bg-surface ps-9 pe-9 text-body outline-offset-2 placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden"
       />
       {searching ? (
         <button
           type="button"
           onClick={() => setQuery("")}
           aria-label={labels.clear}
-          className="absolute top-1/2 right-1 grid size-8 -translate-y-1/2 cursor-pointer place-items-center rounded-md text-muted-foreground hover:bg-subtle"
+          className="absolute end-1 top-1/2 grid size-8 -translate-y-1/2 cursor-pointer place-items-center rounded-md text-muted-foreground hover:bg-subtle"
         >
           <XIcon aria-hidden className="size-4" />
         </button>
@@ -134,7 +134,7 @@ export function DocsNav({
               </span>
               {labels.groups[g]}
               {g === "rest" ? (
-                <span className="ml-auto rounded-full border border-border bg-subtle px-2 text-micro font-semibold text-secondary-foreground">
+                <span className="ms-auto rounded-full border border-border bg-subtle px-2 text-micro font-semibold text-secondary-foreground">
                   {labels.restBadge}
                 </span>
               ) : null}
@@ -143,7 +143,7 @@ export function DocsNav({
               {list.map((i) => (
                 <li key={i.id}>
                   {i.state === "soon" ? (
-                    <span className="flex min-h-9 items-center justify-between gap-2 pr-2 pl-10 text-[0.875rem] text-muted-foreground">
+                    <span className="flex min-h-9 items-center justify-between gap-2 ps-10 pe-2 text-[0.875rem] text-muted-foreground">
                       {i.label}
                       <span className="text-micro tracking-wide uppercase">{labels.soon}</span>
                     </span>
@@ -153,7 +153,7 @@ export function DocsNav({
                       aria-current={i.id === current ? "page" : undefined}
                       onClick={() => setOpen(false)}
                       className={cn(
-                        "flex min-h-9 items-center justify-between gap-2 rounded-md border-l-2 pr-2 pl-9.5 text-[0.875rem] transition-colors hover:bg-subtle",
+                        "flex min-h-9 items-center justify-between gap-2 rounded-md border-s-2 ps-9.5 pe-2 text-[0.875rem] transition-colors hover:bg-subtle",
                         i.id === current
                           ? "border-accent-strong bg-selected font-semibold text-accent-text"
                           : "border-transparent text-secondary-foreground",
@@ -257,7 +257,7 @@ export function DocsNav({
             aria-controls={`${panelId}-menu`}
             aria-label={open ? labels.menuClose : labels.menuOpen}
             onClick={() => setOpen((o) => !o)}
-            className="flex min-h-14 w-full cursor-pointer items-center gap-3 px-4 text-left"
+            className="flex min-h-14 w-full cursor-pointer items-center gap-3 px-4 text-start"
           >
             <MenuIcon aria-hidden className="size-4 shrink-0" />
             <span className="flex min-w-0 flex-col">
@@ -266,7 +266,7 @@ export function DocsNav({
               </span>
               <span className="truncate text-label font-semibold">{pageTitle}</span>
             </span>
-            {open ? <ChevronUpIcon aria-hidden className="ml-auto size-4" /> : <ChevronDownIcon aria-hidden className="ml-auto size-4" />}
+            {open ? <ChevronUpIcon aria-hidden className="ms-auto size-4" /> : <ChevronDownIcon aria-hidden className="ms-auto size-4" />}
           </button>
           <div id={`${panelId}-menu`} hidden={!open} className="max-h-[70dvh] overflow-y-auto border-t border-border p-3">
             {panel}

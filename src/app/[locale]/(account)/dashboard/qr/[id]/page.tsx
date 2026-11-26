@@ -402,7 +402,7 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
                         {layout.name}
                       </span>
                       <span className="text-caption text-muted-foreground">
-                        {dims(layout)} · {mm ? tl("print") : tl("screen")}
+                        <bdi dir="ltr">{dims(layout)}</bdi> · {mm ? tl("print") : tl("screen")}
                       </span>
                     </div>
                     {/* HEY-65: on a narrow card (two per row at 390 px) the icon actions wrap under Edit instead of

@@ -1,0 +1,4504 @@
+{
+  "meta": {
+    "title": "Hey QR — kody QR, które wyglądają jak Twoja marka",
+    "description": "Zaprojektuj kod QR, sprawdź, czy się skanuje, i pobierz gotowe do druku pliki PNG i SVG."
+  },
+  "nav": {
+    "create": "Utwórz",
+    "pricing": "Cennik",
+    "myCodes": "Moje kody QR",
+    "billing": "Plan i płatności",
+    "signIn": "Zaloguj się",
+    "signOut": "Wyloguj się",
+    "account": "Konto i płatności, {name}",
+    "language": "Język",
+    "skipToContent": "Przejdź do treści",
+    "home": "Strona główna Hey QR",
+    "createCode": "Utwórz kod QR",
+    "menu": "Menu",
+    "main": "Główna",
+    "languageChoose": "Wybierz język",
+    "languageCount": "Języki: {count}",
+    "languageSearch": "Szukaj języków",
+    "languages": "Języki",
+    "languageEmpty": "Żaden język nie pasuje do „{query}”.",
+    "languageNote": "Ceny pozostają w Twojej walucie. Arabski przełącza układ na kierunek od prawej do lewej.",
+    "trial": "Darmowy okres próbny",
+    "apiKeys": "Klucze API",
+    "developers": "API dla programistów",
+    "developersShort": "API"
+  },
+  "payment": {
+    "title": "Jak działa płatność",
+    "oneTime": "Single QR to jednorazowa płatność {price} za kod plus ewentualny podatek doliczony przez Stripe przy kasie. To nie subskrypcja i nic się nie odnawia.",
+    "where": "Płacisz na bezpiecznej stronie płatności Stripe. Hey QR nigdy nie widzi danych Twojej karty.",
+    "receipt": "Potwierdzenie znajdziesz na swoim koncie w sekcji Płatności, obok zakupu.",
+    "support": "Pytania o płatność? Napisz na <link>{email}</link>.",
+    "terms": "Regulamin",
+    "privacy": "Prywatność",
+    "supportLink": "Pomoc"
+  },
+  "footer": {
+    "terms": "Regulamin",
+    "privacy": "Prywatność",
+    "support": "Pomoc",
+    "rights": "© {year} Hey QR",
+    "pricing": "Cennik",
+    "label": "Stopka",
+    "tagline": "Kody QR, które wyglądają jak Twoja marka i zawsze się skanują.",
+    "product": "Produkt",
+    "makeFor": "Utwórz kod dla",
+    "company": "Firma",
+    "smallPrint": "21 języków · Płatności przez Stripe"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Studio QR · projektowanie i podgląd za darmo",
+      "title": "Kod QR, który wygląda jak Twój.",
+      "lead": "Wklej link i nadaj mu styl. Podgląd zmienia się w trakcie pisania, a projektowanie jest darmowe.",
+      "reveal": "Dobre rzeczy są o jedno skanowanie stąd."
+    },
+    "tool": {
+      "typesLabel": "Co ma otwierać kod?",
+      "more": "Więcej +",
+      "url": "Adres strony",
+      "urlPlaceholder": "yourname.com/portfolio",
+      "errors": {
+        "empty": "Wpisz adres strony, np. yourname.com.",
+        "spaces": "Adres strony nie może zawierać spacji."
+      },
+      "color": "Kolor kodu",
+      "inks": {
+        "ink": "Atrament",
+        "violet": "Fiolet",
+        "forest": "Las",
+        "ocean": "Ocean",
+        "berry": "Jagoda",
+        "clay": "Glina"
+      },
+      "caption": "Podpis",
+      "captionDefault": "Zobacz portfolio",
+      "continue": "Projektuj dalej",
+      "priceNote": "Projektowanie i podgląd są darmowe. Pobranie plików PNG i SVG kosztuje <b>{price}</b> za kod, jednorazowo.",
+      "seePricing": "Zobacz cennik",
+      "stageTitle": "{type} · podgląd na żywo",
+      "scans": "Skanuje się",
+      "livePreview": "Podgląd na żywo",
+      "realCode": "Prawdziwy, skanowalny kod",
+      "previewLabel": "Podgląd Twojego kodu QR",
+      "otherType": "Twój szkic to kod typu {type}. „Projektuj dalej” otworzy go w edytorze.",
+      "stageCard": "Wizytówka · 90 mm × 50 mm"
+    },
+    "how": {
+      "label": "Jak to działa",
+      "content": {
+        "title": "Dodaj treść",
+        "text": "Link, tekst, dane Wi-Fi lub wizytówka kontaktowa."
+      },
+      "design": {
+        "title": "Zaprojektuj",
+        "text": "Układ, rozmiar, kształty, kolory, logo i podpis — ze sprawdzaniem skanowania na żywo."
+      },
+      "download": {
+        "title": "Zapłać i pobierz",
+        "text": "Zaloguj się przez Google, zapłać raz i pobieraj PNG lub SVG, kiedy chcesz."
+      }
+    },
+    "models": {
+      "title": "Czy zmienisz link po wydrukowaniu?",
+      "lead": "To jedno pytanie decyduje, jakiego kodu potrzebujesz.",
+      "static": {
+        "badge": "Nie · Statyczny QR",
+        "text": "Link jest zapisany we wzorze kodu. Jedna płatność <b>{price}</b> za kod."
+      },
+      "dynamic": {
+        "badge": "Tak · Dynamiczny QR",
+        "text": "Kod zawiera stały krótki link, który możesz w każdej chwili przekierować. <b>{price}</b>/mies. za maks. {limit} kodów."
+      }
+    },
+    "examples": {
+      "kicker": "Przykłady",
+      "title": "Do druku i na ekran",
+      "lead": "Zacznij od prawdziwego, skanowalnego układu i dopasuj go do siebie. Każdy przykład otwiera się w edytorze z kolorami, kształtami i ramką.",
+      "hint": "Przewiń, aby zobaczyć więcej",
+      "use": "Zacznij od przykładu {title}",
+      "useShort": "Użyj",
+      "items": {
+        "businessCard": {
+          "title": "Wizytówka",
+          "kind": "Strona · statyczny"
+        },
+        "tableTent": {
+          "title": "Stojak na stolik w kawiarni",
+          "kind": "Wi-Fi · statyczny"
+        },
+        "menuSticker": {
+          "title": "Naklejka z menu",
+          "kind": "Strona · dynamiczny"
+        },
+        "eventPoster": {
+          "title": "Plakat wydarzenia",
+          "kind": "Strona · dynamiczny"
+        },
+        "contactBadge": {
+          "title": "Identyfikator kontaktowy",
+          "kind": "Kontakt · statyczny"
+        },
+        "windowSticker": {
+          "title": "Naklejka na szybę",
+          "kind": "Strona · statyczny"
+        }
+      }
+    },
+    "features": {
+      "kicker": "Dlaczego HeyQR",
+      "title": "Wszystko, czego potrzebuje drukowany kod",
+      "lead": "Narzędzia projektowe, które nie przeszkadzają, i skaner, który sprawdza Twoją pracę, zanim zapłacisz.",
+      "scan": {
+        "title": "Sprawdzanie skanowania przy każdej zmianie",
+        "text": "Odczytujemy Twój kod tak jak aparat telefonu i mówimy dokładnie, co poprawić: za niski kontrast, odwrócone kolory albo logo, które zakrywa za dużo."
+      },
+      "style": {
+        "title": "Twoje kształty i kolory",
+        "text": "Osiem kształtów modułów, pięć stylów narożników i dowolny kolor — z kontrolą kontrastu."
+      },
+      "logo": {
+        "title": "Logo lub ikona na środku",
+        "text": "Prześlij swoje logo lub wybierz spośród {icons} ikon. Dobieramy rozmiar tak, aby kod nadal dało się odczytać."
+      },
+      "frames": {
+        "title": "Ramki i podpisy",
+        "text": "{frames} ramek z wezwaniem do działania, np. „Zeskanuj, aby zobaczyć menu”, albo krótki tekst w samym kodzie."
+      },
+      "files": {
+        "title": "Pliki gotowe do druku",
+        "text": "Wektorowy SVG i ostry PNG w prawdziwych rozmiarach: wizytówki, plakaty, stojaki na stoliki i naklejki."
+      },
+      "dynamic": {
+        "title": "Zmień go po wydrukowaniu",
+        "text": "Kody dynamiczne prowadzą do krótkiego linku, który możesz w każdej chwili przekierować, z dziennymi statystykami skanów."
+      }
+    },
+    "types": {
+      "kicker": "Dziewięć typów treści",
+      "title": "Jedno studio dla każdego rodzaju kodu",
+      "lead": "Wybierz, co ma otwierać kod. Formularz pyta tylko o to, czego potrzebuje dany typ.",
+      "website": {
+        "label": "Strona internetowa",
+        "desc": "Otwórz stronę, portfolio lub menu."
+      },
+      "text": {
+        "label": "Tekst",
+        "desc": "Pokaż notatkę, godziny otwarcia lub instrukcje."
+      },
+      "wifi": {
+        "label": "Wi-Fi",
+        "desc": "Goście łączą się z siecią bez wpisywania hasła."
+      },
+      "contact": {
+        "label": "Wizytówka",
+        "desc": "Zapisz imię, telefon i e-mail jednym dotknięciem."
+      },
+      "email": {
+        "label": "E-mail",
+        "desc": "Otwórz gotowy do wysłania e-mail."
+      },
+      "phone": {
+        "label": "Połączenie",
+        "desc": "Zadzwoń pod numer jednym dotknięciem."
+      },
+      "sms": {
+        "label": "SMS",
+        "desc": "Rozpocznij SMS-a z Twoją treścią."
+      },
+      "location": {
+        "label": "Lokalizacja",
+        "desc": "Otwórz miejsce w aplikacji map."
+      },
+      "event": {
+        "label": "Wydarzenie",
+        "desc": "Dodaj wydarzenie do kalendarza."
+      },
+      "menu": {
+        "label": "Menu",
+        "desc": "Dania, sekcje i ceny na stronie przyjaznej telefonom."
+      },
+      "coupon": {
+        "label": "Kupon",
+        "desc": "Rabat z kodem promocyjnym i datą ważności."
+      },
+      "social": {
+        "label": "Linki społecznościowe",
+        "desc": "Twoje profile i linki na jednej stronie."
+      },
+      "business": {
+        "label": "Firma",
+        "desc": "Godziny, adres, połączenie i dojazd."
+      },
+      "apps": {
+        "label": "Aplikacje",
+        "desc": "Jeden kod dla App Store i Google Play."
+      },
+      "pdf": {
+        "label": "Dokument PDF",
+        "desc": "Prześlij PDF, który otworzy się na każdym telefonie."
+      },
+      "product": {
+        "label": "Produkt",
+        "desc": "Zdjęcia, cena i przycisk zakupu."
+      }
+    },
+    "faq": {
+      "kicker": "Pytania",
+      "title": "Warto wiedzieć",
+      "lead": "Krótkie odpowiedzi o płatnościach, plikach i skanowaniu.",
+      "items": {
+        "model": {
+          "q": "Statyczny czy dynamiczny: którego potrzebuję?",
+          "a": "Kod statyczny ma treść zapisaną we wzorze i działa zawsze po jednej płatności {static}. Kod dynamiczny zawiera krótki link, który po wydrukowaniu możesz skierować gdzie indziej — za {dynamic}/mies. za maks. {limit} kodów."
+        },
+        "scan": {
+          "q": "Czy mój kod nadal się zeskanuje z logo i kolorami?",
+          "a": "Każda zmiana jest sprawdzana w trakcie projektowania. Jeśli kontrast jest za niski, kolory są odwrócone albo logo zakrywa za dużo, powiemy o tym i zaproponujemy poprawkę jednym dotknięciem, zanim zapłacisz."
+        },
+        "account": {
+          "q": "Czy do projektowania potrzebuję konta?",
+          "a": "Nie. Projektowanie i podgląd są darmowe. Logujesz się przez Google dopiero przy pobieraniu, a Twój projekt przechodzi razem z Tobą."
+        },
+        "files": {
+          "q": "Jakie pliki dostanę?",
+          "a": "Ostry PNG na ekrany i drukarki oraz wektorowy SVG dla drukarni — dla każdego układu kupionego kodu."
+        },
+        "again": {
+          "q": "Czy mogę później pobrać pliki ponownie?",
+          "a": "Tak. Twoje kody zostają w sekcji Moje kody QR i możesz je ponownie pobrać w dowolnym formacie bez dodatkowych kosztów."
+        }
+      }
+    },
+    "cta": {
+      "label": "Zacznij",
+      "title": "Twój pierwszy kod zajmie około minuty.",
+      "lead": "Projektuj za darmo. Płacisz {price} dopiero przy pobieraniu.",
+      "pricing": "Zobacz cennik"
+    },
+    "studio": {
+      "kicker": "Twoje studio",
+      "welcome": "Witaj ponownie, {name}",
+      "summaryTop": "{name} zeskanowano dziś {count, plural, one {# raz} few {# razy} many {# razy} other {# razy}}. Wszystkie Twoje projekty masz pod ręką.",
+      "summary": "Wszystkie Twoje projekty masz pod ręką: pliki, linki i skany.",
+      "summaryEmpty": "Utwórz pierwszy kod, a pojawi się tutaj razem z plikami i skanami.",
+      "billing": "Plan i płatności",
+      "library": "Otwórz Moje kody QR",
+      "kpi": {
+        "codes": "Kody QR",
+        "codesNote": "Opłacone: {paid} · {drafts, plural, one {# szkic} few {# szkice} many {# szkiców} other {# szkicu}}",
+        "scans": "Skany · 14 dni",
+        "scansNone": "Brak skanów",
+        "scansDelta": "{delta, number, ::sign-always percent} w porównaniu z poprzednim tygodniem",
+        "dynamic": "Kody dynamiczne",
+        "dynamicNote": "W Twoim planie {left, plural, one {został # slot} few {zostały # sloty} many {zostało # slotów} other {zostało # slotu}}",
+        "dynamicMeter": "Używane kody dynamiczne",
+        "files": "Gotowe pliki",
+        "filesNote": "{count, plural, one {układ} few {układy} many {układów} other {układu}} do pobrania jako PNG lub SVG"
+      },
+      "chart": {
+        "title": "Skany · ostatnie 14 dni",
+        "sub": "Wszystkie kody dynamiczne razem",
+        "empty": "Tutaj pojawią się skany Twoich kodów dynamicznych.",
+        "today": "Dziś",
+        "label": "Dzienne skany wszystkich kodów dynamicznych z ostatnich 14 dni"
+      },
+      "top": "Najlepszy kod",
+      "topNote": "{count, plural, one {# skan} few {# skany} many {# skanów} other {# skanu}} w 14 dni · {link}",
+      "topNone": "Nie masz jeszcze kodów dynamicznych",
+      "topNoneNote": "Kody dynamiczne liczą każdy skan.",
+      "recent": "Ostatnie kody",
+      "seeAll": "Zobacz wszystkie ({count})",
+      "recentEmpty": "Tutaj znajdziesz swoje kody razem z plikami i skanami.",
+      "createFirst": "Utwórz pierwszy kod",
+      "open": "Otwórz",
+      "openName": "Otwórz {name}",
+      "status": {
+        "dynamic": "Dynamiczny · aktywny",
+        "paid": "Opłacony",
+        "draft": "Szkic"
+      },
+      "metricScans": "{count, plural, one {# skan} few {# skany} many {# skanów} other {# skanu}}",
+      "metricLayouts": "{count, plural, one {# układ} few {# układy} many {# układów} other {# układu}}",
+      "metricFinish": "Dokończ, aby pobrać",
+      "perksTitle": "W ramach Twojego konta",
+      "perks": {
+        "again": "Pobieraj każdy opłacony układ ponownie, jako PNG lub SVG, bez opłat",
+        "redirect": "Kieruj kody dynamiczne w nowe miejsca bez ponownego drukowania",
+        "scans": "Dzienne statystyki skanów dla każdego kodu dynamicznego",
+        "drafts": "Szkice zapisane na koncie na każdym urządzeniu",
+        "billing": "Potwierdzenia, plan i metoda płatności w sekcji Plan i płatności"
+      },
+      "loading": "Ładowanie Twojego studia",
+      "trial": "Darmowy okres próbny · {days, plural, one {został # dzień} few {zostały # dni} many {zostało # dni} other {zostało # dnia}}"
+    },
+    "workspace": {
+      "kicker": "Moje kody QR",
+      "title": "Wszystkie kody QR w jednym miejscu.",
+      "lead": "Twoja prywatna przestrzeń robocza po zalogowaniu. Każdy zaprojektowany kod zachowuje swoje układy, pliki, a w przypadku kodów dynamicznych — także skany.",
+      "points": {
+        "layouts": "Nazwane układy dla każdego kodu: wizytówka, plakat, strona",
+        "files": "Pobieraj PNG i SVG ponownie, kiedy chcesz",
+        "edit": "Zmień adres docelowy kodu dynamicznego po wydrukowaniu",
+        "scans": "Dzienne skany kodów dynamicznych"
+      },
+      "create": "Utwórz kod QR",
+      "signIn": "Zaloguj się",
+      "sampleOwner": "Przykładowa przestrzeń",
+      "sampleBadge": "Przykład",
+      "sampleNote": "Przykładowe kody i skany dla ilustracji. Zaloguj się, aby zobaczyć własne.",
+      "tabs": {
+        "all": "Wszystkie {count}",
+        "static": "Statyczne {count}",
+        "dynamic": "Dynamiczne {count}"
+      },
+      "models": {
+        "static": "Statyczny",
+        "dynamic": "Dynamiczny"
+      },
+      "samples": {
+        "portfolio": {
+          "name": "Wizytówka portfolio",
+          "meta": "3 układy · kupiony"
+        },
+        "menu": {
+          "name": "Menu kawiarni",
+          "meta": "Stojak na stolik · 214 skanów"
+        },
+        "wifi": {
+          "name": "Wi-Fi dla gości",
+          "meta": "Szkic"
+        }
+      },
+      "scans": "Analityka skanów · ostatnie 14 dni",
+      "startTrial": "Rozpocznij 7-dniowy darmowy okres próbny",
+      "trialNote": "Okres próbny Starter · bez karty · bez automatycznego obciążenia"
+    },
+    "printPack": {
+      "kicker": "Print Pack",
+      "title": "Z Twojego ekranu prosto do drukarni.",
+      "lead": "Dodaj Print Pack do dowolnego kodu QR i daj drukarni wszystko w jednym pobraniu: dokładny rozmiar, właściwe kolory i plik, który pozostaje ostry.",
+      "cardTag": "Wizytówka · 90 × 50 mm",
+      "labelTag": "Etykieta na opakowanie · 50 × 62 mm",
+      "cardLabel": "Układ druku wizytówki",
+      "labelLabel": "Układ druku etykiety na opakowanie",
+      "panelKicker": "Eksport · Print Pack",
+      "panelTitle": "Trzy pliki gotowe do druku",
+      "perQr": "za kod QR",
+      "files": {
+        "pdf": "Wektorowy PDF do druku",
+        "pdfSub": "Ostry w każdym rozmiarze, ze spadem 3 mm i znacznikami cięcia, w sRGB.",
+        "svg": "Edytowalny SVG",
+        "svgSub": "Otwórz go w Illustratorze, Figmie lub Inkscape, aby umieścić kod QR we własnym projekcie.",
+        "spec": "Specyfikacja kolorów i rozmiarów",
+        "specSub": "Jedna strona z rozmiarem końcowym, rozmiarem kodu QR, strefą ciszy i wszystkimi wartościami kolorów."
+      },
+      "addNote": "Wyłączony, dopóki nie włączysz go przy kasie. Dodaj go za +{price} albo później w szczegółach kodu QR.",
+      "single": "Single QR",
+      "withPack": "Z Print Pack",
+      "details": "Zobacz szczegóły Print Pack",
+      "preview": "Otwórz podgląd wydruku"
+    },
+    "explore": {
+      "kicker": "Poznaj typy kodów QR",
+      "title": "Jedno studio dla każdego rodzaju kodu",
+      "lead": "Wybierz typ, aby zobaczyć, co ludzie dostaną na telefonie po zeskanowaniu.",
+      "tabs": "Typy kodów QR",
+      "legend": "Strona hostowana: HeyQR utrzymuje ją online, a Ty możesz ją edytować po wydrukowaniu",
+      "hostedBadge": "Strona hostowana · Dynamiczny QR",
+      "websiteBadge": "Statyczny lub Dynamiczny QR",
+      "directBadge": "Otwiera się bezpośrednio · Statyczny QR",
+      "hostedExtra": "Edytuj stronę po wydrukowaniu. Kod pozostaje ten sam",
+      "directExtra": "Projektowanie i podgląd za darmo",
+      "hostedPrice": "Strony hostowane wymagają planu Dynamicznego: Starter {price}/mies., 7 dni za darmo.",
+      "directPrice": "Projektowanie za darmo. {price} za kod przy pobieraniu.",
+      "whatYouGet": "Co dostajesz",
+      "allTypes": "Zobacz wszystkie 16 typów",
+      "types": {
+        "menu": {
+          "short": "Dania i ceny",
+          "use": "Połóż całe menu na stole. Goście skanują, przeglądają sekcje i widzą ceny bez czekania na drukowaną kartę.",
+          "cta": "Utwórz kod QR z menu",
+          "points": {
+            "a": "Sekcje, dania, ceny i opcjonalne zdjęcia",
+            "b": "Zmieniaj ceny, kiedy chcesz; wydrukowane kody nadal działają"
+          }
+        },
+        "coupon": {
+          "short": "Rabaty, z których ludzie korzystają",
+          "use": "Zamień skan w sprzedaż dzięki kodowi, który klienci kopiują przy kasie lub pokazują przy ladzie.",
+          "cta": "Utwórz kod QR z kuponem",
+          "points": {
+            "a": "Kod promocyjny, data ważności i warunki",
+            "b": "Po wygaśnięciu pokazuje czytelną stronę „oferta zakończona”"
+          }
+        },
+        "social": {
+          "short": "Wszystkie Twoje profile",
+          "use": "Jeden kod dla każdego udostępnianego profilu: portfolio, konta społecznościowe i inne, w wybranej przez Ciebie kolejności.",
+          "cta": "Utwórz kod QR z linkami społecznościowymi",
+          "points": {
+            "a": "Zdjęcie, imię i krótkie bio",
+            "b": "Zmieniaj kolejność linków, kiedy chcesz"
+          }
+        },
+        "business": {
+          "short": "Godziny, połączenia, dojazd",
+          "use": "Wszystko, czego odwiedzający potrzebuje, by do Ciebie trafić: godziny otwarcia, przycisk połączenia, dojazd i Twoja strona.",
+          "cta": "Utwórz kod QR firmy",
+          "points": {
+            "a": "Połączenie, Dojazd i Strona pojawiają się, gdy dodasz te dane",
+            "b": "Pokazuje, czy masz dziś otwarte"
+          }
+        },
+        "apps": {
+          "short": "Oba sklepy z aplikacjami",
+          "use": "Kieruj iPhone’y do App Store, a telefony z Androidem do Google Play — z tego samego wydrukowanego kodu.",
+          "cta": "Utwórz kod QR z aplikacjami",
+          "points": {
+            "a": "Działa z jednym sklepem lub z oboma",
+            "b": "Komputery dostają stronę z oboma linkami i kodem do zeskanowania"
+          }
+        },
+        "pdf": {
+          "short": "Udostępnij dokument",
+          "use": "Broszury, harmonogramy czy instrukcje: prześlij PDF, a ludzie otworzą go na telefonie jednym dotknięciem.",
+          "cta": "Utwórz kod QR z PDF",
+          "points": {
+            "a": "Podmień plik później bez ponownego drukowania",
+            "b": "Przyciski Otwórz PDF i Pobierz"
+          }
+        },
+        "product": {
+          "short": "Strona produktu",
+          "use": "Pokaż produkt ze zdjęciami, ceną i przyciskiem zakupu — prosto z opakowania lub półki.",
+          "cta": "Utwórz kod QR produktu",
+          "points": {
+            "a": "Do 5 zdjęć, cena opcjonalna",
+            "b": "Twój przycisk: Kup teraz, Zobacz produkt lub Zamów teraz"
+          }
+        },
+        "website": {
+          "short": "Otwórz stronę internetową",
+          "use": "Kieruj ludzi na dowolną stronę: portfolio, sklep lub formularz rezerwacji.",
+          "cta": "Utwórz kod QR ze stroną",
+          "points": {
+            "a": "Statyczny lub Dynamiczny, jeśli link może się zmienić",
+            "b": "Sprawdzanie skanowania na żywo podczas projektowania"
+          }
+        },
+        "wifi": {
+          "short": "Połącz z Wi-Fi",
+          "use": "Goście kierują aparat na kod i łączą się z siecią. Nikt nie musi literować hasła.",
+          "cta": "Utwórz kod QR z Wi-Fi",
+          "points": {
+            "a": "Sieci WPA, WEP lub otwarte",
+            "b": "Działa offline: dane są zapisane w kodzie"
+          }
+        },
+        "contact": {
+          "short": "Zapisz kontakt",
+          "use": "Wizytówka, która zapisuje Twoje imię, telefon i e-mail prosto w kontaktach.",
+          "cta": "Utwórz kod QR z kontaktem",
+          "points": {
+            "a": "Działa na iPhonie i Androidzie",
+            "b": "Bez aplikacji"
+          }
+        }
+      }
+    }
+  },
+  "pricing": {
+    "title": "Cennik",
+    "head": "Zapłać raz za kod albo co miesiąc za kody, które możesz zmieniać.",
+    "lead": "Projektowanie, podgląd i sprawdzanie skanowania są zawsze darmowe. Płacisz przy pobieraniu.",
+    "currency": {
+      "label": "Pokaż ceny w",
+      "unavailable": "Ceny w {chosen} nie są jeszcze dostępne. HeyQR pobiera opłaty w {charged}; Twój bank przelicza kwotę. Na potwierdzeniu widać kwotę zapłaconą w {charged}."
+    },
+    "once": {
+      "title": "Jednorazowo",
+      "sub": "Bez subskrypcji. Odblokowane kody zostają Twoje."
+    },
+    "monthly": {
+      "title": "Miesięcznie",
+      "sub": "Dla dynamicznych kodów QR, które możesz zmieniać po wydrukowaniu. Anuluj w każdej chwili."
+    },
+    "free": {
+      "name": "Darmowy",
+      "price": "{price}",
+      "q": "Zaprojektuj i przetestuj kod, zanim cokolwiek wydasz.",
+      "points": [
+        "Każdy układ, kształt, kolor, logo i podpis",
+        "Sprawdzanie skanowania na żywo przy każdej zmianie",
+        "Twój szkic jest zapisany w tej przeglądarce"
+      ],
+      "cta": "Zacznij projektować"
+    },
+    "single": {
+      "name": "Single QR",
+      "price": "{price}",
+      "per": "jednorazowo",
+      "q": "Jeden statyczny kod QR ze wszystkimi plikami do pobrania.",
+      "points": [
+        "PNG i SVG każdego układu",
+        "Rozmiary do druku w mm i rozmiary ekranowe w px",
+        "Pobieraj ponownie, kiedy chcesz, na zawsze"
+      ],
+      "cta": "Utwórz kod QR"
+    },
+    "dynamic": {
+      "name": "Dynamiczny",
+      "price": "{price}",
+      "per": "miesięcznie",
+      "q": "Stały krótki link, który możesz skierować gdziekolwiek — także po wydrukowaniu.",
+      "live": "Aktywne kody dynamiczne",
+      "liveCount": "Maks. {limit} aktywnych jednocześnie",
+      "liveHint": "Liczba aktywnych kodów, nie miesięczny limit: wstrzymanie lub usunięcie kodu zwalnia jego slot.",
+      "points": [
+        "Zmieniaj adres docelowy, kiedy chcesz; wydrukowany kod pozostaje ten sam",
+        "Dzienne skany z ostatnich 14 dni",
+        "PNG i SVG każdego układu"
+      ],
+      "cta": "Utwórz Dynamiczny kod QR"
+    },
+    "compare": {
+      "title": "Porównaj",
+      "feature": "Co dostajesz",
+      "free": "Darmowy",
+      "single": "Single QR",
+      "dynamic": "Dynamiczny",
+      "yes": "W zestawie",
+      "no": "Brak",
+      "rows": {
+        "design": "Projekt, podgląd i sprawdzanie skanowania",
+        "download": "Pobieranie PNG i SVG",
+        "repeat": "Ponowne pobieranie",
+        "change": "Zmiana adresu docelowego kodu",
+        "analytics": "Analityka skanów",
+        "codes": "Kody"
+      },
+      "codesSingle": "1 na zakup",
+      "codesDynamic": "{limit} aktywnych",
+      "codesFree": "Nieograniczona liczba szkiców"
+    },
+    "tax": "Ceny nie zawierają podatku. Stripe dolicza ewentualny podatek przy kasie, a potwierdzenie pokazuje kwotę końcową.",
+    "trial": {
+      "action": "Rozpocznij 7-dniowy darmowy okres próbny",
+      "note": "Okres próbny: bez karty, bez automatycznego obciążenia. Jeden testowy Dynamiczny kod QR z prawdziwym krótkim linkiem."
+    }
+  },
+  "auth": {
+    "title": "Zaloguj się do Hey QR",
+    "lead": "Twój projekt zostaje zapisany na koncie, więc możesz go pobrać po płatności.",
+    "google": "Kontynuuj z Google",
+    "legal": "Kontynuując, akceptujesz Regulamin i Politykę prywatności.",
+    "failed": "Logowanie nie powiodło się. Spróbuj ponownie.",
+    "canceled": {
+      "draft": "Logowanie przez Google zostało anulowane. Twój projekt jest nadal zapisany w tej przeglądarce. Kliknij „Kontynuuj z Google”, aby spróbować ponownie.",
+      "plain": "Logowanie przez Google zostało anulowane. Kliknij „Kontynuuj z Google”, aby spróbować ponownie."
+    },
+    "incomplete": {
+      "draft": "Logowanie przez Google nie zostało dokończone. Twój projekt jest nadal zapisany w tej przeglądarce. Kliknij „Kontynuuj z Google”, aby spróbować ponownie.",
+      "plain": "Logowanie przez Google nie zostało dokończone. Kliknij „Kontynuuj z Google”, aby spróbować ponownie."
+    },
+    "backToDesign": "Wróć do mojego projektu"
+  },
+  "contentTypes": {
+    "website": "Strona internetowa",
+    "text": "Tekst",
+    "wifi": "Wi-Fi",
+    "contact": "Kontakt",
+    "email": "E-mail",
+    "phone": "Telefon",
+    "sms": "SMS",
+    "location": "Lokalizacja",
+    "event": "Wydarzenie",
+    "menu": "Menu",
+    "coupon": "Kupon",
+    "social": "Linki społecznościowe",
+    "business": "Firma",
+    "apps": "Aplikacje",
+    "pdf": "Dokument PDF",
+    "product": "Produkt"
+  },
+  "fields": {
+    "url": "Adres strony",
+    "text": "Tekst",
+    "ssid": "Nazwa sieci",
+    "security": "Zabezpieczenia",
+    "password": "Hasło",
+    "hidden": "Ta sieć jest ukryta",
+    "firstName": "Imię",
+    "lastName": "Nazwisko",
+    "title": "Stanowisko",
+    "company": "Firma",
+    "phone": "Telefon",
+    "email": "E-mail",
+    "website": "Strona internetowa",
+    "to": "Adres e-mail",
+    "subject": "Temat",
+    "body": "Wiadomość",
+    "number": "Numer telefonu",
+    "message": "Wiadomość",
+    "name": "Nazwa miejsca",
+    "address": "Adres",
+    "eventTitle": "Nazwa wydarzenia",
+    "start": "Początek",
+    "end": "Koniec",
+    "place": "Miejsce",
+    "securityNone": "Bez hasła",
+    "securityWpa": "WPA/WPA2/WPA3",
+    "date": "Data"
+  },
+  "editor": {
+    "openLibrary": "Otwórz Moje kody QR",
+    "title": "Utwórz kod QR",
+    "steps": {
+      "content": "Treść",
+      "design": "Wygląd",
+      "frame": "Ramka",
+      "type": "Typ"
+    },
+    "type": "Co ma otwierać kod?",
+    "model": {
+      "label": "Rodzaj kodu",
+      "static": "Statyczny",
+      "staticHint": "Jedna płatność, działa zawsze",
+      "dynamic": "Dynamiczny",
+      "dynamicHint": "Zmień link po wydrukowaniu"
+    },
+    "name": "Nazwa (widzisz ją tylko Ty)",
+    "namePlaceholder": "Wizytówka portfolio",
+    "pattern": "Moduły",
+    "eyeFrame": "Ramka narożnika",
+    "eyeBall": "Środek narożnika",
+    "colors": "Kolory",
+    "fg": "Moduły",
+    "bg": "Tło",
+    "logo": "Środek",
+    "logoNone": "Brak",
+    "logoUpload": "Prześlij logo",
+    "logoSize": "Rozmiar logo",
+    "layout": "Układ",
+    "presets": {
+      "qr": "Tylko QR",
+      "caption": "QR + podpis",
+      "vertical": "Karta pionowa",
+      "horizontal": "Karta pozioma",
+      "frame": "Ramka"
+    },
+    "frameStyle": "Styl ramki",
+    "caption": "Podpis",
+    "captionPlaceholder": "Zeskanuj mnie",
+    "preview": "Podgląd",
+    "previewNote": "Podgląd ze znakiem wodnym. Pliki w pełnym rozmiarze powstają po płatności.",
+    "download": "Pobierz",
+    "saving": "Zapisywanie…",
+    "draftRestored": "Przywróciliśmy Twój ostatni projekt.",
+    "scanOk": "Skanowanie potwierdzone",
+    "scanFix": "Popraw",
+    "shapes": {
+      "square": "Kwadrat",
+      "rounded": "Zaokrąglony",
+      "dot": "Kropki",
+      "diamond": "Romb",
+      "leaf": "Liść",
+      "fluid": "Płynny",
+      "vbars": "Pionowy",
+      "hbars": "Poziomy",
+      "cushion": "Miękki",
+      "circle": "Koło"
+    },
+    "frames": {
+      "bar": "Etykieta na dole",
+      "tab": "Zakładka u góry",
+      "bubble": "Dymek",
+      "pill": "Etykieta-pigułka",
+      "corners": "Celownik",
+      "circle": "Odznaka",
+      "ticket": "Bilet",
+      "phone": "Telefon"
+    },
+    "icons": {
+      "globe": "Strona",
+      "link": "Link",
+      "wifi": "Wi-Fi",
+      "phone": "Telefon",
+      "mail": "E-mail",
+      "message": "Wiadomość",
+      "pin": "Lokalizacja",
+      "calendar": "Kalendarz",
+      "clock": "Godziny",
+      "user": "Osoba",
+      "users": "Zespół",
+      "briefcase": "Praca",
+      "home": "Dom",
+      "bag": "Sklep",
+      "cart": "Koszyk",
+      "coffee": "Kawa",
+      "utensils": "Menu",
+      "wine": "Bar",
+      "music": "Muzyka",
+      "play": "Wideo",
+      "camera": "Zdjęcie",
+      "image": "Galeria",
+      "heart": "Polubienie",
+      "star": "Opinia",
+      "gift": "Prezent",
+      "ticket": "Bilet",
+      "tag": "Cena",
+      "percent": "Rabat",
+      "card": "Płatność",
+      "download": "Pobieranie",
+      "file": "Dokument",
+      "book": "Przewodnik",
+      "leaf": "Eko",
+      "sun": "Plener",
+      "bike": "Rower",
+      "plane": "Podróże",
+      "at": "Społeczność",
+      "smile": "Opinie"
+    },
+    "back": "Strona główna",
+    "stepsLabel": "Utwórz kod QR",
+    "settings": "Ustawienia wyglądu",
+    "scanFailed": "Może się nie skanować",
+    "priceOnce": "{price} jednorazowo",
+    "pricePerMonth": "{price} / mies.",
+    "previewFree": "Podgląd za darmo · płacisz przy pobieraniu",
+    "draftUnreadable": "Nie udało się otworzyć Twojego ostatniego projektu, więc zaczynasz od nowa. Jest zachowany w tej przeglądarce.",
+    "mode": {
+      "question": "Czy link może się zmienić po wydrukowaniu?",
+      "lead": "Zdecyduj teraz: wydrukowanego kodu statycznego nie da się później skierować gdzie indziej.",
+      "static": {
+        "eyebrow": "Nie, zostaje bez zmian",
+        "title": "Statyczny QR",
+        "text": "Treść jest zapisana we wzorze. Zmiana oznacza nowy kod. Płacisz raz: {price}."
+      },
+      "dynamic": {
+        "eyebrow": "Tak, mogę go zmienić",
+        "title": "Dynamiczny QR",
+        "text": "Kod zawiera stały krótki link. Zmieniaj, dokąd prowadzi, i oglądaj dzienne skany. {price}/mies."
+      },
+      "unavailable": "Kody typu {type} są zawsze statyczne: treść trafia prosto do wzoru. Dynamiczny jest dla linków do stron.",
+      "switched": "Kody typu {type} są statyczne, więc ten kod jest teraz Statyczny. Dynamiczny jest dla linków do stron.",
+      "adjusted": "Twój szkic był Dynamiczny, ale dynamiczne mogą być tylko linki do stron, więc teraz jest Statyczny. Treść i wygląd się nie zmieniły."
+    },
+    "backTo": {
+      "home": "Strona główna",
+      "type": "Typ",
+      "content": "Treść"
+    },
+    "continue": "Dalej",
+    "export": "Eksport",
+    "previewFrom": "Podgląd za darmo · pobieranie od {price}",
+    "optional": "opcjonalnie",
+    "frameGroup": {
+      "title": "Ramka wokół kodu",
+      "count": "Opcje: {count}",
+      "none": "Bez ramki",
+      "text": "Tekst ramki",
+      "textHint": "Tekst sam dopasowuje się do ramki. Czcionkę i grubość ustawisz w Podpisie.",
+      "quick": "Szybki tekst",
+      "phrases": {
+        "scanMe": "Zeskanuj mnie",
+        "callMe": "Zadzwoń",
+        "menu": "Menu",
+        "wifi": "Wi-Fi",
+        "payHere": "Zapłać tutaj",
+        "reviewUs": "Oceń nas",
+        "followUs": "Obserwuj nas",
+        "bookNow": "Zarezerwuj"
+      },
+      "color": "Kolor ramki",
+      "textColor": "Kolor tekstu",
+      "presets": "Gotowe zestawy kolorów",
+      "presetsHint": "Ramka · kod · tło",
+      "preset": "Ramka {frame}, kod {code}, tło {bg}",
+      "white": "Biały",
+      "graphite": "Grafit",
+      "violetUi": "Fiolet"
+    },
+    "typeStep": {
+      "title": "Co ma otwierać Twój kod?",
+      "lead": "Wszystko możesz wypróbować za darmo. Płacisz dopiero przy pobieraniu gotowego pliku.",
+      "groupLabel": "Typ kodu QR",
+      "example": "np. {example}",
+      "next": "Dalej: dodaj treść",
+      "examples": {
+        "website": "anareyes.studio/portfolio",
+        "text": "„Zadzwoń dzwonkiem dwa razy”",
+        "wifi": "Reyes Studio Guest",
+        "contact": "Ana Reyes · Projektantka",
+        "email": "hello@reyes.studio",
+        "phone": "+1 415 555 0142",
+        "sms": "„Potwierdzam obecność”",
+        "location": "21 Pier St, San Francisco",
+        "event": "Wiosenny pokaz · 5 grudnia",
+        "menu": "Menu Little Fern Café",
+        "coupon": "20% zniżki na zajęcia z ceramiki",
+        "social": "@ana.makes, portfolio, YouTube",
+        "business": "Reyes Ceramics Studio",
+        "apps": "Aplikacja Fern Rewards",
+        "pdf": "Wiosenny plan zajęć",
+        "product": "Nakrapiany kubek z kamionki"
+      },
+      "directGroup": "Otwiera się prosto z kodu",
+      "directGroupLabel": "Typy kodów QR, które otwierają się bezpośrednio",
+      "hostedGroup": "Strony hostowane",
+      "hostedNew": "Nowość",
+      "hostedLead": "Dla tych typów HeyQR hostuje stronę mobilną, a kod zawiera Dynamiczny krótki link, więc możesz edytować stronę po wydrukowaniu. Wymagają planu Dynamicznego: Starter {starter}/mies. lub Studio {studio}/mies., z 7-dniowym darmowym okresem próbnym.",
+      "hostedSummary": "{type} · Strona hostowana · Dynamiczny"
+    },
+    "contentStep": {
+      "titles": {
+        "website": "Jaką stronę ma otwierać?",
+        "text": "Co mają przeczytać ludzie?",
+        "wifi": "Do jakiej sieci mają dołączyć goście?",
+        "contact": "Kogo mają zapisać ludzie?",
+        "email": "Do kogo ma trafić e-mail?",
+        "phone": "Pod jaki numer ma dzwonić?",
+        "sms": "Kto ma dostać SMS-a?",
+        "location": "Jakie miejsce ma otwierać?",
+        "event": "Jakie to wydarzenie?",
+        "menu": "Co jest w menu?",
+        "coupon": "Jaka jest oferta?",
+        "social": "Jakie linki mają znaleźć ludzie?",
+        "business": "Jak można się z Tobą skontaktować?",
+        "apps": "Gdzie można pobrać Twoją aplikację?",
+        "pdf": "Jaki dokument ma się otworzyć?",
+        "product": "Jaki produkt pokazujesz?"
+      },
+      "subs": {
+        "website": "Wklej pełny adres. Zobaczysz, co ludzie dostaną po zeskanowaniu.",
+        "text": "Zwykły tekst pojawia się na telefonie zaraz po zeskanowaniu.",
+        "wifi": "Telefony łączą się z siecią po zeskanowaniu. Bez wpisywania.",
+        "contact": "Po zeskanowaniu telefony proponują zapisanie tego kontaktu.",
+        "email": "Skanowanie otwiera nowy e-mail z wypełnionym adresem, tematem i treścią.",
+        "phone": "Skanowanie proponuje połączenie z numerem. Bez wpisywania.",
+        "sms": "Skanowanie otwiera SMS-a gotowego do wysłania.",
+        "location": "Skanowanie otwiera miejsce w aplikacji map na telefonie.",
+        "event": "Skanowanie proponuje dodanie wydarzenia do kalendarza.",
+        "menu": "Dodaj sekcje i dania. Po zeskanowaniu goście widzą menu przyjazne telefonom.",
+        "coupon": "Ludzie widzą rabat, kopiują kod i wykorzystują go przed końcem oferty.",
+        "social": "Jedna strona z Twoim zdjęciem, krótkim bio i linkami w Twojej kolejności.",
+        "business": "Przyciski połączenia, dojazdu i Twojej strony pojawiają się, gdy dodasz te dane.",
+        "apps": "Telefony trafiają prosto do swojego sklepu. Inne urządzenia widzą oba linki.",
+        "pdf": "Prześlij PDF. Ludzie otworzą lub pobiorą go jednym dotknięciem.",
+        "product": "Zdjęcia, cena i jeden wyraźny przycisk, by kupić lub dowiedzieć się więcej."
+      },
+      "nameLabel": "Nazwa w Moich kodach QR",
+      "stepOf": "Krok 2 z 3",
+      "kept": "Twoje dane zostaną zachowane, jeśli wrócisz.",
+      "continue": "Przejdź do wyglądu",
+      "errorsOne": "Popraw zaznaczone pole, aby kontynuować. Wszystko inne jest zapisane.",
+      "errorsMany": "Popraw zaznaczone pola ({count}), aby kontynuować. Wszystko inne jest zapisane.",
+      "back": "Wstecz",
+      "urlHint": "Ten adres jest zapisany w kodzie. Aby później skierować wydrukowane kody gdzie indziej, wybierz Dynamiczny w poprzednim kroku.",
+      "urlHintDynamic": "Twój kod będzie zawierał stały krótki link. Tu kieruje on ludzi, a po wydrukowaniu możesz to zmienić.",
+      "nameHint": "Tę nazwę widzisz tylko Ty.",
+      "namePlaceholderType": "QR {type}"
+    },
+    "errors": {
+      "urlEmpty": "Wpisz adres strony, np. yourname.com.",
+      "urlSpaces": "Adres strony nie może zawierać spacji.",
+      "urlInvalid": "Sprawdź adres. Potrzebna jest domena, np. yourname.com.",
+      "text": "Wpisz tekst, który ludzie mają zobaczyć po zeskanowaniu.",
+      "ssid": "Wpisz nazwę sieci dokładnie tak, jak wyświetla się na telefonach.",
+      "password": "Wpisz hasło do Wi-Fi albo wybierz „Bez hasła”.",
+      "passwordShort": "Hasła WPA mają co najmniej 8 znaków.",
+      "contactName": "Dodaj przynajmniej imię lub nazwisko.",
+      "phone": "Używaj cyfr, spacji i opcjonalnie + przed kodem kraju.",
+      "email": "Sprawdź adres e-mail. Potrzebna jest nazwa, @ i domena, np. ana@studio.com.",
+      "emailTo": "Wpisz adres, na który ma trafić e-mail.",
+      "emailInvalid": "Sprawdź adres. Potrzebna jest nazwa, @ i domena.",
+      "phoneNumber": "Wpisz numer telefonu z kodem kraju, np. +1 415 555 0142.",
+      "smsTo": "Wpisz numer, który ma otrzymać wiadomość.",
+      "address": "Wpisz adres, który ma otworzyć aplikacja map.",
+      "eventTitle": "Nadaj wydarzeniu nazwę.",
+      "eventStart": "Wybierz datę."
+    },
+    "afterScanning": {
+      "label": "Po zeskanowaniu",
+      "toggleHint": "Zobacz, co ludzie dostaną na telefonie",
+      "caption": "Co ludzie widzą po zeskanowaniu",
+      "websitePlaceholder": "Twoja strona internetowa",
+      "dynamicNote": "Najpierw otwiera Twój krótki link, a potem przekierowuje tutaj.",
+      "textPlaceholder": "Tutaj pojawi się Twój tekst.",
+      "wifiPlaceholder": "Połączyć z siecią?",
+      "security": "Zabezpieczenia",
+      "open": "Sieć otwarta",
+      "password": "Hasło",
+      "join": "Połącz z siecią",
+      "contactPlaceholder": "Nowy kontakt",
+      "phone": "Telefon",
+      "email": "E-mail",
+      "company": "Firma",
+      "save": "Dodaj do kontaktów",
+      "emailPlaceholder": "Nowy e-mail",
+      "subject": "Temat",
+      "compose": "Napisz e-mail",
+      "phonePlaceholder": "Numer telefonu",
+      "call": "Zadzwoń",
+      "message": "Wiadomość",
+      "text": "Wyślij SMS",
+      "locationPlaceholder": "Miejsce",
+      "address": "Adres",
+      "openMaps": "Otwórz w Mapach",
+      "eventPlaceholder": "Nowe wydarzenie",
+      "place": "Miejsce",
+      "addToCalendar": "Dodaj do kalendarza",
+      "wifiKicker": "Połącz z siecią Wi-Fi",
+      "website": "Strona internetowa",
+      "textKicker": "Zeskanowany tekst",
+      "loading": "Ładowanie podglądu",
+      "date": "Data",
+      "addEvent": "Dodaj wydarzenie"
+    },
+    "passwordShow": "Pokaż",
+    "passwordHide": "Ukryj",
+    "wifiPasswordHint": "Podgląd ukrywa hasło. Jest ono zapisane w samym kodzie, więc każdy, kto go zeskanuje, może się połączyć.",
+    "tooLong": {
+      "title": "Za długie na kod QR",
+      "text": "To około {over}% więcej, niż zmieści kod QR. Skróć treść, a kod od razu wróci. Nic z wpisanej treści nie przepadnie.",
+      "centerHint": "Logo lub podpis na środku kodu obniża limit. Usunięcie go też zwalnia miejsce.",
+      "detail": "{bytes} z {max} bajtów",
+      "edit": "Edytuj treść",
+      "badge": "Za długie",
+      "preview": "Kod QR nie jest wyświetlany: treść jest za długa"
+    },
+    "eyeColor": "Ramki narożników",
+    "eyeInColor": "Środki narożników",
+    "resetColors": "Resetuj kolory",
+    "colorInvalid": "Użyj koloru HEX, np. #1F4D3A: # i 6 znaków z zakresu 0–9 i A–F.",
+    "size": {
+      "title": "Rozmiar",
+      "unitHint": "Na ekrany, slajdy i do internetu. 1 jednostka = 1 piksel przy 1×.",
+      "qr": "Rozmiar kodu QR",
+      "qrSlider": "Suwak rozmiaru kodu QR",
+      "clamped": "Ten kod nie mieści się w układzie: jest rysowany w rozmiarze {shown} {unit}, największym, jaki się mieści. Powiększ układ lub zmniejsz kod.",
+      "layout": "Rozmiar układu",
+      "width": "Szerokość",
+      "height": "Wysokość",
+      "locked": "Przy „Tylko QR” i „Ramka” układ dopasowuje się do kodu. Wybierz „QR + podpis” lub kartę, aby ustawić własny rozmiar.",
+      "presets": {
+        "square": "Kwadrat 1080",
+        "story": "Relacja 1080×1920",
+        "slide": "Slajd 1920×1080",
+        "card": "Wizytówka 90×50",
+        "a6": "A6 105×148",
+        "sticker": "Naklejka 50×62"
+      },
+      "invalid": "Wpisz liczbę całkowitą od {min} do {max} {unit}.",
+      "units": "Jednostki",
+      "unitMm": "Druk · mm",
+      "unitPx": "Ekran · px",
+      "unitHintMm": "Do druku. Pliki są eksportowane w 300, 600 lub 1200 dpi.",
+      "invalidMm": "Wpisz liczbę od {min} do {max} mm, z maksymalnie jednym miejscem po przecinku.",
+      "qrHint": "ze strefą ciszy",
+      "reach": "Skanuje się z odległości do ok. {cm} cm (zasada 10 : 1). Większy kod, większy zasięg.",
+      "viewNoteMm": "Obszar roboczy jest przeskalowany do ekranu. Wybierz <b>Rzeczywisty rozmiar</b> nad obszarem, aby zobaczyć go w rozmiarze wydruku. Eksport: <b>PNG {width} × {height} px</b>.",
+      "viewNotePx": "Obszar roboczy jest przeskalowany do ekranu. Wybierz <b>Rzeczywisty rozmiar</b> nad obszarem, aby zobaczyć go w skali 1×. Eksport: <b>PNG {width} × {height} px</b> (2×)."
+    },
+    "updatingPreview": "Aktualizowanie podglądu…",
+    "captionField": {
+      "label": "Tekst podpisu",
+      "hint": "Naciśnij Enter, aby dodać drugą linię. Zostaw puste, aby ukryć podpis.",
+      "tooLong": "Użyj maks. {max} znaków: usuń {over, plural, one {# znak} few {# znaki} many {# znaków} other {# znaku}}. Podgląd zachowuje ostatni podpis, który się mieści.",
+      "tooManyLines": "Użyj maks. {max} linii. Podgląd zachowuje ostatni podpis, który się mieści.",
+      "count": "{count} z {max} znaków",
+      "unsupported": "Czcionka {font} nie obsługuje znaków {chars}. Wybierz inną czcionkę lub zmień {count, plural, one {ten znak} few {te znaki} many {te znaki} other {te znaki}}: w plikach {count, plural, one {wyświetliłby się} few {wyświetliłyby się} many {wyświetliłyby się} other {wyświetliłyby się}} jako puste prostokąty."
+    },
+    "captionFont": {
+      "title": "Czcionka",
+      "hint": "Czcionki dla Twojego kodu QR. Interfejs HeyQR zawsze używa DM Sans.",
+      "weight": "Grubość",
+      "weights": {
+        "400": "Normalna",
+        "500": "Średnia",
+        "700": "Pogrubiona"
+      },
+      "original": "DM Sans (oryginalna)",
+      "originalHint": "Ten układ powstał, zanim pojawiło się więcej czcionek. DM Sans ma tylko litery łacińskie; dla cyrylicy wybierz inną czcionkę."
+    },
+    "captionSize": {
+      "label": "Rozmiar",
+      "invalid": "Wpisz {min}–{max} {unit}, z maksymalnie jednym miejscem po przecinku. Podgląd zachowuje ostatni prawidłowy rozmiar.",
+      "fitted": "Rysowany w rozmiarze {size} {unit}, aby podpis zmieścił się w układzie."
+    },
+    "edit": {
+      "title": "Edytuj wygląd · {layout}",
+      "back": "Wróć do kodu",
+      "save": "Zapisz zmiany",
+      "saved": "Wygląd zapisany",
+      "restored": "Zachowaliśmy zmiany, których nie zapisano przed ponownym zalogowaniem. Zapisz, aby je zachować.",
+      "discardRestored": "Odrzuć",
+      "unsaved": "Niezapisane zmiany",
+      "retry": "Spróbuj ponownie",
+      "failed": "Nie udało się zapisać wyglądu. Twoje zmiany nadal tu są.",
+      "notFound": "Ten kod lub układ już nie istnieje.",
+      "hint": "Zmiany dotyczą tylko tego układu",
+      "note": "Zapis aktualizuje ten układ. Treść, płatność i linki pozostają bez zmian.",
+      "layouts": "Układy tego kodu",
+      "newLayout": "Nowy układ",
+      "newName": "Układ {n}",
+      "added": "Utworzono „{name}” na podstawie bieżącego układu. Pozostałe są bez zmian.",
+      "addFailed": "Nie udało się dodać układu. Twoje zmiany nadal tu są; spróbuj ponownie.",
+      "unsavedSwitch": "Ten układ ma niezapisane zmiany.",
+      "discardSwitch": "Odrzuć i przełącz",
+      "layoutName": "Nazwa układu",
+      "unsavedSwitchText": "Przełączyć na „{name}” i odrzucić zmiany w tym układzie? Najpierw zapisz, aby je zachować.",
+      "keepEditing": "Edytuj dalej",
+      "conflictTitle": "Ten układ został zapisany gdzie indziej",
+      "conflictText": "Inna karta lub urządzenie zapisało ten układ po jego otwarciu, więc Twoje zmiany nie zostały zapisane. Nadal tu są: zapisz je jako nowy układ albo wczytaj zapisaną wersję (wtedy zmiany tutaj zostaną odrzucone).",
+      "conflictNewLayout": "Zapisz moje zmiany jako nowy układ",
+      "conflictReload": "Wczytaj zapisaną wersję"
+    },
+    "captionStyle": {
+      "align": "Wyrównanie",
+      "aligns": {
+        "left": "Do lewej",
+        "center": "Do środka",
+        "right": "Do prawej"
+      },
+      "color": "Kolor podpisu",
+      "palette": "Gotowe kolory podpisu",
+      "matchCode": "Jak kod"
+    },
+    "logoFile": {
+      "hint": "PNG, JPG, SVG lub WebP, maks. {max} MB. Wybierz plik lub upuść go na kafelek przesyłania.",
+      "reading": "Odczytywanie obrazu…",
+      "empty": "Ten plik jest pusty.",
+      "tooLarge": "Ten plik przekracza limit {max} MB.",
+      "unsupported": "Ten plik nie jest obrazem PNG, JPG, SVG ani WebP, niezależnie od nazwy.",
+      "unreadable": "Nie można otworzyć tego obrazu. Może być uszkodzony; wyeksportuj go ponownie i spróbuj jeszcze raz.",
+      "kept": "Twoje obecne logo zostaje."
+    },
+    "logoPlate": {
+      "label": "Podkład",
+      "none": "Brak",
+      "square": "Kwadrat",
+      "circle": "Koło"
+    },
+    "logoSizeValue": "{size}% · skanuje się do {max}%",
+    "logoSizeLegacy": "Zapisano {saved}%; rysowane w maksymalnym rozmiarze {max}%. Przesunięcie suwaka zapisze rozmiar w tym zakresie.",
+    "groups": {
+      "label": "Ustawienia wyglądu",
+      "layout": "Układ",
+      "frame": "Ramka",
+      "size": "Rozmiar",
+      "pattern": "Wzór",
+      "colors": "Kolory",
+      "logo": "Logo",
+      "caption": "Podpis",
+      "brand": "Marka"
+    },
+    "quickStyles": {
+      "title": "Szybkie style",
+      "hint": "Jedno dotknięcie ustawia kształty i kolory naraz. Cofnij przywraca poprzedni wygląd.",
+      "surprise": "Zaskocz mnie",
+      "apply": "Zastosuj styl {name}",
+      "applied": "Zastosowano styl „{name}”. Cofnij przywraca poprzedni wygląd.",
+      "surprised": "Nowy wygląd. Cofnij przywraca poprzedni.",
+      "names": {
+        "classic": "Klasyczny",
+        "soft": "Miękki",
+        "dots": "Kropki",
+        "fluid": "Płynny",
+        "lines": "Linie",
+        "gem": "Klejnot"
+      }
+    },
+    "layoutGroup": {
+      "title": "Układ",
+      "hint": "Elementy się przesuwają, ustawienia zostają",
+      "border": "Ramka wokół układu",
+      "borderCards": "Karty zawsze mają ramkę."
+    },
+    "colorsGroup": {
+      "title": "Co pokolorować",
+      "targets": "Elementy do kolorowania",
+      "resetAll": "Resetuj wszystko",
+      "edited": "Zmieniono",
+      "roles": {
+        "fg": "Moduły",
+        "eye": "Ramki narożników",
+        "eyeIn": "Środki narożników",
+        "bg": "Tło",
+        "frame": "Ramka",
+        "caption": "Podpis"
+      },
+      "editing": "Kolor: {role}",
+      "swatches": "Próbki",
+      "reset": "Przywróć domyślny",
+      "note": "Te kolory zmieniają tylko Twój kod QR. Przyciski i menu HeyQR zachowują swoje kolory.",
+      "frameHint": "Ramki, obramowania kart i ramka wokół układu.",
+      "captionHint": "Podpisy pod kodem, nad nim lub w kodzie.",
+      "picker": "Wybór koloru: {role}"
+    },
+    "logoGroup": {
+      "source": "Źródło logo",
+      "icons": "Biblioteka ikon",
+      "upload": "Prześlij logo",
+      "count": "Ikony wektorowe: {count}",
+      "search": "Szukaj ikon",
+      "searchPlaceholder": "Szukaj ikon: menu, wifi, sklep…",
+      "empty": "Żadna ikona nie pasuje do „{query}”.",
+      "style": "Styl ikony",
+      "plate": "Na podkładce",
+      "tile": "Kolorowy kafelek",
+      "vectorNote": "Ikony pozostają wektorowe w SVG i PDF, więc są ostre w każdym rozmiarze. Przyjmują kolor środków narożników.",
+      "remove": "Usuń logo",
+      "backingHint": "Podkład usuwa kropki za logo, aby było dobrze widoczne.",
+      "position": "Pozycja",
+      "positions": {
+        "center": "Środek kodu",
+        "top": "Góra karty"
+      },
+      "positionHint": "„Góra karty” działa z kartą pionową i poziomą.",
+      "brandName": "Nazwa obok logo",
+      "brandNameHint": "Opcjonalnie. Wyświetlana obok logo nad kodem.",
+      "uploadTitle": "Prześlij swoje logo",
+      "brandedUpload": "Najpierw prześlij obraz",
+      "imageSize": "Rozmiar obrazu"
+    },
+    "captionGroup": {
+      "position": "Pozycja",
+      "positions": {
+        "below": "Pod kodem",
+        "above": "Nad kodem",
+        "inside": "W kodzie"
+      },
+      "insideHint": "Krótki tekst leży na podkładce na środku kodu. Jeśli zakrywa za dużo, sprawdzanie skanowania poprosi o skrócenie.",
+      "hiddenNote": "Układ „{layout}” nie ma podpisu. Wybierz QR + podpis lub kartę, aby go pokazać.",
+      "frameNote": "Tekst ramki ustawisz w sekcji Ramka.",
+      "toLayout": "Użyj QR + podpis",
+      "color": "Kolor podpisu",
+      "insideShortened": "W kodzie jest miejsce na {max} znaków, więc wyświetla się „{shown}”. Skróć podpis lub umieść go pod kodem albo nad nim."
+    },
+    "stage": {
+      "history": "Historia",
+      "undo": "Cofnij",
+      "redo": "Ponów",
+      "background": "Tło obszaru roboczego",
+      "bg": {
+        "light": "Jasne",
+        "dark": "Ciemne",
+        "checker": "Przezroczyste"
+      },
+      "scale": "Skala podglądu",
+      "fit": "Dopasuj",
+      "actual": "Rzeczywisty rozmiar",
+      "dims": {
+        "layout": "Układ",
+        "qr": "QR",
+        "file": "Plik"
+      },
+      "scaleLabel": "{pct}%",
+      "openFull": "Otwórz podgląd pełnoekranowy",
+      "fullTitle": "Podgląd pełnoekranowy",
+      "done": "Gotowe",
+      "scaledToFit": "Dopasowano do ekranu"
+    },
+    "scanChecking": "Sprawdzanie skanowania",
+    "darkenCorners": "Przyciemnij znaczniki narożne",
+    "textCount": "{count} z {max} znaków. Krótki tekst daje prostszy, łatwiejszy do zeskanowania kod.",
+    "brand": {
+      "step1": "1 · Twoje logo lub obraz",
+      "step1Hint": "PNG, JPG, WebP lub SVG",
+      "step1Ready": "Możesz go wymienić w każdej chwili",
+      "drag": "Przeciągnij tu swoje logo",
+      "dropNow": "Upuść, aby przesłać",
+      "add": "Dodaj logo lub obraz",
+      "formats": "PNG, JPG, WebP lub SVG, maks. 10 MB. Najlepiej sprawdza się przezroczyste tło.",
+      "choose": "Wybierz obraz",
+      "chooseMobile": "Wybierz ze zdjęć lub plików",
+      "chooseLabel": "Wybierz obraz logo",
+      "sample": "Wypróbuj przykładowe logo",
+      "error": "Nie udało się odczytać tego pliku. Spróbuj z PNG, JPG, WebP lub SVG do 10 MB.",
+      "reading": "Odczytywanie kolorów z obrazu…",
+      "preview": "Przesłany obraz",
+      "image": "Twój obraz",
+      "colorsFound": "{count, plural, one {Znaleziono # kolor} few {Znaleziono # kolory} many {Znaleziono # kolorów} other {Znaleziono # koloru}}",
+      "replace": "Wymień obraz",
+      "replaceLabel": "Wymień obraz logo",
+      "remove": "Usuń obraz",
+      "step2": "2 · Kolory z Twojego obrazu",
+      "step2Hint": "Zastosowano do kodu QR",
+      "roles": "Role kolorów marki",
+      "role": {
+        "primary": "Kolor kodu",
+        "bg": "Tło",
+        "accent": "Akcent"
+      },
+      "roleHint": {
+        "primary": "Moduły i ramki narożników",
+        "bg": "Za kodem i kartą",
+        "accent": "Środki narożników i detale"
+      },
+      "fromImage": "Z Twojego obrazu",
+      "found": "Kolory znalezione w obrazie",
+      "hexFor": "HEX dla: {role}",
+      "reset": "Resetuj",
+      "contrast": {
+        "ok": "Kod na tle: {ratio}:1 · łatwy do odczytania. Ostatnie słowo ma sprawdzanie skanowania.",
+        "warn": "Kod na tle: {ratio}:1 · czytelny, ale większy kontrast jest bezpieczniejszy.",
+        "err": "Kod na tle: {ratio}:1 · za mało, by niezawodnie się skanował."
+      },
+      "appColors": "Te kolory zmieniają tylko Twój kod QR. Przyciski i menu HeyQR zachowują własne kolory.",
+      "step3": "3 · Wybierz kierunek",
+      "step3Hint": "Ten sam kod, trzy wyglądy",
+      "looks": "Wyglądy z marką",
+      "lookCards": {
+        "center": {
+          "title": "Logo w kodzie",
+          "desc": "Twój znak leży na podkładce na środku."
+        },
+        "card": {
+          "title": "Karta marki",
+          "desc": "Logo i nazwa nad kodem, w ramce."
+        },
+        "art": {
+          "title": "Grafika",
+          "desc": "Twój obraz przenika do kropek i narożników."
+        }
+      },
+      "step4": "4 · Dopracuj",
+      "fine": {
+        "logo": "Rozmiar obrazu i podkład",
+        "pattern": "Kropki i narożniki",
+        "caption": "Podpis i czcionka",
+        "size": "Rozmiar"
+      },
+      "updating": "Aktualizowanie wyglądu z marką… możesz edytować dalej",
+      "readingCanvas": "Odczytywanie obrazu…"
+    },
+    "designMode": {
+      "label": "Tryb projektowania",
+      "custom": "Własny wygląd",
+      "branded": "Wygląd z marką",
+      "chooseTitle": "Jak chcesz go zaprojektować?",
+      "chooseLead": "Oba zaczynają od tego samego kodu. Możesz przełączać się w każdej chwili bez utraty treści.",
+      "customTitle": "Własny wygląd",
+      "customText": "Sam wybierz układ, kształty, kolory, ramkę i podpis.",
+      "brandedTitle": "Wygląd z marką",
+      "brandedBadge": "Z Twojego logo",
+      "brandedText": "Prześlij logo lub obraz. Pobierzemy z niego kolory i zaproponujemy trzy wyglądy."
+    },
+    "patternHint": "8 kształtów kropek, które przechowują dane",
+    "eyeFrameHint": "Zewnętrzny pierścień 3 znaczników narożnych",
+    "eyeBallHint": "Wewnętrzna kropka 3 znaczników narożnych",
+    "finderNote": "Każdy kształt zachowuje proporcje znacznika 1 : 1 : 3 : 1 : 1, więc sprawdzanie skanowania nadal przechodzi.",
+    "colorPicker": "Wybór koloru: {label}",
+    "scanCheck": {
+      "run": "Sprawdź skanowanie",
+      "retry": "Sprawdź ponownie",
+      "readBack": "Odczytano „{value}” na tym urządzeniu, jak aparatem telefonu.",
+      "unreadableTitle": "Nie zeskanowano",
+      "unreadable": "Aparat telefonu nie odczytał tego układu. Zwiększ kontrast, zmniejsz logo lub użyj prostszych kształtów, a potem sprawdź ponownie.",
+      "mismatch": "Odczytano „{value}”, a nie Twoją treść. Sprawdź treść, a potem sprawdź ponownie.",
+      "errorTitle": "Sprawdzanie skanowania nie zostało uruchomione",
+      "errorText": "Nie udało się uruchomić sprawdzania skanowania. Twój projekt jest bezpieczny; spróbuj ponownie.",
+      "finding": "Sprawdzamy przyczynę na tym urządzeniu…",
+      "multiTitle": "Ten układ może się nie skanować · poprawki: {count}",
+      "confirmed": "Sprawdzono na tym urządzeniu: po zmianie tylko tego ustawienia kod się skanuje.",
+      "general": "Nie udało się wskazać jednego ustawienia. Zwiększ kontrast, zmniejsz logo lub użyj prostszych kształtów, a potem sprawdź ponownie.",
+      "logoSearching": "Sprawdzamy mniejsze rozmiary logo na tym urządzeniu…",
+      "logoNone": "Żaden mniejszy rozmiar logo nie skanuje się w tym układzie, więc projekt pozostał bez zmian. Spróbuj podkładu, prostszego logo albo usuń je w sekcji Logo.",
+      "openLogo": "Otwórz ustawienia logo",
+      "logoApplied": "Logo zmniejszono z {from}% do {to}%. Sprawdzamy nowy układ…",
+      "causes": {
+        "invert": {
+          "title": "Jasny kod na ciemnym tle",
+          "text": "Wiele aparatów w telefonach nie odczytuje odwróconych kodów. Kod powinien być ciemniejszy niż tło.",
+          "fix": "Zamień kolory"
+        },
+        "contrast": {
+          "title": "Za mały kontrast",
+          "text": "Kod i tło są zbyt podobne ({ratio}:1). Celuj w co najmniej 4:1.",
+          "fix": "Zwiększ kontrast"
+        },
+        "eyes": {
+          "title": "Znaczniki narożne są za jasne",
+          "text": "Skanery znajdują kod po trzech znacznikach narożnych. Przyciemnij je.",
+          "fix": "Przyciemnij znaczniki narożne"
+        },
+        "text": {
+          "title": "Tekst w kodzie jest za długi",
+          "text": "Ogranicz tekst w kodzie do ok. 8 znaków, aby korekcja błędów mogła odtworzyć to, co zakrywa.",
+          "fix": "Skróć tekst"
+        },
+        "logo": {
+          "title": "Logo zakrywa za dużą część kodu",
+          "text": "Korekcja błędów odtworzy logo o szerokości do {max}%. Twoje ma {size}%.",
+          "critical": "Zachodzi na znacznik narożny lub linię synchronizacji.",
+          "fix": "Zmniejsz logo"
+        }
+      }
+    },
+    "hosted": {
+      "badge": "Strona hostowana",
+      "notice": "HeyQR publikuje tę stronę pod adresem {short}. {needs} Zmiany są widoczne po opublikowaniu; wydrukowane kody nadal działają.",
+      "noticePreview": "krótki link kodu",
+      "needsPlan": "Publikowanie wymaga planu Dynamicznego: Starter {starter}/mies. za 5 kodów lub Studio {studio}/mies. za 25, z 7-dniowym darmowym okresem próbnym. Projektowanie i podgląd pozostają darmowe.",
+      "needsSlot": "Zajmuje jeden z {slots} slotów Dynamicznych w planie {plan}.",
+      "sample": "Zacznij od przykładu",
+      "sampleAdded": "Dodano przykład. Zastąp go własnymi danymi.",
+      "previews": "Podglądy · Po zeskanowaniu i wygląd QR",
+      "previewSwitch": "Podgląd",
+      "afterScan": "Po zeskanowaniu",
+      "qrDesign": "Wygląd QR",
+      "moveUp": "Przesuń {item} w górę",
+      "moveDown": "Przesuń {item} w dół",
+      "remove": "Usuń {item}",
+      "optional": "opcjonalnie",
+      "photoAdd": "Dodaj zdjęcie",
+      "photoReplace": "Wymień zdjęcie",
+      "photoRemove": "Usuń zdjęcie",
+      "photoHint": "Zdjęcia są przesyłane do HeyQR i skalowane pod telefony. JPG lub PNG, maks. 5 MB każde.",
+      "photoType": "„{name}” nie jest plikiem JPG ani PNG.",
+      "photoTooLarge": "„{name}” ma {size}. Limit to 5 MB.",
+      "photoUnreadable": "Nie udało się odczytać „{name}”. Spróbuj z innym zdjęciem.",
+      "menu": {
+        "name": "Nazwa restauracji",
+        "namePlaceholder": "Little Fern Café",
+        "note": "Notatka",
+        "notePlaceholder": "Kuchnia czynna 8:00–15:00",
+        "currency": "Ceny w",
+        "section": "Sekcja {n}",
+        "sectionPlaceholder": "Śniadanie",
+        "sectionHint": "Nazwij tę sekcję, np. „Śniadanie” lub „Napoje”.",
+        "dish": "Danie {n}",
+        "dishPlaceholder": "Tost z awokado",
+        "descPlaceholder": "Opis · opcjonalnie",
+        "price": "Cena",
+        "pricePlaceholder": "12",
+        "dishPhoto": "Zdjęcie dania",
+        "addDish": "Dodaj danie",
+        "addSection": "Dodaj sekcję"
+      },
+      "coupon": {
+        "title": "Tytuł oferty",
+        "titlePlaceholder": "Na dowolne zajęcia z ceramiki w tym miesiącu",
+        "discount": "Rabat",
+        "discountPlaceholder": "20% zniżki",
+        "discountHint": "Krótko i wyraźnie: „20% zniżki”, „5 zł taniej”, „Kawa gratis”.",
+        "code": "Kod promocyjny",
+        "codePlaceholder": "FERN20",
+        "expires": "Kończy się",
+        "expiresHint": "Po tej dacie strona pokazuje „Oferta zakończona” i ukrywa kod. Oferta jest ważna przez cały dzień w Twojej strefie czasowej ({zone}).",
+        "clearDate": "Wyczyść datę",
+        "link": "Link do realizacji",
+        "linkPlaceholder": "yourshop.com/offer",
+        "terms": "Warunki",
+        "termsPlaceholder": "Jeden kod na osobę. Nie łączy się z innymi ofertami.",
+        "previewAs": "Podgląd strony jako",
+        "valid": "Ważna oferta",
+        "expired": "Wygasła"
+      },
+      "social": {
+        "photo": "Zdjęcie profilowe",
+        "name": "Nazwa profilu",
+        "namePlaceholder": "Ana Reyes",
+        "bio": "Krótkie bio",
+        "bioPlaceholder": "Projektantka produktów. W weekendy ceramika.",
+        "links": "Linki w kolejności, w jakiej widzą je ludzie",
+        "link": "Link {n}",
+        "labelLabel": "Etykieta",
+        "labelPlaceholder": "Instagram",
+        "urlLabel": "Adres",
+        "urlPlaceholder": "instagram.com/yourname",
+        "quickAdd": "Dodaj:",
+        "addLink": "Dodaj link"
+      },
+      "business": {
+        "name": "Nazwa firmy",
+        "namePlaceholder": "Reyes Ceramics Studio",
+        "desc": "Krótki opis",
+        "descPlaceholder": "Ręcznie toczona zastawa i zajęcia z ceramiki.",
+        "hours": "Godziny otwarcia",
+        "open": "Otwarte",
+        "from": "Otwarcie",
+        "to": "Zamknięcie",
+        "closed": "Zamknięte",
+        "copyMonday": "Skopiuj godziny z poniedziałku na wt–pt",
+        "zone": "Godziny w strefie {zone}.",
+        "address": "Adres",
+        "addressPlaceholder": "21 Pier St, San Francisco",
+        "addressHint": "Dodaje przycisk Dojazd.",
+        "phone": "Telefon",
+        "phonePlaceholder": "+1 415 555 0142",
+        "phoneHint": "Dodaje przycisk Zadzwoń.",
+        "website": "Strona internetowa",
+        "websitePlaceholder": "yourshop.com",
+        "websiteHint": "Dodaje przycisk Strona."
+      },
+      "apps": {
+        "icon": "Ikona aplikacji",
+        "name": "Nazwa aplikacji",
+        "namePlaceholder": "Fern Rewards",
+        "desc": "Opis",
+        "descPlaceholder": "Co robi aplikacja, w jednym zdaniu.",
+        "ios": "Link do App Store",
+        "iosPlaceholder": "apps.apple.com/app/your-app",
+        "android": "Link do Google Play",
+        "androidPlaceholder": "play.google.com/store/apps/details?id=…",
+        "storesHint": "Dodaj co najmniej jeden sklep. Telefony otwierają swój sklep; inne urządzenia widzą stronę z oboma linkami."
+      },
+      "pdf": {
+        "title": "Tytuł",
+        "titlePlaceholder": "Wiosenny plan zajęć",
+        "desc": "Krótki opis",
+        "descPlaceholder": "Terminy, ceny i co zabrać.",
+        "file": "Plik PDF",
+        "choose": "Wybierz PDF",
+        "limits": "Maks. 25 MB · maks. 300 stron",
+        "sample": "Użyj przykładowego PDF",
+        "uploading": "Przesyłanie · {pct}%",
+        "processing": "Sprawdzanie pliku PDF…",
+        "cancel": "Anuluj",
+        "meta": "{pages, plural, one {# strona} few {# strony} many {# stron} other {# strony}} · {size}",
+        "metaNoPages": "{size}",
+        "replace": "Wymień",
+        "remove": "Usuń",
+        "hint": "Przechowywany przez HeyQR. Wymiana pliku zachowuje ten sam krótki link, więc po opublikowaniu wydrukowane kody otwierają nową wersję.",
+        "signIn": "Zaloguj się, aby przesłać PDF. Twój szkic zostanie zachowany.",
+        "notPdf": "„{name}” nie jest plikiem PDF. Wybierz plik z rozszerzeniem .pdf.",
+        "empty": "„{name}” jest pusty. Wybierz inny plik.",
+        "tooLarge": "„{name}” ma {size}. Limit to 25 MB. Wyeksportuj mniejszy PDF i spróbuj ponownie.",
+        "tooManyPages": "„{name}” ma {pages} stron. Limit to 300.",
+        "failed": "Ten plik nie został przesłany. Spróbuj ponownie."
+      },
+      "product": {
+        "name": "Nazwa produktu",
+        "namePlaceholder": "Nakrapiany kubek z kamionki",
+        "photos": "Zdjęcia",
+        "cover": "Okładka",
+        "photosHint": "Do 5 zdjęć. Pierwsze jest okładką. JPG lub PNG, maks. 5 MB każde.",
+        "photo": "Zdjęcie {n}",
+        "desc": "Opis",
+        "descPlaceholder": "Rozmiar, materiał, pielęgnacja.",
+        "currency": "Waluta",
+        "price": "Cena",
+        "pricePlaceholder": "38",
+        "cta": "Przycisk",
+        "ctas": {
+          "buy": "Kup teraz",
+          "view": "Zobacz produkt",
+          "order": "Zamów teraz"
+        },
+        "link": "Link do produktu",
+        "linkPlaceholder": "yourshop.com/product",
+        "linkHint": "Dokąd prowadzi przycisk: Twój sklep lub oferta w serwisie sprzedażowym."
+      },
+      "signInPhotos": "Zaloguj się, aby dodać zdjęcia. Twój szkic zostanie zachowany.",
+      "errors": {
+        "menuName": "Dodaj nazwę, którą goście zobaczą na górze menu.",
+        "menuSections": "Dodaj co najmniej jedną sekcję.",
+        "sectionName": "Nazwij tę sekcję, np. „Śniadanie” lub „Napoje”.",
+        "sectionDishes": "Dodaj co najmniej jedno danie do tej sekcji.",
+        "dishName": "Każde danie musi mieć nazwę.",
+        "price": "Ceny zawierają tylko cyfry, np. 12 lub 4.50.",
+        "couponTitle": "Napisz, czego dotyczy oferta.",
+        "couponDiscount": "Dodaj rabat, np. „20% zniżki”.",
+        "couponCode": "Używaj tylko liter, cyfr, - lub _, bez spacji.",
+        "dateInvalid": "Wybierz prawidłową datę.",
+        "datePassed": "Ta data już minęła. Wybierz późniejszą albo wyczyść ją, aby oferta nie miała daty końcowej.",
+        "urlEmpty": "Wpisz adres strony, np. yourname.com.",
+        "urlSpaces": "Adres strony nie może zawierać spacji.",
+        "urlInvalid": "Sprawdź adres. Potrzebna jest domena, np. yourname.com.",
+        "socialName": "Dodaj nazwę, którą ludzie zobaczą na górze strony.",
+        "socialLinks": "Dodaj co najmniej jeden link.",
+        "linkLabel": "Ten link musi mieć etykietę.",
+        "linkUrl": "Ten link musi mieć pełny adres strony, np. instagram.com/yourname.",
+        "businessName": "Dodaj nazwę firmy.",
+        "businessReach": "Dodaj adres, telefon lub stronę, aby ludzie mogli się z Tobą skontaktować.",
+        "phone": "Używaj cyfr, spacji i opcjonalnie + przed kodem kraju.",
+        "hoursInvalid": "Wpisuj godziny w formacie 09:00.",
+        "hoursOrder": "Godzina zamknięcia musi być późniejsza niż godzina otwarcia.",
+        "appName": "Dodaj nazwę aplikacji.",
+        "appStores": "Dodaj co najmniej jeden link do sklepu.",
+        "appStoreLink": "Linki do App Store zaczynają się od apps.apple.com/.",
+        "googlePlayLink": "Linki do Google Play zaczynają się od play.google.com/.",
+        "pdfTitle": "Dodaj tytuł dokumentu.",
+        "pdfFile": "Prześlij PDF, aby kontynuować.",
+        "pdfUploading": "Poczekaj na zakończenie przesyłania.",
+        "productName": "Dodaj nazwę produktu.",
+        "productLink": "Dodaj stronę, na której można kupić lub zobaczyć produkt.",
+        "productPrice": "Używaj tylko cyfr, np. 38 lub 38.50. Walutę wybierz w menu.",
+        "productImages": "Do 5 zdjęć."
+      },
+      "previewNote": "HeyQR hostuje tę stronę pod adresem {short}. Zmiany są widoczne po opublikowaniu; wydrukowane kody nadal działają.",
+      "qrNote": "Kod zawiera krótki link {short}, więc strona może się zmieniać po wydrukowaniu."
+    }
+  },
+  "scan": {
+    "invert": "Jasny kod na ciemnym tle. Wiele aparatów w telefonach nie odczytuje odwróconych kodów.",
+    "contrast": "Za mały kontrast między kodem a tłem. Potrzeba co najmniej 3:1.",
+    "eyes": "Znaczniki narożne muszą być ciemniejsze niż tło, z kontrastem co najmniej 3:1 (2,5:1 dla środków). Skanery znajdują po nich kod.",
+    "logo": "Logo zakrywa za dużą część kodu. Zmniejsz je.",
+    "text": "Tekst w kodzie jest za długi. Ogranicz go do ok. 8 znaków."
+  },
+  "export": {
+    "title": "Pobierz swój kod",
+    "shortLinkPreview": {
+      "mark": "Podgląd",
+      "note": "Podgląd z przykładowym krótkim linkiem. Twój stały krótki link powstaje po aktywowaniu kodu i zawiera go każdy pobrany plik."
+    },
+    "format": "Format",
+    "png": "PNG",
+    "pngHint": "Obraz do 8K do internetu i dokumentów.",
+    "svg": "SVG",
+    "svgHint": "Wektor, dowolny rozmiar, edytowalny.",
+    "pay": "Zapłać {price} i pobierz",
+    "subscribe": "Subskrybuj za {price} / mies.",
+    "download": "Pobierz {format}",
+    "paid": "Płatność otrzymana. Twoje pliki są gotowe.",
+    "pending": "Potwierdzamy płatność… Zwykle trwa to kilka sekund. Ustawienia są zablokowane, aby plik zgadzał się z potwierdzeniem.",
+    "cancelled": "<b>Płatność anulowana.</b> Nie pobrano opłaty. Twój projekt i format są zapisane, więc możesz zapłacić, kiedy zechcesz.",
+    "secure": "Dokończysz na bezpiecznej stronie płatności Stripe, a potem wrócisz tu, aby pobrać pliki.",
+    "includedNote": "W cenie zakupu. Nic nie płacisz.",
+    "resolution": "Rozmiar PNG",
+    "scale": "{scale}×",
+    "dpi": "{dpi} dpi",
+    "pixels": "{width} × {height} px",
+    "titleBuy": "Pobierz swój kod QR",
+    "titleGuest": "Gotowe do pobrania",
+    "subGuest": "Sprawdź układ i plik, a potem zaloguj się przez Google, aby zapłacić i pobrać. Twój projekt zostaje bez zmian.",
+    "subPay": "Sprawdź układ i format. Przed płatnością zobaczysz kwotę końcową.",
+    "subEntitled": "Ten kod jest Twój. Pobieraj go w dowolnym formacie tyle razy, ile potrzebujesz.",
+    "stageLabel": "Układ do pobrania",
+    "layouts": "Układy tego kodu",
+    "backToDesign": "Wróć do wyglądu",
+    "model": {
+      "static": "Statyczny",
+      "dynamic": "Dynamiczny"
+    },
+    "dims": {
+      "layout": "Układ",
+      "file": "Plik"
+    },
+    "scanOk": "Skanowanie potwierdzone",
+    "scanFail": "Może się nie skanować",
+    "transparent": "Przezroczyste tło",
+    "quality": "<b>Bez utraty jakości.</b> SVG i PDF to czysty wektor: moduły, ikony i tekst skalują się do rozmiaru billboardu. PNG jest renderowany z tego samego wektora w rozdzielczości do 8K.",
+    "returned": "Zalogowano przez Google. Twój układ i <b>{format}</b> są dokładnie takie, jak je zostawiono.",
+    "sessionEnded": "<b>Sesja wygasła.</b> Zaloguj się ponownie, aby kontynuować: ten układ i opcje pliku zostaną zachowane.",
+    "signInAgain": "Zaloguj się ponownie",
+    "alreadyOwned": "Już należy do Ciebie. Pobierz go ponownie w każdej chwili, bez nowej płatności.",
+    "paymentProcessing": "Płatność za ten kod jest potwierdzana. Odblokuje się za chwilę, bez drugiego obciążenia.",
+    "signInCanceled": "Logowanie przez Google zostało anulowane. Twój układ i <b>{format}</b> są nadal wybrane. Kliknij „Kontynuuj z Google”, aby spróbować ponownie.",
+    "signInIncomplete": "Logowanie przez Google nie zostało dokończone. Twój układ i <b>{format}</b> są nadal wybrane. Kliknij „Kontynuuj z Google”, aby spróbować ponownie.",
+    "confirming": "Potwierdzamy płatność…",
+    "preparing": "Przygotowujemy plik {format}…",
+    "ready": "Plik {format} jest gotowy.",
+    "downloaded": "<b>Pobrano {name}.</b> Znajdziesz go też w Moich kodach QR, gotowy do ponownego pobrania.",
+    "downloadAgain": "Pobierz ponownie",
+    "tryAgain": "Spróbuj ponownie",
+    "errors": {
+      "failed": "<b>Nie udało się przygotować pliku {format}.</b> Twoja płatność i ustawienia są bezpieczne. Spróbuj ponownie za chwilę.",
+      "scan": "<b>Ten układ może się nie skanować.</b> Otwórz projekt, aby to poprawić; pliki powstają tylko dla kodów, które przejdą sprawdzanie skanowania.",
+      "size": "<b>Ten rozmiar jest za duży na jeden plik.</b> Wybierz mniejszy rozmiar PNG lub SVG.",
+      "payment": "<b>Ten kod nie jest jeszcze odblokowany.</b> Nie pobrano opłaty. Odśwież za chwilę lub zapłać, aby pobrać."
+    },
+    "checkoutFailed": "Nie udało się otworzyć płatności. Nie pobrano opłaty; spróbuj ponownie.",
+    "continueGoogle": "Kontynuuj z Google",
+    "guestNote": "Projektowanie za darmo. Płacisz dopiero przy pobieraniu.",
+    "receipt": {
+      "title": "Potwierdzenie",
+      "paid": "Zapłacono",
+      "tax": "Podatek wliczony zgodnie z wyliczeniem Stripe."
+    },
+    "lines": {
+      "single": "Single QR",
+      "dynamic": "Dynamiczny QR",
+      "singleNamed": "Single QR · {name}",
+      "unlock": "Odblokowanie statyczne · {plan} · pozostało {left} z {limit}",
+      "credit": "Kredyt statyczny · pozostało {left}",
+      "slot": "Slot Dynamiczny · {plan} · w użyciu {used} z {limit}",
+      "starter": "Starter · miesięcznie",
+      "ppIncluded": "Print Pack · w ramach {plan} · pozostało {left} z {limit}",
+      "pp": "Print Pack"
+    },
+    "perMonth": "{price}/mies.",
+    "summary": {
+      "title": "Podsumowanie zamówienia",
+      "code": "Kod QR",
+      "type": "Typ",
+      "layout": "Układ",
+      "file": "Plik",
+      "total": "Razem",
+      "tax": "Ewentualny podatek jest naliczany przy płatności.",
+      "included": "W cenie",
+      "includedShort": "W cenie"
+    },
+    "emptyTitle": "Nie ma jeszcze nic do pobrania",
+    "emptyText": "Najpierw zaprojektuj kod QR. Twój szkic zostaje w tej przeglądarce do czasu pobrania.",
+    "emptyAction": "Utwórz kod QR",
+    "inspectPrint": "Otwórz podgląd wydruku",
+    "printTitle": "Print Pack",
+    "printPreviewText": "Przed drukiem sprawdź dokładny PDF do druku, spady, znaczniki cięcia i wartości kolorów tego układu.",
+    "printSetupText": "Print Pack wymaga układu do druku mierzonego w mm. Przełącz ten układ na Druk · mm w Edytuj wygląd → Rozmiar.",
+    "printSetup": "Przygotuj do druku",
+    "pdf": "PDF",
+    "pdfHint": "Wektor dla drukarni.",
+    "payTotal": "Zapłać {price} i pobierz",
+    "useUnlock": "Użyj 1 odblokowania i pobierz",
+    "useCredit": "Użyj 1 kredytu i pobierz",
+    "unlockNote": "Z planu {plan}. Po tym {left, plural, one {zostanie # odblokowanie} few {zostaną # odblokowania} many {zostanie # odblokowań} other {zostanie # odblokowania}} w tym miesiącu.",
+    "creditNote": "Z kredytów statycznych. Po tym {left, plural, one {zostanie # kredyt} few {zostaną # kredyty} many {zostanie # kredytów} other {zostanie # kredytu}}.",
+    "goLive": "Aktywuj i pobierz",
+    "goLiveNote": "Zajmuje aktywny slot planu {plan}: {used} z {limit} po tym kodzie.",
+    "perMonthShort": "{price}/mies.",
+    "ppTitle": "Print Pack",
+    "ppOptional": "Opcjonalnie",
+    "ppUnlocked": "Odblokowano",
+    "ppDownload": "Pobierz",
+    "ppAddTitle": "Dodaj Print Pack",
+    "ppSub": "PDF do druku, edytowalny SVG oraz specyfikacja kolorów i rozmiarów",
+    "ppUseIncluded": "Użyj 1 Print Pack z planu",
+    "ppIncludedSub": "Pozostało {left} z {limit} w tym miesiącu · PDF do druku, SVG i specyfikacja",
+    "ppIncluded": "W cenie",
+    "ppAddText": "PDF do druku ze spadami i znacznikami cięcia, edytowalny SVG oraz arkusz kolorów i rozmiarów dla tego kodu QR.",
+    "ppAdd": "Dodaj Print Pack · +{price}",
+    "ppNotForSale": "Print Pack nie jest jeszcze dostępny w tej walucie.",
+    "ppRepeat": "Ponowne pobieranie jest w cenie. Ustawienia: rozmiar 100%, spad 3 mm, znaczniki cięcia, sRGB.",
+    "inspectPrintFirst": "Najpierw obejrzyj pliki do druku",
+    "incl": {
+      "static1": "PNG i SVG każdego układu tego kodu",
+      "static2": "Nieograniczone ponowne pobieranie",
+      "static3": "Zmiany wyglądu w każdej chwili",
+      "dyn1": "Do {limit} aktywnych Dynamicznych kodów QR, adresy docelowe zmieniasz w każdej chwili",
+      "dyn2": "Podstawowa analityka skanów",
+      "dyn3": "PNG i SVG, nieograniczone ponowne pobieranie",
+      "pp": "Print Pack: PDF do druku, edytowalny SVG i specyfikacja"
+    },
+    "catalog": {
+      "not_offered": "Tego nie można jeszcze kupić w wybranej walucie. Nie pobrano opłaty.",
+      "price_mismatch": "Cena zmieniła się od załadowania strony. Nie pobrano opłaty; odśwież, aby zobaczyć aktualną cenę.",
+      "unavailable": "Jeszcze niedostępne do kupienia w tej walucie. Zmień walutę w Cenniku lub sprawdź później. Nic nie zostanie pobrane."
+    },
+    "unlockErrors": {
+      "no_allowance": "Brak odblokowań w tym miesiącu. Wybierz inną opcję poniżej.",
+      "no_credits": "Brak kredytów statycznych.",
+      "limit": "Wszystkie aktywne sloty Dynamiczne są zajęte.",
+      "failed": "Nie udało się. Nie pobrano opłaty; spróbuj ponownie."
+    },
+    "limits": {
+      "staticTitle": "Wykorzystano wszystkie {limit} odblokowania statyczne w tym miesiącu",
+      "staticText": "Ten kod QR potrzebuje jeszcze jednego odblokowania. Wybierz, co Ci pasuje; Twój projekt zostaje bez zmian.",
+      "staticUsed": "Wykorzystano {used} z {limit} odblokowań",
+      "resets": "Odnowienie {date}",
+      "buyOnce": "Kup ten kod QR jednorazowo",
+      "buyOnceSub": "Single QR z PNG i SVG",
+      "credits": "Kup 3 kredyty statyczne",
+      "creditsSub": "Nigdy nie wygasają",
+      "studio": "Przejdź na Studio",
+      "studioSub": "40 odblokowań i 5 Print Packów co miesiąc",
+      "dynTitle": "Wszystkie {limit} sloty Dynamiczne są zajęte",
+      "dynText": "Sloty liczą kody, które teraz przekierowują, a nie kody utworzone w tym miesiącu. Zwolnij jeden lub przejdź na większy plan.",
+      "dynUsed": "Aktywne: {used} z {limit}",
+      "live": "Liczba bieżąca · nie miesięczna",
+      "pause": "Wstrzymaj lub usuń kod Dynamiczny",
+      "pauseSub": "Od razu zwalnia jego slot",
+      "studioDynSub": "25 slotów Dynamicznych i analityka dla każdego kodu",
+      "toStatic": "Zrób z niego statyczny kod QR",
+      "toStaticSub": "Stała treść · zużywa odblokowanie statyczne"
+    },
+    "limit": "większe rozmiary przekraczają {max} px",
+    "subUnlock": "W ramach {plan}: zużywa 1 z miesięcznych odblokowań statycznych.",
+    "subCredit": "Zużywa 1 z Twoich kredytów statycznych."
+  },
+  "dashboard": {
+    "noMatch": {
+      "static": "Brak statycznych kodów QR",
+      "dynamic": "Brak dynamicznych kodów QR",
+      "text": "Pozostałe kody znajdziesz w zakładce Wszystkie.",
+      "all": "Pokaż wszystkie kody"
+    },
+    "title": "Moje kody QR",
+    "new": "Utwórz kod QR",
+    "empty": {
+      "title": "Nie masz jeszcze kodów QR",
+      "text": "Tutaj pojawiają się kody, które kupisz lub zaczniesz projektować. Możesz je ponownie pobierać i dodawać nowe układy w każdej chwili.",
+      "cta": "Utwórz pierwszy kod QR"
+    },
+    "status": {
+      "draft": "Szkic",
+      "active": "Aktywny",
+      "paused": "Wstrzymany",
+      "archived": "Zarchiwizowany",
+      "purchased": "Kupiony",
+      "inactive": "Nieaktywny"
+    },
+    "model": {
+      "static": "Statyczny",
+      "dynamic": "Dynamiczny"
+    },
+    "updated": "Zaktualizowano {date}",
+    "open": "Otwórz {name}",
+    "sub": "{count, plural, one {# kod} few {# kody} many {# kodów} other {# kodu}} · aktywne dynamiczne: {dynamic}",
+    "subEmpty": "Tutaj znajdziesz kupione kody i szkice.",
+    "filterLabel": "Filtr",
+    "filters": {
+      "all": "Wszystkie {count}",
+      "static": "Statyczne {count}",
+      "dynamic": "Dynamiczne {count}"
+    },
+    "actions": {
+      "edit": "Edytuj wygląd",
+      "download": "Pobierz",
+      "buy": "Kup i pobierz",
+      "reactivate": "Włącz ponownie"
+    },
+    "loading": "Ładowanie Twoich kodów QR",
+    "manage": {
+      "select": "Zaznacz",
+      "done": "Gotowe",
+      "selectAll": "Zaznacz wszystkie",
+      "selectOne": "Zaznacz {name}",
+      "chooseToDelete": "Wybierz kody do usunięcia",
+      "selected": "Zaznaczono {count} z {total}",
+      "deleteSelected": "{count, plural, =0 {Usuń} other {Usuń (#)}}",
+      "deleteOne": "Usuń {name}",
+      "cancel": "Anuluj",
+      "dialog": {
+        "titleOne": "Usunąć „{name}”?",
+        "titleMany": "Usunąć kody QR ({count})?",
+        "leadOne": "Zniknie z Moich kodów QR na wszystkich urządzeniach.",
+        "leadMany": "Znikną z Moich kodów QR na wszystkich urządzeniach.",
+        "dynamicTitle": "{count, plural, one {Jego krótki link przestanie działać} few {Ich krótkie linki przestaną działać} many {Ich krótkie linki przestaną działać} other {Ich krótkie linki przestaną działać}}",
+        "dynamicText": "{links} od razu {count, plural, one {przestaje} few {przestają} many {przestają} other {przestają}} przekierowywać. Wydrukowane kopie otworzą stronę „link nieaktywny”. {count, plural, one {Zwolni się jeden slot planu} few {Zwolnią się # sloty planu} many {Zwolni się # slotów planu} other {Zwolni się # slotu planu}}.",
+        "staticTitle": "Wydrukowane kopie nadal działają",
+        "staticText": "Kod statyczny przechowuje treść we wzorze, więc wydrukowane kopie nadal się skanują. Nie będzie można już pobrać ani edytować {count, plural, one {tego zakupu} few {tych # zakupów} many {tych # zakupów} other {tych # zakupu}}, a usunięcie nie oznacza zwrotu pieniędzy.",
+        "draftTitle": "{count, plural, one {Szkic zostanie usunięty} few {# szkice zostaną usunięte} many {# szkiców zostanie usuniętych} other {# szkicu zostanie usunięte}}",
+        "draftText": "Nic za {count, plural, one {niego} few {nie} many {nie} other {nie}} nie zapłacono, więc nic więcej się nie zmienia.",
+        "confirmOne": "Usuń kod",
+        "confirmMany": "Usuń kody ({count})",
+        "undoNote": "Przez kilka sekund po usunięciu możesz to cofnąć.",
+        "close": "Zamknij",
+        "metaDynamic": "Dynamiczny",
+        "metaStatic": "Statyczny",
+        "metaActive": "aktywny",
+        "metaPurchased": "kupiony",
+        "metaDraft": "szkic"
+      },
+      "deletedOne": "Usunięto „{name}”.",
+      "deletedMany": "Usunięto kody: {count}.",
+      "undo": "Cofnij",
+      "restoredOne": "Kod przywrócony.",
+      "restoredMany": "Przywrócono kody: {count}.",
+      "deleteFailed": "Nie udało się usunąć. Spróbuj ponownie.",
+      "restoreFailed": "Nie udało się przywrócić. Cofnięcie jest dostępne przez kilka minut po usunięciu.",
+      "rename": {
+        "action": "Zmień nazwę",
+        "actionOne": "Zmień nazwę {name}",
+        "label": "Nazwa: {name}",
+        "save": "Zapisz",
+        "cancel": "Anuluj",
+        "saved": "Zmieniono nazwę na „{name}”.",
+        "empty": "Nadaj kodowi nazwę.",
+        "failed": "Nie udało się zmienić nazwy. Twój tekst nadal tu jest; spróbuj ponownie."
+      }
+    },
+    "printPack": "Print Pack"
+  },
+  "qr": {
+    "back": "Wszystkie kody",
+    "layouts": "Układy",
+    "shortLink": "Krótki link",
+    "destination": "Adres docelowy",
+    "destinationHint": "Wydrukowane kody nadal działają; teraz otwierają ten adres.",
+    "save": "Zapisz",
+    "saved": "Zapisano",
+    "scans": "Skany z ostatnich 14 dni",
+    "scansTotal": "{count, plural, one {# skan} few {# skany} many {# skanów} other {# skanu}}",
+    "download": "Pobierz",
+    "buy": "Kup, aby pobrać",
+    "copy": "Kopiuj",
+    "copied": "Skopiowano",
+    "editDesign": "Edytuj wygląd",
+    "dest": {
+      "title": "Adres docelowy",
+      "saved": "Zapisano",
+      "new": "Nowy adres docelowy",
+      "hint": "Wydrukowane kody otworzą nowy adres w ciągu minuty. Krótki link pozostaje {short}.",
+      "save": "Zapisz adres docelowy",
+      "cancel": "Anuluj",
+      "goesTo": "Skany {short} prowadzą do",
+      "previously": "Wcześniej {url}",
+      "changedAt": "zmieniono",
+      "history": {
+        "title": "Historia zmian",
+        "to": "Zmieniono na",
+        "from": "z {url}"
+      },
+      "change": "Zmień adres docelowy",
+      "conflict": {
+        "title": "Ten adres docelowy zmieniono gdzie indziej",
+        "text": "Teraz prowadzi do {url}. Twoja zmiana poniżej nie została zapisana.",
+        "load": "Wczytaj najnowszą wersję",
+        "loaded": "Wczytano najnowszą wersję: {url}. Przejrzyj swoją zmianę i zapisz, aby ją zastąpić."
+      }
+    },
+    "scansCard": {
+      "title": "Skany · ostatnie 14 dni",
+      "total": "Razem",
+      "today": "Dziś",
+      "emptyTitle": "Brak skanów",
+      "emptyText": "Pierwszy skan pojawi się tutaj w ciągu kilku minut. Spróbuj zeskanować wydrukowany kod.",
+      "periodEmptyTitle": "Brak skanów w ostatnich 14 dniach",
+      "periodEmptyText": "Wcześniejsze skany są zachowane. Nowe pojawią się tutaj w ciągu kilku minut."
+    },
+    "details": {
+      "back": "Moje kody QR",
+      "newLayout": "Nowy układ",
+      "permanent": "Stały",
+      "shortNote": "To właśnie zawiera Twój wydrukowany kod. Nigdy się nie zmienia, więc wydrukowane kody nadal działają.",
+      "noShortLink": "Ten kod zacznie działać z krótkim linkiem po aktywacji.",
+      "content": "Treść",
+      "fixed": "Zapisana w kodzie",
+      "staticNote": "Kod statyczny przechowuje treść w samym wzorze, więc wydrukowane kopie zawsze otwierają właśnie to. Zmiany wyglądu są darmowe i bez limitu.",
+      "incl": {
+        "files": "PNG i SVG, pobierane tyle razy, ile chcesz",
+        "layouts": "Nowe układy i zmiany wyglądu w cenie"
+      },
+      "dimsSquare": "Kwadrat {size}",
+      "print": "Druk · mm",
+      "screen": "Ekran · px",
+      "setupPrint": "Przygotuj do druku",
+      "pack": {
+        "needsMm": "Print Pack wymaga układu do druku mierzonego w mm. Przygotuj układ do druku w Edytuj wygląd → Rozmiar, a potem sprawdź go w podglądzie wydruku.",
+        "what": "PDF do druku ze spadami i znacznikami cięcia, edytowalny SVG oraz arkusz kolorów i rozmiarów dla tego kodu QR.",
+        "add": "Dodaj Print Pack · +{price}",
+        "addSub": "Otwiera podgląd wydruku, więc możesz sprawdzić PDF i specyfikację przed płatnością.",
+        "useIncluded": "Użyj 1 Print Pack z planu",
+        "includedSub": "W planie {plan} pozostało w tym miesiącu {left} z {limit} Print Packów. Jeśli chcesz, najpierw sprawdź pliki w podglądzie wydruku.",
+        "includedDone": "Dodano Print Pack z Twojego planu. Pliki są gotowe.",
+        "includedFailed": "Nie udało się użyć Print Pack z planu. Nic nie zostało zużyte; spróbuj ponownie.",
+        "noneLeft": "W tym miesiącu nie zostały już żadne Print Packi z planu.",
+        "inspect": "Sprawdź w podglądzie wydruku",
+        "notForSale": "Podgląd wydruku pokazuje dokładną stronę i specyfikację. Zakup Print Pack nie jest tu jeszcze dostępny.",
+        "repeat": "Ponowne pobieranie jest w cenie. Pliki układu „{layout}” w rozmiarze 100%, spad 3 mm, znaczniki cięcia."
+      },
+      "layoutNoteDynamic": "Zmiana wyglądu tworzy nowy plik do pobrania. Już wydrukowane kody nadal działają.",
+      "layoutNoteStatic": "Każdy układ jest objęty tym zakupem. Pobierz dowolny jako PNG lub SVG.",
+      "rename": "Zmień nazwę",
+      "renameFailed": "Nie udało się zmienić nazwy kodu. Twój tekst nadal tu jest; spróbuj ponownie.",
+      "nameLabel": "Nazwa kodu QR",
+      "save": "Zapisz",
+      "cancel": "Anuluj",
+      "opens": "Otwiera",
+      "downloadAll": "Pobierz wszystko",
+      "layoutsCount": "{n, plural, one {# układ} few {# układy} many {# układów} other {# układu}}",
+      "edit": "Edytuj",
+      "downloadLayout": "Pobierz {name}",
+      "downloadFormat": "Pobierz {format} – {name}",
+      "printPreview": "Podgląd wydruku – {name}",
+      "newLayoutCard": "Nowy układ",
+      "layoutAdded": "Dodano „{name}” do {code}. Pozostałe układy są bez zmian.",
+      "layoutAddFailed": "Nie udało się dodać układu. Spróbuj ponownie.",
+      "copy": {
+        "action": "Użyj innej treści…",
+        "title": "Użyj innej treści",
+        "text": "Kod statyczny przechowuje treść we wzorze, więc inna treść oznacza nowy kod QR: projektuje się go i kupuje osobno ({price}). Ten kod i jego pliki pozostają dokładnie takie, jakie są.",
+        "start": "Utwórz nowy kod QR",
+        "keep": "Zachowaj ten kod",
+        "close": "Zamknij"
+      },
+      "ppUnlocked": "Odblokowany",
+      "ppLocked": "Zablokowany",
+      "deleteLayout": {
+        "label": "Usuń układ {name}",
+        "title": "Usunąć „{name}”?",
+        "text": "„{name}” zostanie usunięty z konta wraz z plikami do pobrania tego układu. Tego nie da się cofnąć.",
+        "keeps": "Kod QR, jego treść, krótki link, adres docelowy, zakup i Print Pack oraz pozostałe układy zostają bez zmian.",
+        "confirm": "Usuń układ",
+        "cancel": "Anuluj",
+        "close": "Zamknij",
+        "done": "Usunięto „{name}”.",
+        "failed": "Nie udało się usunąć „{name}”. Nic się nie zmieniło; spróbuj ponownie.",
+        "retry": "Spróbuj ponownie",
+        "lastTitle": "To jedyny układ",
+        "lastText": "Kod QR zawsze ma co najmniej jeden układ, więc nie można usunąć „{name}”. Najpierw dodaj inny układ albo usuń cały kod w Moich kodach QR.",
+        "lastError": "Kod QR ma zawsze co najmniej jeden układ, więc ten zostaje.",
+        "ok": "OK"
+      },
+      "pause": {
+        "pause": "Wstrzymaj",
+        "resume": "Wznów",
+        "pausedTitle": "Krótki link wstrzymany",
+        "pausedText": "Osoby skanujące ten kod widzą stronę niedostępności. Krótki link, adres docelowy i układy są zachowane. Możesz teraz zmienić adres docelowy; zacznie działać po wznowieniu.",
+        "liveText": "Wstrzymanie od razu zatrzymuje przekierowanie. W planie zwalnia też aktywny slot tego kodu.",
+        "paused": "Wstrzymano. Krótki link pokazuje teraz stronę niedostępności.",
+        "resumed": "Wznowiono. Krótki link znów przekierowuje na Twój adres docelowy.",
+        "limit": "Wszystkie aktywne sloty Dynamiczne w Twoim planie są zajęte. Wstrzymaj lub usuń inny kod Dynamiczny, a potem wznów ten.",
+        "noPlan": "Wznowienie tego kodu wymaga aktywnego planu Dynamicznego.",
+        "failed": "Nie udało się zmienić statusu kodu. Nic się nie zmieniło; spróbuj ponownie."
+      },
+      "inactiveNote": "Skany tego kodu pokazują stronę „teraz nieaktywny”: potrzebny jest aktywny plan Dynamiczny. Krótki link, adres docelowy i skany są zachowane, a ten sam wydrukowany kod znów przekieruje, gdy plan będzie aktywny.",
+      "inactiveCta": "Plan i płatności"
+    },
+    "hostedPage": {
+      "title": "Strona hostowana",
+      "live": "Opublikowana · wersja {version}",
+      "publishedOn": "Opublikowano {date}",
+      "never": "Jeszcze nieopublikowana",
+      "neverNote": "Opublikuj stronę, aby osoby skanujące kod ją zobaczyły.",
+      "changed": "Nieopublikowane zmiany",
+      "changedNote": "Odwiedzający widzą opublikowaną wersję, dopóki nie opublikujesz ponownie.",
+      "upToDate": "Odwiedzający widzą najnowszą wersję.",
+      "notLive": "Strona zacznie działać pod krótkim linkiem po aktywacji kodu.",
+      "edit": "Edytuj stronę",
+      "publish": "Opublikuj",
+      "publishing": "Publikowanie…",
+      "published": "Opublikowano. Ten sam kod QR i krótki link pokazują teraz tę wersję.",
+      "unchanged": "Nie ma nic nowego do opublikowania.",
+      "rules": "Przed publikacją trzeba poprawić kilka szczegółów. Edytuj stronę, aby je poprawić.",
+      "failed": "Nie udało się opublikować. Spróbuj ponownie.",
+      "open": "Otwórz stronę",
+      "takenDown": "Usunęliśmy tę stronę po zgłoszeniu, więc jej krótki link pokazuje „Ta strona jest niedostępna”. Twoja treść i skany są zachowane. Jeśli uważasz, że to pomyłka, napisz do pomocy technicznej."
+    },
+    "hostedEditor": {
+      "title": "Edytuj stronę",
+      "back": "Wróć do szczegółów kodu QR",
+      "lead": "Zmiany są zapisywane jako szkic. Odwiedzający zobaczą je po opublikowaniu.",
+      "save": "Zapisz szkic",
+      "saving": "Zapisywanie…",
+      "saved": "Szkic zapisany.",
+      "saveFailed": "Nie udało się zapisać szkicu. Sprawdź zdjęcia i spróbuj ponownie.",
+      "publish": "Zapisz i opublikuj",
+      "unsaved": "Niezapisane zmiany",
+      "loading": "Ładowanie edytora strony"
+    }
+  },
+  "billing": {
+    "title": "Plan i płatności",
+    "plan": "Plan Dynamiczny",
+    "active": "Aktywny do {date}",
+    "cancels": "Wygasa {date}",
+    "none": "Bez subskrypcji. Za kody statyczne płacisz raz; Starter dodaje kody Dynamiczne i miesięczne odblokowania.",
+    "manage": "Zarządzaj subskrypcją",
+    "purchases": "Zakupy",
+    "noPurchases": "Brak zakupów.",
+    "usage": "Wykorzystanie",
+    "liveDynamic": "Aktywne kody Dynamiczne",
+    "liveCount": "{used} z {limit}",
+    "liveHint": "Aktywne sloty zwalniają się po wstrzymaniu lub usunięciu kodu Dynamicznego.",
+    "renews": "Odnawia się {date}",
+    "payment": "Metoda płatności",
+    "paymentManaged": "Twoją kartę przechowuje Stripe. Zarządzaj nią w portalu płatności.",
+    "compare": "Porównaj plany",
+    "statusActive": "Aktywny",
+    "statusCanceling": "Wygasa",
+    "statusNone": "Brak planu",
+    "date": "Data",
+    "open": "Otwórz",
+    "receiptNote": "Stripe wysyła e-mailem potwierdzenie każdej płatności.",
+    "statuses": {
+      "paid": "Zapłacono",
+      "pending": "Oczekuje",
+      "refunded": "Zwrócono",
+      "failed": "Nieudana"
+    },
+    "liveNoPlan": "Aktywne: {used} · brak planu",
+    "printPackItem": "Print Pack",
+    "packItem": "Static Pack · kredyty: {n}",
+    "signedIn": "Zalogowano przez Google jako {email}.",
+    "current": "Obecny plan",
+    "planMonthly": "{plan} · miesięcznie",
+    "noPlan": "Brak planu",
+    "plans": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "tiles": {
+      "dynamic": "Aktywne Dynamiczne QR",
+      "live": "Aktywne",
+      "dynamicNote": "Wstrzymaj lub usuń kod, aby zwolnić slot",
+      "unlocks": "Odblokowania statyczne",
+      "packs": "Print Packi w planie",
+      "packsNote": "{resets} · potem +{price}",
+      "credits": "Kredyty statyczne",
+      "oneTime": "Jednorazowe",
+      "creditsNote": "Nigdy nie wygasają · używane po odblokowaniach miesięcznych",
+      "available": "Dostępne: {n}",
+      "leftMonth": "W tym miesiącu pozostało: {n}",
+      "noReset": "Plan kończy się {date} · bez odnowienia"
+    },
+    "of": "z {limit}",
+    "left": "pozostało",
+    "resets": "Odnowienie {date}",
+    "price": "Cena",
+    "perMonth": "{price} / mies.",
+    "renewsOn": "Odnawia się",
+    "endsOn": "Kończy się",
+    "paymentStripe": "Przechowywana przez Stripe",
+    "upgrade": "Przejdź na Studio · {price}/mies.",
+    "choosePlan": "Wybierz plan",
+    "oneTime": "Zakupy jednorazowe",
+    "item": "Pozycja",
+    "amount": "Kwota",
+    "receipt": "Potwierdzenie",
+    "credits": "Kredyty statyczne: {n}",
+    "items": {
+      "single": "Single QR",
+      "printPack": "Print Pack"
+    },
+    "portal": {
+      "noCustomer": "Nie ma jeszcze konta płatności. Zostanie utworzone przy pierwszej płatności.",
+      "unavailable": "To nie jest teraz dostępne w Twoim planie.",
+      "failed": "Nie udało się otworzyć Stripe. Nic się nie zmieniło; spróbuj ponownie."
+    },
+    "updatePayment": "Zmień metodę płatności",
+    "card": "{brand} •••• {last4}",
+    "overdue": {
+      "title": "Płatność za odnowienie nie powiodła się",
+      "pastDue": "Twój plan pozostaje aktywny, gdy płatność jest zaległa. Zmień metodę płatności, aby opłacić otwartą fakturę.",
+      "unpaid": "Twój plan wygasł, ponieważ nie udało się pobrać płatności za odnowienie. Zmień metodę płatności, aby opłacić otwartą fakturę i włączyć go ponownie.",
+      "action": "Zmień metodę płatności i zapłać",
+      "status": "Zaległa płatność",
+      "pending": "Po płatności aktualizacja planu w tym miejscu może chwilę potrwać."
+    },
+    "canceling": {
+      "title": "Twój plan kończy się {date}",
+      "until": "Do tego czasu wszystko działa jak teraz: Twoje kody Dynamiczne przekierowują, a sloty i miesięczne odblokowania zostają.",
+      "after": "{count, plural, =0 {Po tej dacie kody Dynamiczne zamiast przekierowywać pokażą stronę „teraz nieaktywny”.} one {Po tej dacie Twój # aktywny kod Dynamiczny zamiast przekierowywać pokaże stronę „teraz nieaktywny”. Jego krótki link, adres docelowy i wygląd zostaną zachowane.} few {Po tej dacie Twoje # aktywne kody Dynamiczne zamiast przekierowywać pokażą stronę „teraz nieaktywny”. Ich krótkie linki, adresy docelowe i wygląd zostaną zachowane.} many {Po tej dacie Twoje # aktywnych kodów Dynamicznych zamiast przekierowywać pokaże stronę „teraz nieaktywny”. Ich krótkie linki, adresy docelowe i wygląd zostaną zachowane.} other {Po tej dacie Twoje # aktywnego kodu Dynamicznego zamiast przekierowywać pokaże stronę „teraz nieaktywny”. Ich krótkie linki, adresy docelowe i wygląd zostaną zachowane.}} Kupione kody statyczne nadal działają.",
+      "resume": "Zachowaj mój plan",
+      "resumeNote": "Twój plan trwa dalej w ramach tej samej subskrypcji i odnowi się w zwykłym terminie. Teraz nic nie jest pobierane.",
+      "resumed": "Twój plan trwa dalej. Odnowi się w zwykłym terminie.",
+      "notScheduled": "Nie ma już anulowania do cofnięcia. Odśwież stronę, aby zobaczyć swój plan.",
+      "failed": "Nie udało się zachować planu. Nic się nie zmieniło. Spróbuj ponownie."
+    },
+    "ended": {
+      "title": "Twój plan {plan} zakończył się {date}",
+      "titleNoDate": "Twój plan {plan} się zakończył",
+      "scans": "Twoje kody Dynamiczne pokazują stronę „teraz nieaktywny”. Ich krótkie linki, adresy docelowe, wygląd i skany są zachowane. Kupione kody statyczne nadal działają.",
+      "back": "Aktywuj ponownie, a te same wydrukowane kody znów będą przekierowywać. Kody wstrzymane lub usunięte pozostaną takie, jakie są.",
+      "reactivate": "Aktywuj ponownie {plan} · {price}/mies."
+    }
+  },
+  "legal": {
+    "terms": {
+      "title": "Regulamin"
+    },
+    "privacy": {
+      "title": "Polityka prywatności"
+    },
+    "draft": "Ta strona jest tymczasowa, dopóki tekst prawny nie zostanie zatwierdzony."
+  },
+  "errors": {
+    "notFound": {
+      "title": "Nie znaleziono strony",
+      "text": "Strona, której szukasz, nie istnieje.",
+      "cta": "Strona główna"
+    },
+    "linkUnavailable": {
+      "title": "Ten link jest nieaktywny",
+      "text": "Właściciel tego kodu QR wstrzymał go albo kod już nie istnieje."
+    },
+    "generic": "Coś poszło nie tak. Spróbuj ponownie.",
+    "invalid": "Sprawdź zaznaczone pola.",
+    "unauthorized": "Zaloguj się, aby kontynuować.",
+    "too_long": "Ta treść jest za długa na kod QR. Skróć ją i spróbuj ponownie.",
+    "linkInactive": {
+      "title": "Ten link jest teraz niedostępny",
+      "text": "Ten kod QR jest w tej chwili nieaktywny. Z Twoim telefonem wszystko w porządku; spróbuj później."
+    },
+    "draft_limit": "Masz {limit} zapisanych szkiców — to maksimum na konto. Odblokuj lub usuń jeden w Moich kodach QR, a potem zapisz ponownie: Twój projekt zostaje tutaj.",
+    "page": {
+      "title": "Coś poszło nie tak",
+      "text": "Nie udało się załadować tej strony. Twoje zapisane kody i szkice są bezpieczne. Spróbuj ponownie lub wróć na początek.",
+      "retry": "Spróbuj ponownie",
+      "home": "Przejdź na stronę główną",
+      "reference": "Identyfikator: {ref}"
+    }
+  },
+  "common": {
+    "close": "Zamknij",
+    "loading": "Ładowanie…",
+    "required": "Wymagane"
+  },
+  "loading": {
+    "page": "Ładowanie",
+    "details": "Ładowanie kodu QR",
+    "billing": "Ładowanie planu i zakupów",
+    "export": "Ładowanie pliku",
+    "editor": "Ładowanie edytora"
+  },
+  "trial": {
+    "badge": "Okres próbny Starter",
+    "back": "Moje kody QR",
+    "states": {
+      "active": {
+        "title": "Twój okres próbny trwa",
+        "lead": "Rozpoczęty {start}. Twój testowy Dynamiczny kod QR działa naprawdę do {end}.",
+        "big": "{days, plural, one {# dzień} few {# dni} many {# dni} other {# dnia}}",
+        "bigSub": "do końca · kończy się {end}",
+        "status": "Brak zapisanej karty, więc po zakończeniu okresu próbnego nic nie zostanie pobrane. Do tego czasu kod testowy naprawdę przekierowuje.",
+        "main": "Aktywuj Starter · {price}/mies.",
+        "second": "Otwórz Moje kody QR",
+        "foot": "Aktywacja zachowuje ten sam krótki link, więc wydrukowane testy nadal działają.",
+        "endTitle": "Gdy okres próbny skończy się {end}"
+      },
+      "ending": {
+        "title": "Twój okres próbny wkrótce się kończy",
+        "lead": "{end} Twój kod testowy przestanie przekierowywać. Aktywuj Starter, aby nadal działał.",
+        "big": "{days, plural, one {# dzień} few {# dni} many {# dni} other {# dnia}}",
+        "bigSub": "do końca · kończy się {end}",
+        "status": "Nie ma zapisanej karty, więc nic nie zostanie pobrane automatycznie.",
+        "main": "Aktywuj Starter · {price}/mies.",
+        "second": "Otwórz Moje kody QR",
+        "foot": "Aktywacja zachowuje ten sam krótki link, więc wydrukowane testy nadal działają.",
+        "endTitle": "Co się stanie {end}"
+      },
+      "expired": {
+        "title": "Twój okres próbny się zakończył",
+        "lead": "Zakończył się {end}. Twój kod testowy jest wstrzymany; projekt i skany są zachowane.",
+        "big": "Zakończony",
+        "bigSub": "{end}",
+        "status": "Krótki link kodu testowego pokazuje teraz stronę „link wstrzymany”. Aktywuj Starter, a znów będzie przekierowywać na Twój adres docelowy.",
+        "main": "Aktywuj ponownie ze Starter · {price}/mies.",
+        "second": "Zobacz wszystkie plany",
+        "foot": "Nic nie zostało pobrane. Nie było zapisanej karty.",
+        "endTitle": "Jak go włączyć ponownie"
+      },
+      "upgraded": {
+        "title": "Twój plan Starter jest aktywny",
+        "lead": "Twój testowy kod z okresu próbnego jest teraz zwykłym Dynamicznym kodem QR w Twoim planie.",
+        "big": "Dynamiczny",
+        "bigSub": "plan aktywny",
+        "status": "Twój kod testowy zachowuje krótki link i przekierowuje jak wcześniej.",
+        "main": "Otwórz Moje kody QR",
+        "second": "Plan i płatności",
+        "foot": "Stripe wysyła e-mailem potwierdzenie każdej płatności.",
+        "endTitle": "Co się zmieniło"
+      }
+    },
+    "steps": {
+      "pause": {
+        "t": "Testowe przekierowanie zostaje wstrzymane",
+        "d": "Jego krótki link pokazuje stronę „link wstrzymany” zamiast Twojego adresu docelowego. Nic nie jest usuwane."
+      },
+      "free": {
+        "t": "Nic nie jest pobierane",
+        "d": "Nie ma zapisanej karty ani automatycznego odnowienia."
+      },
+      "wake": {
+        "t": "Aktywuj w każdej chwili, aby go włączyć",
+        "d": "Wybierz Starter, a ten sam krótki link znów zacznie przekierowywać. Projekt i skany zostają na Twoim koncie."
+      },
+      "choose": {
+        "t": "Wybierz Starter",
+        "d": "{price} miesięcznie. Anuluj w każdej chwili."
+      },
+      "same": {
+        "t": "Twój krótki link się budzi",
+        "d": "Znów przekierowuje na ten sam adres docelowy."
+      },
+      "room": {
+        "t": "Działaj dalej",
+        "d": "Do {limit} aktywnych kodów Dynamicznych z dziennymi skanami."
+      },
+      "kept": {
+        "t": "Ten sam krótki link",
+        "d": "Wydrukowane testy nadal działają. Nic nie trzeba drukować ponownie."
+      },
+      "more": {
+        "t": "Więcej miejsca",
+        "d": "Do {limit} aktywnych kodów Dynamicznych i dzienne skany."
+      },
+      "receipt": {
+        "t": "Potwierdzenia e-mailem",
+        "d": "Zarządzaj planem lub anuluj go w każdej chwili w sekcji Plan i płatności."
+      }
+    },
+    "code": {
+      "title": "Twój testowy Dynamiczny kod QR",
+      "live": "Przekierowuje",
+      "paused": "Przekierowanie wstrzymane",
+      "plan": "Aktywny w Twoim planie",
+      "opens": "Otwiera {host}",
+      "pausedLine": "Wstrzymany · pokazuje stronę „link wstrzymany”",
+      "scans": "Dotychczasowe skany",
+      "today": "Dziś",
+      "chart": "Skany w okresie próbnym według dni: {values}",
+      "change": "Zmień adres docelowy",
+      "view": "Zobacz kod testowy",
+      "none": "Nie masz jeszcze kodu testowego.",
+      "noneText": "Utwórz Dynamiczny kod QR ze stroną i aktywuj go w ramach okresu próbnego: prawdziwy krótki link, który możesz wydrukować i przetestować.",
+      "create": "Utwórz testowy Dynamiczny kod QR"
+    },
+    "included": {
+      "title": "W ramach okresu próbnego",
+      "kept": "Zachowane z okresu próbnego",
+      "points": [
+        "1 testowy Dynamiczny kod QR z prawdziwym krótkim linkiem",
+        "Dzienne sumy skanów",
+        "Zmieniaj, dokąd prowadzi, w każdej chwili",
+        "Każdy układ, kształt, kolor, logo i podpis"
+      ],
+      "not": "Kody statyczne nadal wymagają zakupu."
+    },
+    "start": {
+      "title": "Wypróbuj Dynamiczny przez 7 dni za darmo",
+      "text": "Bez karty, bez automatycznego obciążenia. Jeden testowy Dynamiczny kod QR z prawdziwym krótkim linkiem.",
+      "action": "Rozpocznij 7-dniowy darmowy okres próbny",
+      "used": "Darmowy okres próbny został już wykorzystany.",
+      "failed": "Nie udało się rozpocząć okresu próbnego. Spróbuj ponownie."
+    },
+    "bar": {
+      "active": {
+        "title": "Okres próbny Starter · {days, plural, one {został # dzień} few {zostały # dni} many {zostało # dni} other {zostało # dnia}}.",
+        "text": "Twój kod testowy przekierowuje do {end}. Brak zapisanej karty."
+      },
+      "ending": {
+        "title": "Okres próbny kończy się {end}.",
+        "text": "Aktywuj Starter, aby kod testowy dalej przekierowywał."
+      },
+      "expired": {
+        "title": "Okres próbny zakończył się {end}.",
+        "text": "Twój kod testowy jest wstrzymany. Aktywuj Starter, aby go włączyć ponownie."
+      },
+      "upgraded": {
+        "title": "Twój plan Starter jest aktywny.",
+        "text": "Twój kod testowy jest teraz zwykłym Dynamicznym kodem QR."
+      },
+      "open": "Szczegóły okresu próbnego",
+      "activate": "Aktywuj Starter…"
+    },
+    "usage": {
+      "title": "Slot Dynamiczny okresu próbnego",
+      "count": "{used} z 1",
+      "hint": "Aktywny slot, nie miesięczny limit."
+    },
+    "useTrial": "Użyj darmowego okresu próbnego · aktywuj teraz",
+    "useTrialHint": "Twój jedyny testowy Dynamiczny kod QR w okresie próbnym. Karta nie jest potrzebna.",
+    "useTrialFailed": "Nie udało się użyć okresu próbnego dla tego kodu. Być może masz już kod testowy.",
+    "sample": {
+      "title": "Przykładowy Print Pack",
+      "badge": "Demo QR",
+      "demo": "Demo QR przykładowego Print Pack",
+      "text": "Zobacz dokładnie, co zawiera Print Pack. Przykład używa demonstracyjnego kodu QR, który otwiera Hey QR, a nie Twojego kodu testowego.",
+      "pdf": "Przykładowy PDF do druku",
+      "pdfSub": "sRGB · strona {w} × {h} mm ze spadami i znacznikami cięcia",
+      "svg": "Przykładowy edytowalny SVG",
+      "svgSub": "sRGB · kolory HEX · {w} × {h} mm",
+      "spec": "Przykładowa specyfikacja",
+      "specSub": "Arkusz PDF · rozmiary i wartości kolorów"
+    }
+  },
+  "print": {
+    "spec": {
+      "title": "Specyfikacja druku",
+      "finished": "Rozmiar końcowy",
+      "page": "Strona PDF (ze spadami i znacznikami)",
+      "bleed": "Spad",
+      "marks": "Znaczniki cięcia",
+      "qr": "Rozmiar QR (ze strefą ciszy)",
+      "profile": "Profil kolorów",
+      "srgb": "sRGB · bez konwersji",
+      "logo": "Rozdzielczość logo",
+      "vector": "Wektor, dowolny rozmiar",
+      "colors": "Kolory (HEX · sRGB)",
+      "key": "Klucz renderowania",
+      "yes": "Tak",
+      "no": "Nie",
+      "role_modules": "Moduły",
+      "role_corners": "Ramki narożników",
+      "role_centers": "Środki narożników",
+      "role_background": "Tło",
+      "role_frame": "Ramka",
+      "role_caption": "Podpis"
+    },
+    "title": "Podgląd wydruku",
+    "leadLocked": "Przed zakupem sprawdź dokładną stronę PDF i specyfikację druku. Pliki będą zgodne z tym, co tu widzisz.",
+    "leadUnlocked": "To strona PDF, z której powstają Twoje pliki. Zmień ustawienie i pobierz ponownie bez dodatkowych kosztów.",
+    "locked": "Print Pack zablokowany",
+    "unlocked": "Print Pack odblokowany",
+    "back": {
+      "details": "Wróć do szczegółów kodu QR",
+      "export": "Wróć do eksportu"
+    },
+    "toDesign": "Wróć do wyglądu",
+    "canvas": "Podgląd strony PDF",
+    "zoom": "Powiększenie",
+    "fit": "Dopasuj",
+    "z100": "100%",
+    "z200": "200%",
+    "guides": "Linia cięcia i obszar bezpieczny",
+    "approx": "Ekranowe przybliżenie koloru druku",
+    "trimLabel": "Format netto {size}",
+    "generating": "Generowanie podglądu wydruku…",
+    "pageLabel": "Strona PDF do druku, {w} × {h} mm",
+    "error": {
+      "title": "Nie udało się wygenerować podglądu.",
+      "text": "Twój układ i ustawienia druku są zachowane. Zwykle to chwilowy problem.",
+      "retry": "Spróbuj ponownie"
+    },
+    "foot": {
+      "page": "Strona PDF {size}",
+      "count": "1 strona",
+      "bleed": "Spad {bleed} mm",
+      "noBleed": "Bez spadu",
+      "marks": "Znaczniki cięcia",
+      "noMarks": "Bez znaczników cięcia",
+      "pageB": "Strona PDF <b>{size}</b>"
+    },
+    "specTitle": "Specyfikacja druku",
+    "keys": {
+      "finished": "Rozmiar końcowy",
+      "finishedBleed": "+ {bleed} mm spadu z każdej strony",
+      "finishedNoBleed": "Bez spadu",
+      "qr": "Rozmiar QR",
+      "qrSmall": "Poniżej 20 mm · może nie skanować się wszędzie",
+      "qrOk": "Skanuje się z odległości do ok. {cm} cm",
+      "profile": "Profil kolorów",
+      "profileSub": "RGB, bez konwersji",
+      "logo": "Rozdzielczość logo",
+      "logoVector": "Wektor",
+      "logoNone": "Brak logo",
+      "logoLow": "Poniżej 300 ppi w tym rozmiarze",
+      "logoOk": "300 ppi lub więcej · drukuje się ostro",
+      "logoVectorSub": "Ostry w każdym rozmiarze",
+      "logoNoneSub": "Nie ma czego sprawdzać",
+      "logoChecking": "Sprawdzanie…",
+      "logoCheckingSub": "Zmierzono w tym rozmiarze"
+    },
+    "unlock": {
+      "title": "Odblokuj Print Pack",
+      "text": "Pobierz PDF do druku, edytowalny SVG i specyfikację dla „{name}”, przygotowane z poniższymi ustawieniami.",
+      "action": "Dodaj Print Pack · +{price}",
+      "sub": "Jednorazowo dla tego kodu QR. Wrócisz do tego ekranu ze swoimi ustawieniami.",
+      "notForSale": "Print Pack nie jest tu jeszcze dostępny do kupienia. Nadal możesz sprawdzić stronę i specyfikację.",
+      "needCode": "Najpierw odblokuj ten kod QR: Print Pack to dodatek do kupionego lub aktywnego kodu.",
+      "buyCode": "Kup ten kod QR",
+      "failed": "Nie udało się otworzyć płatności. Nie pobrano opłaty; spróbuj ponownie.",
+      "cancelled": "Płatność anulowana. Nie pobrano opłaty; ustawienia są zachowane.",
+      "pending": "Potwierdzamy płatność…",
+      "pendingSub": "Zostajesz tutaj, z tymi ustawieniami.",
+      "useIncluded": "Użyj 1 Print Pack z planu",
+      "payInstead": "Zamiast tego zapłać {price} i zachowaj limit",
+      "includedLeft": "W tym miesiącu pozostało {left} z {limit} Print Packów z planu · odnowienie {resets}"
+    },
+    "files": {
+      "title": "Print Pack odblokowany",
+      "badge": "Gotowe do pobrania",
+      "text": "Pliki używają poniższych ustawień. Zmień któreś i pobierz ponownie bez dodatkowych kosztów.",
+      "pdf": "Pobierz PDF do druku",
+      "pdfSub": "sRGB · strona {w} × {h} mm",
+      "svg": "Pobierz edytowalny SVG",
+      "svgSub": "sRGB · kolory HEX · {w} × {h} mm",
+      "spec": "Pobierz specyfikację druku",
+      "specSub": "Arkusz PDF · rozmiary i wartości kolorów",
+      "stale": "Układ zmienił się od tego podglądu. Przed pobraniem sprawdź stronę ponownie.",
+      "pdfTitle": "PDF do druku",
+      "svgTitle": "Edytowalny SVG",
+      "specTitle": "Specyfikacja druku"
+    },
+    "size": {
+      "title": "Rozmiar końcowy",
+      "custom": "Własny",
+      "width": "Szerokość",
+      "height": "Wysokość · zachowuje proporcje",
+      "hint": "Od 15 do 600 mm szerokości. Kod QR i podpis skalują się z układem."
+    },
+    "warn": {
+      "qrTitle": "Kod QR ma {mm} mm szerokości",
+      "qrText": "Kody poniżej 20 mm mogą nie działać na starszych telefonach. Powiększ układ lub zachowaj kod o szerokości co najmniej 20 mm.",
+      "logoTitle": "Twoje logo ma {ppi} ppi w tym rozmiarze",
+      "logoText": "Może wydrukować się nieostro. Prześlij logo o szerokości co najmniej {px} px lub drukuj w 100%.",
+      "upload": "Prześlij logo w wyższej rozdzielczości",
+      "use100": "Użyj rozmiaru 100%"
+    },
+    "profiles": {
+      "title": "Profil kolorów dla PDF do druku",
+      "srgb": "sRGB · bez konwersji",
+      "srgbDesc": "Dla drukarek cyfrowych i większości drukarni internetowych.",
+      "fogra39": "Coated FOGRA39",
+      "gracol": "GRACoL 2013",
+      "fogra29": "Uncoated FOGRA29",
+      "cmykDesc": "Konwersja do CMYK nie jest jeszcze dostępna.",
+      "shop": "<b>Potwierdź z drukarnią.</b> Zapytaj, jakiego profilu kolorów potrzebują. Jeśli nie są pewni, wyślij PDF razem z arkuszem specyfikacji."
+    },
+    "colors": {
+      "title": "Kolory",
+      "legendHex": "<b>HEX · sRGB</b> edytowalny SVG",
+      "legendCmyk": "<b>CMYK</b> tylko z profilem CMYK",
+      "none": "—",
+      "note": "Kolory to dokładne wartości sRGB w obu plikach. Ekran pokazuje przybliżenie koloru druku."
+    },
+    "tech": {
+      "title": "Ustawienia techniczne",
+      "bleed": "Spad",
+      "bleedDesc": "Tło wychodzi poza linię cięcia",
+      "marks": "Znaczniki cięcia",
+      "k100": "Drukuj czarne moduły jako 100% K",
+      "k100Hint": "Dostępne z profilem CMYK.",
+      "pdf": "Standard PDF",
+      "pdfV": "PDF 1.7, wektor",
+      "text": "Tekst",
+      "textV": "Czcionki osadzone",
+      "logo": "Logo",
+      "logoRaster": "Raster {px} px · {ppi} ppi przy {mm} mm",
+      "logoVector": "Wektor",
+      "quiet": "Strefa ciszy",
+      "quietV": "4 moduły z każdej strony",
+      "safe": "Obszar bezpieczny",
+      "safeV": "{mm} mm wewnątrz linii cięcia",
+      "intent": "Output intent",
+      "intentV": "sRGB, bez konwersji",
+      "none": "Brak"
+    },
+    "notPrint": {
+      "title": "Ten układ jest przeznaczony na ekrany",
+      "text": "Print Pack wymaga układu do druku mierzonego w mm. Zmień jednostkę w Wygląd → Rozmiar, aby go dodać.",
+      "action": "Przygotuj do druku"
+    },
+    "pack": {
+      "title": "Print Pack",
+      "add": "Dodaj Print Pack i daj drukarni wszystko w jednym pobraniu: PDF do druku ze spadami i znacznikami cięcia, edytowalny SVG oraz arkusz kolorów i rozmiarów. Najpierw sprawdź stronę w podglądzie wydruku.",
+      "preview": "Podgląd wydruku · {layout}",
+      "defaults": "Ustawienia domyślne: rozmiar 100%, spad 3 mm, znaczniki cięcia. Zmienisz je w podglądzie wydruku.",
+      "open": "Otwórz podgląd wydruku"
+    },
+    "plan": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "sample": {
+      "pageTitle": "Podgląd wydruku · przykład",
+      "name": "Little Fern Coffee",
+      "layout": "Przykładowa karta marki",
+      "back": "Wróć na stronę główną",
+      "title": "To jest przykład",
+      "text": "Demonstracyjny kod QR pokazuje dokładnie, co zawiera Print Pack. Utwórz własny kod, a potem sprawdź tu jego pliki do druku przed zakupem.",
+      "create": "Utwórz swój kod QR",
+      "pricing": "Zobacz szczegóły Print Pack"
+    }
+  },
+  "plans": {
+    "title": "Zapłać raz za kilka kodów albo wybierz plan na wiele.",
+    "lead": "Projektowanie, podgląd i sprawdzanie skanowania są zawsze darmowe. Płacisz przy pobieraniu.",
+    "currencyLabel": "Pokaż ceny w",
+    "localTitle": "Ceny lokalne w {currency}.",
+    "localText": "Cała strona, płatność i potwierdzenia używają tych kwot. Podatki są doliczane przy płatności.",
+    "pendingTitle": "Niektóre ceny w {currency} nie są jeszcze ustalone.",
+    "pendingText": "Ofert bez ceny w {currency} nie można na razie kupić w {currency}. Nic nie jest przeliczane z innej waluty.",
+    "unavailable": "Jeszcze niedostępne do kupienia w {currency}.",
+    "current": "Twój obecny plan",
+    "manage": "Zarządzaj planem",
+    "perMonth": "miesięcznie",
+    "live": "Aktywne jednocześnie",
+    "monthly": "Nowe co miesiąc",
+    "dynCodes": "Dynamiczne kody QR: <b>{n}</b>",
+    "unlocks": "Odblokowania statycznych kodów QR: <b>{n}</b>",
+    "packsIncl": "Print Packi: <b>{n}</b>",
+    "once": {
+      "title": "Jednorazowo",
+      "sub": "Bez subskrypcji. Odblokowane kody zostają Twoje."
+    },
+    "month": {
+      "title": "Miesięcznie",
+      "sub": "Dla Dynamicznych kodów QR i wielu statycznych. Anuluj w każdej chwili."
+    },
+    "free": {
+      "title": "Darmowy",
+      "q": "Zaprojektuj i przetestuj kod, zanim cokolwiek wydasz.",
+      "a": "Projektowanie i podgląd na żywo",
+      "b": "Sprawdzanie skanowania przy każdej zmianie",
+      "c": "Do {limit} zapisanych szkiców po zalogowaniu",
+      "cta": "Zacznij projektować"
+    },
+    "single": {
+      "title": "Single QR",
+      "unit": "jednorazowo",
+      "q": "Jeden statyczny kod QR ze wszystkimi plikami do pobrania.",
+      "a": "Pobieranie PNG i SVG",
+      "b": "Każdy układ tego kodu QR, do ponownego pobrania w każdej chwili",
+      "c": "Opcjonalny Print Pack +{price}",
+      "cta": "Utwórz kod QR"
+    },
+    "packs": {
+      "title": "Static Packi",
+      "unit": "za {n} kredytów",
+      "credits": "Kredyty statyczne: {n}",
+      "each": "{price} za kod QR",
+      "buy": "Kup kredyty ({n})",
+      "note": "Jeden kredyt odblokowuje jeden unikalny statyczny kod QR, kiedy zechcesz. Kredyty nie wygasają."
+    },
+    "pp": {
+      "kicker": "Dodatek do dowolnego kodu QR",
+      "title": "Print Pack · +{price} za kod QR",
+      "text": "Domyślnie wyłączony. Dodaj go przy płatności lub później w szczegółach kodu QR. Studio zawiera {n} miesięcznie.",
+      "pdf": "Wektorowy PDF do druku",
+      "pdfSub": "sRGB, spad 3 mm i znaczniki cięcia, w dokładnym rozmiarze.",
+      "svg": "Edytowalny SVG",
+      "svgSub": "Do własnych projektów, z kolorami sRGB i HEX.",
+      "spec": "Arkusz kolorów i rozmiarów",
+      "specSub": "Rozmiar końcowy, rozmiar QR, strefa ciszy i wartości kolorów."
+    },
+    "starter": {
+      "title": "Starter",
+      "badge": "7 dni za darmo",
+      "a": "Podstawowa analityka skanów: sumy dzienne",
+      "b": "Zmieniaj adresy docelowe kodów Dynamicznych w każdej chwili",
+      "c": "Print Pack +{price} za kod QR",
+      "trial": "Rozpocznij 7-dniowy darmowy okres próbny",
+      "openTrial": "Otwórz okres próbny",
+      "subscribe": "Subskrybuj teraz · {price}/mies.",
+      "note": "Okres próbny: bez karty, bez automatycznego obciążenia."
+    },
+    "studio": {
+      "title": "Studio",
+      "badge": "Dla zespołów i prac drukowanych",
+      "a": "Analityka skanów dla każdego kodu",
+      "b": "Zmieniaj adresy docelowe kodów Dynamicznych w każdej chwili",
+      "c": "Dodatkowe Print Packi +{price} za kod QR",
+      "cta": "Wybierz Studio"
+    },
+    "rules": {
+      "title": "Jak działają odblokowania i limity",
+      "1t": "Jedno odblokowanie, jeden unikalny kod QR",
+      "1d": "Kredyt statyczny lub miesięczne odblokowanie otwiera jeden kod QR. Wszystkie jego układy, pliki PNG i SVG oraz ponowne pobrania korzystają z tego samego odblokowania.",
+      "2t": "Miesięczne limity się odnawiają",
+      "2d": "Nowe odblokowania statyczne i Print Packi z planu odnawiają się w dniu rozliczenia. Niewykorzystane nie przechodzą na kolejny miesiąc.",
+      "3t": "Sloty Dynamiczne są bieżące, nie miesięczne",
+      "3d": "Slot jest zajęty, dopóki kod przekierowuje. Wstrzymaj lub usuń kod Dynamiczny, aby od razu zwolnić jego slot.",
+      "4t": "Twoje także po anulowaniu",
+      "4d": "Odblokowane kody statyczne zostają Twoje: wydrukowane kopie nadal działają, a ich pliki można pobierać. Po zakończeniu opłaconego okresu krótkie linki Dynamiczne przestają przekierowywać i nie można ich pobierać ani aktywować. Twoje kody są zachowane.",
+      "5t": "Jeśli płatność za odnowienie się nie powiedzie",
+      "5d": "Twój plan pozostaje aktywny, gdy płatność jest zaległa, a Stripe ponawia próbę. Jeśli płatność nie zostanie odzyskana i subskrypcja się zakończy, plan kończy się jak po anulowaniu. Gdy płatność przejdzie, Twój plan trwa dalej."
+    },
+    "cmp": {
+      "title": "Porównaj",
+      "what": "Funkcja",
+      "region": "Porównanie planów",
+      "more": "Przewiń, aby zobaczyć więcej planów",
+      "pick1": "Pierwszy plan",
+      "pick2": "Drugi plan",
+      "yes": "W zestawie",
+      "no": "Brak",
+      "na": "Nie dotyczy: to nie subskrypcja",
+      "model": {
+        "free": "Darmowy",
+        "once": "Zakup jednorazowy",
+        "credits": "Kredyty",
+        "monthly": "Subskrypcja miesięczna"
+      },
+      "once": "jednorazowo",
+      "mo": "/mies.",
+      "live": "Projektowanie, podgląd i sprawdzanie skanowania na żywo",
+      "static": "Odblokowania statycznych kodów QR",
+      "staticHint": "Pliki PNG i SVG",
+      "dynamic": "Aktywne sloty Dynamicznych kodów QR",
+      "dynamicHint": "Aktywne jednocześnie",
+      "analytics": "Analityka skanów",
+      "printPack": "Print Pack",
+      "repeat": "Ponowne pobieranie",
+      "cancel": "Po anulowaniu",
+      "oneQr": "1 kod QR",
+      "perCredit": "1 kod QR za kredyt",
+      "noExpiry": "Kredyty nie wygasają",
+      "perMonth": "{n} nowych co miesiąc",
+      "noRollover": "Niewykorzystane nie przechodzą dalej",
+      "atOnce": "{n} aktywnych jednocześnie",
+      "freeSlot": "Wstrzymaj jeden, aby zwolnić slot",
+      "basic": "Podstawowa",
+      "daily": "Sumy dzienne",
+      "perCode": "Dla każdego kodu",
+      "ppAdd": "+{price} za kod QR",
+      "ppStudio": "{n} w cenie co miesiąc",
+      "ppThen": "Potem +{price} za kod QR",
+      "stay": "Kody statyczne można nadal pobierać",
+      "dynStop": "Linki Dynamiczne przestają przekierowywać po zakończeniu opłaconego okresu",
+      "foot": "Podatki są naliczane przy płatności. Kody stron mogą być statyczne lub dynamiczne; kody z tekstem, Wi-Fi i wizytówką są statyczne."
+    },
+    "errors": {
+      "not_offered": "Tego nie można jeszcze kupić w wybranej walucie. Nie pobrano opłaty.",
+      "price_mismatch": "Cena zmieniła się od załadowania strony. Nie pobrano opłaty; odśwież, aby zobaczyć aktualną cenę.",
+      "unauthorized": "Zaloguj się, aby kontynuować.",
+      "failed": "Nie udało się otworzyć płatności. Nie pobrano opłaty; spróbuj ponownie."
+    },
+    "terms": "Anuluj w każdej chwili: Twój plan działa do końca opłaconego okresu. Jeśli płatność za odnowienie się nie powiedzie, plan pozostaje aktywny, gdy płatność jest zaległa."
+  },
+  "apiKeys": {
+    "title": "Klucze API",
+    "lead": "Klucze pozwalają Twoim narzędziom korzystać z kodów QR tego konta. Każdy klucz należy tylko do tego konta.",
+    "yourKeys": "Twoje klucze",
+    "create": "Utwórz klucz API",
+    "once": "Skopiuj ten klucz teraz. Ze względów bezpieczeństwa jest wyświetlany tylko raz i nie można go później odzyskać.",
+    "copy": "Kopiuj",
+    "copied": "Skopiowano",
+    "done": "Gotowe",
+    "none": "Brak kluczy API.",
+    "created": "Utworzono {date}",
+    "failed": "Nie udało się utworzyć klucza. Nic nie zostało zapisane; spróbuj ponownie.",
+    "active": "Aktywny",
+    "revoked": "Unieważniony",
+    "revokedOn": "Unieważniono {date}",
+    "lastUsed": "Ostatnio użyty {date}",
+    "neverUsed": "Nigdy nie użyty",
+    "revoke": {
+      "action": "Unieważnij",
+      "label": "Unieważnij {prefix}",
+      "title": "Unieważnić {prefix}?",
+      "text": "Narzędzia korzystające z tego klucza od razu przestaną działać. Pozostałe klucze działają dalej. Tego nie da się cofnąć.",
+      "confirm": "Unieważnij klucz",
+      "cancel": "Anuluj",
+      "done": "Klucz {prefix} został unieważniony.",
+      "failed": "Nie udało się unieważnić klucza. Nic się nie zmieniło; spróbuj ponownie.",
+      "close": "Zamknij"
+    }
+  },
+  "hosted": {
+    "hostedBy": "Hostowane przez HeyQR",
+    "report": "Zgłoś tę stronę",
+    "unavailableTitle": "Ta strona jest niedostępna",
+    "unavailableText": "Właściciel wstrzymał ten kod QR lub usunął stronę. Spróbuj później lub skontaktuj się z nim bezpośrednio.",
+    "loading": "Ładowanie strony",
+    "menu": {
+      "kicker": "Menu",
+      "sections": "Sekcje menu"
+    },
+    "coupon": {
+      "kicker": "Kupon",
+      "expiredKicker": "Oferta zakończona",
+      "copy": "Kopiuj kod",
+      "copied": "Skopiowano",
+      "redeem": "Wykorzystaj online",
+      "expired": "Wygasła",
+      "ended": "Ta oferta się zakończyła. Zapytaj w sklepie o aktualne promocje.",
+      "ends": "Kończy się {date}",
+      "endedOn": "Zakończona {date}",
+      "terms": "Warunki"
+    },
+    "social": {
+      "links": "Linki"
+    },
+    "business": {
+      "kicker": "Firma",
+      "openNow": "Teraz otwarte · do {to}",
+      "closedNow": "Teraz zamknięte",
+      "closedToday": "Dziś zamknięte",
+      "call": "Zadzwoń",
+      "directions": "Dojazd",
+      "website": "Strona",
+      "hours": "Godziny otwarcia",
+      "closed": "Zamknięte",
+      "days": {
+        "mon": "Pn",
+        "tue": "Wt",
+        "wed": "Śr",
+        "thu": "Cz",
+        "fri": "Pt",
+        "sat": "Sb",
+        "sun": "Nd"
+      },
+      "closedOpens": "Teraz zamknięte · otwarcie {from}"
+    },
+    "apps": {
+      "appStoreTop": "Pobierz z",
+      "appStore": "App Store",
+      "playTop": "Pobierz z",
+      "play": "Google Play",
+      "phoneNote": "Otwórz link do sklepu na Twoim telefonie.",
+      "desktopNote": "Na komputerze przyciski otwierają strony sklepów.",
+      "scanTitle": "Zeskanuj telefonem",
+      "scanText": "Otwiera App Store na iPhonie i Google Play na Androidzie.",
+      "qrLabel": "Kod QR tej strony"
+    },
+    "pdf": {
+      "open": "Otwórz PDF",
+      "download": "Pobierz",
+      "meta": "{pages, plural, one {# strona} few {# strony} many {# stron} other {# strony}} · {size}",
+      "metaNoPages": "{size}",
+      "waiting": "Przygotowujemy nową wersję tego dokumentu. Spróbuj ponownie za chwilę.",
+      "notReady": "Dokument jest jeszcze przygotowywany."
+    },
+    "product": {
+      "photos": "Zdjęcia produktu",
+      "photo": "Zdjęcie {n} z {count}",
+      "prev": "Poprzednie zdjęcie",
+      "next": "Następne zdjęcie",
+      "opens": "Otwiera {host}"
+    },
+    "reportForm": {
+      "title": "Zgłoś tę stronę",
+      "lead": "Powiedz nam, co jest nie tak. HeyQR sprawdza każde zgłoszenie.",
+      "reason": "Powód",
+      "reasons": {
+        "scam": "Oszustwo",
+        "malware": "Złośliwe oprogramowanie lub szkodliwy plik",
+        "illegal": "Nielegalne lub szkodliwe treści",
+        "impersonation": "Podszywanie się pod kogoś",
+        "other": "Coś innego"
+      },
+      "details": "Szczegóły",
+      "detailsPlaceholder": "Co jest nie tak na stronie? (opcjonalnie)",
+      "email": "Twój e-mail",
+      "emailHint": "Opcjonalnie. Użyjemy go tylko wtedy, gdy będziemy musieli o coś zapytać.",
+      "send": "Wyślij zgłoszenie",
+      "sending": "Wysyłanie…",
+      "sent": "Dziękujemy. Sprawdzimy tę stronę.",
+      "failed": "Nie udało się wysłać zgłoszenia. Spróbuj ponownie.",
+      "invalid": "Wybierz powód i sprawdź adres e-mail.",
+      "back": "Wróć do strony"
+    }
+  },
+  "developers": {
+    "metaTitle": "API dla programistów",
+    "metaDescription": "Twórz kody HeyQR we własnym kodzie: pakiet @heyqr/qr-core dla kodów statycznych i REST API dla kodów Dynamicznych, które już wkrótce.",
+    "docs": {
+      "search": {
+        "label": "Szukaj w dokumentacji",
+        "placeholder": "Szukaj w dokumentacji",
+        "clear": "Wyczyść wyszukiwanie",
+        "empty": "Żadna strona nie pasuje do „{query}”.",
+        "emptyHint": "Spróbuj „logo”, „PNG”, „skan” lub „Wi-Fi”.",
+        "suggestions": ["logo", "PNG", "skan", "Wi-Fi"],
+        "resultOne": "1 strona",
+        "resultOther": "Strony: {count}"
+      },
+      "groups": {
+        "start": "Pierwsze kroki",
+        "guides": "Poradniki",
+        "ref": "Dokumentacja",
+        "help": "Pomoc",
+        "rest": "REST API"
+      },
+      "menu": {
+        "open": "Otwórz menu dokumentacji",
+        "close": "Zamknij menu dokumentacji",
+        "label": "Dokumentacja"
+      },
+      "breadcrumbRoot": "Programiści",
+      "onThisPage": "Na tej stronie",
+      "backToTop": "Do góry",
+      "previous": "Poprzednia",
+      "next": "Następna",
+      "soon": "Wkrótce",
+      "preview": "Podgląd",
+      "designPreview": "Podgląd projektu",
+      "notPublic": "Jeszcze niepubliczne",
+      "env": {
+        "both": "Przeglądarka i Node.js",
+        "browser": "Przeglądarka",
+        "node": "Tylko Node.js",
+        "shell": "Terminal",
+        "types": "Typy",
+        "http": "HTTP",
+        "json": "JSON"
+      },
+      "copy": "Kopiuj",
+      "copied": "Skopiowano",
+      "copiedAnnounce": "Skopiowano {file} do schowka",
+      "copyFailed": "Nie udało się skopiować. Zaznacz kod ręcznie.",
+      "required": "Wymagane",
+      "endpoint": {
+        "auth": "Autoryzacja",
+        "authValue": "Authorization: Bearer <klucz API>",
+        "method": "Metoda",
+        "url": "URL żądania",
+        "base": "Na serwerze HeyQR, z którego korzystasz; publiczne API nie jest jeszcze dostępne."
+      },
+      "helpful": {
+        "question": "Czy ta strona była pomocna?",
+        "yes": "Tak",
+        "no": "Nie",
+        "sending": "Wysyłanie…",
+        "thanks": "Dziękujemy za opinię.",
+        "failed": "Nie udało się tego zapisać. Spróbuj ponownie."
+      },
+      "footer": {
+        "checked": "Sprawdzono z kodem źródłowym @heyqr/qr-core {version}. Ścieżka: {route}",
+        "restChecked": "Sprawdzono z trasami /api/v1 tej wersji. Ścieżka: {route}",
+        "proposed": "Proponowany projekt. To nie jest opublikowany kontrakt."
+      },
+      "status": {
+        "unpublished": "Nieopublikowany",
+        "live": "Dostępny",
+        "liveOnNpm": "Dostępny w npm",
+        "soon": "Wkrótce"
+      },
+      "products": {
+        "pkgTitle": "Pakiet npm",
+        "pkgText": "Darmowy. Statyczne kody QR renderowane na Twoim komputerze. Bez konta, bez klucza API.",
+        "restTitle": "REST API",
+        "restText": "Twórz kody, także Dynamiczne, i zarządzaj nimi ze swojego serwera."
+      },
+      "install": {
+        "managers": "Menedżer pakietów",
+        "npmLink": "npmjs.com/package/{name}",
+        "opensNewTab": "(otwiera się w nowej karcie)",
+        "unpublishedTitle": "Jeszcze nie ma go w npm",
+        "unpublishedText": "{name} {version} nie jest jeszcze opublikowany, więc nie ma czego instalować. Wszystko na tych stronach odpowiada jego bieżącemu kodowi źródłowemu. Otrzymaj e-mail, gdy się pojawi:"
+      },
+      "restSoon": {
+        "cardTitle": "Kody Dynamiczne z Twojego serwera",
+        "cardText": "Klucz API z Twojego konta pozwoli tworzyć kody, zmieniać adresy docelowe kodów Dynamicznych i odczytywać liczbę skanów. Pełną dokumentację z prawdziwymi żądaniami i odpowiedziami opublikujemy po uruchomieniu.",
+        "planned": "Planowane",
+        "items": [
+          "Klucze API dla Twojego konta",
+          "Twórz jeden kod lub do 100 naraz",
+          "Zmieniaj adres docelowy kodu Dynamicznego",
+          "Dzienna liczba skanów"
+        ],
+        "npmLink": "Użyj pakietu npm już teraz"
+      },
+      "waitlist": {
+        "label": "Otrzymaj e-mail, gdy REST API zostanie uruchomione",
+        "placeholder": "you@company.com",
+        "join": "Zapisz się na listę oczekujących",
+        "joining": "Zapisywanie…",
+        "invalid": "Sprawdź adres. Potrzebna jest nazwa, @ i domena.",
+        "failed": "Nie udało się Cię teraz dodać. Spróbuj ponownie.",
+        "joined": "Jesteś na liście. Napiszemy na {email}, gdy REST API zostanie uruchomione.",
+        "hint": "Jeden e-mail po uruchomieniu. Bez newslettera."
+      },
+      "notifyPackages": {
+        "label": "Otrzymaj e-mail, gdy pakiet zostanie opublikowany",
+        "join": "Powiadom mnie",
+        "joined": "Jesteś na liście. Napiszemy na {email}, gdy zostanie opublikowany.",
+        "hint": "Jeden e-mail, gdy się pojawi. Bez newslettera."
+      },
+      "responseNotes": {
+        "created": "Kod został utworzony jako szkic, z jednym identyfikatorem układu na każdy układ w żądaniu.",
+        "invalid": "Pole narusza regułę; `details` wymienia każde z nich i nigdy nie powtarza wartości.",
+        "draftLimit": "Konto ma już maksymalną liczbę szkiców.",
+        "reused": "Idempotency-Key został użyty dla innego żądania; nic nie utworzono.",
+        "changed": "Zapisano. `changed` ma wartość false, gdy adres był już zapisany.",
+        "conflict": "Ktoś zmienił go wcześniej. `current` to obecnie zapisana wartość; odczytaj ją i zdecyduj ponownie.",
+        "notDynamic": "Kody statyczne nie mają adresu docelowego: ich treść jest we wzorze.",
+        "rateLimited": "Przekroczono limit konta. Odczekaj Retry-After sekund, a potem wyślij to samo żądanie ponownie.",
+        "unauthorized": "Każdy klucz, który nie przejdzie weryfikacji, dostaje tę odpowiedź, zanim treść żądania zostanie odczytana.",
+        "bulk202": "Odpytuj GET /v1/jobs/{job_id} lub poczekaj na webhook.",
+        "bulk400": "Jeśli którykolwiek element się nie powiedzie, żaden kod nie zostanie utworzony.",
+        "scans200": "Dni bez skanów są uwzględniane z wartością 0."
+      },
+      "pages": {
+        "overview": {
+          "title": "API dla programistów",
+          "nav": "Przegląd",
+          "lead": "Twórz kody HeyQR we własnym kodzie. Zacznij już dziś od darmowego pakietu npm; REST API dla kodów Dynamicznych jest w drodze.",
+          "blocks": [
+            {
+              "k": "products"
+            },
+            {
+              "k": "h2",
+              "id": "what",
+              "t": "Co możesz zbudować"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Stylizowane kody QR w aplikacji przeglądarkowej: kształty, kolory, logo lub krótki tekst na środku.",
+                "Gotowe do druku pliki SVG i PNG ze skryptu lub zadania na serwerze.",
+                "Sprawdzanie skanowania, zanim cokolwiek zostanie pokazane lub wydrukowane: kontrast, odwrócone kolory, logo zakrywające za dużo.",
+                "Pełne układy z ramkami i podpisami — te same, które eksportuje edytor HeyQR."
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "entries",
+              "t": "Punkty wejścia"
+            },
+            {
+              "k": "p",
+              "t": "Jeden pakiet, pięć importów. Główny punkt wejścia działa wszędzie; pozostałe są dla Node.js lub do dekodowania w przeglądarce."
+            },
+            {
+              "k": "table",
+              "label": "Punkty wejścia",
+              "cols": ["Import", "Działa w", "Co daje"],
+              "rows": [
+                {
+                  "cells": [
+                    "`@heyqr/qr-core`",
+                    "Przeglądarka i Node.js",
+                    "`encodePayload`, `renderQr`, `renderQrSvg`, `composeLayout`, funkcje pomocnicze kolorów i pojemności"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/raster`", "Tylko Node.js", "`rasterizeSvg`: SVG do PNG za pomocą resvg"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`@heyqr/qr-core/verify`",
+                    "Tylko Node.js",
+                    "`decodeSvg`, `decodeImage`, `verifyScan`: odczytaj kod z powrotem za pomocą ZXing"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`@heyqr/qr-core/verify-browser`",
+                    "Przeglądarka",
+                    "`decodeSvgInBrowser`: ten sam dekoder, z pliku wasm, który hostujesz"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/node`", "Tylko Node.js", "`rasterizeSvg` i funkcje weryfikacji w jednym imporcie"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Pakiet tworzy kody statyczne: treść jest zapisana we wzorze. Kody Dynamiczne z edytowalnym krótkim linkiem i licznikiem skanów wymagają planu HeyQR i pojawią się wraz z REST API."
+            },
+            {
+              "k": "h2",
+              "id": "next",
+              "t": "Następne kroki"
+            },
+            {
+              "k": "cards",
+              "items": [
+                {
+                  "page": "quickstart",
+                  "title": "Szybki start",
+                  "t": "Twój pierwszy kod w pięciu liniach.",
+                  "icon": "zap"
+                },
+                {
+                  "page": "content",
+                  "title": "Kodowanie treści",
+                  "t": "Strony, Wi-Fi, kontakty, wydarzenia i więcej.",
+                  "icon": "book"
+                },
+                {
+                  "page": "scan",
+                  "title": "Sprawdź, czy się skanuje",
+                  "t": "Odczytaj raport skanowania i zdekoduj wynik.",
+                  "icon": "scan"
+                },
+                {
+                  "page": "api",
+                  "title": "Funkcje",
+                  "t": "Każdy eksport z sygnaturą.",
+                  "icon": "braces"
+                }
+              ]
+            }
+          ]
+        },
+        "install": {
+          "title": "Instalacja",
+          "lead": "Dodaj @heyqr/qr-core do aplikacji przeglądarkowej, usługi Node.js lub obu.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "add",
+              "t": "Dodaj pakiet"
+            },
+            {
+              "k": "install",
+              "package": "qrCore"
+            },
+            {
+              "k": "h2",
+              "id": "reqs",
+              "t": "Wymagania"
+            },
+            {
+              "k": "table",
+              "label": "Wymagania",
+              "cols": ["Element", "Szczegóły"],
+              "rows": [
+                {
+                  "cells": ["Format modułów", "Tylko moduły ES (pakiet ma `\"type\": \"module\"`). Używaj `import`, nie `require`."],
+                  "required": false
+                },
+                {
+                  "cells": ["TypeScript", "Typy są dołączone do pakietu. Pakiet `@types` nie jest potrzebny."],
+                  "required": false
+                },
+                {
+                  "cells": ["Przeglądarka", "Główny punkt wejścia nie ma zależności od Node.js i działa z każdym nowoczesnym bundlerem."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "Node.js",
+                    "`/raster` i `/verify` używają `@resvg/resvg-js` — natywnego modułu z gotowymi plikami binarnymi dla popularnych platform."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "Dekodowanie w przeglądarce",
+                    "`/verify-browser` wczytuje `zxing_reader.wasm` z wybranego przez Ciebie URL, nigdy z CDN."
+                  ],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "wasm",
+              "t": "Hostuj dekoder dla przeglądarki"
+            },
+            {
+              "k": "p",
+              "t": "Potrzebne tylko dla `decodeSvgInBrowser`. Skopiuj plik wasm z zależności `zxing-wasm` do folderu publicznego i przekaż jego URL. Polecenie znajduje plik przez pakiet, więc działa z npm, pnpm i Yarn."
+            },
+            {
+              "k": "code",
+              "example": "wasm"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Plik to `zxing-wasm/reader/zxing_reader.wasm` w zxing-wasm 3.1.7 — wersji, od której pakiet dziś zależy. Sprawdź to ponownie po aktualizacji."
+            }
+          ]
+        },
+        "quickstart": {
+          "title": "Szybki start",
+          "lead": "Zakoduj treść, nadaj jej styl, sprawdź skanowanie i pobierz SVG — w około minutę.",
+          "blocks": [
+            {
+              "k": "steps",
+              "items": [
+                {
+                  "title": "Instalacja",
+                  "t": "Dodaj `@heyqr/qr-core` za pomocą menedżera pakietów."
+                },
+                {
+                  "title": "Zakoduj treść",
+                  "t": "`encodePayload` zamienia stronę, sieć Wi-Fi lub kontakt na tekst zapisany w kodzie."
+                },
+                {
+                  "title": "Opisz wygląd",
+                  "t": "`QrStyle` ustawia kształt modułów, kształty narożników i kolory."
+                },
+                {
+                  "title": "Sprawdź skanowanie",
+                  "t": "`renderQr` zwraca raport skanowania z poprawką dla każdego problemu."
+                },
+                {
+                  "title": "Pobierz plik",
+                  "t": "`renderQrSvg` zwraca samodzielny plik SVG; w Node.js `rasterizeSvg` zamienia go na PNG."
+                }
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "W przeglądarce"
+            },
+            {
+              "k": "code",
+              "example": "quickstartBrowser"
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Zapisywanie plików w Node.js"
+            },
+            {
+              "k": "code",
+              "example": "quickstartNode"
+            }
+          ]
+        },
+        "content": {
+          "title": "Kodowanie treści",
+          "lead": "encodePayload zamienia ustrukturyzowaną treść na dokładnie taki tekst, jakiego telefony oczekują dla każdego rodzaju kodu.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "types",
+              "t": "Typy treści"
+            },
+            {
+              "k": "p",
+              "t": "Przekaż jeden z dziewięciu obiektów `QrContent`. `QR_CONTENT_TYPES` wymienia wartości `type`."
+            },
+            {
+              "k": "table",
+              "label": "Typy treści",
+              "cols": ["type", "Pola", "Kod zawiera"],
+              "rows": [
+                {
+                  "cells": ["`website`", "`url` (same domeny dostają https://)", "Znormalizowany URL"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "`text`", "Tekst bez zmian"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`wifi`",
+                    "`ssid`, `security` \"WPA\" | \"WEP\" | \"nopass\", `password?`, `hidden?`",
+                    "`WIFI:T:WPA;S:…;P:…;;`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`contact`", "`firstName?`, `lastName?`, `title?`, `company?`, `phone?`, `email?`, `website?`", "vCard 3.0"],
+                  "required": false
+                },
+                {
+                  "cells": ["`email`", "`to`, `subject?`, `body?`", "`mailto:` z tematem i treścią"],
+                  "required": false
+                },
+                {
+                  "cells": ["`phone`", "`number`", "`tel:` z cyframi i +"],
+                  "required": false
+                },
+                {
+                  "cells": ["`sms`", "`number`, `message?`", "`SMSTO:number:message`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`location`", "`address`, `name?`", "`geo:0,0?q=` z adresem"],
+                  "required": false
+                },
+                {
+                  "cells": ["`event`", "`title`, `start`, `end?`, `place?`", "Wydarzenie kalendarza (VEVENT)"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "examples",
+              "t": "Przykłady"
+            },
+            {
+              "k": "code",
+              "example": "contentExamples"
+            },
+            {
+              "k": "h2",
+              "id": "contact",
+              "t": "Wizytówki kontaktowe"
+            },
+            {
+              "k": "p",
+              "t": "Kontakty stają się wizytówką vCard 3.0 — wersją, którą aparaty telefonów odczytują najpewniej. Puste pola są pomijane, a długie linie zawijane."
+            },
+            {
+              "k": "code",
+              "example": "vcard"
+            },
+            {
+              "k": "h2",
+              "id": "events",
+              "t": "Wydarzenia"
+            },
+            {
+              "k": "p",
+              "t": "`start` i `end` to czasy lokalne, np. `2026-12-05T19:00`. Data bez godziny, np. `2026-12-05`, tworzy wydarzenie całodniowe."
+            },
+            {
+              "k": "code",
+              "example": "event"
+            },
+            {
+              "k": "h2",
+              "id": "urls",
+              "t": "Sprawdzanie adresu strony"
+            },
+            {
+              "k": "p",
+              "t": "`parseWebsiteUrl` to ta sama kontrola, której używa edytor HeyQR. Odrzuca spacje, inne schematy, dane logowania i hosty bez kropki."
+            },
+            {
+              "k": "code",
+              "example": "urlCheck"
+            }
+          ]
+        },
+        "style": {
+          "title": "Stylizowanie kodu",
+          "lead": "QrStyle opisuje kształty i kolory. Każdy styl jest sprawdzany według tych samych reguł skanowania.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "shapes",
+              "t": "Kształty"
+            },
+            {
+              "k": "chips",
+              "t": "pattern · moduły danych",
+              "items": ["square", "rounded", "dot", "diamond", "leaf", "fluid", "vbars", "hbars"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeFrame · pierścienie znaczników narożnych",
+              "items": ["square", "rounded", "cushion", "circle", "leaf"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeBall · środki znaczników narożnych",
+              "items": ["square", "rounded", "circle", "diamond", "leaf"]
+            },
+            {
+              "k": "h2",
+              "id": "colors",
+              "t": "Kolory"
+            },
+            {
+              "k": "p",
+              "t": "`colors` przyjmuje cztery kolory hex: `fg` dla modułów danych, `eye` dla pierścieni narożnych, `eyeIn` dla środków narożników i `bg` dla tła."
+            },
+            {
+              "k": "table",
+              "label": "Minimalny kontrast",
+              "cols": ["Element", "Minimalny kontrast z tłem"],
+              "rows": [
+                {
+                  "cells": ["Moduły danych (`fg`)", "3 : 1 (`MIN_CONTRAST.modules`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Pierścienie narożne (`eye`)", "3 : 1 (`MIN_CONTRAST.eyeFrame`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Środki narożników (`eyeIn`)", "2,5 : 1 (`MIN_CONTRAST.eyeCenter`)"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Kody muszą być ciemniejsze niż tło. Jasny kod na ciemnym tle nie przechodzi kontroli z problemem `invert`, nawet przy wysokim kontraście."
+            },
+            {
+              "k": "code",
+              "example": "contrast"
+            },
+            {
+              "k": "h2",
+              "id": "center",
+              "t": "Krótki tekst na środku"
+            },
+            {
+              "k": "p",
+              "t": "`centerText` umieszcza etykietę w kodzie. Pokazuje pierwszą linię, do 14 znaków (`CENTER_TEXT_MAX`); dłuższy tekst jest ucinany na całym słowie z wielokropkiem."
+            },
+            {
+              "k": "code",
+              "example": "centerText"
+            },
+            {
+              "k": "h2",
+              "id": "art",
+              "t": "Grafika za kodem"
+            },
+            {
+              "k": "p",
+              "t": "`art` rysuje miękkie kształty w dwóch odcieniach za modułami, z opcjonalnym delikatnym obrazem. Sprawdzanie skanowania traktuje tło jako zabarwione."
+            },
+            {
+              "k": "code",
+              "example": "art"
+            }
+          ]
+        },
+        "logo": {
+          "title": "Logo i ikony",
+          "lead": "Umieść na środku obraz lub ikonę konturową 24 × 24. Korekcja błędów rośnie automatycznie, więc kod nadal się odczytuje.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "fields",
+              "t": "Pola logo"
+            },
+            {
+              "k": "table",
+              "label": "QrLogo",
+              "cols": ["Pole", "Typ", "Opis"],
+              "rows": [
+                {
+                  "cells": ["`href`", "string", "URL obrazu lub data URI. Ignorowane, gdy ustawiono `iconPath`."],
+                  "required": false
+                },
+                {
+                  "cells": ["`iconPath`", "string", "Ścieżka konturu 24 × 24, np. ikona Lucide."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`size`",
+                    "number",
+                    "Szerokość logo jako część szerokości kodu. Rysowane w zakresie od 0,10 do 0,46 (`CENTER_LOGO_SIZE`)."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`plate`", "\"none\" | \"square\" | \"circle\"", "Podkład za logo."],
+                  "required": true
+                },
+                {
+                  "cells": ["`tile`", "boolean", "Ikona na kolorowym zaokrąglonym kafelku zamiast podkładki."],
+                  "required": false
+                },
+                {
+                  "cells": ["`plateColor`, `iconColor`", "string", "Kolory hex podkładki i ikony."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "example",
+              "t": "Przykład"
+            },
+            {
+              "k": "code",
+              "example": "logoStyle"
+            },
+            {
+              "k": "h2",
+              "id": "fit",
+              "t": "Jak duże może być?"
+            },
+            {
+              "k": "p",
+              "t": "Z logo lub tekstem na środku kod używa korekcji błędów H, więc mieści nieco ponad połowę danych (382 bajty zamiast 666). Po renderowaniu `scan.maxLogoSize` to największy rozmiar, który nadal się dekoduje; większe logo nie przechodzi kontroli z problemem `logo`."
+            },
+            {
+              "k": "code",
+              "example": "logoFit"
+            }
+          ]
+        },
+        "layouts": {
+          "title": "Ramki i podpisy",
+          "lead": "composeLayout rysuje pełny układ: kartę lub ramkę, kod, podpis i opcjonalne logo — dokładnie jak eksport HeyQR.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "presets",
+              "t": "Gotowe układy"
+            },
+            {
+              "k": "table",
+              "label": "Gotowe układy",
+              "cols": ["preset", "Co rysuje"],
+              "rows": [
+                {
+                  "cells": ["`qr`", "Sam kod w rozmiarze `qrSize`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`caption`", "Kod z podpisem nad lub pod nim albo tekst wewnątrz kodu"],
+                  "required": false
+                },
+                {
+                  "cells": ["`vertical`", "Karta z kodem nad podpisem"],
+                  "required": false
+                },
+                {
+                  "cells": ["`horizontal`", "Karta z kodem obok podpisu"],
+                  "required": false
+                },
+                {
+                  "cells": ["`frame`", "Ramka wokół kodu; rozmiar wynika z `qrSize`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "chips",
+              "t": "frameStyle",
+              "items": ["bar", "tab", "bubble", "pill", "corners", "circle", "ticket", "phone"]
+            },
+            {
+              "k": "h2",
+              "id": "compose",
+              "t": "Komponowanie układu"
+            },
+            {
+              "k": "code",
+              "example": "compose"
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Wywołaj `layoutCapacity` przed `composeLayout`, aby zbyt długa treść dała komunikat zamiast wyjątku. Przekaż `{ transparent: true }` jako trzeci argument, aby uzyskać przezroczyste tło."
+            },
+            {
+              "k": "h2",
+              "id": "fonts",
+              "t": "Czcionki podpisów"
+            },
+            {
+              "k": "p",
+              "t": "Podpisy to tekst SVG. W przeglądarce używają czcionek strony; przy rasteryzacji w Node.js przekaż pliki czcionek w `fontFiles`, w przeciwnym razie użyte zostaną czcionki zainstalowane w systemie. Czcionki podpisów obsługują alfabet łaciński i cyrylicę."
+            }
+          ]
+        },
+        "png": {
+          "title": "Zapisywanie PNG",
+          "lead": "rasterizeSvg renderuje dowolny SVG z pakietu do bufora PNG za pomocą resvg.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "basic",
+              "t": "Renderowanie PNG"
+            },
+            {
+              "k": "code",
+              "example": "png"
+            },
+            {
+              "k": "h2",
+              "id": "options",
+              "t": "Opcje"
+            },
+            {
+              "k": "table",
+              "label": "RasterOptions",
+              "cols": ["Opcja", "Typ", "Opis"],
+              "rows": [
+                {
+                  "cells": ["`width`", "number", "Szerokość wyjściowa w pikselach. Wysokość wynika z SVG."],
+                  "required": true
+                },
+                {
+                  "cells": ["`fontFiles`", "string[]", "Pliki czcionek dla podpisów."],
+                  "required": false
+                },
+                {
+                  "cells": ["`systemFonts`", "boolean", "Używaj także zainstalowanych czcionek. Domyślnie `true`."],
+                  "required": false
+                },
+                {
+                  "cells": ["`background`", "string", "Kolor tła za przezroczystymi obszarami."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`dpi`",
+                    "number",
+                    "Rozdzielczość druku zapisana w pliku, aby programy do druku otwierały go w rozmiarze fizycznym. Pomiń ją dla plików ekranowych."
+                  ],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "print",
+              "t": "Rozmiary do druku"
+            },
+            {
+              "k": "p",
+              "t": "`pngPixelSize` podaje dokładny rozmiar układu w pikselach: układy w mm w 300, 600 lub 1200 dpi (`PNG_DPIS`), układy w px w skali 1×, 2×, 4× lub 8× (`PNG_SCALES`). Boki mieszczą się w zakresie 64–8192 px."
+            },
+            {
+              "k": "code",
+              "example": "printPng"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Nie importuj `/raster` w paczkach przeglądarkowych: resvg to natywny moduł Node.js."
+            }
+          ]
+        },
+        "scan": {
+          "title": "Sprawdź, czy się skanuje",
+          "lead": "Każde renderowanie zwraca raport skanowania. W Node.js i w przeglądarce możesz też zdekodować wynik, aby mieć pewność.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "Raport skanowania"
+            },
+            {
+              "k": "code",
+              "example": "scanReport"
+            },
+            {
+              "k": "table",
+              "label": "Kody problemów",
+              "cols": ["code", "title", "fix"],
+              "rows": [
+                {
+                  "cells": ["`invert`", "Light code on a dark background", "Swap colors"],
+                  "required": false
+                },
+                {
+                  "cells": ["`contrast`", "Not enough contrast", "Increase contrast"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eyes`", "Corner markers are too light", "Darken corner markers"],
+                  "required": false
+                },
+                {
+                  "cells": ["`logo`", "The logo hides too much of the code", "Reduce logo size"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "The text in the code is too long", "Shorten the text"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Raport opiera się na regułach: sprawdza dokładną geometrię i kolory bez dekodowania. Dekoduj, gdy potrzebujesz dowodu."
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Dekodowanie w Node.js"
+            },
+            {
+              "k": "code",
+              "example": "verifyNode"
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "Dekodowanie w przeglądarce"
+            },
+            {
+              "k": "code",
+              "example": "verifyBrowser"
+            },
+            {
+              "k": "p",
+              "t": "Nic nie opuszcza urządzenia: dekoder działa lokalnie i nigdy nie otwiera adresu docelowego kodu."
+            }
+          ]
+        },
+        "api": {
+          "title": "Funkcje",
+          "lead": "Każda publiczna funkcja, pogrupowana według punktu wejścia. Sygnatury odpowiadają typom TypeScript w pakiecie.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "Treść"
+            },
+            {
+              "k": "table",
+              "label": "Funkcje treści",
+              "cols": ["Funkcja", "Sygnatura"],
+              "rows": [
+                {
+                  "cells": ["`encodePayload`", "`(content: QrContent) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`encodeVCard`", "`(contact) => string` · vCard 3.0"],
+                  "required": false
+                },
+                {
+                  "cells": ["`normalizeUrl`", "`(input: string) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseWebsiteUrl`", "`(input: string) => { ok: true; url } | { ok: false; problem }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "render",
+              "t": "Renderowanie"
+            },
+            {
+              "k": "table",
+              "label": "Funkcje renderowania",
+              "cols": ["Funkcja", "Sygnatura"],
+              "rows": [
+                {
+                  "cells": ["`renderQr`", "`(value: string, style: QrStyle) => RenderedQr`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`renderQrSvg`", "`(value: string, style: QrStyle, sizePx = 512) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eclForStyle`", "`(style) => \"M\" | \"H\"` · H, gdy logo lub tekst zakrywa środek"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerLogoSize`", "`(size: number) => number` · ogranicza do 0,10–0,46"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerTextLabel`", "`(text: string) => { label; shortened }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "layout",
+              "t": "Układy"
+            },
+            {
+              "k": "table",
+              "label": "Funkcje układów",
+              "cols": ["Funkcja", "Sygnatura"],
+              "rows": [
+                {
+                  "cells": [
+                    "`composeLayout`",
+                    "`(layout: Layout, value: string, options?: { transparent? }) => { svg, width, height, scan }`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutCapacity`", "`(layout: Layout, value: string) => { ok, bytes, maxBytes, ecl, centerCovered }`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutGeometry`", "`(layout: Layout) => LayoutGeometry`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pngPixelSize`", "`(layout: Layout, { scale?, dpi? }) => { width, height, ok }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "encode",
+              "t": "Kodowanie i pojemność"
+            },
+            {
+              "k": "table",
+              "label": "Funkcje kodowania",
+              "cols": ["Funkcja", "Sygnatura"],
+              "rows": [
+                {
+                  "cells": ["`encodeQr`", "`(text: string, ecl = \"M\") => QrMatrix`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`payloadBytes`", "`(text: string) => number` · bajty UTF-8"],
+                  "required": false
+                },
+                {
+                  "cells": ["`maxPayloadBytes`", "`(ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pickVersion`", "`(byteLength: number, ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`QrCapacityError`", "Błąd z `byteLength` i `maxBytes`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "color",
+              "t": "Kolor"
+            },
+            {
+              "k": "table",
+              "label": "Funkcje kolorów",
+              "cols": ["Funkcja", "Sygnatura"],
+              "rows": [
+                {
+                  "cells": ["`contrastRatio`", "`(a: string, b: string) => number` · współczynnik WCAG"],
+                  "required": false
+                },
+                {
+                  "cells": ["`luminance`", "`(hex: string) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`isHexColor`", "`(value: string) => boolean` · tylko `#RRGGBB`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseHexColor`", "`(text: string) => string | null`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`mixColors`", "`(a: string, b: string, t: number) => string`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Punkty wejścia Node.js i przeglądarki"
+            },
+            {
+              "k": "table",
+              "label": "Pozostałe punkty wejścia",
+              "cols": ["Funkcja", "Punkt wejścia", "Sygnatura"],
+              "rows": [
+                {
+                  "cells": ["`rasterizeSvg`", "`/raster`", "`(svg: string, options: RasterOptions) => Buffer`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvg`", "`/verify`", "`(svg: string, width = 720) => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeImage`", "`/verify`", "`(file: Uint8Array, type = \"image/png\") => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`verifyScan`", "`/verify`", "`(svg, expected, widths = [300, 600, 1200]) => Promise<boolean>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvgInBrowser`", "`/verify-browser`", "`(svg, { wasmUrl, size? = 960 }) => Promise<string | null>`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        },
+        "types": {
+          "title": "Typy",
+          "lead": "Główne typy w postaci, w jakiej występują w pakiecie.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "style",
+              "t": "QrStyle"
+            },
+            {
+              "k": "code",
+              "example": "typesStyle"
+            },
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "RenderedQr i ScanReport"
+            },
+            {
+              "k": "code",
+              "example": "typesReport"
+            },
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "QrContent"
+            },
+            {
+              "k": "code",
+              "example": "typesContent"
+            }
+          ]
+        },
+        "limits": {
+          "title": "Limity i błędy",
+          "lead": "Co akceptuje koder i co się dzieje, gdy treść się nie mieści.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Limity"
+            },
+            {
+              "k": "table",
+              "label": "Limity",
+              "cols": ["Limit", "Wartość"],
+              "rows": [
+                {
+                  "cells": ["Największa wersja QR", "20 (`MAX_VERSION`), 97 × 97 modułów"],
+                  "required": false
+                },
+                {
+                  "cells": ["Treść", "666 bajtów przy korekcji błędów M, 382 przy H"],
+                  "required": false
+                },
+                {
+                  "cells": ["Korekcja błędów", "M lub H z logo albo tekstem na środku"],
+                  "required": false
+                },
+                {
+                  "cells": ["Strefa ciszy", "4 moduły z każdej strony, wliczone w `viewBox`"],
+                  "required": false
+                },
+                {
+                  "cells": ["Rozmiar logo", "0,10–0,46 szerokości kodu (`CENTER_LOGO_SIZE`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Tekst na środku", "14 znaków (`CENTER_TEXT_MAX`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Bok PNG", "64–8192 px (`PNG_MIN_SIDE`, `PNG_MAX_SIDE`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Kontrast", "3 : 1 dla modułów i pierścieni, 2,5 : 1 dla środków narożników"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "capacity",
+              "t": "Zbyt długa treść"
+            },
+            {
+              "k": "p",
+              "t": "Renderowanie zgłasza `QrCapacityError`, gdy treść się nie mieści. Błąd zawiera rozmiary, nigdy treść, więc można go bezpiecznie logować."
+            },
+            {
+              "k": "code",
+              "example": "capacity"
+            },
+            {
+              "k": "h2",
+              "id": "null",
+              "t": "Dekodery zwracające null"
+            },
+            {
+              "k": "p",
+              "t": "`decodeSvg`, `decodeImage` i `decodeSvgInBrowser` zwracają `null`, gdy nie da się odczytać kodu. Traktuj to jako nieudaną kontrolę, nie błąd."
+            }
+          ]
+        },
+        "faq": {
+          "title": "FAQ",
+          "lead": "Krótkie odpowiedzi na częste pytania.",
+          "blocks": [
+            {
+              "k": "faq",
+              "items": [
+                {
+                  "q": "Czy pakiet wysyła cokolwiek do HeyQR?",
+                  "a": "Nie. Kodowanie, renderowanie i sprawdzanie skanowania działają na Twoim komputerze. Dekoder przeglądarkowy wczytuje plik wasm z hostowanego przez Ciebie URL."
+                },
+                {
+                  "q": "Czy mogę nim tworzyć kody Dynamiczne?",
+                  "a": "Jeszcze nie. Kod Dynamiczny wymaga krótkiego linku HeyQR, planu i liczenia skanów na naszych serwerach. To pojawi się wraz z REST API."
+                },
+                {
+                  "q": "Dlaczego mój kod z logo nie przechodzi?",
+                  "a": "Logo podnosi korekcję błędów do H, co zmniejsza pojemność, i zakrywa moduły. Zmniejsz logo poniżej `scan.maxLogoSize` lub skróć treść."
+                },
+                {
+                  "q": "Dlaczego eksport PNG działa tylko w Node.js?",
+                  "a": "Pliki PNG są renderowane za pomocą resvg, modułu natywnego. W przeglądarce narysuj SVG na canvasie, jeśli potrzebujesz pikseli."
+                },
+                {
+                  "q": "Czy pliki będą zgodne z edytorem HeyQR?",
+                  "a": "Tak. Podgląd w edytorze i płatny eksport używają `composeLayout`, więc ten sam układ daje ten sam SVG."
+                },
+                {
+                  "q": "Czy mogę go użyć w produkcie komercyjnym?",
+                  "a": "Licencja zostanie ustalona przy pierwszym publicznym wydaniu i będzie widoczna tutaj oraz w npm."
+                }
+              ]
+            }
+          ]
+        },
+        "changelog": {
+          "title": "Lista zmian",
+          "lead": "Wydania @heyqr/qr-core.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "v010",
+              "t": "0.1.0 · jeszcze nieopublikowane"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Pierwsze publiczne wydanie w przygotowaniu. Wszystko na tych stronach odpowiada bieżącemu kodowi źródłowemu pakietu.",
+                "Punkty wejścia: główny, `/raster`, `/verify`, `/verify-browser`, `/node`."
+              ]
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Gdy wersja zostanie opublikowana, pojawią się tu jej informacje i link do npm."
+            }
+          ]
+        },
+        "rest": {
+          "title": "REST API",
+          "lead": "Twórz kody, zmieniaj adresy docelowe kodów Dynamicznych i odczytuj liczbę skanów ze swojego serwera.",
+          "blocks": [
+            {
+              "k": "restSoon"
+            }
+          ]
+        },
+        "restAuth": {
+          "title": "Uwierzytelnianie",
+          "lead": "Każde żądanie zawiera klucz API z Twojego konta HeyQR.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Jeszcze niepubliczne. Ta strona opisuje REST API w tej wersji HeyQR, sprawdzone z jego trasami. Nie jest jeszcze dostępne na heyqr.me i do tego czasu nie pojawia się w wyszukiwarkach."
+            },
+            {
+              "k": "h2",
+              "id": "keys",
+              "t": "Klucze API"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Twórz klucze w sekcji Konto → Klucze API. Klucz należy do Twojego konta; każdy klucz konta widzi te same kody.",
+                "Klucze mają postać `hqk_<lookupId>_<secret>`. Pełny klucz jest wyświetlany raz, przy tworzeniu; HeyQR przechowuje tylko weryfikator.",
+                "Wysyłaj klucz w nagłówku `Authorization` ze swojego serwera. Nigdy nie umieszczaj go w URL ani w kodzie przeglądarkowym.",
+                "Brakujący, błędny lub unieważniony klucz dostaje tę samą odpowiedź `401 unauthorized`, zanim treść żądania zostanie odczytana."
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "header",
+              "t": "Nagłówki żądania"
+            },
+            {
+              "k": "code",
+              "example": "restHeader"
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Limity żądań"
+            },
+            {
+              "k": "p",
+              "t": "Limity należą do konta: wszystkie jego klucze je współdzielą, a konta nie wpływają na siebie nawzajem. Okno zaczyna się od pierwszego żądania i trwa 60 sekund."
+            },
+            {
+              "k": "table",
+              "label": "Limity żądań",
+              "cols": ["Pula", "Co jest liczone", "Domyślnie na minutę"],
+              "rows": [
+                {
+                  "cells": ["`api`", "Każde żądanie z prawidłowym kluczem", "120"],
+                  "required": false
+                },
+                {
+                  "cells": ["`export`", "Eksporty plików, liczone także w `api`", "30"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "p",
+              "t": "Po przekroczeniu puli odpowiedź to `429 rate_limited` z `Retry-After`, zanim cokolwiek zostanie utworzone, zmienione lub wyrenderowane."
+            }
+          ]
+        },
+        "restCreate": {
+          "title": "Tworzenie kodu QR",
+          "lead": "Tworzy jeden kod QR z jego układami jako szkic na Twoim koncie. Aktywacja, krótkie linki i płatność pozostają w aplikacji.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Jeszcze niepubliczne. Ta strona opisuje REST API w tej wersji HeyQR, sprawdzone z jego trasami. Nie jest jeszcze dostępne na heyqr.me i do tego czasu nie pojawia się w wyszukiwarkach."
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Treść żądania"
+            },
+            {
+              "k": "table",
+              "label": "Treść żądania",
+              "cols": ["Parametr", "Typ", "Przykład", "Opis"],
+              "rows": [
+                {
+                  "cells": ["`name`", "string", "\"Spring menu\"", "1–80 znaków. Nazwa w Moich kodach QR."],
+                  "required": true
+                },
+                {
+                  "cells": ["`mode`", "\"static\" | \"dynamic\"", "\"static\"", "`dynamic` jest tylko dla treści `website`."],
+                  "required": true
+                },
+                {
+                  "cells": [
+                    "`content`",
+                    "QrContent",
+                    "{ \"type\": \"website\", … }",
+                    "Co otwiera kod. Te same struktury co w `encodePayload`."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"littlefern.cafe/menu\"",
+                    "Tylko `dynamic`: dokąd krótki link kieruje ludzi. Domyślnie adres strony."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`layouts`",
+                    "array",
+                    "[{ \"name\": \"Sticker\", \"layout\": … }]",
+                    "1–20 układów: `name` (1–60), wyrenderowany `layout` i opcjonalne ustawienia `editor`."
+                  ],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "p",
+              "t": "Treść jest ścisła: nieznane pole jest odrzucane. Wyślij nagłówek `Idempotency-Key` (1–255 widocznych znaków, UUID się sprawdzi), aby ponowienia były bezpieczne: ten sam klucz i żądanie zwracają pierwotną odpowiedź `201`."
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "Żądanie"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateRequest",
+              "label": "Przykładowe żądanie"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Odpowiedzi"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateResponses",
+              "label": "Odpowiedzi"
+            }
+          ]
+        },
+        "restBulk": {
+          "title": "Tworzenie zbiorcze",
+          "lead": "Tworzy do 100 kodów w jednym żądaniu. Zadanie działa w tle.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "Podgląd projektu. Proponowany endpoint: nic na tej stronie jeszcze nie działa, a nazwy i pola mogą się zmienić przed wydaniem."
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes/bulk"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Treść żądania"
+            },
+            {
+              "k": "table",
+              "label": "Treść żądania",
+              "cols": ["Parametr", "Typ", "Przykład", "Opis"],
+              "rows": [
+                {
+                  "cells": ["`items`", "array", "[{ \"name\": …, \"content\": … }]", "1–100 kodów, każdy jak w Tworzeniu kodu QR."],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].name`", "string", "\"Table 12\"", "Nazwa w Moich kodach QR."],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].content`", "QrContent", "{ \"type\": \"website\", … }", "Co otwiera każdy kod."],
+                  "required": true
+                },
+                {
+                  "cells": ["`style`", "QrStyle", "{ \"pattern\": \"rounded\", … }", "Jeden styl dla wszystkich kodów w partii."],
+                  "required": false
+                },
+                {
+                  "cells": ["`webhook_url`", "string", "\"https://…/heyqr\"", "Wywoływany raz, gdy zadanie się zakończy."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Odpowiedzi"
+            },
+            {
+              "k": "tabs",
+              "example": "bulkResponses",
+              "label": "Odpowiedzi"
+            }
+          ]
+        },
+        "restDestination": {
+          "title": "Zmiana adresu docelowego",
+          "lead": "Kieruje kod Dynamiczny gdzie indziej. Wydrukowane kody zachowują krótki link i od razu podążają za zmianą.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Jeszcze niepubliczne. Ta strona opisuje REST API w tej wersji HeyQR, sprawdzone z jego trasami. Nie jest jeszcze dostępne na heyqr.me i do tego czasu nie pojawia się w wyszukiwarkach."
+            },
+            {
+              "k": "h2",
+              "id": "read",
+              "t": "Odczytaj bieżący adres docelowy"
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "code",
+              "example": "restDestinationRead"
+            },
+            {
+              "k": "p",
+              "t": "Zmieniaj go na podstawie odczytanego `revision`: jeśli adres zmieniono od tego czasu w aplikacji lub innym żądaniem, dostaniesz `409` i nic nie zostanie zapisane."
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Treść żądania"
+            },
+            {
+              "k": "endpoint",
+              "method": "PATCH",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "table",
+              "label": "Treść żądania",
+              "cols": ["Parametr", "Typ", "Przykład", "Opis"],
+              "rows": [
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"https://littlefern.cafe/today\"",
+                    "Nowy adres, do 2048 znaków. Sama domena staje się https://."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`revision`", "integer", "3", "Rewizja z GET lub ostatniego PATCH."],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "Żądanie"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationRequest",
+              "label": "Przykładowe żądanie"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Odpowiedzi"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationResponses",
+              "label": "Odpowiedzi"
+            }
+          ]
+        },
+        "restScans": {
+          "title": "Statystyki skanów",
+          "lead": "Dzienna liczba skanów kodu Dynamicznego.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "Podgląd projektu. Proponowany endpoint: nic na tej stronie jeszcze nie działa, a nazwy i pola mogą się zmienić przed wydaniem."
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{id}/scans?from=2026-11-01&to=2026-11-26"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Odpowiedzi"
+            },
+            {
+              "k": "tabs",
+              "example": "scansResponses",
+              "label": "Odpowiedzi"
+            }
+          ]
+        },
+        "restErrors": {
+          "title": "Błędy i limity żądań",
+          "lead": "Błędy mają jedną strukturę. Rozgałęziaj logikę według code, nigdy według komunikatu.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Jeszcze niepubliczne. Ta strona opisuje REST API w tej wersji HeyQR, sprawdzone z jego trasami. Nie jest jeszcze dostępne na heyqr.me i do tego czasu nie pojawia się w wyszukiwarkach."
+            },
+            {
+              "k": "h2",
+              "id": "shape",
+              "t": "Struktura błędu"
+            },
+            {
+              "k": "p",
+              "t": "Każdy błąd to `{ \"error\": { \"code\", \"message\", …details } }` z `Cache-Control: no-store`. Komunikaty są dla ludzi; kody są stabilne."
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "Kody statusu"
+            },
+            {
+              "k": "table",
+              "label": "Błędy",
+              "cols": ["Status", "code", "Kiedy"],
+              "rows": [
+                {
+                  "cells": ["400", "`malformed_json`", "Treść nie jest w formacie JSON."],
+                  "required": false
+                },
+                {
+                  "cells": ["401", "`unauthorized`", "Brakujący, źle sformatowany, błędny lub unieważniony klucz."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "402",
+                    "`payment_required`",
+                    "Eksport kodu, który nie jest opłacony ani aktywny; `paymentUrl` otwiera jego ekran eksportu."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["403", "`draft_limit`", "Konto ma maksymalną liczbę szkiców."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "404",
+                    "`not_found`",
+                    "To nie Twój kod lub układ, został usunięty albo nie istnieje: jedna odpowiedź dla wszystkich przypadków."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "409",
+                    "`revision_conflict`, `idempotency_key_reused`",
+                    "Zmieniono od Twojej rewizji lub ponownie użyto Idempotency-Key."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["422", "`invalid_request`, `content_too_long`, `not_dynamic`", "Naruszono regułę; `details` wskazuje pole."],
+                  "required": false
+                },
+                {
+                  "cells": ["429", "`rate_limited`", "Przekroczono pulę konta; odczekaj `Retry-After` sekund."],
+                  "required": false
+                },
+                {
+                  "cells": ["500", "`internal_error`", "Nic nie zostało zmienione; spróbuj ponownie."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Limity żądań"
+            },
+            {
+              "k": "tabs",
+              "example": "restRateLimited",
+              "label": "Przykładowe odpowiedzi"
+            },
+            {
+              "k": "p",
+              "t": "Domyślnie 120 żądań i 30 eksportów na minutę na konto. Odrzucone żądania nie wydłużają czasu oczekiwania."
+            }
+          ]
+        },
+        "restSdk": {
+          "title": "TypeScript SDK",
+          "lead": "@heyqr/sdk to typowany klient REST API dla Node.js 18 i nowszych. Niczego nie renderuje: od tego jest @heyqr/qr-core.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Jeszcze niepubliczne. Ta strona opisuje REST API w tej wersji HeyQR, sprawdzone z jego trasami. Nie jest jeszcze dostępne na heyqr.me i do tego czasu nie pojawia się w wyszukiwarkach."
+            },
+            {
+              "k": "h2",
+              "id": "install",
+              "t": "Instalacja"
+            },
+            {
+              "k": "install",
+              "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "server",
+              "t": "Na Twoim serwerze"
+            },
+            {
+              "k": "p",
+              "t": "`HeyQrClient` wymaga klucza API, więc działa tylko na serwerze. W paczce przeglądarkowej pakiet wskazuje na punkt wejścia, którego `HeyQrClient` zgłasza `HeyQrError` rodzaju `server_only`. Do podglądów w przeglądarce użyj `@heyqr/sdk/react`."
+            },
+            {
+              "k": "code",
+              "example": "sdkInstallNote"
+            },
+            {
+              "k": "h2",
+              "id": "methods",
+              "t": "Metody"
+            },
+            {
+              "k": "table",
+              "label": "HeyQrClient",
+              "cols": ["Metoda", "Żądanie"],
+              "rows": [
+                {
+                  "cells": ["`createQr(request, { idempotencyKey? })`", "`POST /api/v1/qr-codes`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getLayout(qrCodeId, layoutId)`", "`GET …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateLayout(qrCodeId, layoutId, request)`", "`PATCH …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getDestination(qrCodeId)`", "`GET …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateDestination(qrCodeId, request)`", "`PATCH …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`downloadExport(qrCodeId, layoutId, { format })`", "`GET …/export`, z przejściem pod podpisany link"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "Błędy"
+            },
+            {
+              "k": "table",
+              "label": "Błędy",
+              "cols": ["Błąd", "Kiedy"],
+              "rows": [
+                {
+                  "cells": ["`HeyQrApiError`", "Udokumentowany błąd API, ze `status`, `code` i typowaną odpowiedzią"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrRateLimitError`", "429, z `retryAfterSeconds` i `code`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrTimeoutError`, `HeyQrAbortError`", "Minął termin lub Twój `signal` anulował wywołanie"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrError`", "Brak udokumentowanej odpowiedzi: `kind` mówi dlaczego"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        }
+      },
+      "breadcrumb": "Ścieżka nawigacji"
+    }
+  }
+}

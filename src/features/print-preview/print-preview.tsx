@@ -368,7 +368,10 @@ export function PrintPreview({
               {specCells.map((c) => (
                 <div key={c.k} className={cn("flex flex-col gap-0.5 p-3.5", c.warn && "bg-warning-soft")}>
                   <dt className="text-caption text-muted-foreground">{c.k}</dt>
-                  <dd className="text-label tabular-nums">{c.v}</dd>
+                  {/* HEY-192: measurements read left to right in Arabic too. */}
+                  <dd className="text-label tabular-nums">
+                    <bdi dir="ltr">{c.v}</bdi>
+                  </dd>
                   <dd className={cn("text-caption", c.warn ? "text-warning" : "text-muted-foreground")}>{c.sub}</dd>
                 </div>
               ))}
@@ -487,7 +490,7 @@ export function PrintPreview({
                 <h3 id="print-size" className="text-[0.875rem] font-bold">
                   {t("size.title")}
                 </h3>
-                <span className="text-caption text-muted-foreground tabular-nums">
+                <span dir="ltr" className="text-caption text-muted-foreground tabular-nums">
                   {sizes.finished.width} × {sizes.finished.height} mm
                 </span>
               </div>

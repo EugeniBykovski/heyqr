@@ -320,7 +320,7 @@ function MenuForm({ content, onChange, errors }: HostedFormProps & { content: Me
                             onChange={(e) => dishAt({ desc: e.target.value })}
                           />
                         </div>
-                        <label className="flex w-24 shrink-0 items-center gap-1 rounded-md border border-input bg-surface pl-2.5 focus-within:border-ring">
+                        <label className="flex w-24 shrink-0 items-center gap-1 rounded-md border border-input bg-surface ps-2.5 focus-within:border-ring">
                           <span aria-hidden className="text-caption text-muted-foreground">
                             {SYMBOL[content.currency]}
                           </span>
@@ -332,13 +332,13 @@ function MenuForm({ content, onChange, errors }: HostedFormProps & { content: Me
                             maxLength={HOSTED_LIMITS.price}
                             aria-invalid={priceErr ? true : undefined}
                             onChange={(e) => dishAt({ price: e.target.value })}
-                            className="min-h-control w-full min-w-0 bg-transparent pr-2 text-body tabular-nums outline-none"
+                            className="min-h-control w-full min-w-0 bg-transparent pe-2 text-body tabular-nums outline-none"
                           />
                         </label>
                       </div>
                       <div className="flex items-center justify-between gap-2">
                         <ErrorText id={`hosted-dish-${d.id}-error`}>{nameErr ?? priceErr}</ErrorText>
-                        <span className="ml-auto">
+                        <span className="ms-auto">
                           <RowControls
                             index={k}
                             count={s.dishes.length}
@@ -879,7 +879,7 @@ function ProductForm({ content, onChange, errors }: HostedFormProps & { content:
           {t("price")}
           <span className="font-normal text-muted-foreground">· {tHosted("optional")}</span>
         </Label>
-        <div className="flex max-w-48 items-center gap-1 rounded-md border border-input bg-surface pl-3 focus-within:border-ring">
+        <div className="flex max-w-48 items-center gap-1 rounded-md border border-input bg-surface ps-3 focus-within:border-ring">
           <span aria-hidden className="text-muted-foreground">
             {SYMBOL[content.currency]}
           </span>
@@ -892,7 +892,7 @@ function ProductForm({ content, onChange, errors }: HostedFormProps & { content:
             aria-invalid={err("price") ? true : undefined}
             aria-describedby={err("price") ? "hosted-product-price-error" : undefined}
             onChange={(e) => set({ price: e.target.value })}
-            className="min-h-control w-full min-w-0 bg-transparent pr-3 text-body tabular-nums outline-none"
+            className="min-h-control w-full min-w-0 bg-transparent pe-3 text-body tabular-nums outline-none"
           />
         </div>
         <ErrorText id="hosted-product-price-error">{err("price")}</ErrorText>
@@ -975,7 +975,7 @@ function ProductPhotos({
               className="size-full object-cover"
             />
             {i === 0 ? (
-              <span className="absolute bottom-1 left-1 rounded-sm bg-inverse px-1.5 py-0.5 text-micro text-inverse-foreground">
+              <span className="absolute start-1 bottom-1 rounded-sm bg-inverse px-1.5 py-0.5 text-micro text-inverse-foreground">
                 {coverLabel}
               </span>
             ) : null}
@@ -983,7 +983,7 @@ function ProductPhotos({
               type="button"
               aria-label={removeLabel(i + 1)}
               onClick={() => onChange(images.filter((_, j) => j !== i))}
-              className="absolute top-1 right-1 grid size-7 cursor-pointer place-items-center rounded-full bg-surface/90 shadow-1"
+              className="absolute end-1 top-1 grid size-7 cursor-pointer place-items-center rounded-full bg-surface/90 shadow-1"
             >
               <XIcon aria-hidden className="size-3.5" />
             </button>

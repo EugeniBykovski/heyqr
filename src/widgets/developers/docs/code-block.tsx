@@ -55,7 +55,7 @@ export function CodeBlock({
   };
   return (
     <figure className="min-w-0 overflow-hidden rounded-xl border border-inverse bg-inverse text-inverse-foreground">
-      <figcaption className="flex min-h-11 flex-wrap items-center gap-2 border-b border-inverse-border py-1 pr-1.5 pl-3">
+      <figcaption className="flex min-h-11 flex-wrap items-center gap-2 border-b border-inverse-border py-1 ps-3 pe-1.5">
         {tabs.length > 1 ? (
           <div role="tablist" aria-label={tabsLabel} className="flex min-w-0 flex-wrap gap-1" onKeyDown={onKey}>
             {tabs.map((t, i) => (
@@ -86,7 +86,7 @@ export function CodeBlock({
             <span className="truncate">{name}</span>
           </span>
         )}
-        <span className="ml-auto rounded-full bg-inverse-foreground/10 px-2 py-0.5 text-micro font-semibold text-inverse-foreground">
+        <span className="ms-auto rounded-full bg-inverse-foreground/10 px-2 py-0.5 text-micro font-semibold text-inverse-foreground">
           {labels.env}
         </span>
         <button

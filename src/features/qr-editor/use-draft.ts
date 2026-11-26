@@ -10,6 +10,7 @@ import {
   type EditorDesign,
   type QrType,
 } from "@/entities/qr";
+import { LOCALE_CHANGE_EVENT } from "@/shared/lib/locale-carry";
 
 /** Browser slot for the guest draft. ":v1" names the slot; the JSON inside carries its own schemaVersion. */
 const KEY = "heyqr:draft:v1";
@@ -131,9 +132,12 @@ export function useDraft() {
     const onHidden = () => document.visibilityState === "hidden" && flush();
     window.addEventListener("pagehide", flush);
     document.addEventListener("visibilitychange", onHidden);
+    // HEY-192: a language change remounts the editor, which reads the draft while rendering, before this one unmounts.
+    window.addEventListener(LOCALE_CHANGE_EVENT, flush);
     return () => {
       window.removeEventListener("pagehide", flush);
       document.removeEventListener("visibilitychange", onHidden);
+      window.removeEventListener(LOCALE_CHANGE_EVENT, flush);
       flush();
     };
   }, []);

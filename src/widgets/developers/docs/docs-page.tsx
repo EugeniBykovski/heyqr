@@ -82,14 +82,14 @@ function DocsTable({ block, requiredLabel }: { block: Extract<Block, { k: "table
     <>
       <Md text={c} />
       {key(i) && block.reqCol && row.required ? (
-        <span className="ml-2 font-sans text-micro font-semibold text-danger uppercase">{requiredLabel}</span>
+        <span className="ms-2 font-sans text-micro font-semibold text-danger uppercase">{requiredLabel}</span>
       ) : null}
     </>
   );
   return (
     <>
       <div className="hidden overflow-hidden rounded-xl border border-border bg-surface md:block">
-        <table className="w-full text-left text-[0.875rem]">
+        <table className="w-full text-start text-[0.875rem]">
           <caption className="sr-only">{block.label}</caption>
           <thead className="bg-subtle text-micro text-muted-foreground uppercase">
             <tr>
@@ -181,7 +181,7 @@ async function renderBlock(b: Block, i: number, t: T, page: Page): Promise<React
       return (
         <Note key={i} kind={b.kind}>
           {b.kind === "design" ? (
-            <Badge variant="warning" className="mr-2">
+            <Badge variant="warning" className="me-2">
               {t("designPreview")}
             </Badge>
           ) : null}
@@ -586,7 +586,7 @@ export async function DocsPage({ page, previews }: { page: Page; previews: boole
                   <Link
                     href={docsHref(next)}
                     rel="next"
-                    className="flex flex-col items-end rounded-xl border border-border bg-surface px-4 py-3 text-right hover:border-border-hover"
+                    className="flex flex-col items-end rounded-xl border border-border bg-surface px-4 py-3 text-end hover:border-border-hover"
                   >
                     <span className="text-micro text-muted-foreground uppercase">{t("next")}</span>
                     <span className="text-label font-semibold">{copyOf(next.id).nav ?? copyOf(next.id).title}</span>

@@ -54,6 +54,9 @@ export function QrPreview({
       aria-label={label || undefined}
       aria-hidden={label ? undefined : true}
       data-scan-ok={scan.ok}
+      // HEY-192: the drawing is the printed artwork and never mirrors; in Arabic its caption text would otherwise
+      // inherit right-to-left and start from the other side (over the code).
+      dir="ltr"
       style={{ aspectRatio: `${width} / ${height}` }}
       className={cn(
         "relative max-h-full min-h-0 w-full max-w-full min-w-0 [&>svg]:absolute [&>svg]:inset-0 [&>svg]:block [&>svg]:size-full",

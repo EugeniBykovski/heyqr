@@ -1,0 +1,4507 @@
+{
+  "meta": {
+    "title": "Hey QR — QR-codes die eruitzien als je merk",
+    "description": "Ontwerp een QR-code, controleer of hij scant en download printklare PNG- en SVG-bestanden."
+  },
+  "nav": {
+    "create": "Maken",
+    "pricing": "Prijzen",
+    "myCodes": "Mijn QR-codes",
+    "billing": "Abonnement & facturatie",
+    "signIn": "Inloggen",
+    "signOut": "Uitloggen",
+    "account": "Account en facturatie, {name}",
+    "language": "Taal",
+    "skipToContent": "Naar de inhoud",
+    "home": "Hey QR-startpagina",
+    "createCode": "QR-code maken",
+    "menu": "Menu",
+    "main": "Hoofdmenu",
+    "languageChoose": "Kies een taal",
+    "languageCount": "{count} talen",
+    "languageSearch": "Talen zoeken",
+    "languages": "Talen",
+    "languageEmpty": "Geen taal gevonden voor “{query}”.",
+    "languageNote": "Prijzen blijven in je eigen valuta. Arabisch zet de lay-out om naar rechts-naar-links.",
+    "trial": "Gratis proefperiode",
+    "apiKeys": "API-sleutels",
+    "developers": "API voor ontwikkelaars",
+    "developersShort": "API"
+  },
+  "payment": {
+    "title": "Zo werkt betalen",
+    "oneTime": "Single QR is een eenmalige betaling van {price} per code, plus eventuele btw die Stripe bij het afrekenen toevoegt. Het is geen abonnement en er wordt niets verlengd.",
+    "where": "Je betaalt op de beveiligde betaalpagina van Stripe. Hey QR ziet je kaartgegevens nooit.",
+    "receipt": "Je bon staat in je account onder Facturatie, naast de aankoop.",
+    "support": "Vragen over een betaling? Mail naar <link>{email}</link>.",
+    "terms": "Voorwaarden",
+    "privacy": "Privacy",
+    "supportLink": "Support"
+  },
+  "footer": {
+    "terms": "Voorwaarden",
+    "privacy": "Privacy",
+    "support": "Support",
+    "rights": "© {year} Hey QR",
+    "pricing": "Prijzen",
+    "label": "Footer",
+    "tagline": "QR-codes die eruitzien als je merk en altijd scannen.",
+    "product": "Product",
+    "makeFor": "Maak een code voor",
+    "company": "Bedrijf",
+    "smallPrint": "21 talen · Betalingen via Stripe"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "QR-studio · gratis ontwerpen en bekijken",
+      "title": "Een QR-code die er echt uitziet als de jouwe.",
+      "lead": "Plak een link en geef hem hier stijl. Het voorbeeld wordt bijgewerkt terwijl je typt, en ontwerpen is gratis.",
+      "reveal": "Mooie dingen zijn maar één scan verwijderd."
+    },
+    "tool": {
+      "typesLabel": "Wat moet de code openen?",
+      "more": "Meer +",
+      "url": "Websiteadres",
+      "urlPlaceholder": "yourname.com/portfolio",
+      "errors": {
+        "empty": "Voer een webadres in, zoals yourname.com.",
+        "spaces": "Webadressen kunnen geen spaties bevatten."
+      },
+      "color": "Kleur van de code",
+      "inks": {
+        "ink": "Inkt",
+        "violet": "Violet",
+        "forest": "Bos",
+        "ocean": "Oceaan",
+        "berry": "Bes",
+        "clay": "Klei"
+      },
+      "caption": "Bijschrift",
+      "captionDefault": "Bekijk portfolio",
+      "continue": "Verder ontwerpen",
+      "priceNote": "Gratis ontwerpen en bekijken. De PNG en SVG downloaden kost eenmalig <b>{price}</b> per code.",
+      "seePricing": "Bekijk prijzen",
+      "stageTitle": "{type} · live voorbeeld",
+      "scans": "Scans",
+      "livePreview": "Live voorbeeld",
+      "realCode": "Echte, scanbare code",
+      "previewLabel": "Voorbeeld van je QR-code",
+      "otherType": "Je concept is een {type}-code. Met Verder ontwerpen open je het in de editor.",
+      "stageCard": "Visitekaartje · 90 mm × 50 mm"
+    },
+    "how": {
+      "label": "Zo werkt het",
+      "content": {
+        "title": "Voeg je inhoud toe",
+        "text": "Een link, tekst, Wi-Fi-gegevens of een visitekaartje."
+      },
+      "design": {
+        "title": "Ontwerp hem",
+        "text": "Lay-out, formaat, vormen, kleuren, logo en bijschrift, met een live scancheck."
+      },
+      "download": {
+        "title": "Betaal en download",
+        "text": "Log in met Google, betaal eenmalig en download PNG of SVG wanneer je wilt opnieuw."
+      }
+    },
+    "models": {
+      "title": "Ga je de link na het printen nog wijzigen?",
+      "lead": "Die ene vraag bepaalt welke code je nodig hebt.",
+      "static": {
+        "badge": "Nee · Statische QR",
+        "text": "De link zit in het patroon zelf. Eén betaling van <b>{price}</b> per code."
+      },
+      "dynamic": {
+        "badge": "Ja · Dynamische QR",
+        "text": "De code bevat een permanente korte link die je altijd kunt omleiden. <b>{price}</b>/maand voor maximaal {limit} codes."
+      }
+    },
+    "examples": {
+      "kicker": "Voorbeelden",
+      "title": "Gemaakt voor print en scherm",
+      "lead": "Begin met een echte, scanbare lay-out en maak hem helemaal van jou. Elk voorbeeld opent in de editor met zijn kleuren, vormen en kader.",
+      "hint": "Scroll voor meer",
+      "use": "Begin met het voorbeeld {title}",
+      "useShort": "Gebruiken",
+      "items": {
+        "businessCard": {
+          "title": "Visitekaartje",
+          "kind": "Website · statisch"
+        },
+        "tableTent": {
+          "title": "Tafelstandaard café",
+          "kind": "Wi-Fi · statisch"
+        },
+        "menuSticker": {
+          "title": "Menusticker",
+          "kind": "Website · dynamisch"
+        },
+        "eventPoster": {
+          "title": "Evenementposter",
+          "kind": "Website · dynamisch"
+        },
+        "contactBadge": {
+          "title": "Contactbadge",
+          "kind": "Contact · statisch"
+        },
+        "windowSticker": {
+          "title": "Raamsticker",
+          "kind": "Website · statisch"
+        }
+      }
+    },
+    "features": {
+      "kicker": "Waarom HeyQR",
+      "title": "Alles wat een geprinte code nodig heeft",
+      "lead": "Ontwerptools die je niet in de weg zitten, en een scanner die je werk controleert voordat je betaalt.",
+      "scan": {
+        "title": "Een scancheck bij elke bewerking",
+        "text": "We lezen je code zoals een telefooncamera dat doet en vertellen je precies wat je moet verbeteren: te weinig contrast, omgekeerde kleuren of een logo dat te veel bedekt."
+      },
+      "style": {
+        "title": "Jouw vormen en kleuren",
+        "text": "Acht modulevormen, vijf hoekstijlen en elke kleur die je wilt, met het contrast onder controle."
+      },
+      "logo": {
+        "title": "Logo of icoon in het midden",
+        "text": "Upload je logo of kies uit {icons} iconen. We stemmen het formaat zo af dat de code leesbaar blijft."
+      },
+      "frames": {
+        "title": "Kaders en bijschriften",
+        "text": "{frames} kaders met een oproep zoals “Scan voor de menukaart”, of korte tekst in de code zelf."
+      },
+      "files": {
+        "title": "Printklare bestanden",
+        "text": "Vector-SVG en scherpe PNG op echte formaten: visitekaartjes, posters, tafelstandaards en stickers."
+      },
+      "dynamic": {
+        "title": "Wijzig hem na het printen",
+        "text": "Dynamische codes wijzen naar een korte link die je altijd kunt omleiden, met dagelijkse scantellingen."
+      }
+    },
+    "types": {
+      "kicker": "Negen soorten inhoud",
+      "title": "Eén studio voor elke soort code",
+      "lead": "Kies wat de code moet openen. Het formulier vraagt alleen wat dat type nodig heeft.",
+      "website": {
+        "label": "Website",
+        "desc": "Open een pagina, portfolio of menukaart."
+      },
+      "text": {
+        "label": "Tekst",
+        "desc": "Toon een notitie, openingstijden of instructies."
+      },
+      "wifi": {
+        "label": "Wi-Fi",
+        "desc": "Gasten maken verbinding met je netwerk zonder te typen."
+      },
+      "contact": {
+        "label": "Visitekaartje",
+        "desc": "Sla naam, telefoon en e-mail op met één tik."
+      },
+      "email": {
+        "label": "E-mail",
+        "desc": "Open een e-mail die klaar is om te versturen."
+      },
+      "phone": {
+        "label": "Telefoongesprek",
+        "desc": "Bel een nummer met één tik."
+      },
+      "sms": {
+        "label": "Sms-bericht",
+        "desc": "Begin een sms met jouw woorden."
+      },
+      "location": {
+        "label": "Locatie",
+        "desc": "Open een plek in de kaarten-app."
+      },
+      "event": {
+        "label": "Evenement",
+        "desc": "Voeg een evenement toe aan de agenda."
+      },
+      "menu": {
+        "label": "Menukaart",
+        "desc": "Gerechten, onderdelen en prijzen op een telefoonvriendelijke pagina."
+      },
+      "coupon": {
+        "label": "Coupon",
+        "desc": "Een korting met een promocode en een einddatum."
+      },
+      "social": {
+        "label": "Sociale links",
+        "desc": "Je profielen en links op één pagina."
+      },
+      "business": {
+        "label": "Bedrijf",
+        "desc": "Openingstijden, adres, bellen en route."
+      },
+      "apps": {
+        "label": "Apps",
+        "desc": "Eén code voor de App Store en Google Play."
+      },
+      "pdf": {
+        "label": "PDF-document",
+        "desc": "Upload een PDF die op elke telefoon opent."
+      },
+      "product": {
+        "label": "Product",
+        "desc": "Foto’s, prijs en een koopknop."
+      }
+    },
+    "faq": {
+      "kicker": "Vragen",
+      "title": "Goed om te weten",
+      "lead": "Korte antwoorden over betalen, bestanden en scannen.",
+      "items": {
+        "model": {
+          "q": "Statisch of dynamisch: welke heb ik nodig?",
+          "a": "Een statische code heeft de inhoud in zijn patroon en werkt voor altijd na één betaling van {static}. Een dynamische code bevat een korte link die je na het printen ergens anders naartoe kunt laten wijzen, voor {dynamic}/maand voor maximaal {limit} codes."
+        },
+        "scan": {
+          "q": "Scant mijn code nog met een logo en kleuren?",
+          "a": "Elke wijziging wordt gecontroleerd terwijl je ontwerpt. Is het contrast te laag, zijn de kleuren omgekeerd of bedekt het logo te veel, dan zeggen we dat en bieden we een oplossing met één tik aan voordat je betaalt."
+        },
+        "account": {
+          "q": "Heb ik een account nodig om te ontwerpen?",
+          "a": "Nee. Ontwerpen en bekijken zijn gratis. Je logt pas in met Google als je downloadt, en je ontwerp gaat met je mee."
+        },
+        "files": {
+          "q": "Welke bestanden krijg ik?",
+          "a": "Een scherpe PNG voor schermen en printers en een vector-SVG voor drukkerijen, voor elke lay-out van de code die je hebt gekocht."
+        },
+        "again": {
+          "q": "Kan ik de bestanden later opnieuw downloaden?",
+          "a": "Ja. Je codes blijven in Mijn QR-codes en je kunt ze zonder extra kosten opnieuw downloaden in elk formaat."
+        }
+      }
+    },
+    "cta": {
+      "label": "Aan de slag",
+      "title": "Je eerste code maak je in ongeveer een minuut.",
+      "lead": "Ontwerp hem gratis. Betaal pas {price} als je downloadt.",
+      "pricing": "Bekijk prijzen"
+    },
+    "studio": {
+      "kicker": "Je studio",
+      "welcome": "Welkom terug, {name}",
+      "summaryTop": "{name} is vandaag {count, plural, one {# keer} other {# keer}} gescand. Alles wat je hebt gemaakt, is maar één tik verwijderd.",
+      "summary": "Alles wat je hebt gemaakt, is maar één tik verwijderd: bestanden, links en scans.",
+      "summaryEmpty": "Maak je eerste code en hij verschijnt hier met zijn bestanden en scans.",
+      "billing": "Abonnement & facturatie",
+      "library": "Mijn QR-codes openen",
+      "kpi": {
+        "codes": "QR-codes",
+        "codesNote": "{paid} betaald · {drafts, plural, one {# concept} other {# concepten}}",
+        "scans": "Scans · 14 dagen",
+        "scansNone": "Nog geen scans",
+        "scansDelta": "{delta, number, ::sign-always percent} t.o.v. vorige week",
+        "dynamic": "Dynamische codes",
+        "dynamicNote": "Nog {left, plural, one {# plek} other {# plekken}} in je abonnement",
+        "dynamicMeter": "Dynamische codes in gebruik",
+        "files": "Bestanden klaar",
+        "filesNote": "{count, plural, one {lay-out} other {lay-outs}} om te downloaden als PNG of SVG"
+      },
+      "chart": {
+        "title": "Scans · afgelopen 14 dagen",
+        "sub": "Alle dynamische codes samen",
+        "empty": "Scans van je dynamische codes verschijnen hier.",
+        "today": "Vandaag",
+        "label": "Dagelijkse scans van alle dynamische codes in de afgelopen 14 dagen"
+      },
+      "top": "Topcode",
+      "topNote": "{count, plural, one {# scan} other {# scans}} in 14 dagen · {link}",
+      "topNone": "Nog geen dynamische codes",
+      "topNoneNote": "Dynamische codes tellen elke scan.",
+      "recent": "Recente codes",
+      "seeAll": "Alle {count} bekijken",
+      "recentEmpty": "Hier komen je codes te staan, met hun bestanden en scans.",
+      "createFirst": "Maak je eerste code",
+      "open": "Openen",
+      "openName": "{name} openen",
+      "status": {
+        "dynamic": "Dynamisch · actief",
+        "paid": "Betaald",
+        "draft": "Concept"
+      },
+      "metricScans": "{count, plural, one {# scan} other {# scans}}",
+      "metricLayouts": "{count, plural, one {# lay-out} other {# lay-outs}}",
+      "metricFinish": "Rond af om te downloaden",
+      "perksTitle": "Inbegrepen bij je account",
+      "perks": {
+        "again": "Download elke betaalde lay-out gratis opnieuw, als PNG of SVG",
+        "redirect": "Laat dynamische codes ergens anders naartoe wijzen zonder opnieuw te printen",
+        "scans": "Dagelijkse scantellingen voor elke dynamische code",
+        "drafts": "Concepten opgeslagen in je account, op elk apparaat",
+        "billing": "Bonnen, abonnement en betaalmethode in Abonnement & facturatie"
+      },
+      "loading": "Je studio laden",
+      "trial": "Gratis proefperiode · nog {days, plural, one {# dag} other {# dagen}}"
+    },
+    "workspace": {
+      "kicker": "Mijn QR-codes",
+      "title": "Al je QR-codes op één plek.",
+      "lead": "Je eigen privéwerkruimte zodra je inlogt. Elke code die je ontwerpt, houdt zijn lay-outs, bestanden en, bij Dynamische codes, zijn scans.",
+      "points": {
+        "layouts": "Lay-outs met een naam per code: visitekaartje, poster, website",
+        "files": "Download PNG en SVG wanneer je wilt opnieuw",
+        "edit": "Wijzig de bestemming van een Dynamische code na het printen",
+        "scans": "Dagelijkse scans voor Dynamische codes"
+      },
+      "create": "QR-code maken",
+      "signIn": "Inloggen",
+      "sampleOwner": "Voorbeeldwerkruimte",
+      "sampleBadge": "Voorbeeld",
+      "sampleNote": "Voorbeeldcodes en -scans ter illustratie. Log in om je eigen codes te zien.",
+      "tabs": {
+        "all": "Alle {count}",
+        "static": "Statisch {count}",
+        "dynamic": "Dynamisch {count}"
+      },
+      "models": {
+        "static": "Statisch",
+        "dynamic": "Dynamisch"
+      },
+      "samples": {
+        "portfolio": {
+          "name": "Portfoliokaart",
+          "meta": "3 lay-outs · gekocht"
+        },
+        "menu": {
+          "name": "Menukaart café",
+          "meta": "Tafelstandaard · 214 scans"
+        },
+        "wifi": {
+          "name": "Gasten-Wi-Fi",
+          "meta": "Concept"
+        }
+      },
+      "scans": "Scanstatistieken · afgelopen 14 dagen",
+      "startTrial": "Start 7 dagen gratis proberen",
+      "trialNote": "Starter-proefperiode · geen kaart · geen automatische afschrijving"
+    },
+    "printPack": {
+      "kicker": "Print Pack",
+      "title": "Van je scherm naar de drukkerij.",
+      "lead": "Voeg een Print Pack toe aan elke QR en geef je drukker alles in één download: het exacte formaat, de juiste kleuren en een bestand dat scherp blijft.",
+      "cardTag": "Visitekaartje · 90 × 50 mm",
+      "labelTag": "Verpakkingslabel · 50 × 62 mm",
+      "cardLabel": "Printlay-out visitekaartje",
+      "labelLabel": "Printlay-out verpakkingslabel",
+      "panelKicker": "Exporteren · Print Pack",
+      "panelTitle": "Drie bestanden, klaar om te printen",
+      "perQr": "per QR",
+      "files": {
+        "pdf": "Vector-PDF voor print",
+        "pdfSub": "Scherp op elk formaat, met 3 mm afloop en snijtekens, in sRGB.",
+        "svg": "Bewerkbare SVG",
+        "svgSub": "Open hem in Illustrator, Figma of Inkscape om de QR in je eigen ontwerp te plaatsen.",
+        "spec": "Kleur- en formaatspecificaties",
+        "specSub": "Eén pagina met het eindformaat, het QR-formaat, de stille zone en elke kleurwaarde."
+      },
+      "addNote": "Uit tot je het bij het afrekenen aanzet. Voeg het toe voor +{price}, of later via de details van de QR.",
+      "single": "Single QR",
+      "withPack": "Met Print Pack",
+      "details": "Bekijk de details van het Print Pack",
+      "preview": "Printvoorbeeld openen"
+    },
+    "explore": {
+      "kicker": "Ontdek QR-types",
+      "title": "Eén studio voor elke soort code",
+      "lead": "Kies een type om te zien wat mensen na het scannen op hun telefoon krijgen.",
+      "tabs": "QR-types",
+      "legend": "Gehoste pagina: HeyQR houdt de pagina online en je kunt hem na het printen bewerken",
+      "hostedBadge": "Gehoste pagina · Dynamische QR",
+      "websiteBadge": "Statische of Dynamische QR",
+      "directBadge": "Opent direct · Statische QR",
+      "hostedExtra": "Bewerk de pagina na het printen. De code blijft hetzelfde",
+      "directExtra": "Gratis ontwerpen en bekijken",
+      "hostedPrice": "Gehoste pagina’s hebben een Dynamisch abonnement nodig: Starter {price}/maand, 7 dagen gratis proberen.",
+      "directPrice": "Gratis ontwerpen. {price} per code als je downloadt.",
+      "whatYouGet": "Wat je krijgt",
+      "allTypes": "Alle 16 types bekijken",
+      "types": {
+        "menu": {
+          "short": "Gerechten en prijzen",
+          "use": "Zet je hele menukaart op tafel. Gasten scannen, bladeren per onderdeel en zien de prijzen zonder op een geprinte kaart te wachten.",
+          "cta": "Maak een Menukaart-QR",
+          "points": {
+            "a": "Onderdelen, gerechten, prijzen en optionele foto’s",
+            "b": "Wijzig prijzen wanneer je wilt; geprinte codes blijven werken"
+          }
+        },
+        "coupon": {
+          "short": "Kortingen die mensen gebruiken",
+          "use": "Maak van een scan een verkoop met een code die klanten bij het afrekenen kopiëren of aan de kassa laten zien.",
+          "cta": "Maak een Coupon-QR",
+          "points": {
+            "a": "Promocode, einddatum en voorwaarden",
+            "b": "Toont na afloop een duidelijke pagina “aanbieding afgelopen”"
+          }
+        },
+        "social": {
+          "short": "Al je profielen",
+          "use": "Eén code voor elk profiel dat je deelt: portfolio, sociale accounts en meer, in de volgorde die jij kiest.",
+          "cta": "Maak een Sociale links-QR",
+          "points": {
+            "a": "Foto, naam en een korte bio",
+            "b": "Zet links in een andere volgorde wanneer je wilt"
+          }
+        },
+        "business": {
+          "short": "Openingstijden, bellen, route",
+          "use": "Alles wat een bezoeker nodig heeft om je te bereiken: openingstijden, een belknop, routebeschrijving en je website.",
+          "cta": "Maak een Bedrijf-QR",
+          "points": {
+            "a": "Bellen, Route en Website verschijnen als je die gegevens toevoegt",
+            "b": "Toont of je vandaag open bent"
+          }
+        },
+        "apps": {
+          "short": "Beide app stores",
+          "use": "Stuur iPhones naar de App Store en Android-telefoons naar Google Play met dezelfde geprinte code.",
+          "cta": "Maak een Apps-QR",
+          "points": {
+            "a": "Werkt met één store of allebei",
+            "b": "Computers krijgen een pagina met beide links en een code om te scannen"
+          }
+        },
+        "pdf": {
+          "short": "Deel een document",
+          "use": "Brochures, schema’s of handleidingen: upload een PDF en mensen openen hem met één tik op hun telefoon.",
+          "cta": "Maak een PDF-QR",
+          "points": {
+            "a": "Vervang het bestand later zonder opnieuw te printen",
+            "b": "Knoppen PDF openen en Downloaden"
+          }
+        },
+        "product": {
+          "short": "Een productpagina",
+          "use": "Toon een product met foto’s, prijs en een koopknop, direct vanaf de verpakking of het schap.",
+          "cta": "Maak een Product-QR",
+          "points": {
+            "a": "Tot 5 foto’s, prijs optioneel",
+            "b": "Jouw knop: Nu kopen, Product bekijken of Nu bestellen"
+          }
+        },
+        "website": {
+          "short": "Open een webpagina",
+          "use": "Stuur mensen naar elke pagina: je portfolio, webshop of boekingsformulier.",
+          "cta": "Maak een Website-QR",
+          "points": {
+            "a": "Statisch, of Dynamisch als de link kan veranderen",
+            "b": "Live scancheck terwijl je ontwerpt"
+          }
+        },
+        "wifi": {
+          "short": "Verbinden met Wi-Fi",
+          "use": "Gasten richten de camera en maken verbinding met je netwerk. Niemand hoeft een wachtwoord te spellen.",
+          "cta": "Maak een Wi-Fi-QR",
+          "points": {
+            "a": "WPA-, WEP- of open netwerken",
+            "b": "Werkt offline: de gegevens staan in de code"
+          }
+        },
+        "contact": {
+          "short": "Een contact opslaan",
+          "use": "Een visitekaartje dat je naam, telefoon en e-mail direct in hun contacten opslaat.",
+          "cta": "Maak een Contact-QR",
+          "points": {
+            "a": "Werkt op iPhone en Android",
+            "b": "Geen app nodig"
+          }
+        }
+      }
+    }
+  },
+  "pricing": {
+    "title": "Prijzen",
+    "head": "Betaal eenmalig voor een code, of maandelijks voor codes die je kunt wijzigen.",
+    "lead": "Ontwerpen, bekijken en de scancheck zijn altijd gratis. Je betaalt pas bij het downloaden.",
+    "currency": {
+      "label": "Prijzen tonen in",
+      "unavailable": "Prijzen in {chosen} zijn nog niet beschikbaar. HeyQR rekent af in {charged}; je bank rekent het bedrag om. Op je bon staat het bedrag in {charged} dat je hebt betaald."
+    },
+    "once": {
+      "title": "Eenmalig",
+      "sub": "Geen abonnement. Codes die je ontgrendelt, blijven van jou."
+    },
+    "monthly": {
+      "title": "Maandelijks",
+      "sub": "Voor Dynamische QR-codes die je na het printen nog kunt wijzigen. Altijd opzegbaar."
+    },
+    "free": {
+      "name": "Gratis",
+      "price": "{price}",
+      "q": "Ontwerp en test een code voordat je iets uitgeeft.",
+      "points": [
+        "Elke lay-out, vorm, kleur, elk logo en elk bijschrift",
+        "Live scancheck bij elke wijziging",
+        "Je concept wordt in deze browser bewaard"
+      ],
+      "cta": "Begin met ontwerpen"
+    },
+    "single": {
+      "name": "Single QR",
+      "price": "{price}",
+      "per": "eenmalig",
+      "q": "Eén statische QR met alle downloads.",
+      "points": ["PNG en SVG van elke lay-out", "Printformaten in mm en schermformaten in px", "Altijd opnieuw downloaden, voor altijd"],
+      "cta": "Maak een QR"
+    },
+    "dynamic": {
+      "name": "Dynamisch",
+      "price": "{price}",
+      "per": "per maand",
+      "q": "Een permanente korte link die je overal naartoe kunt laten wijzen, ook na het printen.",
+      "live": "Actieve Dynamische codes",
+      "liveCount": "Tot {limit} tegelijk actief",
+      "liveHint": "Een actuele telling, geen maandtegoed: een code pauzeren of verwijderen maakt zijn plek vrij.",
+      "points": [
+        "Wijzig de bestemming wanneer je wilt; de geprinte code blijft hetzelfde",
+        "Dagelijkse scans van de afgelopen 14 dagen",
+        "PNG en SVG van elke lay-out"
+      ],
+      "cta": "Maak een Dynamische QR"
+    },
+    "compare": {
+      "title": "Vergelijken",
+      "feature": "Wat je krijgt",
+      "free": "Gratis",
+      "single": "Single QR",
+      "dynamic": "Dynamisch",
+      "yes": "Inbegrepen",
+      "no": "Niet inbegrepen",
+      "rows": {
+        "design": "Ontwerp, voorbeeld en scancheck",
+        "download": "PNG- en SVG-downloads",
+        "repeat": "Opnieuw downloaden",
+        "change": "Wijzigen waar de code naartoe leidt",
+        "analytics": "Scanstatistieken",
+        "codes": "Codes"
+      },
+      "codesSingle": "1 per aankoop",
+      "codesDynamic": "{limit} actief",
+      "codesFree": "Onbeperkt concepten"
+    },
+    "tax": "Prijzen zijn exclusief btw. Stripe voegt eventuele btw toe bij het afrekenen en je bon toont het eindbedrag.",
+    "trial": {
+      "action": "Start 7 dagen gratis proberen",
+      "note": "Proefperiode: geen kaart, geen automatische afschrijving. Eén Dynamische test-QR met een echte korte link."
+    }
+  },
+  "auth": {
+    "title": "Inloggen bij Hey QR",
+    "lead": "Je ontwerp wordt in je account opgeslagen, zodat je het na betaling kunt downloaden.",
+    "google": "Doorgaan met Google",
+    "legal": "Door verder te gaan ga je akkoord met de Voorwaarden en het Privacybeleid.",
+    "failed": "Inloggen mislukt. Probeer het opnieuw.",
+    "canceled": {
+      "draft": "Inloggen met Google is geannuleerd. Je ontwerp staat nog in deze browser. Ga door met Google om het opnieuw te proberen.",
+      "plain": "Inloggen met Google is geannuleerd. Ga door met Google om het opnieuw te proberen."
+    },
+    "incomplete": {
+      "draft": "Inloggen met Google is niet afgerond. Je ontwerp staat nog in deze browser. Ga door met Google om het opnieuw te proberen.",
+      "plain": "Inloggen met Google is niet afgerond. Ga door met Google om het opnieuw te proberen."
+    },
+    "backToDesign": "Terug naar mijn ontwerp"
+  },
+  "contentTypes": {
+    "website": "Website",
+    "text": "Tekst",
+    "wifi": "Wi-Fi",
+    "contact": "Contact",
+    "email": "E-mail",
+    "phone": "Telefoon",
+    "sms": "Sms",
+    "location": "Locatie",
+    "event": "Evenement",
+    "menu": "Menukaart",
+    "coupon": "Coupon",
+    "social": "Sociale links",
+    "business": "Bedrijf",
+    "apps": "Apps",
+    "pdf": "PDF-document",
+    "product": "Product"
+  },
+  "fields": {
+    "url": "Websiteadres",
+    "text": "Tekst",
+    "ssid": "Netwerknaam",
+    "security": "Beveiliging",
+    "password": "Wachtwoord",
+    "hidden": "Dit netwerk is verborgen",
+    "firstName": "Voornaam",
+    "lastName": "Achternaam",
+    "title": "Functie",
+    "company": "Bedrijf",
+    "phone": "Telefoon",
+    "email": "E-mail",
+    "website": "Website",
+    "to": "E-mailadres",
+    "subject": "Onderwerp",
+    "body": "Bericht",
+    "number": "Telefoonnummer",
+    "message": "Bericht",
+    "name": "Naam van de plek",
+    "address": "Adres",
+    "eventTitle": "Naam van het evenement",
+    "start": "Begint",
+    "end": "Eindigt",
+    "place": "Plaats",
+    "securityNone": "Geen wachtwoord",
+    "securityWpa": "WPA/WPA2/WPA3",
+    "date": "Datum"
+  },
+  "editor": {
+    "openLibrary": "Mijn QR-codes openen",
+    "title": "QR-code maken",
+    "steps": {
+      "content": "Inhoud",
+      "design": "Ontwerp",
+      "frame": "Kader",
+      "type": "Type"
+    },
+    "type": "Wat moet de code openen?",
+    "model": {
+      "label": "Soort code",
+      "static": "Statisch",
+      "staticHint": "Eén betaling, werkt voor altijd",
+      "dynamic": "Dynamisch",
+      "dynamicHint": "Wijzig de link na het printen"
+    },
+    "name": "Naam (alleen jij ziet hem)",
+    "namePlaceholder": "Portfoliokaart",
+    "pattern": "Modules",
+    "eyeFrame": "Hoekkader",
+    "eyeBall": "Hoekmidden",
+    "colors": "Kleuren",
+    "fg": "Modules",
+    "bg": "Achtergrond",
+    "logo": "Midden",
+    "logoNone": "Geen",
+    "logoUpload": "Logo uploaden",
+    "logoSize": "Logoformaat",
+    "layout": "Lay-out",
+    "presets": {
+      "qr": "Alleen QR",
+      "caption": "QR + bijschrift",
+      "vertical": "Staande kaart",
+      "horizontal": "Liggende kaart",
+      "frame": "Kader"
+    },
+    "frameStyle": "Kaderstijl",
+    "caption": "Bijschrift",
+    "captionPlaceholder": "Scan mij",
+    "preview": "Voorbeeld",
+    "previewNote": "Voorbeeld met watermerk. Bestanden op volledig formaat worden na betaling gemaakt.",
+    "download": "Downloaden",
+    "saving": "Opslaan…",
+    "draftRestored": "We hebben je laatste ontwerp hersteld.",
+    "scanOk": "Scan gecontroleerd",
+    "scanFix": "Oplossen",
+    "shapes": {
+      "square": "Vierkant",
+      "rounded": "Afgerond",
+      "dot": "Stippen",
+      "diamond": "Ruit",
+      "leaf": "Blad",
+      "fluid": "Vloeiend",
+      "vbars": "Verticaal",
+      "hbars": "Horizontaal",
+      "cushion": "Zacht",
+      "circle": "Cirkel"
+    },
+    "frames": {
+      "bar": "Label onder",
+      "tab": "Tab boven",
+      "bubble": "Tekstballon",
+      "pill": "Pillabel",
+      "corners": "Zoeker",
+      "circle": "Badge",
+      "ticket": "Ticket",
+      "phone": "Telefoon"
+    },
+    "icons": {
+      "globe": "Website",
+      "link": "Link",
+      "wifi": "Wi-Fi",
+      "phone": "Telefoon",
+      "mail": "E-mail",
+      "message": "Bericht",
+      "pin": "Locatie",
+      "calendar": "Agenda",
+      "clock": "Openingstijden",
+      "user": "Persoon",
+      "users": "Team",
+      "briefcase": "Werk",
+      "home": "Thuis",
+      "bag": "Winkel",
+      "cart": "Winkelwagen",
+      "coffee": "Koffie",
+      "utensils": "Menukaart",
+      "wine": "Bar",
+      "music": "Muziek",
+      "play": "Video",
+      "camera": "Foto",
+      "image": "Galerij",
+      "heart": "Leuk",
+      "star": "Review",
+      "gift": "Cadeau",
+      "ticket": "Ticket",
+      "tag": "Prijs",
+      "percent": "Korting",
+      "card": "Betalen",
+      "download": "Download",
+      "file": "Document",
+      "book": "Gids",
+      "leaf": "Eco",
+      "sun": "Buiten",
+      "bike": "Fiets",
+      "plane": "Reizen",
+      "at": "Sociaal",
+      "smile": "Feedback"
+    },
+    "back": "Start",
+    "stepsLabel": "QR-code maken",
+    "settings": "Ontwerpinstellingen",
+    "scanFailed": "Scant mogelijk niet",
+    "priceOnce": "{price} eenmalig",
+    "pricePerMonth": "{price} / maand",
+    "previewFree": "Gratis voorbeeld · betaal bij het downloaden",
+    "draftUnreadable": "We konden je laatste ontwerp niet openen, dus je begint opnieuw. Het blijft bewaard in deze browser.",
+    "mode": {
+      "question": "Kan de link na het printen veranderen?",
+      "lead": "Beslis het nu: een geprinte statische code kun je later niet ergens anders naartoe laten wijzen.",
+      "static": {
+        "eyebrow": "Nee, hij blijft hetzelfde",
+        "title": "Statische QR",
+        "text": "De inhoud zit in het patroon. Wijzigen betekent een nieuwe code. Eenmalig betalen: {price}."
+      },
+      "dynamic": {
+        "eyebrow": "Ja, misschien wijzig ik hem",
+        "title": "Dynamische QR",
+        "text": "De code bevat een permanente korte link. Wijzig waar hij naartoe gaat en bekijk dagelijkse scans. {price}/maand."
+      },
+      "unavailable": "{type}-codes zijn altijd statisch: de inhoud gaat rechtstreeks in het patroon. Dynamisch is voor websitelinks.",
+      "switched": "{type}-codes zijn statisch, dus deze code is nu Statisch. Dynamisch is voor websitelinks.",
+      "adjusted": "Je concept was Dynamisch, maar alleen websitelinks kunnen dynamisch zijn, dus het is nu Statisch. Je inhoud en ontwerp zijn ongewijzigd."
+    },
+    "backTo": {
+      "home": "Start",
+      "type": "Type",
+      "content": "Inhoud"
+    },
+    "continue": "Doorgaan",
+    "export": "Exporteren",
+    "previewFrom": "Gratis voorbeeld · downloaden vanaf {price}",
+    "optional": "optioneel",
+    "frameGroup": {
+      "title": "Kader rond de code",
+      "count": "{count} opties",
+      "none": "Geen kader",
+      "text": "Kadertekst",
+      "textHint": "De tekst past zich aan het kader aan. Lettertype en dikte vind je bij Bijschrift.",
+      "quick": "Snelle tekst",
+      "phrases": {
+        "scanMe": "Scan mij",
+        "callMe": "Bel mij",
+        "menu": "Menukaart",
+        "wifi": "Wi-Fi",
+        "payHere": "Betaal hier",
+        "reviewUs": "Geef een review",
+        "followUs": "Volg ons",
+        "bookNow": "Nu boeken"
+      },
+      "color": "Kaderkleur",
+      "textColor": "Tekstkleur",
+      "presets": "Kleurcombinaties",
+      "presetsHint": "Kader · code · achtergrond",
+      "preset": "Kader {frame}, code {code}, achtergrond {bg}",
+      "white": "Wit",
+      "graphite": "Grafiet",
+      "violetUi": "Violet"
+    },
+    "typeStep": {
+      "title": "Wat moet je code openen?",
+      "lead": "Alles is gratis uit te proberen. Je betaalt pas als je het eindbestand downloadt.",
+      "groupLabel": "QR-type",
+      "example": "bijv. {example}",
+      "next": "Volgende: voeg je inhoud toe",
+      "examples": {
+        "website": "anareyes.studio/portfolio",
+        "text": "“Twee keer aanbellen”",
+        "wifi": "Reyes Studio Guest",
+        "contact": "Ana Reyes · Ontwerper",
+        "email": "hello@reyes.studio",
+        "phone": "+1 415 555 0142",
+        "sms": "“RSVP ja”",
+        "location": "21 Pier St, San Francisco",
+        "event": "Voorjaarsshow · 5 dec",
+        "menu": "Menukaart Little Fern Café",
+        "coupon": "20% korting op pottenbakles",
+        "social": "@ana.makes, portfolio, YouTube",
+        "business": "Reyes Ceramics Studio",
+        "apps": "Fern Rewards-app",
+        "pdf": "Lesrooster voorjaar",
+        "product": "Gespikkelde mok van steengoed"
+      },
+      "directGroup": "Opent rechtstreeks vanuit de code",
+      "directGroupLabel": "QR-types die direct openen",
+      "hostedGroup": "Gehoste pagina’s",
+      "hostedNew": "Nieuw",
+      "hostedLead": "HeyQR host hiervoor een mobiele pagina en de code bevat een Dynamische korte link, zodat je de pagina na het printen kunt bewerken. Ze hebben een Dynamisch abonnement nodig: Starter {starter}/maand of Studio {studio}/maand, met 7 dagen gratis proberen.",
+      "hostedSummary": "{type} · Gehoste pagina · Dynamisch"
+    },
+    "contentStep": {
+      "titles": {
+        "website": "Welke pagina moet hij openen?",
+        "text": "Wat moeten mensen lezen?",
+        "wifi": "Met welk netwerk moeten gasten verbinden?",
+        "contact": "Wie moeten mensen opslaan?",
+        "email": "Naar wie moet de e-mail gaan?",
+        "phone": "Welk nummer moet hij bellen?",
+        "sms": "Wie krijgt het sms-bericht?",
+        "location": "Welke plek moet hij openen?",
+        "event": "Wat is het evenement?",
+        "menu": "Wat staat er op de menukaart?",
+        "coupon": "Wat is de aanbieding?",
+        "social": "Welke links moeten mensen vinden?",
+        "business": "Hoe bereiken mensen je?",
+        "apps": "Waar kunnen mensen je app krijgen?",
+        "pdf": "Welk document moet openen?",
+        "product": "Welk product laat je zien?"
+      },
+      "subs": {
+        "website": "Plak het volledige adres. Je ziet wat mensen na het scannen krijgen.",
+        "text": "Platte tekst verschijnt direct na het scannen op de telefoon.",
+        "wifi": "Telefoons maken na het scannen verbinding met het netwerk. Niets te typen.",
+        "contact": "Telefoons bieden na het scannen aan dit contact op te slaan.",
+        "email": "Scannen opent een nieuwe e-mail met adres, onderwerp en bericht al ingevuld.",
+        "phone": "Scannen biedt aan het nummer te bellen. Niets te typen.",
+        "sms": "Scannen opent een sms-bericht, klaar om te versturen.",
+        "location": "Scannen opent de plek in de kaarten-app van de telefoon.",
+        "event": "Scannen biedt aan het evenement aan de agenda toe te voegen.",
+        "menu": "Voeg onderdelen en gerechten toe. Gasten zien na het scannen een telefoonvriendelijke menukaart.",
+        "coupon": "Mensen zien de korting, kopiëren de code en wisselen hem in voordat hij afloopt.",
+        "social": "Eén pagina met je foto, een korte bio en je links, in jouw volgorde.",
+        "business": "Knoppen voor bellen, route en je website verschijnen als je die gegevens toevoegt.",
+        "apps": "Telefoons gaan direct naar hun eigen store. Andere apparaten zien beide links.",
+        "pdf": "Upload de PDF. Mensen openen of downloaden hem met één tik.",
+        "product": "Foto’s, prijs en één duidelijke knop om te kopen of meer te weten te komen."
+      },
+      "nameLabel": "Naam in Mijn QR-codes",
+      "stepOf": "Stap 2 van 3",
+      "kept": "Wat je hebt ingevuld, blijft bewaard als je teruggaat.",
+      "continue": "Verder naar ontwerp",
+      "errorsOne": "Verbeter het gemarkeerde veld om verder te gaan. Al het andere is opgeslagen.",
+      "errorsMany": "Verbeter de {count} gemarkeerde velden om verder te gaan. Al het andere is opgeslagen.",
+      "back": "Terug",
+      "urlHint": "Dit adres zit in de code zelf. Wil je geprinte codes later ergens anders naartoe laten wijzen, kies dan Dynamisch bij de vorige stap.",
+      "urlHintDynamic": "Je code bevat een permanente korte link. Hierheen stuurt hij mensen, en je kunt het na het printen wijzigen.",
+      "nameHint": "Alleen jij ziet deze naam.",
+      "namePlaceholderType": "{type}-QR"
+    },
+    "errors": {
+      "urlEmpty": "Voer een webadres in, zoals yourname.com.",
+      "urlSpaces": "Webadressen kunnen geen spaties bevatten.",
+      "urlInvalid": "Controleer het adres. Er is een domein nodig, zoals yourname.com.",
+      "text": "Typ de tekst die mensen na het scannen moeten zien.",
+      "ssid": "Voer de netwerknaam in precies zoals hij op telefoons verschijnt.",
+      "password": "Voer het Wi-Fi-wachtwoord in, of kies “Geen wachtwoord”.",
+      "passwordShort": "WPA-wachtwoorden hebben minstens 8 tekens.",
+      "contactName": "Voeg minstens een voor- of achternaam toe.",
+      "phone": "Gebruik cijfers, spaties en eventueel een + voor de landcode.",
+      "email": "Controleer het e-mailadres. Er is een naam, @ en een domein nodig, zoals ana@studio.com.",
+      "emailTo": "Voer het adres in waar de e-mail naartoe moet.",
+      "emailInvalid": "Controleer het adres. Er is een naam, @ en een domein nodig.",
+      "phoneNumber": "Voer een telefoonnummer in met de landcode, zoals +1 415 555 0142.",
+      "smsTo": "Voer het nummer in dat het bericht moet ontvangen.",
+      "address": "Voer het adres in dat de kaarten-app moet openen.",
+      "eventTitle": "Geef het evenement een naam.",
+      "eventStart": "Kies een datum."
+    },
+    "afterScanning": {
+      "label": "Na het scannen",
+      "toggleHint": "Zie wat mensen op hun telefoon krijgen",
+      "caption": "Wat mensen na het scannen zien",
+      "websitePlaceholder": "Je webpagina",
+      "dynamicNote": "Opent eerst je korte link en stuurt dan hierheen door.",
+      "textPlaceholder": "Je tekst verschijnt hier.",
+      "wifiPlaceholder": "Verbinden met het netwerk?",
+      "security": "Beveiliging",
+      "open": "Open netwerk",
+      "password": "Wachtwoord",
+      "join": "Verbinden",
+      "contactPlaceholder": "Nieuw contact",
+      "phone": "Telefoon",
+      "email": "E-mail",
+      "company": "Bedrijf",
+      "save": "Toevoegen aan contacten",
+      "emailPlaceholder": "Nieuwe e-mail",
+      "subject": "Onderwerp",
+      "compose": "E-mail schrijven",
+      "phonePlaceholder": "Telefoonnummer",
+      "call": "Bellen",
+      "message": "Bericht",
+      "text": "Sms versturen",
+      "locationPlaceholder": "Een plek",
+      "address": "Adres",
+      "openMaps": "Openen in Kaarten",
+      "eventPlaceholder": "Nieuw evenement",
+      "place": "Plaats",
+      "addToCalendar": "Toevoegen aan agenda",
+      "wifiKicker": "Verbinden met Wi-Fi-netwerk",
+      "website": "Website",
+      "textKicker": "Gescande tekst",
+      "loading": "Voorbeeld laden",
+      "date": "Datum",
+      "addEvent": "Evenement toevoegen"
+    },
+    "passwordShow": "Tonen",
+    "passwordHide": "Verbergen",
+    "wifiPasswordHint": "Het voorbeeld verbergt het wachtwoord. Het staat in de code zelf, dus iedereen die hem scant, kan verbinden.",
+    "tooLong": {
+      "title": "Te lang voor een QR-code",
+      "text": "Het is ongeveer {over}% meer dan een QR-code kan bevatten. Maak de inhoud korter en de code komt meteen terug. Niets van wat je hebt getypt, gaat verloren.",
+      "centerHint": "Een logo of bijschrift in het midden van de code verlaagt de limiet. Weghalen maakt ook ruimte.",
+      "detail": "{bytes} van {max} bytes",
+      "edit": "Inhoud bewerken",
+      "badge": "Te lang",
+      "preview": "QR-code niet getoond: de inhoud is te lang"
+    },
+    "eyeColor": "Hoekkaders",
+    "eyeInColor": "Hoekmiddens",
+    "resetColors": "Kleuren resetten",
+    "colorInvalid": "Gebruik een HEX-kleur zoals #1F4D3A: # en 6 tekens uit 0–9 en A–F.",
+    "size": {
+      "title": "Formaat",
+      "unitHint": "Voor schermen, presentaties en het web. 1 eenheid = 1 pixel bij 1×.",
+      "qr": "Formaat QR-code",
+      "qrSlider": "Schuifregelaar formaat QR-code",
+      "clamped": "Deze code past niet in de lay-out: hij wordt getekend op {shown} {unit}, het grootste formaat dat past. Maak de lay-out groter of de code kleiner.",
+      "layout": "Formaat lay-out",
+      "width": "Breedte",
+      "height": "Hoogte",
+      "locked": "Bij “Alleen QR” en “Kader” volgt de lay-out de code. Kies “QR + bijschrift” of een kaart om zelf het formaat te bepalen.",
+      "presets": {
+        "square": "Vierkant 1080",
+        "story": "Story 1080×1920",
+        "slide": "Dia 1920×1080",
+        "card": "Visitekaartje 90×50",
+        "a6": "A6 105×148",
+        "sticker": "Sticker 50×62"
+      },
+      "invalid": "Voer een heel getal in van {min} tot {max} {unit}.",
+      "units": "Eenheden",
+      "unitMm": "Print · mm",
+      "unitPx": "Scherm · px",
+      "unitHintMm": "Voor print. Bestanden worden geëxporteerd op 300, 600 of 1200 dpi.",
+      "invalidMm": "Voer een getal in van {min} tot {max} mm, met maximaal één decimaal.",
+      "qrHint": "incl. stille zone",
+      "reach": "Scant van maximaal ongeveer {cm} cm afstand (10 : 1-regel). Grotere code, groter bereik.",
+      "viewNoteMm": "Het canvas is geschaald naar je scherm. Kies <b>Ware grootte</b> boven het canvas om het op printformaat te zien. Export: <b>PNG {width} × {height} px</b>.",
+      "viewNotePx": "Het canvas is geschaald naar je scherm. Kies <b>Ware grootte</b> boven het canvas om het op 1× te zien. Export: <b>PNG {width} × {height} px</b> (2×)."
+    },
+    "updatingPreview": "Voorbeeld bijwerken…",
+    "captionField": {
+      "label": "Bijschrifttekst",
+      "hint": "Druk op Enter voor een tweede regel. Laat leeg om het bijschrift te verbergen.",
+      "tooLong": "Gebruik maximaal {max} tekens: verwijder {over, plural, one {# teken} other {# tekens}}. Het voorbeeld houdt je laatste bijschrift dat past.",
+      "tooManyLines": "Gebruik maximaal {max} regels. Het voorbeeld houdt je laatste bijschrift dat past.",
+      "count": "{count} van {max} tekens",
+      "unsupported": "{font} kan {chars} niet weergeven. Kies een ander lettertype of wijzig {count, plural, one {dit teken} other {deze tekens}}: de bestanden zouden {count, plural, one {het} other {ze}} als lege vakjes tonen."
+    },
+    "captionFont": {
+      "title": "Lettertype",
+      "hint": "Lettertypen voor je QR. De HeyQR-interface gebruikt altijd DM Sans.",
+      "weight": "Dikte",
+      "weights": {
+        "400": "Normaal",
+        "500": "Medium",
+        "700": "Vet"
+      },
+      "original": "DM Sans (origineel)",
+      "originalHint": "Deze lay-out is gemaakt voordat er meer lettertypen kwamen. DM Sans heeft alleen Latijnse letters; kies een ander lettertype voor Cyrillisch."
+    },
+    "captionSize": {
+      "label": "Grootte",
+      "invalid": "Voer {min}–{max} {unit} in, met maximaal één decimaal. Het voorbeeld houdt de laatste geldige grootte.",
+      "fitted": "Getekend op {size} {unit} zodat het bijschrift in de lay-out past."
+    },
+    "edit": {
+      "title": "Ontwerp bewerken · {layout}",
+      "back": "Terug naar code",
+      "save": "Wijzigingen opslaan",
+      "saved": "Ontwerp opgeslagen",
+      "restored": "We hebben de wijzigingen bewaard die je niet had opgeslagen voordat je opnieuw inlogde. Sla op om ze te houden.",
+      "discardRestored": "Weggooien",
+      "unsaved": "Niet-opgeslagen wijzigingen",
+      "retry": "Opnieuw proberen",
+      "failed": "Kon het ontwerp niet opslaan. Je wijzigingen staan er nog.",
+      "notFound": "Deze code of lay-out bestaat niet meer.",
+      "hint": "Wijzigingen gelden alleen voor deze lay-out",
+      "note": "Opslaan werkt deze lay-out bij. Inhoud, betaling en links blijven hetzelfde.",
+      "layouts": "Lay-outs van deze code",
+      "newLayout": "Nieuwe lay-out",
+      "newName": "Lay-out {n}",
+      "added": "“{name}” gemaakt van de huidige lay-out. De andere blijven zoals ze waren.",
+      "addFailed": "We konden de lay-out niet toevoegen. Je wijzigingen staan er nog; probeer het opnieuw.",
+      "unsavedSwitch": "Deze lay-out heeft niet-opgeslagen wijzigingen.",
+      "discardSwitch": "Weggooien en wisselen",
+      "layoutName": "Naam van de lay-out",
+      "unsavedSwitchText": "Overschakelen naar “{name}” en de wijzigingen aan deze lay-out weggooien? Sla eerst op om ze te houden.",
+      "keepEditing": "Verder bewerken",
+      "conflictTitle": "Deze lay-out is ergens anders opgeslagen",
+      "conflictText": "Een ander tabblad of apparaat heeft deze lay-out opgeslagen nadat jij hem opende, dus je wijzigingen zijn niet opgeslagen. Ze staan er nog: sla ze op als nieuwe lay-out, of laad de opgeslagen versie opnieuw (je wijzigingen hier gaan dan verloren).",
+      "conflictNewLayout": "Mijn wijzigingen opslaan als nieuwe lay-out",
+      "conflictReload": "Opgeslagen versie opnieuw laden"
+    },
+    "captionStyle": {
+      "align": "Uitlijnen",
+      "aligns": {
+        "left": "Links",
+        "center": "Midden",
+        "right": "Rechts"
+      },
+      "color": "Kleur bijschrift",
+      "palette": "Kleurcombinaties bijschrift",
+      "matchCode": "Zelfde als code"
+    },
+    "logoFile": {
+      "hint": "PNG, JPG, SVG of WebP, tot {max} MB. Kies een bestand of sleep het naar de uploadtegel.",
+      "reading": "Afbeelding lezen…",
+      "empty": "Dit bestand is leeg.",
+      "tooLarge": "Dit bestand is groter dan de limiet van {max} MB.",
+      "unsupported": "Dit bestand is geen PNG-, JPG-, SVG- of WebP-afbeelding, wat de naam ook zegt.",
+      "unreadable": "Deze afbeelding kan niet worden geopend. Misschien is hij beschadigd; exporteer hem opnieuw en probeer het nog eens.",
+      "kept": "Je huidige logo blijft behouden."
+    },
+    "logoPlate": {
+      "label": "Ondergrond",
+      "none": "Geen",
+      "square": "Vierkant",
+      "circle": "Cirkel"
+    },
+    "logoSizeValue": "{size}% · scant tot {max}%",
+    "logoSizeLegacy": "Opgeslagen op {saved}%; getekend op het maximum van {max}%. Met de schuifregelaar sla je een formaat binnen die grens op.",
+    "groups": {
+      "label": "Ontwerpinstellingen",
+      "layout": "Lay-out",
+      "frame": "Kader",
+      "size": "Formaat",
+      "pattern": "Patroon",
+      "colors": "Kleuren",
+      "logo": "Logo",
+      "caption": "Bijschrift",
+      "brand": "Merk"
+    },
+    "quickStyles": {
+      "title": "Snelle stijlen",
+      "hint": "Eén tik stelt vormen en kleuren tegelijk in. Ongedaan maken brengt de vorige look terug.",
+      "surprise": "Verras me",
+      "apply": "Stijl {name} toepassen",
+      "applied": "Stijl “{name}” toegepast. Ongedaan maken brengt de vorige look terug.",
+      "surprised": "Een nieuwe look. Ongedaan maken brengt de vorige terug.",
+      "names": {
+        "classic": "Klassiek",
+        "soft": "Zacht",
+        "dots": "Stippen",
+        "fluid": "Vloeiend",
+        "lines": "Lijnen",
+        "gem": "Edelsteen"
+      }
+    },
+    "layoutGroup": {
+      "title": "Lay-out",
+      "hint": "Elementen verschuiven, instellingen blijven",
+      "border": "Kader rond de lay-out",
+      "borderCards": "Kaarten hebben altijd een kader."
+    },
+    "colorsGroup": {
+      "title": "Wat kleur je?",
+      "targets": "Kleurdoelen",
+      "resetAll": "Alles resetten",
+      "edited": "Bewerkt",
+      "roles": {
+        "fg": "Modules",
+        "eye": "Hoekkaders",
+        "eyeIn": "Hoekmiddens",
+        "bg": "Achtergrond",
+        "frame": "Kader",
+        "caption": "Bijschrift"
+      },
+      "editing": "Kleur {role}",
+      "swatches": "Stalen",
+      "reset": "Standaard herstellen",
+      "note": "Deze kleuren gelden alleen voor je QR. De knoppen en menu’s van HeyQR houden hun eigen kleuren.",
+      "frameHint": "Kaders, kaartranden en het kader rond een lay-out.",
+      "captionHint": "Bijschriften onder, boven of in de code.",
+      "picker": "Kleurkiezer {role}"
+    },
+    "logoGroup": {
+      "source": "Bron van het logo",
+      "icons": "Iconenbibliotheek",
+      "upload": "Logo uploaden",
+      "count": "{count} vectoriconen",
+      "search": "Iconen zoeken",
+      "searchPlaceholder": "Iconen zoeken: menu, wifi, winkel…",
+      "empty": "Geen icoon gevonden voor “{query}”.",
+      "style": "Icoonstijl",
+      "plate": "Op een plaatje",
+      "tile": "Gekleurde tegel",
+      "vectorNote": "Iconen blijven vector in SVG en PDF, dus ze zijn scherp op elk formaat. Ze krijgen de kleur van de hoekmiddens.",
+      "remove": "Logo verwijderen",
+      "backingHint": "Een ondergrond haalt de stippen achter je logo weg, zodat het goed leesbaar is.",
+      "position": "Positie",
+      "positions": {
+        "center": "Midden van de code",
+        "top": "Bovenaan de kaart"
+      },
+      "positionHint": "“Bovenaan de kaart” werkt met de staande en liggende kaarten.",
+      "brandName": "Naam naast het logo",
+      "brandNameHint": "Optioneel. Getoond naast het logo boven de code.",
+      "uploadTitle": "Upload je logo",
+      "brandedUpload": "Upload eerst een afbeelding",
+      "imageSize": "Afbeeldingsformaat"
+    },
+    "captionGroup": {
+      "position": "Positie",
+      "positions": {
+        "below": "Onder",
+        "above": "Boven",
+        "inside": "In de code"
+      },
+      "insideHint": "Korte tekst staat op een plaatje in het midden van de code. De scancheck vraagt je hem in te korten als hij te veel bedekt.",
+      "hiddenNote": "“{layout}” heeft geen bijschrift. Kies QR + bijschrift of een kaart om het te tonen.",
+      "frameNote": "De tekst van het kader stel je in bij Kader.",
+      "toLayout": "QR + bijschrift gebruiken",
+      "color": "Kleur bijschrift",
+      "insideShortened": "In de code is ruimte voor {max} tekens, dus er staat “{shown}”. Kort het bijschrift in, of zet het onder of boven de code."
+    },
+    "stage": {
+      "history": "Geschiedenis",
+      "undo": "Ongedaan maken",
+      "redo": "Opnieuw",
+      "background": "Achtergrond canvas",
+      "bg": {
+        "light": "Licht",
+        "dark": "Donker",
+        "checker": "Transparant"
+      },
+      "scale": "Schaal voorbeeld",
+      "fit": "Passend",
+      "actual": "Ware grootte",
+      "dims": {
+        "layout": "Lay-out",
+        "qr": "QR",
+        "file": "Bestand"
+      },
+      "scaleLabel": "{pct}%",
+      "openFull": "Voorbeeld op volledig scherm openen",
+      "fullTitle": "Voorbeeld op volledig scherm",
+      "done": "Klaar",
+      "scaledToFit": "Passend geschaald"
+    },
+    "scanChecking": "Scan controleren",
+    "darkenCorners": "Hoekmarkeringen donkerder maken",
+    "textCount": "{count} van {max} tekens. Korte tekst geeft een eenvoudigere code die makkelijker scant.",
+    "brand": {
+      "step1": "1 · Je logo of afbeelding",
+      "step1Hint": "PNG, JPG, WebP of SVG",
+      "step1Ready": "Altijd te vervangen",
+      "drag": "Sleep je logo hierheen",
+      "dropNow": "Loslaten om te uploaden",
+      "add": "Voeg je logo of afbeelding toe",
+      "formats": "PNG, JPG, WebP of SVG, tot 10 MB. Een transparante achtergrond werkt het best.",
+      "choose": "Afbeelding kiezen",
+      "chooseMobile": "Kies uit foto’s of bestanden",
+      "chooseLabel": "Kies een logoafbeelding",
+      "sample": "Probeer een voorbeeldlogo",
+      "error": "We konden dat bestand niet lezen. Probeer een PNG, JPG, WebP of SVG tot 10 MB.",
+      "reading": "Kleuren uit je afbeelding lezen…",
+      "preview": "Geüploade afbeelding",
+      "image": "Je afbeelding",
+      "colorsFound": "{count, plural, one {# kleur gevonden} other {# kleuren gevonden}}",
+      "replace": "Afbeelding vervangen",
+      "replaceLabel": "De logoafbeelding vervangen",
+      "remove": "Afbeelding verwijderen",
+      "step2": "2 · Kleuren uit je afbeelding",
+      "step2Hint": "Toegepast op de QR",
+      "roles": "Rollen van merkkleuren",
+      "role": {
+        "primary": "Codekleur",
+        "bg": "Achtergrond",
+        "accent": "Accent"
+      },
+      "roleHint": {
+        "primary": "Modules en hoekkaders",
+        "bg": "Achter de code en kaart",
+        "accent": "Hoekmiddens en details"
+      },
+      "fromImage": "Uit je afbeelding",
+      "found": "Kleuren gevonden in je afbeelding",
+      "hexFor": "HEX voor {role}",
+      "reset": "Resetten",
+      "contrast": {
+        "ok": "Code op achtergrond: {ratio}:1 · goed leesbaar. De scancheck heeft het laatste woord.",
+        "warn": "Code op achtergrond: {ratio}:1 · leesbaar, maar meer contrast is veiliger.",
+        "err": "Code op achtergrond: {ratio}:1 · te laag om betrouwbaar te scannen."
+      },
+      "appColors": "Deze kleuren gelden alleen voor je QR. De knoppen en menu’s van HeyQR houden hun eigen kleuren.",
+      "step3": "3 · Kies een richting",
+      "step3Hint": "Dezelfde code, drie looks",
+      "looks": "Merklooks",
+      "lookCards": {
+        "center": {
+          "title": "Logo in de code",
+          "desc": "Je merkteken staat op een plaatje in het midden."
+        },
+        "card": {
+          "title": "Merkkaart",
+          "desc": "Logo en naam boven de code, in een kader."
+        },
+        "art": {
+          "title": "Artwork",
+          "desc": "Je afbeelding loopt door in de stippen en hoeken."
+        }
+      },
+      "step4": "4 · Verfijnen",
+      "fine": {
+        "logo": "Afbeeldingsformaat & ondergrond",
+        "pattern": "Stippen & hoeken",
+        "caption": "Bijschrift & lettertype",
+        "size": "Formaat"
+      },
+      "updating": "Merkontwerp bijwerken… je kunt verder bewerken",
+      "readingCanvas": "Je afbeelding lezen…"
+    },
+    "designMode": {
+      "label": "Ontwerpmodus",
+      "custom": "Eigen ontwerp",
+      "branded": "Merkontwerp",
+      "chooseTitle": "Hoe wil je hem ontwerpen?",
+      "chooseLead": "Beide beginnen met dezelfde code. Je kunt altijd wisselen zonder je inhoud kwijt te raken.",
+      "customTitle": "Eigen ontwerp",
+      "customText": "Kies zelf de lay-out, vormen, kleuren, het kader en het bijschrift.",
+      "brandedTitle": "Merkontwerp",
+      "brandedBadge": "Vanuit je logo",
+      "brandedText": "Upload je logo of een afbeelding. We nemen de kleuren over en stellen drie looks voor."
+    },
+    "patternHint": "8 vormen voor de stippen die je gegevens bevatten",
+    "eyeFrameHint": "Buitenring van de 3 hoekmarkeringen",
+    "eyeBallHint": "Binnenste stip van de 3 hoekmarkeringen",
+    "finderNote": "Elke vorm behoudt de finderverhoudingen 1 : 1 : 3 : 1 : 1, dus de scancheck slaagt nog steeds.",
+    "colorPicker": "Kleurkiezer {label}",
+    "scanCheck": {
+      "run": "Scan controleren",
+      "retry": "Opnieuw controleren",
+      "readBack": "Op dit apparaat teruggelezen als “{value}”, zoals een telefooncamera.",
+      "unreadableTitle": "Niet gescand",
+      "unreadable": "Een telefooncamera kon deze lay-out niet lezen. Verhoog het contrast, maak het logo kleiner of gebruik eenvoudigere vormen en controleer opnieuw.",
+      "mismatch": "Er werd “{value}” gelezen, niet je inhoud. Controleer de inhoud en controleer dan opnieuw.",
+      "errorTitle": "Scancheck is niet uitgevoerd",
+      "errorText": "De scancheck kon niet starten. Je ontwerp is veilig; probeer het opnieuw.",
+      "finding": "Op dit apparaat uitzoeken waarom…",
+      "multiTitle": "Deze lay-out scant mogelijk niet · {count} oplossingen",
+      "confirmed": "Gecontroleerd op dit apparaat: met alleen deze wijziging scant hij.",
+      "general": "We konden het niet aan één instelling koppelen. Verhoog het contrast, maak het logo kleiner of gebruik eenvoudigere vormen en controleer opnieuw.",
+      "logoSearching": "Kleinere logoformaten proberen op dit apparaat…",
+      "logoNone": "Geen kleiner logoformaat scant met deze lay-out, dus je ontwerp is ongewijzigd. Probeer een ondergrond, een eenvoudiger logo of verwijder het bij Logo.",
+      "openLogo": "Logo-instellingen openen",
+      "logoApplied": "Logo verkleind van {from}% naar {to}%. De nieuwe lay-out controleren…",
+      "causes": {
+        "invert": {
+          "title": "Lichte code op een donkere achtergrond",
+          "text": "Veel telefooncamera’s kunnen omgekeerde codes niet lezen. Houd de code donkerder dan de achtergrond.",
+          "fix": "Kleuren omwisselen"
+        },
+        "contrast": {
+          "title": "Te weinig contrast",
+          "text": "De code en de achtergrond lijken te veel op elkaar ({ratio}:1). Mik op minstens 4:1.",
+          "fix": "Contrast verhogen"
+        },
+        "eyes": {
+          "title": "Hoekmarkeringen zijn te licht",
+          "text": "Scanners vinden de code aan de hand van de drie hoekmarkeringen. Maak ze donkerder.",
+          "fix": "Hoekmarkeringen donkerder maken"
+        },
+        "text": {
+          "title": "De tekst in de code is te lang",
+          "text": "Houd tekst in de code bij ongeveer 8 tekens, zodat de foutcorrectie kan herstellen wat hij bedekt.",
+          "fix": "Tekst inkorten"
+        },
+        "logo": {
+          "title": "Het logo bedekt te veel van de code",
+          "text": "Foutcorrectie kan een logobreedte tot {max}% herstellen. Die van jou is {size}%.",
+          "critical": "Het overlapt een hoekmarkering of timinglijn.",
+          "fix": "Logo verkleinen"
+        }
+      }
+    },
+    "hosted": {
+      "badge": "Gehoste pagina",
+      "notice": "HeyQR publiceert deze pagina op {short}. {needs} Wijzigingen gaan live als je publiceert; geprinte codes blijven werken.",
+      "noticePreview": "de korte link van de code",
+      "needsPlan": "Publiceren vereist een Dynamisch abonnement: Starter {starter}/maand voor 5 codes of Studio {studio}/maand voor 25, met 7 dagen gratis proberen. Ontwerpen en bekijken blijven gratis.",
+      "needsSlot": "Het gebruikt een van je {slots} Dynamische plekken in {plan}.",
+      "sample": "Begin met het voorbeeld",
+      "sampleAdded": "Voorbeeld toegevoegd. Vervang het door je eigen gegevens.",
+      "previews": "Voorbeelden · Na het scannen en QR-ontwerp",
+      "previewSwitch": "Voorbeeld",
+      "afterScan": "Na het scannen",
+      "qrDesign": "QR-ontwerp",
+      "moveUp": "{item} omhoog",
+      "moveDown": "{item} omlaag",
+      "remove": "{item} verwijderen",
+      "optional": "optioneel",
+      "photoAdd": "Foto toevoegen",
+      "photoReplace": "Foto vervangen",
+      "photoRemove": "Foto verwijderen",
+      "photoHint": "Foto’s worden naar HeyQR geüpload en geschaald voor telefoons. JPG of PNG, tot 5 MB per stuk.",
+      "photoType": "“{name}” is geen JPG of PNG.",
+      "photoTooLarge": "“{name}” is {size}. De limiet is 5 MB.",
+      "photoUnreadable": "We konden “{name}” niet lezen. Probeer een andere foto.",
+      "menu": {
+        "name": "Naam van het restaurant",
+        "namePlaceholder": "Little Fern Café",
+        "note": "Opmerking",
+        "notePlaceholder": "Keuken open 8:00–15:00",
+        "currency": "Prijzen in",
+        "section": "Onderdeel {n}",
+        "sectionPlaceholder": "Ontbijt",
+        "sectionHint": "Geef dit onderdeel een naam, zoals “Ontbijt” of “Dranken”.",
+        "dish": "Gerecht {n}",
+        "dishPlaceholder": "Avocadotoast",
+        "descPlaceholder": "Beschrijving · optioneel",
+        "price": "Prijs",
+        "pricePlaceholder": "12",
+        "dishPhoto": "Foto van het gerecht",
+        "addDish": "Gerecht toevoegen",
+        "addSection": "Onderdeel toevoegen"
+      },
+      "coupon": {
+        "title": "Titel van de aanbieding",
+        "titlePlaceholder": "Op elke pottenbakles deze maand",
+        "discount": "Korting",
+        "discountPlaceholder": "20% korting",
+        "discountHint": "Kort en groot: “20% korting”, “€5 korting”, “Gratis koffie”.",
+        "code": "Promocode",
+        "codePlaceholder": "FERN20",
+        "expires": "Eindigt op",
+        "expiresHint": "Na deze datum toont de pagina “Aanbieding afgelopen” en verbergt hij de code. De aanbieding geldt de hele dag in jouw tijdzone ({zone}).",
+        "clearDate": "Datum wissen",
+        "link": "Inwissellink",
+        "linkPlaceholder": "yourshop.com/offer",
+        "terms": "Voorwaarden",
+        "termsPlaceholder": "Eén code per persoon. Niet geldig in combinatie met andere aanbiedingen.",
+        "previewAs": "Pagina bekijken als",
+        "valid": "Geldige aanbieding",
+        "expired": "Verlopen"
+      },
+      "social": {
+        "photo": "Profielfoto",
+        "name": "Profielnaam",
+        "namePlaceholder": "Ana Reyes",
+        "bio": "Korte bio",
+        "bioPlaceholder": "Productontwerper. In het weekend keramiek.",
+        "links": "Links, in de volgorde waarin mensen ze zien",
+        "link": "Link {n}",
+        "labelLabel": "Label",
+        "labelPlaceholder": "Instagram",
+        "urlLabel": "Adres",
+        "urlPlaceholder": "instagram.com/yourname",
+        "quickAdd": "Toevoegen:",
+        "addLink": "Link toevoegen"
+      },
+      "business": {
+        "name": "Bedrijfsnaam",
+        "namePlaceholder": "Reyes Ceramics Studio",
+        "desc": "Korte beschrijving",
+        "descPlaceholder": "Handgedraaid servies en pottenbaklessen.",
+        "hours": "Openingstijden",
+        "open": "Open",
+        "from": "Opent",
+        "to": "Sluit",
+        "closed": "Gesloten",
+        "copyMonday": "Tijden van maandag kopiëren naar di–vr",
+        "zone": "Tijden zijn in {zone}.",
+        "address": "Adres",
+        "addressPlaceholder": "21 Pier St, San Francisco",
+        "addressHint": "Voegt een knop Route toe.",
+        "phone": "Telefoon",
+        "phonePlaceholder": "+1 415 555 0142",
+        "phoneHint": "Voegt een knop Bellen toe.",
+        "website": "Website",
+        "websitePlaceholder": "yourshop.com",
+        "websiteHint": "Voegt een knop Website toe."
+      },
+      "apps": {
+        "icon": "App-icoon",
+        "name": "Naam van de app",
+        "namePlaceholder": "Fern Rewards",
+        "desc": "Beschrijving",
+        "descPlaceholder": "Wat de app doet, in één zin.",
+        "ios": "Link naar de App Store",
+        "iosPlaceholder": "apps.apple.com/app/your-app",
+        "android": "Link naar Google Play",
+        "androidPlaceholder": "play.google.com/store/apps/details?id=…",
+        "storesHint": "Voeg minstens één store toe. Telefoons openen hun eigen store; andere apparaten zien een pagina met beide links."
+      },
+      "pdf": {
+        "title": "Titel",
+        "titlePlaceholder": "Lesrooster voorjaar",
+        "desc": "Korte beschrijving",
+        "descPlaceholder": "Data, prijzen en wat je moet meenemen.",
+        "file": "PDF-bestand",
+        "choose": "Kies een PDF",
+        "limits": "Tot 25 MB · tot 300 pagina’s",
+        "sample": "Voorbeeld-PDF gebruiken",
+        "uploading": "Uploaden · {pct}%",
+        "processing": "PDF controleren…",
+        "cancel": "Annuleren",
+        "meta": "{pages, plural, one {# pagina} other {# pagina’s}} · {size}",
+        "metaNoPages": "{size}",
+        "replace": "Vervangen",
+        "remove": "Verwijderen",
+        "hint": "Bewaard door HeyQR. Bij het vervangen van het bestand blijft de korte link hetzelfde, dus geprinte codes openen de nieuwe versie nadat je publiceert.",
+        "signIn": "Log in om een PDF te uploaden. Je concept blijft bewaard.",
+        "notPdf": "“{name}” is geen PDF. Kies een bestand dat eindigt op .pdf.",
+        "empty": "“{name}” is leeg. Kies een ander bestand.",
+        "tooLarge": "“{name}” is {size}. De limiet is 25 MB. Exporteer een kleinere PDF en probeer het opnieuw.",
+        "tooManyPages": "“{name}” heeft {pages} pagina’s. De limiet is 300.",
+        "failed": "Dat bestand is niet geüpload. Probeer het opnieuw."
+      },
+      "product": {
+        "name": "Productnaam",
+        "namePlaceholder": "Gespikkelde mok van steengoed",
+        "photos": "Foto’s",
+        "cover": "Omslag",
+        "photosHint": "Tot 5 foto’s. De eerste is de omslag. JPG of PNG, tot 5 MB per stuk.",
+        "photo": "Foto {n}",
+        "desc": "Beschrijving",
+        "descPlaceholder": "Formaat, materiaal, onderhoud.",
+        "currency": "Valuta",
+        "price": "Prijs",
+        "pricePlaceholder": "38",
+        "cta": "Knop",
+        "ctas": {
+          "buy": "Nu kopen",
+          "view": "Product bekijken",
+          "order": "Nu bestellen"
+        },
+        "link": "Productlink",
+        "linkPlaceholder": "yourshop.com/product",
+        "linkHint": "Waar de knop naartoe gaat: je webshop of een advertentie op een marktplaats."
+      },
+      "signInPhotos": "Log in om foto’s toe te voegen. Je concept blijft bewaard.",
+      "errors": {
+        "menuName": "Voeg de naam toe die gasten bovenaan de menukaart zien.",
+        "menuSections": "Voeg minstens één onderdeel toe.",
+        "sectionName": "Geef dit onderdeel een naam, zoals “Ontbijt” of “Dranken”.",
+        "sectionDishes": "Voeg minstens één gerecht toe aan dit onderdeel.",
+        "dishName": "Elk gerecht heeft een naam nodig.",
+        "price": "Prijzen bestaan alleen uit cijfers, zoals 12 of 4.50.",
+        "couponTitle": "Zeg waarvoor de aanbieding is.",
+        "couponDiscount": "Voeg de korting toe, zoals “20% korting”.",
+        "couponCode": "Gebruik alleen letters, cijfers, - of _, zonder spaties.",
+        "dateInvalid": "Kies een geldige datum.",
+        "datePassed": "Deze datum is al voorbij. Kies een latere datum, of wis hem voor een aanbieding zonder einddatum.",
+        "urlEmpty": "Voer een webadres in, zoals yourname.com.",
+        "urlSpaces": "Webadressen kunnen geen spaties bevatten.",
+        "urlInvalid": "Controleer het adres. Er is een domein nodig, zoals yourname.com.",
+        "socialName": "Voeg de naam toe die mensen bovenaan de pagina zien.",
+        "socialLinks": "Voeg minstens één link toe.",
+        "linkLabel": "Deze link heeft een label nodig.",
+        "linkUrl": "Deze link heeft een volledig webadres nodig, zoals instagram.com/yourname.",
+        "businessName": "Voeg je bedrijfsnaam toe.",
+        "businessReach": "Voeg een adres, telefoonnummer of website toe zodat mensen je kunnen bereiken.",
+        "phone": "Gebruik cijfers, spaties en eventueel een + voor de landcode.",
+        "hoursInvalid": "Gebruik tijden zoals 09:00.",
+        "hoursOrder": "De sluitingstijd moet later zijn dan de openingstijd.",
+        "appName": "Voeg de naam van de app toe.",
+        "appStores": "Voeg minstens één storelink toe.",
+        "appStoreLink": "Links naar de App Store beginnen met apps.apple.com/.",
+        "googlePlayLink": "Links naar Google Play beginnen met play.google.com/.",
+        "pdfTitle": "Voeg een titel voor het document toe.",
+        "pdfFile": "Upload een PDF om verder te gaan.",
+        "pdfUploading": "Wacht tot het uploaden klaar is.",
+        "productName": "Voeg de productnaam toe.",
+        "productLink": "Voeg de pagina toe waar mensen het product kunnen kopen of bekijken.",
+        "productPrice": "Gebruik alleen cijfers, zoals 38 of 38.50. Kies de valuta in het menu.",
+        "productImages": "Tot 5 foto’s."
+      },
+      "previewNote": "HeyQR host deze pagina op {short}. Wijzigingen gaan live als je publiceert; geprinte codes blijven werken.",
+      "qrNote": "De code bevat de korte link {short}, dus de pagina kan na het printen veranderen."
+    }
+  },
+  "scan": {
+    "invert": "Lichte code op een donkere achtergrond. Veel telefooncamera’s kunnen omgekeerde codes niet lezen.",
+    "contrast": "Te weinig contrast tussen de code en de achtergrond. Er is minstens 3:1 nodig.",
+    "eyes": "De hoekmarkeringen moeten donkerder zijn dan de achtergrond, met minstens 3:1 contrast (2,5:1 voor de middens). Scanners vinden de code aan de hand daarvan.",
+    "logo": "Het logo bedekt te veel van de code. Maak het kleiner.",
+    "text": "De tekst in de code is te lang. Houd het bij ongeveer 8 tekens."
+  },
+  "export": {
+    "title": "Download je code",
+    "shortLinkPreview": {
+      "mark": "Voorbeeld",
+      "note": "Voorbeeld met een voorbeeld-korte link. Je permanente korte link wordt gemaakt als je deze code activeert, en elk bestand dat je downloadt bevat hem."
+    },
+    "format": "Formaat",
+    "png": "PNG",
+    "pngHint": "Afbeelding tot 8K voor web en documenten.",
+    "svg": "SVG",
+    "svgHint": "Vector, elk formaat, bewerkbaar.",
+    "pay": "Betaal {price} en download",
+    "subscribe": "Abonneer voor {price} / maand",
+    "download": "{format} downloaden",
+    "paid": "Betaling ontvangen. Je bestanden staan klaar.",
+    "pending": "Je betaling bevestigen… Dit duurt meestal een paar seconden. Je instellingen zijn vergrendeld zodat het bestand overeenkomt met de bon.",
+    "cancelled": "<b>Afrekenen geannuleerd.</b> Er is niets afgeschreven. Je ontwerp en formaat zijn opgeslagen, dus je kunt betalen wanneer je er klaar voor bent.",
+    "secure": "Je rondt af op de beveiligde betaalpagina van Stripe en komt daarna hier terug om te downloaden.",
+    "includedNote": "Inbegrepen in je aankoop. Niets te betalen.",
+    "resolution": "PNG-formaat",
+    "scale": "{scale}×",
+    "dpi": "{dpi} dpi",
+    "pixels": "{width} × {height} px",
+    "titleBuy": "Download je QR-code",
+    "titleGuest": "Klaar om te downloaden",
+    "subGuest": "Controleer de lay-out en het bestand en log dan in met Google om te betalen en te downloaden. Je ontwerp blijft zoals het is.",
+    "subPay": "Controleer de lay-out en het formaat. Je ziet het totaal voordat je betaalt.",
+    "subEntitled": "Deze code is van jou. Download elk formaat, zo vaak als je wilt.",
+    "stageLabel": "Lay-out om te downloaden",
+    "layouts": "Lay-outs van deze code",
+    "backToDesign": "Terug naar ontwerp",
+    "model": {
+      "static": "Statisch",
+      "dynamic": "Dynamisch"
+    },
+    "dims": {
+      "layout": "Lay-out",
+      "file": "Bestand"
+    },
+    "scanOk": "Scan gecontroleerd",
+    "scanFail": "Scant mogelijk niet",
+    "transparent": "Transparante achtergrond",
+    "quality": "<b>Geen kwaliteitsverlies.</b> SVG en PDF zijn puur vector: modules, iconen en tekst schalen tot billboardformaat. PNG wordt vanuit dezelfde vector gerenderd tot 8K.",
+    "returned": "Ingelogd met Google. Je lay-out en <b>{format}</b> staan precies zoals je ze achterliet.",
+    "sessionEnded": "<b>Je sessie is verlopen.</b> Log opnieuw in om verder te gaan: deze lay-out en je bestandsopties blijven bewaard.",
+    "signInAgain": "Opnieuw inloggen",
+    "alreadyOwned": "Al van jou. Download hem wanneer je wilt opnieuw, zonder nieuwe betaling.",
+    "paymentProcessing": "De betaling voor deze code wordt bevestigd. Hij wordt zo ontgrendeld, zonder tweede afschrijving.",
+    "signInCanceled": "Inloggen met Google is geannuleerd. Je lay-out en <b>{format}</b> zijn nog geselecteerd. Ga door met Google om het opnieuw te proberen.",
+    "signInIncomplete": "Inloggen met Google is niet afgerond. Je lay-out en <b>{format}</b> zijn nog geselecteerd. Ga door met Google om het opnieuw te proberen.",
+    "confirming": "Je betaling bevestigen…",
+    "preparing": "Je {format} voorbereiden…",
+    "ready": "Je {format} staat klaar.",
+    "downloaded": "<b>{name} gedownload.</b> Hij staat ook in Mijn QR-codes, klaar om opnieuw te downloaden.",
+    "downloadAgain": "Opnieuw downloaden",
+    "tryAgain": "Opnieuw proberen",
+    "errors": {
+      "failed": "<b>We konden je {format} niet voorbereiden.</b> Je betaling en instellingen zijn veilig. Probeer het zo opnieuw.",
+      "scan": "<b>Deze lay-out scant mogelijk niet.</b> Open het ontwerp om het op te lossen; bestanden worden alleen gemaakt voor codes die de scancheck doorstaan.",
+      "size": "<b>Dat formaat is te groot voor één bestand.</b> Kies een kleiner PNG-formaat of SVG.",
+      "payment": "<b>Deze code is nog niet ontgrendeld.</b> Er is niets afgeschreven. Vernieuw zo meteen, of betaal om te downloaden."
+    },
+    "checkoutFailed": "We konden het afrekenen niet openen. Er is niets afgeschreven; probeer het opnieuw.",
+    "continueGoogle": "Doorgaan met Google",
+    "guestNote": "Gratis ontwerpen. Je betaalt pas bij het downloaden.",
+    "receipt": {
+      "title": "Bon",
+      "paid": "Betaald",
+      "tax": "Btw inbegrepen zoals berekend door Stripe."
+    },
+    "lines": {
+      "single": "Single QR",
+      "dynamic": "Dynamische QR",
+      "singleNamed": "Single QR · {name}",
+      "unlock": "Statische ontgrendeling · {plan} · nog {left} van {limit}",
+      "credit": "Statisch tegoed · nog {left}",
+      "slot": "Dynamische plek · {plan} · {used} van {limit} in gebruik",
+      "starter": "Starter · maandelijks",
+      "ppIncluded": "Print Pack · inbegrepen bij {plan} · nog {left} van {limit}",
+      "pp": "Print Pack"
+    },
+    "perMonth": "{price}/maand",
+    "summary": {
+      "title": "Overzicht van je bestelling",
+      "code": "QR-code",
+      "type": "Type",
+      "layout": "Lay-out",
+      "file": "Bestand",
+      "total": "Totaal",
+      "tax": "Eventuele btw wordt berekend bij het afrekenen.",
+      "included": "Inbegrepen",
+      "includedShort": "Inbegrepen"
+    },
+    "emptyTitle": "Nog niets om te downloaden",
+    "emptyText": "Ontwerp eerst een QR-code. Je concept blijft in deze browser tot je het downloadt.",
+    "emptyAction": "Maak een QR-code",
+    "inspectPrint": "Printvoorbeeld openen",
+    "printTitle": "Print Pack",
+    "printPreviewText": "Controleer de exacte print-PDF, afloop, snijtekens en kleurwaarden van deze lay-out voordat je print.",
+    "printSetupText": "Print Pack heeft een printlay-out in mm nodig. Zet deze lay-out op Print · mm in Ontwerp bewerken → Formaat.",
+    "printSetup": "Instellen voor print",
+    "pdf": "PDF",
+    "pdfHint": "Vector voor drukkerijen.",
+    "payTotal": "Betaal {price} en download",
+    "useUnlock": "1 ontgrendeling gebruiken en downloaden",
+    "useCredit": "1 tegoed gebruiken en downloaden",
+    "unlockNote": "Uit je {plan}-abonnement. Hierna nog {left, plural, one {# ontgrendeling} other {# ontgrendelingen}} deze maand.",
+    "creditNote": "Uit je statische tegoeden. Hierna nog {left, plural, one {# tegoed} other {# tegoeden}}.",
+    "goLive": "Live zetten en downloaden",
+    "goLiveNote": "Gebruikt een actieve plek van je {plan}-abonnement: {used} van {limit} hierna.",
+    "perMonthShort": "{price}/mnd",
+    "ppTitle": "Print Pack",
+    "ppOptional": "Optioneel",
+    "ppUnlocked": "Ontgrendeld",
+    "ppDownload": "Downloaden",
+    "ppAddTitle": "Print Pack toevoegen",
+    "ppSub": "Print-PDF, bewerkbare SVG en kleur- en formaatspecificaties",
+    "ppUseIncluded": "1 inbegrepen Print Pack gebruiken",
+    "ppIncludedSub": "Nog {left} van {limit} deze maand · print-PDF, SVG en specificaties",
+    "ppIncluded": "Inbegrepen",
+    "ppAddText": "Print-PDF met afloop en snijtekens, een bewerkbare SVG en een kleur- en formaatblad voor deze QR.",
+    "ppAdd": "Print Pack toevoegen · +{price}",
+    "ppNotForSale": "Het Print Pack is nog niet in deze valuta te koop.",
+    "ppRepeat": "Opnieuw downloaden is inbegrepen. Instellingen: 100% formaat, 3 mm afloop, snijtekens, sRGB.",
+    "inspectPrintFirst": "Bekijk eerst de printbestanden",
+    "incl": {
+      "static1": "PNG en SVG van elke lay-out van deze code",
+      "static2": "Onbeperkt opnieuw downloaden",
+      "static3": "Ontwerp altijd aan te passen",
+      "dyn1": "Tot {limit} actieve Dynamische QR-codes, bestemmingen altijd te wijzigen",
+      "dyn2": "Basis scanstatistieken",
+      "dyn3": "PNG en SVG, onbeperkt opnieuw downloaden",
+      "pp": "Print Pack: print-PDF, bewerkbare SVG en specificaties"
+    },
+    "catalog": {
+      "not_offered": "Dit kan nog niet in de gekozen valuta worden gekocht. Er is niets afgeschreven.",
+      "price_mismatch": "De prijs is veranderd sinds deze pagina werd geladen. Er is niets afgeschreven; laad opnieuw om de actuele prijs te zien.",
+      "unavailable": "Nog niet te koop in deze valuta. Wijzig de valuta op Prijzen, of kijk later nog eens. Er wordt niets afgeschreven."
+    },
+    "unlockErrors": {
+      "no_allowance": "Geen maandelijkse ontgrendelingen meer. Kies hieronder een andere optie.",
+      "no_credits": "Geen statische tegoeden meer.",
+      "limit": "Alle actieve Dynamische plekken zijn in gebruik.",
+      "failed": "Dat is niet gelukt. Er is niets afgeschreven; probeer het opnieuw."
+    },
+    "limits": {
+      "staticTitle": "Je hebt deze maand alle {limit} statische ontgrendelingen gebruikt",
+      "staticText": "Deze QR heeft nog één ontgrendeling nodig. Kies wat bij je past; je ontwerp blijft zoals het is.",
+      "staticUsed": "{used} van {limit} ontgrendelingen gebruikt",
+      "resets": "Reset op {date}",
+      "buyOnce": "Koop deze QR eenmalig",
+      "buyOnceSub": "Single QR met PNG en SVG",
+      "credits": "3 statische tegoeden kopen",
+      "creditsSub": "Verlopen nooit",
+      "studio": "Upgraden naar Studio",
+      "studioSub": "40 ontgrendelingen en 5 Print Packs per maand",
+      "dynTitle": "Alle {limit} Dynamische plekken zijn in gebruik",
+      "dynText": "Plekken tellen de codes die op dit moment doorsturen, niet de codes die je deze maand hebt gemaakt. Maak er een vrij of stap over op een groter abonnement.",
+      "dynUsed": "{used} van {limit} actief",
+      "live": "Actuele telling · niet maandelijks",
+      "pause": "Pauzeer of verwijder een Dynamische code",
+      "pauseSub": "Maakt zijn plek meteen vrij",
+      "studioDynSub": "25 Dynamische plekken en statistieken per code",
+      "toStatic": "Maak er liever een statische QR van",
+      "toStaticSub": "Vaste inhoud · gebruikt een statische ontgrendeling"
+    },
+    "limit": "grotere formaten zijn meer dan {max} px",
+    "subUnlock": "Inbegrepen in {plan}: dit gebruikt 1 van je maandelijkse statische ontgrendelingen.",
+    "subCredit": "Dit gebruikt 1 van je statische tegoeden."
+  },
+  "dashboard": {
+    "noMatch": {
+      "static": "Geen statische QR-codes",
+      "dynamic": "Geen dynamische QR-codes",
+      "text": "Je andere codes staan onder Alle.",
+      "all": "Alle codes tonen"
+    },
+    "title": "Mijn QR-codes",
+    "new": "QR-code maken",
+    "empty": {
+      "title": "Nog geen QR-codes",
+      "text": "Codes die je koopt of begint te ontwerpen, verschijnen hier. Je kunt ze altijd opnieuw downloaden en nieuwe lay-outs toevoegen.",
+      "cta": "Maak je eerste QR-code"
+    },
+    "status": {
+      "draft": "Concept",
+      "active": "Actief",
+      "paused": "Gepauzeerd",
+      "archived": "Gearchiveerd",
+      "purchased": "Gekocht",
+      "inactive": "Niet actief"
+    },
+    "model": {
+      "static": "Statisch",
+      "dynamic": "Dynamisch"
+    },
+    "updated": "Bijgewerkt op {date}",
+    "open": "{name} openen",
+    "sub": "{count, plural, one {# code} other {# codes}} · {dynamic} dynamisch actief",
+    "subEmpty": "Hier staan je gekochte codes en concepten.",
+    "filterLabel": "Filter",
+    "filters": {
+      "all": "Alle {count}",
+      "static": "Statisch {count}",
+      "dynamic": "Dynamisch {count}"
+    },
+    "actions": {
+      "edit": "Ontwerp bewerken",
+      "download": "Downloaden",
+      "buy": "Kopen & downloaden",
+      "reactivate": "Weer aanzetten"
+    },
+    "loading": "Je QR-codes laden",
+    "manage": {
+      "select": "Selecteren",
+      "done": "Klaar",
+      "selectAll": "Alles selecteren",
+      "selectOne": "{name} selecteren",
+      "chooseToDelete": "Kies codes om te verwijderen",
+      "selected": "{count} van {total} geselecteerd",
+      "deleteSelected": "{count, plural, =0 {Verwijderen} other {# verwijderen}}",
+      "deleteOne": "{name} verwijderen",
+      "cancel": "Annuleren",
+      "dialog": {
+        "titleOne": "“{name}” verwijderen?",
+        "titleMany": "{count} QR-codes verwijderen?",
+        "leadOne": "Hij verdwijnt op elk apparaat uit Mijn QR-codes.",
+        "leadMany": "Ze verdwijnen op elk apparaat uit Mijn QR-codes.",
+        "dynamicTitle": "{count, plural, one {De korte link werkt niet meer} other {De korte links werken niet meer}}",
+        "dynamicText": "{links} {count, plural, one {stuurt} other {sturen}} meteen niet meer door. Geprinte exemplaren openen een pagina “link niet actief”. {count, plural, one {Er komt één plek in je abonnement} other {Er komen # plekken in je abonnement}} vrij.",
+        "staticTitle": "Geprinte exemplaren blijven werken",
+        "staticText": "Een statische code draagt zijn inhoud in het patroon, dus geprinte exemplaren scannen nog steeds. Je kunt {count, plural, one {deze aankoop} other {deze # aankopen}} niet meer downloaden of bewerken, en verwijderen levert geen terugbetaling op.",
+        "draftTitle": "{count, plural, one {Het concept wordt verwijderd} other {# concepten worden verwijderd}}",
+        "draftText": "Er is niets voor {count, plural, one {betaald} other {betaald}}, dus verder verandert er niets.",
+        "confirmOne": "Code verwijderen",
+        "confirmMany": "{count} codes verwijderen",
+        "undoNote": "Na het verwijderen kun je het een paar seconden ongedaan maken.",
+        "close": "Sluiten",
+        "metaDynamic": "Dynamisch",
+        "metaStatic": "Statisch",
+        "metaActive": "actief",
+        "metaPurchased": "gekocht",
+        "metaDraft": "concept"
+      },
+      "deletedOne": "“{name}” verwijderd.",
+      "deletedMany": "{count} codes verwijderd.",
+      "undo": "Ongedaan maken",
+      "restoredOne": "Code hersteld.",
+      "restoredMany": "{count} codes hersteld.",
+      "deleteFailed": "Verwijderen mislukt. Probeer het opnieuw.",
+      "restoreFailed": "Herstellen mislukt. Ongedaan maken kan tot een paar minuten na het verwijderen.",
+      "rename": {
+        "action": "Hernoemen",
+        "actionOne": "{name} hernoemen",
+        "label": "Naam van {name}",
+        "save": "Opslaan",
+        "cancel": "Annuleren",
+        "saved": "Hernoemd naar “{name}”.",
+        "empty": "Geef de code een naam.",
+        "failed": "We konden de naam niet wijzigen. Je tekst staat er nog; probeer het opnieuw."
+      }
+    },
+    "printPack": "Print Pack"
+  },
+  "qr": {
+    "back": "Alle codes",
+    "layouts": "Lay-outs",
+    "shortLink": "Korte link",
+    "destination": "Bestemming",
+    "destinationHint": "Geprinte codes blijven werken; ze openen nu dit adres.",
+    "save": "Opslaan",
+    "saved": "Opgeslagen",
+    "scans": "Scans, afgelopen 14 dagen",
+    "scansTotal": "{count, plural, one {# scan} other {# scans}}",
+    "download": "Downloaden",
+    "buy": "Kopen om te downloaden",
+    "copy": "Kopiëren",
+    "copied": "Gekopieerd",
+    "editDesign": "Ontwerp bewerken",
+    "dest": {
+      "title": "Bestemming",
+      "saved": "Opgeslagen",
+      "new": "Nieuwe bestemming",
+      "hint": "Geprinte codes openen het nieuwe adres binnen een minuut. De korte link blijft {short}.",
+      "save": "Bestemming opslaan",
+      "cancel": "Annuleren",
+      "goesTo": "Scans van {short} gaan naar",
+      "previously": "Eerder {url}",
+      "changedAt": "gewijzigd",
+      "history": {
+        "title": "Wijzigingsgeschiedenis",
+        "to": "Gewijzigd naar",
+        "from": "van {url}"
+      },
+      "change": "Bestemming wijzigen",
+      "conflict": {
+        "title": "Deze bestemming is ergens anders gewijzigd",
+        "text": "Hij gaat nu naar {url}. Je wijziging hieronder is niet opgeslagen.",
+        "load": "Nieuwste versie laden",
+        "loaded": "Nieuwste versie geladen: {url}. Bekijk je wijziging en sla op om hem te vervangen."
+      }
+    },
+    "scansCard": {
+      "title": "Scans · afgelopen 14 dagen",
+      "total": "Totaal",
+      "today": "Vandaag",
+      "emptyTitle": "Nog geen scans",
+      "emptyText": "De eerste scan verschijnt hier binnen een paar minuten. Probeer je geprinte code te scannen.",
+      "periodEmptyTitle": "Geen scans in de afgelopen 14 dagen",
+      "periodEmptyText": "Eerdere scans blijven bewaard. Nieuwe scans verschijnen hier binnen een paar minuten."
+    },
+    "details": {
+      "back": "Mijn QR-codes",
+      "newLayout": "Nieuwe lay-out",
+      "permanent": "Permanent",
+      "shortNote": "Dit staat er in je geprinte code. Het verandert nooit, dus geprinte codes blijven werken.",
+      "noShortLink": "Deze code gaat live met een korte link zodra hij is geactiveerd.",
+      "content": "Inhoud",
+      "fixed": "Vast in de code",
+      "staticNote": "Een statische code bewaart zijn inhoud in het patroon zelf, dus geprinte exemplaren openen altijd dit. Ontwerpwijzigingen zijn gratis en onbeperkt.",
+      "incl": {
+        "files": "PNG en SVG, zo vaak downloaden als je wilt",
+        "layouts": "Nieuwe lay-outs en ontwerpwijzigingen inbegrepen"
+      },
+      "dimsSquare": "{size} vierkant",
+      "print": "Print · mm",
+      "screen": "Scherm · px",
+      "setupPrint": "Instellen voor print",
+      "pack": {
+        "needsMm": "Print Pack heeft een printlay-out in mm nodig. Stel een lay-out in voor print in Ontwerp bewerken → Formaat en controleer hem daarna in Printvoorbeeld.",
+        "what": "Print-PDF met afloop en snijtekens, een bewerkbare SVG en een kleur- en formaatblad voor deze QR.",
+        "add": "Print Pack toevoegen · +{price}",
+        "addSub": "Opent Printvoorbeeld, zodat je de PDF en specificaties kunt controleren voordat je betaalt.",
+        "useIncluded": "1 inbegrepen Print Pack gebruiken",
+        "includedSub": "Nog {left} van {limit} inbegrepen Print Packs deze maand in {plan}. Controleer de bestanden eerst in Printvoorbeeld als je wilt.",
+        "includedDone": "Print Pack toegevoegd uit je abonnement. De bestanden staan klaar.",
+        "includedFailed": "We konden geen inbegrepen Print Pack gebruiken. Er is niets verbruikt; probeer het opnieuw.",
+        "noneLeft": "Er zijn deze maand geen inbegrepen Print Packs meer over.",
+        "inspect": "Bekijken in Printvoorbeeld",
+        "notForSale": "Printvoorbeeld toont de exacte pagina en specificaties. Het Print Pack is hier nog niet te koop.",
+        "repeat": "Opnieuw downloaden is inbegrepen. Bestanden van “{layout}” op 100% formaat, 3 mm afloop, snijtekens."
+      },
+      "layoutNoteDynamic": "Een ontwerp wijzigen maakt een nieuw bestand om te downloaden. Codes die je al hebt geprint, blijven werken.",
+      "layoutNoteStatic": "Elke lay-out is inbegrepen in deze aankoop. Download ze als PNG of SVG.",
+      "rename": "Hernoemen",
+      "renameFailed": "We konden de naam van de code niet wijzigen. Je tekst staat er nog; probeer het opnieuw.",
+      "nameLabel": "Naam van de QR-code",
+      "save": "Opslaan",
+      "cancel": "Annuleren",
+      "opens": "Opent",
+      "downloadAll": "Alles downloaden",
+      "layoutsCount": "{n, plural, one {# lay-out} other {# lay-outs}}",
+      "edit": "Bewerken",
+      "downloadLayout": "{name} downloaden",
+      "downloadFormat": "{format} van {name} downloaden",
+      "printPreview": "Printvoorbeeld van {name}",
+      "newLayoutCard": "Nieuwe lay-out",
+      "layoutAdded": "“{name}” toegevoegd aan {code}. Je andere lay-outs zijn ongewijzigd.",
+      "layoutAddFailed": "We konden de lay-out niet toevoegen. Probeer het opnieuw.",
+      "copy": {
+        "action": "Andere inhoud gebruiken…",
+        "title": "Andere inhoud gebruiken",
+        "text": "Een statische code bewaart zijn inhoud in het patroon, dus andere inhoud betekent een nieuwe QR-code: die wordt apart ontworpen en gekocht ({price}). Deze code en zijn bestanden blijven precies zoals ze zijn.",
+        "start": "Nieuwe QR-code maken",
+        "keep": "Deze code houden",
+        "close": "Sluiten"
+      },
+      "ppUnlocked": "Ontgrendeld",
+      "ppLocked": "Vergrendeld",
+      "deleteLayout": {
+        "label": "Lay-out {name} verwijderen",
+        "title": "“{name}” verwijderen?",
+        "text": "“{name}” wordt uit je account verwijderd, samen met de downloads van deze lay-out. Dit kan niet ongedaan worden gemaakt.",
+        "keeps": "De QR-code, de inhoud, korte link, bestemming, aankoop en het Print Pack, en de andere lay-outs blijven zoals ze zijn.",
+        "confirm": "Lay-out verwijderen",
+        "cancel": "Annuleren",
+        "close": "Sluiten",
+        "done": "“{name}” verwijderd.",
+        "failed": "We konden “{name}” niet verwijderen. Er is niets veranderd; probeer het opnieuw.",
+        "retry": "Opnieuw proberen",
+        "lastTitle": "Dit is de enige lay-out",
+        "lastText": "Een QR-code houdt altijd minstens één lay-out, dus “{name}” kan niet worden verwijderd. Voeg eerst een andere lay-out toe, of verwijder de hele code in Mijn QR-codes.",
+        "lastError": "Een QR-code houdt minstens één lay-out, dus deze blijft.",
+        "ok": "OK"
+      },
+      "pause": {
+        "pause": "Pauzeren",
+        "resume": "Hervatten",
+        "pausedTitle": "Korte link gepauzeerd",
+        "pausedText": "Wie deze code scant, ziet een pagina die niet beschikbaar is. De korte link, bestemming en lay-outs blijven bewaard. Je kunt de bestemming nu wijzigen; hij opent zodra je hervat.",
+        "liveText": "Pauzeren stopt het doorsturen meteen. In een abonnement maakt het ook de actieve plek van deze code vrij.",
+        "paused": "Gepauzeerd. De korte link toont nu een pagina die niet beschikbaar is.",
+        "resumed": "Hervat. De korte link stuurt weer door naar je bestemming.",
+        "limit": "Alle actieve Dynamische plekken in je abonnement zijn in gebruik. Pauzeer of verwijder een andere Dynamische code en hervat daarna deze.",
+        "noPlan": "Voor het hervatten van deze code is een actief Dynamisch abonnement nodig.",
+        "failed": "We konden de status van de code niet wijzigen. Er is niets veranderd; probeer het opnieuw."
+      },
+      "inactiveNote": "Scans van deze code tonen een pagina “nu niet actief”: er is een actief Dynamisch abonnement nodig. De korte link, bestemming en scans blijven bewaard, en dezelfde geprinte code stuurt weer door zodra een abonnement actief is.",
+      "inactiveCta": "Abonnement & facturatie"
+    },
+    "hostedPage": {
+      "title": "Gehoste pagina",
+      "live": "Live · versie {version}",
+      "publishedOn": "Gepubliceerd op {date}",
+      "never": "Nog niet gepubliceerd",
+      "neverNote": "Publiceer de pagina zodat mensen die de code scannen hem zien.",
+      "changed": "Niet-gepubliceerde wijzigingen",
+      "changedNote": "Bezoekers zien de gepubliceerde versie tot je opnieuw publiceert.",
+      "upToDate": "Bezoekers zien de nieuwste versie.",
+      "notLive": "De pagina gaat live op de korte link zodra de code actief is.",
+      "edit": "Pagina bewerken",
+      "publish": "Publiceren",
+      "publishing": "Publiceren…",
+      "published": "Gepubliceerd. Dezelfde QR-code en korte link tonen nu deze versie.",
+      "unchanged": "Niets nieuws om te publiceren.",
+      "rules": "Sommige gegevens moeten worden aangepast voordat je publiceert. Bewerk de pagina om ze op te lossen.",
+      "failed": "Publiceren mislukt. Probeer het opnieuw.",
+      "open": "Pagina openen",
+      "takenDown": "We hebben deze pagina na een melding offline gehaald, dus de korte link toont “Deze pagina is niet beschikbaar”. Je inhoud en scans blijven bewaard. Schrijf naar support als je denkt dat dit een vergissing is."
+    },
+    "hostedEditor": {
+      "title": "Pagina bewerken",
+      "back": "Terug naar QR-details",
+      "lead": "Wijzigingen worden als concept opgeslagen. Bezoekers zien ze nadat je publiceert.",
+      "save": "Concept opslaan",
+      "saving": "Opslaan…",
+      "saved": "Concept opgeslagen.",
+      "saveFailed": "Kon het concept niet opslaan. Controleer de foto’s en probeer het opnieuw.",
+      "publish": "Opslaan en publiceren",
+      "unsaved": "Niet-opgeslagen wijzigingen",
+      "loading": "Pagina-editor laden"
+    }
+  },
+  "billing": {
+    "title": "Abonnement & facturatie",
+    "plan": "Dynamisch abonnement",
+    "active": "Actief tot {date}",
+    "cancels": "Stopt op {date}",
+    "none": "Geen abonnement. Statische codes betaal je eenmalig; Starter voegt Dynamische codes en maandelijkse ontgrendelingen toe.",
+    "manage": "Abonnement beheren",
+    "purchases": "Aankopen",
+    "noPurchases": "Nog geen aankopen.",
+    "usage": "Gebruik",
+    "liveDynamic": "Actieve Dynamische codes",
+    "liveCount": "{used} van {limit}",
+    "liveHint": "Er komen plekken vrij als je een Dynamische code pauzeert of verwijdert.",
+    "renews": "Wordt verlengd op {date}",
+    "payment": "Betaalmethode",
+    "paymentManaged": "Je kaart wordt bewaard door Stripe. Beheer hem in het facturatieportaal.",
+    "compare": "Abonnementen vergelijken",
+    "statusActive": "Actief",
+    "statusCanceling": "Stopt",
+    "statusNone": "Geen abonnement",
+    "date": "Datum",
+    "open": "Openen",
+    "receiptNote": "Stripe mailt een bon voor elke betaling.",
+    "statuses": {
+      "paid": "Betaald",
+      "pending": "In behandeling",
+      "refunded": "Terugbetaald",
+      "failed": "Mislukt"
+    },
+    "liveNoPlan": "{used} actief · geen abonnement",
+    "printPackItem": "Print Pack",
+    "packItem": "Statisch pakket · {n} tegoeden",
+    "signedIn": "Ingelogd met Google als {email}.",
+    "current": "Huidig abonnement",
+    "planMonthly": "{plan} · maandelijks",
+    "noPlan": "Geen abonnement",
+    "plans": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "tiles": {
+      "dynamic": "Actieve Dynamische QR",
+      "live": "Actief",
+      "dynamicNote": "Pauzeer of verwijder een code om een plek vrij te maken",
+      "unlocks": "Statische ontgrendelingen",
+      "packs": "Inbegrepen Print Packs",
+      "packsNote": "{resets} · daarna +{price}",
+      "credits": "Statische tegoeden",
+      "oneTime": "Eenmalig",
+      "creditsNote": "Verlopen nooit · gebruikt na de maandelijkse ontgrendelingen",
+      "available": "{n} beschikbaar",
+      "leftMonth": "Nog {n} deze maand",
+      "noReset": "Abonnement stopt op {date} · geen reset"
+    },
+    "of": "van {limit}",
+    "left": "over",
+    "resets": "Reset op {date}",
+    "price": "Prijs",
+    "perMonth": "{price} / maand",
+    "renewsOn": "Wordt verlengd op",
+    "endsOn": "Stopt op",
+    "paymentStripe": "Bewaard door Stripe",
+    "upgrade": "Upgraden naar Studio · {price}/maand",
+    "choosePlan": "Kies een abonnement",
+    "oneTime": "Eenmalige aankopen",
+    "item": "Artikel",
+    "amount": "Bedrag",
+    "receipt": "Bon",
+    "credits": "{n} statische tegoeden",
+    "items": {
+      "single": "Single QR",
+      "printPack": "Print Pack"
+    },
+    "portal": {
+      "noCustomer": "Er is nog geen facturatieaccount. Dat wordt aangemaakt bij je eerste betaling.",
+      "unavailable": "Dat is op dit moment niet beschikbaar voor je abonnement.",
+      "failed": "We konden Stripe niet openen. Er is niets veranderd; probeer het opnieuw."
+    },
+    "updatePayment": "Betaalmethode bijwerken",
+    "card": "{brand} •••• {last4}",
+    "overdue": {
+      "title": "Je verlengingsbetaling is niet gelukt",
+      "pastDue": "Je abonnement blijft actief zolang de betaling openstaat. Werk je betaalmethode bij om de openstaande factuur te betalen.",
+      "unpaid": "Je abonnement is gestopt omdat de verlengingsbetaling niet is geïnd. Werk je betaalmethode bij om de openstaande factuur te betalen en het weer aan te zetten.",
+      "action": "Betaalmethode bijwerken en betalen",
+      "status": "Betaling achterstallig",
+      "pending": "Na het betalen kan het even duren voordat je abonnement hier is bijgewerkt."
+    },
+    "canceling": {
+      "title": "Je abonnement stopt op {date}",
+      "until": "Tot die tijd werkt alles zoals nu: je Dynamische codes sturen door en je plekken en maandelijkse ontgrendelingen blijven.",
+      "after": "{count, plural, =0 {Na die datum tonen Dynamische codes een pagina “nu niet actief” in plaats van door te sturen.} one {Na die datum toont je # actieve Dynamische code een pagina “nu niet actief” in plaats van door te sturen. De korte link, bestemming en het ontwerp blijven bewaard.} other {Na die datum tonen je # actieve Dynamische codes een pagina “nu niet actief” in plaats van door te sturen. De korte links, bestemmingen en ontwerpen blijven bewaard.}} Statische codes die je hebt gekocht, blijven werken.",
+      "resume": "Mijn abonnement houden",
+      "resumeNote": "Je abonnement loopt door op hetzelfde abonnement en wordt op de gebruikelijke datum verlengd. Er wordt nu niets afgeschreven.",
+      "resumed": "Je abonnement loopt door. Het wordt op de gebruikelijke datum verlengd.",
+      "notScheduled": "Er is geen opzegging meer om ongedaan te maken. Laad de pagina opnieuw om je abonnement te zien.",
+      "failed": "We konden je abonnement niet behouden. Er is niets veranderd. Probeer het opnieuw."
+    },
+    "ended": {
+      "title": "Je {plan}-abonnement is gestopt op {date}",
+      "titleNoDate": "Je {plan}-abonnement is gestopt",
+      "scans": "Je Dynamische codes tonen een pagina “nu niet actief”. De korte links, bestemmingen, ontwerpen en scans blijven bewaard. Statische codes die je hebt gekocht, blijven werken.",
+      "back": "Activeer opnieuw en dezelfde geprinte codes sturen weer door. Codes die je hebt gepauzeerd of verwijderd, blijven zo.",
+      "reactivate": "{plan} opnieuw activeren · {price}/maand"
+    }
+  },
+  "legal": {
+    "terms": {
+      "title": "Servicevoorwaarden"
+    },
+    "privacy": {
+      "title": "Privacybeleid"
+    },
+    "draft": "Deze pagina is een tijdelijke versie tot de juridische tekst is goedgekeurd."
+  },
+  "errors": {
+    "notFound": {
+      "title": "Pagina niet gevonden",
+      "text": "De pagina die je zoekt bestaat niet.",
+      "cta": "Naar de startpagina"
+    },
+    "linkUnavailable": {
+      "title": "Deze link is niet actief",
+      "text": "De eigenaar van deze QR-code heeft hem gepauzeerd, of hij bestaat niet meer."
+    },
+    "generic": "Er ging iets mis. Probeer het opnieuw.",
+    "invalid": "Controleer de gemarkeerde velden.",
+    "unauthorized": "Log in om verder te gaan.",
+    "too_long": "Deze inhoud is te lang voor een QR-code. Maak hem korter en probeer het opnieuw.",
+    "linkInactive": {
+      "title": "Deze link is nu niet beschikbaar",
+      "text": "Deze QR-code is op dit moment niet actief. Er is niets mis met je telefoon; probeer het later opnieuw."
+    },
+    "draft_limit": "Je hebt {limit} opgeslagen concepten, het maximum per account. Ontgrendel of verwijder er een in Mijn QR-codes en sla daarna opnieuw op: je ontwerp blijft hier staan.",
+    "page": {
+      "title": "Er ging iets mis",
+      "text": "Deze pagina kon niet laden. Je opgeslagen codes en concepten zijn veilig. Probeer het opnieuw of ga terug naar het begin.",
+      "retry": "Opnieuw proberen",
+      "home": "Naar de startpagina",
+      "reference": "Referentie: {ref}"
+    }
+  },
+  "common": {
+    "close": "Sluiten",
+    "loading": "Laden…",
+    "required": "Verplicht"
+  },
+  "loading": {
+    "page": "Laden",
+    "details": "QR-code laden",
+    "billing": "Je abonnement en aankopen laden",
+    "export": "Je bestand laden",
+    "editor": "Editor laden"
+  },
+  "trial": {
+    "badge": "Starter-proefperiode",
+    "back": "Mijn QR-codes",
+    "states": {
+      "active": {
+        "title": "Je proefperiode loopt",
+        "lead": "Gestart op {start}. Je Dynamische test-QR werkt echt tot {end}.",
+        "big": "{days, plural, one {# dag} other {# dagen}}",
+        "bigSub": "over · eindigt op {end}",
+        "status": "Er staat geen kaart geregistreerd, dus er wordt niets afgeschreven als de proefperiode afloopt. Je testcode stuurt tot die tijd echt door.",
+        "main": "Starter activeren · {price}/maand",
+        "second": "Mijn QR-codes openen",
+        "foot": "Bij activeren blijft de korte link hetzelfde, dus geprinte tests blijven werken.",
+        "endTitle": "Als de proefperiode afloopt op {end}"
+      },
+      "ending": {
+        "title": "Je proefperiode loopt bijna af",
+        "lead": "Op {end} stuurt je testcode niet meer door. Activeer Starter om hem actief te houden.",
+        "big": "{days, plural, one {# dag} other {# dagen}}",
+        "bigSub": "over · eindigt op {end}",
+        "status": "Er staat geen kaart geregistreerd, dus er wordt niets automatisch afgeschreven.",
+        "main": "Starter activeren · {price}/maand",
+        "second": "Mijn QR-codes openen",
+        "foot": "Bij activeren blijft de korte link hetzelfde, dus geprinte tests blijven werken.",
+        "endTitle": "Wat er gebeurt op {end}"
+      },
+      "expired": {
+        "title": "Je proefperiode is afgelopen",
+        "lead": "Hij is afgelopen op {end}. Je testcode is gepauzeerd; je ontwerp en scans blijven bewaard.",
+        "big": "Afgelopen",
+        "bigSub": "{end}",
+        "status": "De korte link van je testcode toont nu een pagina “link gepauzeerd”. Activeer Starter en hij stuurt weer door naar je bestemming.",
+        "main": "Opnieuw activeren met Starter · {price}/maand",
+        "second": "Alle abonnementen bekijken",
+        "foot": "Er is niets afgeschreven. Er stond geen kaart geregistreerd.",
+        "endTitle": "Zo zet je hem weer aan"
+      },
+      "upgraded": {
+        "title": "Je Starter-abonnement is actief",
+        "lead": "De testcode uit je proefperiode is nu een gewone Dynamische QR in je abonnement.",
+        "big": "Dynamisch",
+        "bigSub": "abonnement actief",
+        "status": "Je testcode houdt zijn korte link en stuurt door zoals voorheen.",
+        "main": "Mijn QR-codes openen",
+        "second": "Abonnement & facturatie",
+        "foot": "Stripe mailt een bon voor elke betaling.",
+        "endTitle": "Wat er is veranderd"
+      }
+    },
+    "steps": {
+      "pause": {
+        "t": "Je testdoorverwijzing wordt gepauzeerd",
+        "d": "De korte link toont een pagina “link gepauzeerd” in plaats van je bestemming. Er wordt niets verwijderd."
+      },
+      "free": {
+        "t": "Er wordt niets afgeschreven",
+        "d": "Er staat geen kaart geregistreerd en er is geen automatische verlenging."
+      },
+      "wake": {
+        "t": "Activeer wanneer je wilt om hem weer aan te zetten",
+        "d": "Neem Starter en dezelfde korte link stuurt weer door. Je ontwerp en scans blijven in je account."
+      },
+      "choose": {
+        "t": "Kies Starter",
+        "d": "{price} per maand. Altijd opzegbaar."
+      },
+      "same": {
+        "t": "Je korte link wordt weer wakker",
+        "d": "Hij stuurt weer door, naar dezelfde bestemming."
+      },
+      "room": {
+        "t": "Ga verder",
+        "d": "Tot {limit} actieve Dynamische codes, met dagelijkse scans."
+      },
+      "kept": {
+        "t": "Dezelfde korte link",
+        "d": "Geprinte tests blijven werken. Niets opnieuw printen."
+      },
+      "more": {
+        "t": "Meer ruimte",
+        "d": "Tot {limit} actieve Dynamische codes en dagelijkse scans."
+      },
+      "receipt": {
+        "t": "Bonnen per e-mail",
+        "d": "Beheer of zeg het abonnement op wanneer je wilt via Abonnement & facturatie."
+      }
+    },
+    "code": {
+      "title": "Je Dynamische test-QR",
+      "live": "Stuurt door",
+      "paused": "Doorsturen gepauzeerd",
+      "plan": "Actief in je abonnement",
+      "opens": "Opent {host}",
+      "pausedLine": "Gepauzeerd · toont een pagina “link gepauzeerd”",
+      "scans": "Scans tot nu toe",
+      "today": "Vandaag",
+      "chart": "Scans in de proefperiode per dag: {values}",
+      "change": "Bestemming wijzigen",
+      "view": "Testcode bekijken",
+      "none": "Je hebt je testcode nog niet gemaakt.",
+      "noneText": "Maak een Dynamische website-QR en gebruik je proefperiode om hem actief te maken: een echte korte link die je kunt printen en testen.",
+      "create": "Maak een Dynamische test-QR"
+    },
+    "included": {
+      "title": "Inbegrepen in je proefperiode",
+      "kept": "Bewaard uit je proefperiode",
+      "points": [
+        "1 Dynamische test-QR met een echte korte link",
+        "Dagelijkse scantotalen",
+        "Wijzig op elk moment waar hij naartoe leidt",
+        "Elke lay-out, vorm, kleur, elk logo en elk bijschrift"
+      ],
+      "not": "Statische codes moet je nog steeds kopen."
+    },
+    "start": {
+      "title": "Probeer Dynamisch 7 dagen gratis",
+      "text": "Geen kaart, geen automatische afschrijving. Eén Dynamische test-QR met een echte korte link.",
+      "action": "Start 7 dagen gratis proberen",
+      "used": "Je hebt je gratis proefperiode al gebruikt.",
+      "failed": "We konden de proefperiode niet starten. Probeer het opnieuw."
+    },
+    "bar": {
+      "active": {
+        "title": "Starter-proefperiode · nog {days, plural, one {# dag} other {# dagen}}.",
+        "text": "Je testcode stuurt door tot {end}. Geen kaart geregistreerd."
+      },
+      "ending": {
+        "title": "Proefperiode eindigt op {end}.",
+        "text": "Activeer Starter zodat je testcode blijft doorsturen."
+      },
+      "expired": {
+        "title": "Proefperiode afgelopen op {end}.",
+        "text": "Je testcode is gepauzeerd. Activeer Starter om hem weer aan te zetten."
+      },
+      "upgraded": {
+        "title": "Je Starter-abonnement is actief.",
+        "text": "Je testcode is nu een gewone Dynamische QR."
+      },
+      "open": "Details proefperiode",
+      "activate": "Starter activeren…"
+    },
+    "usage": {
+      "title": "Dynamische plek voor de proefperiode",
+      "count": "{used} van 1",
+      "hint": "Een actuele plek, geen maandtegoed."
+    },
+    "useTrial": "Gebruik je gratis proefperiode · nu live",
+    "useTrialHint": "Je ene Dynamische test-QR tijdens de proefperiode. Geen kaart nodig.",
+    "useTrialFailed": "We konden je proefperiode niet voor deze code gebruiken. Misschien heb je al een testcode.",
+    "sample": {
+      "title": "Voorbeeld van een Print Pack",
+      "badge": "Demo-QR",
+      "demo": "Demo-QR van het Print Pack-voorbeeld",
+      "text": "Zie precies wat een Print Pack bevat. Het voorbeeld gebruikt een demo-QR die Hey QR opent, niet je testcode.",
+      "pdf": "Voorbeeld-PDF voor print",
+      "pdfSub": "sRGB · pagina {w} × {h} mm met afloop en snijtekens",
+      "svg": "Voorbeeld bewerkbare SVG",
+      "svgSub": "sRGB · HEX-kleuren · {w} × {h} mm",
+      "spec": "Voorbeeldspecificaties",
+      "specSub": "PDF-blad · formaten en kleurwaarden"
+    }
+  },
+  "print": {
+    "spec": {
+      "title": "Printspecificaties",
+      "finished": "Eindformaat",
+      "page": "PDF-pagina (met afloop en tekens)",
+      "bleed": "Afloop",
+      "marks": "Snijtekens",
+      "qr": "QR-formaat (met stille zone)",
+      "profile": "Kleurprofiel",
+      "srgb": "sRGB · geen conversie",
+      "logo": "Logoresolutie",
+      "vector": "Vector, elk formaat",
+      "colors": "Kleuren (HEX · sRGB)",
+      "key": "Renderkenmerk",
+      "yes": "Ja",
+      "no": "Nee",
+      "role_modules": "Modules",
+      "role_corners": "Hoekkaders",
+      "role_centers": "Hoekmiddens",
+      "role_background": "Achtergrond",
+      "role_frame": "Kader",
+      "role_caption": "Bijschrift"
+    },
+    "title": "Printvoorbeeld",
+    "leadLocked": "Controleer de exacte PDF-pagina en printspecificaties voordat je koopt. De bestanden komen overeen met wat je hier ziet.",
+    "leadUnlocked": "Dit is de PDF-pagina waarvan je bestanden worden gemaakt. Pas een instelling aan en download opnieuw zonder extra kosten.",
+    "locked": "Print Pack vergrendeld",
+    "unlocked": "Print Pack ontgrendeld",
+    "back": {
+      "details": "Terug naar QR-details",
+      "export": "Terug naar exporteren"
+    },
+    "toDesign": "Terug naar ontwerp",
+    "canvas": "Voorbeeld van de PDF-pagina",
+    "zoom": "Zoomen",
+    "fit": "Passend",
+    "z100": "100%",
+    "z200": "200%",
+    "guides": "Snijlijn en veilige zone",
+    "approx": "Schermbenadering van de printkleur",
+    "trimLabel": "Snijformaat {size}",
+    "generating": "Printvoorbeeld maken…",
+    "pageLabel": "Print-PDF-pagina, {w} × {h} mm",
+    "error": {
+      "title": "We konden het voorbeeld niet maken.",
+      "text": "Je lay-out en printinstellingen blijven bewaard. Dit is meestal tijdelijk.",
+      "retry": "Opnieuw proberen"
+    },
+    "foot": {
+      "page": "PDF-pagina {size}",
+      "count": "1 pagina",
+      "bleed": "Afloop {bleed} mm",
+      "noBleed": "Geen afloop",
+      "marks": "Snijtekens",
+      "noMarks": "Geen snijtekens",
+      "pageB": "PDF-pagina <b>{size}</b>"
+    },
+    "specTitle": "Printspecificaties",
+    "keys": {
+      "finished": "Eindformaat",
+      "finishedBleed": "+ {bleed} mm afloop aan elke kant",
+      "finishedNoBleed": "Geen afloop",
+      "qr": "QR-formaat",
+      "qrSmall": "Onder 20 mm · scant misschien niet overal",
+      "qrOk": "Scant vanaf maximaal ongeveer {cm} cm",
+      "profile": "Kleurprofiel",
+      "profileSub": "RGB, geen conversie",
+      "logo": "Logoresolutie",
+      "logoVector": "Vector",
+      "logoNone": "Geen logo",
+      "logoLow": "Onder 300 ppi op dit formaat",
+      "logoOk": "300 ppi of meer · wordt scherp geprint",
+      "logoVectorSub": "Scherp op elk formaat",
+      "logoNoneSub": "Niets te controleren",
+      "logoChecking": "Controleren…",
+      "logoCheckingSub": "Gemeten op dit formaat"
+    },
+    "unlock": {
+      "title": "Print Pack ontgrendelen",
+      "text": "Krijg de print-PDF, bewerkbare SVG en specificaties voor “{name}”, gemaakt met de instellingen hieronder.",
+      "action": "Print Pack toevoegen · +{price}",
+      "sub": "Eenmalig voor deze QR. Je komt met je instellingen terug op dit scherm.",
+      "notForSale": "Het Print Pack is hier nog niet te koop. Je kunt de pagina en specificaties wel bekijken.",
+      "needCode": "Ontgrendel eerst deze QR: het Print Pack is een extra voor een gekochte of actieve code.",
+      "buyCode": "Deze QR kopen",
+      "failed": "We konden het afrekenen niet openen. Er is niets afgeschreven; probeer het opnieuw.",
+      "cancelled": "Afrekenen geannuleerd. Er is niets afgeschreven; je instellingen blijven bewaard.",
+      "pending": "Je betaling bevestigen…",
+      "pendingSub": "Je blijft hier, met deze instellingen.",
+      "useIncluded": "1 inbegrepen Print Pack gebruiken",
+      "payInstead": "Betaal liever {price} en houd je tegoed",
+      "includedLeft": "Nog {left} van {limit} inbegrepen Print Packs deze maand · reset op {resets}"
+    },
+    "files": {
+      "title": "Print Pack ontgrendeld",
+      "badge": "Klaar om te downloaden",
+      "text": "De bestanden gebruiken de instellingen hieronder. Wijzig er een en download opnieuw zonder extra kosten.",
+      "pdf": "Print-PDF downloaden",
+      "pdfSub": "sRGB · pagina {w} × {h} mm",
+      "svg": "Bewerkbare SVG downloaden",
+      "svgSub": "sRGB · HEX-kleuren · {w} × {h} mm",
+      "spec": "Printspecificaties downloaden",
+      "specSub": "PDF-blad · formaten en kleurwaarden",
+      "stale": "De lay-out is veranderd sinds dit voorbeeld. Controleer de pagina opnieuw voordat je downloadt.",
+      "pdfTitle": "Print-PDF",
+      "svgTitle": "Bewerkbare SVG",
+      "specTitle": "Printspecificaties"
+    },
+    "size": {
+      "title": "Eindformaat",
+      "custom": "Aangepast",
+      "width": "Breedte",
+      "height": "Hoogte · behoudt verhoudingen",
+      "hint": "Van 15 tot 600 mm breed. De QR en het bijschrift schalen mee met de lay-out."
+    },
+    "warn": {
+      "qrTitle": "De QR is {mm} mm breed",
+      "qrText": "Codes onder 20 mm kunnen op oudere telefoons mislukken. Maak de lay-out groter of houd de code minstens 20 mm.",
+      "logoTitle": "Je logo is {ppi} ppi op dit formaat",
+      "logoText": "Het kan onscherp worden geprint. Upload een logo van minstens {px} px breed, of print op 100%.",
+      "upload": "Logo met hogere resolutie uploaden",
+      "use100": "100% formaat gebruiken"
+    },
+    "profiles": {
+      "title": "Kleurprofiel voor de print-PDF",
+      "srgb": "sRGB · geen conversie",
+      "srgbDesc": "Voor digitale printers en de meeste online drukkerijen.",
+      "fogra39": "Coated FOGRA39",
+      "gracol": "GRACoL 2013",
+      "fogra29": "Uncoated FOGRA29",
+      "cmykDesc": "CMYK-conversie is nog niet beschikbaar.",
+      "shop": "<b>Overleg met je drukkerij.</b> Vraag welk kleurprofiel ze nodig hebben. Weten ze het niet zeker, stuur dan de PDF samen met het specificatieblad."
+    },
+    "colors": {
+      "title": "Kleuren",
+      "legendHex": "<b>HEX · sRGB</b> bewerkbare SVG",
+      "legendCmyk": "<b>CMYK</b> alleen met een CMYK-profiel",
+      "none": "—",
+      "note": "Kleuren zijn exacte sRGB-waarden in beide bestanden. Het scherm toont een benadering van de printkleur."
+    },
+    "tech": {
+      "title": "Technische instellingen",
+      "bleed": "Afloop",
+      "bleedDesc": "Achtergrond loopt door voorbij de snijlijn",
+      "marks": "Snijtekens",
+      "k100": "Zwarte modules printen als 100% K",
+      "k100Hint": "Beschikbaar met een CMYK-profiel.",
+      "pdf": "PDF-standaard",
+      "pdfV": "PDF 1.7, vector",
+      "text": "Tekst",
+      "textV": "Lettertypen ingesloten",
+      "logo": "Logo",
+      "logoRaster": "{px} px raster · {ppi} ppi bij {mm} mm",
+      "logoVector": "Vector",
+      "quiet": "Stille zone",
+      "quietV": "4 modules aan elke kant",
+      "safe": "Veilige zone",
+      "safeV": "{mm} mm binnen de snijlijn",
+      "intent": "Output intent",
+      "intentV": "sRGB, geen conversie",
+      "none": "Geen"
+    },
+    "notPrint": {
+      "title": "Deze lay-out is voor schermen",
+      "text": "Print Pack heeft een printlay-out in mm nodig. Wijzig de eenheid in Ontwerp → Formaat om er een toe te voegen.",
+      "action": "Instellen voor print"
+    },
+    "pack": {
+      "title": "Print Pack",
+      "add": "Voeg een Print Pack toe en geef je drukker alles in één download: een print-PDF met afloop en snijtekens, een bewerkbare SVG en een kleur- en formaatblad. Bekijk de pagina eerst in Printvoorbeeld.",
+      "preview": "Printvoorbeeld · {layout}",
+      "defaults": "Standaardinstellingen: 100% formaat, 3 mm afloop, snijtekens. Wijzig ze in Printvoorbeeld.",
+      "open": "Printvoorbeeld openen"
+    },
+    "plan": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "sample": {
+      "pageTitle": "Printvoorbeeld · voorbeeld",
+      "name": "Little Fern Coffee",
+      "layout": "Voorbeeld merkkaart",
+      "back": "Terug naar de startpagina",
+      "title": "Dit is een voorbeeld",
+      "text": "Een demo-QR laat precies zien wat een Print Pack bevat. Maak je eigen code en controleer hier de printbestanden voordat je koopt.",
+      "create": "Maak je QR-code",
+      "pricing": "Bekijk de details van het Print Pack"
+    }
+  },
+  "plans": {
+    "title": "Betaal eenmalig voor een paar codes, of neem een abonnement voor veel.",
+    "lead": "Ontwerpen, bekijken en de scancheck zijn altijd gratis. Je betaalt pas bij het downloaden.",
+    "currencyLabel": "Prijzen tonen in",
+    "localTitle": "Lokale prijzen in {currency}.",
+    "localText": "De hele site, het afrekenen en de bonnen gebruiken deze bedragen. Btw wordt bij het afrekenen toegevoegd.",
+    "pendingTitle": "Sommige prijzen in {currency} zijn nog niet vastgesteld.",
+    "pendingText": "Aanbiedingen zonder prijs in {currency} kun je voorlopig niet in {currency} kopen. Er wordt niets omgerekend vanuit een andere valuta.",
+    "unavailable": "Nog niet te koop in {currency}.",
+    "current": "Je huidige abonnement",
+    "manage": "Je abonnement beheren",
+    "perMonth": "per maand",
+    "live": "Tegelijk actief",
+    "monthly": "Elke maand nieuw",
+    "dynCodes": "<b>{n}</b> Dynamische QR-codes",
+    "unlocks": "<b>{n}</b> statische QR-ontgrendelingen",
+    "packsIncl": "<b>{n}</b> Print Packs",
+    "once": {
+      "title": "Eenmalig",
+      "sub": "Geen abonnement. Codes die je ontgrendelt, blijven van jou."
+    },
+    "month": {
+      "title": "Maandelijks",
+      "sub": "Voor Dynamische QR-codes en veel statische. Altijd opzegbaar."
+    },
+    "free": {
+      "title": "Gratis",
+      "q": "Ontwerp en test een code voordat je iets uitgeeft.",
+      "a": "Live ontwerpen en bekijken",
+      "b": "Scancheck bij elke bewerking",
+      "c": "Tot {limit} opgeslagen concepten als je bent ingelogd",
+      "cta": "Begin met ontwerpen"
+    },
+    "single": {
+      "title": "Single QR",
+      "unit": "eenmalig",
+      "q": "Eén statische QR met alle downloads.",
+      "a": "PNG- en SVG-downloads",
+      "b": "Elke lay-out van die QR, altijd opnieuw te downloaden",
+      "c": "Optioneel Print Pack +{price}",
+      "cta": "Maak een QR"
+    },
+    "packs": {
+      "title": "Statische pakketten",
+      "unit": "voor {n} tegoeden",
+      "credits": "{n} statische tegoeden",
+      "each": "{price} per QR",
+      "buy": "{n} tegoeden kopen",
+      "note": "Eén tegoed ontgrendelt één unieke statische QR, wanneer je er klaar voor bent. Tegoeden verlopen niet."
+    },
+    "pp": {
+      "kicker": "Extra voor elke QR",
+      "title": "Print Pack · +{price} per QR",
+      "text": "Standaard uit. Voeg het toe bij het afrekenen of later via de details van de QR. Studio bevat er {n} per maand.",
+      "pdf": "Vector-PDF voor print",
+      "pdfSub": "sRGB, 3 mm afloop en snijtekens, op het exacte formaat.",
+      "svg": "Bewerkbare SVG",
+      "svgSub": "Voor je eigen ontwerp, met sRGB- en HEX-kleuren.",
+      "spec": "Kleur- en formaatblad",
+      "specSub": "Eindformaat, QR-formaat, stille zone en kleurwaarden."
+    },
+    "starter": {
+      "title": "Starter",
+      "badge": "7 dagen gratis proberen",
+      "a": "Basis scanstatistieken: dagtotalen",
+      "b": "Wijzig Dynamische bestemmingen wanneer je wilt",
+      "c": "Print Pack +{price} per QR",
+      "trial": "Start 7 dagen gratis proberen",
+      "openTrial": "Open je proefperiode",
+      "subscribe": "Nu abonneren · {price}/maand",
+      "note": "Proefperiode: geen kaart, geen automatische afschrijving."
+    },
+    "studio": {
+      "title": "Studio",
+      "badge": "Voor teams en printwerk",
+      "a": "Scanstatistieken per code",
+      "b": "Wijzig Dynamische bestemmingen wanneer je wilt",
+      "c": "Extra Print Packs +{price} per QR",
+      "cta": "Kies Studio"
+    },
+    "rules": {
+      "title": "Zo werken ontgrendelingen en limieten",
+      "1t": "Eén ontgrendeling, één unieke QR",
+      "1d": "Een statisch tegoed of maandelijkse ontgrendeling opent één QR. Alle lay-outs, PNG- en SVG-bestanden en herhaalde downloads gebruiken diezelfde ontgrendeling.",
+      "2t": "Maandelijkse tegoeden worden gereset",
+      "2d": "Nieuwe statische ontgrendelingen en inbegrepen Print Packs worden op je factuurdatum vernieuwd. Ongebruikte schuiven niet door.",
+      "3t": "Dynamische plekken zijn actueel, niet maandelijks",
+      "3d": "Een plek is in gebruik zolang de code doorstuurt. Pauzeer of verwijder een Dynamische code om zijn plek meteen vrij te maken.",
+      "4t": "Van jou na het opzeggen",
+      "4d": "Statische codes die je hebt ontgrendeld, blijven van jou: geprinte exemplaren blijven werken en de bestanden blijven downloadbaar. Als de betaalde periode afloopt, sturen Dynamische korte links niet meer door en kunnen ze niet worden gedownload of geactiveerd. Je codes blijven bewaard.",
+      "5t": "Als een verlengingsbetaling mislukt",
+      "5d": "Je abonnement blijft actief zolang de betaling openstaat en Stripe het opnieuw probeert. Lukt het niet en eindigt het abonnement, dan stopt het net als na een opzegging. Zodra de betaling slaagt, loopt je abonnement gewoon door."
+    },
+    "cmp": {
+      "title": "Vergelijken",
+      "what": "Functie",
+      "region": "Vergelijking van abonnementen",
+      "more": "Scroll voor meer abonnementen",
+      "pick1": "Eerste abonnement",
+      "pick2": "Tweede abonnement",
+      "yes": "Inbegrepen",
+      "no": "Niet inbegrepen",
+      "na": "Niet van toepassing: geen abonnement",
+      "model": {
+        "free": "Gratis",
+        "once": "Eenmalige aankoop",
+        "credits": "Tegoeden",
+        "monthly": "Maandabonnement"
+      },
+      "once": "eenmalig",
+      "mo": "/mnd",
+      "live": "Live ontwerp, voorbeeld en scancheck",
+      "static": "Statische QR-ontgrendelingen",
+      "staticHint": "PNG- en SVG-bestanden",
+      "dynamic": "Actieve Dynamische QR-plekken",
+      "dynamicHint": "Tegelijk actief",
+      "analytics": "Scanstatistieken",
+      "printPack": "Print Pack",
+      "repeat": "Opnieuw downloaden",
+      "cancel": "Na het opzeggen",
+      "oneQr": "1 QR",
+      "perCredit": "1 QR per tegoed",
+      "noExpiry": "Tegoeden verlopen niet",
+      "perMonth": "Elke maand {n} nieuw",
+      "noRollover": "Ongebruikte schuiven niet door",
+      "atOnce": "{n} tegelijk actief",
+      "freeSlot": "Pauzeer er een om de plek vrij te maken",
+      "basic": "Basis",
+      "daily": "Dagtotalen",
+      "perCode": "Per code",
+      "ppAdd": "+{price} per QR",
+      "ppStudio": "{n} inbegrepen per maand",
+      "ppThen": "Daarna +{price} per QR",
+      "stay": "Statische codes blijven downloadbaar",
+      "dynStop": "Dynamische links sturen niet meer door als de betaalde periode afloopt",
+      "foot": "Btw wordt berekend bij het afrekenen. Websitecodes kunnen statisch of dynamisch zijn; tekst-, Wi-Fi- en visitekaartcodes zijn statisch."
+    },
+    "errors": {
+      "not_offered": "Dit kan nog niet in de gekozen valuta worden gekocht. Er is niets afgeschreven.",
+      "price_mismatch": "De prijs is veranderd sinds deze pagina werd geladen. Er is niets afgeschreven; laad opnieuw om de actuele prijs te zien.",
+      "unauthorized": "Log in om verder te gaan.",
+      "failed": "We konden het afrekenen niet openen. Er is niets afgeschreven; probeer het opnieuw."
+    },
+    "terms": "Altijd opzegbaar: je abonnement loopt tot het einde van de betaalde periode. Als een verlengingsbetaling mislukt, blijft het actief zolang de betaling openstaat."
+  },
+  "apiKeys": {
+    "title": "API-sleutels",
+    "lead": "Met sleutels werken je eigen tools met de QR-codes van dit account. Elke sleutel hoort alleen bij dit account.",
+    "yourKeys": "Je sleutels",
+    "create": "API-sleutel maken",
+    "once": "Kopieer deze sleutel nu. Voor je veiligheid wordt hij maar één keer getoond en kan hij later niet worden opgehaald.",
+    "copy": "Kopiëren",
+    "copied": "Gekopieerd",
+    "done": "Klaar",
+    "none": "Nog geen API-sleutels.",
+    "created": "Gemaakt op {date}",
+    "failed": "We konden geen sleutel maken. Er is niets opgeslagen; probeer het opnieuw.",
+    "active": "Actief",
+    "revoked": "Ingetrokken",
+    "revokedOn": "Ingetrokken op {date}",
+    "lastUsed": "Laatst gebruikt op {date}",
+    "neverUsed": "Nooit gebruikt",
+    "revoke": {
+      "action": "Intrekken",
+      "label": "{prefix} intrekken",
+      "title": "{prefix} intrekken?",
+      "text": "Tools die deze sleutel gebruiken, werken meteen niet meer. Je andere sleutels blijven werken. Dit kan niet ongedaan worden gemaakt.",
+      "confirm": "Sleutel intrekken",
+      "cancel": "Annuleren",
+      "done": "{prefix} is ingetrokken.",
+      "failed": "We konden de sleutel niet intrekken. Er is niets veranderd; probeer het opnieuw.",
+      "close": "Sluiten"
+    }
+  },
+  "hosted": {
+    "hostedBy": "Gehost door HeyQR",
+    "report": "Deze pagina melden",
+    "unavailableTitle": "Deze pagina is niet beschikbaar",
+    "unavailableText": "De eigenaar heeft deze QR-code gepauzeerd of de pagina verwijderd. Probeer het later opnieuw of neem rechtstreeks contact met hen op.",
+    "loading": "Pagina laden",
+    "menu": {
+      "kicker": "Menukaart",
+      "sections": "Onderdelen van de menukaart"
+    },
+    "coupon": {
+      "kicker": "Coupon",
+      "expiredKicker": "Aanbieding afgelopen",
+      "copy": "Code kopiëren",
+      "copied": "Gekopieerd",
+      "redeem": "Online inwisselen",
+      "expired": "Verlopen",
+      "ended": "Deze aanbieding is afgelopen. Vraag in de winkel naar de actuele acties.",
+      "ends": "Geldig tot {date}",
+      "endedOn": "Afgelopen op {date}",
+      "terms": "Voorwaarden"
+    },
+    "social": {
+      "links": "Links"
+    },
+    "business": {
+      "kicker": "Bedrijf",
+      "openNow": "Nu open · tot {to}",
+      "closedNow": "Nu gesloten",
+      "closedToday": "Vandaag gesloten",
+      "call": "Bellen",
+      "directions": "Route",
+      "website": "Website",
+      "hours": "Openingstijden",
+      "closed": "Gesloten",
+      "days": {
+        "mon": "ma",
+        "tue": "di",
+        "wed": "wo",
+        "thu": "do",
+        "fri": "vr",
+        "sat": "za",
+        "sun": "zo"
+      },
+      "closedOpens": "Nu gesloten · opent om {from}"
+    },
+    "apps": {
+      "appStoreTop": "Download in de",
+      "appStore": "App Store",
+      "playTop": "Ontdek het op",
+      "play": "Google Play",
+      "phoneNote": "Open de link voor de store van je telefoon.",
+      "desktopNote": "Op een computer openen de knoppen de website van elke store.",
+      "scanTitle": "Scan met je telefoon",
+      "scanText": "Op iPhone opent de App Store, op Android Google Play.",
+      "qrLabel": "QR-code voor deze pagina"
+    },
+    "pdf": {
+      "open": "PDF openen",
+      "download": "Downloaden",
+      "meta": "{pages, plural, one {# pagina} other {# pagina’s}} · {size}",
+      "metaNoPages": "{size}",
+      "waiting": "Er wordt een nieuwe versie van dit document voorbereid. Probeer het zo opnieuw.",
+      "notReady": "Het document wordt nog voorbereid."
+    },
+    "product": {
+      "photos": "Productfoto’s",
+      "photo": "Foto {n} van {count}",
+      "prev": "Vorige foto",
+      "next": "Volgende foto",
+      "opens": "Opent {host}"
+    },
+    "reportForm": {
+      "title": "Deze pagina melden",
+      "lead": "Vertel ons wat er mis is. HeyQR bekijkt elke melding.",
+      "reason": "Reden",
+      "reasons": {
+        "scam": "Oplichting of fraude",
+        "malware": "Malware of een schadelijke download",
+        "illegal": "Illegale of schadelijke inhoud",
+        "impersonation": "Doet zich voor als iemand anders",
+        "other": "Iets anders"
+      },
+      "details": "Details",
+      "detailsPlaceholder": "Wat zag je? (optioneel)",
+      "email": "Je e-mailadres",
+      "emailHint": "Optioneel. Alleen gebruikt als we je iets moeten vragen.",
+      "send": "Melding versturen",
+      "sending": "Versturen…",
+      "sent": "Bedankt. We bekijken deze pagina.",
+      "failed": "We konden de melding niet versturen. Probeer het opnieuw.",
+      "invalid": "Kies een reden en controleer het e-mailadres.",
+      "back": "Terug naar de pagina"
+    }
+  },
+  "developers": {
+    "metaTitle": "API voor ontwikkelaars",
+    "metaDescription": "Maak HeyQR-codes in je eigen code: het pakket @heyqr/qr-core voor statische codes, en een REST API voor Dynamische codes die eraan komt.",
+    "docs": {
+      "search": {
+        "label": "Zoeken in de documentatie",
+        "placeholder": "Zoeken in de documentatie",
+        "clear": "Zoekopdracht wissen",
+        "empty": "Geen pagina’s gevonden voor “{query}”.",
+        "emptyHint": "Probeer “logo”, “PNG”, “scannen” of “Wi-Fi”.",
+        "suggestions": ["logo", "PNG", "scannen", "Wi-Fi"],
+        "resultOne": "1 pagina",
+        "resultOther": "{count} pagina’s"
+      },
+      "groups": {
+        "start": "Aan de slag",
+        "guides": "Handleidingen",
+        "ref": "Referentie",
+        "help": "Hulp",
+        "rest": "REST API"
+      },
+      "menu": {
+        "open": "Documentatiemenu openen",
+        "close": "Documentatiemenu sluiten",
+        "label": "Documentatie"
+      },
+      "breadcrumbRoot": "Ontwikkelaars",
+      "onThisPage": "Op deze pagina",
+      "backToTop": "Terug naar boven",
+      "previous": "Vorige",
+      "next": "Volgende",
+      "soon": "Binnenkort",
+      "preview": "Voorbeeld",
+      "designPreview": "Ontwerpvoorbeeld",
+      "notPublic": "Nog niet openbaar",
+      "env": {
+        "both": "Browser en Node.js",
+        "browser": "Browser",
+        "node": "Alleen Node.js",
+        "shell": "Terminal",
+        "types": "Types",
+        "http": "HTTP",
+        "json": "JSON"
+      },
+      "copy": "Kopiëren",
+      "copied": "Gekopieerd",
+      "copiedAnnounce": "{file} gekopieerd naar het klembord",
+      "copyFailed": "Kopiëren mislukt. Selecteer de code zelf.",
+      "required": "Verplicht",
+      "endpoint": {
+        "auth": "Autorisatie",
+        "authValue": "Authorization: Bearer <API-sleutel>",
+        "method": "Methode",
+        "url": "Request-URL",
+        "base": "Op de HeyQR-server die je gebruikt; de openbare API is nog niet beschikbaar."
+      },
+      "helpful": {
+        "question": "Was deze pagina nuttig?",
+        "yes": "Ja",
+        "no": "Nee",
+        "sending": "Versturen…",
+        "thanks": "Bedankt voor je feedback.",
+        "failed": "We konden dat niet opslaan. Probeer het opnieuw."
+      },
+      "footer": {
+        "checked": "Gecontroleerd aan de hand van de broncode van @heyqr/qr-core {version}. Route: {route}",
+        "restChecked": "Gecontroleerd aan de hand van de /api/v1-routes van deze build. Route: {route}",
+        "proposed": "Voorgesteld ontwerp. Geen gepubliceerd contract."
+      },
+      "status": {
+        "unpublished": "Niet gepubliceerd",
+        "live": "Live",
+        "liveOnNpm": "Live op npm",
+        "soon": "Binnenkort"
+      },
+      "products": {
+        "pkgTitle": "npm-pakket",
+        "pkgText": "Gratis. Statische QR-codes, gerenderd op je eigen machine. Geen account, geen API-sleutel.",
+        "restTitle": "REST API",
+        "restText": "Maak en beheer codes, ook Dynamische codes, vanaf je server."
+      },
+      "install": {
+        "managers": "Pakketbeheerder",
+        "npmLink": "npmjs.com/package/{name}",
+        "opensNewTab": "(opent in een nieuw tabblad)",
+        "unpublishedTitle": "Nog niet op npm",
+        "unpublishedText": "{name} {version} is nog niet gepubliceerd, dus er valt nog niets te installeren. Alles op deze pagina’s komt overeen met de huidige broncode. Ontvang een e-mail zodra het uit is:"
+      },
+      "restSoon": {
+        "cardTitle": "Dynamische codes vanaf je server",
+        "cardText": "Met een API-sleutel uit je account kun je codes maken, wijzigen waar Dynamische codes naartoe wijzen en scantellingen lezen. We publiceren de volledige referentie met echte requests en responses zodra hij opengaat.",
+        "planned": "Gepland",
+        "items": [
+          "API-sleutels voor je account",
+          "Eén code of tot 100 tegelijk maken",
+          "De bestemming van een Dynamische code wijzigen",
+          "Dagelijkse scantellingen"
+        ],
+        "npmLink": "Gebruik nu het npm-pakket"
+      },
+      "waitlist": {
+        "label": "Ontvang een e-mail zodra de REST API opengaat",
+        "placeholder": "you@company.com",
+        "join": "Op de wachtlijst",
+        "joining": "Aanmelden…",
+        "invalid": "Controleer het adres. Er is een naam, @ en een domein nodig.",
+        "failed": "We konden je nu niet toevoegen. Probeer het opnieuw.",
+        "joined": "Je staat op de lijst. We schrijven naar {email} zodra de REST API opengaat.",
+        "hint": "Eén e-mail zodra hij opengaat. Geen nieuwsbrief."
+      },
+      "notifyPackages": {
+        "label": "Ontvang een e-mail zodra het pakket is gepubliceerd",
+        "join": "Mail mij",
+        "joined": "Je staat op de lijst. We schrijven naar {email} zodra het is gepubliceerd.",
+        "hint": "Eén e-mail zodra het uit is. Geen nieuwsbrief."
+      },
+      "responseNotes": {
+        "created": "De code is als concept gemaakt, met één layout-id per lay-out in de request.",
+        "invalid": "Een veld overtreedt een regel; `details` noemt elk veld en herhaalt nooit waarden.",
+        "draftLimit": "Het account heeft al het maximale aantal concepten.",
+        "reused": "De Idempotency-Key is gebruikt voor een andere request; er is niets gemaakt.",
+        "changed": "Opgeslagen. `changed` is false als het adres al het opgeslagen adres was.",
+        "conflict": "Iemand anders heeft het eerst gewijzigd. `current` is wat er nu is opgeslagen; lees het en beslis opnieuw.",
+        "notDynamic": "Statische codes hebben geen bestemming: hun inhoud zit in het patroon.",
+        "rateLimited": "Over het budget van het account. Wacht Retry-After seconden en stuur dan dezelfde request opnieuw.",
+        "unauthorized": "Elke sleutel die niet geverifieerd wordt, krijgt dit antwoord, nog voordat de body wordt gelezen.",
+        "bulk202": "Poll GET /v1/jobs/{job_id} of wacht op de webhook.",
+        "bulk400": "Er wordt geen code gemaakt als een item faalt.",
+        "scans200": "Dagen zonder scans worden opgenomen met 0."
+      },
+      "pages": {
+        "overview": {
+          "title": "API voor ontwikkelaars",
+          "nav": "Overzicht",
+          "lead": "Maak HeyQR-codes in je eigen code. Begin vandaag met het gratis npm-pakket; een REST API voor Dynamische codes is onderweg.",
+          "blocks": [
+            {
+              "k": "products"
+            },
+            {
+              "k": "h2",
+              "id": "what",
+              "t": "Wat je kunt bouwen"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Gestileerde QR-codes in een browserapp: vormen, kleuren, een logo of korte tekst in het midden.",
+                "Printklare SVG- en PNG-bestanden vanuit een script of een serverjob.",
+                "Een scancheck voordat er iets wordt getoond of geprint: contrast, omgekeerde kleuren, een logo dat te veel bedekt.",
+                "Complete lay-outs met kaders en bijschriften, dezelfde die de HeyQR-editor exporteert."
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "entries",
+              "t": "Entry points"
+            },
+            {
+              "k": "p",
+              "t": "Eén pakket, vijf imports. Gebruik de hoofdentry overal; de andere zijn voor Node.js of voor decoderen in de browser."
+            },
+            {
+              "k": "table",
+              "label": "Entry points",
+              "cols": ["Import", "Draait in", "Wat je krijgt"],
+              "rows": [
+                {
+                  "cells": [
+                    "`@heyqr/qr-core`",
+                    "Browser en Node.js",
+                    "`encodePayload`, `renderQr`, `renderQrSvg`, `composeLayout`, helpers voor kleur en capaciteit"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/raster`", "Alleen Node.js", "`rasterizeSvg`: SVG naar PNG met resvg"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`@heyqr/qr-core/verify`",
+                    "Alleen Node.js",
+                    "`decodeSvg`, `decodeImage`, `verifyScan`: lees de code terug met ZXing"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`@heyqr/qr-core/verify-browser`",
+                    "Browser",
+                    "`decodeSvgInBrowser`: dezelfde decoder, vanuit een wasm-bestand dat je zelf host"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/node`", "Alleen Node.js", "`rasterizeSvg` en de verify-functies in één import"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Het pakket maakt statische codes: de inhoud zit in het patroon. Dynamische codes met een bewerkbare korte link en scantellingen vereisen een HeyQR-abonnement en komen met de REST API."
+            },
+            {
+              "k": "h2",
+              "id": "next",
+              "t": "Volgende stappen"
+            },
+            {
+              "k": "cards",
+              "items": [
+                {
+                  "page": "quickstart",
+                  "title": "Snelstart",
+                  "t": "Je eerste code in vijf regels.",
+                  "icon": "zap"
+                },
+                {
+                  "page": "content",
+                  "title": "Inhoud coderen",
+                  "t": "Websites, Wi-Fi, contacten, evenementen en meer.",
+                  "icon": "book"
+                },
+                {
+                  "page": "scan",
+                  "title": "Controleer of hij scant",
+                  "t": "Lees het scanrapport en decodeer het resultaat.",
+                  "icon": "scan"
+                },
+                {
+                  "page": "api",
+                  "title": "Functies",
+                  "t": "Elke export met zijn signatuur.",
+                  "icon": "braces"
+                }
+              ]
+            }
+          ]
+        },
+        "install": {
+          "title": "Installatie",
+          "lead": "Voeg @heyqr/qr-core toe aan een browserapp, een Node.js-service of allebei.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "add",
+              "t": "Het pakket toevoegen"
+            },
+            {
+              "k": "install",
+              "package": "qrCore"
+            },
+            {
+              "k": "h2",
+              "id": "reqs",
+              "t": "Vereisten"
+            },
+            {
+              "k": "table",
+              "label": "Vereisten",
+              "cols": ["Onderdeel", "Details"],
+              "rows": [
+                {
+                  "cells": ["Moduleformaat", "Alleen ES-modules (het pakket is `\"type\": \"module\"`). Gebruik `import`, niet `require`."],
+                  "required": false
+                },
+                {
+                  "cells": ["TypeScript", "Types worden met het pakket meegeleverd. Geen `@types`-pakket nodig."],
+                  "required": false
+                },
+                {
+                  "cells": ["Browser", "De hoofdentry heeft geen Node.js-afhankelijkheden en werkt met elke moderne bundler."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "Node.js",
+                    "`/raster` en `/verify` gebruiken `@resvg/resvg-js`, een native module met kant-en-klare binaries voor gangbare platforms."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "Decoderen in de browser",
+                    "`/verify-browser` laadt `zxing_reader.wasm` vanaf een URL die jij kiest, nooit vanaf een CDN."
+                  ],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "wasm",
+              "t": "De decoder hosten voor de browser"
+            },
+            {
+              "k": "p",
+              "t": "Alleen nodig voor `decodeSvgInBrowser`. Kopieer het wasm-bestand uit de afhankelijkheid `zxing-wasm` naar je public-map en geef de URL ervan door. Het commando vindt het bestand via het pakket, dus het werkt met npm, pnpm en Yarn."
+            },
+            {
+              "k": "code",
+              "example": "wasm"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Het bestand is `zxing-wasm/reader/zxing_reader.wasm` in zxing-wasm 3.1.7, de versie waarvan het pakket nu afhankelijk is. Controleer het opnieuw na een upgrade."
+            }
+          ]
+        },
+        "quickstart": {
+          "title": "Snelstart",
+          "lead": "Codeer inhoud, geef hem stijl, controleer de scan en krijg een SVG, in ongeveer een minuut.",
+          "blocks": [
+            {
+              "k": "steps",
+              "items": [
+                {
+                  "title": "Installeren",
+                  "t": "Voeg `@heyqr/qr-core` toe met je pakketbeheerder."
+                },
+                {
+                  "title": "De inhoud coderen",
+                  "t": "`encodePayload` zet een website, Wi-Fi-netwerk of contact om in de tekst in de code."
+                },
+                {
+                  "title": "De look beschrijven",
+                  "t": "Een `QrStyle` bepaalt de modulevorm, hoekvormen en kleuren."
+                },
+                {
+                  "title": "De scan controleren",
+                  "t": "`renderQr` geeft een scanrapport terug met een oplossing voor elk probleem."
+                },
+                {
+                  "title": "Het bestand ophalen",
+                  "t": "`renderQrSvg` geeft een losse SVG terug; in Node.js zet `rasterizeSvg` die om in een PNG."
+                }
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "In de browser"
+            },
+            {
+              "k": "code",
+              "example": "quickstartBrowser"
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Bestanden opslaan in Node.js"
+            },
+            {
+              "k": "code",
+              "example": "quickstartNode"
+            }
+          ]
+        },
+        "content": {
+          "title": "Inhoud coderen",
+          "lead": "encodePayload zet gestructureerde inhoud om in precies de tekst die telefoons voor elke soort code verwachten.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "types",
+              "t": "Soorten inhoud"
+            },
+            {
+              "k": "p",
+              "t": "Geef een van de negen `QrContent`-objecten door. `QR_CONTENT_TYPES` somt de `type`-waarden op."
+            },
+            {
+              "k": "table",
+              "label": "Soorten inhoud",
+              "cols": ["type", "Velden", "De code bevat"],
+              "rows": [
+                {
+                  "cells": ["`website`", "`url` (kale domeinen krijgen https://)", "De genormaliseerde URL"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "`text`", "De tekst zoals hij is"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`wifi`",
+                    "`ssid`, `security` \"WPA\" | \"WEP\" | \"nopass\", `password?`, `hidden?`",
+                    "`WIFI:T:WPA;S:…;P:…;;`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`contact`",
+                    "`firstName?`, `lastName?`, `title?`, `company?`, `phone?`, `email?`, `website?`",
+                    "Een vCard 3.0"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`email`", "`to`, `subject?`, `body?`", "`mailto:` met onderwerp en tekst"],
+                  "required": false
+                },
+                {
+                  "cells": ["`phone`", "`number`", "`tel:` met cijfers en +"],
+                  "required": false
+                },
+                {
+                  "cells": ["`sms`", "`number`, `message?`", "`SMSTO:number:message`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`location`", "`address`, `name?`", "`geo:0,0?q=` met het adres"],
+                  "required": false
+                },
+                {
+                  "cells": ["`event`", "`title`, `start`, `end?`, `place?`", "Een agenda-item (VEVENT)"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "examples",
+              "t": "Voorbeelden"
+            },
+            {
+              "k": "code",
+              "example": "contentExamples"
+            },
+            {
+              "k": "h2",
+              "id": "contact",
+              "t": "Visitekaartjes"
+            },
+            {
+              "k": "p",
+              "t": "Contacten worden een vCard 3.0, de versie die telefooncamera’s het betrouwbaarst lezen. Lege velden worden weggelaten en lange regels worden afgebroken."
+            },
+            {
+              "k": "code",
+              "example": "vcard"
+            },
+            {
+              "k": "h2",
+              "id": "events",
+              "t": "Evenementen"
+            },
+            {
+              "k": "p",
+              "t": "`start` en `end` zijn lokale tijden zoals `2026-12-05T19:00`. Een datum zonder tijd, zoals `2026-12-05`, maakt een evenement van een hele dag."
+            },
+            {
+              "k": "code",
+              "example": "event"
+            },
+            {
+              "k": "h2",
+              "id": "urls",
+              "t": "Een websiteadres controleren"
+            },
+            {
+              "k": "p",
+              "t": "`parseWebsiteUrl` is dezelfde controle die de HeyQR-editor gebruikt. Hij weigert spaties, andere schema’s, inloggegevens en hosts zonder punt."
+            },
+            {
+              "k": "code",
+              "example": "urlCheck"
+            }
+          ]
+        },
+        "style": {
+          "title": "Een code stylen",
+          "lead": "Een QrStyle beschrijft vormen en kleuren. Elke stijl wordt aan dezelfde scanregels getoetst.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "shapes",
+              "t": "Vormen"
+            },
+            {
+              "k": "chips",
+              "t": "pattern · datamodules",
+              "items": ["square", "rounded", "dot", "diamond", "leaf", "fluid", "vbars", "hbars"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeFrame · ringen van de hoekmarkeringen",
+              "items": ["square", "rounded", "cushion", "circle", "leaf"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeBall · middens van de hoekmarkeringen",
+              "items": ["square", "rounded", "circle", "diamond", "leaf"]
+            },
+            {
+              "k": "h2",
+              "id": "colors",
+              "t": "Kleuren"
+            },
+            {
+              "k": "p",
+              "t": "`colors` neemt vier hexkleuren: `fg` voor datamodules, `eye` voor de hoekringen, `eyeIn` voor de hoekmiddens en `bg` voor de achtergrond."
+            },
+            {
+              "k": "table",
+              "label": "Minimaal contrast",
+              "cols": ["Onderdeel", "Minimaal contrast met de achtergrond"],
+              "rows": [
+                {
+                  "cells": ["Datamodules (`fg`)", "3 : 1 (`MIN_CONTRAST.modules`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Hoekringen (`eye`)", "3 : 1 (`MIN_CONTRAST.eyeFrame`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Hoekmiddens (`eyeIn`)", "2,5 : 1 (`MIN_CONTRAST.eyeCenter`)"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Codes moeten donkerder zijn dan hun achtergrond. Een lichte code op een donkere achtergrond faalt met het probleem `invert`, zelfs als het contrast hoog is."
+            },
+            {
+              "k": "code",
+              "example": "contrast"
+            },
+            {
+              "k": "h2",
+              "id": "center",
+              "t": "Korte tekst in het midden"
+            },
+            {
+              "k": "p",
+              "t": "`centerText` zet een label in de code. Het toont de eerste regel, tot 14 tekens (`CENTER_TEXT_MAX`); langere tekst wordt bij een heel woord afgekapt met een beletselteken."
+            },
+            {
+              "k": "code",
+              "example": "centerText"
+            },
+            {
+              "k": "h2",
+              "id": "art",
+              "t": "Artwork achter de code"
+            },
+            {
+              "k": "p",
+              "t": "`art` tekent zachte vormen in twee tinten achter de modules, met een optionele vage afbeelding. De scancheck leest de achtergrond als getint."
+            },
+            {
+              "k": "code",
+              "example": "art"
+            }
+          ]
+        },
+        "logo": {
+          "title": "Logo’s en iconen",
+          "lead": "Zet een afbeelding of een 24 × 24 lijnicoon in het midden. De foutcorrectie gaat automatisch omhoog, zodat de code leesbaar blijft.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "fields",
+              "t": "Logovelden"
+            },
+            {
+              "k": "table",
+              "label": "QrLogo",
+              "cols": ["Veld", "Type", "Beschrijving"],
+              "rows": [
+                {
+                  "cells": ["`href`", "string", "Afbeeldings-URL of data-URI. Genegeerd als `iconPath` is ingesteld."],
+                  "required": false
+                },
+                {
+                  "cells": ["`iconPath`", "string", "Een 24 × 24 lijnpad, bijvoorbeeld een Lucide-icoon."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`size`",
+                    "number",
+                    "Logobreedte als aandeel van de codebreedte. Getekend tussen 0.10 en 0.46 (`CENTER_LOGO_SIZE`)."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`plate`", "\"none\" | \"square\" | \"circle\"", "Ondergrond achter het logo."],
+                  "required": true
+                },
+                {
+                  "cells": ["`tile`", "boolean", "Icoon op een gekleurde afgeronde tegel in plaats van een plaatje."],
+                  "required": false
+                },
+                {
+                  "cells": ["`plateColor`, `iconColor`", "string", "Hexkleuren voor het plaatje en het icoon."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "example",
+              "t": "Voorbeeld"
+            },
+            {
+              "k": "code",
+              "example": "logoStyle"
+            },
+            {
+              "k": "h2",
+              "id": "fit",
+              "t": "Hoe groot mag het zijn?"
+            },
+            {
+              "k": "p",
+              "t": "Met een logo of tekst in het midden gebruikt de code foutcorrectie H, dus past er iets meer dan de helft in (382 bytes in plaats van 666). Na het renderen is `scan.maxLogoSize` het grootste formaat dat nog decodeert; een groter logo faalt met het probleem `logo`."
+            },
+            {
+              "k": "code",
+              "example": "logoFit"
+            }
+          ]
+        },
+        "layouts": {
+          "title": "Kaders en bijschriften",
+          "lead": "composeLayout tekent een complete lay-out: een kaart of kader, de code, een bijschrift en een optioneel logo, precies zoals de HeyQR-export.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "presets",
+              "t": "Lay-outpresets"
+            },
+            {
+              "k": "table",
+              "label": "Presets",
+              "cols": ["preset", "Wat het tekent"],
+              "rows": [
+                {
+                  "cells": ["`qr`", "Alleen de code, op `qrSize`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`caption`", "De code met een bijschrift erboven of eronder, of tekst in de code"],
+                  "required": false
+                },
+                {
+                  "cells": ["`vertical`", "Een kaart met de code boven het bijschrift"],
+                  "required": false
+                },
+                {
+                  "cells": ["`horizontal`", "Een kaart met de code naast het bijschrift"],
+                  "required": false
+                },
+                {
+                  "cells": ["`frame`", "Een kader rond de code; het formaat komt uit `qrSize`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "chips",
+              "t": "frameStyle",
+              "items": ["bar", "tab", "bubble", "pill", "corners", "circle", "ticket", "phone"]
+            },
+            {
+              "k": "h2",
+              "id": "compose",
+              "t": "Een lay-out samenstellen"
+            },
+            {
+              "k": "code",
+              "example": "compose"
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Roep `layoutCapacity` aan vóór `composeLayout`, zodat te lange inhoud een melding wordt in plaats van een exception. Geef `{ transparent: true }` als derde argument door voor een transparante achtergrond."
+            },
+            {
+              "k": "h2",
+              "id": "fonts",
+              "t": "Lettertypen voor bijschriften"
+            },
+            {
+              "k": "p",
+              "t": "Bijschriften zijn SVG-tekst. In de browser gebruiken ze de lettertypen van de pagina; als je in Node.js rastert, geef je lettertypebestanden door met `fontFiles`, anders worden de geïnstalleerde lettertypen van de machine gebruikt. De lettertypen voor bijschriften ondersteunen Latijns en Cyrillisch."
+            }
+          ]
+        },
+        "png": {
+          "title": "Een PNG opslaan",
+          "lead": "rasterizeSvg rendert elke SVG uit het pakket naar een PNG-Buffer met resvg.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "basic",
+              "t": "Een PNG renderen"
+            },
+            {
+              "k": "code",
+              "example": "png"
+            },
+            {
+              "k": "h2",
+              "id": "options",
+              "t": "Opties"
+            },
+            {
+              "k": "table",
+              "label": "RasterOptions",
+              "cols": ["Optie", "Type", "Beschrijving"],
+              "rows": [
+                {
+                  "cells": ["`width`", "number", "Uitvoerbreedte in pixels. De hoogte volgt de SVG."],
+                  "required": true
+                },
+                {
+                  "cells": ["`fontFiles`", "string[]", "Lettertypebestanden voor bijschriften."],
+                  "required": false
+                },
+                {
+                  "cells": ["`systemFonts`", "boolean", "Gebruik ook geïnstalleerde lettertypen. Standaard `true`."],
+                  "required": false
+                },
+                {
+                  "cells": ["`background`", "string", "Achtergrondkleur achter transparante gebieden."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`dpi`",
+                    "number",
+                    "Printresolutie die in het bestand wordt geschreven, zodat printsoftware het op het fysieke formaat opent. Laat het weg voor schermbestanden."
+                  ],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "print",
+              "t": "Printformaten"
+            },
+            {
+              "k": "p",
+              "t": "`pngPixelSize` geeft het exacte pixelformaat van een lay-out: mm-lay-outs op 300, 600 of 1200 dpi (`PNG_DPIS`), px-lay-outs op 1×, 2×, 4× of 8× (`PNG_SCALES`). Zijden blijven tussen 64 en 8192 px."
+            },
+            {
+              "k": "code",
+              "example": "printPng"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Importeer `/raster` niet in browserbundels: resvg is een native Node.js-module."
+            }
+          ]
+        },
+        "scan": {
+          "title": "Controleer of hij scant",
+          "lead": "Elke render komt met een scanrapport. In Node.js en de browser kun je het resultaat ook decoderen om zeker te zijn.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "Het scanrapport"
+            },
+            {
+              "k": "code",
+              "example": "scanReport"
+            },
+            {
+              "k": "table",
+              "label": "Probleemcodes",
+              "cols": ["code", "title", "fix"],
+              "rows": [
+                {
+                  "cells": ["`invert`", "Light code on a dark background", "Swap colors"],
+                  "required": false
+                },
+                {
+                  "cells": ["`contrast`", "Not enough contrast", "Increase contrast"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eyes`", "Corner markers are too light", "Darken corner markers"],
+                  "required": false
+                },
+                {
+                  "cells": ["`logo`", "The logo hides too much of the code", "Reduce logo size"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "The text in the code is too long", "Shorten the text"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Het rapport is gebaseerd op regels: het controleert de exacte geometrie en kleuren zonder te decoderen. Decodeer als je bewijs nodig hebt."
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Decoderen in Node.js"
+            },
+            {
+              "k": "code",
+              "example": "verifyNode"
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "Decoderen in de browser"
+            },
+            {
+              "k": "code",
+              "example": "verifyBrowser"
+            },
+            {
+              "k": "p",
+              "t": "Niets verlaat het apparaat: de decoder draait lokaal en opent nooit de bestemming van de code."
+            }
+          ]
+        },
+        "api": {
+          "title": "Functies",
+          "lead": "Elke publieke functie, gegroepeerd per entry point. Signaturen komen overeen met de TypeScript-types in het pakket.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "Inhoud"
+            },
+            {
+              "k": "table",
+              "label": "Inhoudsfuncties",
+              "cols": ["Functie", "Signatuur"],
+              "rows": [
+                {
+                  "cells": ["`encodePayload`", "`(content: QrContent) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`encodeVCard`", "`(contact) => string` · vCard 3.0"],
+                  "required": false
+                },
+                {
+                  "cells": ["`normalizeUrl`", "`(input: string) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseWebsiteUrl`", "`(input: string) => { ok: true; url } | { ok: false; problem }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "render",
+              "t": "Renderen"
+            },
+            {
+              "k": "table",
+              "label": "Renderfuncties",
+              "cols": ["Functie", "Signatuur"],
+              "rows": [
+                {
+                  "cells": ["`renderQr`", "`(value: string, style: QrStyle) => RenderedQr`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`renderQrSvg`", "`(value: string, style: QrStyle, sizePx = 512) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eclForStyle`", "`(style) => \"M\" | \"H\"` · H als een logo of tekst het midden bedekt"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerLogoSize`", "`(size: number) => number` · begrensd tot 0.10–0.46"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerTextLabel`", "`(text: string) => { label; shortened }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "layout",
+              "t": "Lay-outs"
+            },
+            {
+              "k": "table",
+              "label": "Lay-outfuncties",
+              "cols": ["Functie", "Signatuur"],
+              "rows": [
+                {
+                  "cells": [
+                    "`composeLayout`",
+                    "`(layout: Layout, value: string, options?: { transparent? }) => { svg, width, height, scan }`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutCapacity`", "`(layout: Layout, value: string) => { ok, bytes, maxBytes, ecl, centerCovered }`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutGeometry`", "`(layout: Layout) => LayoutGeometry`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pngPixelSize`", "`(layout: Layout, { scale?, dpi? }) => { width, height, ok }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "encode",
+              "t": "Codering en capaciteit"
+            },
+            {
+              "k": "table",
+              "label": "Coderingsfuncties",
+              "cols": ["Functie", "Signatuur"],
+              "rows": [
+                {
+                  "cells": ["`encodeQr`", "`(text: string, ecl = \"M\") => QrMatrix`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`payloadBytes`", "`(text: string) => number` · UTF-8-bytes"],
+                  "required": false
+                },
+                {
+                  "cells": ["`maxPayloadBytes`", "`(ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pickVersion`", "`(byteLength: number, ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`QrCapacityError`", "Error met `byteLength` en `maxBytes`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "color",
+              "t": "Kleur"
+            },
+            {
+              "k": "table",
+              "label": "Kleurfuncties",
+              "cols": ["Functie", "Signatuur"],
+              "rows": [
+                {
+                  "cells": ["`contrastRatio`", "`(a: string, b: string) => number` · WCAG-verhouding"],
+                  "required": false
+                },
+                {
+                  "cells": ["`luminance`", "`(hex: string) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`isHexColor`", "`(value: string) => boolean` · alleen `#RRGGBB`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseHexColor`", "`(text: string) => string | null`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`mixColors`", "`(a: string, b: string, t: number) => string`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Node.js- en browserentries"
+            },
+            {
+              "k": "table",
+              "label": "Andere entries",
+              "cols": ["Functie", "Entry", "Signatuur"],
+              "rows": [
+                {
+                  "cells": ["`rasterizeSvg`", "`/raster`", "`(svg: string, options: RasterOptions) => Buffer`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvg`", "`/verify`", "`(svg: string, width = 720) => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeImage`", "`/verify`", "`(file: Uint8Array, type = \"image/png\") => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`verifyScan`", "`/verify`", "`(svg, expected, widths = [300, 600, 1200]) => Promise<boolean>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvgInBrowser`", "`/verify-browser`", "`(svg, { wasmUrl, size? = 960 }) => Promise<string | null>`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        },
+        "types": {
+          "title": "Types",
+          "lead": "De belangrijkste types, zoals ze in het pakket staan.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "style",
+              "t": "QrStyle"
+            },
+            {
+              "k": "code",
+              "example": "typesStyle"
+            },
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "RenderedQr en ScanReport"
+            },
+            {
+              "k": "code",
+              "example": "typesReport"
+            },
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "QrContent"
+            },
+            {
+              "k": "code",
+              "example": "typesContent"
+            }
+          ]
+        },
+        "limits": {
+          "title": "Limieten en fouten",
+          "lead": "Wat de encoder accepteert, en wat er gebeurt als inhoud niet past.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Limieten"
+            },
+            {
+              "k": "table",
+              "label": "Limieten",
+              "cols": ["Limiet", "Waarde"],
+              "rows": [
+                {
+                  "cells": ["Grootste QR-versie", "20 (`MAX_VERSION`), 97 × 97 modules"],
+                  "required": false
+                },
+                {
+                  "cells": ["Inhoud", "666 bytes bij foutcorrectie M, 382 bij H"],
+                  "required": false
+                },
+                {
+                  "cells": ["Foutcorrectie", "M, of H met een logo of tekst in het midden"],
+                  "required": false
+                },
+                {
+                  "cells": ["Stille zone", "4 modules aan elke kant, inbegrepen in `viewBox`"],
+                  "required": false
+                },
+                {
+                  "cells": ["Logoformaat", "0.10–0.46 van de codebreedte (`CENTER_LOGO_SIZE`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Tekst in het midden", "14 tekens (`CENTER_TEXT_MAX`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["PNG-zijde", "64–8192 px (`PNG_MIN_SIDE`, `PNG_MAX_SIDE`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Contrast", "3 : 1 modules en ringen, 2,5 : 1 hoekmiddens"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "capacity",
+              "t": "Te lange inhoud"
+            },
+            {
+              "k": "p",
+              "t": "Renderen gooit `QrCapacityError` als de inhoud niet past. De fout bevat formaten, nooit de inhoud, dus je kunt hem veilig loggen."
+            },
+            {
+              "k": "code",
+              "example": "capacity"
+            },
+            {
+              "k": "h2",
+              "id": "null",
+              "t": "Decoders die null teruggeven"
+            },
+            {
+              "k": "p",
+              "t": "`decodeSvg`, `decodeImage` en `decodeSvgInBrowser` geven `null` terug als er geen code kan worden gelezen. Behandel dat als een mislukte controle, niet als een fout."
+            }
+          ]
+        },
+        "faq": {
+          "title": "Veelgestelde vragen",
+          "lead": "Korte antwoorden op veelgestelde vragen.",
+          "blocks": [
+            {
+              "k": "faq",
+              "items": [
+                {
+                  "q": "Stuurt het pakket iets naar HeyQR?",
+                  "a": "Nee. Coderen, renderen en de scancheck draaien op je eigen machine. De browserdecoder laadt zijn wasm-bestand vanaf een URL die je zelf host."
+                },
+                {
+                  "q": "Kan ik er Dynamische codes mee maken?",
+                  "a": "Nog niet. Een Dynamische code heeft een korte link van HeyQR nodig, een abonnement en scantelling op onze servers. Dat komt met de REST API."
+                },
+                {
+                  "q": "Waarom faalt mijn code met een logo?",
+                  "a": "Een logo verhoogt de foutcorrectie naar H, wat de capaciteit verlaagt, en bedekt modules. Maak het logo kleiner dan `scan.maxLogoSize` of maak de inhoud korter."
+                },
+                {
+                  "q": "Waarom is PNG-export alleen voor Node.js?",
+                  "a": "PNG’s worden gerenderd met resvg, een native module. Teken in de browser de SVG op een canvas als je pixels nodig hebt."
+                },
+                {
+                  "q": "Komen de bestanden overeen met de HeyQR-editor?",
+                  "a": "Ja. Het voorbeeld in de editor en de betaalde export gebruiken allebei `composeLayout`, dus dezelfde lay-out geeft dezelfde SVG."
+                },
+                {
+                  "q": "Mag ik het in een commercieel product gebruiken?",
+                  "a": "De licentie wordt vastgesteld bij de eerste openbare release en komt hier en op npm te staan."
+                }
+              ]
+            }
+          ]
+        },
+        "changelog": {
+          "title": "Wijzigingslog",
+          "lead": "Releases van @heyqr/qr-core.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "v010",
+              "t": "0.1.0 · nog niet gepubliceerd"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Eerste openbare release in voorbereiding. Alles op deze pagina’s komt overeen met de huidige broncode van het pakket.",
+                "Entry points: main, `/raster`, `/verify`, `/verify-browser`, `/node`."
+              ]
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Zodra een versie is gepubliceerd, verschijnen de notities en de npm-link hier."
+            }
+          ]
+        },
+        "rest": {
+          "title": "REST API",
+          "lead": "Maak codes, wijzig waar Dynamische codes naartoe wijzen en lees scantellingen vanaf je server.",
+          "blocks": [
+            {
+              "k": "restSoon"
+            }
+          ]
+        },
+        "restAuth": {
+          "title": "Authenticatie",
+          "lead": "Elke request bevat een API-sleutel uit je HeyQR-account.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Nog niet openbaar. Deze pagina beschrijft de REST API in deze build van HeyQR, gecontroleerd aan de hand van de routes. Hij is nog niet beschikbaar op heyqr.me en blijft buiten zoekmachines tot dat wel zo is."
+            },
+            {
+              "k": "h2",
+              "id": "keys",
+              "t": "API-sleutels"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Maak sleutels aan in Account → API-sleutels. Een sleutel hoort bij je account; elke sleutel van het account ziet dezelfde codes.",
+                "Sleutels zien eruit als `hqk_<lookupId>_<secret>`. De volledige sleutel wordt één keer getoond, als je hem maakt; HeyQR bewaart alleen een verificatiewaarde.",
+                "Stuur de sleutel vanaf je server mee in de header `Authorization`. Zet hem nooit in een URL of in browsercode.",
+                "Een ontbrekende, verkeerde of ingetrokken sleutel krijgt dezelfde `401 unauthorized`, nog voordat de request-body wordt gelezen."
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "header",
+              "t": "Request-headers"
+            },
+            {
+              "k": "code",
+              "example": "restHeader"
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Rate limits"
+            },
+            {
+              "k": "p",
+              "t": "Limieten horen bij het account: alle sleutels delen ze, en accounts beïnvloeden elkaar niet. Een venster begint bij de eerste request en duurt 60 seconden."
+            },
+            {
+              "k": "table",
+              "label": "Rate limits",
+              "cols": ["Budget", "Telt", "Standaard per minuut"],
+              "rows": [
+                {
+                  "cells": ["`api`", "Elke request met een geldige sleutel", "120"],
+                  "required": false
+                },
+                {
+                  "cells": ["`export`", "Bestandsexports, ook meegeteld in `api`", "30"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "p",
+              "t": "Boven een budget is het antwoord `429 rate_limited` met `Retry-After`, nog voordat er iets wordt gemaakt, gewijzigd of gerenderd."
+            }
+          ]
+        },
+        "restCreate": {
+          "title": "Een QR-code maken",
+          "lead": "Maakt één QR-code met zijn lay-outs, als concept in je account. Activeren, korte links en betalen blijven in de app.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Nog niet openbaar. Deze pagina beschrijft de REST API in deze build van HeyQR, gecontroleerd aan de hand van de routes. Hij is nog niet beschikbaar op heyqr.me en blijft buiten zoekmachines tot dat wel zo is."
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Request-body"
+            },
+            {
+              "k": "table",
+              "label": "Request-body",
+              "cols": ["Parameter", "Type", "Voorbeeld", "Beschrijving"],
+              "rows": [
+                {
+                  "cells": ["`name`", "string", "\"Spring menu\"", "1–80 tekens. De naam in Mijn QR-codes."],
+                  "required": true
+                },
+                {
+                  "cells": ["`mode`", "\"static\" | \"dynamic\"", "\"static\"", "`dynamic` is alleen voor `website`-inhoud."],
+                  "required": true
+                },
+                {
+                  "cells": [
+                    "`content`",
+                    "QrContent",
+                    "{ \"type\": \"website\", … }",
+                    "Wat de code opent. Dezelfde vormen als `encodePayload`."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"littlefern.cafe/menu\"",
+                    "Alleen `dynamic`: waar de korte link mensen naartoe stuurt. Standaard het websiteadres."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`layouts`",
+                    "array",
+                    "[{ \"name\": \"Sticker\", \"layout\": … }]",
+                    "1–20 lay-outs: `name` (1–60), een gerenderde `layout` en optionele `editor`-instellingen."
+                  ],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "p",
+              "t": "De body is strikt: een onbekend veld wordt geweigerd. Stuur een header `Idempotency-Key` mee (1–255 zichtbare tekens, een UUID werkt) om nieuwe pogingen veilig te maken: dezelfde sleutel en request geven de oorspronkelijke `201` terug."
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "Request"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateRequest",
+              "label": "Voorbeeld van een request"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Responses"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateResponses",
+              "label": "Responses"
+            }
+          ]
+        },
+        "restBulk": {
+          "title": "Bulk aanmaken",
+          "lead": "Maakt tot 100 codes in één request. De job draait op de achtergrond.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "Ontwerpvoorbeeld. Voorgesteld endpoint: niets op deze pagina is al live, en namen en velden kunnen vóór de release nog veranderen."
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes/bulk"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Request-body"
+            },
+            {
+              "k": "table",
+              "label": "Request-body",
+              "cols": ["Parameter", "Type", "Voorbeeld", "Beschrijving"],
+              "rows": [
+                {
+                  "cells": ["`items`", "array", "[{ \"name\": …, \"content\": … }]", "1–100 codes, elk zoals bij Een QR-code maken."],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].name`", "string", "\"Table 12\"", "Naam in Mijn QR-codes."],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].content`", "QrContent", "{ \"type\": \"website\", … }", "Wat elke code opent."],
+                  "required": true
+                },
+                {
+                  "cells": ["`style`", "QrStyle", "{ \"pattern\": \"rounded\", … }", "Eén stijl voor elke code in de batch."],
+                  "required": false
+                },
+                {
+                  "cells": ["`webhook_url`", "string", "\"https://…/heyqr\"", "Eén keer aangeroepen als de job klaar is."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Responses"
+            },
+            {
+              "k": "tabs",
+              "example": "bulkResponses",
+              "label": "Responses"
+            }
+          ]
+        },
+        "restDestination": {
+          "title": "Een bestemming wijzigen",
+          "lead": "Laat een Dynamische code ergens anders naartoe wijzen. Geprinte codes houden hun korte link en volgen meteen.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Nog niet openbaar. Deze pagina beschrijft de REST API in deze build van HeyQR, gecontroleerd aan de hand van de routes. Hij is nog niet beschikbaar op heyqr.me en blijft buiten zoekmachines tot dat wel zo is."
+            },
+            {
+              "k": "h2",
+              "id": "read",
+              "t": "De huidige bestemming lezen"
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "code",
+              "example": "restDestinationRead"
+            },
+            {
+              "k": "p",
+              "t": "Wijzig hem vanaf de `revision` die je hebt gelezen: is de bestemming sindsdien in de app of door een andere request gewijzigd, dan krijg je `409` en wordt er niets opgeslagen."
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Request-body"
+            },
+            {
+              "k": "endpoint",
+              "method": "PATCH",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "table",
+              "label": "Request-body",
+              "cols": ["Parameter", "Type", "Voorbeeld", "Beschrijving"],
+              "rows": [
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"https://littlefern.cafe/today\"",
+                    "Het nieuwe adres, tot 2048 tekens. Een kaal domein wordt https://."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`revision`", "integer", "3", "De revisie uit GET of de laatste PATCH."],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "Request"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationRequest",
+              "label": "Voorbeeld van een request"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Responses"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationResponses",
+              "label": "Responses"
+            }
+          ]
+        },
+        "restScans": {
+          "title": "Scanstatistieken",
+          "lead": "Dagelijkse scantellingen voor een Dynamische code.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "Ontwerpvoorbeeld. Voorgesteld endpoint: niets op deze pagina is al live, en namen en velden kunnen vóór de release nog veranderen."
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{id}/scans?from=2026-11-01&to=2026-11-26"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Responses"
+            },
+            {
+              "k": "tabs",
+              "example": "scansResponses",
+              "label": "Responses"
+            }
+          ]
+        },
+        "restErrors": {
+          "title": "Fouten en rate limits",
+          "lead": "Fouten hebben allemaal dezelfde vorm. Vertak op code, nooit op de melding.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Nog niet openbaar. Deze pagina beschrijft de REST API in deze build van HeyQR, gecontroleerd aan de hand van de routes. Hij is nog niet beschikbaar op heyqr.me en blijft buiten zoekmachines tot dat wel zo is."
+            },
+            {
+              "k": "h2",
+              "id": "shape",
+              "t": "Vorm van een fout"
+            },
+            {
+              "k": "p",
+              "t": "Elke fout is `{ \"error\": { \"code\", \"message\", …details } }` met `Cache-Control: no-store`. Meldingen zijn voor mensen; codes zijn stabiel."
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "Statuscodes"
+            },
+            {
+              "k": "table",
+              "label": "Fouten",
+              "cols": ["Status", "code", "Wanneer"],
+              "rows": [
+                {
+                  "cells": ["400", "`malformed_json`", "De body is geen JSON."],
+                  "required": false
+                },
+                {
+                  "cells": ["401", "`unauthorized`", "Ontbrekende, ongeldige, verkeerde of ingetrokken sleutel."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "402",
+                    "`payment_required`",
+                    "Export van een code die niet betaald of live is; `paymentUrl` opent het exportscherm ervan."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["403", "`draft_limit`", "Het account heeft het maximale aantal concepten."],
+                  "required": false
+                },
+                {
+                  "cells": ["404", "`not_found`", "Niet jouw code of lay-out, verwijderd of ontbrekend: één antwoord voor alles."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "409",
+                    "`revision_conflict`, `idempotency_key_reused`",
+                    "Gewijzigd sinds jouw revisie, of een hergebruikte Idempotency-Key."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "422",
+                    "`invalid_request`, `content_too_long`, `not_dynamic`",
+                    "Er is een regel overtreden; `details` noemt het veld."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["429", "`rate_limited`", "Over het budget van het account; wacht `Retry-After` seconden."],
+                  "required": false
+                },
+                {
+                  "cells": ["500", "`internal_error`", "Er is niets veranderd; probeer het opnieuw."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Rate limits"
+            },
+            {
+              "k": "tabs",
+              "example": "restRateLimited",
+              "label": "Voorbeeldresponses"
+            },
+            {
+              "k": "p",
+              "t": "De standaardwaarden zijn 120 requests en 30 exports per minuut per account. Geweigerde requests verlengen de wachttijd niet."
+            }
+          ]
+        },
+        "restSdk": {
+          "title": "TypeScript SDK",
+          "lead": "@heyqr/sdk is een getypeerde client voor de REST API, voor Node.js 18 en hoger. Hij rendert niets: dat doet @heyqr/qr-core.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Nog niet openbaar. Deze pagina beschrijft de REST API in deze build van HeyQR, gecontroleerd aan de hand van de routes. Hij is nog niet beschikbaar op heyqr.me en blijft buiten zoekmachines tot dat wel zo is."
+            },
+            {
+              "k": "h2",
+              "id": "install",
+              "t": "Installeren"
+            },
+            {
+              "k": "install",
+              "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "server",
+              "t": "Op je server"
+            },
+            {
+              "k": "p",
+              "t": "`HeyQrClient` heeft een API-sleutel nodig, dus hij draait alleen op een server. In een browserbundel verwijst het pakket naar een entry waarvan `HeyQrClient` een `HeyQrError` van het soort `server_only` gooit. Gebruik `@heyqr/sdk/react` voor voorbeelden in de browser."
+            },
+            {
+              "k": "code",
+              "example": "sdkInstallNote"
+            },
+            {
+              "k": "h2",
+              "id": "methods",
+              "t": "Methoden"
+            },
+            {
+              "k": "table",
+              "label": "HeyQrClient",
+              "cols": ["Methode", "Request"],
+              "rows": [
+                {
+                  "cells": ["`createQr(request, { idempotencyKey? })`", "`POST /api/v1/qr-codes`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getLayout(qrCodeId, layoutId)`", "`GET …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateLayout(qrCodeId, layoutId, request)`", "`PATCH …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getDestination(qrCodeId)`", "`GET …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateDestination(qrCodeId, request)`", "`PATCH …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`downloadExport(qrCodeId, layoutId, { format })`", "`GET …/export`, met het volgen van de ondertekende link"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "Fouten"
+            },
+            {
+              "k": "table",
+              "label": "Fouten",
+              "cols": ["Fout", "Wanneer"],
+              "rows": [
+                {
+                  "cells": ["`HeyQrApiError`", "Een gedocumenteerde API-fout, met `status`, `code` en de getypeerde response"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrRateLimitError`", "429, met `retryAfterSeconds` en `code`"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`HeyQrTimeoutError`, `HeyQrAbortError`",
+                    "De deadline is verstreken, of je `signal` heeft de aanroep geannuleerd"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrError`", "Geen gedocumenteerd antwoord: `kind` zegt waarom"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        }
+      },
+      "breadcrumb": "Kruimelpad"
+    }
+  }
+}

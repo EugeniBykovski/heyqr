@@ -172,7 +172,7 @@ export function ContentForm({
                     type={showPassword ? "text" : "password"}
                     autoComplete="off"
                     spellCheck={false}
-                    className="rounded-r-none"
+                    className="rounded-e-none"
                     value={String(value ?? "")}
                     onChange={(e) => set(field.name, e.target.value)}
                   />
@@ -181,7 +181,7 @@ export function ContentForm({
                     variant="secondary"
                     aria-pressed={showPassword}
                     aria-controls={id}
-                    className="min-h-control rounded-l-none rounded-r-md border-l-0"
+                    className="min-h-control rounded-s-none rounded-e-md border-s-0"
                     onClick={() => setShowPassword((s) => !s)}
                   >
                     {showPassword ? t("editor.passwordHide") : t("editor.passwordShow")}

@@ -1,0 +1,4500 @@
+{
+  "meta": {
+    "title": "Hey QR — QR-koder som ser ut som ditt varumärke",
+    "description": "Designa en QR-kod, kontrollera att den går att skanna och ladda ner tryckfärdiga PNG- och SVG-filer."
+  },
+  "nav": {
+    "create": "Skapa",
+    "pricing": "Priser",
+    "myCodes": "Mina QR-koder",
+    "billing": "Plan och betalning",
+    "signIn": "Logga in",
+    "signOut": "Logga ut",
+    "account": "Konto och betalning, {name}",
+    "language": "Språk",
+    "skipToContent": "Hoppa till innehållet",
+    "home": "Hey QR startsida",
+    "createCode": "Skapa QR-kod",
+    "menu": "Meny",
+    "main": "Huvudmeny",
+    "languageChoose": "Välj språk",
+    "languageCount": "{count} språk",
+    "languageSearch": "Sök språk",
+    "languages": "Språk",
+    "languageEmpty": "Inget språk matchar ”{query}”.",
+    "languageNote": "Priserna stannar i din valuta. Arabiska växlar layouten till höger till vänster.",
+    "trial": "Gratis provperiod",
+    "apiKeys": "API-nycklar",
+    "developers": "API för utvecklare",
+    "developersShort": "API"
+  },
+  "payment": {
+    "title": "Så fungerar betalningen",
+    "oneTime": "Single QR är en engångsbetalning på {price} per kod, plus eventuell moms som Stripe lägger till i kassan. Det är ingen prenumeration och inget förnyas.",
+    "where": "Du betalar på Stripes säkra kassasida. Hey QR ser aldrig dina kortuppgifter.",
+    "receipt": "Ditt kvitto finns i ditt konto under Betalning, bredvid köpet.",
+    "support": "Frågor om en betalning? Mejla <link>{email}</link>.",
+    "terms": "Villkor",
+    "privacy": "Integritet",
+    "supportLink": "Support"
+  },
+  "footer": {
+    "terms": "Villkor",
+    "privacy": "Integritet",
+    "support": "Support",
+    "rights": "© {year} Hey QR",
+    "pricing": "Priser",
+    "label": "Sidfot",
+    "tagline": "QR-koder som ser ut som ditt varumärke och alltid går att skanna.",
+    "product": "Produkt",
+    "makeFor": "Gör en kod för",
+    "company": "Företag",
+    "smallPrint": "21 språk · Betalningar via Stripe"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "QR-studio · gratis att designa och förhandsgranska",
+      "title": "En QR-kod som ser ut att vara din.",
+      "lead": "Klistra in en länk och ge den stil här. Förhandsvisningen uppdateras medan du skriver, och att designa är gratis.",
+      "reveal": "Bra saker finns bara en skanning bort."
+    },
+    "tool": {
+      "typesLabel": "Vad ska koden öppna?",
+      "more": "Mer +",
+      "url": "Webbadress",
+      "urlPlaceholder": "yourname.com/portfolio",
+      "errors": {
+        "empty": "Ange en webbadress, till exempel yourname.com.",
+        "spaces": "Webbadresser får inte innehålla mellanslag."
+      },
+      "color": "Kodens färg",
+      "inks": {
+        "ink": "Bläck",
+        "violet": "Violett",
+        "forest": "Skog",
+        "ocean": "Hav",
+        "berry": "Bär",
+        "clay": "Lera"
+      },
+      "caption": "Bildtext",
+      "captionDefault": "Visa portfolio",
+      "continue": "Fortsätt designa",
+      "priceNote": "Gratis att designa och förhandsgranska. Att ladda ner PNG och SVG kostar <b>{price}</b> per kod, en gång.",
+      "seePricing": "Se priser",
+      "stageTitle": "{type} · liveförhandsvisning",
+      "scans": "Skannar",
+      "livePreview": "Liveförhandsvisning",
+      "realCode": "Riktig, skanningsbar kod",
+      "previewLabel": "Förhandsvisning av din QR-kod",
+      "otherType": "Ditt utkast är en {type}-kod. Fortsätt designa öppnar den i redigeraren.",
+      "stageCard": "Visitkort · 90 mm × 50 mm"
+    },
+    "how": {
+      "label": "Så fungerar det",
+      "content": {
+        "title": "Lägg till ditt innehåll",
+        "text": "En länk, text, Wi-Fi-uppgifter eller ett kontaktkort."
+      },
+      "design": {
+        "title": "Designa den",
+        "text": "Layout, storlek, former, färger, logotyp och bildtext, med skanningskontroll i realtid."
+      },
+      "download": {
+        "title": "Betala och ladda ner",
+        "text": "Logga in med Google, betala en gång och ladda ner PNG eller SVG igen när du vill."
+      }
+    },
+    "models": {
+      "title": "Kommer du att ändra länken efter tryck?",
+      "lead": "Den frågan avgör vilken kod du behöver.",
+      "static": {
+        "badge": "Nej · Statisk QR",
+        "text": "Länken är inbyggd i mönstret. En betalning på <b>{price}</b> per kod."
+      },
+      "dynamic": {
+        "badge": "Ja · Dynamisk QR",
+        "text": "Koden innehåller en permanent kortlänk som du kan styra om när du vill. <b>{price}</b>/månad för upp till {limit} koder."
+      }
+    },
+    "examples": {
+      "kicker": "Exempel",
+      "title": "Gjord för tryck och skärm",
+      "lead": "Börja från en riktig, skanningsbar layout och gör den till din. Varje exempel öppnas i redigeraren med sina färger, former och ram.",
+      "hint": "Scrolla för mer",
+      "use": "Börja från exemplet {title}",
+      "useShort": "Använd",
+      "items": {
+        "businessCard": {
+          "title": "Visitkort",
+          "kind": "Webbplats · statisk"
+        },
+        "tableTent": {
+          "title": "Bordsställ för kafé",
+          "kind": "Wi-Fi · statisk"
+        },
+        "menuSticker": {
+          "title": "Menyklistermärke",
+          "kind": "Webbplats · dynamisk"
+        },
+        "eventPoster": {
+          "title": "Evenemangsaffisch",
+          "kind": "Webbplats · dynamisk"
+        },
+        "contactBadge": {
+          "title": "Kontaktbricka",
+          "kind": "Kontakt · statisk"
+        },
+        "windowSticker": {
+          "title": "Fönsterdekal",
+          "kind": "Webbplats · statisk"
+        }
+      }
+    },
+    "features": {
+      "kicker": "Varför HeyQR",
+      "title": "Allt en tryckt kod behöver",
+      "lead": "Designverktyg som inte står i vägen, och en skanner som kontrollerar ditt arbete innan du betalar.",
+      "scan": {
+        "title": "Skanningskontroll vid varje ändring",
+        "text": "Vi läser din kod som en mobilkamera gör och säger exakt vad du ska åtgärda: låg kontrast, inverterade färger eller en logotyp som täcker för mycket."
+      },
+      "style": {
+        "title": "Dina former och färger",
+        "text": "Åtta modulformer, fem hörnstilar och vilken färg du vill, med kontrasten under kontroll."
+      },
+      "logo": {
+        "title": "Logotyp eller ikon i mitten",
+        "text": "Ladda upp din logotyp eller välj bland {icons} ikoner. Vi anpassar storleken så att koden fortfarande går att läsa."
+      },
+      "frames": {
+        "title": "Ramar och bildtexter",
+        "text": "{frames} ramar med en uppmaning som ”Skanna för menyn”, eller kort text direkt i koden."
+      },
+      "files": {
+        "title": "Tryckfärdiga filer",
+        "text": "Vektor-SVG och skarp PNG i verkliga storlekar: visitkort, affischer, bordsställ och dekaler."
+      },
+      "dynamic": {
+        "title": "Ändra den efter tryck",
+        "text": "Dynamiska koder pekar på en kortlänk som du kan styra om när du vill, med dagliga skanningar."
+      }
+    },
+    "types": {
+      "kicker": "Nio innehållstyper",
+      "title": "En studio för alla sorters koder",
+      "lead": "Välj vad koden ska öppna. Formuläret frågar bara efter det som typen behöver.",
+      "website": {
+        "label": "Webbplats",
+        "desc": "Öppna en sida, portfolio eller meny."
+      },
+      "text": {
+        "label": "Text",
+        "desc": "Visa en anteckning, öppettider eller instruktioner."
+      },
+      "wifi": {
+        "label": "Wi-Fi",
+        "desc": "Gäster ansluter till ditt nätverk utan att skriva."
+      },
+      "contact": {
+        "label": "Kontaktkort",
+        "desc": "Spara namn, telefon och e-post med ett tryck."
+      },
+      "email": {
+        "label": "E-post",
+        "desc": "Öppna ett färdigt mejl."
+      },
+      "phone": {
+        "label": "Telefonsamtal",
+        "desc": "Ring ett nummer med ett tryck."
+      },
+      "sms": {
+        "label": "Sms",
+        "desc": "Starta ett sms med dina ord."
+      },
+      "location": {
+        "label": "Plats",
+        "desc": "Öppna en plats i kartappen."
+      },
+      "event": {
+        "label": "Evenemang",
+        "desc": "Lägg till ett evenemang i kalendern."
+      },
+      "menu": {
+        "label": "Meny",
+        "desc": "Rätter, avsnitt och priser på en mobilvänlig sida."
+      },
+      "coupon": {
+        "label": "Kupong",
+        "desc": "En rabatt med kampanjkod och slutdatum."
+      },
+      "social": {
+        "label": "Sociala länkar",
+        "desc": "Dina profiler och länkar på en sida."
+      },
+      "business": {
+        "label": "Företag",
+        "desc": "Öppettider, adress, samtal och vägbeskrivning."
+      },
+      "apps": {
+        "label": "Appar",
+        "desc": "En kod för App Store och Google Play."
+      },
+      "pdf": {
+        "label": "PDF-dokument",
+        "desc": "Ladda upp en PDF som öppnas på alla mobiler."
+      },
+      "product": {
+        "label": "Produkt",
+        "desc": "Bilder, pris och en köpknapp."
+      }
+    },
+    "faq": {
+      "kicker": "Frågor",
+      "title": "Bra att veta",
+      "lead": "Korta svar om betalning, filer och skanning.",
+      "items": {
+        "model": {
+          "q": "Statisk eller dynamisk: vilken behöver jag?",
+          "a": "En statisk kod har innehållet inbyggt i mönstret och fungerar för alltid efter en enda betalning på {static}. En dynamisk kod innehåller en kortlänk som du kan peka om efter tryck, för {dynamic}/månad för upp till {limit} koder."
+        },
+        "scan": {
+          "q": "Går min kod fortfarande att skanna med logotyp och färger?",
+          "a": "Varje ändring kontrolleras medan du designar. Om kontrasten är för låg, färgerna är inverterade eller logotypen täcker för mycket säger vi till och erbjuder en snabbfix med ett tryck innan du betalar."
+        },
+        "account": {
+          "q": "Behöver jag ett konto för att designa?",
+          "a": "Nej. Att designa och förhandsgranska är gratis. Du loggar in med Google först när du laddar ner, och din design följer med."
+        },
+        "files": {
+          "q": "Vilka filer får jag?",
+          "a": "En skarp PNG för skärmar och skrivare och en vektor-SVG för tryckerier, för varje layout av koden du köpt."
+        },
+        "again": {
+          "q": "Kan jag ladda ner filerna igen senare?",
+          "a": "Ja. Dina koder finns kvar i Mina QR-koder och du kan ladda ner dem igen i valfritt format utan extra kostnad."
+        }
+      }
+    },
+    "cta": {
+      "label": "Kom igång",
+      "title": "Din första kod tar ungefär en minut.",
+      "lead": "Designa gratis. Betala {price} först när du laddar ner.",
+      "pricing": "Se priser"
+    },
+    "studio": {
+      "kicker": "Din studio",
+      "welcome": "Välkommen tillbaka, {name}",
+      "summaryTop": "{name} skannades {count, plural, one {# gång} other {# gånger}} i dag. Allt du har skapat finns ett tryck bort.",
+      "summary": "Allt du har skapat finns ett tryck bort: filer, länkar och skanningar.",
+      "summaryEmpty": "Skapa din första kod så visas den här med sina filer och skanningar.",
+      "billing": "Plan och betalning",
+      "library": "Öppna Mina QR-koder",
+      "kpi": {
+        "codes": "QR-koder",
+        "codesNote": "{paid} betalda · {drafts, plural, one {# utkast} other {# utkast}}",
+        "scans": "Skanningar · 14 dagar",
+        "scansNone": "Inga skanningar än",
+        "scansDelta": "{delta, number, ::sign-always percent} jämfört med förra veckan",
+        "dynamic": "Dynamiska koder",
+        "dynamicNote": "{left, plural, one {# plats} other {# platser}} kvar i din plan",
+        "dynamicMeter": "Dynamiska koder som används",
+        "files": "Filer klara",
+        "filesNote": "{count, plural, one {layout} other {layouter}} att ladda ner som PNG eller SVG"
+      },
+      "chart": {
+        "title": "Skanningar · senaste 14 dagarna",
+        "sub": "Alla dynamiska koder tillsammans",
+        "empty": "Skanningar av dina dynamiska koder visas här.",
+        "today": "I dag",
+        "label": "Dagliga skanningar för dynamiska koder de senaste 14 dagarna"
+      },
+      "top": "Toppkod",
+      "topNote": "{count, plural, one {# skanning} other {# skanningar}} på 14 dagar · {link}",
+      "topNone": "Inga dynamiska koder än",
+      "topNoneNote": "Dynamiska koder räknar varje skanning.",
+      "recent": "Senaste koder",
+      "seeAll": "Visa alla {count}",
+      "recentEmpty": "Dina koder hamnar här, med sina filer och skanningar.",
+      "createFirst": "Skapa din första kod",
+      "open": "Öppna",
+      "openName": "Öppna {name}",
+      "status": {
+        "dynamic": "Dynamisk · aktiv",
+        "paid": "Betald",
+        "draft": "Utkast"
+      },
+      "metricScans": "{count, plural, one {# skanning} other {# skanningar}}",
+      "metricLayouts": "{count, plural, one {# layout} other {# layouter}}",
+      "metricFinish": "Slutför för att ladda ner",
+      "perksTitle": "Ingår i ditt konto",
+      "perks": {
+        "again": "Ladda ner alla betalda layouter igen, som PNG eller SVG, utan kostnad",
+        "redirect": "Peka om dynamiska koder utan att trycka nytt",
+        "scans": "Dagliga skanningar för varje dynamisk kod",
+        "drafts": "Utkast sparas i ditt konto på alla enheter",
+        "billing": "Kvitton, plan och betalningsmetod under Plan och betalning"
+      },
+      "loading": "Laddar din studio",
+      "trial": "Gratis provperiod · {days, plural, one {# dag} other {# dagar}} kvar"
+    },
+    "workspace": {
+      "kicker": "Mina QR-koder",
+      "title": "Alla QR-koder på ett ställe.",
+      "lead": "Din egen privata arbetsyta när du har loggat in. Varje kod du designar behåller sina layouter, filer och, för dynamiska koder, sina skanningar.",
+      "points": {
+        "layouts": "Namngivna layouter per kod: visitkort, affisch, webbplats",
+        "files": "Ladda ner PNG och SVG igen när du vill",
+        "edit": "Ändra en dynamisk kods destination efter tryck",
+        "scans": "Dagliga skanningar för dynamiska koder"
+      },
+      "create": "Skapa en QR-kod",
+      "signIn": "Logga in",
+      "sampleOwner": "Exempelarbetsyta",
+      "sampleBadge": "Exempel",
+      "sampleNote": "Exempelkoder och skanningar som illustration. Logga in för att se dina egna.",
+      "tabs": {
+        "all": "Alla {count}",
+        "static": "Statiska {count}",
+        "dynamic": "Dynamiska {count}"
+      },
+      "models": {
+        "static": "Statisk",
+        "dynamic": "Dynamisk"
+      },
+      "samples": {
+        "portfolio": {
+          "name": "Portfoliokort",
+          "meta": "3 layouter · köpt"
+        },
+        "menu": {
+          "name": "Kafémeny",
+          "meta": "Bordsställ · 214 skanningar"
+        },
+        "wifi": {
+          "name": "Gäst-Wi-Fi",
+          "meta": "Utkast"
+        }
+      },
+      "scans": "Skanningsstatistik · senaste 14 dagarna",
+      "startTrial": "Starta 7 dagars gratis provperiod",
+      "trialNote": "Starter-provperiod · inget kort · ingen automatisk debitering"
+    },
+    "printPack": {
+      "kicker": "Print Pack",
+      "title": "Från din skärm till tryckeriet.",
+      "lead": "Lägg till ett Print Pack till valfri QR och ge tryckeriet allt i en nedladdning: exakt storlek, rätt färger och en fil som förblir skarp.",
+      "cardTag": "Visitkort · 90 × 50 mm",
+      "labelTag": "Förpackningsetikett · 50 × 62 mm",
+      "cardLabel": "Trycklayout för visitkort",
+      "labelLabel": "Trycklayout för förpackningsetikett",
+      "panelKicker": "Export · Print Pack",
+      "panelTitle": "Tre filer, klara för tryck",
+      "perQr": "per QR",
+      "files": {
+        "pdf": "Vektor-PDF för tryck",
+        "pdfSub": "Skarp i alla storlekar, med 3 mm utfall och skärmärken, i sRGB.",
+        "svg": "Redigerbar SVG",
+        "svgSub": "Öppna den i Illustrator, Figma eller Inkscape för att placera QR-koden på ditt eget original.",
+        "spec": "Färg- och storleksspecifikationer",
+        "specSub": "En sida med färdig storlek, QR-storlek, tyst zon och varje färgvärde."
+      },
+      "addNote": "Av tills du slår på det i kassan. Lägg till för +{price}, eller senare från QR-kodens detaljer.",
+      "single": "Single QR",
+      "withPack": "Med Print Pack",
+      "details": "Se detaljer om Print Pack",
+      "preview": "Öppna tryckförhandsvisning"
+    },
+    "explore": {
+      "kicker": "Utforska QR-typer",
+      "title": "En studio för alla sorters koder",
+      "lead": "Välj en typ för att se vad folk får i mobilen efter skanningen.",
+      "tabs": "QR-typer",
+      "legend": "Hostad sida: HeyQR håller sidan online och du kan redigera den efter tryck",
+      "hostedBadge": "Hostad sida · Dynamisk QR",
+      "websiteBadge": "Statisk eller Dynamisk QR",
+      "directBadge": "Öppnas direkt · Statisk QR",
+      "hostedExtra": "Redigera sidan efter tryck. Koden förblir densamma",
+      "directExtra": "Gratis att designa och förhandsgranska",
+      "hostedPrice": "Hostade sidor kräver en dynamisk plan: Starter {price}/månad, 7 dagars gratis provperiod.",
+      "directPrice": "Gratis att designa. {price} per kod när du laddar ner.",
+      "whatYouGet": "Det här får du",
+      "allTypes": "Visa alla 16 typer",
+      "types": {
+        "menu": {
+          "short": "Rätter och priser",
+          "use": "Lägg hela menyn på bordet. Gästerna skannar, bläddrar per avsnitt och ser priserna utan att vänta på en tryckt meny.",
+          "cta": "Skapa en meny-QR",
+          "points": {
+            "a": "Avsnitt, rätter, priser och valfria bilder",
+            "b": "Ändra priser när du vill; tryckta koder fortsätter att fungera"
+          }
+        },
+        "coupon": {
+          "short": "Rabatter som folk löser in",
+          "use": "Gör en skanning till en försäljning med en kod som kunderna kopierar i kassan eller visar i disken.",
+          "cta": "Skapa en kupong-QR",
+          "points": {
+            "a": "Kampanjkod, slutdatum och villkor",
+            "b": "Visar en tydlig sida om att erbjudandet har gått ut"
+          }
+        },
+        "social": {
+          "short": "Alla dina profiler",
+          "use": "En kod för alla profiler du delar: portfolio, sociala konton med mera, i den ordning du väljer.",
+          "cta": "Skapa en QR för sociala länkar",
+          "points": {
+            "a": "Bild, namn och en kort presentation",
+            "b": "Ändra ordning på länkarna när du vill"
+          }
+        },
+        "business": {
+          "short": "Öppettider, samtal, vägbeskrivning",
+          "use": "Allt en besökare behöver för att nå dig: öppettider, en ringknapp, vägbeskrivning och din webbplats.",
+          "cta": "Skapa en företags-QR",
+          "points": {
+            "a": "Ring, Vägbeskrivning och Webbplats visas när du lägger till de uppgifterna",
+            "b": "Visar om du har öppet i dag"
+          }
+        },
+        "apps": {
+          "short": "Båda appbutikerna",
+          "use": "Skicka iPhones till App Store och Android-mobiler till Google Play från samma tryckta kod.",
+          "cta": "Skapa en app-QR",
+          "points": {
+            "a": "Fungerar med en butik eller båda",
+            "b": "Datorer får en sida med båda länkarna och en kod att skanna"
+          }
+        },
+        "pdf": {
+          "short": "Dela ett dokument",
+          "use": "Broschyrer, scheman eller manualer: ladda upp en PDF så öppnar folk den i mobilen med ett tryck.",
+          "cta": "Skapa en PDF-QR",
+          "points": {
+            "a": "Byt ut filen senare utan att trycka om",
+            "b": "Knappar för Öppna PDF och Ladda ner"
+          }
+        },
+        "product": {
+          "short": "En produktsida",
+          "use": "Visa en produkt med bilder, pris och en köpknapp, direkt från förpackningen eller hyllan.",
+          "cta": "Skapa en produkt-QR",
+          "points": {
+            "a": "Upp till 5 bilder, pris valfritt",
+            "b": "Din knapp: Köp nu, Visa produkt eller Beställ nu"
+          }
+        },
+        "website": {
+          "short": "Öppna en webbsida",
+          "use": "Skicka folk till valfri sida: din portfolio, butik eller bokningsformulär.",
+          "cta": "Skapa en webbplats-QR",
+          "points": {
+            "a": "Statisk, eller dynamisk om länken kan ändras",
+            "b": "Skanningskontroll i realtid medan du designar"
+          }
+        },
+        "wifi": {
+          "short": "Anslut till Wi-Fi",
+          "use": "Gästerna riktar kameran och ansluter till ditt nätverk. Ingen behöver bokstavera ett lösenord.",
+          "cta": "Skapa en Wi-Fi-QR",
+          "points": {
+            "a": "WPA, WEP eller öppna nätverk",
+            "b": "Fungerar offline: uppgifterna finns i koden"
+          }
+        },
+        "contact": {
+          "short": "Spara en kontakt",
+          "use": "Ett visitkort som sparar ditt namn, telefonnummer och e-post direkt i deras kontakter.",
+          "cta": "Skapa en kontakt-QR",
+          "points": {
+            "a": "Fungerar på iPhone och Android",
+            "b": "Ingen app behövs"
+          }
+        }
+      }
+    }
+  },
+  "pricing": {
+    "title": "Priser",
+    "head": "Betala en gång för en kod, eller per månad för koder du kan ändra.",
+    "lead": "Att designa, förhandsgranska och skanningskontrollen är alltid gratis. Du betalar när du laddar ner.",
+    "currency": {
+      "label": "Visa priser i",
+      "unavailable": "Priser i {chosen} finns inte än. HeyQR debiterar i {charged}; din bank räknar om beloppet. Kvitton visar de {charged} du betalade."
+    },
+    "once": {
+      "title": "Engångs",
+      "sub": "Ingen prenumeration. Koder du låser upp förblir dina."
+    },
+    "monthly": {
+      "title": "Månadsvis",
+      "sub": "För dynamiska QR-koder som du kan ändra efter tryck. Avsluta när du vill."
+    },
+    "free": {
+      "name": "Gratis",
+      "price": "{price}",
+      "q": "Designa och testa en kod innan du lägger en krona.",
+      "points": [
+        "Alla layouter, former, färger, logotyper och bildtexter",
+        "Skanningskontroll i realtid vid varje ändring",
+        "Ditt utkast sparas i den här webbläsaren"
+      ],
+      "cta": "Börja designa"
+    },
+    "single": {
+      "name": "Single QR",
+      "price": "{price}",
+      "per": "en gång",
+      "q": "En statisk QR med alla sina nedladdningar.",
+      "points": ["PNG och SVG av varje layout", "Tryckstorlekar i mm och skärmstorlekar i px", "Ladda ner igen när du vill, för alltid"],
+      "cta": "Skapa en QR"
+    },
+    "dynamic": {
+      "name": "Dynamisk",
+      "price": "{price}",
+      "per": "per månad",
+      "q": "En permanent kortlänk som du kan peka vart som helst, även efter tryck.",
+      "live": "Aktiva dynamiska koder",
+      "liveCount": "Upp till {limit} aktiva samtidigt",
+      "liveHint": "Ett löpande antal, ingen månadskvot: att pausa eller radera en kod frigör dess plats.",
+      "points": [
+        "Ändra destinationen när du vill; den tryckta koden förblir densamma",
+        "Dagliga skanningar för de senaste 14 dagarna",
+        "PNG och SVG av varje layout"
+      ],
+      "cta": "Skapa en dynamisk QR"
+    },
+    "compare": {
+      "title": "Jämför",
+      "feature": "Det här får du",
+      "free": "Gratis",
+      "single": "Single QR",
+      "dynamic": "Dynamisk",
+      "yes": "Ingår",
+      "no": "Ingår inte",
+      "rows": {
+        "design": "Design, förhandsvisning och skanningskontroll",
+        "download": "Nedladdning av PNG och SVG",
+        "repeat": "Upprepade nedladdningar",
+        "change": "Ändra vart koden leder",
+        "analytics": "Skanningsstatistik",
+        "codes": "Koder"
+      },
+      "codesSingle": "1 per köp",
+      "codesDynamic": "{limit} aktiva",
+      "codesFree": "Obegränsat antal utkast"
+    },
+    "tax": "Priserna är exklusive moms. Stripe lägger till eventuell moms i kassan och ditt kvitto visar slutbeloppet.",
+    "trial": {
+      "action": "Starta 7 dagars gratis provperiod",
+      "note": "Provperiod: inget kort, ingen automatisk debitering. En dynamisk test-QR med en riktig kortlänk."
+    }
+  },
+  "auth": {
+    "title": "Logga in på Hey QR",
+    "lead": "Din design sparas i ditt konto så att du kan ladda ner den efter betalningen.",
+    "google": "Fortsätt med Google",
+    "legal": "Genom att fortsätta godkänner du villkoren och integritetspolicyn.",
+    "failed": "Inloggningen misslyckades. Försök igen.",
+    "canceled": {
+      "draft": "Inloggningen med Google avbröts. Din design finns kvar i den här webbläsaren. Fortsätt med Google för att försöka igen.",
+      "plain": "Inloggningen med Google avbröts. Fortsätt med Google för att försöka igen."
+    },
+    "incomplete": {
+      "draft": "Inloggningen med Google slutfördes inte. Din design finns kvar i den här webbläsaren. Fortsätt med Google för att försöka igen.",
+      "plain": "Inloggningen med Google slutfördes inte. Fortsätt med Google för att försöka igen."
+    },
+    "backToDesign": "Tillbaka till min design"
+  },
+  "contentTypes": {
+    "website": "Webbplats",
+    "text": "Text",
+    "wifi": "Wi-Fi",
+    "contact": "Kontakt",
+    "email": "E-post",
+    "phone": "Telefon",
+    "sms": "Sms",
+    "location": "Plats",
+    "event": "Evenemang",
+    "menu": "Meny",
+    "coupon": "Kupong",
+    "social": "Sociala länkar",
+    "business": "Företag",
+    "apps": "Appar",
+    "pdf": "PDF-dokument",
+    "product": "Produkt"
+  },
+  "fields": {
+    "url": "Webbadress",
+    "text": "Text",
+    "ssid": "Nätverksnamn",
+    "security": "Säkerhet",
+    "password": "Lösenord",
+    "hidden": "Nätverket är dolt",
+    "firstName": "Förnamn",
+    "lastName": "Efternamn",
+    "title": "Titel",
+    "company": "Företag",
+    "phone": "Telefon",
+    "email": "E-post",
+    "website": "Webbplats",
+    "to": "E-postadress",
+    "subject": "Ämne",
+    "body": "Meddelande",
+    "number": "Telefonnummer",
+    "message": "Meddelande",
+    "name": "Platsens namn",
+    "address": "Adress",
+    "eventTitle": "Evenemangets namn",
+    "start": "Börjar",
+    "end": "Slutar",
+    "place": "Plats",
+    "securityNone": "Inget lösenord",
+    "securityWpa": "WPA/WPA2/WPA3",
+    "date": "Datum"
+  },
+  "editor": {
+    "openLibrary": "Öppna Mina QR-koder",
+    "title": "Skapa en QR-kod",
+    "steps": {
+      "content": "Innehåll",
+      "design": "Design",
+      "frame": "Ram",
+      "type": "Typ"
+    },
+    "type": "Vad ska koden öppna?",
+    "model": {
+      "label": "Kodtyp",
+      "static": "Statisk",
+      "staticHint": "En betalning, fungerar för alltid",
+      "dynamic": "Dynamisk",
+      "dynamicHint": "Ändra länken efter tryck"
+    },
+    "name": "Namn (bara du ser det)",
+    "namePlaceholder": "Portfoliokort",
+    "pattern": "Moduler",
+    "eyeFrame": "Hörnram",
+    "eyeBall": "Hörncentrum",
+    "colors": "Färger",
+    "fg": "Moduler",
+    "bg": "Bakgrund",
+    "logo": "Mitten",
+    "logoNone": "Ingen",
+    "logoUpload": "Ladda upp logotyp",
+    "logoSize": "Logotypstorlek",
+    "layout": "Layout",
+    "presets": {
+      "qr": "Bara QR",
+      "caption": "QR + bildtext",
+      "vertical": "Stående kort",
+      "horizontal": "Liggande kort",
+      "frame": "Ram"
+    },
+    "frameStyle": "Ramstil",
+    "caption": "Bildtext",
+    "captionPlaceholder": "Skanna mig",
+    "preview": "Förhandsvisning",
+    "previewNote": "Förhandsvisning med vattenstämpel. Filer i full storlek skapas efter betalningen.",
+    "download": "Ladda ner",
+    "saving": "Sparar…",
+    "draftRestored": "Vi har återställt din senaste design.",
+    "scanOk": "Skanning verifierad",
+    "scanFix": "Åtgärda",
+    "shapes": {
+      "square": "Fyrkant",
+      "rounded": "Rundad",
+      "dot": "Prickar",
+      "diamond": "Romb",
+      "leaf": "Blad",
+      "fluid": "Flytande",
+      "vbars": "Vertikal",
+      "hbars": "Horisontell",
+      "cushion": "Mjuk",
+      "circle": "Cirkel"
+    },
+    "frames": {
+      "bar": "Etikett nedtill",
+      "tab": "Flik upptill",
+      "bubble": "Pratbubbla",
+      "pill": "Pillerformad etikett",
+      "corners": "Sökare",
+      "circle": "Märke",
+      "ticket": "Biljett",
+      "phone": "Telefon"
+    },
+    "icons": {
+      "globe": "Webbplats",
+      "link": "Länk",
+      "wifi": "Wi-Fi",
+      "phone": "Telefon",
+      "mail": "E-post",
+      "message": "Meddelande",
+      "pin": "Plats",
+      "calendar": "Kalender",
+      "clock": "Öppettider",
+      "user": "Person",
+      "users": "Team",
+      "briefcase": "Jobb",
+      "home": "Hem",
+      "bag": "Butik",
+      "cart": "Varukorg",
+      "coffee": "Kaffe",
+      "utensils": "Meny",
+      "wine": "Bar",
+      "music": "Musik",
+      "play": "Video",
+      "camera": "Foto",
+      "image": "Galleri",
+      "heart": "Gilla",
+      "star": "Recension",
+      "gift": "Present",
+      "ticket": "Biljett",
+      "tag": "Pris",
+      "percent": "Rabatt",
+      "card": "Betala",
+      "download": "Ladda ner",
+      "file": "Dokument",
+      "book": "Guide",
+      "leaf": "Eko",
+      "sun": "Utomhus",
+      "bike": "Cykel",
+      "plane": "Resor",
+      "at": "Socialt",
+      "smile": "Feedback"
+    },
+    "back": "Hem",
+    "stepsLabel": "Skapa en QR-kod",
+    "settings": "Designinställningar",
+    "scanFailed": "Kanske inte går att skanna",
+    "priceOnce": "{price} en gång",
+    "pricePerMonth": "{price} / månad",
+    "previewFree": "Gratis förhandsvisning · betala när du laddar ner",
+    "draftUnreadable": "Vi kunde inte öppna din senaste design, så du börjar om från början. Den finns kvar i den här webbläsaren.",
+    "mode": {
+      "question": "Kan länken ändras efter tryck?",
+      "lead": "Bestäm dig nu: en tryckt statisk kod kan inte pekas om senare.",
+      "static": {
+        "eyebrow": "Nej, den förblir densamma",
+        "title": "Statisk QR",
+        "text": "Innehållet är inbyggt i mönstret. Att ändra det kräver en ny kod. Betala en gång: {price}."
+      },
+      "dynamic": {
+        "eyebrow": "Ja, jag kan komma att ändra den",
+        "title": "Dynamisk QR",
+        "text": "Koden innehåller en permanent kortlänk. Ändra vart den leder och se dagliga skanningar. {price}/månad."
+      },
+      "unavailable": "{type}-koder är alltid statiska: innehållet går direkt in i mönstret. Dynamisk är för webblänkar.",
+      "switched": "{type}-koder är statiska, så den här koden är nu Statisk. Dynamisk är för webblänkar.",
+      "adjusted": "Ditt utkast var Dynamiskt, men bara webblänkar kan vara dynamiska, så det är Statiskt nu. Ditt innehåll och din design är oförändrade."
+    },
+    "backTo": {
+      "home": "Hem",
+      "type": "Typ",
+      "content": "Innehåll"
+    },
+    "continue": "Fortsätt",
+    "export": "Exportera",
+    "previewFrom": "Gratis förhandsvisning · ladda ner från {price}",
+    "optional": "valfritt",
+    "frameGroup": {
+      "title": "Ram runt koden",
+      "count": "{count} alternativ",
+      "none": "Ingen ram",
+      "text": "Ramtext",
+      "textHint": "Texten anpassar sin storlek efter ramen. Typsnitt och vikt finns under Bildtext.",
+      "quick": "Snabbtext",
+      "phrases": {
+        "scanMe": "Skanna mig",
+        "callMe": "Ring mig",
+        "menu": "Meny",
+        "wifi": "Wi-Fi",
+        "payHere": "Betala här",
+        "reviewUs": "Recensera oss",
+        "followUs": "Följ oss",
+        "bookNow": "Boka nu"
+      },
+      "color": "Ramfärg",
+      "textColor": "Textfärg",
+      "presets": "Färgförval",
+      "presetsHint": "Ram · kod · bakgrund",
+      "preset": "Ram {frame}, kod {code}, bakgrund {bg}",
+      "white": "Vit",
+      "graphite": "Grafit",
+      "violetUi": "Violett"
+    },
+    "typeStep": {
+      "title": "Vad ska din kod öppna?",
+      "lead": "Allt är gratis att prova. Du betalar bara när du laddar ner den färdiga filen.",
+      "groupLabel": "QR-typ",
+      "example": "t.ex. {example}",
+      "next": "Nästa: lägg till ditt innehåll",
+      "examples": {
+        "website": "anareyes.studio/portfolio",
+        "text": "”Ring på dörren två gånger”",
+        "wifi": "Reyes Studio Guest",
+        "contact": "Ana Reyes · Designer",
+        "email": "hello@reyes.studio",
+        "phone": "+1 415 555 0142",
+        "sms": "”OSA ja”",
+        "location": "21 Pier St, San Francisco",
+        "event": "Vårutställning · 5 dec",
+        "menu": "Little Fern Café-meny",
+        "coupon": "20 % rabatt på keramikkurser",
+        "social": "@ana.makes, portfolio, YouTube",
+        "business": "Reyes Ceramics Studio",
+        "apps": "Fern Rewards-appen",
+        "pdf": "Kursschema för våren",
+        "product": "Spräcklig stengodsmugg"
+      },
+      "directGroup": "Öppnas direkt från koden",
+      "directGroupLabel": "QR-typer som öppnas direkt",
+      "hostedGroup": "Hostade sidor",
+      "hostedNew": "Ny",
+      "hostedLead": "HeyQR hostar en mobilsida för dessa och koden innehåller en dynamisk kortlänk, så att du kan redigera sidan efter tryck. De kräver en dynamisk plan: Starter {starter}/månad eller Studio {studio}/månad, med 7 dagars gratis provperiod.",
+      "hostedSummary": "{type} · Hostad sida · Dynamisk"
+    },
+    "contentStep": {
+      "titles": {
+        "website": "Vilken sida ska den öppna?",
+        "text": "Vad ska folk läsa?",
+        "wifi": "Vilket nätverk ska gästerna ansluta till?",
+        "contact": "Vem ska folk spara?",
+        "email": "Vem ska mejlet gå till?",
+        "phone": "Vilket nummer ska den ringa?",
+        "sms": "Vem får sms:et?",
+        "location": "Vilken plats ska den öppna?",
+        "event": "Vad är det för evenemang?",
+        "menu": "Vad står på menyn?",
+        "coupon": "Vad är erbjudandet?",
+        "social": "Vilka länkar ska folk hitta?",
+        "business": "Hur når folk dig?",
+        "apps": "Var kan folk hämta din app?",
+        "pdf": "Vilket dokument ska öppnas?",
+        "product": "Vilken produkt visar du?"
+      },
+      "subs": {
+        "website": "Klistra in hela adressen. Du ser vad folk får efter skanningen.",
+        "text": "Vanlig text visas i mobilen direkt efter skanningen.",
+        "wifi": "Mobiler ansluter till nätverket efter skanningen. Inget behöver skrivas.",
+        "contact": "Mobiler erbjuder att spara kontakten efter skanningen.",
+        "email": "Skanningen öppnar ett nytt mejl med adress, ämne och meddelande ifyllda.",
+        "phone": "Skanningen erbjuder att ringa numret. Inget att skriva.",
+        "sms": "Skanningen öppnar ett sms, klart att skicka.",
+        "location": "Skanningen öppnar platsen i mobilens kartapp.",
+        "event": "Skanningen erbjuder att lägga till evenemanget i kalendern.",
+        "menu": "Lägg till avsnitt och rätter. Gästerna ser en mobilvänlig meny efter skanningen.",
+        "coupon": "Folk ser rabatten, kopierar koden och löser in den innan den går ut.",
+        "social": "En sida med din bild, en kort presentation och dina länkar, i din ordning.",
+        "business": "Knappar för samtal, vägbeskrivning och din webbplats visas när du lägger till de uppgifterna.",
+        "apps": "Mobiler går direkt till sin egen butik. Andra enheter ser båda länkarna.",
+        "pdf": "Ladda upp PDF:en. Folk öppnar eller laddar ner den med ett tryck.",
+        "product": "Bilder, pris och en tydlig knapp för att köpa eller läsa mer."
+      },
+      "nameLabel": "Namn i Mina QR-koder",
+      "stepOf": "Steg 2 av 3",
+      "kept": "Det du har fyllt i sparas om du går tillbaka.",
+      "continue": "Fortsätt till design",
+      "errorsOne": "Rätta det markerade fältet för att fortsätta. Allt annat är sparat.",
+      "errorsMany": "Rätta de {count} markerade fälten för att fortsätta. Allt annat är sparat.",
+      "back": "Tillbaka",
+      "urlHint": "Den här adressen är inbyggd i koden. För att kunna peka om tryckta koder senare väljer du Dynamisk i föregående steg.",
+      "urlHintDynamic": "Din kod kommer att innehålla en permanent kortlänk. Hit skickar den folk, och du kan ändra det efter tryck.",
+      "nameHint": "Bara du ser det här namnet.",
+      "namePlaceholderType": "{type}-QR"
+    },
+    "errors": {
+      "urlEmpty": "Ange en webbadress, till exempel yourname.com.",
+      "urlSpaces": "Webbadresser får inte innehålla mellanslag.",
+      "urlInvalid": "Kontrollera adressen. Den behöver en domän, till exempel yourname.com.",
+      "text": "Skriv texten som folk ska se efter skanningen.",
+      "ssid": "Ange nätverksnamnet exakt som det visas i mobiler.",
+      "password": "Ange Wi-Fi-lösenordet, eller välj ”Inget lösenord”.",
+      "passwordShort": "WPA-lösenord har minst 8 tecken.",
+      "contactName": "Lägg till minst ett förnamn eller efternamn.",
+      "phone": "Använd siffror, mellanslag och ett valfritt + för landsnumret.",
+      "email": "Kontrollera e-postadressen. Den behöver ett namn, @ och en domän, till exempel ana@studio.com.",
+      "emailTo": "Ange adressen som mejlet ska gå till.",
+      "emailInvalid": "Kontrollera adressen. Den behöver ett namn, @ och en domän.",
+      "phoneNumber": "Ange ett telefonnummer med landsnummer, till exempel +1 415 555 0142.",
+      "smsTo": "Ange numret som ska ta emot meddelandet.",
+      "address": "Ange adressen som kartappen ska öppna.",
+      "eventTitle": "Ge evenemanget ett namn.",
+      "eventStart": "Välj ett datum."
+    },
+    "afterScanning": {
+      "label": "Efter skanningen",
+      "toggleHint": "Se vad folk får i mobilen",
+      "caption": "Det här ser folk efter skanningen",
+      "websitePlaceholder": "Din webbsida",
+      "dynamicNote": "Öppnar först din kortlänk och skickar sedan vidare hit.",
+      "textPlaceholder": "Din text visas här.",
+      "wifiPlaceholder": "Ansluta till nätverket?",
+      "security": "Säkerhet",
+      "open": "Öppet nätverk",
+      "password": "Lösenord",
+      "join": "Anslut till nätverket",
+      "contactPlaceholder": "Ny kontakt",
+      "phone": "Telefon",
+      "email": "E-post",
+      "company": "Företag",
+      "save": "Lägg till i kontakter",
+      "emailPlaceholder": "Nytt mejl",
+      "subject": "Ämne",
+      "compose": "Skriv mejl",
+      "phonePlaceholder": "Telefonnummer",
+      "call": "Ring",
+      "message": "Meddelande",
+      "text": "Skicka sms",
+      "locationPlaceholder": "En plats",
+      "address": "Adress",
+      "openMaps": "Öppna i Kartor",
+      "eventPlaceholder": "Nytt evenemang",
+      "place": "Plats",
+      "addToCalendar": "Lägg till i kalendern",
+      "wifiKicker": "Anslut till Wi-Fi-nätverk",
+      "website": "Webbplats",
+      "textKicker": "Skannad text",
+      "loading": "Laddar förhandsvisning",
+      "date": "Datum",
+      "addEvent": "Lägg till evenemang"
+    },
+    "passwordShow": "Visa",
+    "passwordHide": "Dölj",
+    "wifiPasswordHint": "Förhandsvisningen döljer lösenordet. Det lagras i själva koden, så alla som skannar den kan ansluta.",
+    "tooLong": {
+      "title": "För långt för en QR-kod",
+      "text": "Det är ungefär {over} % mer än en QR-kod rymmer. Korta innehållet så kommer koden tillbaka direkt. Inget du har skrivit går förlorat.",
+      "centerHint": "En logotyp eller bildtext mitt i koden sänker gränsen. Att ta bort den ger också plats.",
+      "detail": "{bytes} av {max} byte",
+      "edit": "Redigera innehåll",
+      "badge": "För långt",
+      "preview": "QR-koden visas inte: innehållet är för långt"
+    },
+    "eyeColor": "Hörnramar",
+    "eyeInColor": "Hörncentrum",
+    "resetColors": "Återställ färger",
+    "colorInvalid": "Använd en HEX-färg som #1F4D3A: # och 6 tecken från 0–9 och A–F.",
+    "size": {
+      "title": "Storlek",
+      "unitHint": "För skärmar, presentationer och webben. 1 enhet = 1 pixel vid 1×.",
+      "qr": "QR-kodens storlek",
+      "qrSlider": "Reglage för QR-kodens storlek",
+      "clamped": "Koden får inte plats i layouten: den ritas i {shown} {unit}, den största storlek som får plats. Gör layouten större eller koden mindre.",
+      "layout": "Layoutstorlek",
+      "width": "Bredd",
+      "height": "Höjd",
+      "locked": "Med ”Bara QR” och ”Ram” följer layouten koden. Välj ”QR + bildtext” eller ett kort för att ange en egen storlek.",
+      "presets": {
+        "square": "Kvadrat 1080",
+        "story": "Story 1080×1920",
+        "slide": "Bild 1920×1080",
+        "card": "Visitkort 90×50",
+        "a6": "A6 105×148",
+        "sticker": "Dekal 50×62"
+      },
+      "invalid": "Ange ett heltal från {min} till {max} {unit}.",
+      "units": "Enheter",
+      "unitMm": "Tryck · mm",
+      "unitPx": "Skärm · px",
+      "unitHintMm": "För tryck. Filer exporteras i 300, 600 eller 1200 dpi.",
+      "invalidMm": "Ange ett tal från {min} till {max} mm, med högst en decimal.",
+      "qrHint": "inkl. tyst zon",
+      "reach": "Kan skannas från upp till cirka {cm} cm avstånd (10 : 1-regeln). Större kod, längre räckvidd.",
+      "viewNoteMm": "Ytan skalas för att passa skärmen. Välj <b>Faktisk storlek</b> ovanför ytan för att se den i tryckstorlek. Export: <b>PNG {width} × {height} px</b>.",
+      "viewNotePx": "Ytan skalas för att passa skärmen. Välj <b>Faktisk storlek</b> ovanför ytan för att se den i 1×. Export: <b>PNG {width} × {height} px</b> (2×)."
+    },
+    "updatingPreview": "Uppdaterar förhandsvisning…",
+    "captionField": {
+      "label": "Bildtext",
+      "hint": "Tryck på Enter för en andra rad. Lämna tomt för att dölja bildtexten.",
+      "tooLong": "Använd högst {max} tecken: ta bort {over, plural, one {# tecken} other {# tecken}}. Förhandsvisningen behåller din senaste bildtext som får plats.",
+      "tooManyLines": "Använd högst {max} rader. Förhandsvisningen behåller din senaste bildtext som får plats.",
+      "count": "{count} av {max} tecken",
+      "unsupported": "{font} kan inte rita {chars}. Välj ett annat typsnitt eller ändra {count, plural, one {det här tecknet} other {de här tecknen}}: filerna skulle visa {count, plural, one {det} other {dem}} som tomma rutor."
+    },
+    "captionFont": {
+      "title": "Typsnitt",
+      "hint": "Typsnitt för din QR. HeyQR:s gränssnitt använder alltid DM Sans.",
+      "weight": "Vikt",
+      "weights": {
+        "400": "Normal",
+        "500": "Medium",
+        "700": "Fet"
+      },
+      "original": "DM Sans (original)",
+      "originalHint": "Den här layouten skapades innan fler typsnitt fanns. DM Sans har bara latinska bokstäver; välj ett annat typsnitt för kyrilliska."
+    },
+    "captionSize": {
+      "label": "Storlek",
+      "invalid": "Ange {min}–{max} {unit}, med högst en decimal. Förhandsvisningen behåller den senaste giltiga storleken.",
+      "fitted": "Ritas i {size} {unit} så att bildtexten får plats i layouten."
+    },
+    "edit": {
+      "title": "Redigera design · {layout}",
+      "back": "Tillbaka till koden",
+      "save": "Spara ändringar",
+      "saved": "Designen har sparats",
+      "restored": "Vi behöll ändringarna du inte hade sparat innan du loggade in igen. Spara för att behålla dem.",
+      "discardRestored": "Kasta",
+      "unsaved": "Osparade ändringar",
+      "retry": "Försök igen",
+      "failed": "Det gick inte att spara designen. Dina ändringar finns kvar här.",
+      "notFound": "Den här koden eller layouten finns inte längre.",
+      "hint": "Ändringarna gäller bara den här layouten",
+      "note": "När du sparar uppdateras den här layouten. Innehåll, betalning och länkar förblir desamma.",
+      "layouts": "Layouter för den här koden",
+      "newLayout": "Ny layout",
+      "newName": "Layout {n}",
+      "added": "”{name}” skapades från den aktuella layouten. De andra är oförändrade.",
+      "addFailed": "Vi kunde inte lägga till layouten. Dina ändringar finns kvar; försök igen.",
+      "unsavedSwitch": "Den här layouten har osparade ändringar.",
+      "discardSwitch": "Kasta och byt",
+      "layoutName": "Layoutens namn",
+      "unsavedSwitchText": "Byta till ”{name}” och kasta ändringarna i den här layouten? Spara först för att behålla dem.",
+      "keepEditing": "Fortsätt redigera",
+      "conflictTitle": "Den här layouten sparades någon annanstans",
+      "conflictText": "En annan flik eller enhet sparade layouten efter att du öppnade den, så dina ändringar sparades inte. De finns kvar här: spara dem som en ny layout, eller ladda om den sparade versionen (dina ändringar här kastas då).",
+      "conflictNewLayout": "Spara mina ändringar som en ny layout",
+      "conflictReload": "Ladda om sparad version"
+    },
+    "captionStyle": {
+      "align": "Justera",
+      "aligns": {
+        "left": "Vänster",
+        "center": "Mitten",
+        "right": "Höger"
+      },
+      "color": "Bildtextens färg",
+      "palette": "Färgförval för bildtext",
+      "matchCode": "Samma som koden"
+    },
+    "logoFile": {
+      "hint": "PNG, JPG, SVG eller WebP, upp till {max} MB. Välj en fil eller släpp den på uppladdningsrutan.",
+      "reading": "Läser bilden…",
+      "empty": "Filen är tom.",
+      "tooLarge": "Filen är större än gränsen på {max} MB.",
+      "unsupported": "Filen är inte en PNG-, JPG-, SVG- eller WebP-bild, oavsett vad namnet säger.",
+      "unreadable": "Bilden kan inte öppnas. Den kan vara skadad; exportera den igen och försök på nytt.",
+      "kept": "Din nuvarande logotyp behålls."
+    },
+    "logoPlate": {
+      "label": "Underlag",
+      "none": "Inget",
+      "square": "Fyrkant",
+      "circle": "Cirkel"
+    },
+    "logoSizeValue": "{size} % · upp till {max} % går att skanna",
+    "logoSizeLegacy": "Sparad som {saved} %; ritas med maxvärdet {max} %. Om du flyttar reglaget sparas en storlek inom gränsen.",
+    "groups": {
+      "label": "Designinställningar",
+      "layout": "Layout",
+      "frame": "Ram",
+      "size": "Storlek",
+      "pattern": "Mönster",
+      "colors": "Färger",
+      "logo": "Logotyp",
+      "caption": "Bildtext",
+      "brand": "Varumärke"
+    },
+    "quickStyles": {
+      "title": "Snabbstilar",
+      "hint": "Ett tryck ställer in former och färger samtidigt. Ångra tar tillbaka det tidigare utseendet.",
+      "surprise": "Överraska mig",
+      "apply": "Använd stilen {name}",
+      "applied": "Stilen ”{name}” används. Ångra tar tillbaka det tidigare utseendet.",
+      "surprised": "Ett nytt utseende. Ångra tar tillbaka det tidigare.",
+      "names": {
+        "classic": "Klassisk",
+        "soft": "Mjuk",
+        "dots": "Prickar",
+        "fluid": "Flytande",
+        "lines": "Linjer",
+        "gem": "Ädelsten"
+      }
+    },
+    "layoutGroup": {
+      "title": "Layout",
+      "hint": "Element flyttas, inställningar behålls",
+      "border": "Ram runt layouten",
+      "borderCards": "Kort har alltid en ram."
+    },
+    "colorsGroup": {
+      "title": "Vad ska färgas",
+      "targets": "Färgmål",
+      "resetAll": "Återställ alla",
+      "edited": "Ändrad",
+      "roles": {
+        "fg": "Moduler",
+        "eye": "Hörnramar",
+        "eyeIn": "Hörncentrum",
+        "bg": "Bakgrund",
+        "frame": "Ram",
+        "caption": "Bildtext"
+      },
+      "editing": "Färg för {role}",
+      "swatches": "Färgrutor",
+      "reset": "Återställ till standard",
+      "note": "Färgerna gäller bara din QR. HeyQR:s egna knappar och menyer behåller sina färger.",
+      "frameHint": "Ramar, kortkanter och ramen runt en layout.",
+      "captionHint": "Bildtexter under, ovanför eller i koden.",
+      "picker": "Färgväljare för {role}"
+    },
+    "logoGroup": {
+      "source": "Logotypkälla",
+      "icons": "Ikonbibliotek",
+      "upload": "Ladda upp logotyp",
+      "count": "{count} vektorikoner",
+      "search": "Sök ikoner",
+      "searchPlaceholder": "Sök ikoner: meny, wifi, butik…",
+      "empty": "Ingen ikon matchar ”{query}”.",
+      "style": "Ikonstil",
+      "plate": "På en platta",
+      "tile": "Färgruta",
+      "vectorNote": "Ikoner förblir vektorer i SVG och PDF, så de är skarpa i alla storlekar. De får hörncentrumets färg.",
+      "remove": "Ta bort logotyp",
+      "backingHint": "Ett underlag tar bort prickarna bakom logotypen så att den syns tydligt.",
+      "position": "Placering",
+      "positions": {
+        "center": "Mitt i koden",
+        "top": "Överst på kortet"
+      },
+      "positionHint": "”Överst på kortet” fungerar med stående och liggande kort.",
+      "brandName": "Namn bredvid logotypen",
+      "brandNameHint": "Valfritt. Visas bredvid logotypen ovanför koden.",
+      "uploadTitle": "Ladda upp din logotyp",
+      "brandedUpload": "Ladda upp en bild först",
+      "imageSize": "Bildstorlek"
+    },
+    "captionGroup": {
+      "position": "Placering",
+      "positions": {
+        "below": "Under",
+        "above": "Ovanför",
+        "inside": "I koden"
+      },
+      "insideHint": "Kort text ligger på en platta mitt i koden. Skanningskontrollen ber dig korta den om den döljer för mycket.",
+      "hiddenNote": "”{layout}” har ingen bildtext. Välj QR + bildtext eller ett kort för att visa den.",
+      "frameNote": "Ramens text ställs in under Ram.",
+      "toLayout": "Använd QR + bildtext",
+      "color": "Bildtextens färg",
+      "insideShortened": "I koden finns plats för {max} tecken, så den visar ”{shown}”. Korta bildtexten eller placera den under eller ovanför koden."
+    },
+    "stage": {
+      "history": "Historik",
+      "undo": "Ångra",
+      "redo": "Gör om",
+      "background": "Ytans bakgrund",
+      "bg": {
+        "light": "Ljus",
+        "dark": "Mörk",
+        "checker": "Transparent"
+      },
+      "scale": "Förhandsvisningens skala",
+      "fit": "Anpassa",
+      "actual": "Faktisk storlek",
+      "dims": {
+        "layout": "Layout",
+        "qr": "QR",
+        "file": "Fil"
+      },
+      "scaleLabel": "{pct} %",
+      "openFull": "Öppna förhandsvisning i helskärm",
+      "fullTitle": "Förhandsvisning i helskärm",
+      "done": "Klar",
+      "scaledToFit": "Skalad för att passa"
+    },
+    "scanChecking": "Kontrollerar skanning",
+    "darkenCorners": "Gör hörnmarkörerna mörkare",
+    "textCount": "{count} av {max} tecken. Kort text ger en enklare kod som är lättare att skanna.",
+    "brand": {
+      "step1": "1 · Din logotyp eller bild",
+      "step1Hint": "PNG, JPG, WebP eller SVG",
+      "step1Ready": "Byt ut den när du vill",
+      "drag": "Dra din logotyp hit",
+      "dropNow": "Släpp för att ladda upp",
+      "add": "Lägg till din logotyp eller bild",
+      "formats": "PNG, JPG, WebP eller SVG, upp till 10 MB. En transparent bakgrund fungerar bäst.",
+      "choose": "Välj bild",
+      "chooseMobile": "Välj bland bilder eller filer",
+      "chooseLabel": "Välj en logotypbild",
+      "sample": "Prova en exempellogotyp",
+      "error": "Vi kunde inte läsa filen. Prova en PNG, JPG, WebP eller SVG på upp till 10 MB.",
+      "reading": "Läser färger från din bild…",
+      "preview": "Uppladdad bild",
+      "image": "Din bild",
+      "colorsFound": "{count, plural, one {# färg hittades} other {# färger hittades}}",
+      "replace": "Byt bild",
+      "replaceLabel": "Byt logotypbild",
+      "remove": "Ta bort bild",
+      "step2": "2 · Färger från din bild",
+      "step2Hint": "Används på QR-koden",
+      "roles": "Varumärkets färgroller",
+      "role": {
+        "primary": "Kodens färg",
+        "bg": "Bakgrund",
+        "accent": "Accent"
+      },
+      "roleHint": {
+        "primary": "Moduler och hörnramar",
+        "bg": "Bakom koden och kortet",
+        "accent": "Hörncentrum och detaljer"
+      },
+      "fromImage": "Från din bild",
+      "found": "Färger som hittades i din bild",
+      "hexFor": "HEX för {role}",
+      "reset": "Återställ",
+      "contrast": {
+        "ok": "Kod mot bakgrund: {ratio}:1 · lätt att läsa. Skanningskontrollen har sista ordet.",
+        "warn": "Kod mot bakgrund: {ratio}:1 · läsbar, men mer kontrast är säkrare.",
+        "err": "Kod mot bakgrund: {ratio}:1 · för låg för att skannas pålitligt."
+      },
+      "appColors": "Färgerna gäller bara din QR. HeyQR:s knappar och menyer behåller sina egna färger.",
+      "step3": "3 · Välj en riktning",
+      "step3Hint": "Samma kod, tre utseenden",
+      "looks": "Varumärkesutseenden",
+      "lookCards": {
+        "center": {
+          "title": "Logotyp i koden",
+          "desc": "Ditt märke ligger på en platta i mitten."
+        },
+        "card": {
+          "title": "Varumärkeskort",
+          "desc": "Logotyp och namn ovanför koden, i en ram."
+        },
+        "art": {
+          "title": "Konstverk",
+          "desc": "Din bild flödar in i prickarna och hörnen."
+        }
+      },
+      "step4": "4 · Finjustera",
+      "fine": {
+        "logo": "Bildstorlek och underlag",
+        "pattern": "Prickar och hörn",
+        "caption": "Bildtext och typsnitt",
+        "size": "Storlek"
+      },
+      "updating": "Uppdaterar varumärkesdesignen… fortsätt redigera",
+      "readingCanvas": "Läser din bild…"
+    },
+    "designMode": {
+      "label": "Designläge",
+      "custom": "Egen design",
+      "branded": "Varumärkesdesign",
+      "chooseTitle": "Hur vill du designa den?",
+      "chooseLead": "Båda utgår från samma kod. Du kan byta när som helst utan att förlora ditt innehåll.",
+      "customTitle": "Egen design",
+      "customText": "Välj layout, former, färger, ram och bildtext själv.",
+      "brandedTitle": "Varumärkesdesign",
+      "brandedBadge": "Från din logotyp",
+      "brandedText": "Ladda upp din logotyp eller en bild. Vi hämtar dess färger och föreslår tre utseenden."
+    },
+    "patternHint": "8 former för prickarna som bär din data",
+    "eyeFrameHint": "Yttre ring på de 3 hörnmarkörerna",
+    "eyeBallHint": "Inre prick på de 3 hörnmarkörerna",
+    "finderNote": "Varje form behåller sökmönstrets proportioner 1 : 1 : 3 : 1 : 1, så skanningskontrollen godkänns ändå.",
+    "colorPicker": "Färgväljare för {label}",
+    "scanCheck": {
+      "run": "Kontrollera skanning",
+      "retry": "Kontrollera igen",
+      "readBack": "Läs tillbaka ”{value}” på den här enheten, som en mobilkamera.",
+      "unreadableTitle": "Gick inte att skanna",
+      "unreadable": "En mobilkamera kunde inte läsa den här layouten. Öka kontrasten, gör logotypen mindre eller använd enklare former och kontrollera igen.",
+      "mismatch": "Den läste ”{value}”, inte ditt innehåll. Kontrollera innehållet och kontrollera igen.",
+      "errorTitle": "Skanningskontrollen kördes inte",
+      "errorText": "Skanningskontrollen kunde inte starta. Din design är säker; försök igen.",
+      "finding": "Tar reda på varför på den här enheten…",
+      "multiTitle": "Layouten kanske inte går att skanna · {count} åtgärder",
+      "confirmed": "Kontrollerat på den här enheten: med bara den här ändringen går den att skanna.",
+      "general": "Vi kunde inte koppla det till en enda inställning. Öka kontrasten, gör logotypen mindre eller använd enklare former och kontrollera igen.",
+      "logoSearching": "Provar mindre logotypstorlekar på den här enheten…",
+      "logoNone": "Ingen mindre logotypstorlek går att skanna med den här layouten, så din design är oförändrad. Prova ett underlag, en enklare logotyp eller ta bort den under Logotyp.",
+      "openLogo": "Öppna logotypinställningar",
+      "logoApplied": "Logotypen minskades från {from} % till {to} %. Kontrollerar den nya layouten…",
+      "causes": {
+        "invert": {
+          "title": "Ljus kod på mörk bakgrund",
+          "text": "Många mobilkameror kan inte läsa inverterade koder. Håll koden mörkare än bakgrunden.",
+          "fix": "Byt färger"
+        },
+        "contrast": {
+          "title": "Inte tillräcklig kontrast",
+          "text": "Koden och bakgrunden ligger för nära varandra ({ratio}:1). Sikta på minst 4:1.",
+          "fix": "Öka kontrasten"
+        },
+        "eyes": {
+          "title": "Hörnmarkörerna är för ljusa",
+          "text": "Skannrar hittar koden via dess tre hörnmarkörer. Gör dem mörkare.",
+          "fix": "Gör hörnmarkörerna mörkare"
+        },
+        "text": {
+          "title": "Texten i koden är för lång",
+          "text": "Håll texten i koden till cirka 8 tecken så att felkorrigeringen kan återskapa det den täcker.",
+          "fix": "Korta texten"
+        },
+        "logo": {
+          "title": "Logotypen döljer för mycket av koden",
+          "text": "Felkorrigeringen klarar upp till {max} % logotypbredd. Din är {size} %.",
+          "critical": "Den överlappar en hörnmarkör eller tidslinje.",
+          "fix": "Minska logotypens storlek"
+        }
+      }
+    },
+    "hosted": {
+      "badge": "Hostad sida",
+      "notice": "HeyQR publicerar sidan på {short}. {needs} Ändringar går live när du publicerar; tryckta koder fortsätter att fungera.",
+      "noticePreview": "kodens kortlänk",
+      "needsPlan": "Publicering kräver en dynamisk plan: Starter {starter}/månad för 5 koder eller Studio {studio}/månad för 25, med 7 dagars gratis provperiod. Att designa och förhandsgranska är fortfarande gratis.",
+      "needsSlot": "Den använder en av dina {slots} dynamiska platser i {plan}.",
+      "sample": "Börja från exemplet",
+      "sampleAdded": "Exemplet har lagts till. Ersätt det med dina egna uppgifter.",
+      "previews": "Förhandsvisningar · Efter skanning och QR-design",
+      "previewSwitch": "Förhandsvisning",
+      "afterScan": "Efter skanning",
+      "qrDesign": "QR-design",
+      "moveUp": "Flytta upp {item}",
+      "moveDown": "Flytta ner {item}",
+      "remove": "Ta bort {item}",
+      "optional": "valfritt",
+      "photoAdd": "Lägg till bild",
+      "photoReplace": "Byt bild",
+      "photoRemove": "Ta bort bild",
+      "photoHint": "Bilder laddas upp till HeyQR och storleksanpassas för mobiler. JPG eller PNG, upp till 5 MB vardera.",
+      "photoType": "”{name}” är inte en JPG eller PNG.",
+      "photoTooLarge": "”{name}” är {size}. Gränsen är 5 MB.",
+      "photoUnreadable": "Vi kunde inte läsa ”{name}”. Prova en annan bild.",
+      "menu": {
+        "name": "Restaurangens namn",
+        "namePlaceholder": "Little Fern Café",
+        "note": "Anteckning",
+        "notePlaceholder": "Köket öppet 8.00–15.00",
+        "currency": "Priser i",
+        "section": "Avsnitt {n}",
+        "sectionPlaceholder": "Frukost",
+        "sectionHint": "Namnge avsnittet, till exempel ”Frukost” eller ”Drycker”.",
+        "dish": "Rätt {n}",
+        "dishPlaceholder": "Avokadotoast",
+        "descPlaceholder": "Beskrivning · valfritt",
+        "price": "Pris",
+        "pricePlaceholder": "12",
+        "dishPhoto": "Bild på rätten",
+        "addDish": "Lägg till rätt",
+        "addSection": "Lägg till avsnitt"
+      },
+      "coupon": {
+        "title": "Erbjudandets rubrik",
+        "titlePlaceholder": "På alla keramikkurser den här månaden",
+        "discount": "Rabatt",
+        "discountPlaceholder": "20 % rabatt",
+        "discountHint": "Kort och stort: ”20 % rabatt”, ”50 kr rabatt”, ”Gratis kaffe”.",
+        "code": "Kampanjkod",
+        "codePlaceholder": "FERN20",
+        "expires": "Slutar den",
+        "expiresHint": "Efter det här datumet visar sidan ”Erbjudandet har gått ut” och döljer koden. Erbjudandet gäller hela dagen i din tidszon ({zone}).",
+        "clearDate": "Rensa datum",
+        "link": "Inlösningslänk",
+        "linkPlaceholder": "yourshop.com/offer",
+        "terms": "Villkor",
+        "termsPlaceholder": "En kod per person. Gäller inte med andra erbjudanden.",
+        "previewAs": "Förhandsgranska sidan som",
+        "valid": "Giltigt erbjudande",
+        "expired": "Utgånget"
+      },
+      "social": {
+        "photo": "Profilbild",
+        "name": "Profilnamn",
+        "namePlaceholder": "Ana Reyes",
+        "bio": "Kort presentation",
+        "bioPlaceholder": "Produktdesigner. Keramik på helgerna.",
+        "links": "Länkar, i den ordning folk ser dem",
+        "link": "Länk {n}",
+        "labelLabel": "Etikett",
+        "labelPlaceholder": "Instagram",
+        "urlLabel": "Adress",
+        "urlPlaceholder": "instagram.com/yourname",
+        "quickAdd": "Lägg till:",
+        "addLink": "Lägg till länk"
+      },
+      "business": {
+        "name": "Företagsnamn",
+        "namePlaceholder": "Reyes Ceramics Studio",
+        "desc": "Kort beskrivning",
+        "descPlaceholder": "Handdrejat porslin och keramikkurser.",
+        "hours": "Öppettider",
+        "open": "Öppet",
+        "from": "Öppnar",
+        "to": "Stänger",
+        "closed": "Stängt",
+        "copyMonday": "Kopiera måndagens tider till tis–fre",
+        "zone": "Tiderna anges i {zone}.",
+        "address": "Adress",
+        "addressPlaceholder": "21 Pier St, San Francisco",
+        "addressHint": "Lägger till en knapp för vägbeskrivning.",
+        "phone": "Telefon",
+        "phonePlaceholder": "+1 415 555 0142",
+        "phoneHint": "Lägger till en ringknapp.",
+        "website": "Webbplats",
+        "websitePlaceholder": "yourshop.com",
+        "websiteHint": "Lägger till en webbplatsknapp."
+      },
+      "apps": {
+        "icon": "Appikon",
+        "name": "Appens namn",
+        "namePlaceholder": "Fern Rewards",
+        "desc": "Beskrivning",
+        "descPlaceholder": "Vad appen gör, i en mening.",
+        "ios": "Länk till App Store",
+        "iosPlaceholder": "apps.apple.com/app/your-app",
+        "android": "Länk till Google Play",
+        "androidPlaceholder": "play.google.com/store/apps/details?id=…",
+        "storesHint": "Lägg till minst en butik. Mobiler öppnar sin egen butik; andra enheter ser en sida med båda länkarna."
+      },
+      "pdf": {
+        "title": "Rubrik",
+        "titlePlaceholder": "Kursschema för våren",
+        "desc": "Kort beskrivning",
+        "descPlaceholder": "Datum, priser och vad du ska ta med.",
+        "file": "PDF-fil",
+        "choose": "Välj en PDF",
+        "limits": "Upp till 25 MB · upp till 300 sidor",
+        "sample": "Använd exempel-PDF:en",
+        "uploading": "Laddar upp · {pct} %",
+        "processing": "Kontrollerar PDF:en…",
+        "cancel": "Avbryt",
+        "meta": "{pages, plural, one {# sida} other {# sidor}} · {size}",
+        "metaNoPages": "{size}",
+        "replace": "Byt",
+        "remove": "Ta bort",
+        "hint": "Lagras av HeyQR. Om du byter fil behålls samma kortlänk, så tryckta koder öppnar den nya versionen när du har publicerat.",
+        "signIn": "Logga in för att ladda upp en PDF. Ditt utkast sparas.",
+        "notPdf": "”{name}” är inte en PDF. Välj en fil som slutar på .pdf.",
+        "empty": "”{name}” är tom. Välj en annan fil.",
+        "tooLarge": "”{name}” är {size}. Gränsen är 25 MB. Exportera en mindre PDF och försök igen.",
+        "tooManyPages": "”{name}” har {pages} sidor. Gränsen är 300.",
+        "failed": "Filen laddades inte upp. Försök igen."
+      },
+      "product": {
+        "name": "Produktnamn",
+        "namePlaceholder": "Spräcklig stengodsmugg",
+        "photos": "Bilder",
+        "cover": "Omslag",
+        "photosHint": "Upp till 5 bilder. Den första är omslagsbild. JPG eller PNG, upp till 5 MB vardera.",
+        "photo": "Bild {n}",
+        "desc": "Beskrivning",
+        "descPlaceholder": "Storlek, material, skötsel.",
+        "currency": "Valuta",
+        "price": "Pris",
+        "pricePlaceholder": "38",
+        "cta": "Knapp",
+        "ctas": {
+          "buy": "Köp nu",
+          "view": "Visa produkt",
+          "order": "Beställ nu"
+        },
+        "link": "Produktlänk",
+        "linkPlaceholder": "yourshop.com/product",
+        "linkHint": "Vart knappen leder: din butik eller en annons på en marknadsplats."
+      },
+      "signInPhotos": "Logga in för att lägga till bilder. Ditt utkast sparas.",
+      "errors": {
+        "menuName": "Lägg till namnet som gästerna ser överst i menyn.",
+        "menuSections": "Lägg till minst ett avsnitt.",
+        "sectionName": "Namnge avsnittet, till exempel ”Frukost” eller ”Drycker”.",
+        "sectionDishes": "Lägg till minst en rätt i det här avsnittet.",
+        "dishName": "Varje rätt behöver ett namn.",
+        "price": "Priser anges bara med siffror, till exempel 12 eller 4.50.",
+        "couponTitle": "Beskriv vad erbjudandet gäller.",
+        "couponDiscount": "Lägg till rabatten, till exempel ”20 % rabatt”.",
+        "couponCode": "Använd bara bokstäver, siffror, - eller _, utan mellanslag.",
+        "dateInvalid": "Välj ett giltigt datum.",
+        "datePassed": "Datumet har passerat. Välj ett senare datum, eller rensa det för ett erbjudande utan slutdatum.",
+        "urlEmpty": "Ange en webbadress, till exempel yourname.com.",
+        "urlSpaces": "Webbadresser får inte innehålla mellanslag.",
+        "urlInvalid": "Kontrollera adressen. Den behöver en domän, till exempel yourname.com.",
+        "socialName": "Lägg till namnet som folk ser överst på sidan.",
+        "socialLinks": "Lägg till minst en länk.",
+        "linkLabel": "Länken behöver en etikett.",
+        "linkUrl": "Länken behöver en fullständig webbadress, till exempel instagram.com/yourname.",
+        "businessName": "Lägg till ditt företagsnamn.",
+        "businessReach": "Lägg till en adress, ett telefonnummer eller en webbplats så att folk kan nå dig.",
+        "phone": "Använd siffror, mellanslag och ett valfritt + för landsnumret.",
+        "hoursInvalid": "Ange tider som 09:00.",
+        "hoursOrder": "Stängningstiden måste vara senare än öppningstiden.",
+        "appName": "Lägg till appens namn.",
+        "appStores": "Lägg till minst en butikslänk.",
+        "appStoreLink": "Länkar till App Store börjar med apps.apple.com/.",
+        "googlePlayLink": "Länkar till Google Play börjar med play.google.com/.",
+        "pdfTitle": "Lägg till en rubrik för dokumentet.",
+        "pdfFile": "Ladda upp en PDF för att fortsätta.",
+        "pdfUploading": "Vänta tills uppladdningen är klar.",
+        "productName": "Lägg till produktens namn.",
+        "productLink": "Lägg till sidan där folk kan köpa eller se produkten.",
+        "productPrice": "Använd bara siffror, till exempel 38 eller 38.50. Välj valuta i menyn.",
+        "productImages": "Upp till 5 bilder."
+      },
+      "previewNote": "HeyQR hostar sidan på {short}. Ändringar går live när du publicerar; tryckta koder fortsätter att fungera.",
+      "qrNote": "Koden innehåller kortlänken {short}, så sidan kan ändras efter tryck."
+    }
+  },
+  "scan": {
+    "invert": "Ljus kod på mörk bakgrund. Många mobilkameror kan inte läsa inverterade koder.",
+    "contrast": "För låg kontrast mellan koden och bakgrunden. Den behöver minst 3:1.",
+    "eyes": "Hörnmarkörerna måste vara mörkare än bakgrunden, med minst 3:1 i kontrast (2.5:1 för mitten). Skannrar hittar koden med hjälp av dem.",
+    "logo": "Logotypen döljer för mycket av koden. Gör den mindre.",
+    "text": "Texten i koden är för lång. Håll den till cirka 8 tecken."
+  },
+  "export": {
+    "title": "Ladda ner din kod",
+    "shortLinkPreview": {
+      "mark": "Förhandsvisning",
+      "note": "Förhandsvisning med en exempelkortlänk. Din permanenta kortlänk skapas när du aktiverar koden, och alla filer du laddar ner innehåller den."
+    },
+    "format": "Format",
+    "png": "PNG",
+    "pngHint": "Bild upp till 8K för webb och dokument.",
+    "svg": "SVG",
+    "svgHint": "Vektor, valfri storlek, redigerbar.",
+    "pay": "Betala {price} och ladda ner",
+    "subscribe": "Prenumerera för {price} / månad",
+    "download": "Ladda ner {format}",
+    "paid": "Betalningen har tagits emot. Dina filer är klara.",
+    "pending": "Bekräftar din betalning… Det brukar ta några sekunder. Dina inställningar är låsta så att filen stämmer med kvittot.",
+    "cancelled": "<b>Betalningen avbröts.</b> Du har inte debiterats. Din design och ditt format är sparade, så du kan betala när du är redo.",
+    "secure": "Du slutför köpet i Stripes säkra kassa och kommer sedan tillbaka hit för att ladda ner.",
+    "includedNote": "Ingår i ditt köp. Inget att betala.",
+    "resolution": "PNG-storlek",
+    "scale": "{scale}×",
+    "dpi": "{dpi} dpi",
+    "pixels": "{width} × {height} px",
+    "titleBuy": "Ladda ner din QR-kod",
+    "titleGuest": "Klar att ladda ner",
+    "subGuest": "Kontrollera layout och fil och logga sedan in med Google för att betala och ladda ner. Din design förblir som den är.",
+    "subPay": "Kontrollera layout och format. Du ser totalbeloppet innan du betalar.",
+    "subEntitled": "Den här koden är din. Ladda ner valfritt format, så ofta du behöver.",
+    "stageLabel": "Layout att ladda ner",
+    "layouts": "Layouter för den här koden",
+    "backToDesign": "Tillbaka till design",
+    "model": {
+      "static": "Statisk",
+      "dynamic": "Dynamisk"
+    },
+    "dims": {
+      "layout": "Layout",
+      "file": "Fil"
+    },
+    "scanOk": "Skanning verifierad",
+    "scanFail": "Kanske inte går att skanna",
+    "transparent": "Transparent bakgrund",
+    "quality": "<b>Ingen kvalitetsförlust.</b> SVG och PDF är ren vektor: moduler, ikoner och text skalas upp till skyltstorlek. PNG renderas från samma vektor i upp till 8K.",
+    "returned": "Inloggad med Google. Din layout och <b>{format}</b> är precis som du lämnade dem.",
+    "sessionEnded": "<b>Din session har gått ut.</b> Logga in igen för att fortsätta: layouten och dina filval behålls.",
+    "signInAgain": "Logga in igen",
+    "alreadyOwned": "Redan din. Ladda ner den igen när du vill, utan ny betalning.",
+    "paymentProcessing": "Betalningen för koden bekräftas. Den låses upp om ett ögonblick, utan någon andra debitering.",
+    "signInCanceled": "Inloggningen med Google avbröts. Din layout och <b>{format}</b> är fortfarande valda. Fortsätt med Google för att försöka igen.",
+    "signInIncomplete": "Inloggningen med Google slutfördes inte. Din layout och <b>{format}</b> är fortfarande valda. Fortsätt med Google för att försöka igen.",
+    "confirming": "Bekräftar din betalning…",
+    "preparing": "Förbereder din {format}…",
+    "ready": "Din {format} är klar.",
+    "downloaded": "<b>{name} har laddats ner.</b> Den finns också i Mina QR-koder, redo att laddas ner igen.",
+    "downloadAgain": "Ladda ner igen",
+    "tryAgain": "Försök igen",
+    "errors": {
+      "failed": "<b>Vi kunde inte förbereda din {format}.</b> Din betalning och dina inställningar är säkra. Försök igen om en stund.",
+      "scan": "<b>Den här layouten kanske inte går att skanna.</b> Öppna designen för att åtgärda det; filer skapas bara för koder som klarar skanningskontrollen.",
+      "size": "<b>Storleken är för stor för en fil.</b> Välj en mindre PNG-storlek eller SVG.",
+      "payment": "<b>Koden är inte upplåst än.</b> Inget har debiterats. Uppdatera om en stund, eller betala för att ladda ner."
+    },
+    "checkoutFailed": "Vi kunde inte öppna kassan. Inget har debiterats; försök igen.",
+    "continueGoogle": "Fortsätt med Google",
+    "guestNote": "Gratis att designa. Du betalar bara när du laddar ner.",
+    "receipt": {
+      "title": "Kvitto",
+      "paid": "Betald",
+      "tax": "Moms ingår enligt Stripes beräkning."
+    },
+    "lines": {
+      "single": "Single QR",
+      "dynamic": "Dynamisk QR",
+      "singleNamed": "Single QR · {name}",
+      "unlock": "Statisk upplåsning · {plan} · {left} av {limit} kvar",
+      "credit": "Statisk kredit · {left} kvar",
+      "slot": "Dynamisk plats · {plan} · {used} av {limit} används",
+      "starter": "Starter · månadsvis",
+      "ppIncluded": "Print Pack · ingår i {plan} · {left} av {limit} kvar",
+      "pp": "Print Pack"
+    },
+    "perMonth": "{price}/månad",
+    "summary": {
+      "title": "Ordersammanfattning",
+      "code": "QR-kod",
+      "type": "Typ",
+      "layout": "Layout",
+      "file": "Fil",
+      "total": "Totalt",
+      "tax": "Eventuell moms beräknas i kassan.",
+      "included": "Ingår",
+      "includedShort": "Ingår"
+    },
+    "emptyTitle": "Inget att ladda ner än",
+    "emptyText": "Designa en QR-kod först. Ditt utkast finns kvar i den här webbläsaren tills du laddar ner det.",
+    "emptyAction": "Skapa en QR-kod",
+    "inspectPrint": "Öppna tryckförhandsvisning",
+    "printTitle": "Print Pack",
+    "printPreviewText": "Kontrollera den exakta tryck-PDF:en, utfall, skärmärken och färgvärden för den här layouten innan du trycker.",
+    "printSetupText": "Print Pack kräver en trycklayout mätt i mm. Byt layouten till Tryck · mm under Redigera design → Storlek.",
+    "printSetup": "Ställ in för tryck",
+    "pdf": "PDF",
+    "pdfHint": "Vektor för tryckerier.",
+    "payTotal": "Betala {price} och ladda ner",
+    "useUnlock": "Använd 1 upplåsning och ladda ner",
+    "useCredit": "Använd 1 kredit och ladda ner",
+    "unlockNote": "Från din {plan}-plan. {left, plural, one {# upplåsning} other {# upplåsningar}} kvar den här månaden efter den här.",
+    "creditNote": "Från dina statiska krediter. {left, plural, one {# kredit} other {# krediter}} kvar efter den här.",
+    "goLive": "Gå live och ladda ner",
+    "goLiveNote": "Använder en aktiv plats i din {plan}-plan: {used} av {limit} efter den här.",
+    "perMonthShort": "{price}/mån",
+    "ppTitle": "Print Pack",
+    "ppOptional": "Valfritt",
+    "ppUnlocked": "Upplåst",
+    "ppDownload": "Ladda ner",
+    "ppAddTitle": "Lägg till Print Pack",
+    "ppSub": "Tryck-PDF, redigerbar SVG och specifikationer för färg och storlek",
+    "ppUseIncluded": "Använd 1 inkluderat Print Pack",
+    "ppIncludedSub": "{left} av {limit} kvar den här månaden · tryck-PDF, SVG och specifikationer",
+    "ppIncluded": "Ingår",
+    "ppAddText": "Tryck-PDF med utfall och skärmärken, en redigerbar SVG och ett färg- och storleksblad för den här QR-koden.",
+    "ppAdd": "Lägg till Print Pack · +{price}",
+    "ppNotForSale": "Print Pack kan inte köpas i den här valutan än.",
+    "ppRepeat": "Upprepade nedladdningar ingår. Inställningar: 100 % storlek, 3 mm utfall, skärmärken, sRGB.",
+    "inspectPrintFirst": "Granska tryckfilerna först",
+    "incl": {
+      "static1": "PNG och SVG av varje layout av den här koden",
+      "static2": "Obegränsade nya nedladdningar",
+      "static3": "Ändra designen när du vill",
+      "dyn1": "Upp till {limit} aktiva dynamiska QR-koder, ändra destinationer när du vill",
+      "dyn2": "Grundläggande skanningsstatistik",
+      "dyn3": "PNG och SVG, obegränsade nya nedladdningar",
+      "pp": "Print Pack: tryck-PDF, redigerbar SVG och specifikationer"
+    },
+    "catalog": {
+      "not_offered": "Det här kan inte köpas i den valda valutan än. Inget har debiterats.",
+      "price_mismatch": "Priset har ändrats sedan sidan laddades. Inget har debiterats; ladda om för att se det aktuella priset.",
+      "unavailable": "Kan inte köpas i den här valutan än. Byt valuta under Priser, eller kontrollera igen senare. Inget kommer att debiteras."
+    },
+    "unlockErrors": {
+      "no_allowance": "Inga månatliga upplåsningar kvar. Välj ett annat alternativ nedan.",
+      "no_credits": "Inga statiska krediter kvar.",
+      "limit": "Alla aktiva dynamiska platser används.",
+      "failed": "Det fungerade inte. Inget har debiterats; försök igen."
+    },
+    "limits": {
+      "staticTitle": "Du har använt alla {limit} statiska upplåsningar den här månaden",
+      "staticText": "Den här QR-koden behöver ytterligare en upplåsning. Välj det som passar dig; din design förblir som den är.",
+      "staticUsed": "{used} av {limit} upplåsningar använda",
+      "resets": "Återställs {date}",
+      "buyOnce": "Köp den här QR-koden en gång",
+      "buyOnceSub": "Single QR med PNG och SVG",
+      "credits": "Skaffa 3 statiska krediter",
+      "creditsSub": "Går aldrig ut",
+      "studio": "Uppgradera till Studio",
+      "studioSub": "40 upplåsningar och 5 Print Packs varje månad",
+      "dynTitle": "Alla {limit} dynamiska platser används",
+      "dynText": "Platserna räknar koderna som skickar vidare just nu, inte koder som skapats den här månaden. Frigör en eller byt till en större plan.",
+      "dynUsed": "{used} av {limit} aktiva",
+      "live": "Löpande antal · inte per månad",
+      "pause": "Pausa eller radera en dynamisk kod",
+      "pauseSub": "Frigör platsen direkt",
+      "studioDynSub": "25 dynamiska platser och statistik per kod",
+      "toStatic": "Gör den till en statisk QR i stället",
+      "toStaticSub": "Fast innehåll · använder en statisk upplåsning"
+    },
+    "limit": "större storlekar överskrider {max} px",
+    "subUnlock": "Ingår i {plan}: detta använder 1 av dina månatliga statiska upplåsningar.",
+    "subCredit": "Detta använder 1 av dina statiska krediter."
+  },
+  "dashboard": {
+    "noMatch": {
+      "static": "Inga statiska QR-koder",
+      "dynamic": "Inga dynamiska QR-koder",
+      "text": "Dina andra koder finns under Alla.",
+      "all": "Visa alla koder"
+    },
+    "title": "Mina QR-koder",
+    "new": "Skapa QR-kod",
+    "empty": {
+      "title": "Inga QR-koder än",
+      "text": "Koder du köper eller börjar designa visas här. Du kan ladda ner dem igen och lägga till nya layouter när du vill.",
+      "cta": "Skapa din första QR-kod"
+    },
+    "status": {
+      "draft": "Utkast",
+      "active": "Aktiv",
+      "paused": "Pausad",
+      "archived": "Arkiverad",
+      "purchased": "Köpt",
+      "inactive": "Inte aktiv"
+    },
+    "model": {
+      "static": "Statisk",
+      "dynamic": "Dynamisk"
+    },
+    "updated": "Uppdaterad {date}",
+    "open": "Öppna {name}",
+    "sub": "{count, plural, one {# kod} other {# koder}} · {dynamic} dynamiska aktiva",
+    "subEmpty": "Dina köpta koder och utkast finns här.",
+    "filterLabel": "Filtrera",
+    "filters": {
+      "all": "Alla {count}",
+      "static": "Statiska {count}",
+      "dynamic": "Dynamiska {count}"
+    },
+    "actions": {
+      "edit": "Redigera design",
+      "download": "Ladda ner",
+      "buy": "Köp och ladda ner",
+      "reactivate": "Slå på igen"
+    },
+    "loading": "Laddar dina QR-koder",
+    "manage": {
+      "select": "Välj",
+      "done": "Klar",
+      "selectAll": "Välj alla",
+      "selectOne": "Välj {name}",
+      "chooseToDelete": "Välj koder att radera",
+      "selected": "{count} av {total} valda",
+      "deleteSelected": "{count, plural, =0 {Radera} one {Radera #} other {Radera #}}",
+      "deleteOne": "Radera {name}",
+      "cancel": "Avbryt",
+      "dialog": {
+        "titleOne": "Radera ”{name}”?",
+        "titleMany": "Radera {count} QR-koder?",
+        "leadOne": "Den försvinner från Mina QR-koder på alla enheter.",
+        "leadMany": "De försvinner från Mina QR-koder på alla enheter.",
+        "dynamicTitle": "{count, plural, one {Dess kortlänk slutar fungera} other {Deras kortlänkar slutar fungera}}",
+        "dynamicText": "{links} slutar skicka vidare direkt. Tryckta exemplar öppnar en sida om att länken inte är aktiv. {count, plural, one {En plats i planen} other {# platser i planen}} frigörs.",
+        "staticTitle": "Tryckta exemplar fortsätter att fungera",
+        "staticText": "En statisk kod bär sitt innehåll i mönstret, så tryckta exemplar går fortfarande att skanna. Du kommer inte att kunna ladda ner eller redigera {count, plural, one {det här köpet} other {de här # köpen}} igen, och radering ger ingen återbetalning.",
+        "draftTitle": "{count, plural, one {Utkastet tas bort} other {# utkast tas bort}}",
+        "draftText": "Inget har betalats för {count, plural, one {det} other {dem}}, så inget annat ändras.",
+        "confirmOne": "Radera kod",
+        "confirmMany": "Radera {count} koder",
+        "undoNote": "Du kan ångra i några sekunder efter raderingen.",
+        "close": "Stäng",
+        "metaDynamic": "Dynamisk",
+        "metaStatic": "Statisk",
+        "metaActive": "aktiv",
+        "metaPurchased": "köpt",
+        "metaDraft": "utkast"
+      },
+      "deletedOne": "”{name}” har raderats.",
+      "deletedMany": "{count} koder har raderats.",
+      "undo": "Ångra",
+      "restoredOne": "Koden har återställts.",
+      "restoredMany": "{count} koder har återställts.",
+      "deleteFailed": "Det gick inte att radera. Försök igen.",
+      "restoreFailed": "Det gick inte att återställa. Ångra är tillgängligt i några minuter efter raderingen.",
+      "rename": {
+        "action": "Byt namn",
+        "actionOne": "Byt namn på {name}",
+        "label": "Namn på {name}",
+        "save": "Spara",
+        "cancel": "Avbryt",
+        "saved": "Namnet har ändrats till ”{name}”.",
+        "empty": "Ge koden ett namn.",
+        "failed": "Vi kunde inte byta namn. Din text finns kvar; försök igen."
+      }
+    },
+    "printPack": "Print Pack"
+  },
+  "qr": {
+    "back": "Alla koder",
+    "layouts": "Layouter",
+    "shortLink": "Kortlänk",
+    "destination": "Destination",
+    "destinationHint": "Tryckta koder fortsätter att fungera; de öppnar nu den här adressen.",
+    "save": "Spara",
+    "saved": "Sparad",
+    "scans": "Skanningar, senaste 14 dagarna",
+    "scansTotal": "{count, plural, one {# skanning} other {# skanningar}}",
+    "download": "Ladda ner",
+    "buy": "Köp för att ladda ner",
+    "copy": "Kopiera",
+    "copied": "Kopierad",
+    "editDesign": "Redigera design",
+    "dest": {
+      "title": "Destination",
+      "saved": "Sparad",
+      "new": "Ny destination",
+      "hint": "Tryckta koder öppnar den nya adressen inom en minut. Kortlänken förblir {short}.",
+      "save": "Spara destination",
+      "cancel": "Avbryt",
+      "goesTo": "Skanningar av {short} går till",
+      "previously": "Tidigare {url}",
+      "changedAt": "ändrad",
+      "history": {
+        "title": "Ändringshistorik",
+        "to": "Ändrad till",
+        "from": "från {url}"
+      },
+      "change": "Ändra destination",
+      "conflict": {
+        "title": "Destinationen ändrades någon annanstans",
+        "text": "Den går nu till {url}. Din ändring nedan har inte sparats.",
+        "load": "Ladda senaste versionen",
+        "loaded": "Senaste versionen har laddats: {url}. Granska din ändring och spara för att ersätta den."
+      }
+    },
+    "scansCard": {
+      "title": "Skanningar · senaste 14 dagarna",
+      "total": "Totalt",
+      "today": "I dag",
+      "emptyTitle": "Inga skanningar än",
+      "emptyText": "Den första skanningen visas här inom några minuter. Prova att skanna din tryckta kod.",
+      "periodEmptyTitle": "Inga skanningar de senaste 14 dagarna",
+      "periodEmptyText": "Tidigare skanningar sparas. Nya skanningar visas här inom några minuter."
+    },
+    "details": {
+      "back": "Mina QR-koder",
+      "newLayout": "Ny layout",
+      "permanent": "Permanent",
+      "shortNote": "Det här är vad din tryckta kod innehåller. Det ändras aldrig, så tryckta koder fortsätter att fungera.",
+      "noShortLink": "Koden går live med en kortlänk när den har aktiverats.",
+      "content": "Innehåll",
+      "fixed": "Fast i koden",
+      "staticNote": "En statisk kod lagrar sitt innehåll i själva mönstret, så tryckta exemplar öppnar alltid detta. Designändringar är gratis och obegränsade.",
+      "incl": {
+        "files": "PNG och SVG, nedladdade så ofta du vill",
+        "layouts": "Nya layouter och designändringar ingår"
+      },
+      "dimsSquare": "{size} kvadratisk",
+      "print": "Tryck · mm",
+      "screen": "Skärm · px",
+      "setupPrint": "Ställ in för tryck",
+      "pack": {
+        "needsMm": "Print Pack kräver en trycklayout mätt i mm. Ställ in en layout för tryck under Redigera design → Storlek och kontrollera den sedan i tryckförhandsvisningen.",
+        "what": "Tryck-PDF med utfall och skärmärken, en redigerbar SVG och ett färg- och storleksblad för den här QR-koden.",
+        "add": "Lägg till Print Pack · +{price}",
+        "addSub": "Öppnar tryckförhandsvisningen så att du kan kontrollera PDF:en och specifikationerna innan du betalar.",
+        "useIncluded": "Använd 1 inkluderat Print Pack",
+        "includedSub": "{left} av {limit} inkluderade Print Packs kvar den här månaden i {plan}. Kontrollera gärna filerna i tryckförhandsvisningen först.",
+        "includedDone": "Print Pack har lagts till från din plan. Filerna är klara.",
+        "includedFailed": "Vi kunde inte använda ett inkluderat Print Pack. Inget har förbrukats; försök igen.",
+        "noneLeft": "Inga inkluderade Print Packs finns kvar den här månaden.",
+        "inspect": "Granska i tryckförhandsvisningen",
+        "notForSale": "Tryckförhandsvisningen visar den exakta sidan och specifikationerna. Det går inte att köpa Print Pack här än.",
+        "repeat": "Upprepade nedladdningar ingår. Filer för ”{layout}” i 100 % storlek, 3 mm utfall, skärmärken."
+      },
+      "layoutNoteDynamic": "När du ändrar en design skapas en ny fil att ladda ner. Koder som du redan har tryckt fortsätter att fungera.",
+      "layoutNoteStatic": "Alla layouter ingår i det här köpet. Ladda ner vilken som helst som PNG eller SVG.",
+      "rename": "Byt namn",
+      "renameFailed": "Vi kunde inte byta namn på koden. Din text finns kvar; försök igen.",
+      "nameLabel": "QR-kodens namn",
+      "save": "Spara",
+      "cancel": "Avbryt",
+      "opens": "Öppnar",
+      "downloadAll": "Ladda ner alla",
+      "layoutsCount": "{n, plural, one {# layout} other {# layouter}}",
+      "edit": "Redigera",
+      "downloadLayout": "Ladda ner {name}",
+      "downloadFormat": "Ladda ner {format} av {name}",
+      "printPreview": "Tryckförhandsvisning av {name}",
+      "newLayoutCard": "Ny layout",
+      "layoutAdded": "”{name}” har lagts till i {code}. Dina andra layouter är oförändrade.",
+      "layoutAddFailed": "Vi kunde inte lägga till layouten. Försök igen.",
+      "copy": {
+        "action": "Använd annat innehåll…",
+        "title": "Använd annat innehåll",
+        "text": "En statisk kod lagrar sitt innehåll i mönstret, så annat innehåll blir en ny QR-kod: den designas och köps separat ({price}). Den här koden och dess filer förblir exakt som de är.",
+        "start": "Skapa en ny QR-kod",
+        "keep": "Behåll den här koden",
+        "close": "Stäng"
+      },
+      "ppUnlocked": "Upplåst",
+      "ppLocked": "Låst",
+      "deleteLayout": {
+        "label": "Radera layouten {name}",
+        "title": "Radera ”{name}”?",
+        "text": "”{name}” tas bort från ditt konto, tillsammans med layoutens nedladdningar. Det går inte att ångra.",
+        "keeps": "QR-koden, dess innehåll, kortlänk, destination, köp och Print Pack samt dess andra layouter förblir som de är.",
+        "confirm": "Radera layout",
+        "cancel": "Avbryt",
+        "close": "Stäng",
+        "done": "”{name}” har raderats.",
+        "failed": "Vi kunde inte radera ”{name}”. Inget har ändrats; försök igen.",
+        "retry": "Försök igen",
+        "lastTitle": "Det här är den enda layouten",
+        "lastText": "En QR-kod har alltid minst en layout, så ”{name}” kan inte raderas. Lägg till en annan layout först, eller radera hela koden från Mina QR-koder.",
+        "lastError": "En QR-kod behåller minst en layout, så den här blir kvar.",
+        "ok": "OK"
+      },
+      "pause": {
+        "pause": "Pausa",
+        "resume": "Återuppta",
+        "pausedTitle": "Kortlänken är pausad",
+        "pausedText": "Den som skannar koden ser en sida om att den inte är tillgänglig. Kortlänken, destinationen och layouterna behålls. Du kan ändra destinationen nu; den öppnas när du återupptar.",
+        "liveText": "En paus stoppar vidarebefordringen direkt. Med en plan frigörs även kodens aktiva plats.",
+        "paused": "Pausad. Kortlänken visar nu en sida om att den inte är tillgänglig.",
+        "resumed": "Återupptagen. Kortlänken skickar vidare till din destination igen.",
+        "limit": "Alla aktiva dynamiska platser i din plan används. Pausa eller radera en annan dynamisk kod och återuppta sedan den här.",
+        "noPlan": "För att återuppta koden krävs en aktiv dynamisk plan.",
+        "failed": "Vi kunde inte ändra kodens status. Inget har ändrats; försök igen."
+      },
+      "inactiveNote": "Skanningar av koden visar en sida om att den inte är aktiv just nu: den kräver en aktiv dynamisk plan. Kortlänken, destinationen och skanningarna behålls, och samma tryckta kod skickar vidare igen när en plan är aktiv.",
+      "inactiveCta": "Plan och betalning"
+    },
+    "hostedPage": {
+      "title": "Hostad sida",
+      "live": "Live · version {version}",
+      "publishedOn": "Publicerad {date}",
+      "never": "Inte publicerad än",
+      "neverNote": "Publicera sidan så att de som skannar koden ser den.",
+      "changed": "Opublicerade ändringar",
+      "changedNote": "Besökarna ser fortfarande den publicerade versionen tills du publicerar igen.",
+      "upToDate": "Besökarna ser den senaste versionen.",
+      "notLive": "Sidan går live på kortlänken när koden är aktiv.",
+      "edit": "Redigera sida",
+      "publish": "Publicera",
+      "publishing": "Publicerar…",
+      "published": "Publicerad. Samma QR-kod och kortlänk visar nu den här versionen.",
+      "unchanged": "Inget nytt att publicera.",
+      "rules": "Vissa uppgifter behöver åtgärdas innan publicering. Redigera sidan för att rätta dem.",
+      "failed": "Det gick inte att publicera. Försök igen.",
+      "open": "Öppna sidan",
+      "takenDown": "Vi tog ner sidan efter en anmälan, så kortlänken visar ”Sidan är inte tillgänglig”. Ditt innehåll och dina skanningar behålls. Skriv till supporten om du tror att det är ett misstag."
+    },
+    "hostedEditor": {
+      "title": "Redigera sida",
+      "back": "Tillbaka till QR-detaljer",
+      "lead": "Ändringar sparas som utkast. Besökarna ser dem när du har publicerat.",
+      "save": "Spara utkast",
+      "saving": "Sparar…",
+      "saved": "Utkastet har sparats.",
+      "saveFailed": "Det gick inte att spara utkastet. Kontrollera bilderna och försök igen.",
+      "publish": "Spara och publicera",
+      "unsaved": "Osparade ändringar",
+      "loading": "Laddar sidredigeraren"
+    }
+  },
+  "billing": {
+    "title": "Plan och betalning",
+    "plan": "Dynamisk plan",
+    "active": "Aktiv till {date}",
+    "cancels": "Avslutas {date}",
+    "none": "Ingen prenumeration. Statiska koder betalas en gång; Starter lägger till dynamiska koder och månatliga upplåsningar.",
+    "manage": "Hantera prenumeration",
+    "purchases": "Köp",
+    "noPurchases": "Inga köp än.",
+    "usage": "Användning",
+    "liveDynamic": "Aktiva dynamiska koder",
+    "liveCount": "{used} av {limit}",
+    "liveHint": "Aktiva platser frigörs när du pausar eller raderar en dynamisk kod.",
+    "renews": "Förnyas {date}",
+    "payment": "Betalningsmetod",
+    "paymentManaged": "Ditt kort förvaras av Stripe. Hantera det i betalningsportalen.",
+    "compare": "Jämför planer",
+    "statusActive": "Aktiv",
+    "statusCanceling": "Avslutas",
+    "statusNone": "Ingen plan",
+    "date": "Datum",
+    "open": "Öppna",
+    "receiptNote": "Stripe mejlar ett kvitto för varje betalning.",
+    "statuses": {
+      "paid": "Betald",
+      "pending": "Väntar",
+      "refunded": "Återbetald",
+      "failed": "Misslyckad"
+    },
+    "liveNoPlan": "{used} aktiva · ingen plan",
+    "printPackItem": "Print Pack",
+    "packItem": "Static Pack · {n} krediter",
+    "signedIn": "Inloggad med Google som {email}.",
+    "current": "Nuvarande plan",
+    "planMonthly": "{plan} · månadsvis",
+    "noPlan": "Ingen plan",
+    "plans": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "tiles": {
+      "dynamic": "Aktiva dynamiska QR",
+      "live": "Live",
+      "dynamicNote": "Pausa eller radera en kod för att frigöra en plats",
+      "unlocks": "Statiska upplåsningar",
+      "packs": "Inkluderade Print Packs",
+      "packsNote": "{resets} · sedan +{price}",
+      "credits": "Statiska krediter",
+      "oneTime": "Engångs",
+      "creditsNote": "Går aldrig ut · används efter de månatliga upplåsningarna",
+      "available": "{n} tillgängliga",
+      "leftMonth": "{n} kvar den här månaden",
+      "noReset": "Planen slutar {date} · ingen återställning"
+    },
+    "of": "av {limit}",
+    "left": "kvar",
+    "resets": "Återställs {date}",
+    "price": "Pris",
+    "perMonth": "{price} / månad",
+    "renewsOn": "Förnyas",
+    "endsOn": "Slutar",
+    "paymentStripe": "Förvaras av Stripe",
+    "upgrade": "Uppgradera till Studio · {price}/månad",
+    "choosePlan": "Välj en plan",
+    "oneTime": "Engångsköp",
+    "item": "Artikel",
+    "amount": "Belopp",
+    "receipt": "Kvitto",
+    "credits": "{n} statiska krediter",
+    "items": {
+      "single": "Single QR",
+      "printPack": "Print Pack"
+    },
+    "portal": {
+      "noCustomer": "Det finns inget betalkonto än. Det skapas vid din första betalning.",
+      "unavailable": "Det är inte tillgängligt för din plan just nu.",
+      "failed": "Vi kunde inte öppna Stripe. Inget har ändrats; försök igen."
+    },
+    "updatePayment": "Uppdatera betalningsmetod",
+    "card": "{brand} •••• {last4}",
+    "overdue": {
+      "title": "Din förnyelsebetalning gick inte igenom",
+      "pastDue": "Din plan förblir aktiv medan betalningen är försenad. Uppdatera din betalningsmetod för att betala den obetalda fakturan.",
+      "unpaid": "Din plan har avslutats eftersom förnyelsebetalningen inte kunde återvinnas. Uppdatera din betalningsmetod för att betala den obetalda fakturan och slå på den igen.",
+      "action": "Uppdatera betalningsmetod och betala",
+      "status": "Betalningen är försenad",
+      "pending": "När du har betalat kan det ta en stund innan din plan uppdateras här."
+    },
+    "canceling": {
+      "title": "Din plan slutar {date}",
+      "until": "Fram till dess fungerar allt som nu: dina dynamiska koder skickar vidare, och dina platser och månatliga upplåsningar finns kvar.",
+      "after": "{count, plural, =0 {Efter det datumet visar dynamiska koder en sida om att de inte är aktiva just nu i stället för att skicka vidare.} one {Efter det datumet visar din # aktiva dynamiska kod en sida om att den inte är aktiv just nu i stället för att skicka vidare. Dess kortlänk, destination och design behålls.} other {Efter det datumet visar dina # aktiva dynamiska koder en sida om att de inte är aktiva just nu i stället för att skicka vidare. Deras kortlänkar, destinationer och designer behålls.}} Statiska koder som du har köpt fortsätter att fungera.",
+      "resume": "Behåll min plan",
+      "resumeNote": "Din plan fortsätter på samma prenumeration och förnyas på sitt vanliga datum. Inget debiteras nu.",
+      "resumed": "Din plan fortsätter. Den förnyas på sitt vanliga datum.",
+      "notScheduled": "Det finns ingen uppsägning att ångra längre. Ladda om sidan för att se din plan.",
+      "failed": "Vi kunde inte behålla din plan. Inget har ändrats. Försök igen."
+    },
+    "ended": {
+      "title": "Din {plan}-plan slutade {date}",
+      "titleNoDate": "Din {plan}-plan har avslutats",
+      "scans": "Dina dynamiska koder visar en sida om att de inte är aktiva just nu. Deras kortlänkar, destinationer, designer och skanningar behålls. Statiska koder som du har köpt fortsätter att fungera.",
+      "back": "Återaktivera så skickar samma tryckta koder vidare igen. Koder som du har pausat eller raderat förblir så.",
+      "reactivate": "Återaktivera {plan} · {price}/månad"
+    }
+  },
+  "legal": {
+    "terms": {
+      "title": "Användarvillkor"
+    },
+    "privacy": {
+      "title": "Integritetspolicy"
+    },
+    "draft": "Den här sidan är en platshållare tills den juridiska texten har godkänts."
+  },
+  "errors": {
+    "notFound": {
+      "title": "Sidan hittades inte",
+      "text": "Sidan du letar efter finns inte.",
+      "cta": "Till startsidan"
+    },
+    "linkUnavailable": {
+      "title": "Länken är inte aktiv",
+      "text": "Ägaren till den här QR-koden har pausat den, eller så finns den inte längre."
+    },
+    "generic": "Något gick fel. Försök igen.",
+    "invalid": "Kontrollera de markerade fälten.",
+    "unauthorized": "Logga in för att fortsätta.",
+    "too_long": "Innehållet är för långt för en QR-kod. Korta det och försök igen.",
+    "linkInactive": {
+      "title": "Länken är inte tillgänglig just nu",
+      "text": "QR-koden är inte aktiv för tillfället. Det är inget fel på din mobil; försök igen senare."
+    },
+    "draft_limit": "Du har {limit} sparade utkast, det högsta antal ett konto kan ha. Lås upp eller radera ett i Mina QR-koder och spara sedan igen: din design finns kvar här.",
+    "page": {
+      "title": "Något gick fel",
+      "text": "Sidan kunde inte laddas. Dina sparade koder och utkast är säkra. Försök igen, eller gå tillbaka till början.",
+      "retry": "Försök igen",
+      "home": "Gå till startsidan",
+      "reference": "Referens: {ref}"
+    }
+  },
+  "common": {
+    "close": "Stäng",
+    "loading": "Laddar…",
+    "required": "Obligatoriskt"
+  },
+  "loading": {
+    "page": "Laddar",
+    "details": "Laddar QR-koden",
+    "billing": "Laddar din plan och dina köp",
+    "export": "Laddar din fil",
+    "editor": "Laddar redigeraren"
+  },
+  "trial": {
+    "badge": "Starter-provperiod",
+    "back": "Mina QR-koder",
+    "states": {
+      "active": {
+        "title": "Din provperiod är igång",
+        "lead": "Startade {start}. Din dynamiska test-QR fungerar på riktigt till {end}.",
+        "big": "{days, plural, one {# dag} other {# dagar}}",
+        "bigSub": "kvar · slutar {end}",
+        "status": "Inget kort är registrerat, så inget debiteras när provperioden slutar. Din testkod skickar vidare på riktigt fram till dess.",
+        "main": "Aktivera Starter · {price}/månad",
+        "second": "Öppna Mina QR-koder",
+        "foot": "Vid aktivering behålls samma kortlänk, så tryckta tester fortsätter att fungera.",
+        "endTitle": "När provperioden slutar {end}"
+      },
+      "ending": {
+        "title": "Din provperiod slutar snart",
+        "lead": "Den {end} slutar din testkod att skicka vidare. Aktivera Starter för att hålla den live.",
+        "big": "{days, plural, one {# dag} other {# dagar}}",
+        "bigSub": "kvar · slutar {end}",
+        "status": "Inget kort är registrerat, så inget debiteras automatiskt.",
+        "main": "Aktivera Starter · {price}/månad",
+        "second": "Öppna Mina QR-koder",
+        "foot": "Vid aktivering behålls samma kortlänk, så tryckta tester fortsätter att fungera.",
+        "endTitle": "Det här händer {end}"
+      },
+      "expired": {
+        "title": "Din provperiod har slutat",
+        "lead": "Den slutade {end}. Din testkod är pausad; din design och dina skanningar behålls.",
+        "big": "Avslutad",
+        "bigSub": "{end}",
+        "status": "Testkodens kortlänk visar nu en sida om att länken är pausad. Aktivera Starter så skickar den vidare till din destination igen.",
+        "main": "Återaktivera med Starter · {price}/månad",
+        "second": "Visa alla planer",
+        "foot": "Inget har debiterats. Inget kort var registrerat.",
+        "endTitle": "Så slår du på den igen"
+      },
+      "upgraded": {
+        "title": "Din Starter-plan är aktiv",
+        "lead": "Testkoden från provperioden är nu en vanlig dynamisk QR i din plan.",
+        "big": "Dynamisk",
+        "bigSub": "plan aktiv",
+        "status": "Din testkod behåller sin kortlänk och skickar vidare som tidigare.",
+        "main": "Öppna Mina QR-koder",
+        "second": "Plan och betalning",
+        "foot": "Stripe mejlar ett kvitto för varje betalning.",
+        "endTitle": "Vad som har ändrats"
+      }
+    },
+    "steps": {
+      "pause": {
+        "t": "Din testvidarebefordring pausas",
+        "d": "Kortlänken visar en sida om att länken är pausad i stället för din destination. Inget raderas."
+      },
+      "free": {
+        "t": "Inget debiteras",
+        "d": "Inget kort är registrerat och ingen automatisk förnyelse."
+      },
+      "wake": {
+        "t": "Aktivera när som helst för att slå på den igen",
+        "d": "Välj Starter så skickar samma kortlänk vidare igen. Din design och dina skanningar finns kvar i ditt konto."
+      },
+      "choose": {
+        "t": "Välj Starter",
+        "d": "{price} per månad. Avsluta när du vill."
+      },
+      "same": {
+        "t": "Din kortlänk vaknar",
+        "d": "Den skickar vidare igen, till samma destination."
+      },
+      "room": {
+        "t": "Fortsätt",
+        "d": "Upp till {limit} aktiva dynamiska koder, med dagliga skanningar."
+      },
+      "kept": {
+        "t": "Samma kortlänk",
+        "d": "Tryckta tester fortsätter att fungera. Inget att trycka om."
+      },
+      "more": {
+        "t": "Mer utrymme",
+        "d": "Upp till {limit} aktiva dynamiska koder och dagliga skanningar."
+      },
+      "receipt": {
+        "t": "Kvitton via e-post",
+        "d": "Hantera eller avsluta planen när du vill under Plan och betalning."
+      }
+    },
+    "code": {
+      "title": "Din dynamiska test-QR",
+      "live": "Skickar vidare",
+      "paused": "Vidarebefordring pausad",
+      "plan": "Live i din plan",
+      "opens": "Öppnar {host}",
+      "pausedLine": "Pausad · visar en sida om att länken är pausad",
+      "scans": "Skanningar hittills",
+      "today": "I dag",
+      "chart": "Skanningar per dag under provperioden: {values}",
+      "change": "Ändra destination",
+      "view": "Visa testkod",
+      "none": "Du har inte skapat din testkod än.",
+      "noneText": "Skapa en dynamisk webbplats-QR och använd provperioden för att göra den live: en riktig kortlänk som du kan trycka och testa.",
+      "create": "Skapa en dynamisk test-QR"
+    },
+    "included": {
+      "title": "Ingår i din provperiod",
+      "kept": "Behålls från din provperiod",
+      "points": [
+        "1 dynamisk test-QR med en riktig kortlänk",
+        "Dagliga skanningssummor",
+        "Ändra vart den leder när du vill",
+        "Alla layouter, former, färger, logotyper och bildtexter"
+      ],
+      "not": "Statiska koder behöver fortfarande köpas."
+    },
+    "start": {
+      "title": "Prova Dynamisk gratis i 7 dagar",
+      "text": "Inget kort, ingen automatisk debitering. En dynamisk test-QR med en riktig kortlänk.",
+      "action": "Starta 7 dagars gratis provperiod",
+      "used": "Du har redan använt din gratis provperiod.",
+      "failed": "Vi kunde inte starta provperioden. Försök igen."
+    },
+    "bar": {
+      "active": {
+        "title": "Starter-provperiod · {days, plural, one {# dag} other {# dagar}} kvar.",
+        "text": "Din testkod skickar vidare till {end}. Inget kort registrerat."
+      },
+      "ending": {
+        "title": "Provperioden slutar {end}.",
+        "text": "Aktivera Starter för att din testkod ska fortsätta skicka vidare."
+      },
+      "expired": {
+        "title": "Provperioden slutade {end}.",
+        "text": "Din testkod är pausad. Aktivera Starter för att slå på den igen."
+      },
+      "upgraded": {
+        "title": "Din Starter-plan är aktiv.",
+        "text": "Din testkod är nu en vanlig dynamisk QR."
+      },
+      "open": "Detaljer om provperioden",
+      "activate": "Aktivera Starter…"
+    },
+    "usage": {
+      "title": "Dynamisk plats för provperioden",
+      "count": "{used} av 1",
+      "hint": "En aktiv plats, ingen månadskvot."
+    },
+    "useTrial": "Använd din gratis provperiod · gå live nu",
+    "useTrialHint": "Din enda dynamiska test-QR under provperioden. Inget kort behövs.",
+    "useTrialFailed": "Vi kunde inte använda din provperiod för den här koden. Du kanske redan har en testkod.",
+    "sample": {
+      "title": "Exempel på Print Pack",
+      "badge": "Demo-QR",
+      "demo": "Demo-QR för Print Pack-exemplet",
+      "text": "Se exakt vad ett Print Pack innehåller. Exemplet använder en demo-QR som öppnar Hey QR, inte din testkod.",
+      "pdf": "Exempel på tryck-PDF",
+      "pdfSub": "sRGB · sida {w} × {h} mm med utfall och skärmärken",
+      "svg": "Exempel på redigerbar SVG",
+      "svgSub": "sRGB · HEX-färger · {w} × {h} mm",
+      "spec": "Exempel på specifikationer",
+      "specSub": "PDF-blad · storlekar och färgvärden"
+    }
+  },
+  "print": {
+    "spec": {
+      "title": "Tryckspecifikationer",
+      "finished": "Färdig storlek",
+      "page": "PDF-sida (med utfall och märken)",
+      "bleed": "Utfall",
+      "marks": "Skärmärken",
+      "qr": "QR-storlek (med tyst zon)",
+      "profile": "Färgprofil",
+      "srgb": "sRGB · ingen konvertering",
+      "logo": "Logotypens upplösning",
+      "vector": "Vektor, valfri storlek",
+      "colors": "Färger (HEX · sRGB)",
+      "key": "Rendera K",
+      "yes": "Ja",
+      "no": "Nej",
+      "role_modules": "Moduler",
+      "role_corners": "Hörnramar",
+      "role_centers": "Hörncentrum",
+      "role_background": "Bakgrund",
+      "role_frame": "Ram",
+      "role_caption": "Bildtext"
+    },
+    "title": "Tryckförhandsvisning",
+    "leadLocked": "Kontrollera den exakta PDF-sidan och tryckspecifikationerna innan du köper. Filerna motsvarar det du ser här.",
+    "leadUnlocked": "Det här är PDF-sidan som dina filer skapas från. Ändra en inställning och ladda ner igen utan extra kostnad.",
+    "locked": "Print Pack låst",
+    "unlocked": "Print Pack upplåst",
+    "back": {
+      "details": "Tillbaka till QR-detaljer",
+      "export": "Tillbaka till export"
+    },
+    "toDesign": "Tillbaka till design",
+    "canvas": "Förhandsvisning av PDF-sida",
+    "zoom": "Zoom",
+    "fit": "Anpassa",
+    "z100": "100 %",
+    "z200": "200 %",
+    "guides": "Beskärning och säker zon",
+    "approx": "Skärmapproximation av tryckt färg",
+    "trimLabel": "Beskärning {size}",
+    "generating": "Skapar tryckförhandsvisningen…",
+    "pageLabel": "PDF-sida för tryck, {w} × {h} mm",
+    "error": {
+      "title": "Vi kunde inte skapa förhandsvisningen.",
+      "text": "Din layout och dina tryckinställningar behålls. Det här är oftast tillfälligt.",
+      "retry": "Försök igen"
+    },
+    "foot": {
+      "page": "PDF-sida {size}",
+      "count": "1 sida",
+      "bleed": "Utfall {bleed} mm",
+      "noBleed": "Inget utfall",
+      "marks": "Skärmärken",
+      "noMarks": "Inga skärmärken",
+      "pageB": "PDF-sida <b>{size}</b>"
+    },
+    "specTitle": "Tryckspecifikationer",
+    "keys": {
+      "finished": "Färdig storlek",
+      "finishedBleed": "+ {bleed} mm utfall på varje sida",
+      "finishedNoBleed": "Inget utfall",
+      "qr": "QR-storlek",
+      "qrSmall": "Under 20 mm · kanske inte går att skanna överallt",
+      "qrOk": "Kan skannas från upp till cirka {cm} cm",
+      "profile": "Färgprofil",
+      "profileSub": "RGB, ingen konvertering",
+      "logo": "Logotypens upplösning",
+      "logoVector": "Vektor",
+      "logoNone": "Ingen logotyp",
+      "logoLow": "Under 300 ppi i den här storleken",
+      "logoOk": "300 ppi eller mer · blir skarp i tryck",
+      "logoVectorSub": "Skarp i alla storlekar",
+      "logoNoneSub": "Inget att kontrollera",
+      "logoChecking": "Kontrollerar…",
+      "logoCheckingSub": "Uppmätt i den här storleken"
+    },
+    "unlock": {
+      "title": "Lås upp Print Pack",
+      "text": "Få tryck-PDF, redigerbar SVG och specifikationer för ”{name}”, gjorda med inställningarna nedan.",
+      "action": "Lägg till Print Pack · +{price}",
+      "sub": "Engångsköp för den här QR-koden. Du kommer tillbaka till den här skärmen med dina inställningar.",
+      "notForSale": "Print Pack kan inte köpas här än. Du kan fortfarande kontrollera sidan och specifikationerna.",
+      "needCode": "Lås upp den här QR-koden först: Print Pack är ett tillägg för en köpt eller aktiv kod.",
+      "buyCode": "Köp den här QR-koden",
+      "failed": "Vi kunde inte öppna kassan. Inget har debiterats; försök igen.",
+      "cancelled": "Betalningen avbröts. Du har inte debiterats; dina inställningar behålls.",
+      "pending": "Bekräftar din betalning…",
+      "pendingSub": "Du stannar här, med de här inställningarna.",
+      "useIncluded": "Använd 1 inkluderat Print Pack",
+      "payInstead": "Betala {price} i stället och spara din kvot",
+      "includedLeft": "{left} av {limit} inkluderade Print Packs kvar den här månaden · återställs {resets}"
+    },
+    "files": {
+      "title": "Print Pack upplåst",
+      "badge": "Klar att ladda ner",
+      "text": "Filerna använder inställningarna nedan. Ändra en och ladda ner igen utan extra kostnad.",
+      "pdf": "Ladda ner tryck-PDF",
+      "pdfSub": "sRGB · sida {w} × {h} mm",
+      "svg": "Ladda ner redigerbar SVG",
+      "svgSub": "sRGB · HEX-färger · {w} × {h} mm",
+      "spec": "Ladda ner tryckspecifikationer",
+      "specSub": "PDF-blad · storlekar och färgvärden",
+      "stale": "Layouten har ändrats sedan den här förhandsvisningen. Kontrollera sidan igen innan du laddar ner.",
+      "pdfTitle": "Tryck-PDF",
+      "svgTitle": "Redigerbar SVG",
+      "specTitle": "Tryckspecifikationer"
+    },
+    "size": {
+      "title": "Färdig storlek",
+      "custom": "Anpassad",
+      "width": "Bredd",
+      "height": "Höjd · behåller proportionerna",
+      "hint": "Från 15 till 600 mm bred. QR-koden och bildtexten skalas med layouten."
+    },
+    "warn": {
+      "qrTitle": "QR-koden är {mm} mm bred",
+      "qrText": "Koder under 20 mm kan misslyckas på äldre mobiler. Gör layouten större, eller håll koden på minst 20 mm.",
+      "logoTitle": "Din logotyp har {ppi} ppi i den här storleken",
+      "logoText": "Den kan bli suddig i tryck. Ladda upp en logotyp som är minst {px} px bred, eller tryck i 100 %.",
+      "upload": "Ladda upp en logotyp med högre upplösning",
+      "use100": "Använd 100 % storlek"
+    },
+    "profiles": {
+      "title": "Färgprofil för tryck-PDF:en",
+      "srgb": "sRGB · ingen konvertering",
+      "srgbDesc": "För digitala tryckpressar och de flesta onlinetryckerier.",
+      "fogra39": "Coated FOGRA39",
+      "gracol": "GRACoL 2013",
+      "fogra29": "Uncoated FOGRA29",
+      "cmykDesc": "CMYK-konvertering är inte tillgänglig än.",
+      "shop": "<b>Stäm av med ditt tryckeri.</b> Fråga vilken färgprofil de behöver. Om de inte är säkra skickar du PDF:en tillsammans med specifikationsbladet."
+    },
+    "colors": {
+      "title": "Färger",
+      "legendHex": "<b>HEX · sRGB</b> redigerbar SVG",
+      "legendCmyk": "<b>CMYK</b> bara med en CMYK-profil",
+      "none": "—",
+      "note": "Färgerna är exakta sRGB-värden i båda filerna. Skärmen visar en approximation av den tryckta färgen."
+    },
+    "tech": {
+      "title": "Tekniska inställningar",
+      "bleed": "Utfall",
+      "bleedDesc": "Bakgrunden går utanför beskärningen",
+      "marks": "Skärmärken",
+      "k100": "Tryck svarta moduler som 100 % K",
+      "k100Hint": "Tillgängligt med en CMYK-profil.",
+      "pdf": "PDF-standard",
+      "pdfV": "PDF 1.7, vektor",
+      "text": "Text",
+      "textV": "Typsnitt inbäddade",
+      "logo": "Logotyp",
+      "logoRaster": "{px} px raster · {ppi} ppi vid {mm} mm",
+      "logoVector": "Vektor",
+      "quiet": "Tyst zon",
+      "quietV": "4 moduler på varje sida",
+      "safe": "Säker zon",
+      "safeV": "{mm} mm innanför beskärningen",
+      "intent": "Output intent",
+      "intentV": "sRGB, ingen konvertering",
+      "none": "Ingen"
+    },
+    "notPrint": {
+      "title": "Den här layouten är för skärmar",
+      "text": "Print Pack kräver en trycklayout mätt i mm. Byt enhet under Design → Storlek för att lägga till en.",
+      "action": "Ställ in för tryck"
+    },
+    "pack": {
+      "title": "Print Pack",
+      "add": "Lägg till ett Print Pack och ge tryckeriet allt i en nedladdning: en tryck-PDF med utfall och skärmärken, en redigerbar SVG och ett färg- och storleksblad. Kontrollera sidan först i tryckförhandsvisningen.",
+      "preview": "Tryckförhandsvisning · {layout}",
+      "defaults": "Standardinställningar: 100 % storlek, 3 mm utfall, skärmärken. Ändra dem i tryckförhandsvisningen.",
+      "open": "Öppna tryckförhandsvisning"
+    },
+    "plan": {
+      "starter": "Starter",
+      "studio": "Studio"
+    },
+    "sample": {
+      "pageTitle": "Tryckförhandsvisning · exempel",
+      "name": "Little Fern Coffee",
+      "layout": "Exempel på varumärkeskort",
+      "back": "Tillbaka till startsidan",
+      "title": "Det här är ett exempel",
+      "text": "En demo-QR visar exakt vad ett Print Pack innehåller. Skapa din egen kod och kontrollera sedan dess tryckfiler här innan du köper.",
+      "create": "Skapa din QR-kod",
+      "pricing": "Se detaljer om Print Pack"
+    }
+  },
+  "plans": {
+    "title": "Betala en gång för några koder, eller välj en plan för många.",
+    "lead": "Att designa, förhandsgranska och skanningskontrollen är alltid gratis. Du betalar när du laddar ner.",
+    "currencyLabel": "Visa priser i",
+    "localTitle": "Lokala priser i {currency}.",
+    "localText": "Hela webbplatsen, kassan och kvittona använder de här beloppen. Moms läggs till i kassan.",
+    "pendingTitle": "Vissa priser i {currency} är inte satta än.",
+    "pendingText": "Erbjudanden utan pris i {currency} kan inte köpas i {currency} just nu. Inget räknas om från en annan valuta.",
+    "unavailable": "Kan inte köpas i {currency} än.",
+    "current": "Din nuvarande plan",
+    "manage": "Hantera din plan",
+    "perMonth": "per månad",
+    "live": "Aktiva samtidigt",
+    "monthly": "Nya varje månad",
+    "dynCodes": "<b>{n}</b> dynamiska QR-koder",
+    "unlocks": "<b>{n}</b> statiska QR-upplåsningar",
+    "packsIncl": "<b>{n}</b> Print Packs",
+    "once": {
+      "title": "Engångs",
+      "sub": "Ingen prenumeration. Koder du låser upp förblir dina."
+    },
+    "month": {
+      "title": "Månadsvis",
+      "sub": "För dynamiska QR-koder och många statiska. Avsluta när du vill."
+    },
+    "free": {
+      "title": "Gratis",
+      "q": "Designa och testa en kod innan du lägger en krona.",
+      "a": "Design och förhandsvisning i realtid",
+      "b": "Skanningskontroll vid varje ändring",
+      "c": "Upp till {limit} sparade utkast när du är inloggad",
+      "cta": "Börja designa"
+    },
+    "single": {
+      "title": "Single QR",
+      "unit": "en gång",
+      "q": "En statisk QR med alla sina nedladdningar.",
+      "a": "Nedladdning av PNG och SVG",
+      "b": "Alla layouter för den QR-koden, nedladdade igen när du vill",
+      "c": "Valfritt Print Pack +{price}",
+      "cta": "Skapa en QR"
+    },
+    "packs": {
+      "title": "Static Packs",
+      "unit": "för {n} krediter",
+      "credits": "{n} statiska krediter",
+      "each": "{price} per QR",
+      "buy": "Köp {n} krediter",
+      "note": "En kredit låser upp en unik statisk QR, när du är redo. Krediter går aldrig ut."
+    },
+    "pp": {
+      "kicker": "Tillägg för valfri QR",
+      "title": "Print Pack · +{price} per QR",
+      "text": "Av som standard. Lägg till det i kassan eller senare från QR-kodens detaljer. Studio innehåller {n} per månad.",
+      "pdf": "Vektor-PDF för tryck",
+      "pdfSub": "sRGB, 3 mm utfall och skärmärken, i exakt storlek.",
+      "svg": "Redigerbar SVG",
+      "svgSub": "För ditt eget original, med sRGB- och HEX-färger.",
+      "spec": "Färg- och storleksblad",
+      "specSub": "Färdig storlek, QR-storlek, tyst zon och färgvärden."
+    },
+    "starter": {
+      "title": "Starter",
+      "badge": "7 dagars gratis provperiod",
+      "a": "Grundläggande skanningsstatistik: dagliga summor",
+      "b": "Ändra dynamiska destinationer när du vill",
+      "c": "Print Pack +{price} per QR",
+      "trial": "Starta 7 dagars gratis provperiod",
+      "openTrial": "Öppna din provperiod",
+      "subscribe": "Prenumerera nu · {price}/månad",
+      "note": "Provperiod: inget kort, ingen automatisk debitering."
+    },
+    "studio": {
+      "title": "Studio",
+      "badge": "För team och tryckjobb",
+      "a": "Skanningsstatistik per kod",
+      "b": "Ändra dynamiska destinationer när du vill",
+      "c": "Extra Print Packs +{price} per QR",
+      "cta": "Välj Studio"
+    },
+    "rules": {
+      "title": "Så fungerar upplåsningar och gränser",
+      "1t": "En upplåsning, en unik QR",
+      "1d": "En statisk kredit eller månatlig upplåsning öppnar en QR. Alla dess layouter, PNG- och SVG-filer och upprepade nedladdningar använder samma upplåsning.",
+      "2t": "Månadskvoter återställs",
+      "2d": "Nya statiska upplåsningar och inkluderade Print Packs fylls på på ditt faktureringsdatum. Oanvända förs inte över.",
+      "3t": "Dynamiska platser räknas löpande, inte per månad",
+      "3d": "En plats används medan koden skickar vidare. Pausa eller radera en dynamisk kod för att frigöra platsen direkt.",
+      "4t": "Ditt även efter uppsägning",
+      "4d": "Statiska koder som du har låst upp förblir dina: tryckta exemplar fortsätter att fungera och filerna går att ladda ner. När den betalda perioden slutar slutar dynamiska kortlänkar att skicka vidare och kan inte laddas ner eller aktiveras. Dina koder behålls.",
+      "5t": "Om en förnyelsebetalning misslyckas",
+      "5d": "Din plan förblir aktiv medan betalningen är försenad och Stripe försöker igen. Om den inte återvinns och prenumerationen upphör, slutar planen som efter en uppsägning. När betalningen går igenom fortsätter din plan."
+    },
+    "cmp": {
+      "title": "Jämför",
+      "what": "Funktion",
+      "region": "Jämförelse av planer",
+      "more": "Scrolla för fler planer",
+      "pick1": "Första planen",
+      "pick2": "Andra planen",
+      "yes": "Ingår",
+      "no": "Ingår inte",
+      "na": "Gäller inte: ingen prenumeration",
+      "model": {
+        "free": "Gratis",
+        "once": "Engångsköp",
+        "credits": "Krediter",
+        "monthly": "Månadsprenumeration"
+      },
+      "once": "en gång",
+      "mo": "/mån",
+      "live": "Design, förhandsvisning och skanningskontroll i realtid",
+      "static": "Statiska QR-upplåsningar",
+      "staticHint": "PNG- och SVG-filer",
+      "dynamic": "Aktiva dynamiska QR-platser",
+      "dynamicHint": "Aktiva samtidigt",
+      "analytics": "Skanningsstatistik",
+      "printPack": "Print Pack",
+      "repeat": "Upprepade nedladdningar",
+      "cancel": "Efter uppsägning",
+      "oneQr": "1 QR",
+      "perCredit": "1 QR per kredit",
+      "noExpiry": "Krediter går inte ut",
+      "perMonth": "{n} nya varje månad",
+      "noRollover": "Oanvända förs inte över",
+      "atOnce": "{n} aktiva samtidigt",
+      "freeSlot": "Pausa en för att frigöra platsen",
+      "basic": "Grundläggande",
+      "daily": "Dagliga summor",
+      "perCode": "Per kod",
+      "ppAdd": "+{price} per QR",
+      "ppStudio": "{n} ingår varje månad",
+      "ppThen": "Sedan +{price} per QR",
+      "stay": "Statiska koder går fortfarande att ladda ner",
+      "dynStop": "Dynamiska länkar slutar skicka vidare när den betalda perioden slutar",
+      "foot": "Moms beräknas i kassan. Webbplatskoder kan vara statiska eller dynamiska; koder för text, Wi-Fi och kontaktkort är statiska."
+    },
+    "errors": {
+      "not_offered": "Det här kan inte köpas i den valda valutan än. Inget har debiterats.",
+      "price_mismatch": "Priset har ändrats sedan sidan laddades. Inget har debiterats; ladda om för att se det aktuella priset.",
+      "unauthorized": "Logga in för att fortsätta.",
+      "failed": "Vi kunde inte öppna kassan. Inget har debiterats; försök igen."
+    },
+    "terms": "Avsluta när du vill: din plan gäller till slutet av den betalda perioden. Om en förnyelsebetalning misslyckas förblir den aktiv medan betalningen är försenad."
+  },
+  "apiKeys": {
+    "title": "API-nycklar",
+    "lead": "Med nycklar kan dina egna verktyg arbeta med QR-koderna i det här kontot. Varje nyckel hör bara till det här kontot.",
+    "yourKeys": "Dina nycklar",
+    "create": "Skapa API-nyckel",
+    "once": "Kopiera nyckeln nu. Av säkerhetsskäl visas den bara en gång och kan inte hämtas senare.",
+    "copy": "Kopiera",
+    "copied": "Kopierad",
+    "done": "Klar",
+    "none": "Inga API-nycklar än.",
+    "created": "Skapad {date}",
+    "failed": "Vi kunde inte skapa en nyckel. Inget har sparats; försök igen.",
+    "active": "Aktiv",
+    "revoked": "Återkallad",
+    "revokedOn": "Återkallad {date}",
+    "lastUsed": "Senast använd {date}",
+    "neverUsed": "Aldrig använd",
+    "revoke": {
+      "action": "Återkalla",
+      "label": "Återkalla {prefix}",
+      "title": "Återkalla {prefix}?",
+      "text": "Verktyg som använder nyckeln slutar fungera direkt. Dina andra nycklar fortsätter att fungera. Det går inte att ångra.",
+      "confirm": "Återkalla nyckel",
+      "cancel": "Avbryt",
+      "done": "{prefix} har återkallats.",
+      "failed": "Vi kunde inte återkalla nyckeln. Inget har ändrats; försök igen.",
+      "close": "Stäng"
+    }
+  },
+  "hosted": {
+    "hostedBy": "Hostad av HeyQR",
+    "report": "Anmäl den här sidan",
+    "unavailableTitle": "Sidan är inte tillgänglig",
+    "unavailableText": "Ägaren har pausat den här QR-koden eller tagit bort sidan. Försök igen senare eller kontakta ägaren direkt.",
+    "loading": "Laddar sidan",
+    "menu": {
+      "kicker": "Meny",
+      "sections": "Menyavsnitt"
+    },
+    "coupon": {
+      "kicker": "Kupong",
+      "expiredKicker": "Erbjudandet har gått ut",
+      "copy": "Kopiera kod",
+      "copied": "Kopierad",
+      "redeem": "Lös in online",
+      "expired": "Utgånget",
+      "ended": "Erbjudandet har gått ut. Fråga butiken om aktuella erbjudanden.",
+      "ends": "Slutar {date}",
+      "endedOn": "Slutade {date}",
+      "terms": "Villkor"
+    },
+    "social": {
+      "links": "Länkar"
+    },
+    "business": {
+      "kicker": "Företag",
+      "openNow": "Öppet nu · till {to}",
+      "closedNow": "Stängt nu",
+      "closedToday": "Stängt i dag",
+      "call": "Ring",
+      "directions": "Vägbeskrivning",
+      "website": "Webbplats",
+      "hours": "Öppettider",
+      "closed": "Stängt",
+      "days": {
+        "mon": "mån",
+        "tue": "tis",
+        "wed": "ons",
+        "thu": "tors",
+        "fri": "fre",
+        "sat": "lör",
+        "sun": "sön"
+      },
+      "closedOpens": "Stängt nu · öppnar {from}"
+    },
+    "apps": {
+      "appStoreTop": "Hämta i",
+      "appStore": "App Store",
+      "playTop": "Ladda ned på",
+      "play": "Google Play",
+      "phoneNote": "Öppna länken för din mobils butik.",
+      "desktopNote": "På en dator öppnar knapparna respektive butiks webbplats.",
+      "scanTitle": "Skanna med mobilen",
+      "scanText": "Den öppnar App Store på iPhone och Google Play på Android.",
+      "qrLabel": "QR-kod för den här sidan"
+    },
+    "pdf": {
+      "open": "Öppna PDF",
+      "download": "Ladda ner",
+      "meta": "{pages, plural, one {# sida} other {# sidor}} · {size}",
+      "metaNoPages": "{size}",
+      "waiting": "En ny version av dokumentet förbereds. Försök igen om en stund.",
+      "notReady": "Dokumentet förbereds fortfarande."
+    },
+    "product": {
+      "photos": "Produktbilder",
+      "photo": "Bild {n} av {count}",
+      "prev": "Föregående bild",
+      "next": "Nästa bild",
+      "opens": "Öppnar {host}"
+    },
+    "reportForm": {
+      "title": "Anmäl den här sidan",
+      "lead": "Berätta vad som är fel. HeyQR granskar varje anmälan.",
+      "reason": "Anledning",
+      "reasons": {
+        "scam": "Bluff eller bedrägeri",
+        "malware": "Skadlig kod eller skadlig nedladdning",
+        "illegal": "Olagligt eller skadligt innehåll",
+        "impersonation": "Utger sig för att vara någon annan",
+        "other": "Något annat"
+      },
+      "details": "Detaljer",
+      "detailsPlaceholder": "Vad såg du? (valfritt)",
+      "email": "Din e-post",
+      "emailHint": "Valfritt. Används bara om vi behöver fråga dig något.",
+      "send": "Skicka anmälan",
+      "sending": "Skickar…",
+      "sent": "Tack. Vi granskar sidan.",
+      "failed": "Vi kunde inte skicka anmälan. Försök igen.",
+      "invalid": "Välj en anledning och kontrollera e-postadressen.",
+      "back": "Tillbaka till sidan"
+    }
+  },
+  "developers": {
+    "metaTitle": "API för utvecklare",
+    "metaDescription": "Skapa HeyQR-koder i din egen kod: paketet @heyqr/qr-core för statiska koder, och ett REST API för dynamiska koder som är på väg.",
+    "docs": {
+      "search": {
+        "label": "Sök i dokumentationen",
+        "placeholder": "Sök i dokumentationen",
+        "clear": "Rensa sökningen",
+        "empty": "Inga sidor matchar ”{query}”.",
+        "emptyHint": "Prova ”logotyp”, ”PNG”, ”skanna” eller ”Wi-Fi”.",
+        "suggestions": ["logotyp", "PNG", "skanna", "Wi-Fi"],
+        "resultOne": "1 sida",
+        "resultOther": "{count} sidor"
+      },
+      "groups": {
+        "start": "Kom igång",
+        "guides": "Guider",
+        "ref": "Referens",
+        "help": "Hjälp",
+        "rest": "REST API"
+      },
+      "menu": {
+        "open": "Öppna dokumentationsmenyn",
+        "close": "Stäng dokumentationsmenyn",
+        "label": "Dokumentation"
+      },
+      "breadcrumbRoot": "Utvecklare",
+      "onThisPage": "På den här sidan",
+      "backToTop": "Till toppen",
+      "previous": "Föregående",
+      "next": "Nästa",
+      "soon": "Snart",
+      "preview": "Förhandsvisning",
+      "designPreview": "Förhandsvisning av designen",
+      "notPublic": "Inte offentlig än",
+      "env": {
+        "both": "Webbläsare och Node.js",
+        "browser": "Webbläsare",
+        "node": "Bara Node.js",
+        "shell": "Terminal",
+        "types": "Typer",
+        "http": "HTTP",
+        "json": "JSON"
+      },
+      "copy": "Kopiera",
+      "copied": "Kopierad",
+      "copiedAnnounce": "{file} har kopierats till urklipp",
+      "copyFailed": "Det gick inte att kopiera. Markera koden i stället.",
+      "required": "Obligatorisk",
+      "endpoint": {
+        "auth": "Auktorisering",
+        "authValue": "Authorization: Bearer <API-nyckel>",
+        "method": "Metod",
+        "url": "Förfrågans URL",
+        "base": "På den HeyQR-server du använder; det publika API:et är inte tillgängligt än."
+      },
+      "helpful": {
+        "question": "Var den här sidan till hjälp?",
+        "yes": "Ja",
+        "no": "Nej",
+        "sending": "Skickar…",
+        "thanks": "Tack för din feedback.",
+        "failed": "Vi kunde inte spara det. Försök igen."
+      },
+      "footer": {
+        "checked": "Kontrollerad mot källkoden för @heyqr/qr-core {version}. Route: {route}",
+        "restChecked": "Kontrollerad mot det här byggets /api/v1-routes. Route: {route}",
+        "proposed": "Föreslagen design. Inget publicerat kontrakt."
+      },
+      "status": {
+        "unpublished": "Opublicerad",
+        "live": "Live",
+        "liveOnNpm": "Live på npm",
+        "soon": "Kommer snart"
+      },
+      "products": {
+        "pkgTitle": "npm-paket",
+        "pkgText": "Gratis. Statiska QR-koder som renderas på din dator. Inget konto, ingen API-nyckel.",
+        "restTitle": "REST API",
+        "restText": "Skapa och hantera koder, även dynamiska, från din server."
+      },
+      "install": {
+        "managers": "Pakethanterare",
+        "npmLink": "npmjs.com/package/{name}",
+        "opensNewTab": "(öppnas i en ny flik)",
+        "unpublishedTitle": "Inte på npm än",
+        "unpublishedText": "{name} {version} är inte publicerat än, så det finns inget att installera. Allt på de här sidorna motsvarar den aktuella källkoden. Få ett mejl när det släpps:"
+      },
+      "restSoon": {
+        "cardTitle": "Dynamiska koder från din server",
+        "cardText": "Med en API-nyckel från ditt konto kan du skapa koder, ändra vart dynamiska koder pekar och läsa antal skanningar. Vi publicerar den fullständiga referensen med riktiga förfrågningar och svar när den öppnar.",
+        "planned": "Planerat",
+        "items": [
+          "API-nycklar för ditt konto",
+          "Skapa en kod eller upp till 100 på en gång",
+          "Ändra en dynamisk kods destination",
+          "Dagligt antal skanningar"
+        ],
+        "npmLink": "Använd npm-paketet nu"
+      },
+      "waitlist": {
+        "label": "Få ett mejl när REST API:et öppnar",
+        "placeholder": "du@foretag.se",
+        "join": "Ställ dig i kön",
+        "joining": "Ansluter…",
+        "invalid": "Kontrollera adressen. Den behöver ett namn, @ och en domän.",
+        "failed": "Vi kunde inte lägga till dig just nu. Försök igen.",
+        "joined": "Du står på listan. Vi skriver till {email} när REST API:et öppnar.",
+        "hint": "Ett mejl när det öppnar. Inget nyhetsbrev."
+      },
+      "notifyPackages": {
+        "label": "Få ett mejl när paketet publiceras",
+        "join": "Mejla mig",
+        "joined": "Du står på listan. Vi skriver till {email} när det har publicerats.",
+        "hint": "Ett mejl när det släpps. Inget nyhetsbrev."
+      },
+      "responseNotes": {
+        "created": "Koden skapades som ett utkast, med ett layout-id per layout i förfrågan.",
+        "invalid": "Ett fält bryter mot en regel; `details` namnger vart och ett och upprepar aldrig värden.",
+        "draftLimit": "Kontot har redan det högsta antalet utkast.",
+        "reused": "Idempotency-Key användes för en annan förfrågan; inget skapades.",
+        "changed": "Sparat. `changed` är false när adressen redan var den lagrade.",
+        "conflict": "Någon ändrade den först. `current` är det som lagras nu; läs det och bestäm igen.",
+        "notDynamic": "Statiska koder har ingen destination: deras innehåll finns i mönstret.",
+        "rateLimited": "Över kontots budget. Vänta Retry-After sekunder och skicka sedan samma förfrågan igen.",
+        "unauthorized": "Alla nycklar som inte kan verifieras får det här svaret, innan bodyn läses.",
+        "bulk202": "Polla GET /v1/jobs/{job_id} eller vänta på webhooken.",
+        "bulk400": "Ingen kod skapas om någon post misslyckas.",
+        "scans200": "Dagar utan skanningar tas med som 0."
+      },
+      "pages": {
+        "overview": {
+          "title": "API för utvecklare",
+          "nav": "Översikt",
+          "lead": "Skapa HeyQR-koder i din egen kod. Börja i dag med det kostnadsfria npm-paketet; ett REST API för dynamiska koder är på väg.",
+          "blocks": [
+            {
+              "k": "products"
+            },
+            {
+              "k": "h2",
+              "id": "what",
+              "t": "Vad du kan bygga"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Stilade QR-koder i en webbläsarapp: former, färger, en logotyp eller kort text i mitten.",
+                "Tryckfärdiga SVG- och PNG-filer från ett skript eller ett serverjobb.",
+                "En skanningskontroll innan något visas eller trycks: kontrast, inverterade färger, en logotyp som täcker för mycket.",
+                "Kompletta layouter med ramar och bildtexter, samma som HeyQR-redigeraren exporterar."
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "entries",
+              "t": "Ingångspunkter"
+            },
+            {
+              "k": "p",
+              "t": "Ett paket, fem importer. Använd huvudingången var som helst; de andra är för Node.js eller för avkodning i webbläsaren."
+            },
+            {
+              "k": "table",
+              "label": "Ingångspunkter",
+              "cols": ["Import", "Körs i", "Vad den ger dig"],
+              "rows": [
+                {
+                  "cells": [
+                    "`@heyqr/qr-core`",
+                    "Webbläsare och Node.js",
+                    "`encodePayload`, `renderQr`, `renderQrSvg`, `composeLayout`, hjälpfunktioner för färg och kapacitet"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/raster`", "Bara Node.js", "`rasterizeSvg`: SVG till PNG med resvg"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`@heyqr/qr-core/verify`",
+                    "Bara Node.js",
+                    "`decodeSvg`, `decodeImage`, `verifyScan`: läs tillbaka koden med ZXing"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`@heyqr/qr-core/verify-browser`",
+                    "Webbläsare",
+                    "`decodeSvgInBrowser`: samma avkodare, från en wasm-fil som du hostar"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`@heyqr/qr-core/node`", "Bara Node.js", "`rasterizeSvg` och verifieringsfunktionerna i en import"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Paketet skapar statiska koder: innehållet är inbyggt i mönstret. Dynamiska koder med en redigerbar kortlänk och antal skanningar kräver en HeyQR-plan och kommer med REST API:et."
+            },
+            {
+              "k": "h2",
+              "id": "next",
+              "t": "Nästa steg"
+            },
+            {
+              "k": "cards",
+              "items": [
+                {
+                  "page": "quickstart",
+                  "title": "Snabbstart",
+                  "t": "Din första kod på fem rader.",
+                  "icon": "zap"
+                },
+                {
+                  "page": "content",
+                  "title": "Koda innehåll",
+                  "t": "Webbplatser, Wi-Fi, kontakter, evenemang med mera.",
+                  "icon": "book"
+                },
+                {
+                  "page": "scan",
+                  "title": "Kontrollera att den går att skanna",
+                  "t": "Läs skanningsrapporten och avkoda resultatet.",
+                  "icon": "scan"
+                },
+                {
+                  "page": "api",
+                  "title": "Funktioner",
+                  "t": "Varje export med sin signatur.",
+                  "icon": "braces"
+                }
+              ]
+            }
+          ]
+        },
+        "install": {
+          "title": "Installation",
+          "lead": "Lägg till @heyqr/qr-core i en webbläsarapp, en Node.js-tjänst eller båda.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "add",
+              "t": "Lägg till paketet"
+            },
+            {
+              "k": "install",
+              "package": "qrCore"
+            },
+            {
+              "k": "h2",
+              "id": "reqs",
+              "t": "Krav"
+            },
+            {
+              "k": "table",
+              "label": "Krav",
+              "cols": ["Punkt", "Detaljer"],
+              "rows": [
+                {
+                  "cells": ["Modulformat", "Bara ES-moduler (paketet är `\"type\": \"module\"`). Använd `import`, inte `require`."],
+                  "required": false
+                },
+                {
+                  "cells": ["TypeScript", "Typerna följer med paketet. Inget `@types`-paket behövs."],
+                  "required": false
+                },
+                {
+                  "cells": ["Webbläsare", "Huvudingången har inga Node.js-beroenden och fungerar med alla moderna bundlers."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "Node.js",
+                    "`/raster` och `/verify` använder `@resvg/resvg-js`, en native-modul med förbyggda binärer för vanliga plattformar."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "Avkodning i webbläsaren",
+                    "`/verify-browser` laddar `zxing_reader.wasm` från en URL som du väljer, aldrig från ett CDN."
+                  ],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "wasm",
+              "t": "Hosta avkodaren för webbläsaren"
+            },
+            {
+              "k": "p",
+              "t": "Behövs bara för `decodeSvgInBrowser`. Kopiera wasm-filen från beroendet `zxing-wasm` till din publika mapp och skicka med dess URL. Kommandot hittar filen via paketet, så det fungerar med npm, pnpm och Yarn."
+            },
+            {
+              "k": "code",
+              "example": "wasm"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Filen är `zxing-wasm/reader/zxing_reader.wasm` i zxing-wasm 3.1.7, den version som paketet är beroende av i dag. Kontrollera den igen efter en uppgradering."
+            }
+          ]
+        },
+        "quickstart": {
+          "title": "Snabbstart",
+          "lead": "Koda innehåll, ge det stil, kontrollera skanningen och få en SVG, på ungefär en minut.",
+          "blocks": [
+            {
+              "k": "steps",
+              "items": [
+                {
+                  "title": "Installera",
+                  "t": "Lägg till `@heyqr/qr-core` med din pakethanterare."
+                },
+                {
+                  "title": "Koda innehållet",
+                  "t": "`encodePayload` gör om en webbplats, ett Wi-Fi-nätverk eller en kontakt till texten i koden."
+                },
+                {
+                  "title": "Beskriv utseendet",
+                  "t": "En `QrStyle` anger modulform, hörnformer och färger."
+                },
+                {
+                  "title": "Kontrollera skanningen",
+                  "t": "`renderQr` returnerar en skanningsrapport med en åtgärd för varje problem."
+                },
+                {
+                  "title": "Hämta filen",
+                  "t": "`renderQrSvg` returnerar en fristående SVG; i Node.js gör `rasterizeSvg` om den till en PNG."
+                }
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "I webbläsaren"
+            },
+            {
+              "k": "code",
+              "example": "quickstartBrowser"
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Spara filer i Node.js"
+            },
+            {
+              "k": "code",
+              "example": "quickstartNode"
+            }
+          ]
+        },
+        "content": {
+          "title": "Koda innehåll",
+          "lead": "encodePayload gör om strukturerat innehåll till exakt den text som mobiler förväntar sig för varje sorts kod.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "types",
+              "t": "Innehållstyper"
+            },
+            {
+              "k": "p",
+              "t": "Skicka ett av nio `QrContent`-objekt. `QR_CONTENT_TYPES` listar värdena för `type`."
+            },
+            {
+              "k": "table",
+              "label": "Innehållstyper",
+              "cols": ["type", "Fält", "Koden innehåller"],
+              "rows": [
+                {
+                  "cells": ["`website`", "`url` (domäner utan schema får https://)", "Den normaliserade URL:en"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "`text`", "Texten som den är"],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`wifi`",
+                    "`ssid`, `security` \"WPA\" | \"WEP\" | \"nopass\", `password?`, `hidden?`",
+                    "`WIFI:T:WPA;S:…;P:…;;`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`contact`",
+                    "`firstName?`, `lastName?`, `title?`, `company?`, `phone?`, `email?`, `website?`",
+                    "Ett vCard 3.0"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`email`", "`to`, `subject?`, `body?`", "`mailto:` med ämne och brödtext"],
+                  "required": false
+                },
+                {
+                  "cells": ["`phone`", "`number`", "`tel:` med siffror och +"],
+                  "required": false
+                },
+                {
+                  "cells": ["`sms`", "`number`, `message?`", "`SMSTO:number:message`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`location`", "`address`, `name?`", "`geo:0,0?q=` med adressen"],
+                  "required": false
+                },
+                {
+                  "cells": ["`event`", "`title`, `start`, `end?`, `place?`", "Ett kalenderevenemang (VEVENT)"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "examples",
+              "t": "Exempel"
+            },
+            {
+              "k": "code",
+              "example": "contentExamples"
+            },
+            {
+              "k": "h2",
+              "id": "contact",
+              "t": "Kontaktkort"
+            },
+            {
+              "k": "p",
+              "t": "Kontakter blir ett vCard 3.0, den version som mobilkameror läser mest pålitligt. Tomma fält utelämnas och långa rader radbryts."
+            },
+            {
+              "k": "code",
+              "example": "vcard"
+            },
+            {
+              "k": "h2",
+              "id": "events",
+              "t": "Evenemang"
+            },
+            {
+              "k": "p",
+              "t": "`start` och `end` är lokala tider som `2026-12-05T19:00`. Ett datum utan tid, som `2026-12-05`, ger ett heldagsevenemang."
+            },
+            {
+              "k": "code",
+              "example": "event"
+            },
+            {
+              "k": "h2",
+              "id": "urls",
+              "t": "Kontrollera en webbadress"
+            },
+            {
+              "k": "p",
+              "t": "`parseWebsiteUrl` är samma kontroll som HeyQR-redigeraren använder. Den avvisar mellanslag, andra scheman, inloggningsuppgifter och värdar utan punkt."
+            },
+            {
+              "k": "code",
+              "example": "urlCheck"
+            }
+          ]
+        },
+        "style": {
+          "title": "Ge en kod stil",
+          "lead": "En QrStyle beskriver former och färger. Varje stil kontrolleras mot samma skanningsregler.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "shapes",
+              "t": "Former"
+            },
+            {
+              "k": "chips",
+              "t": "pattern · datamoduler",
+              "items": ["square", "rounded", "dot", "diamond", "leaf", "fluid", "vbars", "hbars"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeFrame · ringar på hörnmarkörerna",
+              "items": ["square", "rounded", "cushion", "circle", "leaf"]
+            },
+            {
+              "k": "chips",
+              "t": "eyeBall · mitten av hörnmarkörerna",
+              "items": ["square", "rounded", "circle", "diamond", "leaf"]
+            },
+            {
+              "k": "h2",
+              "id": "colors",
+              "t": "Färger"
+            },
+            {
+              "k": "p",
+              "t": "`colors` tar fyra hexfärger: `fg` för datamoduler, `eye` för hörnringarna, `eyeIn` för hörncentrum och `bg` för bakgrunden."
+            },
+            {
+              "k": "table",
+              "label": "Minsta kontrast",
+              "cols": ["Del", "Minsta kontrast mot bakgrunden"],
+              "rows": [
+                {
+                  "cells": ["Datamoduler (`fg`)", "3 : 1 (`MIN_CONTRAST.modules`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Hörnringar (`eye`)", "3 : 1 (`MIN_CONTRAST.eyeFrame`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Hörncentrum (`eyeIn`)", "2.5 : 1 (`MIN_CONTRAST.eyeCenter`)"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Koder måste vara mörkare än bakgrunden. En ljus kod på mörk bakgrund underkänns med problemet `invert` även när kontrasten är hög."
+            },
+            {
+              "k": "code",
+              "example": "contrast"
+            },
+            {
+              "k": "h2",
+              "id": "center",
+              "t": "Kort text i mitten"
+            },
+            {
+              "k": "p",
+              "t": "`centerText` lägger en etikett inuti koden. Den visar första raden, upp till 14 tecken (`CENTER_TEXT_MAX`); längre text kortas vid ett helt ord med en ellips."
+            },
+            {
+              "k": "code",
+              "example": "centerText"
+            },
+            {
+              "k": "h2",
+              "id": "art",
+              "t": "Konstverk bakom koden"
+            },
+            {
+              "k": "p",
+              "t": "`art` ritar mjuka former i två toner bakom modulerna, med en valfri svag bild. Skanningskontrollen läser bakgrunden som tonad."
+            },
+            {
+              "k": "code",
+              "example": "art"
+            }
+          ]
+        },
+        "logo": {
+          "title": "Logotyper och ikoner",
+          "lead": "Placera en bild eller en 24 × 24-linjeikon i mitten. Felkorrigeringen höjs automatiskt så att koden fortfarande går att läsa.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "fields",
+              "t": "Logotypfält"
+            },
+            {
+              "k": "table",
+              "label": "QrLogo",
+              "cols": ["Fält", "Typ", "Beskrivning"],
+              "rows": [
+                {
+                  "cells": ["`href`", "string", "Bild-URL eller data-URI. Ignoreras när `iconPath` är satt."],
+                  "required": false
+                },
+                {
+                  "cells": ["`iconPath`", "string", "En 24 × 24-linjebana, till exempel en Lucide-ikon."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`size`",
+                    "number",
+                    "Logotypens bredd som andel av kodens bredd. Ritas mellan 0.10 och 0.46 (`CENTER_LOGO_SIZE`)."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`plate`", "\"none\" | \"square\" | \"circle\"", "Underlag bakom logotypen."],
+                  "required": true
+                },
+                {
+                  "cells": ["`tile`", "boolean", "Ikon på en färgad rundad ruta i stället för en platta."],
+                  "required": false
+                },
+                {
+                  "cells": ["`plateColor`, `iconColor`", "string", "Hexfärger för plattan och ikonen."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "example",
+              "t": "Exempel"
+            },
+            {
+              "k": "code",
+              "example": "logoStyle"
+            },
+            {
+              "k": "h2",
+              "id": "fit",
+              "t": "Hur stor kan den vara?"
+            },
+            {
+              "k": "p",
+              "t": "Med en logotyp eller text i mitten använder koden felkorrigering H, så den rymmer lite mer än hälften så mycket (382 byte i stället för 666). Efter renderingen är `scan.maxLogoSize` den största storlek som fortfarande kan avkodas; en större logotyp underkänns med problemet `logo`."
+            },
+            {
+              "k": "code",
+              "example": "logoFit"
+            }
+          ]
+        },
+        "layouts": {
+          "title": "Ramar och bildtexter",
+          "lead": "composeLayout ritar en komplett layout: ett kort eller en ram, koden, en bildtext och en valfri logotyp, precis som HeyQR-exporten.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "presets",
+              "t": "Layoutförval"
+            },
+            {
+              "k": "table",
+              "label": "Förval",
+              "cols": ["preset", "Vad den ritar"],
+              "rows": [
+                {
+                  "cells": ["`qr`", "Bara koden, i `qrSize`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`caption`", "Koden med en bildtext ovanför eller under, eller text inuti koden"],
+                  "required": false
+                },
+                {
+                  "cells": ["`vertical`", "Ett kort med koden ovanför bildtexten"],
+                  "required": false
+                },
+                {
+                  "cells": ["`horizontal`", "Ett kort med koden bredvid bildtexten"],
+                  "required": false
+                },
+                {
+                  "cells": ["`frame`", "En ram runt koden; storleken kommer från `qrSize`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "chips",
+              "t": "frameStyle",
+              "items": ["bar", "tab", "bubble", "pill", "corners", "circle", "ticket", "phone"]
+            },
+            {
+              "k": "h2",
+              "id": "compose",
+              "t": "Komponera en layout"
+            },
+            {
+              "k": "code",
+              "example": "compose"
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Anropa `layoutCapacity` före `composeLayout` så att för långt innehåll blir ett meddelande i stället för ett undantag. Skicka `{ transparent: true }` som tredje argument för en transparent bakgrund."
+            },
+            {
+              "k": "h2",
+              "id": "fonts",
+              "t": "Typsnitt för bildtexter"
+            },
+            {
+              "k": "p",
+              "t": "Bildtexter är SVG-text. I webbläsaren använder de sidans typsnitt; när du rastrerar i Node.js skickar du typsnittsfiler med `fontFiles`, annars används datorns installerade typsnitt. Bildtextens typsnitt täcker latinska och kyrilliska tecken."
+            }
+          ]
+        },
+        "png": {
+          "title": "Spara en PNG",
+          "lead": "rasterizeSvg renderar valfri SVG från paketet till en PNG-Buffer med resvg.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "basic",
+              "t": "Rendera en PNG"
+            },
+            {
+              "k": "code",
+              "example": "png"
+            },
+            {
+              "k": "h2",
+              "id": "options",
+              "t": "Alternativ"
+            },
+            {
+              "k": "table",
+              "label": "RasterOptions",
+              "cols": ["Alternativ", "Typ", "Beskrivning"],
+              "rows": [
+                {
+                  "cells": ["`width`", "number", "Utdatabredd i pixlar. Höjden följer SVG:n."],
+                  "required": true
+                },
+                {
+                  "cells": ["`fontFiles`", "string[]", "Typsnittsfiler för bildtexter."],
+                  "required": false
+                },
+                {
+                  "cells": ["`systemFonts`", "boolean", "Använd även installerade typsnitt. Standard `true`."],
+                  "required": false
+                },
+                {
+                  "cells": ["`background`", "string", "Bakgrundsfärg bakom transparenta ytor."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`dpi`",
+                    "number",
+                    "Tryckupplösning som skrivs in i filen, så att tryckprogram öppnar den i fysisk storlek. Utelämna den för skärmfiler."
+                  ],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "print",
+              "t": "Tryckstorlekar"
+            },
+            {
+              "k": "p",
+              "t": "`pngPixelSize` ger en layouts exakta pixelstorlek: mm-layouter i 300, 600 eller 1200 dpi (`PNG_DPIS`), px-layouter i 1×, 2×, 4× eller 8× (`PNG_SCALES`). Sidorna hålls mellan 64 och 8192 px."
+            },
+            {
+              "k": "code",
+              "example": "printPng"
+            },
+            {
+              "k": "note",
+              "kind": "warn",
+              "t": "Importera inte `/raster` i webbläsarbundlar: resvg är en native-modul för Node.js."
+            }
+          ]
+        },
+        "scan": {
+          "title": "Kontrollera att den går att skanna",
+          "lead": "Varje rendering kommer med en skanningsrapport. I Node.js och webbläsaren kan du också avkoda resultatet för att vara säker.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "Skanningsrapporten"
+            },
+            {
+              "k": "code",
+              "example": "scanReport"
+            },
+            {
+              "k": "table",
+              "label": "Problemkoder",
+              "cols": ["code", "title", "fix"],
+              "rows": [
+                {
+                  "cells": ["`invert`", "Light code on a dark background", "Swap colors"],
+                  "required": false
+                },
+                {
+                  "cells": ["`contrast`", "Not enough contrast", "Increase contrast"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eyes`", "Corner markers are too light", "Darken corner markers"],
+                  "required": false
+                },
+                {
+                  "cells": ["`logo`", "The logo hides too much of the code", "Reduce logo size"],
+                  "required": false
+                },
+                {
+                  "cells": ["`text`", "The text in the code is too long", "Shorten the text"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "Rapporten är regelbaserad: den kontrollerar exakt geometri och färger utan att avkoda. Avkoda när du behöver bevis."
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Avkoda i Node.js"
+            },
+            {
+              "k": "code",
+              "example": "verifyNode"
+            },
+            {
+              "k": "h2",
+              "id": "browser",
+              "t": "Avkoda i webbläsaren"
+            },
+            {
+              "k": "code",
+              "example": "verifyBrowser"
+            },
+            {
+              "k": "p",
+              "t": "Inget lämnar enheten: avkodaren körs lokalt och öppnar aldrig kodens destination."
+            }
+          ]
+        },
+        "api": {
+          "title": "Funktioner",
+          "lead": "Alla publika funktioner, grupperade efter ingångspunkt. Signaturerna motsvarar TypeScript-typerna i paketet.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "Innehåll"
+            },
+            {
+              "k": "table",
+              "label": "Innehållsfunktioner",
+              "cols": ["Funktion", "Signatur"],
+              "rows": [
+                {
+                  "cells": ["`encodePayload`", "`(content: QrContent) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`encodeVCard`", "`(contact) => string` · vCard 3.0"],
+                  "required": false
+                },
+                {
+                  "cells": ["`normalizeUrl`", "`(input: string) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseWebsiteUrl`", "`(input: string) => { ok: true; url } | { ok: false; problem }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "render",
+              "t": "Rendering"
+            },
+            {
+              "k": "table",
+              "label": "Renderingsfunktioner",
+              "cols": ["Funktion", "Signatur"],
+              "rows": [
+                {
+                  "cells": ["`renderQr`", "`(value: string, style: QrStyle) => RenderedQr`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`renderQrSvg`", "`(value: string, style: QrStyle, sizePx = 512) => string`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`eclForStyle`", "`(style) => \"M\" | \"H\"` · H när en logotyp eller text täcker mitten"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerLogoSize`", "`(size: number) => number` · begränsas till 0.10–0.46"],
+                  "required": false
+                },
+                {
+                  "cells": ["`centerTextLabel`", "`(text: string) => { label; shortened }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "layout",
+              "t": "Layouter"
+            },
+            {
+              "k": "table",
+              "label": "Layoutfunktioner",
+              "cols": ["Funktion", "Signatur"],
+              "rows": [
+                {
+                  "cells": [
+                    "`composeLayout`",
+                    "`(layout: Layout, value: string, options?: { transparent? }) => { svg, width, height, scan }`"
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutCapacity`", "`(layout: Layout, value: string) => { ok, bytes, maxBytes, ecl, centerCovered }`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`layoutGeometry`", "`(layout: Layout) => LayoutGeometry`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pngPixelSize`", "`(layout: Layout, { scale?, dpi? }) => { width, height, ok }`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "encode",
+              "t": "Kodning och kapacitet"
+            },
+            {
+              "k": "table",
+              "label": "Kodningsfunktioner",
+              "cols": ["Funktion", "Signatur"],
+              "rows": [
+                {
+                  "cells": ["`encodeQr`", "`(text: string, ecl = \"M\") => QrMatrix`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`payloadBytes`", "`(text: string) => number` · UTF-8-byte"],
+                  "required": false
+                },
+                {
+                  "cells": ["`maxPayloadBytes`", "`(ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`pickVersion`", "`(byteLength: number, ecl) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`QrCapacityError`", "Fel med `byteLength` och `maxBytes`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "color",
+              "t": "Färg"
+            },
+            {
+              "k": "table",
+              "label": "Färgfunktioner",
+              "cols": ["Funktion", "Signatur"],
+              "rows": [
+                {
+                  "cells": ["`contrastRatio`", "`(a: string, b: string) => number` · WCAG-förhållande"],
+                  "required": false
+                },
+                {
+                  "cells": ["`luminance`", "`(hex: string) => number`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`isHexColor`", "`(value: string) => boolean` · bara `#RRGGBB`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`parseHexColor`", "`(text: string) => string | null`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`mixColors`", "`(a: string, b: string, t: number) => string`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "node",
+              "t": "Ingångar för Node.js och webbläsare"
+            },
+            {
+              "k": "table",
+              "label": "Andra ingångar",
+              "cols": ["Funktion", "Ingång", "Signatur"],
+              "rows": [
+                {
+                  "cells": ["`rasterizeSvg`", "`/raster`", "`(svg: string, options: RasterOptions) => Buffer`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvg`", "`/verify`", "`(svg: string, width = 720) => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeImage`", "`/verify`", "`(file: Uint8Array, type = \"image/png\") => Promise<string | null>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`verifyScan`", "`/verify`", "`(svg, expected, widths = [300, 600, 1200]) => Promise<boolean>`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`decodeSvgInBrowser`", "`/verify-browser`", "`(svg, { wasmUrl, size? = 960 }) => Promise<string | null>`"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        },
+        "types": {
+          "title": "Typer",
+          "lead": "De viktigaste typerna, så som de ser ut i paketet.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "style",
+              "t": "QrStyle"
+            },
+            {
+              "k": "code",
+              "example": "typesStyle"
+            },
+            {
+              "k": "h2",
+              "id": "report",
+              "t": "RenderedQr och ScanReport"
+            },
+            {
+              "k": "code",
+              "example": "typesReport"
+            },
+            {
+              "k": "h2",
+              "id": "content",
+              "t": "QrContent"
+            },
+            {
+              "k": "code",
+              "example": "typesContent"
+            }
+          ]
+        },
+        "limits": {
+          "title": "Gränser och fel",
+          "lead": "Vad kodaren accepterar och vad som händer när innehållet inte får plats.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Gränser"
+            },
+            {
+              "k": "table",
+              "label": "Gränser",
+              "cols": ["Gräns", "Värde"],
+              "rows": [
+                {
+                  "cells": ["Största QR-version", "20 (`MAX_VERSION`), 97 × 97 moduler"],
+                  "required": false
+                },
+                {
+                  "cells": ["Innehåll", "666 byte med felkorrigering M, 382 med H"],
+                  "required": false
+                },
+                {
+                  "cells": ["Felkorrigering", "M, eller H med logotyp eller text i mitten"],
+                  "required": false
+                },
+                {
+                  "cells": ["Tyst zon", "4 moduler på varje sida, inräknade i `viewBox`"],
+                  "required": false
+                },
+                {
+                  "cells": ["Logotypstorlek", "0.10–0.46 av kodens bredd (`CENTER_LOGO_SIZE`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Text i mitten", "14 tecken (`CENTER_TEXT_MAX`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["PNG-sida", "64–8192 px (`PNG_MIN_SIDE`, `PNG_MAX_SIDE`)"],
+                  "required": false
+                },
+                {
+                  "cells": ["Kontrast", "3 : 1 för moduler och ringar, 2.5 : 1 för hörncentrum"],
+                  "required": false
+                }
+              ],
+              "keyCol": false,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "capacity",
+              "t": "Innehåll som är för långt"
+            },
+            {
+              "k": "p",
+              "t": "Renderingen kastar `QrCapacityError` när innehållet inte får plats. Felet innehåller storlekar, aldrig innehållet, så det är säkert att logga."
+            },
+            {
+              "k": "code",
+              "example": "capacity"
+            },
+            {
+              "k": "h2",
+              "id": "null",
+              "t": "Avkodare som returnerar null"
+            },
+            {
+              "k": "p",
+              "t": "`decodeSvg`, `decodeImage` och `decodeSvgInBrowser` returnerar `null` när ingen kod kan läsas. Behandla det som en underkänd kontroll, inte som ett fel."
+            }
+          ]
+        },
+        "faq": {
+          "title": "Vanliga frågor",
+          "lead": "Korta svar på vanliga frågor.",
+          "blocks": [
+            {
+              "k": "faq",
+              "items": [
+                {
+                  "q": "Skickar paketet något till HeyQR?",
+                  "a": "Nej. Kodning, rendering och skanningskontroll körs på din dator. Webbläsaravkodaren laddar sin wasm-fil från en URL som du hostar."
+                },
+                {
+                  "q": "Kan jag skapa dynamiska koder med det?",
+                  "a": "Inte än. En dynamisk kod kräver en HeyQR-kortlänk, en plan och skanningsräkning på våra servrar. Det kommer med REST API:et."
+                },
+                {
+                  "q": "Varför underkänns min kod med logotyp?",
+                  "a": "En logotyp höjer felkorrigeringen till H, vilket sänker kapaciteten, och döljer moduler. Gör logotypen mindre än `scan.maxLogoSize` eller korta innehållet."
+                },
+                {
+                  "q": "Varför finns PNG-export bara i Node.js?",
+                  "a": "PNG-filer renderas med resvg, en native-modul. I webbläsaren ritar du SVG:n på en canvas om du behöver pixlar."
+                },
+                {
+                  "q": "Kommer filerna att stämma med HeyQR-redigeraren?",
+                  "a": "Ja. Redigerarens förhandsvisning och den betalda exporten använder båda `composeLayout`, så samma layout ger samma SVG."
+                },
+                {
+                  "q": "Får jag använda det i en kommersiell produkt?",
+                  "a": "Licensen bestäms vid den första publika versionen och visas här och på npm."
+                }
+              ]
+            }
+          ]
+        },
+        "changelog": {
+          "title": "Ändringslogg",
+          "lead": "Versioner av @heyqr/qr-core.",
+          "blocks": [
+            {
+              "k": "h2",
+              "id": "v010",
+              "t": "0.1.0 · inte publicerad än"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Första publika versionen förbereds. Allt på de här sidorna motsvarar paketets aktuella källkod.",
+                "Ingångspunkter: main, `/raster`, `/verify`, `/verify-browser`, `/node`."
+              ]
+            },
+            {
+              "k": "note",
+              "kind": "info",
+              "t": "När en version publiceras visas dess versionsinformation och npm-länken här."
+            }
+          ]
+        },
+        "rest": {
+          "title": "REST API",
+          "lead": "Skapa koder, ändra vart dynamiska koder pekar och läs antal skanningar från din server.",
+          "blocks": [
+            {
+              "k": "restSoon"
+            }
+          ]
+        },
+        "restAuth": {
+          "title": "Autentisering",
+          "lead": "Varje förfrågan har en API-nyckel från ditt HeyQR-konto.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Inte offentligt än. Den här sidan beskriver REST API:et i det här bygget av HeyQR, kontrollerat mot dess routes. Det är inte tillgängligt på heyqr.me än och hålls borta från sökmotorer tills det är det."
+            },
+            {
+              "k": "h2",
+              "id": "keys",
+              "t": "API-nycklar"
+            },
+            {
+              "k": "list",
+              "items": [
+                "Skapa nycklar under Konto → API-nycklar. En nyckel hör till ditt konto; alla nycklar i kontot ser samma koder.",
+                "Nycklar ser ut som `hqk_<lookupId>_<secret>`. Hela nyckeln visas en gång, när du skapar den; HeyQR sparar bara en verifierare.",
+                "Skicka nyckeln i headern `Authorization` från din server. Lägg den aldrig i en URL eller i webbläsarkod.",
+                "En saknad, felaktig eller återkallad nyckel får samma `401 unauthorized`, innan förfrågans body läses."
+              ]
+            },
+            {
+              "k": "h2",
+              "id": "header",
+              "t": "Förfrågningsheaders"
+            },
+            {
+              "k": "code",
+              "example": "restHeader"
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Hastighetsgränser"
+            },
+            {
+              "k": "p",
+              "t": "Gränserna hör till kontot: alla dess nycklar delar dem, och konton påverkar inte varandra. Ett fönster börjar med den första förfrågan och varar i 60 sekunder."
+            },
+            {
+              "k": "table",
+              "label": "Hastighetsgränser",
+              "cols": ["Budget", "Räknar", "Standard per minut"],
+              "rows": [
+                {
+                  "cells": ["`api`", "Varje förfrågan med en giltig nyckel", "120"],
+                  "required": false
+                },
+                {
+                  "cells": ["`export`", "Filexporter, räknas även i `api`", "30"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "p",
+              "t": "Över en budget blir svaret `429 rate_limited` med `Retry-After`, innan något skapas, ändras eller renderas."
+            }
+          ]
+        },
+        "restCreate": {
+          "title": "Skapa en QR-kod",
+          "lead": "Skapar en QR-kod med dess layouter, som ett utkast i ditt konto. Aktivering, kortlänkar och betalning sker i appen.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Inte offentligt än. Den här sidan beskriver REST API:et i det här bygget av HeyQR, kontrollerat mot dess routes. Det är inte tillgängligt på heyqr.me än och hålls borta från sökmotorer tills det är det."
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Förfrågans body"
+            },
+            {
+              "k": "table",
+              "label": "Förfrågans body",
+              "cols": ["Parameter", "Typ", "Exempel", "Beskrivning"],
+              "rows": [
+                {
+                  "cells": ["`name`", "string", "\"Spring menu\"", "1–80 tecken. Namnet i Mina QR-koder."],
+                  "required": true
+                },
+                {
+                  "cells": ["`mode`", "\"static\" | \"dynamic\"", "\"static\"", "`dynamic` är bara för innehåll av typen `website`."],
+                  "required": true
+                },
+                {
+                  "cells": [
+                    "`content`",
+                    "QrContent",
+                    "{ \"type\": \"website\", … }",
+                    "Vad koden öppnar. Samma former som `encodePayload`."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"littlefern.cafe/menu\"",
+                    "Bara `dynamic`: vart kortlänken skickar folk. Standard är webbadressen."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "`layouts`",
+                    "array",
+                    "[{ \"name\": \"Sticker\", \"layout\": … }]",
+                    "1–20 layouter: `name` (1–60), en renderad `layout` och valfria `editor`-inställningar."
+                  ],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "p",
+              "t": "Bodyn är strikt: ett okänt fält avvisas. Skicka en `Idempotency-Key`-header (1–255 synliga tecken, ett UUID fungerar) för att göra omförsök säkra: samma nyckel och förfrågan returnerar det ursprungliga `201`."
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "Förfrågan"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateRequest",
+              "label": "Exempel på förfrågan"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Svar"
+            },
+            {
+              "k": "tabs",
+              "example": "restCreateResponses",
+              "label": "Svar"
+            }
+          ]
+        },
+        "restBulk": {
+          "title": "Massskapa",
+          "lead": "Skapar upp till 100 koder i en förfrågan. Jobbet körs i bakgrunden.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "Förhandsvisning av designen. Föreslagen endpoint: inget på den här sidan är live än, och namn och fält kan ändras före lanseringen."
+            },
+            {
+              "k": "endpoint",
+              "method": "POST",
+              "url": "/api/v1/qr-codes/bulk"
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Förfrågans body"
+            },
+            {
+              "k": "table",
+              "label": "Förfrågans body",
+              "cols": ["Parameter", "Typ", "Exempel", "Beskrivning"],
+              "rows": [
+                {
+                  "cells": ["`items`", "array", "[{ \"name\": …, \"content\": … }]", "1–100 koder, var och en som i Skapa en QR-kod."],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].name`", "string", "\"Table 12\"", "Namn i Mina QR-koder."],
+                  "required": true
+                },
+                {
+                  "cells": ["`items[].content`", "QrContent", "{ \"type\": \"website\", … }", "Vad varje kod öppnar."],
+                  "required": true
+                },
+                {
+                  "cells": ["`style`", "QrStyle", "{ \"pattern\": \"rounded\", … }", "En stil för alla koder i batchen."],
+                  "required": false
+                },
+                {
+                  "cells": ["`webhook_url`", "string", "\"https://…/heyqr\"", "Anropas en gång när jobbet är klart."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Svar"
+            },
+            {
+              "k": "tabs",
+              "example": "bulkResponses",
+              "label": "Svar"
+            }
+          ]
+        },
+        "restDestination": {
+          "title": "Ändra en destination",
+          "lead": "Pekar om en dynamisk kod. Tryckta koder behåller sin kortlänk och följer med direkt.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Inte offentligt än. Den här sidan beskriver REST API:et i det här bygget av HeyQR, kontrollerat mot dess routes. Det är inte tillgängligt på heyqr.me än och hålls borta från sökmotorer tills det är det."
+            },
+            {
+              "k": "h2",
+              "id": "read",
+              "t": "Läs den aktuella destinationen"
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "code",
+              "example": "restDestinationRead"
+            },
+            {
+              "k": "p",
+              "t": "Ändra den utifrån den `revision` du läste: en destination som har ändrats i appen eller av en annan förfrågan sedan dess får `409` och inget sparas."
+            },
+            {
+              "k": "h2",
+              "id": "body",
+              "t": "Förfrågans body"
+            },
+            {
+              "k": "endpoint",
+              "method": "PATCH",
+              "url": "/api/v1/qr-codes/{qrCodeId}/destination"
+            },
+            {
+              "k": "table",
+              "label": "Förfrågans body",
+              "cols": ["Parameter", "Typ", "Exempel", "Beskrivning"],
+              "rows": [
+                {
+                  "cells": [
+                    "`destination`",
+                    "string",
+                    "\"https://littlefern.cafe/today\"",
+                    "Den nya adressen, upp till 2048 tecken. En domän utan schema får https://."
+                  ],
+                  "required": true
+                },
+                {
+                  "cells": ["`revision`", "integer", "3", "Revisionen från GET eller den senaste PATCH."],
+                  "required": true
+                }
+              ],
+              "keyCol": true,
+              "reqCol": true
+            },
+            {
+              "k": "h2",
+              "id": "request",
+              "t": "Förfrågan"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationRequest",
+              "label": "Exempel på förfrågan"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Svar"
+            },
+            {
+              "k": "tabs",
+              "example": "restDestinationResponses",
+              "label": "Svar"
+            }
+          ]
+        },
+        "restScans": {
+          "title": "Skanningsstatistik",
+          "lead": "Dagligt antal skanningar för en dynamisk kod.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "design",
+              "t": "Förhandsvisning av designen. Föreslagen endpoint: inget på den här sidan är live än, och namn och fält kan ändras före lanseringen."
+            },
+            {
+              "k": "endpoint",
+              "method": "GET",
+              "url": "/api/v1/qr-codes/{id}/scans?from=2026-11-01&to=2026-11-26"
+            },
+            {
+              "k": "h2",
+              "id": "responses",
+              "t": "Svar"
+            },
+            {
+              "k": "tabs",
+              "example": "scansResponses",
+              "label": "Svar"
+            }
+          ]
+        },
+        "restErrors": {
+          "title": "Fel och hastighetsgränser",
+          "lead": "Alla fel har samma form. Förgrena på code, aldrig på meddelandet.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Inte offentligt än. Den här sidan beskriver REST API:et i det här bygget av HeyQR, kontrollerat mot dess routes. Det är inte tillgängligt på heyqr.me än och hålls borta från sökmotorer tills det är det."
+            },
+            {
+              "k": "h2",
+              "id": "shape",
+              "t": "Felets form"
+            },
+            {
+              "k": "p",
+              "t": "Varje fel är `{ \"error\": { \"code\", \"message\", …details } }` med `Cache-Control: no-store`. Meddelanden är till för människor; koderna är stabila."
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "Statuskoder"
+            },
+            {
+              "k": "table",
+              "label": "Fel",
+              "cols": ["Status", "code", "När"],
+              "rows": [
+                {
+                  "cells": ["400", "`malformed_json`", "Bodyn är inte JSON."],
+                  "required": false
+                },
+                {
+                  "cells": ["401", "`unauthorized`", "Saknad, felformaterad, felaktig eller återkallad nyckel."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "402",
+                    "`payment_required`",
+                    "Export av en kod som inte är betald eller live; `paymentUrl` öppnar dess exportskärm."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["403", "`draft_limit`", "Kontot har det högsta antalet utkast."],
+                  "required": false
+                },
+                {
+                  "cells": ["404", "`not_found`", "Inte din kod eller layout, raderad eller saknas: ett och samma svar för alla."],
+                  "required": false
+                },
+                {
+                  "cells": [
+                    "409",
+                    "`revision_conflict`, `idempotency_key_reused`",
+                    "Ändrad sedan din revision, eller en återanvänd Idempotency-Key."
+                  ],
+                  "required": false
+                },
+                {
+                  "cells": ["422", "`invalid_request`, `content_too_long`, `not_dynamic`", "En regel bryts; `details` namnger fältet."],
+                  "required": false
+                },
+                {
+                  "cells": ["429", "`rate_limited`", "Över kontots budget; vänta `Retry-After` sekunder."],
+                  "required": false
+                },
+                {
+                  "cells": ["500", "`internal_error`", "Inget har ändrats; försök igen."],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "limits",
+              "t": "Hastighetsgränser"
+            },
+            {
+              "k": "tabs",
+              "example": "restRateLimited",
+              "label": "Exempel på svar"
+            },
+            {
+              "k": "p",
+              "t": "Standard är 120 förfrågningar och 30 exporter per minut och konto. Avvisade förfrågningar förlänger inte väntetiden."
+            }
+          ]
+        },
+        "restSdk": {
+          "title": "TypeScript-SDK",
+          "lead": "@heyqr/sdk är en typad klient för REST API:et, för Node.js 18 och senare. Den renderar ingenting: det gör @heyqr/qr-core.",
+          "blocks": [
+            {
+              "k": "note",
+              "kind": "preview",
+              "t": "Inte offentligt än. Den här sidan beskriver REST API:et i det här bygget av HeyQR, kontrollerat mot dess routes. Det är inte tillgängligt på heyqr.me än och hålls borta från sökmotorer tills det är det."
+            },
+            {
+              "k": "h2",
+              "id": "install",
+              "t": "Installera"
+            },
+            {
+              "k": "install",
+              "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "server",
+              "t": "På din server"
+            },
+            {
+              "k": "p",
+              "t": "`HeyQrClient` behöver en API-nyckel, så den körs bara på en server. I en webbläsarbundle löses paketet till en ingång vars `HeyQrClient` kastar ett `HeyQrError` av typen `server_only`. För förhandsvisningar i webbläsaren använder du `@heyqr/sdk/react`."
+            },
+            {
+              "k": "code",
+              "example": "sdkInstallNote"
+            },
+            {
+              "k": "h2",
+              "id": "methods",
+              "t": "Metoder"
+            },
+            {
+              "k": "table",
+              "label": "HeyQrClient",
+              "cols": ["Metod", "Förfrågan"],
+              "rows": [
+                {
+                  "cells": ["`createQr(request, { idempotencyKey? })`", "`POST /api/v1/qr-codes`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getLayout(qrCodeId, layoutId)`", "`GET …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateLayout(qrCodeId, layoutId, request)`", "`PATCH …/layouts/{layoutId}`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`getDestination(qrCodeId)`", "`GET …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`updateDestination(qrCodeId, request)`", "`PATCH …/destination`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`downloadExport(qrCodeId, layoutId, { format })`", "`GET …/export`, som följer den signerade länken"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            },
+            {
+              "k": "h2",
+              "id": "errors",
+              "t": "Fel"
+            },
+            {
+              "k": "table",
+              "label": "Fel",
+              "cols": ["Fel", "När"],
+              "rows": [
+                {
+                  "cells": ["`HeyQrApiError`", "Ett dokumenterat API-fel, med `status`, `code` och det typade svaret"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrRateLimitError`", "429, med `retryAfterSeconds` och `code`"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrTimeoutError`, `HeyQrAbortError`", "Tidsgränsen passerades, eller så avbröt din `signal` anropet"],
+                  "required": false
+                },
+                {
+                  "cells": ["`HeyQrError`", "Inget dokumenterat svar: `kind` anger varför"],
+                  "required": false
+                }
+              ],
+              "keyCol": true,
+              "reqCol": false
+            }
+          ]
+        }
+      },
+      "breadcrumb": "Brödsmulor"
+    }
+  }
+}

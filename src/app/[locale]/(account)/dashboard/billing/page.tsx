@@ -177,7 +177,7 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
             ) : null}
             <div className="flex justify-between gap-3">
               <dt className="text-secondary-foreground">{t("payment")}</dt>
-              <dd data-slot="payment-method" className="text-right font-semibold">
+              <dd data-slot="payment-method" className="text-end font-semibold">
                 {payment?.kind === "card"
                   ? t("card", { brand: brand(payment.brand), last4: payment.last4 })
                   : payment
@@ -219,7 +219,7 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
           <div className="overflow-x-auto">
             <table className="w-full min-w-120 border-collapse text-[0.875rem]">
               <thead>
-                <tr className="text-left text-secondary-foreground">
+                <tr className="text-start text-secondary-foreground">
                   <th scope="col" className="border-b border-border px-2 py-2 font-semibold">
                     {t("item")}
                   </th>
@@ -240,7 +240,7 @@ export default async function BillingPage({ params, searchParams }: PageProps<"/
                     <td className="border-b border-border px-2 py-3.5">{r.label}</td>
                     <td className="border-b border-border px-2 py-3.5">{r.date}</td>
                     <td className="border-b border-border px-2 py-3.5 tabular-nums">{r.amount}</td>
-                    <td className="border-b border-border px-2 py-3.5 text-right">
+                    <td className="border-b border-border px-2 py-3.5 text-end">
                       {r.status === "paid" ? (
                         <a href={`/api/billing/receipt/${r.purchaseId}`} className="font-semibold underline underline-offset-3">
                           {t("receipt")}

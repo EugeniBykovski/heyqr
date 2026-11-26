@@ -34,6 +34,38 @@ describe("language switch (design 1.13)", () => {
     expect(screen.getByRole("status")).toHaveTextContent("No language matches “zzz”.");
     fireEvent.change(screen.getByRole("searchbox", { name: "Search languages" }), { target: { value: "укр" } });
     fireEvent.click(screen.getByRole("button", { name: /Українська/ }));
-    expect(replace).toHaveBeenCalledWith("/pricing", { locale: "uk" });
+    expect(replace).toHaveBeenCalledWith("/pricing", { locale: "uk", scroll: false });
+  });
+
+  it("HEY-192: keeps the query and hash (editor step, plan, currency) and announces the change before navigating", () => {
+    replace.mockClear();
+    window.history.replaceState(null, "", "/create?step=content&plan=studio#preview");
+    const order: string[] = [];
+    const onChange = () => order.push("announced");
+    window.addEventListener("heyqr:locale-change", onChange);
+    replace.mockImplementation(() => order.push("navigated"));
+    render(
+      <NextIntlClientProvider locale="en" messages={messages} timeZone="UTC">
+        <LanguageSwitch />
+      </NextIntlClientProvider>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Language: English" }));
+    expect(screen.getByText("Prices stay in your currency. Arabic switches the layout to right-to-left.")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /العربية/ }));
+    expect(replace).toHaveBeenCalledWith("/pricing?step=content&plan=studio#preview", { locale: "ar", scroll: false });
+    expect(order).toEqual(["announced", "navigated"]);
+    window.removeEventListener("heyqr:locale-change", onChange);
+  });
+
+  it("choosing the current language does nothing", () => {
+    replace.mockClear();
+    render(
+      <NextIntlClientProvider locale="en" messages={messages} timeZone="UTC">
+        <LanguageSwitch />
+      </NextIntlClientProvider>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Language: English" }));
+    fireEvent.click(screen.getByRole("button", { name: /English/, pressed: true }));
+    expect(replace).not.toHaveBeenCalled();
   });
 });

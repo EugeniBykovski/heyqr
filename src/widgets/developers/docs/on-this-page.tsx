@@ -66,7 +66,7 @@ export function OnThisPage({
   );
   if (variant === "rail")
     return (
-      <nav aria-label={title} className="sticky top-[calc(var(--spacing-header)+1.5rem)] flex flex-col gap-1 border-l border-border pl-6">
+      <nav aria-label={title} className="sticky top-[calc(var(--spacing-header)+1.5rem)] flex flex-col gap-1 border-s border-border ps-6">
         <span className="pb-1 text-micro text-muted-foreground uppercase">{title}</span>
         {list}
         <a href="#docs-top" className="flex min-h-9 items-center gap-1.5 text-[0.875rem] text-secondary-foreground hover:text-foreground">
@@ -86,7 +86,7 @@ export function OnThisPage({
       >
         <TextIcon aria-hidden className="size-4" />
         {title}
-        <ChevronDownIcon aria-hidden className={cn("ml-auto size-4 transition-transform", open && "rotate-180")} />
+        <ChevronDownIcon aria-hidden className={cn("ms-auto size-4 transition-transform", open && "rotate-180")} />
       </button>
       <div id={`${id}-list`} hidden={!open} className="border-t border-border px-4 py-2">
         {list}
