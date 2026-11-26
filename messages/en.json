@@ -1542,7 +1542,7 @@
     "text": "The text in the code is too long. Keep it to about 8 characters."
   },
   "export": {
-    "title": "Download your code",
+    "title": "Download your file",
     "shortLinkPreview": {
       "mark": "Preview",
       "note": "Preview with a sample short link. Your permanent short link is created when you activate this code, and every file you download contains it."
@@ -1565,10 +1565,10 @@
     "dpi": "{dpi} dpi",
     "pixels": "{width} × {height} px",
     "titleBuy": "Download your QR code",
-    "titleGuest": "Ready to download",
-    "subGuest": "Check the layout and file, then sign in with Google to pay and download. Your design stays as it is.",
+    "titleGuest": "Download your QR code",
+    "subGuest": "Check the layout and format. You’ll see the total before you pay.",
     "subPay": "Check the layout and format. You’ll see the total before you pay.",
-    "subEntitled": "This code is yours. Download any format, as often as you need.",
+    "subEntitled": "Included in your purchase. PNG and SVG, as often as you like.",
     "stageLabel": "Layout to download",
     "layouts": "Layouts of this code",
     "backToDesign": "Back to design",
@@ -1605,7 +1605,7 @@
     },
     "checkoutFailed": "We couldn’t open checkout. Nothing was charged; try again.",
     "continueGoogle": "Continue with Google",
-    "guestNote": "Free to design. You pay only when you download.",
+    "guestNote": "Sign in to pay. We’ll bring you straight back to this layout with {format} selected.",
     "receipt": {
       "title": "Receipt",
       "paid": "Paid",
@@ -1632,7 +1632,8 @@
       "total": "Total",
       "tax": "Tax, if any, is calculated at checkout.",
       "included": "Included",
-      "includedShort": "Included"
+      "includedShort": "Included",
+      "toPay": "To pay now"
     },
     "emptyTitle": "Nothing to download yet",
     "emptyText": "Design a QR code first. Your draft stays in this browser until you download it.",
@@ -1709,7 +1710,11 @@
     },
     "limit": "larger sizes exceed {max} px",
     "subUnlock": "Included in {plan}: this uses 1 of your monthly static unlocks.",
-    "subCredit": "This uses 1 of your static credits."
+    "subCredit": "This uses 1 of your static credits.",
+    "titleDone": "Downloaded",
+    "subEntitledPlan": "Included in your plan. Download as often as you like.",
+    "pendingNote": "This usually takes a few seconds. Please keep this page open.",
+    "includedNotePlan": "Included in your plan. Nothing to pay."
   },
   "dashboard": {
     "noMatch": {
