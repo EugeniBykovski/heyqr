@@ -22,6 +22,7 @@
     "languageSearch": "Rechercher une langue",
     "languages": "Langues",
     "languageEmpty": "Aucune langue ne correspond à « {query} ».",
+    "languageNote": "Les prix restent dans votre devise. L’arabe passe la mise en page de droite à gauche.",
     "trial": "Essai gratuit",
     "apiKeys": "Clés API",
     "developers": "API pour les développeurs",

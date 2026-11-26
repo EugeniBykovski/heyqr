@@ -22,6 +22,7 @@
     "languageSearch": "Tìm ngôn ngữ",
     "languages": "Ngôn ngữ",
     "languageEmpty": "Không có ngôn ngữ nào khớp với “{query}”.",
+    "languageNote": "Giá vẫn giữ theo đơn vị tiền tệ của bạn. Tiếng Ả Rập chuyển bố cục sang phải sang trái.",
     "trial": "Dùng thử miễn phí",
     "apiKeys": "Khóa API",
     "developers": "API cho nhà phát triển",

@@ -22,6 +22,7 @@
     "languageSearch": "ابحث عن لغة",
     "languages": "اللغات",
     "languageEmpty": "لا توجد لغة تطابق «{query}».",
+    "languageNote": "تبقى الأسعار بعملتك. تحوّل العربية التخطيط إلى الاتجاه من اليمين إلى اليسار.",
     "trial": "تجربة مجانية",
     "apiKeys": "مفاتيح API",
     "developers": "API للمطورين",

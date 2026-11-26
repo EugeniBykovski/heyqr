@@ -22,6 +22,7 @@
     "languageSearch": "Sök språk",
     "languages": "Språk",
     "languageEmpty": "Inget språk matchar ”{query}”.",
+    "languageNote": "Priserna stannar i din valuta. Arabiska växlar layouten till höger till vänster.",
     "trial": "Gratis provperiod",
     "apiKeys": "API-nycklar",
     "developers": "API för utvecklare",

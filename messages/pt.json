@@ -22,6 +22,7 @@
     "languageSearch": "Buscar idiomas",
     "languages": "Idiomas",
     "languageEmpty": "Nenhum idioma corresponde a “{query}”.",
+    "languageNote": "Os preços continuam na sua moeda. O árabe muda o layout para a direita para a esquerda.",
     "trial": "Teste grátis",
     "apiKeys": "Chaves de API",
     "developers": "API para desenvolvedores",

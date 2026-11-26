@@ -22,6 +22,7 @@
     "languageSearch": "Cerca lingue",
     "languages": "Lingue",
     "languageEmpty": "Nessuna lingua corrisponde a “{query}”.",
+    "languageNote": "I prezzi restano nella tua valuta. L’arabo cambia il layout da destra a sinistra.",
     "trial": "Prova gratuita",
     "apiKeys": "Chiavi API",
     "developers": "API per sviluppatori",

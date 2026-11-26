@@ -22,6 +22,7 @@
     "languageSearch": "言語を検索",
     "languages": "言語",
     "languageEmpty": "「{query}」に一致する言語はありません。",
+    "languageNote": "価格はお使いの通貨のまま表示されます。アラビア語を選ぶとレイアウトが右から左に切り替わります。",
     "trial": "無料トライアル",
     "apiKeys": "APIキー",
     "developers": "開発者向けAPI",

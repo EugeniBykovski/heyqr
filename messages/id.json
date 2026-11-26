@@ -22,6 +22,7 @@
     "languageSearch": "Cari bahasa",
     "languages": "Bahasa",
     "languageEmpty": "Tidak ada bahasa yang cocok dengan “{query}”.",
+    "languageNote": "Harga tetap dalam mata uang Anda. Bahasa Arab mengubah tata letak menjadi kanan ke kiri.",
     "trial": "Uji coba gratis",
     "apiKeys": "Kunci API",
     "developers": "API untuk developer",

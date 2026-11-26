@@ -22,6 +22,7 @@
     "languageSearch": "언어 검색",
     "languages": "언어",
     "languageEmpty": "“{query}”와(과) 일치하는 언어가 없어요.",
+    "languageNote": "가격은 사용 중인 통화로 그대로 표시돼요. 아랍어를 선택하면 레이아웃이 오른쪽에서 왼쪽으로 바뀌어요.",
     "trial": "무료 체험",
     "apiKeys": "API 키",
     "developers": "개발자용 API",

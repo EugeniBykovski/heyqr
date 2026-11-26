@@ -22,6 +22,7 @@
     "languageSearch": "搜索语言",
     "languages": "语言",
     "languageEmpty": "没有与“{query}”匹配的语言。",
+    "languageNote": "价格仍以你的货币显示。选择阿拉伯语时，布局会切换为从右到左。",
     "trial": "免费试用",
     "apiKeys": "API 密钥",
     "developers": "面向开发者的 API",

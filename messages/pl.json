@@ -22,6 +22,7 @@
     "languageSearch": "Szukaj języków",
     "languages": "Języki",
     "languageEmpty": "Żaden język nie pasuje do „{query}”.",
+    "languageNote": "Ceny pozostają w Twojej walucie. Arabski przełącza układ na kierunek od prawej do lewej.",
     "trial": "Darmowy okres próbny",
     "apiKeys": "Klucze API",
     "developers": "API dla programistów",

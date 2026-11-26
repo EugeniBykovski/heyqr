@@ -22,6 +22,7 @@
     "languageSearch": "Talen zoeken",
     "languages": "Talen",
     "languageEmpty": "Geen taal gevonden voor “{query}”.",
+    "languageNote": "Prijzen blijven in je eigen valuta. Arabisch zet de lay-out om naar rechts-naar-links.",
     "trial": "Gratis proefperiode",
     "apiKeys": "API-sleutels",
     "developers": "API voor ontwikkelaars",

@@ -22,6 +22,7 @@
     "languageSearch": "Dil arayın",
     "languages": "Diller",
     "languageEmpty": "“{query}” ile eşleşen dil yok.",
+    "languageNote": "Fiyatlar para biriminizde kalır. Arapça, düzeni sağdan sola çevirir.",
     "trial": "Ücretsiz deneme",
     "apiKeys": "API anahtarları",
     "developers": "Geliştiriciler için API",

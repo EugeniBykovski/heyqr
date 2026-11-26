@@ -22,6 +22,7 @@
     "languageSearch": "Sprachen durchsuchen",
     "languages": "Sprachen",
     "languageEmpty": "Keine Sprache passt zu „{query}“.",
+    "languageNote": "Preise bleiben in deiner Währung. Arabisch stellt das Layout auf rechts nach links um.",
     "trial": "Kostenlos testen",
     "apiKeys": "API-Schlüssel",
     "developers": "API für Entwickler",
