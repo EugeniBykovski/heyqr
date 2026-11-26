@@ -360,7 +360,10 @@ function Dims({ dims }: { dims: ReturnType<typeof layoutDims> }) {
     <div className="flex flex-wrap gap-x-3.5 gap-y-1 text-[0.8125rem] text-secondary-foreground">
       {(["layout", "qr", "file"] as const).map((k) => (
         <span key={k}>
-          {t(k)} <b className="font-semibold text-foreground tabular-nums">{dims[k]}</b>
+          {t(k)}{" "}
+          <b dir="ltr" className="font-semibold text-foreground tabular-nums">
+            {dims[k]}
+          </b>
         </span>
       ))}
     </div>
@@ -456,7 +459,9 @@ function FullPreview({
           <div className="flex items-center gap-2 border-b border-border bg-surface px-3 py-2">
             <DialogTitle className="min-w-0 grow truncate text-label">{title}</DialogTitle>
             <DialogDescription className="sr-only">{ts("fullTitle")}</DialogDescription>
-            <span className="shrink-0 text-caption text-secondary-foreground tabular-nums">{dims.layout}</span>
+            <span dir="ltr" className="shrink-0 text-caption text-secondary-foreground tabular-nums">
+              {dims.layout}
+            </span>
             <Button type="button" variant="primary" size="sm" onClick={() => onOpenChange(false)}>
               {ts("done")}
             </Button>
@@ -476,7 +481,10 @@ function FullPreview({
               <div className="flex flex-wrap gap-x-3.5 gap-y-1 text-[0.8125rem] text-secondary-foreground">
                 {(["qr", "file"] as const).map((k) => (
                   <span key={k}>
-                    {tDims(k)} <b className="font-semibold text-foreground tabular-nums">{dims[k]}</b>
+                    {tDims(k)}{" "}
+                    <b dir="ltr" className="font-semibold text-foreground tabular-nums">
+                      {dims[k]}
+                    </b>
                   </span>
                 ))}
               </div>

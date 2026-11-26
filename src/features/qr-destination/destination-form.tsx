@@ -170,7 +170,8 @@ export function DestinationForm({
             hint={t("hint", { short: shortLink })}
             error={problem ? tUrl(PROBLEM_KEY[problem]) : undefined}
           >
-            <div className="flex items-stretch">
+            {/* HEY-192: scheme + address is one web address, read left to right in every language. */}
+            <div dir="ltr" className="flex items-stretch">
               <span
                 data-slot="destination-scheme"
                 className="border-border-control grid place-items-center rounded-s-md border border-e-0 bg-subtle px-2.5 text-caption text-secondary-foreground"

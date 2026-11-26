@@ -69,7 +69,10 @@ describe("file URL and settings (HEY-37 sizes on the new surface)", () => {
         .map((b) => b.textContent)
         .sort(),
     ).toEqual(["1×", "2×", "4×"]);
-    expect(screen.getByText(/3840 × 2160 px · larger sizes exceed 8192 px/)).toBeInTheDocument();
+    // The size is its own left-to-right run (HEY-192), so the line spans two elements.
+    expect(
+      screen.getByText((_, el) => el?.tagName === "SPAN" && /^3840 × 2160 px · larger sizes exceed 8192 px$/.test(el.textContent ?? "")),
+    ).toBeInTheDocument();
   });
 
   it("restores format, size and transparency from the return URL", () => {

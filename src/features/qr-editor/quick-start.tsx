@@ -225,7 +225,8 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
             <label htmlFor="content-url" className="text-label">
               {t("url")}
             </label>
-            <div className="flex min-w-0 items-stretch">
+            {/* HEY-192: "https://" + address is one web address, read left to right in every language. */}
+            <div dir="ltr" className="flex min-w-0 items-stretch">
               <InputPrefix>{schemeOf(design.content.url)}</InputPrefix>
               <Input
                 id="content-url"

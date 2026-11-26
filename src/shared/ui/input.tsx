@@ -14,8 +14,19 @@ export const fieldControl = [
   "disabled:cursor-not-allowed disabled:bg-subtle disabled:text-muted-foreground disabled:hover:border-input",
 ].join(" ");
 
-export function Input({ className, type = "text", ...props }: ComponentProps<"input">) {
-  return <input type={type} data-slot="input" className={cn(fieldControl, "min-h-control", className)} {...props} />;
+/** HEY-192: web addresses, email addresses and phone numbers read left to right in every language, Arabic included. */
+const LTR_TYPES = new Set(["url", "email", "tel"]);
+
+export function Input({ className, type = "text", dir, ...props }: ComponentProps<"input">) {
+  return (
+    <input
+      type={type}
+      dir={dir ?? (LTR_TYPES.has(type) || LTR_TYPES.has(String(props.inputMode)) ? "ltr" : undefined)}
+      data-slot="input"
+      className={cn(fieldControl, "min-h-control", className)}
+      {...props}
+    />
+  );
 }
 
 /** Design "affix": a fixed prefix (e.g. https://) joined to the input that follows it. */

@@ -624,10 +624,16 @@ export function ExportSurface(props: ExportSurfaceProps) {
             <StageFoot>
               <div className="flex flex-wrap gap-x-3.5 gap-y-1 text-[0.8125rem] text-secondary-foreground">
                 <span>
-                  {t("dims.layout")} <b className="font-semibold text-foreground tabular-nums">{layoutDims}</b>
+                  {t("dims.layout")}{" "}
+                  <b dir="ltr" className="font-semibold text-foreground tabular-nums">
+                    {layoutDims}
+                  </b>
                 </span>
                 <span>
-                  {t("dims.file")} <b className="font-semibold text-foreground tabular-nums">{fileDims}</b>
+                  {t("dims.file")}{" "}
+                  <b dir="ltr" className="font-semibold text-foreground tabular-nums">
+                    {fileDims}
+                  </b>
                 </span>
               </div>
               <Badge variant={scan.ok ? "success" : "warning"}>{scan.ok ? t("scanOk") : t("scanFail")}</Badge>
@@ -756,7 +762,8 @@ export function ExportSurface(props: ExportSurfaceProps) {
                   {t("resolution")}
                 </span>
                 <span className="text-caption text-muted-foreground tabular-nums">
-                  {t("pixels", { width: pixels.width, height: pixels.height })}
+                  {/* HEY-192: a measurement reads left to right (width × height) in Arabic too. */}
+                  <bdi dir="ltr">{t("pixels", { width: pixels.width, height: pixels.height })}</bdi>
                   {choices.length < (print ? PNG_DPIS : PNG_SCALES).length ? ` · ${t("limit", { max: PNG_MAX_SIDE })}` : ""}
                 </span>
               </div>
