@@ -69,7 +69,9 @@ export async function resolveShortLink(db: Db, code: string, now: Date = new Dat
   const qr = await db.query.qrCode.findFirst({ where: eq(schema.qrCode.shortCode, code) });
   const hosted = qr?.content ? isHostedContent(qr.content) : false;
   // A hosted code has no destination: its page lives behind the short link.
-  if (!qr || qr.deletedAt || qr.status !== "active" || (!hosted && !qr.destination)) return { kind: "unavailable", inactive: false };
+  // HEY-182: a code an operator took down after a report answers like a removed one, whatever its status.
+  if (!qr || qr.deletedAt || qr.takenDownAt || qr.status !== "active" || (!hosted && !qr.destination))
+    return { kind: "unavailable", inactive: false };
   const subscription = await accessSubscription(db, qr.userId, now);
   if (qr.isTrial) {
     const owner = await db.query.user.findFirst({ where: eq(schema.user.id, qr.userId) });

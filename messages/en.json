@@ -1947,7 +1947,8 @@
       "unchanged": "Nothing new to publish.",
       "rules": "Some details need attention before publishing. Edit the page to fix them.",
       "failed": "Couldn’t publish. Try again.",
-      "open": "Open the page"
+      "open": "Open the page",
+      "takenDown": "We took this page down after a report, so its short link shows “This page isn’t available”. Your content and scans are kept. Write to support if you think this is a mistake."
     },
     "hostedEditor": {
       "title": "Edit page",

@@ -215,6 +215,7 @@ export default async function QrDetailPage({ params, searchParams }: PageProps<"
                     <HostedPageCard
                       qrCodeId={qr.id}
                       status={hosted}
+                      takenDown={Boolean(qr.takenDownAt)}
                       live={live && Boolean(shortLink)}
                       publicHref={qr.shortCode ? `/p/${qr.shortCode}` : null}
                       date={

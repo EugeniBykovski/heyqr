@@ -127,6 +127,14 @@ export const qrCode = pgTable(
     /** Design 8.x Print Pack: set when the Print Pack of this code is bought (print PDF, editable SVG, specifications). */
     printPackAt: timestamp("print_pack_at", { withTimezone: true }),
     /**
+     * HEY-182 moderation (design 11.0 "Report this page → moderation queue → Unavailable"): set by an operator after a
+     * report. The short link and its page answer "unavailable" whatever the code's status, so the owner's Resume or
+     * Publish can't bring it back; only the operator's restore clears it. Null for every code that was never taken down.
+     */
+    takenDownAt: timestamp("taken_down_at", { withTimezone: true }),
+    /** The report reason the takedown was for (REPORT_REASONS). */
+    takedownReason: text("takedown_reason"),
+    /**
      * HEY-77: the random key of the browser draft this code was saved from (kept in that browser until the save
      * succeeds). Saving the same draft again for the same account returns this code instead of a duplicate.
      */

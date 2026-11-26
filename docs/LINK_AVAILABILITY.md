@@ -24,6 +24,23 @@ Manual pauses and deletions are never changed by any of this: a paused or delete
 plan says, and comes back only through Resume or Undo. Scanner-facing pages stay neutral: they never mention the owner's
 plan, trial or payment (`link-unavailable`, HEY-121).
 
+## Reported pages and takedowns (HEY-182)
+
+A visitor's "Report this page" (hosted pages, design 11.0) is stored in `page_report` and limited per visitor; nothing
+changes on the page by itself. An operator reviews the queue and decides:
+
+```sh
+pnpm moderation queue                          # reported short links not taken down, most reports first
+pnpm moderation reports <shortCode>            # every report of one short link
+pnpm moderation take-down <shortCode> scam     # scam | malware | illegal | impersonation | other
+pnpm moderation restore <shortCode>            # the review found nothing wrong
+```
+
+A takedown sets `qr_code.taken_down_at`. From then on the short link, the hosted page and the page's files answer
+exactly like a removed code (`resolveShortLink`), whatever the code's status or plan: the owner's Resume or Publish
+can't bring it back, and QR details tells the owner it was taken down after a report. The owner's content, published
+versions, short link and scans are kept, so `restore` puts the latest published version back at the same link.
+
 ## Missing decisions
 
 1. **Grace period after a failed renewal.** None is defined. Today a failed renewal keeps everything while Stripe reports
