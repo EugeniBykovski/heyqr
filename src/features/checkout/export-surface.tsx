@@ -587,7 +587,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
                     key={l.id}
                     href={l.href}
                     aria-current={l.active ? "page" : undefined}
-                    className="inline-flex min-h-9 max-w-45 flex-none items-center truncate rounded-full border border-border bg-surface px-3 text-[0.8125rem] font-semibold text-secondary-foreground aria-[current=page]:border-violet-300 aria-[current=page]:bg-violet-50 aria-[current=page]:text-violet-800"
+                    className="inline-flex min-h-9 max-w-45 flex-none items-center truncate rounded-full border border-border bg-surface px-3 text-[0.8125rem] font-semibold text-secondary-foreground aria-[current=page]:border-accent-strong-hover aria-[current=page]:bg-accent aria-[current=page]:text-accent-foreground"
                   >
                     {l.name}
                   </Link>

@@ -154,7 +154,9 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
     <section
       className={cn(
         "grid gap-5 pt-6 pb-10 [grid-template-areas:'copy'_'stage'_'tool'] sm:gap-6 sm:pt-10",
-        "lg:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] lg:items-start lg:gap-x-12 lg:gap-y-7 lg:pt-16 lg:pb-20 lg:[grid-template-areas:'copy_stage'_'tool_stage']",
+        // HEY-191: rows auto | 1fr, so the copy row keeps its own height and only the tool's row takes the stage's extra
+        // height; switching Website / Wi-Fi / Contact then changes the fields in place without moving the tool.
+        "lg:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] lg:grid-rows-[auto_1fr] lg:items-start lg:gap-x-12 lg:gap-y-7 lg:pt-16 lg:pb-20 lg:[grid-template-areas:'copy_stage'_'tool_stage']",
         "2xl:gap-x-24 2xl:pt-26",
       )}
     >

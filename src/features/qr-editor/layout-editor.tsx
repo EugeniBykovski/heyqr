@@ -209,7 +209,7 @@ export function LayoutEditor({
           aria-current={l.id === layoutId ? "true" : undefined}
           title={l.name}
           onClick={() => openLayout(l.id)}
-          className="inline-flex min-h-9 max-w-45 flex-none cursor-pointer items-center truncate rounded-full border border-border bg-surface px-3 text-[0.8125rem] font-semibold text-secondary-foreground aria-[current=true]:border-violet-300 aria-[current=true]:bg-violet-50 aria-[current=true]:text-violet-800"
+          className="inline-flex min-h-9 max-w-45 flex-none cursor-pointer items-center truncate rounded-full border border-border bg-surface px-3 text-[0.8125rem] font-semibold text-secondary-foreground aria-[current=true]:border-accent-strong-hover aria-[current=true]:bg-accent aria-[current=true]:text-accent-foreground"
         >
           <span className="truncate">{l.id === layoutId ? name || l.name : l.name}</span>
         </button>

@@ -106,7 +106,7 @@ export function DesignSettings({
             className={cn(
               "inline-flex min-h-10 flex-none cursor-pointer items-center rounded-full border border-transparent px-3.5 text-[0.875rem] font-semibold text-secondary-foreground",
               "transition-[color,background-color,box-shadow] duration-(--motion-fast) hover:bg-subtle hover:text-foreground",
-              "data-[state=active]:bg-violet-50 data-[state=active]:text-violet-800 data-[state=active]:shadow-[inset_0_0_0_1px_var(--color-violet-200)]",
+              "data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-[inset_0_0_0_1px_var(--accent-strong)]",
             )}
           >
             {t(g)}
