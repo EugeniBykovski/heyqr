@@ -5578,6 +5578,102 @@ describe.skipIf(!url)("subscription transitions and out-of-order delivery (HEY-1
 });
 
 /*
+ * HEY-185: a plan ends after a scheduled cancellation and the owner subscribes again (a new subscription, as Checkout
+ * creates it). The live code's same short link redirects again; an owner pause, a deletion and an operator takedown made
+ * while the first plan ran stay in force: the new plan doesn't clear them.
+ */
+describe.skipIf(!url)("reactivation after a plan ended keeps pauses, deletions and takedowns (HEY-185, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "react-owner", name: "Owner", email: "owner@react.test", stripeCustomerId: "cus_react_owner" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  const P1 = 1_797_600_000;
+  const P2 = 1_800_278_400;
+  const stripeNow = new Map<string, SubscriptionEvent>();
+  const sub = (id: string, status: string, periodEnd: number, over: Partial<SubscriptionEvent> = {}): SubscriptionEvent =>
+    ({
+      id,
+      customer: owner.stripeCustomerId,
+      status,
+      cancel_at_period_end: false,
+      cancel_at: null,
+      metadata: { userId: owner.id, plan: "starter" },
+      items: { data: [{ price: { id: "price_starter" }, current_period_start: periodEnd - 2_678_400, current_period_end: periodEnd }] },
+      ...over,
+    }) as unknown as SubscriptionEvent;
+  const deliver = (eventId: string, state: SubscriptionEvent) => {
+    stripeNow.set(state.id, state);
+    return applySubscriptionEvent(
+      db,
+      { id: eventId, type: "customer.subscription.updated", subscription: state },
+      { planForPrice: () => null, current: async (id) => stripeNow.get(id) ?? state },
+    );
+  };
+  const slugs = { live: "reaclive", paused: "reacpaus", deleted: "reacdele", takenDown: "reactake" } as const;
+  const ids: Record<keyof typeof slugs, string> = { live: "", paused: "", deleted: "", takenDown: "" };
+  const D = "https://menu.example.test/react";
+  const links = async () =>
+    Object.fromEntries(
+      await Promise.all(
+        (Object.keys(slugs) as (keyof typeof slugs)[]).map(async (k) => {
+          const a = await resolveShortLink(db, slugs[k]);
+          return [k, a.kind === "redirect" ? a.to : a.kind === "unavailable" && a.inactive ? "inactive" : a.kind] as const;
+        }),
+      ),
+    );
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+    await deliver("evt_react_create", sub("sub_react_1", "active", P1));
+    for (const k of Object.keys(slugs) as (keyof typeof slugs)[]) {
+      const saved = await saveQrWithLayouts(db, owner.id, {
+        name: k,
+        model: "dynamic",
+        content: { type: "website", url: D },
+        destination: D,
+        layouts,
+      });
+      if (!saved.ok) throw new Error("save failed");
+      ids[k] = saved.data.qrCodeId;
+      expect((await activateDynamicCode(db, owner.id, ids[k], () => slugs[k])).ok).toBe(true);
+    }
+    await pauseDynamicCode(db, owner.id, ids.paused);
+    await softDeleteQrCodes(db, owner.id, [ids.deleted]);
+    expect((await takeDown(db, slugs.takenDown, "other")).ok).toBe(true);
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("scheduled → ended → a new subscription: the live link redirects again, the other three stay unavailable", async () => {
+    expect(await links()).toEqual({ live: D, paused: "unavailable", deleted: "unavailable", takenDown: "unavailable" });
+    // Cancellation scheduled at the period end (the Portal's cancel_at): nothing changes before the cutoff.
+    await deliver("evt_react_sched", sub("sub_react_1", "active", P1, { cancel_at: P1 } as Partial<SubscriptionEvent>));
+    expect((await currentPlan(db, owner.id, new Date((P1 - 60) * 1000)))?.endsAt?.getTime()).toBe(P1 * 1000);
+    // Stripe ends it.
+    await deliver("evt_react_end", sub("sub_react_1", "canceled", P1, { cancel_at: P1 } as Partial<SubscriptionEvent>));
+    expect(await currentPlan(db, owner.id)).toBeNull();
+    expect(await links()).toEqual({ live: "inactive", paused: "unavailable", deleted: "unavailable", takenDown: "unavailable" });
+    // The owner subscribes again: a new subscription. A late "active" copy of the old one changes nothing.
+    await deliver("evt_react_new", sub("sub_react_2", "active", P2));
+    await deliver("evt_react_old_late", sub("sub_react_1", "active", P1));
+    expect((await currentPlan(db, owner.id))?.id).toBe("starter");
+    expect(await links()).toEqual({ live: D, paused: "unavailable", deleted: "unavailable", takenDown: "unavailable" });
+    const rows = await db.query.qrCode.findMany({ where: (q, { eq }) => eq(q.userId, owner.id) });
+    const byId = new Map(rows.map((r) => [r.id, r]));
+    expect([
+      byId.get(ids.paused)?.status,
+      Boolean(byId.get(ids.deleted)?.deletedAt),
+      Boolean(byId.get(ids.takenDown)?.takenDownAt),
+    ]).toEqual(["paused", true, true]);
+    expect(byId.get(ids.live)?.shortCode).toBe(slugs.live);
+  });
+});
+
+/*
  * HEY-145 / QR-20.01: the scan counter, as the short-link route uses it (resolveShortLink, then incrementScan for a
  * redirect only). Concurrent scans don't lose increments; unavailable codes count nothing.
  */
