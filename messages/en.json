@@ -282,60 +282,43 @@
       "pricing": "See pricing"
     },
     "studio": {
-      "kicker": "Your studio",
-      "welcome": "Welcome back, {name}",
-      "summaryTop": "{name} was scanned {count, plural, one {# time} other {# times}} today. Everything you made is one tap away.",
-      "summary": "Everything you made is one tap away: files, links and scans.",
-      "summaryEmpty": "Make your first code and it will show up here with its files and scans.",
       "billing": "Plan & billing",
       "library": "Open My QR codes",
-      "kpi": {
-        "codes": "QR codes",
-        "codesNote": "{paid} paid · {drafts, plural, one {# draft} other {# drafts}}",
-        "scans": "Scans · 14 days",
-        "scansNone": "No scans yet",
-        "scansDelta": "{delta, number, ::sign-always percent} vs previous week",
-        "dynamic": "Dynamic codes",
-        "dynamicNote": "{left, plural, one {# slot} other {# slots}} left on your plan",
-        "dynamicMeter": "Dynamic codes in use",
-        "files": "Files ready",
-        "filesNote": "{count, plural, one {layout} other {layouts}} to download as PNG or SVG"
-      },
       "chart": {
-        "title": "Scans · last 14 days",
-        "sub": "All dynamic codes together",
-        "empty": "Scans of your dynamic codes will show up here.",
-        "today": "Today",
-        "label": "Daily scans across dynamic codes for the last 14 days"
+        "title": "Scan analytics",
+        "sub": "Dynamic codes · last 14 days",
+        "empty": "Scans of your Dynamic codes will show up here.",
+        "label": "Daily scans across dynamic codes for the last 14 days",
+        "plans": "Scan analytics come with Starter and Studio.",
+        "note": "Dynamic plans only: daily totals on Starter, per-code charts on Studio."
       },
-      "top": "Top code",
-      "topNote": "{count, plural, one {# scan} other {# scans}} in 14 days · {link}",
-      "topNone": "No dynamic codes yet",
-      "topNoneNote": "Dynamic codes count every scan.",
       "recent": "Recent codes",
-      "seeAll": "See all {count}",
-      "recentEmpty": "Your codes will live here, with their files and scans.",
-      "createFirst": "Create your first code",
-      "open": "Open",
+      "recentEmpty": "Your first code will appear here with its layouts and files.",
+      "createFirst": "Create a QR code",
       "openName": "Open {name}",
       "status": {
-        "dynamic": "Dynamic · active",
-        "paid": "Paid",
         "draft": "Draft"
       },
-      "metricScans": "{count, plural, one {# scan} other {# scans}}",
       "metricLayouts": "{count, plural, one {# layout} other {# layouts}}",
-      "metricFinish": "Finish to download",
-      "perksTitle": "Included with your account",
-      "perks": {
-        "again": "Download every paid layout again, as PNG or SVG, at no cost",
-        "redirect": "Point dynamic codes somewhere new without reprinting",
-        "scans": "Daily scan counts for every dynamic code",
-        "drafts": "Drafts saved to your account on every device",
-        "billing": "Receipts, plan and payment method in Plan & billing"
-      },
       "loading": "Loading your studio",
-      "trial": "Free trial · {days, plural, one {# day} other {# days}} left"
+      "trial": "Free trial · {days, plural, one {# day} other {# days}} left",
+      "lead": "Welcome back, {name}. Everything you made is one tap away: files, layouts and scans.",
+      "leadEmpty": "Welcome back, {name}. Your first code will land here.",
+      "points": {
+        "side": "Static and Dynamic codes side by side, each with its layouts and files",
+        "files": "Edit the design or download PNG and SVG again, any time",
+        "scans": "Scan analytics on Dynamic plans: daily totals on Starter, per code on Studio",
+        "print": "Print Packs stay with their QR, ready to send to the print shop"
+      },
+      "onlyYou": "Only you can see this",
+      "printPack": "Print Pack",
+      "notActive": "Not active",
+      "edit": "Edit design",
+      "download": "Download",
+      "editName": "Edit the design of {name}",
+      "downloadName": "Download {name}",
+      "private": "Private to {email}. Nobody else can see these codes.",
+      "metricScans14": "{count, plural, one {# scan} other {# scans}} · 14 days"
     },
     "workspace": {
       "kicker": "My QR codes",

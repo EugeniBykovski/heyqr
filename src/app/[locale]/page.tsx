@@ -109,7 +109,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 
       {session ? (
         <Suspense fallback={<StudioSkeleton label={t("studio.loading")} />}>
-          <Studio userId={session.user.id} name={session.user.name} />
+          <Studio userId={session.user.id} name={session.user.name} email={session.user.email} />
         </Suspense>
       ) : (
         <SampleWorkspace />
