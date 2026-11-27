@@ -58,7 +58,7 @@ export async function Studio({ userId, name, email }: { userId: string; name: st
   return (
     <section
       aria-labelledby="ws-title"
-      className="grid reveal gap-8 py-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center lg:gap-14 lg:py-18"
+      className="grid reveal grid-cols-[minmax(0,1fr)] gap-8 py-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center lg:gap-14 lg:py-18"
     >
       <div className="flex flex-col gap-4">
         <span className="text-kicker text-accent-text uppercase">{tw("kicker")}</span>

@@ -78,7 +78,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         revealLine={t("hero.reveal")}
         copy={
           <>
-            <span className="inline-flex items-center gap-2 self-start rounded-full border border-border bg-surface py-1 ps-1.5 pe-3 text-[0.8125rem] font-semibold text-secondary-foreground">
+            <span className="inline-flex max-w-full items-center gap-2 self-start rounded-full border border-border bg-surface py-1 ps-1.5 pe-3 text-[0.8125rem] font-semibold text-secondary-foreground">
               <i aria-hidden className="ms-1.5 size-2 rounded-full bg-selected-mark" />
               {t("hero.eyebrow")}
             </span>
@@ -183,7 +183,10 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         </div>
       </section>
 
-      <section aria-labelledby="models-title" className="grid reveal gap-3 pb-12 md:grid-cols-[1.2fr_1fr_1fr] md:items-stretch">
+      <section
+        aria-labelledby="models-title"
+        className="grid reveal grid-cols-[minmax(0,1fr)] gap-3 pb-12 md:grid-cols-[1.2fr_1fr_1fr] md:items-stretch"
+      >
         <div className="flex flex-col gap-2 py-2">
           <h2 id="models-title" className="text-h2">
             {t("models.title")}
@@ -203,7 +206,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       </section>
 
       <section aria-labelledby="home-faq" className={section}>
-        <div className="grid gap-2 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.4fr)] lg:items-start lg:gap-16">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-2 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.4fr)] lg:items-start lg:gap-16">
           <SectionHead id="home-faq" kicker={t("faq.kicker")} title={t("faq.title")} lead={t("faq.lead")} />
           <div className="flex flex-col border-t border-border [interpolate-size:allow-keywords]">
             {FAQ.map((q) => (
@@ -228,7 +231,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       </section>
 
       <section aria-label={t("cta.label")} className={section}>
-        <div className="relative grid items-center gap-6 overflow-hidden rounded-2xl bg-inverse px-6 py-8 text-inverse-foreground md:grid-cols-[minmax(0,1fr)_auto] md:gap-10 md:p-14">
+        <div className="relative grid grid-cols-[minmax(0,1fr)] items-center gap-6 overflow-hidden rounded-2xl bg-inverse px-6 py-8 text-inverse-foreground md:grid-cols-[minmax(0,1fr)_auto] md:gap-10 md:p-14">
           <svg aria-hidden viewBox="0 0 32 32" className="pointer-events-none absolute -end-15 -bottom-20 size-80 text-icon-muted">
             <rect x="10" y="10" width="12" height="12" rx="3.6" fill="currentColor" />
           </svg>

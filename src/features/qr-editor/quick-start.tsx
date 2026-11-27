@@ -162,7 +162,7 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
   return (
     <section
       className={cn(
-        "grid gap-5 pt-6 pb-10 [grid-template-areas:'copy'_'stage'_'tool'] sm:gap-6 sm:pt-10",
+        "grid grid-cols-[minmax(0,1fr)] gap-5 pt-6 pb-10 [grid-template-areas:'copy'_'stage'_'tool'] sm:gap-6 sm:pt-10",
         // HEY-191: rows auto | 1fr, so the copy row keeps its own height and only the tool's row takes the stage's extra
         // height; switching Website / Wi-Fi / Contact then changes the fields in place without moving the tool.
         "lg:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] lg:grid-rows-[auto_1fr] lg:items-start lg:gap-x-12 lg:gap-y-7 lg:pt-16 lg:pb-20 lg:[grid-template-areas:'copy_stage'_'tool_stage']",
@@ -206,7 +206,10 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
             </StageFoot>
           </Stage>
         </div>
-        <div data-slot="hero-sweep" className="mt-8 grid place-items-center motion-safe:lg:mt-0 motion-safe:lg:flex-1 motion-safe:lg:py-12">
+        <div
+          data-slot="hero-sweep"
+          className="mt-8 grid grid-cols-[minmax(0,1fr)] place-items-center motion-safe:lg:mt-0 motion-safe:lg:flex-1 motion-safe:lg:py-12"
+        >
           <p data-slot="hero-reveal" className="w-full text-center text-display text-foreground">
             {revealLine}
           </p>
@@ -271,7 +274,7 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
 
         {tooLong ? <TooLongNotice capacity={tooLong} /> : null}
 
-        <div className="grid gap-6 min-[26.875rem]:grid-cols-[auto_minmax(0,1fr)] lg:max-[80rem]:grid-cols-1">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6 min-[26.875rem]:grid-cols-[auto_minmax(0,1fr)] lg:max-[80rem]:grid-cols-1">
           <div className="flex flex-col gap-2">
             <span id="home-color" className="text-label">
               {t("color")}

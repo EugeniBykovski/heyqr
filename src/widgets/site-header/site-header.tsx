@@ -110,8 +110,9 @@ export async function SiteHeader() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            // Below 390 px Sign in moves into the menu, so the header fits the design's 320 px phones.
-            <Button asChild variant="ghost" size="sm" className="max-[390px]:hidden">
+            // Up to 430 px (phone widths) Sign in moves into the menu, so the header fits in every locale: at 390 px a long
+            // label such as "Iniciar sesión" pushed the menu button 16 px past the screen (HEY-187).
+            <Button asChild variant="ghost" size="sm" className="max-[430px]:hidden">
               <Link href="/sign-in">{t("signIn")}</Link>
             </Button>
           )}

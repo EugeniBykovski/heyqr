@@ -54,8 +54,8 @@ export async function PrintPackShowcase({
         </h2>
         <p className="text-body-lg text-secondary-foreground">{t("lead")}</p>
       </div>
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-stretch">
-        <div className="relative grid min-h-80 place-items-center overflow-hidden rounded-2xl bg-stage p-8">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-stretch">
+        <div className="relative grid min-h-80 grid-cols-[minmax(0,1fr)] place-items-center overflow-hidden rounded-2xl bg-stage p-8">
           <Badge className="absolute start-4 top-4">{t("cardTag")}</Badge>
           <div className="w-[min(78%,26rem)] -rotate-6 drop-shadow-[0_18px_30px_rgb(13_13_18/0.22)]">
             <QrPreview layout={designToLayout(CARD)} value="https://anareyes.studio/portfolio" label={t("cardLabel")} />
@@ -105,10 +105,11 @@ export async function PrintPackShowcase({
             </div>
           </dl>
           <div className="mt-auto flex flex-wrap gap-2">
-            <Button asChild variant="primary">
+            {/* HEY-187: long labels («Відкрити попередній перегляд друку») wrap inside a 320 px phone. */}
+            <Button asChild variant="primary" className="h-auto max-w-full shrink py-2.5 text-balance whitespace-normal">
               <Link href="/pricing#print-pack">{t("details")}</Link>
             </Button>
-            <Button asChild>
+            <Button asChild className="h-auto max-w-full shrink py-2.5 text-balance whitespace-normal">
               <Link href="/print/sample">{t("preview")}</Link>
             </Button>
           </div>
