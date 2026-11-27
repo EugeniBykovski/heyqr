@@ -1,7 +1,7 @@
 import "server-only";
 import { getCurrency } from "../currency";
 import type { Layout } from "@heyqr/qr-core";
-import { readPrintSettings, type PrintSettings } from "@/entities/qr";
+import { readPrintSettings, unsupportedProfile, type PrintSettings } from "@/entities/qr";
 import { canDownload, canDownloadPrintPack, printPackForSale } from "../billing/entitlements";
 import { encodedValue, withEmbeddedImages } from "../qr/export";
 import { getLayoutWithQr } from "../qr/repository";
@@ -32,11 +32,13 @@ export async function loadPrint(
   userId: string,
   layoutId: string,
   raw: Record<string, unknown>,
-): Promise<{ ok: true; ctx: PrintContext } | { ok: false; error: "not_found" | "not_print" | "too_long" }> {
+): Promise<{ ok: true; ctx: PrintContext } | { ok: false; error: "not_found" | "not_print" | "too_long" | "unsupported_profile" }> {
   const record = await getLayoutWithQr(layoutId);
   if (!record || record.qrCode.userId !== userId) return { ok: false, error: "not_found" };
   const base = record.design.layout;
   if (base.unit !== "mm") return { ok: false, error: "not_print" };
+  // HEY-196: a CMYK profile is refused (422), never answered with an sRGB file under its name.
+  if (unsupportedProfile(raw)) return { ok: false, error: "unsupported_profile" };
   const settings = readPrintSettings(raw, base);
   const layout = await withEmbeddedImages(base);
   const value = encodedValue(record.qrCode);

@@ -239,8 +239,9 @@ export function ExportSurface(props: ExportSurfaceProps) {
   const g = layoutGeometry(layout);
   const n = (v: number) => (print ? Math.round(v * 10) / 10 : Math.round(v));
   const layoutDims = `${n(g.width)} × ${n(g.height)} ${layout.unit}`;
+  // SVG and PDF are vector at the layout's own size: in mm for print layouts (HEY-196: physical print dimensions).
   const fileDims =
-    settings.format === "png" ? `${pixels.width} × ${pixels.height} px` : print ? `${layoutDims} · vector` : `${layoutDims} · vector`;
+    settings.format === "png" ? t("pixels", { width: pixels.width, height: pixels.height }) : t("vectorSize", { size: layoutDims });
   const fmt = settings.format.toUpperCase();
   const amount = formatMoney(props.price.cents, props.price.currency);
   // Design 7.3: the itemized order of this path (display only; the server prices the checkout itself).

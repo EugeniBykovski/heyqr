@@ -92,6 +92,8 @@ export function PrintPreview({
   sample?: boolean;
 }) {
   const t = useTranslations("print");
+  // The same file-preparation copy as Export (Handoff · Commerce §3).
+  const te = useTranslations("export");
   const locale = useLocale();
   const router = useRouter();
   const [settings, setSettings] = useState<PrintSettings>(initial);
@@ -147,6 +149,28 @@ export function PrintPreview({
   const logoWarn = ready ? preview.warnings.find((w) => w.code === "logo_low_ppi") : undefined;
   const fileHref = (file: "pdf" | "svg" | "spec") =>
     `/api/print/files/${layoutId}?file=${file}&key=${preview?.renderKey ?? ""}&locale=${locale}&nav=1&qr=${qrCodeId}&${printSettingsQuery(settings)}`;
+  /*
+   * HEY-196 / Handoff · Commerce §3 "File generation": the file is prepared first (the server checks access and stores it,
+   * no bytes); then the link downloads it. A failure keeps the person here with "Your payment and settings are safe"
+   * and Try again, on the same Print Pack: nothing is bought again. A changed layout (409) still follows the link, which
+   * brings the preview back with its notice.
+   */
+  const [fileState, setFileState] = useState<{ file: "pdf" | "svg" | "spec"; kind: "preparing" | "failed" } | null>(null);
+  const download = async (file: "pdf" | "svg" | "spec") => {
+    const href = fileHref(file);
+    setFileState({ file, kind: "preparing" });
+    try {
+      const res = await fetch(`${href.replace("&nav=1", "")}&prepare=1`, { credentials: "same-origin" });
+      if (res.ok || res.status === 409) {
+        setFileState(null);
+        window.location.assign(href);
+        return;
+      }
+      setFileState({ file, kind: "failed" });
+    } catch {
+      setFileState({ file, kind: "failed" });
+    }
+  };
   const pageCss =
     zoom === "fit"
       ? { width: "100%", aspectRatio: `${sizes.page.width} / ${sizes.page.height}` }
@@ -404,24 +428,47 @@ export function PrintPreview({
                   ] as const
                 ).map(([file, label, sub]) =>
                   ready ? (
-                    <a
-                      key={file}
-                      href={fileHref(file)}
-                      className={cn(
-                        "flex min-h-12 items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2 text-left hover:border-border-hover",
-                        file === "pdf" && "border-primary",
-                      )}
-                    >
-                      {file === "spec" ? (
-                        <FileTextIcon aria-hidden className="size-5 shrink-0" />
-                      ) : (
-                        <DownloadIcon aria-hidden className="size-5 shrink-0" />
-                      )}
-                      <span className="flex min-w-0 flex-col">
-                        <b className="text-[0.875rem] font-semibold">{label}</b>
-                        <span className="truncate text-caption text-muted-foreground">{sub}</span>
-                      </span>
-                    </a>
+                    <div key={file} className="flex flex-col gap-1.5">
+                      <a
+                        href={fileHref(file)}
+                        aria-busy={fileState?.file === file && fileState.kind === "preparing" ? true : undefined}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (fileState?.kind !== "preparing") void download(file);
+                        }}
+                        className={cn(
+                          "flex min-h-12 items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2 text-left hover:border-border-hover",
+                          file === "pdf" && "border-primary",
+                        )}
+                      >
+                        {fileState?.file === file && fileState.kind === "preparing" ? (
+                          <LoaderCircleIcon aria-hidden className="size-5 shrink-0 animate-spin motion-reduce:animate-none" />
+                        ) : file === "spec" ? (
+                          <FileTextIcon aria-hidden className="size-5 shrink-0" />
+                        ) : (
+                          <DownloadIcon aria-hidden className="size-5 shrink-0" />
+                        )}
+                        <span className="flex min-w-0 flex-col">
+                          <b className="text-[0.875rem] font-semibold">{label}</b>
+                          <span className="truncate text-caption text-muted-foreground">
+                            {fileState?.file === file && fileState.kind === "preparing"
+                              ? te("preparing", { format: file === "svg" ? "SVG" : "PDF" })
+                              : sub}
+                          </span>
+                        </span>
+                      </a>
+                      {fileState?.file === file && fileState.kind === "failed" ? (
+                        <div
+                          role="alert"
+                          className="flex flex-col items-start gap-2 rounded-md bg-danger-soft px-3 py-2.5 text-caption text-danger"
+                        >
+                          <span>{te.rich("errors.failed", { format: file === "svg" ? "SVG" : "PDF", b: (c) => <b>{c}</b> })}</span>
+                          <Button type="button" variant="secondary" size="sm" onClick={() => void download(file)}>
+                            {t("error.retry")}
+                          </Button>
+                        </div>
+                      ) : null}
+                    </div>
                   ) : (
                     <span
                       key={file}

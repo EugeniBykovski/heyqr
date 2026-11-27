@@ -126,6 +126,7 @@ export {
   printSizes,
   readPrintSettings,
   srgbOf,
+  unsupportedProfile,
   type PrintProfile,
   type PrintSettings,
   type PrintSizes,

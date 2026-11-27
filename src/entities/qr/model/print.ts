@@ -45,6 +45,17 @@ export function readPrintSettings(raw: Record<string, unknown>, layout: Layout):
   };
 }
 
+/**
+ * HEY-196: a colour profile a request names that this deployment can't produce, or null. CMYK needs an ICC conversion
+ * and a profile licensed for bundling, neither of which is available, so the server refuses such a request instead of
+ * quietly handing back an sRGB file under a CMYK name (readPrintSettings alone would fall back to sRGB).
+ */
+export function unsupportedProfile(raw: Record<string, unknown>): string | null {
+  if (raw.profile === undefined || raw.profile === null || raw.profile === "") return null;
+  const p = String(raw.profile);
+  return (AVAILABLE_PROFILES as readonly string[]).includes(p) ? null : p;
+}
+
 export const printSettingsQuery = (s: PrintSettings) =>
   new URLSearchParams({
     scale: String(s.scale),

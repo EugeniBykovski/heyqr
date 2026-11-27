@@ -66,7 +66,9 @@ export function downloadFileName(name: string, ext: string): { name: string; hea
   const slug =
     name
       .normalize("NFC")
-      .replace(/[^\p{L}\p{N}\- ]+/gu, "")
+      .replace(/[^\p{L}\p{N}\- .]+/gu, "")
+      // HEY-196: a decimal point between digits stays (a 57.4 × 71.2 mm print isn't "574x712mm"); other dots go.
+      .replace(/(?<!\p{N})\.|\.(?!\p{N})/gu, "")
       .trim()
       .replace(/\s+/g, "-")
       .toLowerCase() || "qr-code";

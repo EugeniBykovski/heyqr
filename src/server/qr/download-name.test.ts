@@ -23,6 +23,13 @@ describe("download file name (Content-Disposition)", () => {
     expect(header).toContain('filename="cafe-menu-table-4.svg"');
     expect(() => new Headers({ "Content-Disposition": header })).not.toThrow();
   });
+
+  it("a print size keeps its decimal point; dots elsewhere are dropped (HEY-196)", () => {
+    expect(downloadFileName("Menu Card print 57.4x71.2mm", "pdf").name).toBe("menu-card-print-57.4x71.2mm.pdf");
+    expect(downloadFileName("Menu Card print 54x85mm", "pdf").name).toBe("menu-card-print-54x85mm.pdf");
+    expect(downloadFileName("v.2 menu. card...", "svg").name).toBe("v2-menu-card.svg");
+    expect(downloadFileName("Release 2.0", "png").header).toContain('filename="release-2.0.png"');
+  });
 });
 
 describe("checkout return URL", () => {
