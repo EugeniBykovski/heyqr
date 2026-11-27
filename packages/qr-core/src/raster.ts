@@ -36,6 +36,21 @@ export function rasterizeSvg(svg: string, options: RasterOptions): Buffer {
   return options.dpi ? withResolution(png, options.dpi) : png;
 }
 
+/**
+ * HEY-188: the pixels of an SVG at `options.width` px, as straight (not premultiplied) RGBA, 4 bytes a pixel. The print
+ * export reads an embedded image at its own pixel size this way before converting it to CMYK.
+ */
+export function rasterizeSvgPixels(svg: string, options: RasterOptions): { width: number; height: number; rgba: Uint8Array } {
+  const image = new Resvg(svg, resvgOptions(options)).render();
+  const rgba = new Uint8Array(image.pixels);
+  for (let i = 0; i < rgba.length; i += 4) {
+    const a = rgba[i + 3] ?? 0;
+    if (a === 255) continue;
+    for (let c = 0; c < 3; c++) rgba[i + c] = a === 0 ? 255 : Math.min(255, Math.round(((rgba[i + c] ?? 0) * 255) / a));
+  }
+  return { width: image.width, height: image.height, rgba };
+}
+
 const CRC_TABLE = Array.from({ length: 256 }, (_, n) => {
   let c = n;
   for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;

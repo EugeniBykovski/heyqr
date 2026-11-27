@@ -2338,6 +2338,7 @@
       "warnQr": "Codice QR di {mm} mm: sotto {min} mm può non funzionare sui telefoni più vecchi",
       "revision": "Revisione del layout",
       "colors": "Colori (HEX · sRGB)",
+      "colorsCmyk": "Colori (HEX · sRGB · CMYK)",
       "key": "Chiave di rendering",
       "yes": "Sì",
       "no": "No",
@@ -2392,6 +2393,7 @@
       "qrOk": "Leggibile fino a circa {cm} cm",
       "profile": "Profilo colore",
       "profileSub": "RGB, nessuna conversione",
+      "profileSubCmyk": "CMYK · profilo ICC incorporato nel PDF",
       "logo": "Risoluzione del logo",
       "logoVector": "Vettoriale",
       "logoNone": "Nessun logo",
@@ -2424,6 +2426,7 @@
       "text": "I file usano le impostazioni qui sotto. Modificane una e scarica di nuovo senza costi aggiuntivi.",
       "pdf": "Scarica il PDF di stampa",
       "pdfSub": "sRGB · pagina {w} × {h} mm",
+      "pdfSubCmyk": "CMYK · {profile} · pagina {w} × {h} mm",
       "svg": "Scarica l’SVG modificabile",
       "svgSub": "sRGB · colori HEX · {w} × {h} mm",
       "spec": "Scarica le specifiche di stampa",
@@ -2458,6 +2461,9 @@
       "gracol": "GRACoL 2013",
       "fogra29": "Uncoated FOGRA29",
       "cmykDesc": "La conversione CMYK non è ancora disponibile.",
+      "fogra39Desc": "CMYK per offset su carta patinata in Europa (ISO 12647-2).",
+      "gracolDesc": "CMYK per offset su carta patinata in Nord America (CGATS.21).",
+      "fogra29Desc": "CMYK per offset su carta non patinata in Europa (ISO 12647-2).",
       "shop": "<b>Verifica con la tua tipografia.</b> Chiedi quale profilo colore serve. Se non sono sicuri, invia il PDF insieme alla scheda delle specifiche."
     },
     "colors": {
@@ -2465,7 +2471,8 @@
       "legendHex": "<b>HEX · sRGB</b> SVG modificabile",
       "legendCmyk": "<b>CMYK</b> solo con un profilo CMYK",
       "none": "—",
-      "note": "I colori sono valori sRGB esatti in entrambi i file. Lo schermo mostra un’approssimazione del colore stampato."
+      "note": "I colori sono valori sRGB esatti in entrambi i file. Lo schermo mostra un’approssimazione del colore stampato.",
+      "noteCmyk": "Il PDF di stampa usa questi valori CMYK per {profile}; l’SVG modificabile mantiene i valori sRGB esatti. Lo schermo mostra un’approssimazione del colore stampato."
     },
     "tech": {
       "title": "Impostazioni tecniche",

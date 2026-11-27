@@ -2342,6 +2342,7 @@
       "warnQr": "Kod QR {mm} mm: poniżej {min} mm może nie działać na starszych telefonach",
       "revision": "Wersja układu",
       "colors": "Kolory (HEX · sRGB)",
+      "colorsCmyk": "Kolory (HEX · sRGB · CMYK)",
       "key": "Klucz renderowania",
       "yes": "Tak",
       "no": "Nie",
@@ -2396,6 +2397,7 @@
       "qrOk": "Skanuje się z odległości do ok. {cm} cm",
       "profile": "Profil kolorów",
       "profileSub": "RGB, bez konwersji",
+      "profileSubCmyk": "CMYK · profil ICC osadzony w PDF",
       "logo": "Rozdzielczość logo",
       "logoVector": "Wektor",
       "logoNone": "Brak logo",
@@ -2428,6 +2430,7 @@
       "text": "Pliki używają poniższych ustawień. Zmień któreś i pobierz ponownie bez dodatkowych kosztów.",
       "pdf": "Pobierz PDF do druku",
       "pdfSub": "sRGB · strona {w} × {h} mm",
+      "pdfSubCmyk": "CMYK · {profile} · strona {w} × {h} mm",
       "svg": "Pobierz edytowalny SVG",
       "svgSub": "sRGB · kolory HEX · {w} × {h} mm",
       "spec": "Pobierz specyfikację druku",
@@ -2462,6 +2465,9 @@
       "gracol": "GRACoL 2013",
       "fogra29": "Uncoated FOGRA29",
       "cmykDesc": "Konwersja do CMYK nie jest jeszcze dostępna.",
+      "fogra39Desc": "CMYK do offsetu na papierze powlekanym w Europie (ISO 12647-2).",
+      "gracolDesc": "CMYK do offsetu na papierze powlekanym w Ameryce Północnej (CGATS.21).",
+      "fogra29Desc": "CMYK do offsetu na papierze niepowlekanym w Europie (ISO 12647-2).",
       "shop": "<b>Potwierdź z drukarnią.</b> Zapytaj, jakiego profilu kolorów potrzebują. Jeśli nie są pewni, wyślij PDF razem z arkuszem specyfikacji."
     },
     "colors": {
@@ -2469,7 +2475,8 @@
       "legendHex": "<b>HEX · sRGB</b> edytowalny SVG",
       "legendCmyk": "<b>CMYK</b> tylko z profilem CMYK",
       "none": "—",
-      "note": "Kolory to dokładne wartości sRGB w obu plikach. Ekran pokazuje przybliżenie koloru druku."
+      "note": "Kolory to dokładne wartości sRGB w obu plikach. Ekran pokazuje przybliżenie koloru druku.",
+      "noteCmyk": "PDF do druku używa tych wartości CMYK dla {profile}; edytowalny SVG zachowuje dokładne wartości sRGB. Ekran pokazuje przybliżenie koloru druku."
     },
     "tech": {
       "title": "Ustawienia techniczne",

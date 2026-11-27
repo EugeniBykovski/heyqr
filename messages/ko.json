@@ -2330,6 +2330,7 @@
       "warnQr": "QR 코드 {mm} mm: {min} mm 미만이면 오래된 휴대폰에서 인식되지 않을 수 있어요",
       "revision": "레이아웃 리비전",
       "colors": "색상(HEX · sRGB)",
+      "colorsCmyk": "색상(HEX · sRGB · CMYK)",
       "key": "렌더링 키",
       "yes": "예",
       "no": "아니요",
@@ -2384,6 +2385,7 @@
       "qrOk": "최대 약 {cm} cm 거리에서 스캔 가능",
       "profile": "색상 프로필",
       "profileSub": "RGB, 변환 없음",
+      "profileSubCmyk": "CMYK · PDF에 ICC 프로파일 포함",
       "logo": "로고 해상도",
       "logoVector": "벡터",
       "logoNone": "로고 없음",
@@ -2416,6 +2418,7 @@
       "text": "파일에는 아래 설정이 적용돼요. 설정을 바꾸고 추가 비용 없이 다시 다운로드하세요.",
       "pdf": "인쇄용 PDF 다운로드",
       "pdfSub": "sRGB · {w} × {h} mm 페이지",
+      "pdfSubCmyk": "CMYK · {profile} · {w} × {h} mm 페이지",
       "svg": "편집 가능한 SVG 다운로드",
       "svgSub": "sRGB · HEX 색상 · {w} × {h} mm",
       "spec": "인쇄 사양 다운로드",
@@ -2450,6 +2453,9 @@
       "gracol": "GRACoL 2013",
       "fogra29": "Uncoated FOGRA29",
       "cmykDesc": "CMYK 변환은 아직 지원되지 않아요.",
+      "fogra39Desc": "유럽의 코팅지 오프셋 인쇄용 CMYK(ISO 12647-2).",
+      "gracolDesc": "북미의 코팅지 오프셋 인쇄용 CMYK(CGATS.21).",
+      "fogra29Desc": "유럽의 비코팅지 오프셋 인쇄용 CMYK(ISO 12647-2).",
       "shop": "<b>인쇄소에 확인하세요.</b> 어떤 색상 프로필이 필요한지 문의하세요. 잘 모른다면 PDF와 사양서를 함께 보내세요."
     },
     "colors": {
@@ -2457,7 +2463,8 @@
       "legendHex": "<b>HEX · sRGB</b> 편집 가능한 SVG",
       "legendCmyk": "<b>CMYK</b> CMYK 프로필에서만",
       "none": "—",
-      "note": "두 파일 모두 색상은 정확한 sRGB 값이에요. 화면에는 인쇄 색상의 근사치가 표시돼요."
+      "note": "두 파일 모두 색상은 정확한 sRGB 값이에요. 화면에는 인쇄 색상의 근사치가 표시돼요.",
+      "noteCmyk": "인쇄용 PDF는 {profile}에 이 CMYK 값을 사용합니다. 편집 가능한 SVG는 정확한 sRGB 값을 유지합니다. 화면에는 인쇄 색상의 근삿값이 표시됩니다."
     },
     "tech": {
       "title": "기술 설정",

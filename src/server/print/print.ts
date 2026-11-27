@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
 import { brandHeader, composeLayout, layoutGeometry, type Layout } from "@heyqr/qr-core";
-import { rasterizeSvg } from "@heyqr/qr-core/raster";
+import { rasterizeSvg, rasterizeSvgPixels } from "@heyqr/qr-core/raster";
 import PDFDocument from "pdfkit";
-import SVGtoPDF from "svg-to-pdfkit";
+import SVGtoPDF, { type SvgColor } from "svg-to-pdfkit";
 import {
   effectivePpi,
   MIN_LOGO_PPI,
@@ -14,12 +14,14 @@ import {
   type PrintSettings,
 } from "../../entities/qr/model/print";
 import { captionFontFaces } from "../qr/export";
+import type { CmykConverter } from "./cmyk";
 
 /*
  * Design 8.x / Handoff · Commerce §4 "Print Preview contract": the preview and the print files come from one function,
  * keyed by the saved layout revision and the print settings (renderKey). The page is the layout at its finished size,
  * the background carried into the bleed, and crop marks; the PDF is that page as vector with the caption fonts
- * embedded. Colours stay sRGB: CMYK needs ICC conversion, which this deployment doesn't have.
+ * embedded. An sRGB file keeps the layout's colours untagged; a CMYK profile (HEY-188) converts every colour and image
+ * with its ICC profile (cmyk.ts) and embeds that profile as the PDF's output intent.
  * Plain module (no "server-only") so tests render the same files as the routes.
  */
 const MM_TO_PT = 72 / 25.4;
@@ -114,7 +116,8 @@ export type PrintWarning = { code: "logo_low_ppi"; ppi: number; needPx: number }
 export interface PrintPage {
   svg: string;
   sizes: ReturnType<typeof printSizes>;
-  colors: { role: string; roles: string[]; hex: string; srgb: string }[];
+  /** HEY-188: `cmyk` ("C M Y K" percentages) only when a CMYK profile is selected. */
+  colors: { role: string; roles: string[]; hex: string; srgb: string; cmyk?: string }[];
   logo: { raster: boolean; px: number | null; ppi: number | null; mm: number } | null;
   warnings: PrintWarning[];
   renderKey: string;
@@ -234,14 +237,15 @@ const attrOf = (attrs: string, name: string) => new RegExp(`\\s${name}="([^"]*)"
  * own pixel size (never upsampled, so its detail and the low-resolution warning stay as they are); PNG and JPEG are
  * embedded as they are. Other SVGs fall back to a 2400 px PNG (200 mm at 300 ppi).
  */
-export function pdfReadyImages(svg: string): string {
+export function pdfReadyImages(svg: string, options: { cmyk?: boolean } = {}): string {
   return svg.replace(/<image\b([^>]*?)\/>/g, (whole, attrs: string) => {
     const href = attrOf(attrs, "href");
     if (!href) return whole;
     const svgData = /^data:image\/svg\+xml;base64,(.+)$/.exec(href)?.[1];
     if (svgData) {
       const logo = inlineSvgLogo(Buffer.from(svgData, "base64").toString("utf8"));
-      if (logo) {
+      // HEY-188: svg-to-pdfkit computes a mask from RGB values, so in a CMYK file a masked drawing becomes a CMYK image.
+      if (logo && !(options.cmyk && /<mask\b/i.test(logo.inner))) {
         const box = ["x", "y", "width", "height"].map((k) => `${k}="${attrOf(attrs, k) ?? "0"}"`).join(" ");
         const fit = attrOf(attrs, "preserveAspectRatio") ?? "xMidYMid meet";
         // The image's own opacity, clip and transform (the branded artwork is drawn at 13 %) carry over to the drawing.
@@ -283,27 +287,117 @@ export function printBoxes(sizes: PrintPage["sizes"], bleed: number): { trim: nu
   return { trim: box(sizes.trim.x), bleed: box(sizes.trim.x - bleed) };
 }
 
-/** The print PDF: the page as vector, caption fonts embedded, sRGB (untagged DeviceRGB), with TrimBox and BleedBox. */
-export async function printPdf(layout: Layout, page: PrintPage, bleed: number): Promise<Buffer> {
+/** PDFKit's image interface (what doc.image() and its registry use), for an image the export builds itself. */
+interface PdfImage {
+  width: number;
+  height: number;
+  label: string;
+  obj?: PDFKit.PDFKitReference;
+  embed(doc: PDFKit.PDFDocument): void;
+}
+
+/**
+ * HEY-188: every image of a CMYK page becomes a DeviceCMYK image at its own pixel size (never resampled, so the
+ * low-resolution warning still describes it). Transparency stays a soft mask (PDF/X-4 allows it) rather than being
+ * flattened onto a guessed background. The images are registered under their data URL, so svg-to-pdfkit draws these
+ * instead of opening the PNG or JPEG as RGB. An image that can't be read stops the file: it is never left in RGB.
+ */
+function registerCmykImages(doc: PDFKit.PDFDocument, svg: string, cmyk: CmykConverter) {
+  const registry = (doc as unknown as { _imageRegistry: Record<string, PdfImage> })._imageRegistry;
+  let n = 0;
+  for (const m of svg.matchAll(/<image\b([^>]*?)\/>/g)) {
+    const href = attrOf(m[1] ?? "", "href");
+    if (!href || registry[href]) continue;
+    const size = /^data:image\/(?:png|jpeg);base64,/.test(href) ? rasterSize(href) : null;
+    if (!size) throw new Error("An image of the print page can't be converted to CMYK.");
+    const { width, height } = size;
+    const { rgba } = rasterizeSvgPixels(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><image href="${href}" width="${width}" height="${height}" preserveAspectRatio="none"/></svg>`,
+      { width, systemFonts: false },
+    );
+    const count = width * height;
+    const rgb = new Uint8Array(count * 3);
+    const alpha = new Uint8Array(count);
+    let opaque = true;
+    for (let i = 0; i < count; i++) {
+      rgb[i * 3] = rgba[i * 4] ?? 255;
+      rgb[i * 3 + 1] = rgba[i * 4 + 1] ?? 255;
+      rgb[i * 3 + 2] = rgba[i * 4 + 2] ?? 255;
+      alpha[i] = rgba[i * 4 + 3] ?? 255;
+      if (alpha[i] !== 255) opaque = false;
+    }
+    const pixels = cmyk.pixels(rgb, count);
+    const image: PdfImage = {
+      width,
+      height,
+      label: `IC${++n}`,
+      embed(d) {
+        const base = { Type: "XObject", Subtype: "Image", Width: width, Height: height, BitsPerComponent: 8 };
+        let smask: PDFKit.PDFKitReference | undefined;
+        if (!opaque) {
+          smask = d.ref({ ...base, ColorSpace: "DeviceGray" });
+          smask.end(Buffer.from(alpha));
+        }
+        const obj = d.ref({ ...base, ColorSpace: "DeviceCMYK", ...(smask ? { SMask: smask } : {}) });
+        obj.end(Buffer.from(pixels));
+        image.obj = obj;
+      },
+    };
+    registry[href] = image;
+  }
+}
+
+/** A PDF text string (PDFKit writes a String object as a literal string and a plain string as a name). */
+const pdfString = (s: string) => new String(s);
+
+/** HEY-188: the selected ICC profile as the document's PDF/X output intent (written by every PDF/X-4 workflow). */
+function addOutputIntent(doc: PDFKit.PDFDocument, cmyk: CmykConverter) {
+  const profile = doc.ref({ N: 4 });
+  profile.end(cmyk.icc);
+  const intent = doc.ref({
+    Type: "OutputIntent",
+    S: "GTS_PDFX",
+    OutputConditionIdentifier: pdfString(cmyk.outputIntent.identifier),
+    OutputCondition: pdfString(cmyk.outputIntent.condition),
+    RegistryName: pdfString("http://www.color.org"),
+    Info: pdfString(cmyk.outputIntent.info),
+    DestOutputProfile: profile,
+  });
+  intent.end(undefined);
+  (doc as unknown as { _root: { data: Record<string, unknown> } })._root.data.OutputIntents = [intent];
+}
+
+/**
+ * The print PDF: the page as vector, caption fonts embedded, with TrimBox and BleedBox. sRGB (untagged DeviceRGB), or
+ * with `cmyk` (HEY-188) every colour of paths, text and gradients in DeviceCMYK, images as DeviceCMYK, and the profile
+ * embedded as the output intent. The sRGB file is unchanged by the CMYK path (srgb-golden.test.ts).
+ */
+export async function printPdf(layout: Layout, page: PrintPage, bleed: number, cmyk?: CmykConverter): Promise<Buffer> {
   const faces = captionFontFaces(layout);
   const W = page.sizes.page.width * MM_TO_PT;
   const H = page.sizes.page.height * MM_TO_PT;
   const boxes = printBoxes(page.sizes, bleed);
+  const fontCallback = (family: string, bold: boolean) => {
+    const face =
+      faces.find((x) => family.includes(x.family) && (bold ? x.weight >= 600 : x.weight < 600)) ??
+      faces.find((x) => family.includes(x.family)) ??
+      faces[0];
+    return face?.file ?? "Helvetica";
+  };
   return pdfBuffer([W, H], (doc) => {
     const pageDict = doc.page.dictionary.data as Record<string, unknown>;
     pageDict.TrimBox = boxes.trim;
     pageDict.BleedBox = boxes.bleed;
-    SVGtoPDF(doc, pdfReadyImages(page.svg), 0, 0, {
-      width: W,
-      height: H,
-      fontCallback: (family, bold) => {
-        const face =
-          faces.find((x) => family.includes(x.family) && (bold ? x.weight >= 600 : x.weight < 600)) ??
-          faces.find((x) => family.includes(x.family)) ??
-          faces[0];
-        return face?.file ?? "Helvetica";
-      },
-    });
+    if (!cmyk) {
+      SVGtoPDF(doc, pdfReadyImages(page.svg), 0, 0, { width: W, height: H, fontCallback });
+      return;
+    }
+    const svg = pdfReadyImages(page.svg, { cmyk: true });
+    registerCmykImages(doc, svg, cmyk);
+    const colorCallback = (c: SvgColor | undefined): SvgColor | undefined =>
+      c && Array.isArray(c[0]) && c[0].length === 3 ? [cmyk.color(c[0]), c[1]] : c;
+    SVGtoPDF(doc, svg, 0, 0, { width: W, height: H, fontCallback, colorCallback });
+    addOutputIntent(doc, cmyk);
   });
 }
 
@@ -372,7 +466,14 @@ export async function printSpecPdf(
         .font("body")
         .fontSize(10)
         .fillColor("#0D0D12")
-        .text(`${c.roles.map((r) => labels[`role_${r}`] ?? r).join(", ")}   ${c.hex}   sRGB ${c.srgb}`, x + 26, y, { width: 460 });
+        .text(
+          `${c.roles.map((r) => labels[`role_${r}`] ?? r).join(", ")}   ${c.hex}   sRGB ${c.srgb}${c.cmyk ? `   CMYK ${c.cmyk}` : ""}`,
+          x + 26,
+          y,
+          {
+            width: 460,
+          },
+        );
       y += 24;
     }
     y += 16;

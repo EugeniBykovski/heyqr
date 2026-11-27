@@ -2342,6 +2342,7 @@
       "warnQr": "Kode QR {mm} mm: di bawah {min} mm bisa gagal di ponsel lama",
       "revision": "Revisi tata letak",
       "colors": "Warna (HEX · sRGB)",
+      "colorsCmyk": "Warna (HEX · sRGB · CMYK)",
       "key": "Kunci render",
       "yes": "Ya",
       "no": "Tidak",
@@ -2396,6 +2397,7 @@
       "qrOk": "Dapat dipindai dari jarak hingga sekitar {cm} cm",
       "profile": "Profil warna",
       "profileSub": "RGB, tanpa konversi",
+      "profileSubCmyk": "CMYK · profil ICC disematkan di PDF",
       "logo": "Resolusi logo",
       "logoVector": "Vektor",
       "logoNone": "Tanpa logo",
@@ -2428,6 +2430,7 @@
       "text": "File menggunakan pengaturan di bawah. Ubah salah satunya dan unduh lagi tanpa biaya tambahan.",
       "pdf": "Unduh PDF cetak",
       "pdfSub": "sRGB · halaman {w} × {h} mm",
+      "pdfSubCmyk": "CMYK · {profile} · halaman {w} × {h} mm",
       "svg": "Unduh SVG yang dapat diedit",
       "svgSub": "sRGB · warna HEX · {w} × {h} mm",
       "spec": "Unduh spesifikasi cetak",
@@ -2462,6 +2465,9 @@
       "gracol": "GRACoL 2013",
       "fogra29": "Uncoated FOGRA29",
       "cmykDesc": "Konversi CMYK belum tersedia.",
+      "fogra39Desc": "CMYK untuk ofset di kertas coated di Eropa (ISO 12647-2).",
+      "gracolDesc": "CMYK untuk ofset di kertas coated di Amerika Utara (CGATS.21).",
+      "fogra29Desc": "CMYK untuk ofset di kertas uncoated di Eropa (ISO 12647-2).",
       "shop": "<b>Konfirmasikan dengan percetakan Anda.</b> Tanyakan profil warna yang mereka perlukan. Jika mereka tidak yakin, kirim PDF bersama lembar spesifikasi."
     },
     "colors": {
@@ -2469,7 +2475,8 @@
       "legendHex": "<b>HEX · sRGB</b> SVG yang dapat diedit",
       "legendCmyk": "<b>CMYK</b> hanya dengan profil CMYK",
       "none": "—",
-      "note": "Warna adalah nilai sRGB yang persis di kedua file. Layar menampilkan perkiraan warna cetak."
+      "note": "Warna adalah nilai sRGB yang persis di kedua file. Layar menampilkan perkiraan warna cetak.",
+      "noteCmyk": "PDF cetak memakai nilai CMYK ini untuk {profile}; SVG yang dapat diedit tetap memakai nilai sRGB yang tepat. Layar menampilkan perkiraan warna cetak."
     },
     "tech": {
       "title": "Pengaturan teknis",

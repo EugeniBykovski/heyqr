@@ -11,6 +11,7 @@ import { accountUsage } from "@/server/billing/allowances";
 import { db } from "@/server/db";
 import { getCurrency } from "@/server/currency";
 import { canDownload, printPackForSale } from "@/server/billing/entitlements";
+import { availableProfiles } from "@/server/print/profiles";
 import { getQrCode } from "@/server/qr/repository";
 import { Button } from "@/shared/ui/button";
 
@@ -67,6 +68,10 @@ export default async function PrintPage({ params, searchParams }: PageProps<"/[l
   const checkout = query.checkout === "success" || query.checkout === "cancelled" ? query.checkout : undefined;
   const currency = await getCurrency();
   const [usage, format] = await Promise.all([accountUsage(db, session.user.id), getFormatter()]);
+  // HEY-188: a link naming a profile this deployment doesn't produce opens on sRGB, never on a disabled choice.
+  const profiles = availableProfiles();
+  const asked = readPrintSettings(query as Record<string, unknown>, saved);
+  const initial = profiles.includes(asked.profile) ? asked : { ...asked, profile: "srgb" as const };
   return (
     <PrintPreview
       key={`${qr.id}:${layout.id}`}
@@ -75,7 +80,8 @@ export default async function PrintPage({ params, searchParams }: PageProps<"/[l
       layout={saved}
       name={qr.name}
       layoutName={layout.name}
-      initial={readPrintSettings(query as Record<string, unknown>, saved)}
+      initial={initial}
+      profiles={profiles}
       price={{ cents: priceSheet(currency).printPack ?? 0, currency }}
       back={back}
       designHref={designHref}

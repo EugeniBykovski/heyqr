@@ -51,6 +51,13 @@ export const env = createEnv({
     S3_ACCESS_KEY_ID: z.string().min(1).optional(),
     S3_SECRET_ACCESS_KEY: z.string().min(1).optional(),
     S3_ENDPOINT: optionalUrl,
+    // HEY-188 (docs/PRINT_CMYK.md): an Uncoated FOGRA29 ICC profile in the private bucket, and its exact SHA-256. Both
+    // unset: the profile isn't offered. FOGRA39 and GRACoL 2013 are bundled (assets/icc) and need nothing here.
+    PRINT_ICC_FOGRA29_KEY: z.string().min(1).optional(),
+    PRINT_ICC_FOGRA29_SHA256: z
+      .string()
+      .regex(/^[0-9a-fA-F]{64}$/)
+      .optional(),
     // HEY-178: the public API's requests per minute and account (defaults: server/api/v1/rate-limit.ts).
     API_RATE_LIMIT_PER_MINUTE: z.coerce.number().int().min(1).max(100_000).optional(),
     API_RATE_LIMIT_EXPORTS_PER_MINUTE: z.coerce.number().int().min(1).max(100_000).optional(),

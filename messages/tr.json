@@ -2342,6 +2342,7 @@
       "warnQr": "QR kod {mm} mm: {min} mm’nin altında eski telefonlarda okunmayabilir",
       "revision": "Düzen revizyonu",
       "colors": "Renkler (HEX · sRGB)",
+      "colorsCmyk": "Renkler (HEX · sRGB · CMYK)",
       "key": "Çizim anahtarı",
       "yes": "Evet",
       "no": "Hayır",
@@ -2396,6 +2397,7 @@
       "qrOk": "Yaklaşık {cm} cm uzaklığa kadar taranır",
       "profile": "Renk profili",
       "profileSub": "RGB, dönüştürme yok",
+      "profileSubCmyk": "CMYK · ICC profili PDF’e gömülü",
       "logo": "Logo çözünürlüğü",
       "logoVector": "Vektör",
       "logoNone": "Logo yok",
@@ -2428,6 +2430,7 @@
       "text": "Dosyalar aşağıdaki ayarları kullanır. Birini değiştirin ve ek ücret ödemeden yeniden indirin.",
       "pdf": "Baskı PDF’ini indir",
       "pdfSub": "sRGB · sayfa {w} × {h} mm",
+      "pdfSubCmyk": "CMYK · {profile} · sayfa {w} × {h} mm",
       "svg": "Düzenlenebilir SVG’yi indir",
       "svgSub": "sRGB · HEX renkler · {w} × {h} mm",
       "spec": "Baskı özelliklerini indir",
@@ -2462,6 +2465,9 @@
       "gracol": "GRACoL 2013",
       "fogra29": "Uncoated FOGRA29",
       "cmykDesc": "CMYK dönüştürme henüz kullanılamıyor.",
+      "fogra39Desc": "Avrupa’da kuşe kâğıtta ofset için CMYK (ISO 12647-2).",
+      "gracolDesc": "Kuzey Amerika’da kuşe kâğıtta ofset için CMYK (CGATS.21).",
+      "fogra29Desc": "Avrupa’da kuşe olmayan kâğıtta ofset için CMYK (ISO 12647-2).",
       "shop": "<b>Matbaanızla teyit edin.</b> Hangi renk profiline ihtiyaç duyduklarını sorun. Emin değillerse PDF’i özellikler sayfasıyla birlikte gönderin."
     },
     "colors": {
@@ -2469,7 +2475,8 @@
       "legendHex": "<b>HEX · sRGB</b> düzenlenebilir SVG",
       "legendCmyk": "<b>CMYK</b> yalnızca CMYK profiliyle",
       "none": "—",
-      "note": "Renkler her iki dosyada da tam sRGB değerleridir. Ekran, basılı rengin yaklaşık bir görünümünü gösterir."
+      "note": "Renkler her iki dosyada da tam sRGB değerleridir. Ekran, basılı rengin yaklaşık bir görünümünü gösterir.",
+      "noteCmyk": "Baskı PDF’i {profile} için bu CMYK değerlerini kullanır; düzenlenebilir SVG kesin sRGB değerlerini korur. Ekran, basılı rengin yaklaşık hâlini gösterir."
     },
     "tech": {
       "title": "Teknik ayarlar",

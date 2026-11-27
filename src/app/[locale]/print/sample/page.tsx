@@ -4,6 +4,7 @@ import { DEFAULT_PRINT_SETTINGS, designToLayout } from "@/entities/qr";
 import { PrintPreview } from "@/features/print-preview";
 import { resolveLocale } from "@/i18n/server";
 import { getCurrency } from "@/server/currency";
+import { availableProfiles } from "@/server/print/profiles";
 import { SAMPLE_PRINT_DESIGN } from "@/server/print/sample";
 import { priceSheet } from "@/shared/config/catalog";
 
@@ -28,6 +29,7 @@ export default async function PrintSamplePage({ params }: PageProps<"/[locale]/p
       name={t("name")}
       layoutName={t("layout")}
       initial={DEFAULT_PRINT_SETTINGS}
+      profiles={availableProfiles()}
       price={{ cents: priceSheet(currency).printPack ?? 0, currency }}
       back={{ href: "/", label: t("back") }}
       designHref="/create"

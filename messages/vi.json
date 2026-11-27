@@ -2338,6 +2338,7 @@
       "warnQr": "Mã QR {mm} mm: nhỏ hơn {min} mm có thể không quét được trên điện thoại cũ",
       "revision": "Phiên bản bố cục",
       "colors": "Màu (HEX · sRGB)",
+      "colorsCmyk": "Màu (HEX · sRGB · CMYK)",
       "key": "Khóa kết xuất",
       "yes": "Có",
       "no": "Không",
@@ -2392,6 +2393,7 @@
       "qrOk": "Quét được từ khoảng cách tối đa khoảng {cm} cm",
       "profile": "Hồ sơ màu",
       "profileSub": "RGB, không chuyển đổi",
+      "profileSubCmyk": "CMYK · nhúng hồ sơ ICC vào PDF",
       "logo": "Độ phân giải logo",
       "logoVector": "Vector",
       "logoNone": "Không có logo",
@@ -2424,6 +2426,7 @@
       "text": "Các tệp dùng cài đặt bên dưới. Thay đổi một cài đặt và tải lại mà không mất thêm phí.",
       "pdf": "Tải PDF in",
       "pdfSub": "sRGB · trang {w} × {h} mm",
+      "pdfSubCmyk": "CMYK · {profile} · trang {w} × {h} mm",
       "svg": "Tải SVG chỉnh sửa được",
       "svgSub": "sRGB · màu HEX · {w} × {h} mm",
       "spec": "Tải thông số in",
@@ -2458,6 +2461,9 @@
       "gracol": "GRACoL 2013",
       "fogra29": "Uncoated FOGRA29",
       "cmykDesc": "Chuyển đổi CMYK hiện chưa khả dụng.",
+      "fogra39Desc": "CMYK cho in offset trên giấy tráng phủ ở châu Âu (ISO 12647-2).",
+      "gracolDesc": "CMYK cho in offset trên giấy tráng phủ ở Bắc Mỹ (CGATS.21).",
+      "fogra29Desc": "CMYK cho in offset trên giấy không tráng phủ ở châu Âu (ISO 12647-2).",
       "shop": "<b>Hãy xác nhận với nhà in.</b> Hỏi họ cần hồ sơ màu nào. Nếu họ không chắc, hãy gửi PDF kèm bảng thông số."
     },
     "colors": {
@@ -2465,7 +2471,8 @@
       "legendHex": "<b>HEX · sRGB</b> SVG chỉnh sửa được",
       "legendCmyk": "<b>CMYK</b> chỉ với hồ sơ CMYK",
       "none": "—",
-      "note": "Màu là giá trị sRGB chính xác trong cả hai tệp. Màn hình hiển thị màu in mô phỏng gần đúng."
+      "note": "Màu là giá trị sRGB chính xác trong cả hai tệp. Màn hình hiển thị màu in mô phỏng gần đúng.",
+      "noteCmyk": "PDF in dùng các giá trị CMYK này cho {profile}; SVG có thể chỉnh sửa giữ nguyên giá trị sRGB chính xác. Màn hình hiển thị màu in gần đúng."
     },
     "tech": {
       "title": "Cài đặt kỹ thuật",

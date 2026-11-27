@@ -7,10 +7,13 @@ import { layoutGeometry, type Layout } from "@heyqr/qr-core";
 export const PRINT_SCALES = [1, 1.5, 2] as const;
 export const PRINT_BLEEDS = [0, 2, 3, 5] as const;
 export type PrintBleed = (typeof PRINT_BLEEDS)[number];
-/** Colour profiles of the design. Only sRGB is available: CMYK needs ICC conversion, which this deployment doesn't have. */
+/**
+ * Colour profiles of the design. HEY-188: which of them a deployment can produce is decided on the server
+ * (server/print/profiles.ts, availableProfiles) and handed to Print Preview; sRGB always is.
+ */
 export const PRINT_PROFILES = ["srgb", "fogra39", "gracol", "fogra29"] as const;
 export type PrintProfile = (typeof PRINT_PROFILES)[number];
-export const AVAILABLE_PROFILES: readonly PrintProfile[] = ["srgb"];
+export const isPrintProfile = (p: unknown): p is PrintProfile => (PRINT_PROFILES as readonly unknown[]).includes(p);
 export const CUSTOM_WIDTH = { min: 15, max: 600 } as const;
 /** Below this the code can fail on older phones (design 8.x warning). */
 export const MIN_PRINT_QR_MM = 20;
@@ -41,19 +44,18 @@ export function readPrintSettings(raw: Record<string, unknown>, layout: Layout):
     scale: custom ?? (Number.isFinite(scale) && scale > 0 && scale <= 12 ? scale : 1),
     bleed: (PRINT_BLEEDS as readonly number[]).includes(bleed) ? (bleed as PrintBleed) : DEFAULT_PRINT_SETTINGS.bleed,
     cropMarks: raw.cropMarks === undefined ? true : raw.cropMarks === true || raw.cropMarks === "1" || raw.cropMarks === "true",
-    profile: (AVAILABLE_PROFILES as readonly string[]).includes(profile) ? (profile as PrintProfile) : "srgb",
+    profile: isPrintProfile(profile) ? profile : "srgb",
   };
 }
 
 /**
- * HEY-196: a colour profile a request names that this deployment can't produce, or null. CMYK needs an ICC conversion
- * and a profile licensed for bundling, neither of which is available, so the server refuses such a request instead of
- * quietly handing back an sRGB file under a CMYK name (readPrintSettings alone would fall back to sRGB).
+ * HEY-196 / HEY-188: a colour profile a request names that this deployment can't produce (not in `available`), or
+ * null. The server refuses such a request instead of quietly handing back an sRGB file under a CMYK name.
  */
-export function unsupportedProfile(raw: Record<string, unknown>): string | null {
+export function unsupportedProfile(raw: Record<string, unknown>, available: readonly PrintProfile[]): string | null {
   if (raw.profile === undefined || raw.profile === null || raw.profile === "") return null;
   const p = String(raw.profile);
-  return (AVAILABLE_PROFILES as readonly string[]).includes(p) ? null : p;
+  return (available as readonly string[]).includes(p) ? null : p;
 }
 
 export const printSettingsQuery = (s: PrintSettings) =>

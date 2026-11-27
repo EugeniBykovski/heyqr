@@ -2338,6 +2338,7 @@
       "warnQr": "QRコード {mm} mm：{min} mm 未満だと古いスマートフォンで読み取れないことがあります",
       "revision": "レイアウトのリビジョン",
       "colors": "色（HEX · sRGB）",
+      "colorsCmyk": "色（HEX · sRGB · CMYK）",
       "key": "レンダーキー",
       "yes": "あり",
       "no": "なし",
@@ -2392,6 +2393,7 @@
       "qrOk": "約{cm} cmの距離からスキャン可能",
       "profile": "カラープロファイル",
       "profileSub": "RGB、変換なし",
+      "profileSubCmyk": "CMYK・ICCプロファイルをPDFに埋め込み",
       "logo": "ロゴの解像度",
       "logoVector": "ベクター",
       "logoNone": "ロゴなし",
@@ -2424,6 +2426,7 @@
       "text": "ファイルには下の設定が使われます。設定を変更して、追加料金なしで再ダウンロードできます。",
       "pdf": "印刷用PDFをダウンロード",
       "pdfSub": "sRGB · ページ{w} × {h} mm",
+      "pdfSubCmyk": "CMYK · {profile} · ページ{w} × {h} mm",
       "svg": "編集可能なSVGをダウンロード",
       "svgSub": "sRGB · HEXカラー · {w} × {h} mm",
       "spec": "印刷仕様をダウンロード",
@@ -2458,6 +2461,9 @@
       "gracol": "GRACoL 2013",
       "fogra29": "Uncoated FOGRA29",
       "cmykDesc": "CMYK変換はまだご利用いただけません。",
+      "fogra39Desc": "ヨーロッパのコート紙オフセット印刷向けCMYK（ISO 12647-2）。",
+      "gracolDesc": "北米のコート紙オフセット印刷向けCMYK（CGATS.21）。",
+      "fogra29Desc": "ヨーロッパの非コート紙オフセット印刷向けCMYK（ISO 12647-2）。",
       "shop": "<b>印刷会社にご確認ください。</b>必要なカラープロファイルを尋ねてください。わからない場合は、PDFを仕様書と一緒に送ってください。"
     },
     "colors": {
@@ -2465,7 +2471,8 @@
       "legendHex": "<b>HEX · sRGB</b> 編集可能なSVG",
       "legendCmyk": "<b>CMYK</b> CMYKプロファイル使用時のみ",
       "none": "—",
-      "note": "どちらのファイルでも、色は正確なsRGB値です。画面には印刷色の近似が表示されます。"
+      "note": "どちらのファイルでも、色は正確なsRGB値です。画面には印刷色の近似が表示されます。",
+      "noteCmyk": "印刷用PDFは{profile}用にこのCMYK値を使います。編集用SVGは正確なsRGB値のままです。画面には印刷色の近似が表示されます。"
     },
     "tech": {
       "title": "技術設定",
