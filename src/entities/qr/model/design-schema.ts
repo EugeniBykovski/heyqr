@@ -78,6 +78,8 @@ export const designSettingsSchema = z.object({
   // Optional (HEY-194): frames saved before it have no position and keep their text on the frame.
   frameTextPosition: oneOf(FRAME_TEXT_POSITIONS).optional(),
   logoTile: z.boolean().optional(),
+  // Optional (HEY-195): only layouts saved before icons took the corner-center color carry it.
+  iconColor: hex.optional(),
   border: z.boolean().optional(),
   logoPosition: z.enum(["center", "top"]).optional(),
   brandName: z.string().max(40).optional(),
@@ -235,6 +237,7 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     captionPosition,
     frameTextPosition,
     logoTile,
+    iconColor,
     border,
     logoPosition,
     brandName,
@@ -269,6 +272,7 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     ...(captionPosition === undefined ? {} : { captionPosition }),
     ...(frameTextPosition === undefined ? {} : { frameTextPosition }),
     ...(logoTile === undefined ? {} : { logoTile }),
+    ...(iconColor === undefined ? {} : { iconColor }),
     ...(border === undefined ? {} : { border }),
     ...(logoPosition === undefined ? {} : { logoPosition }),
     ...(brandName === undefined ? {} : { brandName }),

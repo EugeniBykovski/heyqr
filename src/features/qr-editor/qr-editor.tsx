@@ -20,6 +20,7 @@ import {
   emptyContent,
   isContentComplete,
   modeFor,
+  patchDesign,
   type EditorDesign,
   directContent,
   isHostedType,
@@ -73,7 +74,7 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
   const step: EditorStep = resume ? "design" : isStep(urlStep) ? urlStep : "type";
   const [showErrors, setShowErrors] = useState(false);
   const [saving, startSaving] = useTransition();
-  const patch = (p: Partial<EditorDesign>) => setDesign((d) => ({ ...d, ...p }));
+  const patch = (p: Partial<EditorDesign>) => setDesign((d) => patchDesign(d, p));
 
   useEffect(() => {
     // Fixed id: shown once even when the effect runs twice (React Strict Mode in development).
