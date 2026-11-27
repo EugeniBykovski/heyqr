@@ -2788,7 +2788,7 @@
   },
   "developers": {
     "metaTitle": "API voor ontwikkelaars",
-    "metaDescription": "Maak HeyQR-codes in je eigen code: het pakket @heyqr/qr-core voor statische codes, en een REST API voor Dynamische codes die eraan komt.",
+    "metaDescription": "Maak HeyQR-codes in je eigen code: de REST API en de TypeScript-SDK @simplex-packages/heyqr-sdk voor codes in je account, ook dynamische, en de renderer @heyqr/qr-core voor statische codes.",
     "docs": {
       "search": {
         "label": "Zoeken in de documentatie",
@@ -2817,10 +2817,8 @@
       "backToTop": "Terug naar boven",
       "previous": "Vorige",
       "next": "Volgende",
-      "soon": "Binnenkort",
       "preview": "Voorbeeld",
       "designPreview": "Ontwerpvoorbeeld",
-      "notPublic": "Nog niet openbaar",
       "env": {
         "both": "Browser en Node.js",
         "browser": "Browser",
@@ -2839,8 +2837,7 @@
         "auth": "Autorisatie",
         "authValue": "Authorization: Bearer <API-sleutel>",
         "method": "Methode",
-        "url": "Request-URL",
-        "base": "Op de HeyQR-server die je gebruikt; de openbare API is nog niet beschikbaar."
+        "url": "Request-URL"
       },
       "helpful": {
         "question": "Was deze pagina nuttig?",
@@ -2856,13 +2853,13 @@
         "proposed": "Voorgesteld ontwerp. Geen gepubliceerd contract."
       },
       "status": {
-        "unpublished": "Niet gepubliceerd",
+        "unpublished": "Nog niet op npm",
         "live": "Live",
-        "liveOnNpm": "Live op npm",
-        "soon": "Binnenkort"
+        "liveOnNpm": "Live op npm"
       },
       "products": {
-        "pkgTitle": "npm-pakket",
+        "sdkTitle": "TypeScript SDK",
+        "sdkText": "Een getypeerde client voor de REST API, op npm als @simplex-packages/heyqr-sdk. Node.js 18 of nieuwer.",
         "pkgText": "Gratis. Statische QR-codes, gerenderd op je eigen machine. Geen account, geen API-sleutel.",
         "restTitle": "REST API",
         "restText": "Maak en beheer codes, ook Dynamische codes, vanaf je server."
@@ -2874,27 +2871,11 @@
         "unpublishedTitle": "Nog niet op npm",
         "unpublishedText": "{name} {version} is nog niet gepubliceerd, dus er valt nog niets te installeren. Alles op deze pagina’s komt overeen met de huidige broncode. Ontvang een e-mail zodra het uit is:"
       },
-      "restSoon": {
-        "cardTitle": "Dynamische codes vanaf je server",
-        "cardText": "Met een API-sleutel uit je account kun je codes maken, wijzigen waar Dynamische codes naartoe wijzen en scantellingen lezen. We publiceren de volledige referentie met echte requests en responses zodra hij opengaat.",
-        "planned": "Gepland",
-        "items": [
-          "API-sleutels voor je account",
-          "Eén code of tot 100 tegelijk maken",
-          "De bestemming van een Dynamische code wijzigen",
-          "Dagelijkse scantellingen"
-        ],
-        "npmLink": "Gebruik nu het npm-pakket"
-      },
       "waitlist": {
-        "label": "Ontvang een e-mail zodra de REST API opengaat",
         "placeholder": "you@company.com",
-        "join": "Op de wachtlijst",
         "joining": "Aanmelden…",
         "invalid": "Controleer het adres. Er is een naam, @ en een domein nodig.",
-        "failed": "We konden je nu niet toevoegen. Probeer het opnieuw.",
-        "joined": "Je staat op de lijst. We schrijven naar {email} zodra de REST API opengaat.",
-        "hint": "Eén e-mail zodra hij opengaat. Geen nieuwsbrief."
+        "failed": "We konden je nu niet toevoegen. Probeer het opnieuw."
       },
       "notifyPackages": {
         "label": "Ontvang een e-mail zodra het pakket is gepubliceerd",
@@ -2920,7 +2901,7 @@
         "overview": {
           "title": "API voor ontwikkelaars",
           "nav": "Overzicht",
-          "lead": "Maak HeyQR-codes in je eigen code. Begin vandaag met het gratis npm-pakket; een REST API voor Dynamische codes is onderweg.",
+          "lead": "Maak HeyQR-codes in je eigen code. De REST API en de TypeScript-SDK maken en beheren codes in je account, ook dynamische, vanaf je server; @heyqr/qr-core rendert statische codes op je eigen computer.",
           "blocks": [
             {
               "k": "products"
@@ -3964,7 +3945,7 @@
                 },
                 {
                   "q": "Kan ik er Dynamische codes mee maken?",
-                  "a": "Nog niet. Een Dynamische code heeft een korte link van HeyQR nodig, een abonnement en scantelling op onze servers. Dat komt met de REST API."
+                  "a": "Niet met @heyqr/qr-core: een dynamische code heeft een korte HeyQR-link, een abonnement en het tellen van scans op onze servers nodig. Gebruik daarvoor de REST API of de TypeScript-SDK `@simplex-packages/heyqr-sdk`."
                 },
                 {
                   "q": "Waarom faalt mijn code met een logo?",
@@ -4011,10 +3992,16 @@
         },
         "rest": {
           "title": "REST API",
-          "lead": "Maak codes, wijzig waar Dynamische codes naartoe wijzen en lees scantellingen vanaf je server.",
+          "lead": "Maak codes en wijzig waar dynamische codes naartoe leiden, vanaf je server, met een API-sleutel uit je HeyQR-account.",
           "blocks": [
             {
-              "k": "restSoon"
+              "k": "note",
+              "kind": "info",
+              "t": "Wat je nodig hebt: een HeyQR-account en een API-sleutel uit Dashboard → API-sleutels. Gebruik de sleutel alleen op een server, nooit in browsercode. De bestanden van een statische code vereisen de eenmalige aankoop ervan: tot dan antwoordt een export met `402 payment_required` en een `paymentUrl`. De korte link van een dynamische code werkt zodra de code actief is op een Starter- of Studio-abonnement."
+            },
+            {
+              "k": "pages",
+              "pages": ["restAuth", "restCreate", "restDestination", "restErrors", "restSdk"]
             }
           ]
         },
@@ -4022,11 +4009,6 @@
           "title": "Authenticatie",
           "lead": "Elke request bevat een API-sleutel uit je HeyQR-account.",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "Nog niet openbaar. Deze pagina beschrijft de REST API in deze build van HeyQR, gecontroleerd aan de hand van de routes. Hij is nog niet beschikbaar op heyqr.me en blijft buiten zoekmachines tot dat wel zo is."
-            },
             {
               "k": "h2",
               "id": "keys",
@@ -4086,11 +4068,6 @@
           "title": "Een QR-code maken",
           "lead": "Maakt één QR-code met zijn lay-outs, als concept in je account. Activeren, korte links en betalen blijven in de app.",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "Nog niet openbaar. Deze pagina beschrijft de REST API in deze build van HeyQR, gecontroleerd aan de hand van de routes. Hij is nog niet beschikbaar op heyqr.me en blijft buiten zoekmachines tot dat wel zo is."
-            },
             {
               "k": "endpoint",
               "method": "POST",
@@ -4236,11 +4213,6 @@
           "lead": "Laat een Dynamische code ergens anders naartoe wijzen. Geprinte codes houden hun korte link en volgen meteen.",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "Nog niet openbaar. Deze pagina beschrijft de REST API in deze build van HeyQR, gecontroleerd aan de hand van de routes. Hij is nog niet beschikbaar op heyqr.me en blijft buiten zoekmachines tot dat wel zo is."
-            },
-            {
               "k": "h2",
               "id": "read",
               "t": "De huidige bestemming lezen"
@@ -4343,11 +4315,6 @@
           "lead": "Fouten hebben allemaal dezelfde vorm. Vertak op code, nooit op de melding.",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "Nog niet openbaar. Deze pagina beschrijft de REST API in deze build van HeyQR, gecontroleerd aan de hand van de routes. Hij is nog niet beschikbaar op heyqr.me en blijft buiten zoekmachines tot dat wel zo is."
-            },
-            {
               "k": "h2",
               "id": "shape",
               "t": "Vorm van een fout"
@@ -4440,8 +4407,8 @@
           "blocks": [
             {
               "k": "note",
-              "kind": "preview",
-              "t": "Nog niet openbaar. Deze pagina beschrijft de REST API in deze build van HeyQR, gecontroleerd aan de hand van de routes. Hij is nog niet beschikbaar op heyqr.me en blijft buiten zoekmachines tot dat wel zo is."
+              "kind": "info",
+              "t": "Wat je nodig hebt: een HeyQR-account en een API-sleutel uit Dashboard → API-sleutels. Gebruik de sleutel alleen op een server, nooit in browsercode. De bestanden van een statische code vereisen de eenmalige aankoop ervan: tot dan antwoordt een export met `402 payment_required` en een `paymentUrl`. De korte link van een dynamische code werkt zodra de code actief is op een Starter- of Studio-abonnement."
             },
             {
               "k": "h2",
@@ -4451,6 +4418,23 @@
             {
               "k": "install",
               "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "quickstart",
+              "t": "Snelstart"
+            },
+            {
+              "k": "p",
+              "t": "Maak een concept van een dynamische QR-code en lees daarna de lay-out en bestemming terug. Sla het bestand op, stel je sleutel in en voer het uit met Node.js 18 of nieuwer:"
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstart"
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstartRun"
             },
             {
               "k": "h2",

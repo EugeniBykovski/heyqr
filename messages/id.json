@@ -2792,7 +2792,7 @@
   },
   "developers": {
     "metaTitle": "API untuk developer",
-    "metaDescription": "Buat kode HeyQR di kode Anda sendiri: paket @heyqr/qr-core untuk kode statis, dan REST API untuk kode Dinamis yang segera hadir.",
+    "metaDescription": "Buat kode HeyQR dari kode Anda sendiri: REST API dan SDK TypeScript-nya, @simplex-packages/heyqr-sdk, untuk kode di akun Anda, termasuk kode dinamis, serta perender @heyqr/qr-core untuk kode statis.",
     "docs": {
       "search": {
         "label": "Cari di dokumentasi",
@@ -2821,10 +2821,8 @@
       "backToTop": "Kembali ke atas",
       "previous": "Sebelumnya",
       "next": "Berikutnya",
-      "soon": "Segera",
       "preview": "Pratinjau",
       "designPreview": "Pratinjau desain",
-      "notPublic": "Belum publik",
       "env": {
         "both": "Browser dan Node.js",
         "browser": "Browser",
@@ -2843,8 +2841,7 @@
         "auth": "Otorisasi",
         "authValue": "Authorization: Bearer <kunci API>",
         "method": "Metode",
-        "url": "URL permintaan",
-        "base": "Di server HeyQR yang Anda gunakan; API publik belum tersedia."
+        "url": "URL permintaan"
       },
       "helpful": {
         "question": "Apakah halaman ini membantu?",
@@ -2860,13 +2857,13 @@
         "proposed": "Usulan desain. Bukan kontrak yang dipublikasikan."
       },
       "status": {
-        "unpublished": "Belum dipublikasikan",
+        "unpublished": "Belum ada di npm",
         "live": "Aktif",
-        "liveOnNpm": "Tersedia di npm",
-        "soon": "Segera hadir"
+        "liveOnNpm": "Tersedia di npm"
       },
       "products": {
-        "pkgTitle": "Paket npm",
+        "sdkTitle": "TypeScript SDK",
+        "sdkText": "Klien bertipe untuk REST API, tersedia di npm sebagai @simplex-packages/heyqr-sdk. Node.js 18 atau lebih baru.",
         "pkgText": "Gratis. Kode QR statis dirender di perangkat Anda. Tanpa akun, tanpa kunci API.",
         "restTitle": "REST API",
         "restText": "Buat dan kelola kode, termasuk kode Dinamis, dari server Anda."
@@ -2878,27 +2875,11 @@
         "unpublishedTitle": "Belum ada di npm",
         "unpublishedText": "{name} {version} belum dipublikasikan, jadi belum ada yang bisa diinstal. Semua isi halaman ini sesuai dengan kode sumbernya saat ini. Dapatkan email saat dirilis:"
       },
-      "restSoon": {
-        "cardTitle": "Kode Dinamis dari server Anda",
-        "cardText": "Dengan kunci API dari akun Anda, Anda bisa membuat kode, mengubah tujuan kode Dinamis, dan membaca jumlah pindaian. Kami akan memublikasikan referensi lengkap dengan permintaan dan respons nyata saat API dibuka.",
-        "planned": "Direncanakan",
-        "items": [
-          "Kunci API untuk akun Anda",
-          "Buat satu kode atau hingga 100 sekaligus",
-          "Ubah tujuan kode Dinamis",
-          "Jumlah pindaian harian"
-        ],
-        "npmLink": "Gunakan paket npm sekarang"
-      },
       "waitlist": {
-        "label": "Dapatkan email saat REST API dibuka",
         "placeholder": "you@company.com",
-        "join": "Gabung daftar tunggu",
         "joining": "Bergabung…",
         "invalid": "Periksa alamatnya. Harus ada nama, @ dan domain.",
-        "failed": "Kami belum bisa menambahkan Anda. Coba lagi.",
-        "joined": "Anda sudah terdaftar. Kami akan menulis ke {email} saat REST API dibuka.",
-        "hint": "Satu email saat dibuka. Bukan newsletter."
+        "failed": "Kami belum bisa menambahkan Anda. Coba lagi."
       },
       "notifyPackages": {
         "label": "Dapatkan email saat paket dipublikasikan",
@@ -2924,7 +2905,7 @@
         "overview": {
           "title": "API untuk developer",
           "nav": "Ikhtisar",
-          "lead": "Buat kode HeyQR di kode Anda sendiri. Mulai hari ini dengan paket npm gratis; REST API untuk kode Dinamis segera hadir.",
+          "lead": "Buat kode HeyQR dari kode Anda sendiri. REST API dan SDK TypeScript-nya membuat dan mengelola kode di akun Anda, termasuk kode dinamis, dari server Anda; @heyqr/qr-core merender kode statis di perangkat Anda.",
           "blocks": [
             {
               "k": "products"
@@ -3964,7 +3945,7 @@
                 },
                 {
                   "q": "Bisakah saya membuat kode Dinamis dengan paket ini?",
-                  "a": "Belum. Kode Dinamis memerlukan tautan pendek HeyQR, paket langganan, dan penghitungan pindaian di server kami. Itu akan hadir bersama REST API."
+                  "a": "Tidak dengan @heyqr/qr-core: kode dinamis memerlukan tautan pendek HeyQR, paket, dan penghitungan pindaian di server kami. Untuk itu, gunakan REST API atau SDK TypeScript `@simplex-packages/heyqr-sdk`."
                 },
                 {
                   "q": "Mengapa kode saya yang memakai logo gagal?",
@@ -4011,10 +3992,16 @@
         },
         "rest": {
           "title": "REST API",
-          "lead": "Buat kode, ubah tujuan kode Dinamis, dan baca jumlah pindaian dari server Anda.",
+          "lead": "Buat kode dan ubah tujuan kode dinamis dari server Anda, dengan kunci API dari akun HeyQR Anda.",
           "blocks": [
             {
-              "k": "restSoon"
+              "k": "note",
+              "kind": "info",
+              "t": "Yang Anda perlukan: akun HeyQR dan kunci API dari Dasbor → Kunci API. Gunakan kunci hanya di server, jangan pernah di kode browser. File kode statis memerlukan pembelian satu kali: sampai saat itu, ekspor menjawab `402 payment_required` dengan `paymentUrl`. Tautan pendek kode dinamis berfungsi setelah kode aktif dengan paket Starter atau Studio."
+            },
+            {
+              "k": "pages",
+              "pages": ["restAuth", "restCreate", "restDestination", "restErrors", "restSdk"]
             }
           ]
         },
@@ -4022,11 +4009,6 @@
           "title": "Autentikasi",
           "lead": "Setiap permintaan membawa kunci API dari akun HeyQR Anda.",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "Belum publik. Halaman ini menjelaskan REST API di build HeyQR ini, yang diperiksa terhadap rutenya. API ini belum tersedia di heyqr.me, dan tidak muncul di pencarian sampai tersedia."
-            },
             {
               "k": "h2",
               "id": "keys",
@@ -4086,11 +4068,6 @@
           "title": "Buat kode QR",
           "lead": "Membuat satu kode QR beserta layout-nya, sebagai draf di akun Anda. Aktivasi, tautan pendek, dan pembayaran tetap di aplikasi.",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "Belum publik. Halaman ini menjelaskan REST API di build HeyQR ini, yang diperiksa terhadap rutenya. API ini belum tersedia di heyqr.me, dan tidak muncul di pencarian sampai tersedia."
-            },
             {
               "k": "endpoint",
               "method": "POST",
@@ -4236,11 +4213,6 @@
           "lead": "Mengarahkan kode Dinamis ke tempat lain. Kode yang sudah dicetak tetap memakai tautan pendeknya dan langsung mengikuti.",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "Belum publik. Halaman ini menjelaskan REST API di build HeyQR ini, yang diperiksa terhadap rutenya. API ini belum tersedia di heyqr.me, dan tidak muncul di pencarian sampai tersedia."
-            },
-            {
               "k": "h2",
               "id": "read",
               "t": "Baca tujuan saat ini"
@@ -4343,11 +4315,6 @@
           "lead": "Semua error memiliki bentuk yang sama. Bercabanglah berdasarkan code, jangan pernah berdasarkan pesan.",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "Belum publik. Halaman ini menjelaskan REST API di build HeyQR ini, yang diperiksa terhadap rutenya. API ini belum tersedia di heyqr.me, dan tidak muncul di pencarian sampai tersedia."
-            },
-            {
               "k": "h2",
               "id": "shape",
               "t": "Bentuk error"
@@ -4444,8 +4411,8 @@
           "blocks": [
             {
               "k": "note",
-              "kind": "preview",
-              "t": "Belum publik. Halaman ini menjelaskan REST API di build HeyQR ini, yang diperiksa terhadap rutenya. API ini belum tersedia di heyqr.me, dan tidak muncul di pencarian sampai tersedia."
+              "kind": "info",
+              "t": "Yang Anda perlukan: akun HeyQR dan kunci API dari Dasbor → Kunci API. Gunakan kunci hanya di server, jangan pernah di kode browser. File kode statis memerlukan pembelian satu kali: sampai saat itu, ekspor menjawab `402 payment_required` dengan `paymentUrl`. Tautan pendek kode dinamis berfungsi setelah kode aktif dengan paket Starter atau Studio."
             },
             {
               "k": "h2",
@@ -4455,6 +4422,23 @@
             {
               "k": "install",
               "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "quickstart",
+              "t": "Mulai cepat"
+            },
+            {
+              "k": "p",
+              "t": "Buat draf kode QR dinamis, lalu baca kembali tata letak dan tujuannya. Simpan file, atur kunci Anda, lalu jalankan dengan Node.js 18 atau lebih baru:"
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstart"
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstartRun"
             },
             {
               "k": "h2",

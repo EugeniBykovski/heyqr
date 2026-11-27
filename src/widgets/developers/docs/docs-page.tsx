@@ -3,7 +3,6 @@ import {
   BracesIcon,
   CheckIcon,
   ChevronRightIcon,
-  CircleDashedIcon,
   ExternalLinkIcon,
   InfoIcon,
   KeyRoundIcon,
@@ -27,7 +26,7 @@ import { EXAMPLES, INSTALL_COMMANDS, TABBED, type CodeEnv } from "./examples";
 import { Helpful, SignupForm } from "./forms";
 import { HashTarget } from "./hash-target";
 import { OnThisPage } from "./on-this-page";
-import { docsHref, DOCS_GROUPS, neighbours, searchablePages, visiblePages, type DocsPage as Page } from "./registry";
+import { docsHref, DOCS_GROUPS, DOCS_PAGES, neighbours, searchablePages, visiblePages, type DocsPage as Page } from "./registry";
 
 type T = Awaited<ReturnType<typeof getTranslations<"developers.docs">>>;
 
@@ -150,7 +149,7 @@ function codeLabels(t: T, env: CodeEnv): CodeLabels {
   };
 }
 
-async function renderBlock(b: Block, i: number, t: T, page: Page): Promise<ReactNode> {
+async function renderBlock(b: Block, i: number, t: T): Promise<ReactNode> {
   switch (b.k) {
     case "p":
       return (
@@ -315,7 +314,6 @@ async function renderBlock(b: Block, i: number, t: T, page: Page): Promise<React
             <div className="min-w-0 rounded-xl border border-border bg-surface px-4 py-3">
               <span className="block text-micro text-muted-foreground uppercase">{t("endpoint.url")}</span>
               <code className="mt-1 block font-mono text-caption break-all">{b.url}</code>
-              {page.visibility === "restPreview" ? <span className="text-micro text-muted-foreground">{t("endpoint.base")}</span> : null}
             </div>
           </div>
         </div>
@@ -352,28 +350,40 @@ async function renderBlock(b: Block, i: number, t: T, page: Page): Promise<React
         <div key={i} className="flex flex-col gap-3 rounded-xl border border-dashed border-border-strong bg-surface p-4">
           <Badge variant="warning">{t("install.unpublishedTitle")}</Badge>
           <p className="text-secondary-foreground">{t("install.unpublishedText", { name: pkg.name, version: pkg.version })}</p>
-          <SignupForm topic="packages" labels={signupLabels(t, "notifyPackages")} />
+          <SignupForm topic="packages" labels={signupLabels(t)} />
         </div>
       );
     }
     case "products": {
-      const live = PACKAGE_RELEASE.qrCore.published;
+      const qrCore = PACKAGE_RELEASE.qrCore;
+      const sdk = PACKAGE_RELEASE.sdk;
+      const npmBadge = (published: boolean) => (
+        <Badge variant={published ? "success" : "warning"}>{published ? t("status.liveOnNpm") : t("status.unpublished")}</Badge>
+      );
       return (
         <ul key={i} className="grid gap-3 sm:grid-cols-2">
           {[
+            // HEY-187: the published SDK first; the REST API it calls is live; qr-core says plainly it isn't on npm yet.
             {
-              href: "/developers/install",
-              Icon: PackageIcon,
-              title: t("products.pkgTitle"),
-              text: t("products.pkgText"),
-              badge: <Badge variant={live ? "success" : "warning"}>{live ? t("status.liveOnNpm") : t("status.unpublished")}</Badge>,
+              href: "/developers/rest/sdk",
+              Icon: BracesIcon,
+              title: t("products.sdkTitle"),
+              text: t("products.sdkText"),
+              badge: npmBadge(sdk.published),
             },
             {
               href: "/developers/rest",
               Icon: ServerIcon,
               title: t("products.restTitle"),
               text: t("products.restText"),
-              badge: <Badge>{t("status.soon")}</Badge>,
+              badge: <Badge variant="success">{t("status.live")}</Badge>,
+            },
+            {
+              href: "/developers/install",
+              Icon: PackageIcon,
+              title: qrCore.name,
+              text: t("products.pkgText"),
+              badge: npmBadge(qrCore.published),
             },
           ].map(({ href, Icon, title, text, badge }) => (
             <li key={href}>
@@ -397,54 +407,46 @@ async function renderBlock(b: Block, i: number, t: T, page: Page): Promise<React
         </ul>
       );
     }
-    case "restSoon":
+    case "pages":
       return (
-        <div key={i} className="flex flex-col gap-5">
-          <div className="flex items-start gap-3 rounded-xl border border-border bg-surface p-4">
-            <span className="bg-accent-bg grid size-10 shrink-0 place-items-center rounded-lg text-accent-text">
-              <ServerIcon aria-hidden className="size-5" />
-            </span>
-            <span className="flex flex-col gap-1">
-              <span className="flex flex-wrap items-center gap-2 text-label font-semibold">
-                {t("restSoon.cardTitle")}
-                <Badge>{t("status.soon")}</Badge>
-              </span>
-              <span className="text-caption text-secondary-foreground">{t("restSoon.cardText")}</span>
-            </span>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h2 className="text-label font-semibold">{t("restSoon.planned")}</h2>
-            <ul className="flex flex-col gap-1.5">
-              {(t.raw("restSoon.items") as string[]).map((it) => (
-                <li key={it} className="flex items-center gap-2 text-secondary-foreground">
-                  <CircleDashedIcon aria-hidden className="size-4 shrink-0 text-muted-foreground" />
-                  {it}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <SignupForm topic="rest" labels={signupLabels(t, "waitlist")} />
-          <Link href="/developers/install" className="inline-flex items-center gap-1.5 self-start text-label font-semibold">
-            {t("restSoon.npmLink")}
-            <ArrowRightIcon aria-hidden className="size-4" />
-          </Link>
-        </div>
+        <ul key={i} className="grid gap-3 sm:grid-cols-2">
+          {b.pages.map((id) => {
+            const target = DOCS_PAGES.find((p) => p.id === id);
+            if (!target) return null;
+            const c = pageCopy(t.raw(`pages.${id}` as never));
+            return (
+              <li key={id}>
+                <Link
+                  href={docsHref(target)}
+                  className="flex h-full flex-col gap-1 rounded-xl border border-border bg-surface p-4 hover:border-border-hover"
+                >
+                  <span className="flex items-center gap-1.5 text-label font-semibold">
+                    {c.nav ?? c.title}
+                    <ArrowRightIcon aria-hidden className="size-4 rtl:-scale-x-100" />
+                  </span>
+                  <span className="text-caption text-secondary-foreground">
+                    <Md text={c.lead} />
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       );
   }
 }
 
-function signupLabels(t: T, key: "waitlist" | "notifyPackages") {
-  const w = (k: string) => t(`waitlist.${k}` as never);
-  const own = (k: string) => (key === "waitlist" ? w(k) : t(`notifyPackages.${k}` as never));
+/** The package release list's sign-up (design 12.2): its own copy, the shared field and error strings. */
+function signupLabels(t: T) {
   return {
-    label: own("label"),
-    placeholder: w("placeholder"),
-    join: own("join"),
-    joining: w("joining"),
-    invalid: w("invalid"),
-    failed: w("failed"),
-    joined: (key === "waitlist" ? t.raw("waitlist.joined") : t.raw("notifyPackages.joined")) as string,
-    hint: own("hint"),
+    label: t("notifyPackages.label"),
+    placeholder: t("waitlist.placeholder"),
+    join: t("notifyPackages.join"),
+    joining: t("waitlist.joining"),
+    invalid: t("waitlist.invalid"),
+    failed: t("waitlist.failed"),
+    joined: t.raw("notifyPackages.joined") as string,
+    hint: t("notifyPackages.hint"),
   };
 }
 
@@ -458,18 +460,12 @@ export async function DocsPage({ page, previews }: { page: Page; previews: boole
   const copyOf = (id: string): PageCopy => pageCopy(t.raw(`pages.${id}` as never));
   const copy = copyOf(page.id);
   const sections = copy.blocks.flatMap((b) => (b.k === "h2" ? [{ id: b.id, title: b.t }] : []));
-  const items: NavItem[] = visiblePages(true).flatMap((p): NavItem[] => {
+  // HEY-187: only pages shown here are listed; unavailable ones (design previews in production) are left out, not "Soon".
+  const items: NavItem[] = visiblePages(previews).map((p): NavItem => {
     const label = copyOf(p.id).nav ?? copyOf(p.id).title;
-    if (p.visibility === "public") return [{ id: p.id, href: docsHref(p), label, group: p.group }];
-    return [
-      {
-        id: p.id,
-        href: docsHref(p),
-        label,
-        group: p.group,
-        state: previews ? (p.visibility === "designPreview" ? "design" : "preview") : "soon",
-      },
-    ];
+    return p.visibility === "public"
+      ? { id: p.id, href: docsHref(p), label, group: p.group }
+      : { id: p.id, href: docsHref(p), label, group: p.group, state: "design" };
   });
   const index: SearchEntry[] = searchablePages().map((p) => {
     const c = copyOf(p.id);
@@ -484,7 +480,7 @@ export async function DocsPage({ page, previews }: { page: Page; previews: boole
   const { previous, next } = neighbours(page, previews);
   const qrCore = PACKAGE_RELEASE.qrCore;
   const route = docsHref(page);
-  const isRest = page.group === "rest" && page.visibility !== "public";
+  const isRest = page.group === "rest";
   const footer =
     page.visibility === "designPreview"
       ? t("footer.proposed")
@@ -509,7 +505,6 @@ export async function DocsPage({ page, previews }: { page: Page; previews: boole
             empty: t.raw("search.empty") as string,
             emptyHint: t("search.emptyHint"),
             suggestions: t.raw("search.suggestions") as string[],
-            soon: t("soon"),
             preview: t("preview"),
             menuOpen: t("menu.open"),
             menuClose: t("menu.close"),
@@ -517,7 +512,6 @@ export async function DocsPage({ page, previews }: { page: Page; previews: boole
             packageName: `${qrCore.name} ${qrCore.version}`,
             packageStatus: qrCore.published ? t("status.live") : t("status.unpublished"),
             packageLive: qrCore.published,
-            restBadge: previews ? t("preview") : t("soon"),
           }}
         />
         <div className="flex min-w-0 flex-1 gap-12">
@@ -545,9 +539,7 @@ export async function DocsPage({ page, previews }: { page: Page; previews: boole
               <div className="flex flex-wrap items-center gap-2.5">
                 <h1 className="text-h1x text-balance">{copy.title}</h1>
                 {page.env === "node" ? <Badge variant="dark">{t("env.node")}</Badge> : null}
-                {page.visibility !== "public" ? (
-                  <Badge variant="warning">{page.visibility === "designPreview" ? t("designPreview") : t("notPublic")}</Badge>
-                ) : null}
+                {page.visibility !== "public" ? <Badge variant="warning">{t("designPreview")}</Badge> : null}
               </div>
               <p className="text-body-lg text-secondary-foreground">
                 <Md text={copy.lead} />
@@ -556,7 +548,7 @@ export async function DocsPage({ page, previews }: { page: Page; previews: boole
             <div className="min-[1280px]:hidden">
               <OnThisPage variant="inline" sections={sections} title={t("onThisPage")} backToTop={t("backToTop")} />
             </div>
-            <div className="flex flex-col gap-5">{await Promise.all(copy.blocks.map((b, i) => renderBlock(b, i, t, page)))}</div>
+            <div className="flex flex-col gap-5">{await Promise.all(copy.blocks.map((b, i) => renderBlock(b, i, t)))}</div>
             <footer className="mt-6 flex flex-col gap-5 border-t border-border pt-6">
               <Helpful
                 page={page.id}

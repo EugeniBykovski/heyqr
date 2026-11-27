@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import messages from "../../../../messages/en.json";
 import { pageCopy } from "./blocks";
@@ -33,15 +35,21 @@ describe("docs pages (design 12.1–12.22)", () => {
   it("design-preview pages say so before anything else; REST reference pages say they aren't public", () => {
     for (const p of DOCS_PAGES.filter((x) => x.visibility !== "public")) {
       const first = pageCopy(pages[p.id]).blocks[0];
-      expect(first, p.id).toMatchObject({ k: "note", kind: p.visibility === "designPreview" ? "design" : "preview" });
+      expect(first, p.id).toMatchObject({ k: "note", kind: "design" });
     }
   });
 
   it("Previous / Next follow the visible order and never lead to a hidden page", () => {
     const rest = pageByPath("rest");
     if (!rest) throw new Error("rest");
-    expect(neighbours(rest, false)).toEqual({ previous: pageByPath("changelog"), next: undefined });
-    expect(neighbours(rest, true).next?.id).toBe("restAuth");
+    // HEY-187: the live REST reference follows the REST overview everywhere; design previews only where allowed.
+    expect(neighbours(rest, false)).toEqual({ previous: pageByPath("changelog"), next: pageByPath("rest/authentication") });
+    expect(visiblePages(false).some((p) => p.visibility === "designPreview")).toBe(false);
+    expect(
+      visiblePages(true)
+        .filter((p) => p.visibility === "designPreview")
+        .map((p) => p.id),
+    ).toEqual(["restBulk", "restScans"]);
   });
 
   it("old single-page anchors land on pages that exist", () => {
@@ -52,5 +60,21 @@ describe("docs pages (design 12.1–12.22)", () => {
         anchor,
       ).toBe(true);
     }
+  });
+
+  it("the SDK page's Quickstart is the package's verified example, word for word (HEY-173, HEY-187)", () => {
+    const shipped = readFileSync(path.join(process.cwd(), "packages/sdk/examples/quickstart.ts"), "utf8").trimEnd();
+    expect(EXAMPLES.sdkQuickstart.code).toBe(shipped);
+    const sdk = pageCopy(pages.restSdk).blocks;
+    expect(sdk.some((b) => b.k === "install" && b.package === "sdk")).toBe(true);
+    expect(sdk.filter((b) => b.k === "code").map((b) => (b.k === "code" ? b.example : ""))).toContain("sdkQuickstart");
+    expect(pageByPath("rest/sdk")?.visibility).toBe("public");
+  });
+
+  it("no English docs copy still says the SDK or the REST API is coming (HEY-187)", () => {
+    const docs = JSON.stringify(messages.developers);
+    for (const stale of ["Coming soon", "Not public yet", "Join the waitlist", "isn’t available yet", "is on the way", "that’s on the way"])
+      expect(docs, stale).not.toContain(stale);
+    expect(messages.developers.docs.status.unpublished).toBe(messages.developers.docs.install.unpublishedTitle);
   });
 });

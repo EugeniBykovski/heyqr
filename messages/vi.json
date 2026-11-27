@@ -2788,7 +2788,7 @@
   },
   "developers": {
     "metaTitle": "API cho nhà phát triển",
-    "metaDescription": "Tạo mã HeyQR ngay trong code của bạn: gói @heyqr/qr-core cho mã tĩnh và REST API cho mã Động sắp ra mắt.",
+    "metaDescription": "Tạo mã HeyQR trong mã của riêng bạn: REST API và SDK TypeScript @simplex-packages/heyqr-sdk cho các mã trong tài khoản của bạn, kể cả mã động, cùng trình hiển thị @heyqr/qr-core cho mã tĩnh.",
     "docs": {
       "search": {
         "label": "Tìm trong tài liệu",
@@ -2817,10 +2817,8 @@
       "backToTop": "Lên đầu trang",
       "previous": "Trước",
       "next": "Tiếp",
-      "soon": "Sắp có",
       "preview": "Xem trước",
       "designPreview": "Bản xem trước thiết kế",
-      "notPublic": "Chưa công khai",
       "env": {
         "both": "Trình duyệt và Node.js",
         "browser": "Trình duyệt",
@@ -2839,8 +2837,7 @@
         "auth": "Xác thực",
         "authValue": "Authorization: Bearer <khóa API>",
         "method": "Phương thức",
-        "url": "URL yêu cầu",
-        "base": "Trên máy chủ HeyQR mà bạn dùng; API công khai chưa khả dụng."
+        "url": "URL yêu cầu"
       },
       "helpful": {
         "question": "Trang này có hữu ích không?",
@@ -2856,13 +2853,13 @@
         "proposed": "Thiết kế đề xuất. Không phải hợp đồng đã công bố."
       },
       "status": {
-        "unpublished": "Chưa phát hành",
+        "unpublished": "Chưa có trên npm",
         "live": "Đang hoạt động",
-        "liveOnNpm": "Đã có trên npm",
-        "soon": "Sắp ra mắt"
+        "liveOnNpm": "Đã có trên npm"
       },
       "products": {
-        "pkgTitle": "Gói npm",
+        "sdkTitle": "TypeScript SDK",
+        "sdkText": "Một client có kiểu dữ liệu cho REST API, có trên npm với tên @simplex-packages/heyqr-sdk. Node.js 18 trở lên.",
         "pkgText": "Miễn phí. Mã QR tĩnh được tạo ngay trên máy của bạn. Không cần tài khoản, không cần khóa API.",
         "restTitle": "REST API",
         "restText": "Tạo và quản lý mã, bao gồm cả mã Động, từ máy chủ của bạn."
@@ -2874,27 +2871,11 @@
         "unpublishedTitle": "Chưa có trên npm",
         "unpublishedText": "{name} {version} chưa được phát hành nên chưa có gì để cài đặt. Mọi nội dung trên các trang này đều khớp với mã nguồn hiện tại. Nhận email khi gói ra mắt:"
       },
-      "restSoon": {
-        "cardTitle": "Mã Động từ máy chủ của bạn",
-        "cardText": "Khóa API từ tài khoản sẽ cho phép bạn tạo mã, thay đổi đích đến của mã Động và xem số lượt quét. Chúng tôi sẽ công bố tài liệu tham chiếu đầy đủ với yêu cầu và phản hồi thực tế khi API mở.",
-        "planned": "Dự kiến",
-        "items": [
-          "Khóa API cho tài khoản của bạn",
-          "Tạo một mã hoặc tối đa 100 mã cùng lúc",
-          "Thay đổi đích đến của mã Động",
-          "Số lượt quét theo ngày"
-        ],
-        "npmLink": "Dùng gói npm ngay"
-      },
       "waitlist": {
-        "label": "Nhận email khi REST API mở",
         "placeholder": "you@company.com",
-        "join": "Tham gia danh sách chờ",
         "joining": "Đang tham gia…",
         "invalid": "Hãy kiểm tra địa chỉ. Địa chỉ cần có tên, @ và tên miền.",
-        "failed": "Hiện chưa thể thêm bạn. Hãy thử lại.",
-        "joined": "Bạn đã có tên trong danh sách. Chúng tôi sẽ gửi thư đến {email} khi REST API mở.",
-        "hint": "Chỉ một email khi API mở. Không có bản tin."
+        "failed": "Hiện chưa thể thêm bạn. Hãy thử lại."
       },
       "notifyPackages": {
         "label": "Nhận email khi gói được phát hành",
@@ -2920,7 +2901,7 @@
         "overview": {
           "title": "API cho nhà phát triển",
           "nav": "Tổng quan",
-          "lead": "Tạo mã HeyQR ngay trong code của bạn. Bắt đầu ngay hôm nay với gói npm miễn phí; REST API cho mã Động đang được phát triển.",
+          "lead": "Tạo mã HeyQR trong mã của riêng bạn. REST API và SDK TypeScript của nó tạo và quản lý các mã trong tài khoản của bạn, kể cả mã động, từ máy chủ của bạn; @heyqr/qr-core hiển thị mã tĩnh ngay trên máy của bạn.",
           "blocks": [
             {
               "k": "products"
@@ -3960,7 +3941,7 @@
                 },
                 {
                   "q": "Tôi có thể tạo mã Động bằng gói này không?",
-                  "a": "Chưa được. Mã Động cần liên kết ngắn HeyQR, một gói dịch vụ và việc đếm lượt quét trên máy chủ của chúng tôi. Tính năng này sẽ đi kèm REST API."
+                  "a": "Không làm được với @heyqr/qr-core: mã động cần liên kết ngắn HeyQR, một gói dịch vụ và việc đếm lượt quét trên máy chủ của chúng tôi. Hãy dùng REST API hoặc SDK TypeScript `@simplex-packages/heyqr-sdk` cho những việc đó."
                 },
                 {
                   "q": "Vì sao mã có logo của tôi không đạt?",
@@ -4007,10 +3988,16 @@
         },
         "rest": {
           "title": "REST API",
-          "lead": "Tạo mã, thay đổi đích đến của mã Động và xem số lượt quét từ máy chủ của bạn.",
+          "lead": "Tạo mã và thay đổi đích đến của mã động từ máy chủ của bạn, bằng khóa API từ tài khoản HeyQR của bạn.",
           "blocks": [
             {
-              "k": "restSoon"
+              "k": "note",
+              "kind": "info",
+              "t": "Bạn cần: một tài khoản HeyQR và một khóa API từ Bảng điều khiển → Khóa API. Chỉ dùng khóa trên máy chủ, tuyệt đối không dùng trong mã trình duyệt. Tệp của mã tĩnh cần được mua một lần: trước đó, thao tác xuất sẽ trả về `402 payment_required` kèm `paymentUrl`. Đường liên kết ngắn của mã động hoạt động khi mã được kích hoạt với gói Starter hoặc Studio."
+            },
+            {
+              "k": "pages",
+              "pages": ["restAuth", "restCreate", "restDestination", "restErrors", "restSdk"]
             }
           ]
         },
@@ -4018,11 +4005,6 @@
           "title": "Xác thực",
           "lead": "Mỗi yêu cầu đều mang một khóa API từ tài khoản HeyQR của bạn.",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "Chưa công khai. Trang này mô tả REST API trong bản build HeyQR này, đã được đối chiếu với các route của nó. API chưa khả dụng trên heyqr.me và sẽ không xuất hiện trong kết quả tìm kiếm cho đến khi khả dụng."
-            },
             {
               "k": "h2",
               "id": "keys",
@@ -4082,11 +4064,6 @@
           "title": "Tạo mã QR",
           "lead": "Tạo một mã QR cùng các bố cục của nó, dưới dạng bản nháp trong tài khoản của bạn. Việc kích hoạt, liên kết ngắn và thanh toán vẫn thực hiện trong ứng dụng.",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "Chưa công khai. Trang này mô tả REST API trong bản build HeyQR này, đã được đối chiếu với các route của nó. API chưa khả dụng trên heyqr.me và sẽ không xuất hiện trong kết quả tìm kiếm cho đến khi khả dụng."
-            },
             {
               "k": "endpoint",
               "method": "POST",
@@ -4232,11 +4209,6 @@
           "lead": "Chuyển mã Động sang một đích đến khác. Mã đã in vẫn giữ liên kết ngắn và cập nhật theo ngay lập tức.",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "Chưa công khai. Trang này mô tả REST API trong bản build HeyQR này, đã được đối chiếu với các route của nó. API chưa khả dụng trên heyqr.me và sẽ không xuất hiện trong kết quả tìm kiếm cho đến khi khả dụng."
-            },
-            {
               "k": "h2",
               "id": "read",
               "t": "Đọc đích đến hiện tại"
@@ -4339,11 +4311,6 @@
           "lead": "Mọi lỗi có chung một cấu trúc. Hãy rẽ nhánh theo code, không bao giờ theo message.",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "Chưa công khai. Trang này mô tả REST API trong bản build HeyQR này, đã được đối chiếu với các route của nó. API chưa khả dụng trên heyqr.me và sẽ không xuất hiện trong kết quả tìm kiếm cho đến khi khả dụng."
-            },
-            {
               "k": "h2",
               "id": "shape",
               "t": "Cấu trúc lỗi"
@@ -4440,8 +4407,8 @@
           "blocks": [
             {
               "k": "note",
-              "kind": "preview",
-              "t": "Chưa công khai. Trang này mô tả REST API trong bản build HeyQR này, đã được đối chiếu với các route của nó. API chưa khả dụng trên heyqr.me và sẽ không xuất hiện trong kết quả tìm kiếm cho đến khi khả dụng."
+              "kind": "info",
+              "t": "Bạn cần: một tài khoản HeyQR và một khóa API từ Bảng điều khiển → Khóa API. Chỉ dùng khóa trên máy chủ, tuyệt đối không dùng trong mã trình duyệt. Tệp của mã tĩnh cần được mua một lần: trước đó, thao tác xuất sẽ trả về `402 payment_required` kèm `paymentUrl`. Đường liên kết ngắn của mã động hoạt động khi mã được kích hoạt với gói Starter hoặc Studio."
             },
             {
               "k": "h2",
@@ -4451,6 +4418,23 @@
             {
               "k": "install",
               "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "quickstart",
+              "t": "Bắt đầu nhanh"
+            },
+            {
+              "k": "p",
+              "t": "Tạo một bản nháp mã QR động, rồi đọc lại bố cục và đích đến của nó. Lưu tệp, đặt khóa của bạn và chạy bằng Node.js 18 trở lên:"
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstart"
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstartRun"
             },
             {
               "k": "h2",

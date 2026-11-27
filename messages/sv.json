@@ -2788,7 +2788,7 @@
   },
   "developers": {
     "metaTitle": "API för utvecklare",
-    "metaDescription": "Skapa HeyQR-koder i din egen kod: paketet @heyqr/qr-core för statiska koder, och ett REST API för dynamiska koder som är på väg.",
+    "metaDescription": "Skapa HeyQR-koder i din egen kod: REST-API:t och dess TypeScript-SDK @simplex-packages/heyqr-sdk för koderna på ditt konto, även dynamiska, och renderaren @heyqr/qr-core för statiska koder.",
     "docs": {
       "search": {
         "label": "Sök i dokumentationen",
@@ -2817,10 +2817,8 @@
       "backToTop": "Till toppen",
       "previous": "Föregående",
       "next": "Nästa",
-      "soon": "Snart",
       "preview": "Förhandsvisning",
       "designPreview": "Förhandsvisning av designen",
-      "notPublic": "Inte offentlig än",
       "env": {
         "both": "Webbläsare och Node.js",
         "browser": "Webbläsare",
@@ -2839,8 +2837,7 @@
         "auth": "Auktorisering",
         "authValue": "Authorization: Bearer <API-nyckel>",
         "method": "Metod",
-        "url": "Förfrågans URL",
-        "base": "På den HeyQR-server du använder; det publika API:et är inte tillgängligt än."
+        "url": "Förfrågans URL"
       },
       "helpful": {
         "question": "Var den här sidan till hjälp?",
@@ -2856,13 +2853,13 @@
         "proposed": "Föreslagen design. Inget publicerat kontrakt."
       },
       "status": {
-        "unpublished": "Opublicerad",
+        "unpublished": "Inte på npm än",
         "live": "Live",
-        "liveOnNpm": "Live på npm",
-        "soon": "Kommer snart"
+        "liveOnNpm": "Live på npm"
       },
       "products": {
-        "pkgTitle": "npm-paket",
+        "sdkTitle": "TypeScript SDK",
+        "sdkText": "En typad klient för REST-API:t, på npm som @simplex-packages/heyqr-sdk. Node.js 18 eller senare.",
         "pkgText": "Gratis. Statiska QR-koder som renderas på din dator. Inget konto, ingen API-nyckel.",
         "restTitle": "REST API",
         "restText": "Skapa och hantera koder, även dynamiska, från din server."
@@ -2874,27 +2871,11 @@
         "unpublishedTitle": "Inte på npm än",
         "unpublishedText": "{name} {version} är inte publicerat än, så det finns inget att installera. Allt på de här sidorna motsvarar den aktuella källkoden. Få ett mejl när det släpps:"
       },
-      "restSoon": {
-        "cardTitle": "Dynamiska koder från din server",
-        "cardText": "Med en API-nyckel från ditt konto kan du skapa koder, ändra vart dynamiska koder pekar och läsa antal skanningar. Vi publicerar den fullständiga referensen med riktiga förfrågningar och svar när den öppnar.",
-        "planned": "Planerat",
-        "items": [
-          "API-nycklar för ditt konto",
-          "Skapa en kod eller upp till 100 på en gång",
-          "Ändra en dynamisk kods destination",
-          "Dagligt antal skanningar"
-        ],
-        "npmLink": "Använd npm-paketet nu"
-      },
       "waitlist": {
-        "label": "Få ett mejl när REST API:et öppnar",
         "placeholder": "du@foretag.se",
-        "join": "Ställ dig i kön",
         "joining": "Ansluter…",
         "invalid": "Kontrollera adressen. Den behöver ett namn, @ och en domän.",
-        "failed": "Vi kunde inte lägga till dig just nu. Försök igen.",
-        "joined": "Du står på listan. Vi skriver till {email} när REST API:et öppnar.",
-        "hint": "Ett mejl när det öppnar. Inget nyhetsbrev."
+        "failed": "Vi kunde inte lägga till dig just nu. Försök igen."
       },
       "notifyPackages": {
         "label": "Få ett mejl när paketet publiceras",
@@ -2920,7 +2901,7 @@
         "overview": {
           "title": "API för utvecklare",
           "nav": "Översikt",
-          "lead": "Skapa HeyQR-koder i din egen kod. Börja i dag med det kostnadsfria npm-paketet; ett REST API för dynamiska koder är på väg.",
+          "lead": "Skapa HeyQR-koder i din egen kod. REST-API:t och dess TypeScript-SDK skapar och hanterar koderna på ditt konto, även dynamiska, från din server; @heyqr/qr-core renderar statiska koder på din dator.",
           "blocks": [
             {
               "k": "products"
@@ -3964,7 +3945,7 @@
                 },
                 {
                   "q": "Kan jag skapa dynamiska koder med det?",
-                  "a": "Inte än. En dynamisk kod kräver en HeyQR-kortlänk, en plan och skanningsräkning på våra servrar. Det kommer med REST API:et."
+                  "a": "Inte med @heyqr/qr-core: en dynamisk kod behöver en HeyQR-kortlänk, ett abonnemang och skanningsräkning på våra servrar. Använd REST-API:t eller TypeScript-SDK:n `@simplex-packages/heyqr-sdk` för det."
                 },
                 {
                   "q": "Varför underkänns min kod med logotyp?",
@@ -4011,10 +3992,16 @@
         },
         "rest": {
           "title": "REST API",
-          "lead": "Skapa koder, ändra vart dynamiska koder pekar och läs antal skanningar från din server.",
+          "lead": "Skapa koder och ändra vart dynamiska koder leder, från din server, med en API-nyckel från ditt HeyQR-konto.",
           "blocks": [
             {
-              "k": "restSoon"
+              "k": "note",
+              "kind": "info",
+              "t": "Det här behöver du: ett HeyQR-konto och en API-nyckel från Översikt → API-nycklar. Använd nyckeln bara på en server, aldrig i webbläsarkod. Filerna för en statisk kod kräver dess engångsköp: tills dess svarar en export med `402 payment_required` och en `paymentUrl`. En dynamisk kods kortlänk fungerar när koden är aktiv på ett Starter- eller Studio-abonnemang."
+            },
+            {
+              "k": "pages",
+              "pages": ["restAuth", "restCreate", "restDestination", "restErrors", "restSdk"]
             }
           ]
         },
@@ -4022,11 +4009,6 @@
           "title": "Autentisering",
           "lead": "Varje förfrågan har en API-nyckel från ditt HeyQR-konto.",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "Inte offentligt än. Den här sidan beskriver REST API:et i det här bygget av HeyQR, kontrollerat mot dess routes. Det är inte tillgängligt på heyqr.me än och hålls borta från sökmotorer tills det är det."
-            },
             {
               "k": "h2",
               "id": "keys",
@@ -4086,11 +4068,6 @@
           "title": "Skapa en QR-kod",
           "lead": "Skapar en QR-kod med dess layouter, som ett utkast i ditt konto. Aktivering, kortlänkar och betalning sker i appen.",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "Inte offentligt än. Den här sidan beskriver REST API:et i det här bygget av HeyQR, kontrollerat mot dess routes. Det är inte tillgängligt på heyqr.me än och hålls borta från sökmotorer tills det är det."
-            },
             {
               "k": "endpoint",
               "method": "POST",
@@ -4236,11 +4213,6 @@
           "lead": "Pekar om en dynamisk kod. Tryckta koder behåller sin kortlänk och följer med direkt.",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "Inte offentligt än. Den här sidan beskriver REST API:et i det här bygget av HeyQR, kontrollerat mot dess routes. Det är inte tillgängligt på heyqr.me än och hålls borta från sökmotorer tills det är det."
-            },
-            {
               "k": "h2",
               "id": "read",
               "t": "Läs den aktuella destinationen"
@@ -4343,11 +4315,6 @@
           "lead": "Alla fel har samma form. Förgrena på code, aldrig på meddelandet.",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "Inte offentligt än. Den här sidan beskriver REST API:et i det här bygget av HeyQR, kontrollerat mot dess routes. Det är inte tillgängligt på heyqr.me än och hålls borta från sökmotorer tills det är det."
-            },
-            {
               "k": "h2",
               "id": "shape",
               "t": "Felets form"
@@ -4436,8 +4403,8 @@
           "blocks": [
             {
               "k": "note",
-              "kind": "preview",
-              "t": "Inte offentligt än. Den här sidan beskriver REST API:et i det här bygget av HeyQR, kontrollerat mot dess routes. Det är inte tillgängligt på heyqr.me än och hålls borta från sökmotorer tills det är det."
+              "kind": "info",
+              "t": "Det här behöver du: ett HeyQR-konto och en API-nyckel från Översikt → API-nycklar. Använd nyckeln bara på en server, aldrig i webbläsarkod. Filerna för en statisk kod kräver dess engångsköp: tills dess svarar en export med `402 payment_required` och en `paymentUrl`. En dynamisk kods kortlänk fungerar när koden är aktiv på ett Starter- eller Studio-abonnemang."
             },
             {
               "k": "h2",
@@ -4447,6 +4414,23 @@
             {
               "k": "install",
               "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "quickstart",
+              "t": "Snabbstart"
+            },
+            {
+              "k": "p",
+              "t": "Skapa ett utkast till en dynamisk QR-kod och läs sedan tillbaka dess layout och mål. Spara filen, ange din nyckel och kör den med Node.js 18 eller senare:"
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstart"
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstartRun"
             },
             {
               "k": "h2",

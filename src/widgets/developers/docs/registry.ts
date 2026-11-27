@@ -5,18 +5,17 @@
  * Release gates (verified, not assumed):
  * - Packages: PACKAGE_RELEASE. @simplex-packages/heyqr-sdk 0.1.0 is on npm (`latest`, HEY-172/HEY-173); @heyqr/qr-core
  *   isn't published (npm answers 404; its manifest is `private`).
- * - REST API: REST_RELEASE. The v1 routes exist in this build, but no public deployment of them is verified, so the
- *   public site keeps design 12.18 "Coming soon" with the waitlist. Its reference pages render only where previews
- *   are allowed (not production) and never appear in search.
+ * - REST API v1 is live in production (HEY-187: www.heyqr.me answers /api/v1 with 401 without a key). Its reference
+ *   pages for implemented routes and the SDK page are public; bulk create and scan statistics aren't implemented and
+ *   stay design previews, shown only where previews are allowed and never in search.
  */
 export type DocsGroup = "start" | "guides" | "ref" | "help" | "rest";
 export type DocsEnv = "both" | "browser" | "node";
 /**
  * - public: always shown and searchable;
- * - restPreview: a REST page documenting what this build implements, shown only while previews are allowed;
  * - designPreview: a planned capability with the design's proposed values, shown only while previews are allowed.
  */
-export type DocsVisibility = "public" | "restPreview" | "designPreview";
+export type DocsVisibility = "public" | "designPreview";
 
 export type DocsPage = {
   id: string;
@@ -48,19 +47,25 @@ export const DOCS_PAGES: readonly DocsPage[] = [
   { id: "faq", path: "faq", group: "help", anchors: [], visibility: "public" },
   { id: "changelog", path: "changelog", group: "help", anchors: ["v010"], visibility: "public" },
   { id: "rest", path: "rest", group: "rest", anchors: [], visibility: "public" },
-  { id: "restAuth", path: "rest/authentication", group: "rest", anchors: ["keys", "header", "limits"], visibility: "restPreview" },
-  { id: "restCreate", path: "rest/create", group: "rest", anchors: ["body", "request", "responses"], visibility: "restPreview" },
+  { id: "restAuth", path: "rest/authentication", group: "rest", anchors: ["keys", "header", "limits"], visibility: "public" },
+  { id: "restCreate", path: "rest/create", group: "rest", anchors: ["body", "request", "responses"], visibility: "public" },
   { id: "restBulk", path: "rest/bulk", group: "rest", anchors: ["body", "responses"], visibility: "designPreview" },
   {
     id: "restDestination",
     path: "rest/destination",
     group: "rest",
     anchors: ["read", "body", "request", "responses"],
-    visibility: "restPreview",
+    visibility: "public",
   },
   { id: "restScans", path: "rest/scans", group: "rest", anchors: ["responses"], visibility: "designPreview" },
-  { id: "restErrors", path: "rest/errors", group: "rest", anchors: ["shape", "errors", "limits"], visibility: "restPreview" },
-  { id: "restSdk", path: "rest/sdk", group: "rest", anchors: ["install", "server", "methods", "errors"], visibility: "restPreview" },
+  { id: "restErrors", path: "rest/errors", group: "rest", anchors: ["shape", "errors", "limits"], visibility: "public" },
+  {
+    id: "restSdk",
+    path: "rest/sdk",
+    group: "rest",
+    anchors: ["install", "quickstart", "server", "methods", "errors"],
+    visibility: "public",
+  },
 ];
 
 /** Whether a page may be shown here. Previews only where previews are allowed; never in production. */
