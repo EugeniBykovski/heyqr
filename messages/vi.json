@@ -802,7 +802,12 @@
       "preset": "Khung {frame}, mã {code}, nền {bg}",
       "white": "Trắng",
       "graphite": "Than chì",
-      "violetUi": "Tím"
+      "violetUi": "Tím",
+      "position": "Vị trí",
+      "positions": {
+        "frame": "Trên khung",
+        "inside": "Trong mã"
+      }
     },
     "typeStep": {
       "title": "Mã của bạn sẽ mở gì?",
@@ -1154,8 +1159,8 @@
     "captionGroup": {
       "position": "Vị trí",
       "positions": {
-        "below": "Bên dưới",
-        "above": "Bên trên",
+        "below": "Bên dưới mã",
+        "above": "Bên trên mã",
         "inside": "Trong mã"
       },
       "insideHint": "Văn bản ngắn nằm trên nền lót ở giữa mã. Kiểm tra quét sẽ yêu cầu bạn rút ngắn nếu nó che quá nhiều.",
@@ -1163,7 +1168,11 @@
       "frameNote": "Chữ của khung được đặt ở mục Khung.",
       "toLayout": "Dùng QR + chú thích",
       "color": "Màu chú thích",
-      "insideShortened": "Trong mã chỉ có chỗ cho {max} ký tự, nên hiển thị “{shown}”. Hãy rút ngắn chú thích, hoặc đặt nó bên dưới hay bên trên mã."
+      "insideShortened": "Trong mã chỉ có chỗ cho {max} ký tự, nên hiển thị “{shown}”. Hãy rút ngắn chú thích, hoặc đặt nó bên dưới hay bên trên mã.",
+      "positionsHorizontal": {
+        "below": "Bên phải mã",
+        "above": "Bên trái mã"
+      }
     },
     "stage": {
       "history": "Lịch sử",

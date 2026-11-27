@@ -806,7 +806,12 @@
       "preset": "Ramka {frame}, kod {code}, tło {bg}",
       "white": "Biały",
       "graphite": "Grafit",
-      "violetUi": "Fiolet"
+      "violetUi": "Fiolet",
+      "position": "Pozycja",
+      "positions": {
+        "frame": "Na ramce",
+        "inside": "W kodzie"
+      }
     },
     "typeStep": {
       "title": "Co ma otwierać Twój kod?",
@@ -1167,7 +1172,11 @@
       "frameNote": "Tekst ramki ustawisz w sekcji Ramka.",
       "toLayout": "Użyj QR + podpis",
       "color": "Kolor podpisu",
-      "insideShortened": "W kodzie jest miejsce na {max} znaków, więc wyświetla się „{shown}”. Skróć podpis lub umieść go pod kodem albo nad nim."
+      "insideShortened": "W kodzie jest miejsce na {max} znaków, więc wyświetla się „{shown}”. Skróć podpis lub umieść go pod kodem albo nad nim.",
+      "positionsHorizontal": {
+        "below": "Na prawo od kodu",
+        "above": "Na lewo od kodu"
+      }
     },
     "stage": {
       "history": "Historia",

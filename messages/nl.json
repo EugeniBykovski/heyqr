@@ -802,7 +802,12 @@
       "preset": "Kader {frame}, code {code}, achtergrond {bg}",
       "white": "Wit",
       "graphite": "Grafiet",
-      "violetUi": "Violet"
+      "violetUi": "Violet",
+      "position": "Positie",
+      "positions": {
+        "frame": "Op het kader",
+        "inside": "In de code"
+      }
     },
     "typeStep": {
       "title": "Wat moet je code openen?",
@@ -1154,8 +1159,8 @@
     "captionGroup": {
       "position": "Positie",
       "positions": {
-        "below": "Onder",
-        "above": "Boven",
+        "below": "Onder de code",
+        "above": "Boven de code",
         "inside": "In de code"
       },
       "insideHint": "Korte tekst staat op een plaatje in het midden van de code. De scancheck vraagt je hem in te korten als hij te veel bedekt.",
@@ -1163,7 +1168,11 @@
       "frameNote": "De tekst van het kader stel je in bij Kader.",
       "toLayout": "QR + bijschrift gebruiken",
       "color": "Kleur bijschrift",
-      "insideShortened": "In de code is ruimte voor {max} tekens, dus er staat “{shown}”. Kort het bijschrift in, of zet het onder of boven de code."
+      "insideShortened": "In de code is ruimte voor {max} tekens, dus er staat “{shown}”. Kort het bijschrift in, of zet het onder of boven de code.",
+      "positionsHorizontal": {
+        "below": "Rechts van de code",
+        "above": "Links van de code"
+      }
     },
     "stage": {
       "history": "Geschiedenis",

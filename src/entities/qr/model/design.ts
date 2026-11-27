@@ -134,6 +134,8 @@ export interface EditorDesign {
   frameTextColor?: string;
   /** Design 1.16: caption below, above or inside the code (QR + caption and cards). Unset = below, as before. */
   captionPosition?: CaptionPosition;
+  /** HEY-194 (design 1.16 "On the frame / In the code"): where a frame's text sits. Unset = on the frame, as before. */
+  frameTextPosition?: FrameTextPosition;
   /** Design 1.15 "Color tile": a centre icon on a tile in the corner-center colour instead of a plate. */
   logoTile?: boolean;
   /** Design "Frame around the layout" for QR + caption (cards always have one). Unset = none, as before. */
@@ -159,6 +161,15 @@ export const logoOnTop = (d: Pick<EditorDesign, "preset" | "logo" | "logoPositio
 export type CaptionPosition = "below" | "above" | "inside";
 export const CAPTION_POSITIONS: readonly CaptionPosition[] = ["below", "above", "inside"];
 const LAYOUT_CAPTION_POSITION = { below: "after", above: "before", inside: "center" } as const;
+/** HEY-194: a frame's text on the frame (its label band) or in the code, like an inside caption. */
+export type FrameTextPosition = "frame" | "inside";
+export const FRAME_TEXT_POSITIONS: readonly FrameTextPosition[] = ["frame", "inside"];
+
+/** The renderer's caption position for a design (frames: label band or in the code; layouts without text: after). */
+export function layoutCaptionPosition(d: Pick<EditorDesign, "preset" | "captionPosition" | "frameTextPosition">) {
+  if (d.preset === "frame") return d.frameTextPosition === "inside" ? "center" : "after";
+  return hasCaptionBand(d.preset) ? LAYOUT_CAPTION_POSITION[d.captionPosition ?? "below"] : "after";
+}
 
 export type CaptionAlign = "left" | "center" | "right";
 export type LogoPlate = "none" | "square" | "circle";
@@ -351,7 +362,7 @@ export function designToLayout(d: EditorDesign): Layout {
       // Frames centre their label; the caption layout aligns its lines as chosen (HEY-46).
       // The horizontal card's caption sits beside the code, left-aligned by default (design preset); others centre.
       align: hasCaptionBand(d.preset) ? (d.captionAlign ?? defaultCaptionAlign(d.preset)) : "center",
-      position: hasCaptionBand(d.preset) ? LAYOUT_CAPTION_POSITION[d.captionPosition ?? "below"] : "after",
+      position: layoutCaptionPosition(d),
     },
   };
 }

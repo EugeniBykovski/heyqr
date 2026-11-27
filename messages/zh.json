@@ -794,7 +794,12 @@
       "preset": "边框 {frame}，二维码 {code}，背景 {bg}",
       "white": "白色",
       "graphite": "石墨色",
-      "violetUi": "紫罗兰色"
+      "violetUi": "紫罗兰色",
+      "position": "位置",
+      "positions": {
+        "frame": "在边框上",
+        "inside": "二维码内"
+      }
     },
     "typeStep": {
       "title": "你的二维码要打开什么？",
@@ -1146,8 +1151,8 @@
     "captionGroup": {
       "position": "位置",
       "positions": {
-        "below": "下方",
-        "above": "上方",
+        "below": "二维码下方",
+        "above": "二维码上方",
         "inside": "二维码内"
       },
       "insideHint": "简短文字会放在二维码中间的底板上。如果遮挡过多，扫描检查会提示你缩短文字。",
@@ -1155,7 +1160,11 @@
       "frameNote": "边框文字在“边框”中设置。",
       "toLayout": "使用“二维码 + 文字说明”",
       "color": "文字说明颜色",
-      "insideShortened": "二维码内最多可容纳 {max} 个字符，因此显示为“{shown}”。请缩短文字说明，或将其放在二维码下方或上方。"
+      "insideShortened": "二维码内最多可容纳 {max} 个字符，因此显示为“{shown}”。请缩短文字说明，或将其放在二维码下方或上方。",
+      "positionsHorizontal": {
+        "below": "二维码右侧",
+        "above": "二维码左侧"
+      }
     },
     "stage": {
       "history": "历史记录",

@@ -84,6 +84,39 @@ describe("Caption panel (1.16)", () => {
   });
 });
 
+describe("Position labels and frame text in the code (HEY-194, design 1.16)", () => {
+  const positions = () =>
+    within(screen.getByRole("group", { name: "Position" }))
+      .getAllByRole("button")
+      .map((b) => b.textContent);
+
+  it("QR + caption reads Below / Above / In the code; the horizontal card Right of / Left of the code", () => {
+    const view = open({ ...card, preset: "caption" }, "caption");
+    expect(positions()).toEqual(["Below code", "Above code", "In the code"]);
+    view.unmount();
+    open(card, "caption");
+    expect(positions()).toEqual(["Right of code", "Left of code", "In the code"]);
+  });
+
+  it("a frame's text goes on the frame or in the code, and the typed text survives frame and position changes", () => {
+    open({ ...card, preset: "frame", frameStyle: "bar", caption: "Little Fern Coffee" }, "frame");
+    expect(positions()).toEqual(["On the frame", "In the code"]);
+    expect(within(screen.getByRole("group", { name: "Position" })).getByRole("button", { name: "On the frame" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    fireEvent.click(within(screen.getByRole("group", { name: "Position" })).getByRole("button", { name: "In the code" }));
+    expect(latest.frameTextPosition).toBe("inside");
+    // Too long for the plate: the panel says what the code shows.
+    expect(screen.getByRole("status").textContent).toContain("“Little Fern…”");
+    fireEvent.click(screen.getByRole("button", { name: "Ticket" }));
+    expect([latest.frameStyle, latest.caption, latest.frameTextPosition]).toEqual(["ticket", "Little Fern Coffee", "inside"]);
+    fireEvent.click(within(screen.getByRole("group", { name: "Position" })).getByRole("button", { name: "On the frame" }));
+    expect([latest.frameTextPosition, latest.caption]).toEqual(["frame", "Little Fern Coffee"]);
+    expect(screen.queryByRole("status")).toBeNull();
+  });
+});
+
 describe("text and logo fit (HEY-60)", () => {
   it("a caption inside the code is cut at a word with an ellipsis, never mid-word", () => {
     expect(centerTextLabel("Menu")).toEqual({ label: "Menu", shortened: false });

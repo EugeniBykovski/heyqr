@@ -806,7 +806,12 @@
       "preset": "Marco {frame}, código {code}, fondo {bg}",
       "white": "Blanco",
       "graphite": "Grafito",
-      "violetUi": "Violeta"
+      "violetUi": "Violeta",
+      "position": "Posición",
+      "positions": {
+        "frame": "En el marco",
+        "inside": "En el código"
+      }
     },
     "typeStep": {
       "title": "¿Qué debe abrir tu código?",
@@ -1158,8 +1163,8 @@
     "captionGroup": {
       "position": "Posición",
       "positions": {
-        "below": "Debajo",
-        "above": "Encima",
+        "below": "Debajo del código",
+        "above": "Encima del código",
         "inside": "En el código"
       },
       "insideHint": "El texto corto se coloca sobre un fondo en el centro del código. La comprobación de escaneo te pedirá acortarlo si tapa demasiado.",
@@ -1167,7 +1172,11 @@
       "frameNote": "El texto del marco se define en Marco.",
       "toLayout": "Usar QR + texto",
       "color": "Color del texto",
-      "insideShortened": "Dentro del código caben {max} caracteres, así que se muestra “{shown}”. Acorta el texto o colócalo debajo o encima del código."
+      "insideShortened": "Dentro del código caben {max} caracteres, así que se muestra “{shown}”. Acorta el texto o colócalo debajo o encima del código.",
+      "positionsHorizontal": {
+        "below": "A la derecha del código",
+        "above": "A la izquierda del código"
+      }
     },
     "stage": {
       "history": "Historial",

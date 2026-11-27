@@ -794,7 +794,12 @@
       "preset": "프레임 {frame}, 코드 {code}, 배경 {bg}",
       "white": "흰색",
       "graphite": "그래파이트",
-      "violetUi": "보라색"
+      "violetUi": "보라색",
+      "position": "위치",
+      "positions": {
+        "frame": "프레임 위",
+        "inside": "코드 안"
+      }
     },
     "typeStep": {
       "title": "코드로 무엇을 열까요?",
@@ -1146,8 +1151,8 @@
     "captionGroup": {
       "position": "위치",
       "positions": {
-        "below": "아래",
-        "above": "위",
+        "below": "코드 아래",
+        "above": "코드 위",
         "inside": "코드 안"
       },
       "insideHint": "짧은 텍스트가 코드 중앙의 배경판 위에 놓여요. 너무 많이 가리면 스캔 확인에서 줄이라고 안내해요.",
@@ -1155,7 +1160,11 @@
       "frameNote": "프레임 텍스트는 프레임에서 설정해요.",
       "toLayout": "QR + 캡션 사용",
       "color": "캡션 색상",
-      "insideShortened": "코드 안에는 {max}자까지 들어가서 “{shown}”(으)로 표시돼요. 캡션을 줄이거나 코드 아래 또는 위에 배치하세요."
+      "insideShortened": "코드 안에는 {max}자까지 들어가서 “{shown}”(으)로 표시돼요. 캡션을 줄이거나 코드 아래 또는 위에 배치하세요.",
+      "positionsHorizontal": {
+        "below": "코드 오른쪽",
+        "above": "코드 왼쪽"
+      }
     },
     "stage": {
       "history": "기록",

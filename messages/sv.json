@@ -802,7 +802,12 @@
       "preset": "Ram {frame}, kod {code}, bakgrund {bg}",
       "white": "Vit",
       "graphite": "Grafit",
-      "violetUi": "Violett"
+      "violetUi": "Violett",
+      "position": "Placering",
+      "positions": {
+        "frame": "På ramen",
+        "inside": "I koden"
+      }
     },
     "typeStep": {
       "title": "Vad ska din kod öppna?",
@@ -1154,8 +1159,8 @@
     "captionGroup": {
       "position": "Placering",
       "positions": {
-        "below": "Under",
-        "above": "Ovanför",
+        "below": "Under koden",
+        "above": "Ovanför koden",
         "inside": "I koden"
       },
       "insideHint": "Kort text ligger på en platta mitt i koden. Skanningskontrollen ber dig korta den om den döljer för mycket.",
@@ -1163,7 +1168,11 @@
       "frameNote": "Ramens text ställs in under Ram.",
       "toLayout": "Använd QR + bildtext",
       "color": "Bildtextens färg",
-      "insideShortened": "I koden finns plats för {max} tecken, så den visar ”{shown}”. Korta bildtexten eller placera den under eller ovanför koden."
+      "insideShortened": "I koden finns plats för {max} tecken, så den visar ”{shown}”. Korta bildtexten eller placera den under eller ovanför koden.",
+      "positionsHorizontal": {
+        "below": "Till höger om koden",
+        "above": "Till vänster om koden"
+      }
     },
     "stage": {
       "history": "Historik",

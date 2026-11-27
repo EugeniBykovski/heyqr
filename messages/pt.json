@@ -806,7 +806,12 @@
       "preset": "Moldura {frame}, código {code}, fundo {bg}",
       "white": "Branco",
       "graphite": "Grafite",
-      "violetUi": "Violeta"
+      "violetUi": "Violeta",
+      "position": "Posição",
+      "positions": {
+        "frame": "Na moldura",
+        "inside": "No código"
+      }
     },
     "typeStep": {
       "title": "O que seu código deve abrir?",
@@ -1158,8 +1163,8 @@
     "captionGroup": {
       "position": "Posição",
       "positions": {
-        "below": "Abaixo",
-        "above": "Acima",
+        "below": "Abaixo do código",
+        "above": "Acima do código",
         "inside": "No código"
       },
       "insideHint": "Um texto curto fica sobre uma base no meio do código. A verificação de leitura pede para encurtá-lo se ele cobrir demais.",
@@ -1167,7 +1172,11 @@
       "frameNote": "O texto da moldura é definido em Moldura.",
       "toLayout": "Usar QR + legenda",
       "color": "Cor da legenda",
-      "insideShortened": "Dentro do código cabem {max} caracteres, então aparece “{shown}”. Encurte a legenda ou coloque-a abaixo ou acima do código."
+      "insideShortened": "Dentro do código cabem {max} caracteres, então aparece “{shown}”. Encurte a legenda ou coloque-a abaixo ou acima do código.",
+      "positionsHorizontal": {
+        "below": "À direita do código",
+        "above": "À esquerda do código"
+      }
     },
     "stage": {
       "history": "Histórico",
