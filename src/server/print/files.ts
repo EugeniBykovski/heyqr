@@ -6,7 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { MIN_PRINT_QR_MM, type PrintSettings } from "@/entities/qr";
 import { routing } from "@/i18n/routing";
 import { CAPTION_FONT_DIR, downloadFileName, renderExport } from "../qr/export";
-import { printPdf, printSpecPdf, type PrintPage } from "./print";
+import { groupedPrintSvg, printPdf, printSpecPdf, type PrintPage } from "./print";
 
 export type PrintFile = "pdf" | "svg" | "spec";
 
@@ -39,12 +39,15 @@ export async function printFileResponse(
       downloadFileName(`${name} ${layoutName} print ${size}`, "pdf").header,
     );
   if (kind === "svg") {
-    const svg = (await renderExport(layout, value, "svg", {})).body
-      .toString()
-      .replace(
-        /^<svg ([^>]*?)width="[^"]*" height="[^"]*"/,
-        `<svg $1width="${page.sizes.finished.width}mm" height="${page.sizes.finished.height}mm"`,
-      );
+    // HEY-196: in mm at the finished size, each part of the layout in its own named group.
+    const svg = groupedPrintSvg(
+      (await renderExport(layout, value, "svg", {})).body
+        .toString()
+        .replace(
+          /^<svg ([^>]*?)width="[^"]*" height="[^"]*"/,
+          `<svg $1width="${page.sizes.finished.width}mm" height="${page.sizes.finished.height}mm"`,
+        ),
+    );
     return file(Buffer.from(svg), "image/svg+xml", downloadFileName(`${name} ${layoutName} editable ${size}`, "svg").header);
   }
   const locale = routing.locales.find((l) => l === input.locale) ?? routing.defaultLocale;

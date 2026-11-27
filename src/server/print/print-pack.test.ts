@@ -5,7 +5,31 @@ import { DEFAULT_DESIGN, DEFAULT_PRINT_SETTINGS, designToLayout, unsupportedProf
 
 vi.mock("server-only", () => ({}));
 vi.mock("@/env", () => ({ env: { NEXT_PUBLIC_SHORT_LINK_BASE: "https://hey.qr" } }));
-const { inlineSvgLogo, pdfReadyImages, printPage, printPdf, printSpecPdf } = await import("./print");
+const { groupedPrintSvg, inlineSvgLogo, pdfReadyImages, printPage, printPdf, printSpecPdf } = await import("./print");
+const { composeLayout } = await import("@heyqr/qr-core");
+const { decodeSvg } = await import("@heyqr/qr-core/verify");
+
+describe("editable SVG (HEY-196)", () => {
+  it("each part of the layout is its own named group; elements, geometry and the decoded payload are unchanged", async () => {
+    const brand: EditorDesign = {
+      ...DEFAULT_DESIGN,
+      preset: "vertical",
+      caption: "Scan for the menu",
+      bg: "#F7F1E6",
+      logo: { kind: "image", href: `data:image/svg+xml;base64,${Buffer.from(LOGO_SVG).toString("base64")}` },
+      logoPosition: "top",
+      brandName: "Little Fern Coffee",
+      size: { unit: "mm", qr: 40, width: 60, height: 90 },
+    };
+    const flat = composeLayout(designToLayout(brand), VALUE).svg;
+    const grouped = groupedPrintSvg(flat);
+    const ids = [...grouped.matchAll(/<g id="([^"]+)">/g)].map((m) => m[1]);
+    expect(ids).toEqual(expect.arrayContaining(["heyqr-card", "heyqr-qr-code", "heyqr-logo", "heyqr-text-1", "heyqr-text-2"]));
+    // Removing the added groups gives the original markup back, element for element.
+    expect(grouped.replace(/<g id="heyqr-[^"]+">|<\/g>/g, "")).toBe(flat.replace(/<\/g>/g, ""));
+    expect(await decodeSvg(grouped)).toBe(VALUE);
+  });
+});
 
 /*
  * HEY-196 Print Pack: vector artwork stays vector in the print PDF, raster logos keep their own pixels, the server

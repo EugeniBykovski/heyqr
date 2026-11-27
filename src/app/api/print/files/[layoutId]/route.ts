@@ -68,9 +68,9 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/api/print/fi
       revision,
       kind: `print-${q.data.file}`,
       ext: q.data.file === "svg" ? "svg" : "pdf",
-      // HEY-196: `files` versions what the files contain (vector SVG logos, the fuller specifications sheet), so a file
-      // stored by an earlier build for the same revision and settings is never served in place of a new one.
-      facts: { renderKey: page.renderKey, settings, value, name, layoutName, locale, files: 2 },
+      // HEY-196: `files` versions what the files contain (vector SVG logos, the fuller specifications sheet, the grouped
+      // SVG), so a file stored by an earlier build for the same revision and settings is never served in place of a new one.
+      facts: { renderKey: page.renderKey, settings, value, name, layoutName, locale, files: 3 },
     },
     () => printFileResponse(q.data.file, { layout, page, value, settings, name, layoutName, locale: q.data.locale, revision }),
   ).catch(failed("export.deliver"));

@@ -25,6 +25,60 @@ import { captionFontFaces } from "../qr/export";
 const MM_TO_PT = 72 / 25.4;
 const f = (v: number) => Number(v.toFixed(3)).toString();
 
+/**
+ * HEY-196: the editable SVG with each part of the layout in its own named group (layers in Illustrator, Inkscape and
+ * Figma): the card or background, the QR code, the logo and each text. Only groups are added; every element keeps its
+ * geometry and colours, so the file draws exactly as before.
+ */
+export function groupedPrintSvg(svg: string): string {
+  const open = /^<svg\b[^>]*>/.exec(svg);
+  const close = svg.lastIndexOf("</svg>");
+  if (!open || close < 0) return svg;
+  const body = svg.slice(open[0].length, close);
+  const parts: string[] = [];
+  const re = /<(\/?)([a-zA-Z][\w:-]*)\b[^>]*?(\/?)>/g;
+  let depth = 0;
+  let start = 0;
+  let last = 0;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(body))) {
+    const [tag, closing, , selfClosing] = m;
+    if (depth === 0 && !closing) start = m.index;
+    if (closing) depth -= 1;
+    else if (!selfClosing) depth += 1;
+    if (depth === 0) {
+      parts.push(body.slice(last, start), body.slice(start, m.index + tag.length));
+      last = m.index + tag.length;
+    }
+  }
+  parts.push(body.slice(last));
+  const count = new Map<string, number>();
+  const named = parts.map((part, i) => {
+    if (i % 2 === 0) return part; // whitespace between elements
+    const name = /^<([a-zA-Z][\w:-]*)/.exec(part)?.[1] ?? "";
+    const role =
+      name === "defs" || name === "style"
+        ? null
+        : name === "svg"
+          ? "qr-code"
+          : name === "image"
+            ? "logo"
+            : name === "text"
+              ? "text"
+              : name === "rect"
+                ? / stroke="/.test(part)
+                  ? "card"
+                  : "background"
+                : "art";
+    if (!role) return part;
+    const n = (count.get(role) ?? 0) + 1;
+    count.set(role, n);
+    const id = role === "text" || role === "art" || n > 1 ? `heyqr-${role}-${n}` : `heyqr-${role}`;
+    return `<g id="${id}">${part}</g>`;
+  });
+  return `${open[0]}${named.join("")}</svg>`;
+}
+
 /** Width and height of a PNG, JPEG or WebP data URL from its header, or null (SVG and unknown formats). */
 export function rasterSize(href: string | undefined): { width: number; height: number } | null {
   const m = href?.match(/^data:(image\/[a-z+]+);base64,(.*)$/);
