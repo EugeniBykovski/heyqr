@@ -263,15 +263,15 @@ importers:
       '@commitlint/config-conventional':
         specifier: 21.2.4
         version: 21.2.4
-      '@heyqr/sdk':
-        specifier: workspace:*
-        version: link:packages/sdk
       '@neon/config':
         specifier: 1.14.0
         version: 1.14.0
       '@neon/env':
         specifier: 2.1.3
         version: 2.1.3
+      '@simplex-packages/heyqr-sdk':
+        specifier: workspace:*
+        version: link:packages/sdk
       '@tailwindcss/turbopack':
         specifier: 4.3.5
         version: 4.3.5

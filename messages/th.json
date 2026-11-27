@@ -4383,7 +4383,7 @@
         },
         "restSdk": {
           "title": "TypeScript SDK",
-          "lead": "@heyqr/sdk คือไคลเอนต์ที่มีไทป์สำหรับ REST API ใช้กับ Node.js 18 ขึ้นไป SDK นี้ไม่เรนเดอร์อะไร งานนั้นเป็นของ @heyqr/qr-core",
+          "lead": "@simplex-packages/heyqr-sdk คือไคลเอนต์ที่มีไทป์สำหรับ REST API ใช้กับ Node.js 18 ขึ้นไป SDK นี้ไม่เรนเดอร์อะไร งานนั้นเป็นของ @heyqr/qr-core",
           "blocks": [
             {
               "k": "note",
@@ -4406,7 +4406,7 @@
             },
             {
               "k": "p",
-              "t": "`HeyQrClient` ต้องใช้ API key จึงทำงานได้เฉพาะบนเซิร์ฟเวอร์ ใน bundle ของเบราว์เซอร์ แพ็กเกจจะชี้ไปยังจุดเข้าที่ `HeyQrClient` โยน `HeyQrError` ชนิด `server_only` สำหรับการแสดงตัวอย่างในเบราว์เซอร์ ให้ใช้ `@heyqr/sdk/react`"
+              "t": "`HeyQrClient` ต้องใช้ API key จึงทำงานได้เฉพาะบนเซิร์ฟเวอร์ ใน bundle ของเบราว์เซอร์ แพ็กเกจจะชี้ไปยังจุดเข้าที่ `HeyQrClient` โยน `HeyQrError` ชนิด `server_only` สำหรับการแสดงตัวอย่างในเบราว์เซอร์ ให้ใช้ `@simplex-packages/heyqr-sdk/react`"
             },
             {
               "k": "code",

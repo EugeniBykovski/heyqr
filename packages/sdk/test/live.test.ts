@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { HeyQrApiError, HeyQrClient, type CreateQrError, type CreateQrRequest } from "@heyqr/sdk";
+import { HeyQrApiError, HeyQrClient, type CreateQrError, type CreateQrRequest } from "@simplex-packages/heyqr-sdk";
 
 /*
  * HEY-161: the SDK against a running HeyQR API. Skipped unless HEYQR_API_KEY and HEYQR_BASE_URL are set, e.g.

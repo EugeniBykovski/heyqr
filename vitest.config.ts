@@ -7,9 +7,12 @@ export default defineConfig({
   resolve: {
     alias: [
       { find: "@", replacement: fileURLToPath(new URL("./src", import.meta.url)) },
-      // HEY-166: workspace tests use @heyqr/sdk's TypeScript source (its entry), not the built dist.
-      { find: /^@heyqr\/sdk$/, replacement: fileURLToPath(new URL("./packages/sdk/src/index.ts", import.meta.url)) },
-      { find: /^@heyqr\/sdk\/react$/, replacement: fileURLToPath(new URL("./packages/sdk/src/react/index.tsx", import.meta.url)) },
+      // HEY-166: workspace tests use @simplex-packages/heyqr-sdk's TypeScript source (its entry), not the built dist.
+      { find: /^@simplex-packages\/heyqr-sdk$/, replacement: fileURLToPath(new URL("./packages/sdk/src/index.ts", import.meta.url)) },
+      {
+        find: /^@simplex-packages\/heyqr-sdk\/react$/,
+        replacement: fileURLToPath(new URL("./packages/sdk/src/react/index.tsx", import.meta.url)),
+      },
     ],
   },
   test: {

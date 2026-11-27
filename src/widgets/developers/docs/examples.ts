@@ -32,7 +32,11 @@ const STYLE = J(
 
 export const INSTALL_COMMANDS = {
   qrCore: { npm: "npm install @heyqr/qr-core", pnpm: "pnpm add @heyqr/qr-core", yarn: "yarn add @heyqr/qr-core" },
-  sdk: { npm: "npm install @heyqr/sdk", pnpm: "pnpm add @heyqr/sdk", yarn: "yarn add @heyqr/sdk" },
+  sdk: {
+    npm: "npm install @simplex-packages/heyqr-sdk",
+    pnpm: "pnpm add @simplex-packages/heyqr-sdk",
+    yarn: "yarn add @simplex-packages/heyqr-sdk",
+  },
 } as const;
 
 export const EXAMPLES = {
@@ -435,7 +439,7 @@ export const EXAMPLES = {
     file: "server.ts",
     env: "node",
     code: J(
-      'import { HeyQrClient, HeyQrRateLimitError, isRevisionConflict } from "@heyqr/sdk";',
+      'import { HeyQrClient, HeyQrRateLimitError, isRevisionConflict } from "@simplex-packages/heyqr-sdk";',
       "",
       "// Server only: the key is a secret. Keep it in the environment, never in browser code.",
       'const heyqr = new HeyQrClient({ apiKey: process.env.HEYQR_API_KEY ?? "", baseUrl: process.env.HEYQR_URL ?? "" });',

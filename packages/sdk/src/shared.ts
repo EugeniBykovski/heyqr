@@ -6,7 +6,7 @@ import type { CreateQrErrorResponse } from "./qr-codes.js";
 
 /*
  * HEY-168 / QR-23.02: what the server client and the browser entry share. Error classes, type guards, constants and
- * small helpers, with no transport, no authentication and no platform module. The browser build of "@heyqr/sdk"
+ * small helpers, with no transport, no authentication and no platform module. The browser build of "@simplex-packages/heyqr-sdk"
  * (browser.ts) exports these, so code that handles errors compiles and runs on both sides. The client itself lives in
  * client.ts and is never part of a browser build.
  */

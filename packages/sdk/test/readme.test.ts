@@ -17,9 +17,9 @@ describe("README Quickstart (HEY-169)", () => {
     for (const text of [
       "Node.js **18 or later**",
       "Dashboard → API keys",
-      "npm install /tmp/heyqr-sdk-0.1.0.tgz",
-      "**After publication (not available yet):**",
-      "npm install @heyqr/sdk",
+      // HEY-172: published on npm; the tarball stays documented for unreleased monorepo builds.
+      "npm install @simplex-packages/heyqr-sdk",
+      "npm install /tmp/simplex-packages-heyqr-sdk-<version>.tgz",
       "HEYQR_API_KEY",
       "HEYQR_BASE_URL",
       "node dist/quickstart.js",
@@ -27,9 +27,8 @@ describe("README Quickstart (HEY-169)", () => {
       expect(section, text).toContain(text);
     // Placeholders only: no real-looking key.
     expect(section).not.toMatch(/hqk_(?!X{12}_)[A-Za-z0-9]{12}_/);
-    // The version in the tarball name is the package's.
-    const { version } = JSON.parse(readFileSync(new URL("package.json", dir), "utf8")) as { version: string };
-    expect(section).toContain(`heyqr-sdk-${version}.tgz`);
+    // The release is public, so nothing in the Quickstart still calls npm "not available yet".
+    expect(section).not.toMatch(/not available yet|Pre-release \(now\)/);
   });
 });
 
@@ -62,7 +61,7 @@ describe("README purchase and re-export (HEY-170)", () => {
 
   it("the example uses only the public entry, reads its settings from the environment and never prints the key", () => {
     const source = readFileSync(new URL("examples/purchase-and-export.ts", dir), "utf8");
-    expect([...source.matchAll(/from "(@heyqr\/[^"]+)"/g)].map((m) => m[1])).toEqual(["@heyqr/sdk"]);
+    expect([...source.matchAll(/from "(@(?:heyqr|simplex-packages)\/[^"]+)"/g)].map((m) => m[1])).toEqual(["@simplex-packages/heyqr-sdk"]);
     for (const name of ["HEYQR_API_KEY", "HEYQR_BASE_URL", "HEYQR_QR_ID", "HEYQR_LAYOUT_ID"])
       expect(source).toContain(`process.env.${name}`);
     expect(source).toContain("isPaymentRequired(error)");

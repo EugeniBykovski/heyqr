@@ -4442,7 +4442,7 @@
         },
         "restSdk": {
           "title": "TypeScript SDK",
-          "lead": "@heyqr/sdk, Node.js 18 ve sonrası için REST API’ye yönelik türlendirilmiş bir istemcidir. Hiçbir şey çizmez: o iş @heyqr/qr-core’undur.",
+          "lead": "@simplex-packages/heyqr-sdk, Node.js 18 ve sonrası için REST API’ye yönelik türlendirilmiş bir istemcidir. Hiçbir şey çizmez: o iş @heyqr/qr-core’undur.",
           "blocks": [
             {
               "k": "note",
@@ -4465,7 +4465,7 @@
             },
             {
               "k": "p",
-              "t": "`HeyQrClient` bir API anahtarı gerektirir, bu yüzden yalnızca sunucuda çalışır. Bir tarayıcı paketinde paket, `HeyQrClient` öğesinin `server_only` türünde bir `HeyQrError` fırlattığı bir girişe çözümlenir. Tarayıcıdaki önizlemeler için `@heyqr/sdk/react` kullanın."
+              "t": "`HeyQrClient` bir API anahtarı gerektirir, bu yüzden yalnızca sunucuda çalışır. Bir tarayıcı paketinde paket, `HeyQrClient` öğesinin `server_only` türünde bir `HeyQrError` fırlattığı bir girişe çözümlenir. Tarayıcıdaki önizlemeler için `@simplex-packages/heyqr-sdk/react` kullanın."
             },
             {
               "k": "code",

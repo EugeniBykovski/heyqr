@@ -3,7 +3,7 @@
  * The words live in messages/en.json under developers.docs.pages.<id>; code examples in ./examples.ts.
  *
  * Release gates (verified, not assumed):
- * - @heyqr/qr-core and @heyqr/sdk: PACKAGE_RELEASE (npm answers 404 for both; both manifests are `private`).
+ * - @heyqr/qr-core and @simplex-packages/heyqr-sdk: PACKAGE_RELEASE (npm answers 404 for both; both manifests are `private`).
  * - REST API: REST_RELEASE. The v1 routes exist in this build, but no public deployment of them is verified, so the
  *   public site keeps design 12.18 "Coming soon" with the waitlist. Its reference pages render only where previews
  *   are allowed (not production) and never appear in search.

@@ -4435,7 +4435,7 @@
         },
         "restSdk": {
           "title": "TypeScript SDK",
-          "lead": "@heyqr/sdk là client có kiểu cho REST API, dành cho Node.js 18 trở lên. Gói này không render gì cả: việc đó là của @heyqr/qr-core.",
+          "lead": "@simplex-packages/heyqr-sdk là client có kiểu cho REST API, dành cho Node.js 18 trở lên. Gói này không render gì cả: việc đó là của @heyqr/qr-core.",
           "blocks": [
             {
               "k": "note",
@@ -4458,7 +4458,7 @@
             },
             {
               "k": "p",
-              "t": "`HeyQrClient` cần khóa API nên chỉ chạy trên máy chủ. Trong bundle trình duyệt, gói trỏ đến một điểm nhập mà `HeyQrClient` ở đó ném `HeyQrError` loại `server_only`. Để xem trước trong trình duyệt, hãy dùng `@heyqr/sdk/react`."
+              "t": "`HeyQrClient` cần khóa API nên chỉ chạy trên máy chủ. Trong bundle trình duyệt, gói trỏ đến một điểm nhập mà `HeyQrClient` ở đó ném `HeyQrError` loại `server_only`. Để xem trước trong trình duyệt, hãy dùng `@simplex-packages/heyqr-sdk/react`."
             },
             {
               "k": "code",

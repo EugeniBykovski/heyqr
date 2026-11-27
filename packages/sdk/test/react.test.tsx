@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { decodeSvg } from "@heyqr/qr-core/verify";
-import { HeyQrPreview, QR_EYE_BALLS, QR_EYE_FRAMES, QR_PATTERNS, type HeyQrPreviewError } from "@heyqr/sdk/react";
+import { HeyQrPreview, QR_EYE_BALLS, QR_EYE_FRAMES, QR_PATTERNS, type HeyQrPreviewError } from "@simplex-packages/heyqr-sdk/react";
 import { cleanup, render } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";

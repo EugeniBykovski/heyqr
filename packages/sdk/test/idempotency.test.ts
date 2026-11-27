@@ -8,7 +8,7 @@ import {
   type CreateQrError,
   type CreateQrRequest,
   type FetchLike,
-} from "@heyqr/sdk";
+} from "@simplex-packages/heyqr-sdk";
 
 /* HEY-165: the SDK side of Idempotency-Key (the server side runs against PostgreSQL in db.integration.test.ts). */
 const KEY = "hqk_AbCdEfGhIjKl_0123456789abcdefghijklmnopqrstuvwxyzABCDEFG";

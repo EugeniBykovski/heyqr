@@ -1,4 +1,4 @@
-# @heyqr/sdk
+# @simplex-packages/heyqr-sdk
 
 The hosted HeyQR REST API, v1, for TypeScript: an ESM package with JavaScript and declarations (HEY-166). It has two
 parts:
@@ -10,9 +10,9 @@ parts:
   - `downloadExport` for PNG and SVG files (HEY-163);
   - timeouts, cancellation, rate limits and payment errors on every method (HEY-164);
   - idempotent `createQr` retries with an Idempotency-Key (HEY-165).
-- **React preview** (HEY-167): `HeyQrPreview` from `@heyqr/sdk/react`, a local QR preview for your own UI.
+- **React preview** (HEY-167): `HeyQrPreview` from `@simplex-packages/heyqr-sdk/react`, a local QR preview for your own UI.
 
-npm publishing comes later. The HTTP
+Published on npm as [`@simplex-packages/heyqr-sdk`](https://www.npmjs.com/package/@simplex-packages/heyqr-sdk): `npm install @simplex-packages/heyqr-sdk`. The HTTP
 contract itself is [docs/API_V1.md](../../docs/API_V1.md).
 
 This package is separate from [`@heyqr/qr-core`](../qr-core), the free local renderer: nothing here renders a code.
@@ -20,10 +20,10 @@ It depends on no other package and uses no platform module, only the runtime's `
 Its declarations don't touch Next.js, the database or server modules.
 
 ```ts
-import type { CreateQrRequest, Layout, UpdateLayoutRequest } from "@heyqr/sdk";
+import type { CreateQrRequest, Layout, UpdateLayoutRequest } from "@simplex-packages/heyqr-sdk";
 ```
 
-Import only from `@heyqr/sdk`; deep imports aren't part of the contract.
+Import only from `@simplex-packages/heyqr-sdk`; deep imports aren't part of the contract.
 
 ## Quickstart
 
@@ -43,20 +43,14 @@ npm init -y && npm pkg set type=module
 npm install -D typescript @types/node
 ```
 
-Install the SDK:
+Install the SDK from the npm registry:
 
-- **Pre-release (now):** install the packed tarball. In the HeyQR monorepo, run
-  `cd packages/sdk && pnpm pack --pack-destination /tmp`. Then, in your project:
+```sh
+npm install @simplex-packages/heyqr-sdk
+```
 
-  ```sh
-  npm install /tmp/heyqr-sdk-0.1.0.tgz
-  ```
-
-- **After publication (not available yet):** install it from the npm registry.
-
-  ```sh
-  npm install @heyqr/sdk
-  ```
+To try an unreleased build from the HeyQR monorepo instead, run `cd packages/sdk && pnpm pack --pack-destination /tmp`
+and install the tarball in your project: `npm install /tmp/simplex-packages-heyqr-sdk-<version>.tgz`.
 
 **4. Configure the environment.** Put these in your server's environment (a secret manager, or a `.env` file that
 isn't committed):
@@ -75,7 +69,7 @@ export HEYQR_BASE_URL="https://www.heyqr.me"   # HeyQR's origin; http://localhos
  * Server-side only (Node.js 18 or later). HEYQR_API_KEY is a secret: keep it in your server's environment, never in
  * browser code or source control. This script never prints it.
  */
-import { HeyQrClient, isHeyQrApiError } from "@heyqr/sdk";
+import { HeyQrClient, isHeyQrApiError } from "@simplex-packages/heyqr-sdk";
 
 const apiKey = process.env.HEYQR_API_KEY;
 const baseUrl = process.env.HEYQR_BASE_URL;
@@ -193,7 +187,7 @@ purchase, the owner pays in HeyQR, and the same export then returns the files, a
 import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { HeyQrClient, isHeyQrApiError, isPaymentRequired, type ExportedFile } from "@heyqr/sdk";
+import { HeyQrClient, isHeyQrApiError, isPaymentRequired, type ExportedFile } from "@simplex-packages/heyqr-sdk";
 
 const apiKey = process.env.HEYQR_API_KEY;
 const baseUrl = process.env.HEYQR_BASE_URL;
@@ -317,21 +311,21 @@ unlocks the code when Stripe's webhook confirms the payment, usually within seco
 
 ## Entry points and runtimes (HEY-168)
 
-| Import                                            | Contents                                                                             | Runs on                                                                                    |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
-| `import { HeyQrClient, … } from "@heyqr/sdk"`     | the API client, every request, response and error type, the error classes and guards | **servers:** Node.js 18+, and Deno, Bun or workers with a global `fetch`. No React needed. |
-| `import { HeyQrPreview } from "@heyqr/sdk/react"` | the React QR preview                                                                 | **browsers**, and React server rendering. Needs React 18+ (an optional peer dependency).   |
+| Import                                                             | Contents                                                                             | Runs on                                                                                    |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| `import { HeyQrClient, … } from "@simplex-packages/heyqr-sdk"`     | the API client, every request, response and error type, the error classes and guards | **servers:** Node.js 18+, and Deno, Bun or workers with a global `fetch`. No React needed. |
+| `import { HeyQrPreview } from "@simplex-packages/heyqr-sdk/react"` | the React QR preview                                                                 | **browsers**, and React server rendering. Needs React 18+ (an optional peer dependency).   |
 
 **The boundary is in the package itself:**
 
-- **Separate entries:** `@heyqr/sdk/react` is its own bundle (React plus HeyQR's renderer). It never loads the API
+- **Separate entries:** `@simplex-packages/heyqr-sdk/react` is its own bundle (React plus HeyQR's renderer). It never loads the API
   client, authentication code or any Node-only module.
-- **`@heyqr/sdk` in a browser build:** a bundler (Vite, webpack, Next.js client components, …) resolves it to a browser
+- **`@simplex-packages/heyqr-sdk` in a browser build:** a bundler (Vite, webpack, Next.js client components, …) resolves it to a browser
   build through the package's `browser` export condition.
   - That build has the same runtime exports (error classes, guards, constants), but no client: no transport, no
     authentication, no key handling.
   - Constructing `HeyQrClient` there throws `HeyQrError` with `kind: "server_only"` and a message pointing to your own
-    server and to `@heyqr/sdk/react`.
+    server and to `@simplex-packages/heyqr-sdk/react`.
   - Node.js always gets the real client. The real client also refuses to start where `document` exists.
 
 ### Quick start (Node.js)
@@ -341,7 +335,7 @@ See [Quickstart](#quickstart) at the top: a complete, self-contained server exam
 ## Client
 
 ```ts
-import { HeyQrClient, isHeyQrApiError } from "@heyqr/sdk";
+import { HeyQrClient, isHeyQrApiError } from "@simplex-packages/heyqr-sdk";
 
 const apiKey = process.env.HEYQR_API_KEY;
 if (!apiKey) throw new Error("Set HEYQR_API_KEY");
@@ -415,7 +409,7 @@ or creates it now if it hadn't.
 - **Who retries:** the SDK never retries on its own; the loop is yours.
 
 ```ts
-import { HeyQrError, HeyQrTimeoutError, isIdempotencyConflict, newIdempotencyKey } from "@heyqr/sdk";
+import { HeyQrError, HeyQrTimeoutError, isIdempotencyConflict, newIdempotencyKey } from "@simplex-packages/heyqr-sdk";
 
 const idempotencyKey = newIdempotencyKey(); // one per code you mean to create
 for (let attempt = 1; ; attempt++) {
@@ -451,7 +445,7 @@ import {
   isHeyQrApiError,
   isPaymentRequired,
   isRevisionConflict,
-} from "@heyqr/sdk";
+} from "@simplex-packages/heyqr-sdk";
 
 try {
   const file = await heyqr.downloadExport(qrId, layoutId, { format: "png" }, { timeoutMs: 15_000 });
@@ -587,18 +581,18 @@ as the code's owner, then run this again.`
 For the whole flow from an unpaid code (402, Checkout, download, download again), see
 [Buy and download a Static code's files](#buy-and-download-a-static-codes-files).
 
-## React preview: `@heyqr/sdk/react` (HEY-167)
+## React preview: `@simplex-packages/heyqr-sdk/react` (HEY-167)
 
 `HeyQrPreview` draws a live QR preview with HeyQR's own renderer, bundled into this entry.
 
 - **Local:** it runs in the browser (or on the server, for SSR). No network request, no API key, no account. It never
   imports the server client.
-- **Optional React:** React (18 or later) is an optional peer dependency. Server-only consumers of `@heyqr/sdk` don't
+- **Optional React:** React (18 or later) is an optional peer dependency. Server-only consumers of `@simplex-packages/heyqr-sdk` don't
   need it, and installing the SDK doesn't install it.
 
 ```tsx
 import { useState } from "react";
-import { HeyQrPreview } from "@heyqr/sdk/react";
+import { HeyQrPreview } from "@simplex-packages/heyqr-sdk/react";
 
 export function MenuPreview() {
   const [url, setUrl] = useState("https://littlefern.cafe/menu");
@@ -647,14 +641,14 @@ export function MenuPreview() {
 
 ## Build, pack and install (HEY-166)
 
-`@heyqr/sdk` ships as **ESM only**, for Node.js 18+ (and other runtimes with `fetch`). It has no dependencies. The
+`@simplex-packages/heyqr-sdk` ships as **ESM only**, for Node.js 18+ (and other runtimes with `fetch`). It has no dependencies. The
 package's entry points (`main`, `types`, `exports`) are the built files in `dist/`: JavaScript plus `.d.ts`
 declarations, compiled from `src/` by `tsc`.
 
 ```sh
-pnpm --filter @heyqr/sdk build                                  # dist/: index.js, client.js, … and their .d.ts
-cd packages/sdk && pnpm pack --pack-destination /tmp            # /tmp/heyqr-sdk-<version>.tgz (rebuilds first)
-tar -tzf /tmp/heyqr-sdk-*.tgz                                   # package.json, README.md, dist/*.js, dist/*.d.ts
+pnpm --filter @simplex-packages/heyqr-sdk build                                  # dist/: index.js, client.js, … and their .d.ts
+cd packages/sdk && pnpm pack --pack-destination /tmp            # /tmp/simplex-packages-heyqr-sdk-<version>.tgz (rebuilds first)
+tar -tzf /tmp/simplex-packages-heyqr-sdk-*.tgz                                   # package.json, README.md, dist/*.js, dist/*.d.ts
 ```
 
 **The archive:** `package/package.json`, `package/README.md`, `package/dist/<module>.js` plus `.d.ts` for `index`,
@@ -676,10 +670,10 @@ source, pass the condition to tsx (`pnpm exec tsx --conditions=@heyqr/source …
 ### Smoke test: install the .tgz in a clean project
 
 ```sh
-pnpm --filter @heyqr/sdk smoke                                   # offline: install, typecheck, run
+pnpm --filter @simplex-packages/heyqr-sdk smoke                                   # offline: install, typecheck, run
 HEYQR_API_KEY=hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX \
 HEYQR_BASE_URL=http://localhost:3000 \
-pnpm --filter @heyqr/sdk smoke                                   # …plus the live API run
+pnpm --filter @simplex-packages/heyqr-sdk smoke                                   # …plus the live API run
 ```
 
 [`scripts/smoke.mjs`](scripts/smoke.mjs) works through these steps:
@@ -688,10 +682,10 @@ pnpm --filter @heyqr/sdk smoke                                   # …plus the l
    README's examples.
 2. Creates a project in the OS temp directory (outside the monorepo) and installs the `.tgz` with
    `npm install <file>.tgz`.
-3. Checks that `node_modules/@heyqr/sdk` is a real installed package, not a link, with no dependencies and exports
+3. Checks that `node_modules/@simplex-packages/heyqr-sdk` is a real installed package, not a link, with no dependencies and exports
    pointing at `dist/`.
 4. Typechecks and compiles [`scripts/smoke-consumer.ts`](scripts/smoke-consumer.ts), which imports only
-   `"@heyqr/sdk"`, under strict `NodeNext` settings. It confirms with `--traceResolution` that `@heyqr/sdk` resolves
+   `"@simplex-packages/heyqr-sdk"`, under strict `NodeNext` settings. It confirms with `--traceResolution` that `@simplex-packages/heyqr-sdk` resolves
    to the installed `dist/index.d.ts`.
 5. Runs the compiled JavaScript with plain `node`, with no loader or alias.
 
@@ -710,7 +704,7 @@ its two globals, so it needs neither DOM nor `@types/node`. Use `SMOKE_KEEP=1` t
 
 | Area                                                         | Types                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| React (HEY-167), from `@heyqr/sdk/react`                     | `HeyQrPreview`, `HeyQrPreviewProps`, `HeyQrPreviewError`, `QR_PATTERNS`, `QR_EYE_FRAMES`, `QR_EYE_BALLS`, `QrPattern`, `QrEyeFrame`, `QrEyeBall`                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| React (HEY-167), from `@simplex-packages/heyqr-sdk/react`    | `HeyQrPreview`, `HeyQrPreviewProps`, `HeyQrPreviewError`, `QR_PATTERNS`, `QR_EYE_FRAMES`, `QR_EYE_BALLS`, `QrPattern`, `QrEyeFrame`, `QrEyeBall`                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | Client (HEY-161 to HEY-165)                                  | `HeyQrClient`, `newIdempotencyKey`, `isIdempotencyConflict`, `CreateQrOptions`, `HeyQrTimeoutError`, `HeyQrAbortError`, `HeyQrRateLimitError`, `isPaymentRequired`, `isTimeout`, `retryAfter`, `DEFAULT_TIMEOUT_MS`, `RequestOptions`, `AbortSignalLike`, `HeyQrErrorKind`, `dispositionFilename`, `HeyQrApiError`, `HeyQrError`, `isHeyQrApiError`, `isRevisionConflict`, `HeyQrClientOptions`, `FetchLike`, `CreateQrError`, `GetLayoutError`, `GetDestinationError`, `UpdateLayoutError`, `UpdateDestinationError`, `DownloadExportRequest`, `DownloadExportError`, `ExportedFile` |
 | Create a QR (`POST /api/v1/qr-codes`)                        | `CreateQrRequest`, `CreateQrLayout`, `QrContent`, `QrContentType`, `QrMode`, `DesignInput`, `CreateQrResponse`, `QrStatus`, `DraftLimitError`, `IdempotencyKeyReusedError`, `ContentTooLongError`, `CreateQrErrorResponse`, `CreateQrResult`                                                                                                                                                                                                                                                                                                                                          |
 | A layout (`GET` / `PATCH …/layouts/{layoutId}`)              | `Layout`, `LayoutRevision`, `LayoutDesign`, `LayoutEditorSettings`, `UpdateLayoutRequest`, `LayoutRevisionConflictError`, `GetLayoutErrorResponse`, `GetLayoutResult`, `UpdateLayoutErrorResponse`, `UpdateLayoutResult`                                                                                                                                                                                                                                                                                                                                                              |
@@ -743,7 +737,14 @@ with `paymentUrl`, HeyQR's Export screen for the same code, layout and format. T
 ## Examples
 
 ```ts
-import type { CreateQrRequest, CreateQrResult, Destination, Layout, UpdateDestinationRequest, UpdateLayoutRequest } from "@heyqr/sdk";
+import type {
+  CreateQrRequest,
+  CreateQrResult,
+  Destination,
+  Layout,
+  UpdateDestinationRequest,
+  UpdateLayoutRequest,
+} from "@simplex-packages/heyqr-sdk";
 
 // Create a static QR (layouts come from HeyQR's editor; any JSON object is sent through and checked by the server).
 const menu: CreateQrRequest = {
@@ -776,7 +777,7 @@ More, with compile-time checks for invalid input and error narrowing: [`test/con
   - SSR.
 - The boundary test (`sdk-contract.test.ts`): the React entry imports only React and the renderer, React is an
   optional peer, and the server modules never import React.
-- `pnpm --filter @heyqr/sdk smoke`: the packed `.tgz`, installed with npm in a clean project and run with plain
+- `pnpm --filter @simplex-packages/heyqr-sdk smoke`: the packed `.tgz`, installed with npm in a clean project and run with plain
   Node.js (see above).
 - `packages/sdk/test/idempotency.test.ts`:
   - the key is sent only when given, and invalid keys are refused locally;
@@ -809,9 +810,9 @@ More, with compile-time checks for invalid input and error narrowing: [`test/con
   each update changes only its own resource, and stale revisions leave the saved values unchanged.
 - `packages/sdk/test/live.test.ts` runs against a running API when `HEYQR_API_KEY` and `HEYQR_BASE_URL` are set
   (optionally `HEYQR_REVOKED_API_KEY`). Otherwise it's skipped.
-- `pnpm --filter @heyqr/sdk typecheck` (also part of `pnpm typecheck`): the package and the examples compile, the package under its own config (no DOM, no Node
+- `pnpm --filter @simplex-packages/heyqr-sdk typecheck` (also part of `pnpm typecheck`): the package and the examples compile, the package under its own config (no DOM, no Node
   types, `exactOptionalPropertyTypes`), and so does the clean consumer in `test/consumer`. The consumer imports only
-  `@heyqr/sdk`; its `@ts-expect-error` lines must fail to compile.
+  `@simplex-packages/heyqr-sdk`; its `@ts-expect-error` lines must fail to compile.
 - `src/server/api/v1/sdk-contract.test.ts`: the SDK types against the route schemas and response types, and SDK-typed
   samples through the server's request validation.
 - The response shapes of the real routes against SDK-typed samples: the PostgreSQL suite (`SDK contract: route

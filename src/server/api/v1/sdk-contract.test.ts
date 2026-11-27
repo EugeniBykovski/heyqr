@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import type * as Sdk from "@heyqr/sdk";
+import type * as Sdk from "@simplex-packages/heyqr-sdk";
 import { describe, expect, expectTypeOf, it } from "vitest";
 import type { z } from "zod";
 import { DEFAULT_DESIGN, designSettingsOf, designToLayout } from "@/entities/qr";
@@ -12,7 +12,7 @@ import type { ApiLayout } from "./layouts";
 import { updateLayoutRequestSchema } from "./layouts";
 
 /*
- * HEY-160 / QR-22.01: the public SDK types (@heyqr/sdk) against what the routes actually accept and return.
+ * HEY-160 / QR-22.01: the public SDK types (@simplex-packages/heyqr-sdk) against what the routes actually accept and return.
  * Type-level checks compare them with the server's own types and Zod schemas; runtime checks send SDK-typed samples
  * through the server's real request validation. Response bodies from the real route handlers are compared in the
  * PostgreSQL suite (db.integration.test.ts, "SDK contract").
@@ -205,7 +205,7 @@ describe("SDK browser entry boundary (HEY-168)", () => {
 
 describe("SDK React entry boundary (HEY-167)", () => {
   const dir = fileURLToPath(new URL("../../../../packages/sdk/", import.meta.url));
-  it("@heyqr/sdk/react imports only React and the renderer, never the server client; React is an optional peer", () => {
+  it("@simplex-packages/heyqr-sdk/react imports only React and the renderer, never the server client; React is an optional peer", () => {
     const pkg = JSON.parse(readFileSync(`${dir}package.json`, "utf8")) as {
       exports: Record<string, unknown>;
       peerDependencies?: Record<string, string>;

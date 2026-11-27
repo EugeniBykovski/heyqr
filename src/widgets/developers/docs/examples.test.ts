@@ -87,7 +87,7 @@ Object.assign(globalThis, {
 
 const code = (Object.entries(EXAMPLES) as [string, Example][]).filter(([, e]) => ["both", "node", "browser"].includes(e.env));
 /** @heyqr/qr-core examples run; the SDK example needs a live API and is type-checked only. */
-const runnable = code.filter(([, e]) => !e.code.includes("@heyqr/sdk"));
+const runnable = code.filter(([, e]) => !e.code.includes("@simplex-packages/heyqr-sdk"));
 
 function fileFor(id: string, e: Example) {
   const source = withChecks(e.code);

@@ -14,7 +14,7 @@ import {
   retryAfter,
   type CreateQrError,
   type FetchLike,
-} from "@heyqr/sdk";
+} from "@simplex-packages/heyqr-sdk";
 
 /*
  * HEY-164: deadlines, cancellation, limits and payment errors, deterministically (fake timers, scripted fetch). Every

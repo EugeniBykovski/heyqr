@@ -1,5 +1,5 @@
 /*
- * HEY-161: create a Dynamic QR, read its layout, and fetch its destination with @heyqr/sdk.
+ * HEY-161: create a Dynamic QR, read its layout, and fetch its destination with @simplex-packages/heyqr-sdk.
  *
  *   HEYQR_API_KEY=hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX \
  *   HEYQR_BASE_URL=http://localhost:3000 \
@@ -8,7 +8,13 @@
  * Run it on a server (never in a browser): the key is sent only in the Authorization header.
  */
 import { readFileSync } from "node:fs";
-import { HeyQrClient, isHeyQrApiError, type CreateQrRequest, type DestinationRevision, type LayoutRevision } from "@heyqr/sdk";
+import {
+  HeyQrClient,
+  isHeyQrApiError,
+  type CreateQrRequest,
+  type DestinationRevision,
+  type LayoutRevision,
+} from "@simplex-packages/heyqr-sdk";
 
 // A layout as HeyQR's editor produces it (any saved design works; the server checks it).
 const sticker = JSON.parse(readFileSync(new URL("./sticker-layout.json", import.meta.url), "utf8")) as { layout: object; editor: object };

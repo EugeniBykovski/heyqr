@@ -4406,7 +4406,7 @@
         },
         "restSdk": {
           "title": "TypeScript SDK",
-          "lead": "@heyqr/sdk عميل مكتوب الأنواع لواجهة REST API، لـ Node.js 18 وما بعده. لا يعرض أي شيء: فذلك دور @heyqr/qr-core.",
+          "lead": "@simplex-packages/heyqr-sdk عميل مكتوب الأنواع لواجهة REST API، لـ Node.js 18 وما بعده. لا يعرض أي شيء: فذلك دور @heyqr/qr-core.",
           "blocks": [
             {
               "k": "note",
@@ -4429,7 +4429,7 @@
             },
             {
               "k": "p",
-              "t": "يحتاج `HeyQrClient` إلى مفتاح API، لذا يعمل على الخادم فقط. في حزمة المتصفح تُحَلّ الحزمة إلى نقطة دخول يرمي فيها `HeyQrClient` خطأ `HeyQrError` من النوع `server_only`. للمعاينات في المتصفح، استخدم `@heyqr/sdk/react`."
+              "t": "يحتاج `HeyQrClient` إلى مفتاح API، لذا يعمل على الخادم فقط. في حزمة المتصفح تُحَلّ الحزمة إلى نقطة دخول يرمي فيها `HeyQrClient` خطأ `HeyQrError` من النوع `server_only`. للمعاينات في المتصفح، استخدم `@simplex-packages/heyqr-sdk/react`."
             },
             {
               "k": "code",

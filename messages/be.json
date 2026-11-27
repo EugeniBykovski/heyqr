@@ -4430,7 +4430,7 @@
         },
         "restSdk": {
           "title": "TypeScript SDK",
-          "lead": "@heyqr/sdk — тыпізаваны кліент для REST API для Node.js 18 і навейшых. Ён нічога не рэндэрыць: для гэтага ёсць @heyqr/qr-core.",
+          "lead": "@simplex-packages/heyqr-sdk — тыпізаваны кліент для REST API для Node.js 18 і навейшых. Ён нічога не рэндэрыць: для гэтага ёсць @heyqr/qr-core.",
           "blocks": [
             {
               "k": "note",
@@ -4453,7 +4453,7 @@
             },
             {
               "k": "p",
-              "t": "`HeyQrClient` патрабуе API-ключ, таму працуе толькі на серверы. У браўзерным бандле пакет падключае кропку ўваходу, дзе `HeyQrClient` кідае `HeyQrError` віду `server_only`. Для прагляду ў браўзеры выкарыстоўвайце `@heyqr/sdk/react`."
+              "t": "`HeyQrClient` патрабуе API-ключ, таму працуе толькі на серверы. У браўзерным бандле пакет падключае кропку ўваходу, дзе `HeyQrClient` кідае `HeyQrError` віду `server_only`. Для прагляду ў браўзеры выкарыстоўвайце `@simplex-packages/heyqr-sdk/react`."
             },
             {
               "k": "code",

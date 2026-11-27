@@ -4443,7 +4443,7 @@
         },
         "restSdk": {
           "title": "TypeScript SDK",
-          "lead": "@heyqr/sdkは、Node.js 18以降向けのREST API用の型付きクライアントです。レンダリングは行いません。レンダリングは@heyqr/qr-coreの役割です。",
+          "lead": "@simplex-packages/heyqr-sdkは、Node.js 18以降向けのREST API用の型付きクライアントです。レンダリングは行いません。レンダリングは@heyqr/qr-coreの役割です。",
           "blocks": [
             {
               "k": "note",
@@ -4466,7 +4466,7 @@
             },
             {
               "k": "p",
-              "t": "`HeyQrClient`にはAPIキーが必要なため、サーバー上でのみ動作します。ブラウザー向けのバンドルでは、パッケージは`HeyQrClient`が種類`server_only`の`HeyQrError`をスローするエントリーに解決されます。ブラウザーでのプレビューには`@heyqr/sdk/react`を使ってください。"
+              "t": "`HeyQrClient`にはAPIキーが必要なため、サーバー上でのみ動作します。ブラウザー向けのバンドルでは、パッケージは`HeyQrClient`が種類`server_only`の`HeyQrError`をスローするエントリーに解決されます。ブラウザーでのプレビューには`@simplex-packages/heyqr-sdk/react`を使ってください。"
             },
             {
               "k": "code",

@@ -12,7 +12,7 @@
 import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { HeyQrClient, isHeyQrApiError, isPaymentRequired, type ExportedFile } from "@heyqr/sdk";
+import { HeyQrClient, isHeyQrApiError, isPaymentRequired, type ExportedFile } from "@simplex-packages/heyqr-sdk";
 
 const apiKey = process.env.HEYQR_API_KEY;
 const baseUrl = process.env.HEYQR_BASE_URL;

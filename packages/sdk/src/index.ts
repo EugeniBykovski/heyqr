@@ -1,5 +1,5 @@
 /**
- * @heyqr/sdk: the hosted HeyQR REST API, v1 (docs/API_V1.md): its public TypeScript contract (HEY-160) and a client
+ * @simplex-packages/heyqr-sdk: the hosted HeyQR REST API, v1 (docs/API_V1.md): its public TypeScript contract (HEY-160) and a client
  * (HEY-161: create a QR, read a layout, read a destination; HEY-162: update a layout, change a destination;
  * HEY-163: download a PNG or SVG export; HEY-164: timeouts, cancellation, rate limits, payment errors;
  * HEY-165: idempotent create retries). Every request sends `Authorization: Bearer <api key>`

@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 /*
- * HEY-166: build and pack @heyqr/sdk, install the .tgz with npm into a clean project outside the monorepo, typecheck
- * and compile a consumer that imports only "@heyqr/sdk", and run the compiled JavaScript with plain Node.js (no
+ * HEY-166: build and pack @simplex-packages/heyqr-sdk, install the .tgz with npm into a clean project outside the monorepo, typecheck
+ * and compile a consumer that imports only "@simplex-packages/heyqr-sdk", and run the compiled JavaScript with plain Node.js (no
  * workspace aliases, no source imports, no TypeScript loader).
  *
- *   pnpm --filter @heyqr/sdk smoke                                  # install, typecheck, run (offline part)
+ *   pnpm --filter @simplex-packages/heyqr-sdk smoke                                  # install, typecheck, run (offline part)
  *   HEYQR_API_KEY=hqk_… HEYQR_BASE_URL=http://localhost:3000 \
- *     pnpm --filter @heyqr/sdk smoke                                # …plus the live create/read/update/read-back
+ *     pnpm --filter @simplex-packages/heyqr-sdk smoke                                # …plus the live create/read/update/read-back
  *
  * Options: SMOKE_KEEP=1 keeps the clean project; SMOKE_TSC=/path/to/tsc uses another TypeScript compiler (default:
- * the monorepo's, used only as a compiler; the consumer resolves @heyqr/sdk from its own node_modules).
+ * the monorepo's, used only as a compiler; the consumer resolves @simplex-packages/heyqr-sdk from its own node_modules).
  */
 import { execFileSync } from "node:child_process";
 import { cpSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -43,10 +43,12 @@ try {
   step("Clean project outside the monorepo; npm install the .tgz");
   writeFileSync(join(project, "package.json"), JSON.stringify({ name: "heyqr-sdk-smoke", private: true, type: "module" }, null, 2));
   run("npm", ["install", "--no-audit", "--no-fund", "--offline", tgz], { cwd: project });
-  const installed = join(project, "node_modules", "@heyqr", "sdk");
-  if (lstatSync(installed).isSymbolicLink()) throw new Error("@heyqr/sdk is a link, not an installed package");
+  const installed = join(project, "node_modules", "@simplex-packages", "heyqr-sdk");
+  if (lstatSync(installed).isSymbolicLink()) throw new Error("@simplex-packages/heyqr-sdk is a link, not an installed package");
   const manifest = JSON.parse(readFileSync(join(installed, "package.json"), "utf8"));
-  console.log(`${project}\n  node_modules/@heyqr/sdk: ${manifest.name}@${manifest.version} · exports ${JSON.stringify(manifest.exports)}`);
+  console.log(
+    `${project}\n  node_modules/@simplex-packages/heyqr-sdk: ${manifest.name}@${manifest.version} · exports ${JSON.stringify(manifest.exports)}`,
+  );
   if (manifest.dependencies) throw new Error("The SDK must have no dependencies");
   if (
     JSON.stringify(manifest.peerDependencies) !== JSON.stringify({ react: ">=18" }) ||
@@ -113,10 +115,10 @@ try {
   run(process.execPath, [tsc, "-p", "."], { cwd: project });
   const resolved = run(process.execPath, [tsc, "-p", ".", "--noEmit", "--traceResolution"], { cwd: project })
     .split("\n")
-    .find((l) => l.includes("'@heyqr/sdk' was successfully resolved"));
+    .find((l) => l.includes("'@simplex-packages/heyqr-sdk' was successfully resolved"));
   console.log(`  typecheck: ok\n  ${resolved?.trim().replace(project, "<project>")}`);
-  if (!resolved?.includes("node_modules/@heyqr/sdk/dist/index.d.ts"))
-    throw new Error("@heyqr/sdk didn't resolve to the installed declarations");
+  if (!resolved?.includes("node_modules/@simplex-packages/heyqr-sdk/dist/index.d.ts"))
+    throw new Error("@simplex-packages/heyqr-sdk didn't resolve to the installed declarations");
 
   step("Run the compiled consumer with plain Node.js");
   const output = run(process.execPath, [join(project, "dist", "smoke.js")], { cwd: project, env: process.env });

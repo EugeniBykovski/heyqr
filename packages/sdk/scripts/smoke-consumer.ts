@@ -1,6 +1,6 @@
 /*
- * HEY-166: the smoke test's consumer, compiled in a clean project that installed @heyqr/sdk from its .tgz. It imports
- * only "@heyqr/sdk". Without HEYQR_API_KEY it checks the package's runtime exports; with it (and HEYQR_BASE_URL) it
+ * HEY-166: the smoke test's consumer, compiled in a clean project that installed @simplex-packages/heyqr-sdk from its .tgz. It imports
+ * only "@simplex-packages/heyqr-sdk". Without HEYQR_API_KEY it checks the package's runtime exports; with it (and HEYQR_BASE_URL) it
  * creates a Dynamic QR, reads its layout and destination, updates both from their revisions, and reads them back.
  */
 import {
@@ -19,7 +19,7 @@ import {
   type CreateQrRequest,
   type DestinationRevision,
   type LayoutRevision,
-} from "@heyqr/sdk";
+} from "@simplex-packages/heyqr-sdk";
 import { sticker } from "./layout.js";
 
 const assert = (ok: boolean, what: string) => {
