@@ -2107,9 +2107,9 @@
       "title": "Privacy Policy"
     },
     "updated": "Last updated {date}",
-    "effectiveNote": "The effective date is set when this text is approved.",
+    "effective": "Effective {date}",
     "onThisPage": "On this page",
-    "englishOnly": "This policy is available in English only for now. A translation will follow once the English text is approved.",
+    "englishOnly": "This policy is available in English only for now.",
     "placeholder": "To be confirmed"
   },
   "errors": {

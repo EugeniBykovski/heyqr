@@ -2111,9 +2111,9 @@
       "title": "Chính sách quyền riêng tư"
     },
     "updated": "Cập nhật lần cuối: {date}",
-    "effectiveNote": "Ngày có hiệu lực sẽ được ấn định khi văn bản này được phê duyệt.",
+    "effective": "Có hiệu lực từ {date}",
     "onThisPage": "Trên trang này",
-    "englishOnly": "Hiện văn bản này chỉ có bằng tiếng Anh. Bản dịch sẽ có sau khi văn bản tiếng Anh được phê duyệt.",
+    "englishOnly": "Hiện văn bản này chỉ có bằng tiếng Anh.",
     "placeholder": "Chờ xác nhận"
   },
   "errors": {

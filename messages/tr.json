@@ -2115,9 +2115,9 @@
       "title": "Gizlilik Politikası"
     },
     "updated": "Son güncelleme: {date}",
-    "effectiveNote": "Yürürlük tarihi, bu metin onaylandığında belirlenecek.",
+    "effective": "Yürürlük tarihi: {date}",
     "onThisPage": "Bu sayfada",
-    "englishOnly": "Bu metin şimdilik yalnızca İngilizce olarak sunuluyor. İngilizce metin onaylandığında çevirisi de eklenecek.",
+    "englishOnly": "Bu metin şimdilik yalnızca İngilizce olarak sunuluyor.",
     "placeholder": "Onaylanacak"
   },
   "errors": {

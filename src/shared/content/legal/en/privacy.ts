@@ -2,12 +2,13 @@ import type { LegalDocument } from "../types";
 
 /**
  * HEY-193 draft Privacy Policy, written from a code and configuration audit (docs/legal/REVIEW.md lists the evidence
- * for each statement and the open items). Not yet approved.
+ * for each statement and the open items). Effective 2026-11-27 (HEY-188); the [[…]] facts await the owner.
  */
 export const privacy: LegalDocument = {
   id: "privacy",
   title: "Privacy Policy",
-  updated: "2026-11-26",
+  updated: "2026-11-27",
+  effective: "2026-11-27",
   intro:
     "This policy explains what HeyQR collects, why, who else receives it and what you can do about it. The controller is [[legal name and registered address of the company that runs HeyQR]].",
   sections: [
@@ -77,7 +78,7 @@ export const privacy: LegalDocument = {
             "Google: sign-in.",
             "Stripe: payments and subscriptions; it receives your email address, HeyQR’s account ID for you and what you’re buying.",
             "Vercel: hosts the website.",
-            "Neon: hosts the database, in [[database region, e.g. AWS us-east-2]].",
+            "Neon: hosts the database, in AWS us-east-2 (Ohio, United States).",
             "[[Cloudflare R2 or AWS S3]]: stores uploaded and paid files.",
             "Resend: sends purchase receipt emails (your name, email address, the amount and a link to your code).",
             "Sentry: error reports. It is set up to send no user details, cookies, request headers, bodies or query strings, and IDs and secrets are removed before an error is sent.",

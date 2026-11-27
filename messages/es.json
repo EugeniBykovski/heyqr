@@ -2115,9 +2115,9 @@
       "title": "Política de privacidad"
     },
     "updated": "Última actualización: {date}",
-    "effectiveNote": "La fecha de entrada en vigor se fijará cuando se apruebe este texto.",
+    "effective": "En vigor desde el {date}",
     "onThisPage": "En esta página",
-    "englishOnly": "Por ahora, este documento solo está disponible en inglés. La traducción llegará cuando se apruebe el texto en inglés.",
+    "englishOnly": "Por ahora, este documento solo está disponible en inglés.",
     "placeholder": "Pendiente de confirmar"
   },
   "errors": {

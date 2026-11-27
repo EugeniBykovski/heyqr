@@ -2111,9 +2111,9 @@
       "title": "プライバシーポリシー"
     },
     "updated": "最終更新日：{date}",
-    "effectiveNote": "施行日は、この文書が承認された時点で設定されます。",
+    "effective": "発効日：{date}",
     "onThisPage": "このページの内容",
-    "englishOnly": "この文書は現在、英語版のみご利用いただけます。英語版の承認後に翻訳を公開します。",
+    "englishOnly": "この文書は現在、英語版のみご利用いただけます。",
     "placeholder": "確認中"
   },
   "errors": {

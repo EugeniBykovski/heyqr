@@ -2115,9 +2115,9 @@
       "title": "Kebijakan Privasi"
     },
     "updated": "Terakhir diperbarui {date}",
-    "effectiveNote": "Tanggal berlaku akan ditetapkan setelah teks ini disetujui.",
+    "effective": "Berlaku sejak {date}",
     "onThisPage": "Di halaman ini",
-    "englishOnly": "Untuk saat ini, dokumen ini hanya tersedia dalam bahasa Inggris. Terjemahan akan menyusul setelah teks bahasa Inggrisnya disetujui.",
+    "englishOnly": "Untuk saat ini, dokumen ini hanya tersedia dalam bahasa Inggris.",
     "placeholder": "Akan dikonfirmasi"
   },
   "errors": {

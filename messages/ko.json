@@ -2103,9 +2103,9 @@
       "title": "개인정보 처리방침"
     },
     "updated": "최종 업데이트: {date}",
-    "effectiveNote": "시행일은 이 문구가 승인되면 정해져요.",
+    "effective": "시행일: {date}",
     "onThisPage": "이 페이지의 내용",
-    "englishOnly": "이 문서는 현재 영어로만 제공돼요. 영어 문구가 승인되면 번역본이 제공될 예정이에요.",
+    "englishOnly": "이 문서는 현재 영어로만 제공돼요.",
     "placeholder": "확인 예정"
   },
   "errors": {

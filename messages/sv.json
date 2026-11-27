@@ -2111,9 +2111,9 @@
       "title": "Integritetspolicy"
     },
     "updated": "Senast uppdaterad {date}",
-    "effectiveNote": "Datum för ikraftträdande fastställs när den här texten har godkänts.",
+    "effective": "Gäller från {date}",
     "onThisPage": "På den här sidan",
-    "englishOnly": "Den här texten finns för närvarande bara på engelska. En översättning kommer när den engelska texten har godkänts.",
+    "englishOnly": "Den här texten finns för närvarande bara på engelska.",
     "placeholder": "Ska bekräftas"
   },
   "errors": {

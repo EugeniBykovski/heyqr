@@ -2111,9 +2111,9 @@
       "title": "Privacybeleid"
     },
     "updated": "Laatst bijgewerkt: {date}",
-    "effectiveNote": "De ingangsdatum wordt vastgesteld zodra deze tekst is goedgekeurd.",
+    "effective": "Van kracht vanaf {date}",
     "onThisPage": "Op deze pagina",
-    "englishOnly": "Deze tekst is voorlopig alleen in het Engels beschikbaar. Een vertaling volgt zodra de Engelse tekst is goedgekeurd.",
+    "englishOnly": "Deze tekst is voorlopig alleen in het Engels beschikbaar.",
     "placeholder": "Nog te bevestigen"
   },
   "errors": {

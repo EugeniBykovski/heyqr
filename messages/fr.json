@@ -2115,9 +2115,9 @@
       "title": "Politique de confidentialité"
     },
     "updated": "Dernière mise à jour : {date}",
-    "effectiveNote": "La date d’entrée en vigueur sera fixée lors de l’approbation de ce texte.",
+    "effective": "En vigueur depuis le {date}",
     "onThisPage": "Sur cette page",
-    "englishOnly": "Ce document n’est disponible qu’en anglais pour le moment. Une traduction suivra une fois le texte anglais approuvé.",
+    "englishOnly": "Ce document n’est disponible qu’en anglais pour le moment.",
     "placeholder": "À confirmer"
   },
   "errors": {

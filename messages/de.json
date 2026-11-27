@@ -2111,9 +2111,9 @@
       "title": "Datenschutzerklärung"
     },
     "updated": "Zuletzt aktualisiert: {date}",
-    "effectiveNote": "Das Datum des Inkrafttretens wird festgelegt, sobald dieser Text freigegeben ist.",
+    "effective": "Gültig ab {date}",
     "onThisPage": "Auf dieser Seite",
-    "englishOnly": "Dieser Text ist vorerst nur auf Englisch verfügbar. Eine Übersetzung folgt, sobald der englische Text freigegeben ist.",
+    "englishOnly": "Dieser Text ist vorerst nur auf Englisch verfügbar.",
     "placeholder": "Noch zu bestätigen"
   },
   "errors": {

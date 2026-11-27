@@ -2111,9 +2111,9 @@
       "title": "Informativa sulla privacy"
     },
     "updated": "Ultimo aggiornamento: {date}",
-    "effectiveNote": "La data di entrata in vigore sarà fissata quando questo testo verrà approvato.",
+    "effective": "In vigore dal {date}",
     "onThisPage": "In questa pagina",
-    "englishOnly": "Per ora questo documento è disponibile solo in inglese. La traduzione arriverà quando il testo inglese sarà approvato.",
+    "englishOnly": "Per ora questo documento è disponibile solo in inglese.",
     "placeholder": "Da confermare"
   },
   "errors": {

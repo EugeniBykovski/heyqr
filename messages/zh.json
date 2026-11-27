@@ -2103,9 +2103,9 @@
       "title": "隐私政策"
     },
     "updated": "最后更新：{date}",
-    "effectiveNote": "生效日期将在本文本获批后确定。",
+    "effective": "生效日期：{date}",
     "onThisPage": "本页内容",
-    "englishOnly": "本文本目前仅提供英文版。英文文本获批后将提供译文。",
+    "englishOnly": "本文本目前仅提供英文版。",
     "placeholder": "待确认"
   },
   "errors": {
