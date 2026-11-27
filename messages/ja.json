@@ -2411,7 +2411,9 @@
       "stale": "このプレビューの後にレイアウトが変更されました。ダウンロード前にページをもう一度確認してください。",
       "pdfTitle": "印刷用PDF",
       "svgTitle": "編集可能なSVG",
-      "specTitle": "印刷仕様"
+      "specTitle": "印刷仕様",
+      "readyAs": "準備完了 · {name}",
+      "downloadedAs": "ダウンロード済み · {name}"
     },
     "size": {
       "title": "仕上がりサイズ",

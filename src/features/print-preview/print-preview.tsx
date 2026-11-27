@@ -4,6 +4,7 @@ import type { Layout } from "@heyqr/qr-core";
 import {
   AlertTriangleIcon,
   ArrowLeftIcon,
+  CheckIcon,
   ChevronDownIcon,
   DownloadIcon,
   FileTextIcon,
@@ -28,6 +29,7 @@ import {
 import { Link, useRouter } from "@/i18n/navigation";
 import { takeIncludedPrintPack } from "@/server/actions/billing";
 import { startPrintPackCheckout } from "@/server/actions/qr";
+import { preparedFileName } from "@/shared/lib/file-name";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -147,7 +149,8 @@ export function PrintPreview({
   const unlocked = preview?.unlocked === true;
   const qrSmall = sizes.qr < 20;
   const logoWarn = ready ? preview.warnings.find((w) => w.code === "logo_low_ppi") : undefined;
-  const fileHref = (file: "pdf" | "svg" | "spec") =>
+  type PackFile = "pdf" | "svg" | "spec";
+  const fileHref = (file: PackFile) =>
     `/api/print/files/${layoutId}?file=${file}&key=${preview?.renderKey ?? ""}&locale=${locale}&nav=1&qr=${qrCodeId}&${printSettingsQuery(settings)}`;
   /*
    * HEY-196 / Handoff · Commerce §3 "File generation": the file is prepared first (the server checks access and stores it,
@@ -155,20 +158,37 @@ export function PrintPreview({
    * and Try again, on the same Print Pack: nothing is bought again. A changed layout (409) still follows the link, which
    * brings the preview back with its notice.
    */
-  const [fileState, setFileState] = useState<{ file: "pdf" | "svg" | "spec"; kind: "preparing" | "failed" } | null>(null);
-  const download = async (file: "pdf" | "svg" | "spec") => {
+  /*
+   * HEY-197: like Export (3.7 → 3.9), a prepared file is then downloaded by the person's own click on its link, under the
+   * name the server gives it, and the row says so. A download started by script after the request ended is an
+   * "automatic download" to the browser, and the second of the three files would wait behind a permission prompt.
+   */
+  type FileRow = { kind: "preparing" | "failed" } | { kind: "ready" | "downloaded"; name: string };
+  // A prepared file belongs to one render (layout revision) and one set of print settings: rows kept for another one
+  // read as empty, so a change starts over.
+  const filesFor = `${preview?.renderKey ?? ""}|${printSettingsQuery(settings)}`;
+  const [fileRows, setFileRows] = useState<{ for: string; rows: Partial<Record<PackFile, FileRow>> }>({ for: "", rows: {} });
+  const files = fileRows.for === filesFor ? fileRows.rows : {};
+  const setRow = (file: PackFile, row: FileRow) =>
+    setFileRows((s) => ({ for: filesFor, rows: { ...(s.for === filesFor ? s.rows : {}), [file]: row } }));
+  const preparingAny = Object.values(files).some((r) => r?.kind === "preparing");
+  const download = async (file: PackFile) => {
     const href = fileHref(file);
-    setFileState({ file, kind: "preparing" });
+    setRow(file, { kind: "preparing" });
     try {
       const res = await fetch(`${href.replace("&nav=1", "")}&prepare=1`, { credentials: "same-origin" });
-      if (res.ok || res.status === 409) {
-        setFileState(null);
+      // A changed layout follows the link, which brings the preview back with its notice.
+      if (res.status === 409) {
         window.location.assign(href);
         return;
       }
-      setFileState({ file, kind: "failed" });
+      if (!res.ok) {
+        setRow(file, { kind: "failed" });
+        return;
+      }
+      setRow(file, { kind: "ready", name: await preparedFileName(res, `print.${file === "spec" ? "pdf" : file}`) });
     } catch {
-      setFileState({ file, kind: "failed" });
+      setRow(file, { kind: "failed" });
     }
   };
   const pageCss =
@@ -426,43 +446,61 @@ export function PrintPreview({
                     ["svg", t("files.svg"), t("files.svgSub", { w: sizes.finished.width, h: sizes.finished.height })],
                     ["spec", t("files.spec"), t("files.specSub")],
                   ] as const
-                ).map(([file, label, sub]) =>
-                  ready ? (
+                ).map(([file, label, sub]) => {
+                  const row = files[file];
+                  const format = file === "svg" ? "SVG" : "PDF";
+                  const prepared = row?.kind === "ready" || row?.kind === "downloaded" ? row : null;
+                  return ready ? (
                     <div key={file} className="flex flex-col gap-1.5">
                       <a
                         href={fileHref(file)}
-                        aria-busy={fileState?.file === file && fileState.kind === "preparing" ? true : undefined}
+                        // Prepared: the link is the download itself, saved under the server's name (3.8 → 3.9).
+                        download={prepared ? prepared.name : undefined}
+                        aria-busy={row?.kind === "preparing" ? true : undefined}
                         onClick={(e) => {
+                          if (prepared) {
+                            setRow(file, { kind: "downloaded", name: prepared.name });
+                            return;
+                          }
                           e.preventDefault();
-                          if (fileState?.kind !== "preparing") void download(file);
+                          if (!preparingAny) void download(file);
                         }}
                         className={cn(
                           "flex min-h-12 items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2 text-left hover:border-border-hover",
                           file === "pdf" && "border-primary",
+                          row?.kind === "ready" && "border-primary bg-selected",
                         )}
                       >
-                        {fileState?.file === file && fileState.kind === "preparing" ? (
+                        {row?.kind === "preparing" ? (
                           <LoaderCircleIcon aria-hidden className="size-5 shrink-0 animate-spin motion-reduce:animate-none" />
+                        ) : row?.kind === "downloaded" ? (
+                          <CheckIcon aria-hidden className="size-5 shrink-0 text-success" />
                         ) : file === "spec" ? (
                           <FileTextIcon aria-hidden className="size-5 shrink-0" />
                         ) : (
                           <DownloadIcon aria-hidden className="size-5 shrink-0" />
                         )}
                         <span className="flex min-w-0 flex-col">
-                          <b className="text-[0.875rem] font-semibold">{label}</b>
+                          <b className="text-[0.875rem] font-semibold">
+                            {row?.kind === "ready" ? te("download", { format }) : row?.kind === "downloaded" ? te("downloadAgain") : label}
+                          </b>
                           <span className="truncate text-caption text-muted-foreground">
-                            {fileState?.file === file && fileState.kind === "preparing"
-                              ? te("preparing", { format: file === "svg" ? "SVG" : "PDF" })
-                              : sub}
+                            {row?.kind === "preparing"
+                              ? te("preparing", { format })
+                              : row?.kind === "ready"
+                                ? t("files.readyAs", { name: row.name })
+                                : row?.kind === "downloaded"
+                                  ? t("files.downloadedAs", { name: row.name })
+                                  : sub}
                           </span>
                         </span>
                       </a>
-                      {fileState?.file === file && fileState.kind === "failed" ? (
+                      {row?.kind === "failed" ? (
                         <div
                           role="alert"
                           className="flex flex-col items-start gap-2 rounded-md bg-danger-soft px-3 py-2.5 text-caption text-danger"
                         >
-                          <span>{te.rich("errors.failed", { format: file === "svg" ? "SVG" : "PDF", b: (c) => <b>{c}</b> })}</span>
+                          <span>{te.rich("errors.failed", { format, b: (c) => <b>{c}</b> })}</span>
                           <Button type="button" variant="secondary" size="sm" onClick={() => void download(file)}>
                             {t("error.retry")}
                           </Button>
@@ -478,8 +516,8 @@ export function PrintPreview({
                       <LoaderCircleIcon aria-hidden className="size-5 shrink-0 animate-spin motion-reduce:animate-none" />
                       <b className="text-[0.875rem] font-semibold">{label}</b>
                     </span>
-                  ),
-                )}
+                  );
+                })}
               </div>
             ) : confirming ? (
               <div role="status" className="flex flex-col gap-1.5 rounded-xl border border-border bg-subtle p-4">

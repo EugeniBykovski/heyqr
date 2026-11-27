@@ -2415,7 +2415,9 @@
       "stale": "Układ zmienił się od tego podglądu. Przed pobraniem sprawdź stronę ponownie.",
       "pdfTitle": "PDF do druku",
       "svgTitle": "Edytowalny SVG",
-      "specTitle": "Specyfikacja druku"
+      "specTitle": "Specyfikacja druku",
+      "readyAs": "Gotowe · {name}",
+      "downloadedAs": "Pobrano · {name}"
     },
     "size": {
       "title": "Rozmiar końcowy",

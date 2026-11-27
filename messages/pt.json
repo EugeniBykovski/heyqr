@@ -2415,7 +2415,9 @@
       "stale": "O layout mudou desde esta prévia. Confira a página novamente antes de baixar.",
       "pdfTitle": "PDF de impressão",
       "svgTitle": "SVG editável",
-      "specTitle": "Especificações de impressão"
+      "specTitle": "Especificações de impressão",
+      "readyAs": "Pronto · {name}",
+      "downloadedAs": "Baixado · {name}"
     },
     "size": {
       "title": "Tamanho final",

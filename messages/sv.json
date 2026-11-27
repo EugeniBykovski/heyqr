@@ -2411,7 +2411,9 @@
       "stale": "Layouten har ändrats sedan den här förhandsvisningen. Kontrollera sidan igen innan du laddar ner.",
       "pdfTitle": "Tryck-PDF",
       "svgTitle": "Redigerbar SVG",
-      "specTitle": "Tryckspecifikationer"
+      "specTitle": "Tryckspecifikationer",
+      "readyAs": "Klar · {name}",
+      "downloadedAs": "Nedladdad · {name}"
     },
     "size": {
       "title": "Färdig storlek",

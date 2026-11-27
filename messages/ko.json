@@ -2403,7 +2403,9 @@
       "stale": "이 미리보기 이후 레이아웃이 변경되었어요. 다운로드하기 전에 페이지를 다시 확인하세요.",
       "pdfTitle": "인쇄용 PDF",
       "svgTitle": "편집 가능한 SVG",
-      "specTitle": "인쇄 사양"
+      "specTitle": "인쇄 사양",
+      "readyAs": "준비 완료 · {name}",
+      "downloadedAs": "다운로드됨 · {name}"
     },
     "size": {
       "title": "완성 크기",

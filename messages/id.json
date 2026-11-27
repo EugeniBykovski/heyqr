@@ -2415,7 +2415,9 @@
       "stale": "Tata letak berubah sejak pratinjau ini. Periksa halaman lagi sebelum Anda mengunduh.",
       "pdfTitle": "PDF cetak",
       "svgTitle": "SVG yang dapat diedit",
-      "specTitle": "Spesifikasi cetak"
+      "specTitle": "Spesifikasi cetak",
+      "readyAs": "Siap · {name}",
+      "downloadedAs": "Sudah diunduh · {name}"
     },
     "size": {
       "title": "Ukuran jadi",

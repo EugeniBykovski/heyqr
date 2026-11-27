@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import messages from "../../../messages/en.json";
@@ -47,9 +47,7 @@ describe("Print Pack downloads (HEY-196)", () => {
       calls.push(url);
       if (url === "/api/print/preview") return new Response(JSON.stringify(preview), { status: 200 });
       prepares += 1;
-      return prepares === 1
-        ? new Response("{}", { status: 500 })
-        : new Response(JSON.stringify({ ready: true, name: "x.pdf" }), { status: 200 });
+      return prepares === 1 ? new Response("{}", { status: 500 }) : Response.json({ ready: true, name: "x.pdf" }, { status: 200 });
     });
     vi.stubGlobal("fetch", fetchMock);
     const assign = vi.fn();
@@ -82,11 +80,20 @@ describe("Print Pack downloads (HEY-196)", () => {
     expect(screen.getByRole("alert").textContent).toMatch(/Your payment and settings are safe/);
     expect(assign).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "Try again" }));
-    await waitFor(() => expect(assign).toHaveBeenCalledTimes(1));
-    expect(assign.mock.calls[0]?.[0]).toMatch(/^\/api\/print\/files\/l1\?file=pdf&key=rk_test_1234&.*nav=1/);
+    // HEY-197: the prepared file is ready under the server's name; the person's own click is the download.
+    const readyLink = await screen.findByRole("link", { name: /Download PDF/ });
+    expect(readyLink.textContent).toMatch(/Ready · x\.pdf/);
+    expect(readyLink.getAttribute("download")).toBe("x.pdf");
+    expect(readyLink.getAttribute("href")).toMatch(/^\/api\/print\/files\/l1\?file=pdf&key=rk_test_1234&.*nav=1/);
     const prepared = calls.filter((u) => u.includes("prepare=1"));
     expect(prepared).toHaveLength(2);
     for (const u of prepared) expect(u).not.toContain("nav=1");
     expect(screen.queryByRole("alert")).toBeNull();
+    expect(assign).not.toHaveBeenCalled();
+    fireEvent.click(readyLink);
+    const done = await screen.findByRole("link", { name: /Download again/ });
+    expect(done.textContent).toMatch(/Downloaded · x\.pdf/);
+    // Downloading again is the same link: nothing is prepared or bought again.
+    expect(calls.filter((u) => u.includes("prepare=1"))).toHaveLength(2);
   });
 });

@@ -2411,7 +2411,9 @@
       "stale": "Das Layout hat sich seit dieser Vorschau geändert. Prüfe die Seite erneut, bevor du herunterlädst.",
       "pdfTitle": "Druck-PDF",
       "svgTitle": "Bearbeitbares SVG",
-      "specTitle": "Druckspezifikationen"
+      "specTitle": "Druckspezifikationen",
+      "readyAs": "Bereit · {name}",
+      "downloadedAs": "Heruntergeladen · {name}"
     },
     "size": {
       "title": "Endformat",

@@ -2398,7 +2398,9 @@
       "stale": "版式在此预览之后已更改。下载前请再次检查页面。",
       "pdfTitle": "打印 PDF",
       "svgTitle": "可编辑 SVG",
-      "specTitle": "打印规格"
+      "specTitle": "打印规格",
+      "readyAs": "已就绪 · {name}",
+      "downloadedAs": "已下载 · {name}"
     },
     "size": {
       "title": "成品尺寸",

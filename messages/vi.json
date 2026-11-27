@@ -2411,7 +2411,9 @@
       "stale": "Bố cục đã thay đổi kể từ bản xem trước này. Hãy kiểm tra lại trang trước khi tải xuống.",
       "pdfTitle": "PDF in",
       "svgTitle": "SVG chỉnh sửa được",
-      "specTitle": "Thông số in"
+      "specTitle": "Thông số in",
+      "readyAs": "Sẵn sàng · {name}",
+      "downloadedAs": "Đã tải xuống · {name}"
     },
     "size": {
       "title": "Kích thước thành phẩm",
