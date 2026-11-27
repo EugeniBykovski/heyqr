@@ -39,6 +39,11 @@ heyqr/
 `app`, server components and server actions only (every module starts with `import "server-only"`;
 action files use `"use server"`). Each slice exposes one `index.ts`.
 
+`package.json` declares the project's modules free of side effects (`"sideEffects": ["*.css"]`), so the bundler
+drops a slice's unused exports: a page that imports one component from `@/entities/qr` or `@/features/qr-editor`
+doesn't ship the rest of the slice to the browser. A module that must run when imported for its effects alone
+(`import "./x"`) has to be listed there.
+
 ## Key flows
 
 **Editing (guest or signed in).** `features/qr-editor` keeps an `EditorDesign` in localStorage,

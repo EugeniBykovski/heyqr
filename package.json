@@ -2,6 +2,9 @@
   "name": "heyqr",
   "version": "0.1.0",
   "private": true,
+  "sideEffects": [
+    "*.css"
+  ],
   "type": "module",
   "packageManager": "pnpm@12.9.1",
   "engines": {
