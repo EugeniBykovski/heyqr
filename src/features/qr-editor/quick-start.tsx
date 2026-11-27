@@ -9,7 +9,6 @@ import { previewShortLink } from "@/shared/lib/short-link";
 import {
   captionFontOf,
   composeShared,
-  DEFAULT_DESIGN,
   designToLayout,
   type EditorDesign,
   emptyContent,
@@ -34,6 +33,7 @@ import { Swatch } from "@/shared/ui/swatch";
 import { bareUrl, fromAddressField, schemeOf } from "./address-field";
 import { CaptionField } from "./caption-field";
 import { ContentForm } from "./content-form";
+import { HERO_SQUARE, heroDesign } from "./hero-square";
 import { contentErrors } from "./content-validation";
 import { ScanStatus } from "./scan-status";
 import { TooLongNotice } from "./too-long-notice";
@@ -65,14 +65,10 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
   const tTypes = useTranslations("contentTypes");
   const tEditor = useTranslations("editor");
   const router = useRouter();
-  // Design 1.1: the hero starts as the Business card layout (90 × 50 mm, code beside the caption).
+  // HEY-187: the hero starts as a square QR + caption (60 × 60 mm, the code above a bold scan line). This is the homepage
+  // only: the editor's presets, the 90 × 50 mm Business card among them, are unchanged.
   // HEY-192: what is typed here survives a language change (it isn't stored until Continue designing, HEY-16).
-  const [design, setDesign, carried] = useCarriedState<EditorDesign>("home:quick:design", () => ({
-    ...DEFAULT_DESIGN,
-    preset: "horizontal",
-    caption: t("captionDefault"),
-    size: { unit: "mm", qr: 35, width: 90, height: 50 },
-  }));
+  const [design, setDesign, carried] = useCarriedState<EditorDesign>("home:quick:design", () => heroDesign(t("captionDefault")));
   /** What was typed on each tab during this visit, so switching away and back keeps it. */
   const [byType, setByType] = useCarriedState<Record<QuickType, QrContent>>("home:quick:byType", () => ({
     website: directContent(emptyContent("website")),
@@ -152,11 +148,21 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
   };
 
   const urlError = shownErrors.url;
+  // The stage's title states the real proportions ("Square · 60 × 60 mm"); a restored Business card keeps its own.
+  // Other types keep "{type} · live preview", which says more than the size.
+  const stageLabel =
+    type !== "website"
+      ? null
+      : design.preset === "horizontal"
+        ? t("stageCard")
+        : layout.unit === "mm" && layout.width === layout.height
+          ? t("stageSquare", { width: layout.width, height: layout.height })
+          : null;
 
   return (
     <section
       className={cn(
-        "grid gap-5 pt-6 pb-10 [grid-template-areas:'copy'_'stage'_'tool'] sm:gap-6 sm:pt-10",
+        "grid grid-cols-[minmax(0,1fr)] gap-5 pt-6 pb-10 [grid-template-areas:'copy'_'stage'_'tool'] sm:gap-6 sm:pt-10",
         // HEY-191: rows auto | 1fr, so the copy row keeps its own height and only the tool's row takes the stage's extra
         // height; switching Website / Wi-Fi / Contact then changes the fields in place without moving the tool.
         "lg:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)] lg:grid-rows-[auto_1fr] lg:items-start lg:gap-x-12 lg:gap-y-7 lg:pt-16 lg:pb-20 lg:[grid-template-areas:'copy_stage'_'tool_stage']",
@@ -180,9 +186,7 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
         >
           <Stage>
             <StageBar>
-              <span className="min-w-0 grow truncate px-1 text-label">
-                {design.preset === "horizontal" && type === "website" ? t("stageCard") : t("stageTitle", { type: tTypes(type) })}
-              </span>
+              <span className="min-w-0 grow truncate px-1 text-label">{stageLabel ?? t("stageTitle", { type: tTypes(type) })}</span>
               <Badge variant={tooLong ? "danger" : scan?.ok && valid ? "success" : "neutral"}>
                 {tooLong ? tEditor("tooLong.badge") : scan?.ok && valid ? t("scans") : t("livePreview")}
               </Badge>
@@ -202,7 +206,10 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
             </StageFoot>
           </Stage>
         </div>
-        <div data-slot="hero-sweep" className="mt-8 grid place-items-center motion-safe:lg:mt-0 motion-safe:lg:flex-1 motion-safe:lg:py-12">
+        <div
+          data-slot="hero-sweep"
+          className="mt-8 grid grid-cols-[minmax(0,1fr)] place-items-center motion-safe:lg:mt-0 motion-safe:lg:flex-1 motion-safe:lg:py-12"
+        >
           <p data-slot="hero-reveal" className="w-full text-center text-display text-foreground">
             {revealLine}
           </p>
@@ -267,7 +274,7 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
 
         {tooLong ? <TooLongNotice capacity={tooLong} /> : null}
 
-        <div className="grid gap-6 min-[26.875rem]:grid-cols-[auto_minmax(0,1fr)] lg:max-[80rem]:grid-cols-1">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6 min-[26.875rem]:grid-cols-[auto_minmax(0,1fr)] lg:max-[80rem]:grid-cols-1">
           <div className="flex flex-col gap-2">
             <span id="home-color" className="text-label">
               {t("color")}
@@ -289,7 +296,10 @@ export function QuickStart({ copy, revealLine }: { copy: ReactNode; revealLine: 
             id="home-caption"
             label={t("caption")}
             value={design.caption}
-            onAccept={(caption) => patch({ caption, preset: caption.trim() ? "horizontal" : "qr" })}
+            onAccept={(caption) =>
+              // A caption keeps the square (60 × 60 mm); clearing it leaves the code alone on its own square.
+              patch(caption.trim() ? { caption, preset: "caption", size: HERO_SQUARE } : { caption, preset: "qr" })
+            }
             font={captionFontOf(design)}
             weight={design.captionWeight ?? 700}
           />

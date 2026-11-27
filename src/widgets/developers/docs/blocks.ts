@@ -21,7 +21,8 @@ export type Block =
   | { k: "endpoint"; method: string; url: string }
   | { k: "install"; package: "qrCore" | "sdk" }
   | { k: "products" }
-  | { k: "restSoon" };
+  /** HEY-187: links to other docs pages, each with its own title and lead (`pages` are page ids, not copy). */
+  | { k: "pages"; pages: string[] };
 
 export type PageCopy = { title: string; nav?: string; lead: string; blocks: Block[] };
 
@@ -41,7 +42,7 @@ const KINDS = new Set([
   "endpoint",
   "install",
   "products",
-  "restSoon",
+  "pages",
 ]);
 
 /** The page's copy from the messages, checked for shape (a malformed message fails loudly in tests and dev). */

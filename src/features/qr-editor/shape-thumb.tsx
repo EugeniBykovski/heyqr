@@ -12,6 +12,14 @@ type Part = { kind: "modules"; shape: ModuleShape } | { kind: "frame"; shape: Ey
 
 const cache = new Map<string, { viewBox: string; inner: string }>();
 
+/**
+ * HEY-187: the finder crop. Quiet zone 4 modules + finder 7 modules, so the finder spans 4–11; the crop leaves 0.6
+ * module on every side. It used to be 3.4 + 7.2 = 10.6, which cut the right and bottom 0.4 module off every corner
+ * frame and center. Exported for the test that checks it against the finder's real bounds.
+ */
+export const FINDER_CROP = { x: 3.4, y: 3.4, size: 8.2 } as const;
+const FINDER_VIEWBOX = `${FINDER_CROP.x} ${FINDER_CROP.y} ${FINDER_CROP.size} ${FINDER_CROP.size}`;
+
 /** The renderer's own drawing of one option, cropped to the part it changes: data modules, or the top-left corner. */
 function art(part: Part) {
   const key = `${part.kind}:${part.shape}`;
@@ -30,7 +38,7 @@ function art(part: Part) {
     },
   });
   // Quiet zone is 4 modules; the finder spans modules 4–10 of the viewBox. Data modules sit right of the finder.
-  const viewBox = part.kind === "modules" ? "11 11 7 7" : part.kind === "frame" ? "3.4 3.4 7.2 7.2" : "5.2 5.2 3.6 3.6";
+  const viewBox = part.kind === "modules" ? "11 11 7 7" : part.kind === "frame" ? FINDER_VIEWBOX : "5.2 5.2 3.6 3.6";
   const out = { viewBox, inner: r.inner };
   cache.set(key, out);
   return out;
@@ -47,7 +55,7 @@ function finderPart(frame: EyeFrameShape, ball: EyeBallShape, ink: "frame" | "ba
     eyeBall: ball,
     colors: { fg: BG, eye: ink === "frame" ? INK : BG, eyeIn: ink === "ball" ? INK : BG, bg: BG },
   });
-  const out = { viewBox: "3.4 3.4 7.2 7.2", inner: r.inner };
+  const out = { viewBox: FINDER_VIEWBOX, inner: r.inner };
   cache.set(key, out);
   return out;
 }

@@ -17,7 +17,7 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/shared/lib/utils";
 import type { DocsGroup } from "./registry";
 
-export type NavItem = { id: string; href: string; label: string; group: DocsGroup; state?: "soon" | "preview" | "design" };
+export type NavItem = { id: string; href: string; label: string; group: DocsGroup; state?: "design" };
 /** A searchable page: its title, intro and section headings (design 12.16). Public pages only. */
 export type SearchEntry = { href: string; title: string; lead: string; group: DocsGroup; sections: { href: string; title: string }[] };
 export type NavLabels = {
@@ -31,7 +31,6 @@ export type NavLabels = {
   empty: string;
   emptyHint: string;
   suggestions: string[];
-  soon: string;
   preview: string;
   menuOpen: string;
   menuClose: string;
@@ -39,7 +38,6 @@ export type NavLabels = {
   packageName: string;
   packageStatus: string;
   packageLive: boolean;
-  restBadge: string;
 };
 
 const ICONS: Record<DocsGroup, typeof RocketIcon> = {
@@ -133,36 +131,24 @@ export function DocsNav({
                 <Icon aria-hidden className="size-4" />
               </span>
               {labels.groups[g]}
-              {g === "rest" ? (
-                <span className="ms-auto rounded-full border border-border bg-subtle px-2 text-micro font-semibold text-secondary-foreground">
-                  {labels.restBadge}
-                </span>
-              ) : null}
             </span>
             <ul className="flex flex-col">
               {list.map((i) => (
                 <li key={i.id}>
-                  {i.state === "soon" ? (
-                    <span className="flex min-h-9 items-center justify-between gap-2 ps-10 pe-2 text-[0.875rem] text-muted-foreground">
-                      {i.label}
-                      <span className="text-micro tracking-wide uppercase">{labels.soon}</span>
-                    </span>
-                  ) : (
-                    <Link
-                      href={i.href}
-                      aria-current={i.id === current ? "page" : undefined}
-                      onClick={() => setOpen(false)}
-                      className={cn(
-                        "flex min-h-9 items-center justify-between gap-2 rounded-md border-s-2 ps-9.5 pe-2 text-[0.875rem] transition-colors hover:bg-subtle",
-                        i.id === current
-                          ? "border-accent-strong bg-selected font-semibold text-accent-text"
-                          : "border-transparent text-secondary-foreground",
-                      )}
-                    >
-                      {i.label}
-                      {i.state ? <span className="text-micro tracking-wide text-warning uppercase">{labels.preview}</span> : null}
-                    </Link>
-                  )}
+                  <Link
+                    href={i.href}
+                    aria-current={i.id === current ? "page" : undefined}
+                    onClick={() => setOpen(false)}
+                    className={cn(
+                      "flex min-h-9 items-center justify-between gap-2 rounded-md border-s-2 ps-9.5 pe-2 text-[0.875rem] transition-colors hover:bg-subtle",
+                      i.id === current
+                        ? "border-accent-strong bg-selected font-semibold text-accent-text"
+                        : "border-transparent text-secondary-foreground",
+                    )}
+                  >
+                    {i.label}
+                    {i.state ? <span className="text-micro tracking-wide text-warning uppercase">{labels.preview}</span> : null}
+                  </Link>
                 </li>
               ))}
             </ul>

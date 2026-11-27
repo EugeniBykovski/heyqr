@@ -54,7 +54,7 @@
   "home": {
     "hero": {
       "eyebrow": "QR 스튜디오 · 디자인과 미리보기는 무료",
-      "title": "나만의 느낌을 담은 QR 코드.",
+      "title": "스캔하고 싶어지는 QR 코드를 만드세요.",
       "lead": "링크를 붙여 넣고 여기서 꾸며 보세요. 입력하는 대로 미리보기가 바뀌며, 디자인은 무료예요.",
       "reveal": "좋은 일은 스캔 한 번이면 시작돼요."
     },
@@ -77,7 +77,7 @@
         "clay": "클레이"
       },
       "caption": "캡션",
-      "captionDefault": "포트폴리오 보기",
+      "captionDefault": "스캔해서 포트폴리오 보기",
       "continue": "계속 디자인하기",
       "priceNote": "디자인과 미리보기는 무료예요. PNG와 SVG 다운로드는 코드당 한 번 <b>{price}</b>예요.",
       "seePricing": "요금 보기",
@@ -87,7 +87,8 @@
       "realCode": "실제로 스캔되는 코드",
       "previewLabel": "QR 코드 미리보기",
       "otherType": "초안은 {type} 코드예요. 계속 디자인하기를 누르면 편집기에서 열려요.",
-      "stageCard": "명함 · 90 mm × 50 mm"
+      "stageCard": "명함 · 90 mm × 50 mm",
+      "stageSquare": "정사각형 · {width} mm × {height} mm"
     },
     "how": {
       "label": "이용 방법",
@@ -2101,7 +2102,6 @@
     "privacy": {
       "title": "개인정보 처리방침"
     },
-    "draft": "소유자 및 법무 검토용 초안이에요. 이 문구는 아직 효력이 없으며 게시 전에 변경될 수 있어요. 강조 표시된 부분은 아직 확인이 필요해요.",
     "updated": "최종 업데이트: {date}",
     "effectiveNote": "시행일은 이 문구가 승인되면 정해져요.",
     "onThisPage": "이 페이지의 내용",
@@ -2779,7 +2779,7 @@
   },
   "developers": {
     "metaTitle": "개발자용 API",
-    "metaDescription": "직접 작성한 코드에서 HeyQR 코드를 만드세요. 정적 코드는 @heyqr/qr-core 패키지로, 동적 코드는 곧 출시될 REST API로 만들 수 있어요.",
+    "metaDescription": "직접 작성한 코드로 HeyQR 코드를 만드세요. 계정의 코드(동적 코드 포함)는 REST API와 TypeScript SDK @simplex-packages/heyqr-sdk로, 정적 코드는 렌더러 @heyqr/qr-core로 만들 수 있어요.",
     "docs": {
       "search": {
         "label": "문서 검색",
@@ -2808,10 +2808,8 @@
       "backToTop": "맨 위로",
       "previous": "이전",
       "next": "다음",
-      "soon": "곧 출시",
       "preview": "미리보기",
       "designPreview": "디자인 미리보기",
-      "notPublic": "아직 비공개",
       "env": {
         "both": "브라우저 및 Node.js",
         "browser": "브라우저",
@@ -2830,8 +2828,7 @@
         "auth": "인증",
         "authValue": "Authorization: Bearer <API 키>",
         "method": "메서드",
-        "url": "요청 URL",
-        "base": "사용하는 HeyQR 서버 기준이에요. 공개 API는 아직 제공되지 않아요."
+        "url": "요청 URL"
       },
       "helpful": {
         "question": "이 페이지가 도움이 되었나요?",
@@ -2847,13 +2844,13 @@
         "proposed": "제안된 설계예요. 공개된 계약이 아니에요."
       },
       "status": {
-        "unpublished": "미게시",
+        "unpublished": "아직 npm에 없어요",
         "live": "출시됨",
-        "liveOnNpm": "npm에 게시됨",
-        "soon": "곧 출시"
+        "liveOnNpm": "npm에 게시됨"
       },
       "products": {
-        "pkgTitle": "npm 패키지",
+        "sdkTitle": "TypeScript SDK",
+        "sdkText": "REST API용 타입 지정 클라이언트로, npm에 @simplex-packages/heyqr-sdk로 공개되어 있어요. Node.js 18 이상.",
         "pkgText": "무료예요. 정적 QR 코드를 내 컴퓨터에서 렌더링해요. 계정도 API 키도 필요 없어요.",
         "restTitle": "REST API",
         "restText": "서버에서 동적 코드를 포함한 코드를 만들고 관리하세요."
@@ -2865,22 +2862,11 @@
         "unpublishedTitle": "아직 npm에 없어요",
         "unpublishedText": "{name} {version}은(는) 아직 게시되지 않아서 설치할 수 없어요. 이 페이지의 모든 내용은 현재 소스와 일치해요. 출시되면 이메일로 알려 드릴게요:"
       },
-      "restSoon": {
-        "cardTitle": "서버에서 만드는 동적 코드",
-        "cardText": "계정의 API 키로 코드를 만들고, 동적 코드의 연결 주소를 바꾸고, 스캔 수를 확인할 수 있게 될 거예요. API가 열리면 실제 요청과 응답이 담긴 전체 레퍼런스를 공개할게요.",
-        "planned": "예정",
-        "items": ["계정용 API 키", "코드 1개 또는 최대 100개를 한 번에 생성", "동적 코드의 연결 주소 변경", "일별 스캔 수"],
-        "npmLink": "지금 npm 패키지 사용하기"
-      },
       "waitlist": {
-        "label": "REST API가 열리면 이메일 받기",
         "placeholder": "you@company.com",
-        "join": "대기자 명단에 등록",
         "joining": "등록 중…",
         "invalid": "주소를 확인해 주세요. 이름, @, 도메인이 필요해요.",
-        "failed": "지금은 등록하지 못했어요. 다시 시도해 주세요.",
-        "joined": "명단에 등록됐어요. REST API가 열리면 {email}(으)로 연락드릴게요.",
-        "hint": "열릴 때 이메일 한 통만 보내요. 뉴스레터는 없어요."
+        "failed": "지금은 등록하지 못했어요. 다시 시도해 주세요."
       },
       "notifyPackages": {
         "label": "패키지가 게시되면 이메일 받기",
@@ -2906,7 +2892,7 @@
         "overview": {
           "title": "개발자용 API",
           "nav": "개요",
-          "lead": "직접 작성한 코드에서 HeyQR 코드를 만드세요. 무료 npm 패키지로 오늘 바로 시작할 수 있고, 동적 코드용 REST API도 곧 나와요.",
+          "lead": "직접 작성한 코드로 HeyQR 코드를 만드세요. REST API와 TypeScript SDK는 서버에서 동적 코드를 포함한 계정의 코드를 만들고 관리해요. @heyqr/qr-core는 기기에서 정적 코드를 렌더링해요.",
           "blocks": [
             {
               "k": "products"
@@ -3942,7 +3928,7 @@
                 },
                 {
                   "q": "이 패키지로 동적 코드를 만들 수 있나요?",
-                  "a": "아직은 안 돼요. 동적 코드에는 HeyQR 단축 링크, 요금제, 그리고 저희 서버의 스캔 집계가 필요해요. REST API와 함께 제공될 예정이에요."
+                  "a": "@heyqr/qr-core로는 안 돼요. 동적 코드에는 HeyQR 단축 링크, 요금제, 저희 서버의 스캔 집계가 필요해요. 이런 경우에는 REST API나 TypeScript SDK `@simplex-packages/heyqr-sdk`를 사용하세요."
                 },
                 {
                   "q": "로고를 넣은 코드가 실패하는 이유는 무엇인가요?",
@@ -3989,10 +3975,16 @@
         },
         "rest": {
           "title": "REST API",
-          "lead": "서버에서 코드를 만들고, 동적 코드의 연결 주소를 바꾸고, 스캔 수를 확인하세요.",
+          "lead": "HeyQR 계정의 API 키로 서버에서 코드를 만들고 동적 코드의 연결 주소를 바꿀 수 있어요.",
           "blocks": [
             {
-              "k": "restSoon"
+              "k": "note",
+              "kind": "info",
+              "t": "필요한 것: HeyQR 계정과 대시보드 → API 키에서 만든 API 키. 키는 서버에서만 사용하고 브라우저 코드에는 절대 넣지 마세요. 정적 코드의 파일은 한 번 구매해야 받을 수 있어요. 구매 전에는 내보내기가 `402 payment_required`와 `paymentUrl`을 반환해요. 동적 코드의 단축 링크는 코드가 Starter 또는 Studio 요금제에서 활성화되면 작동해요."
+            },
+            {
+              "k": "pages",
+              "pages": ["restAuth", "restCreate", "restDestination", "restErrors", "restSdk"]
             }
           ]
         },
@@ -4000,11 +3992,6 @@
           "title": "인증",
           "lead": "모든 요청에는 HeyQR 계정의 API 키가 포함돼요.",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "아직 비공개예요. 이 페이지는 이 HeyQR 빌드의 REST API를 설명하며, 해당 경로와 대조해 확인했어요. 아직 heyqr.me에서는 사용할 수 없고, 공개될 때까지 검색에 노출되지 않아요."
-            },
             {
               "k": "h2",
               "id": "keys",
@@ -4064,11 +4051,6 @@
           "title": "QR 코드 만들기",
           "lead": "레이아웃이 포함된 QR 코드 하나를 계정의 초안으로 만들어요. 활성화, 단축 링크, 결제는 앱에서 처리해요.",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "아직 비공개예요. 이 페이지는 이 HeyQR 빌드의 REST API를 설명하며, 해당 경로와 대조해 확인했어요. 아직 heyqr.me에서는 사용할 수 없고, 공개될 때까지 검색에 노출되지 않아요."
-            },
             {
               "k": "endpoint",
               "method": "POST",
@@ -4214,11 +4196,6 @@
           "lead": "동적 코드가 다른 곳을 가리키게 해요. 인쇄된 코드는 단축 링크를 그대로 유지하며 즉시 새 주소를 따라가요.",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "아직 비공개예요. 이 페이지는 이 HeyQR 빌드의 REST API를 설명하며, 해당 경로와 대조해 확인했어요. 아직 heyqr.me에서는 사용할 수 없고, 공개될 때까지 검색에 노출되지 않아요."
-            },
-            {
               "k": "h2",
               "id": "read",
               "t": "현재 연결 주소 읽기"
@@ -4321,11 +4298,6 @@
           "lead": "모든 오류는 같은 형태예요. 메시지가 아니라 code로 분기하세요.",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "아직 비공개예요. 이 페이지는 이 HeyQR 빌드의 REST API를 설명하며, 해당 경로와 대조해 확인했어요. 아직 heyqr.me에서는 사용할 수 없고, 공개될 때까지 검색에 노출되지 않아요."
-            },
-            {
               "k": "h2",
               "id": "shape",
               "t": "오류 형태"
@@ -4418,8 +4390,8 @@
           "blocks": [
             {
               "k": "note",
-              "kind": "preview",
-              "t": "아직 비공개예요. 이 페이지는 이 HeyQR 빌드의 REST API를 설명하며, 해당 경로와 대조해 확인했어요. 아직 heyqr.me에서는 사용할 수 없고, 공개될 때까지 검색에 노출되지 않아요."
+              "kind": "info",
+              "t": "필요한 것: HeyQR 계정과 대시보드 → API 키에서 만든 API 키. 키는 서버에서만 사용하고 브라우저 코드에는 절대 넣지 마세요. 정적 코드의 파일은 한 번 구매해야 받을 수 있어요. 구매 전에는 내보내기가 `402 payment_required`와 `paymentUrl`을 반환해요. 동적 코드의 단축 링크는 코드가 Starter 또는 Studio 요금제에서 활성화되면 작동해요."
             },
             {
               "k": "h2",
@@ -4429,6 +4401,23 @@
             {
               "k": "install",
               "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "quickstart",
+              "t": "빠른 시작"
+            },
+            {
+              "k": "p",
+              "t": "동적 QR 코드 초안을 만든 다음 레이아웃과 연결 주소를 읽어 와요. 파일을 저장하고 키를 설정한 뒤 Node.js 18 이상에서 실행하세요:"
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstart"
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstartRun"
             },
             {
               "k": "h2",

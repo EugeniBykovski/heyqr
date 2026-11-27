@@ -98,7 +98,9 @@ export function DesignSettings({
     <TabsPrimitive.Root value={active} onValueChange={(v) => onGroupChange(v as DesignGroup)} className="flex flex-col gap-5">
       <TabsPrimitive.List
         aria-label={t("label")}
-        className="-mx-4 flex [scrollbar-width:none] gap-1 overflow-x-auto px-3 py-1 sm:mx-0 sm:flex-wrap sm:px-0"
+        // HEY-187: a scroller clips what is painted outside it, and the focus ring sits 4 px outside a tab (2 px offset
+        // + 2 px outline): the list keeps at least that much room on every side, so Layout's ring isn't cut.
+        className="-mx-4 flex [scrollbar-width:none] gap-1 overflow-x-auto px-3 py-1.5 sm:-mx-1.5 sm:flex-wrap sm:px-1.5"
       >
         {groups.map((g) => (
           <TabsPrimitive.Trigger
@@ -556,7 +558,7 @@ function PatternGroup({ design, onChange }: GroupProps) {
   const t = useTranslations("editor");
   const tile = (o: string, picture: ReactNode) => (
     <>
-      <span className="grid h-14 place-items-center rounded-md bg-subtle">{picture}</span>
+      <span className="grid h-15 place-items-center rounded-md bg-subtle">{picture}</span>
       <span className="max-w-full truncate px-0.5">{t(`shapes.${o}` as "shapes.square")}</span>
     </>
   );
@@ -580,7 +582,7 @@ function PatternGroup({ design, onChange }: GroupProps) {
         options={EYE_FRAME_SHAPES}
         columns="grid-cols-3"
         onChange={(eyeFrame) => onChange({ eyeFrame })}
-        render={(o) => tile(o, <ShapeThumb part={{ kind: "frame", shape: o }} className="size-10" />)}
+        render={(o) => tile(o, <ShapeThumb part={{ kind: "frame", shape: o }} className="size-12" />)}
       />
       <OptionGrid
         label={t("eyeBall")}
@@ -590,7 +592,7 @@ function PatternGroup({ design, onChange }: GroupProps) {
         options={EYE_BALL_SHAPES}
         columns="grid-cols-3"
         onChange={(eyeBall) => onChange({ eyeBall })}
-        render={(o) => tile(o, <ShapeThumb part={{ kind: "ball", shape: o }} className="size-10" />)}
+        render={(o) => tile(o, <ShapeThumb part={{ kind: "ball", shape: o }} className="size-12" />)}
       />
       <p className="text-caption text-muted-foreground">{t("finderNote")}</p>
     </>

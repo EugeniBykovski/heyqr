@@ -54,7 +54,7 @@
   "home": {
     "hero": {
       "eyebrow": "Studio QR · progettazione e anteprima gratuite",
-      "title": "Un codice QR che sembra davvero tuo.",
+      "title": "Crea un codice QR che vale la pena scansionare.",
       "lead": "Incolla un link e personalizzalo qui. L’anteprima si aggiorna mentre scrivi, e progettare è gratis.",
       "reveal": "Le cose belle sono a una scansione di distanza."
     },
@@ -77,7 +77,7 @@
         "clay": "Argilla"
       },
       "caption": "Didascalia",
-      "captionDefault": "Guarda il portfolio",
+      "captionDefault": "Scansiona per vedere il mio portfolio",
       "continue": "Continua a progettare",
       "priceNote": "Progettazione e anteprima gratuite. Scaricare PNG e SVG costa <b>{price}</b> per codice, una sola volta.",
       "seePricing": "Vedi i prezzi",
@@ -87,7 +87,8 @@
       "realCode": "Codice reale e leggibile",
       "previewLabel": "Anteprima del tuo codice QR",
       "otherType": "La tua bozza è un codice {type}. Continua a progettare per aprirla nell’editor.",
-      "stageCard": "Biglietto da visita · 90 mm × 50 mm"
+      "stageCard": "Biglietto da visita · 90 mm × 50 mm",
+      "stageSquare": "Quadrato · {width} mm × {height} mm"
     },
     "how": {
       "label": "Come funziona",
@@ -2109,7 +2110,6 @@
     "privacy": {
       "title": "Informativa sulla privacy"
     },
-    "draft": "Bozza da sottoporre al titolare e all’ufficio legale. Questo testo non è ancora in vigore e può cambiare prima della pubblicazione. Le parti evidenziate devono ancora essere confermate.",
     "updated": "Ultimo aggiornamento: {date}",
     "effectiveNote": "La data di entrata in vigore sarà fissata quando questo testo verrà approvato.",
     "onThisPage": "In questa pagina",
@@ -2787,7 +2787,7 @@
   },
   "developers": {
     "metaTitle": "API per sviluppatori",
-    "metaDescription": "Crea codici HeyQR nel tuo codice: il pacchetto @heyqr/qr-core per i codici statici e un’API REST per i codici Dinamici, in arrivo.",
+    "metaDescription": "Crea codici HeyQR nel tuo codice: l’API REST e il suo SDK TypeScript @simplex-packages/heyqr-sdk per i codici del tuo account, inclusi quelli dinamici, e il renderer @heyqr/qr-core per i codici statici.",
     "docs": {
       "search": {
         "label": "Cerca nella documentazione",
@@ -2816,10 +2816,8 @@
       "backToTop": "Torna su",
       "previous": "Precedente",
       "next": "Successiva",
-      "soon": "Presto",
       "preview": "Anteprima",
       "designPreview": "Anteprima del design",
-      "notPublic": "Non ancora pubblico",
       "env": {
         "both": "Browser e Node.js",
         "browser": "Browser",
@@ -2838,8 +2836,7 @@
         "auth": "Autorizzazione",
         "authValue": "Authorization: Bearer <chiave API>",
         "method": "Metodo",
-        "url": "URL della richiesta",
-        "base": "Sul server HeyQR che usi; l’API pubblica non è ancora disponibile."
+        "url": "URL della richiesta"
       },
       "helpful": {
         "question": "Questa pagina ti è stata utile?",
@@ -2855,13 +2852,13 @@
         "proposed": "Design proposto. Non è un contratto pubblicato."
       },
       "status": {
-        "unpublished": "Non pubblicato",
+        "unpublished": "Non ancora su npm",
         "live": "Disponibile",
-        "liveOnNpm": "Disponibile su npm",
-        "soon": "In arrivo"
+        "liveOnNpm": "Disponibile su npm"
       },
       "products": {
-        "pkgTitle": "Pacchetto npm",
+        "sdkTitle": "TypeScript SDK",
+        "sdkText": "Un client tipizzato per l’API REST, su npm come @simplex-packages/heyqr-sdk. Node.js 18 o successivo.",
         "pkgText": "Gratuito. Codici QR statici generati sul tuo computer. Nessun account, nessuna chiave API.",
         "restTitle": "API REST",
         "restText": "Crea e gestisci codici, compresi i codici Dinamici, dal tuo server."
@@ -2873,27 +2870,11 @@
         "unpublishedTitle": "Non ancora su npm",
         "unpublishedText": "{name} {version} non è ancora pubblicato, quindi non c’è niente da installare. Tutto ciò che trovi in queste pagine corrisponde al suo codice sorgente attuale. Ricevi un’email quando esce:"
       },
-      "restSoon": {
-        "cardTitle": "Codici Dinamici dal tuo server",
-        "cardText": "Una chiave API del tuo account ti permetterà di creare codici, cambiare dove puntano i codici Dinamici e leggere i conteggi delle scansioni. Pubblicheremo il riferimento completo con richieste e risposte reali al lancio.",
-        "planned": "Previsto",
-        "items": [
-          "Chiavi API per il tuo account",
-          "Crea un codice o fino a 100 alla volta",
-          "Cambia la destinazione di un codice Dinamico",
-          "Conteggi giornalieri delle scansioni"
-        ],
-        "npmLink": "Usa subito il pacchetto npm"
-      },
       "waitlist": {
-        "label": "Ricevi un’email quando l’API REST sarà disponibile",
         "placeholder": "tu@azienda.com",
-        "join": "Iscriviti alla lista d’attesa",
         "joining": "Iscrizione…",
         "invalid": "Controlla l’indirizzo. Servono un nome, la @ e un dominio.",
-        "failed": "Non siamo riusciti ad aggiungerti in questo momento. Riprova.",
-        "joined": "Sei in lista. Scriveremo a {email} quando l’API REST sarà disponibile.",
-        "hint": "Una sola email al lancio. Nessuna newsletter."
+        "failed": "Non siamo riusciti ad aggiungerti in questo momento. Riprova."
       },
       "notifyPackages": {
         "label": "Ricevi un’email quando il pacchetto sarà pubblicato",
@@ -2919,7 +2900,7 @@
         "overview": {
           "title": "API per sviluppatori",
           "nav": "Panoramica",
-          "lead": "Crea codici HeyQR nel tuo codice. Inizia oggi con il pacchetto npm gratuito; un’API REST per i codici Dinamici è in arrivo.",
+          "lead": "Crea codici HeyQR nel tuo codice. L’API REST e il suo SDK TypeScript creano e gestiscono i codici del tuo account, inclusi quelli dinamici, dal tuo server; @heyqr/qr-core genera i codici statici sul tuo computer.",
           "blocks": [
             {
               "k": "products"
@@ -3963,7 +3944,7 @@
                 },
                 {
                   "q": "Posso creare codici Dinamici con il pacchetto?",
-                  "a": "Non ancora. Un codice Dinamico richiede un link breve HeyQR, un piano e il conteggio delle scansioni sui nostri server. Arriverà con l’API REST."
+                  "a": "Non con @heyqr/qr-core: un codice dinamico ha bisogno di un link breve HeyQR, di un piano e del conteggio delle scansioni sui nostri server. Per questo usa l’API REST o l’SDK TypeScript `@simplex-packages/heyqr-sdk`."
                 },
                 {
                   "q": "Perché il mio codice con il logo non funziona?",
@@ -4010,10 +3991,16 @@
         },
         "rest": {
           "title": "API REST",
-          "lead": "Crea codici, cambia dove puntano i codici Dinamici e leggi i conteggi delle scansioni dal tuo server.",
+          "lead": "Crea codici e cambia dove portano i codici dinamici dal tuo server, con una chiave API del tuo account HeyQR.",
           "blocks": [
             {
-              "k": "restSoon"
+              "k": "note",
+              "kind": "info",
+              "t": "Cosa ti serve: un account HeyQR e una chiave API da Dashboard → Chiavi API. Usa la chiave solo su un server, mai nel codice del browser. I file di un codice statico richiedono il suo acquisto una tantum: fino ad allora un’esportazione risponde `402 payment_required` con un `paymentUrl`. Il link breve di un codice dinamico funziona quando il codice è attivo con un piano Starter o Studio."
+            },
+            {
+              "k": "pages",
+              "pages": ["restAuth", "restCreate", "restDestination", "restErrors", "restSdk"]
             }
           ]
         },
@@ -4021,11 +4008,6 @@
           "title": "Autenticazione",
           "lead": "Ogni richiesta include una chiave API del tuo account HeyQR.",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "Non ancora pubblica. Questa pagina descrive l’API REST di questa build di HeyQR, verificata sulle sue route. Non è ancora disponibile su heyqr.me e resta esclusa dai motori di ricerca finché non lo sarà."
-            },
             {
               "k": "h2",
               "id": "keys",
@@ -4085,11 +4067,6 @@
           "title": "Crea un codice QR",
           "lead": "Crea un codice QR con i suoi layout, come bozza del tuo account. Attivazione, link brevi e pagamento restano nell’app.",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "Non ancora pubblica. Questa pagina descrive l’API REST di questa build di HeyQR, verificata sulle sue route. Non è ancora disponibile su heyqr.me e resta esclusa dai motori di ricerca finché non lo sarà."
-            },
             {
               "k": "endpoint",
               "method": "POST",
@@ -4235,11 +4212,6 @@
           "lead": "Indirizza altrove un codice Dinamico. I codici stampati mantengono il loro link breve e seguono subito.",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "Non ancora pubblica. Questa pagina descrive l’API REST di questa build di HeyQR, verificata sulle sue route. Non è ancora disponibile su heyqr.me e resta esclusa dai motori di ricerca finché non lo sarà."
-            },
-            {
               "k": "h2",
               "id": "read",
               "t": "Leggi la destinazione attuale"
@@ -4342,11 +4314,6 @@
           "lead": "Gli errori hanno tutti la stessa forma. Basa la logica sul codice, mai sul messaggio.",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "Non ancora pubblica. Questa pagina descrive l’API REST di questa build di HeyQR, verificata sulle sue route. Non è ancora disponibile su heyqr.me e resta esclusa dai motori di ricerca finché non lo sarà."
-            },
-            {
               "k": "h2",
               "id": "shape",
               "t": "Forma degli errori"
@@ -4439,8 +4406,8 @@
           "blocks": [
             {
               "k": "note",
-              "kind": "preview",
-              "t": "Non ancora pubblica. Questa pagina descrive l’API REST di questa build di HeyQR, verificata sulle sue route. Non è ancora disponibile su heyqr.me e resta esclusa dai motori di ricerca finché non lo sarà."
+              "kind": "info",
+              "t": "Cosa ti serve: un account HeyQR e una chiave API da Dashboard → Chiavi API. Usa la chiave solo su un server, mai nel codice del browser. I file di un codice statico richiedono il suo acquisto una tantum: fino ad allora un’esportazione risponde `402 payment_required` con un `paymentUrl`. Il link breve di un codice dinamico funziona quando il codice è attivo con un piano Starter o Studio."
             },
             {
               "k": "h2",
@@ -4450,6 +4417,23 @@
             {
               "k": "install",
               "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "quickstart",
+              "t": "Avvio rapido"
+            },
+            {
+              "k": "p",
+              "t": "Crea una bozza di codice QR dinamico, poi leggi il suo layout e la sua destinazione. Salva il file, imposta la tua chiave ed eseguilo con Node.js 18 o successivo:"
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstart"
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstartRun"
             },
             {
               "k": "h2",

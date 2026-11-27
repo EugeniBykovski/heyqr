@@ -54,7 +54,7 @@
   "home": {
     "hero": {
       "eyebrow": "QRスタジオ · デザインとプレビューは無料",
-      "title": "あなたらしさが伝わるQRコードを。",
+      "title": "思わずスキャンしたくなるQRコードを。",
       "lead": "リンクを貼り付けて、ここでスタイルを整えましょう。入力に合わせてプレビューが更新され、デザインは無料です。",
       "reveal": "いいことは、スキャンひとつ先に。"
     },
@@ -77,7 +77,7 @@
         "clay": "クレイ"
       },
       "caption": "キャプション",
-      "captionDefault": "ポートフォリオを見る",
+      "captionDefault": "スキャンしてポートフォリオを見る",
       "continue": "デザインを続ける",
       "priceNote": "デザインとプレビューは無料です。PNGとSVGのダウンロードはコード1つにつき<b>{price}</b>の一回払いです。",
       "seePricing": "料金を見る",
@@ -87,7 +87,8 @@
       "realCode": "実際に読み取れるコード",
       "previewLabel": "QRコードのプレビュー",
       "otherType": "下書きは{type}のコードです。「デザインを続ける」でエディターが開きます。",
-      "stageCard": "名刺 · 90 mm × 50 mm"
+      "stageCard": "名刺 · 90 mm × 50 mm",
+      "stageSquare": "正方形 · {width} mm × {height} mm"
     },
     "how": {
       "label": "使い方",
@@ -2109,7 +2110,6 @@
     "privacy": {
       "title": "プライバシーポリシー"
     },
-    "draft": "所有者および法務担当による確認用の草案です。この文書はまだ効力がなく、公開前に変更される可能性があります。ハイライトされた部分はまだ確認が必要です。",
     "updated": "最終更新日：{date}",
     "effectiveNote": "施行日は、この文書が承認された時点で設定されます。",
     "onThisPage": "このページの内容",
@@ -2787,7 +2787,7 @@
   },
   "developers": {
     "metaTitle": "開発者向けAPI",
-    "metaDescription": "ご自身のコードでHeyQRのQRコードを作成できます。静的QRコード用の@heyqr/qr-coreパッケージと、動的QRコード用のREST API（近日公開）をご用意しています。",
+    "metaDescription": "自分のコードで HeyQR のコードを作成できます。アカウントのコード（動的コードを含む）には REST API とその TypeScript SDK @simplex-packages/heyqr-sdk、静的コードにはレンダラー @heyqr/qr-core を使います。",
     "docs": {
       "search": {
         "label": "ドキュメントを検索",
@@ -2816,10 +2816,8 @@
       "backToTop": "トップに戻る",
       "previous": "前へ",
       "next": "次へ",
-      "soon": "近日公開",
       "preview": "プレビュー",
       "designPreview": "デザインプレビュー",
-      "notPublic": "未公開",
       "env": {
         "both": "ブラウザーとNode.js",
         "browser": "ブラウザー",
@@ -2838,8 +2836,7 @@
         "auth": "認証",
         "authValue": "Authorization: Bearer <APIキー>",
         "method": "メソッド",
-        "url": "リクエストURL",
-        "base": "ご利用のHeyQRサーバー上のURLです。公開APIはまだご利用いただけません。"
+        "url": "リクエストURL"
       },
       "helpful": {
         "question": "このページは役に立ちましたか？",
@@ -2855,13 +2852,13 @@
         "proposed": "設計案です。公開された仕様ではありません。"
       },
       "status": {
-        "unpublished": "未公開",
+        "unpublished": "npmでは未公開",
         "live": "公開中",
-        "liveOnNpm": "npmで公開中",
-        "soon": "近日公開"
+        "liveOnNpm": "npmで公開中"
       },
       "products": {
-        "pkgTitle": "npmパッケージ",
+        "sdkTitle": "TypeScript SDK",
+        "sdkText": "REST API 用の型付きクライアントです。npm では @simplex-packages/heyqr-sdk として公開されています。Node.js 18 以降。",
         "pkgText": "無料。静的QRコードをお使いのマシン上で生成します。アカウントもAPIキーも不要です。",
         "restTitle": "REST API",
         "restText": "動的QRコードを含むQRコードを、サーバーから作成・管理できます。"
@@ -2873,27 +2870,11 @@
         "unpublishedTitle": "npmでは未公開",
         "unpublishedText": "{name} {version}はまだ公開されていないため、インストールできるものはありません。このページの内容はすべて現在のソースに対応しています。公開時にメールでお知らせします："
       },
-      "restSoon": {
-        "cardTitle": "サーバーから動的QRコードを",
-        "cardText": "アカウントのAPIキーを使って、QRコードの作成、動的QRコードのリンク先の変更、スキャン数の取得ができるようになります。公開時には、実際のリクエストとレスポンスを含む完全なリファレンスを掲載します。",
-        "planned": "予定",
-        "items": [
-          "アカウント用のAPIキー",
-          "QRコードを1件、または最大100件まとめて作成",
-          "動的QRコードのリンク先を変更",
-          "日別のスキャン数"
-        ],
-        "npmLink": "今すぐnpmパッケージを使う"
-      },
       "waitlist": {
-        "label": "REST APIの公開時にメールで通知を受け取る",
         "placeholder": "you@company.com",
-        "join": "ウェイトリストに登録",
         "joining": "登録中…",
         "invalid": "アドレスを確認してください。名前、@、ドメインが必要です。",
-        "failed": "現在登録できませんでした。もう一度お試しください。",
-        "joined": "登録しました。REST APIの公開時に{email}へご連絡します。",
-        "hint": "公開時に1通だけお送りします。ニュースレターではありません。"
+        "failed": "現在登録できませんでした。もう一度お試しください。"
       },
       "notifyPackages": {
         "label": "パッケージの公開時にメールで通知を受け取る",
@@ -2919,7 +2900,7 @@
         "overview": {
           "title": "開発者向けAPI",
           "nav": "概要",
-          "lead": "ご自身のコードでHeyQRのQRコードを作成できます。無料のnpmパッケージなら今日から使えます。動的QRコード用のREST APIも近日公開予定です。",
+          "lead": "自分のコードで HeyQR のコードを作成できます。REST API とその TypeScript SDK は、動的コードを含むアカウントのコードをサーバーから作成・管理します。@heyqr/qr-core は静的コードをお使いのマシン上で描画します。",
           "blocks": [
             {
               "k": "products"
@@ -3962,7 +3943,7 @@
                 },
                 {
                   "q": "動的QRコードを作成できますか？",
-                  "a": "まだできません。動的QRコードには、HeyQRの短縮リンク、プラン、当社サーバーでのスキャン計測が必要です。これらはREST APIで提供されます。"
+                  "a": "@heyqr/qr-core ではできません。動的コードには HeyQR の短縮リンク、プラン、当社サーバーでのスキャン集計が必要です。これらには REST API か TypeScript SDK `@simplex-packages/heyqr-sdk` を使ってください。"
                 },
                 {
                   "q": "ロゴ付きのQRコードが失敗するのはなぜですか？",
@@ -4009,10 +3990,16 @@
         },
         "rest": {
           "title": "REST API",
-          "lead": "サーバーから、QRコードの作成、動的QRコードのリンク先の変更、スキャン数の取得ができます。",
+          "lead": "HeyQR アカウントの API キーを使って、サーバーからコードを作成し、動的コードのリンク先を変更できます。",
           "blocks": [
             {
-              "k": "restSoon"
+              "k": "note",
+              "kind": "info",
+              "t": "必要なもの：HeyQR アカウントと、「ダッシュボード → API キー」で作成した API キー。キーはサーバー上でのみ使い、ブラウザのコードには絶対に含めないでください。静的コードのファイルには一度きりの購入が必要です。購入前のエクスポートは `402 payment_required` と `paymentUrl` を返します。動的コードの短縮リンクは、そのコードが Starter または Studio プランで有効になると機能します。"
+            },
+            {
+              "k": "pages",
+              "pages": ["restAuth", "restCreate", "restDestination", "restErrors", "restSdk"]
             }
           ]
         },
@@ -4020,11 +4007,6 @@
           "title": "認証",
           "lead": "すべてのリクエストには、HeyQRアカウントのAPIキーを付けます。",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "未公開です。このページでは、このHeyQRビルドに含まれるREST APIを、そのルートと照合したうえで説明しています。heyqr.meではまだ利用できず、公開されるまで検索結果にも表示されません。"
-            },
             {
               "k": "h2",
               "id": "keys",
@@ -4084,11 +4066,6 @@
           "title": "QRコードを作成",
           "lead": "レイアウト付きのQRコードを1件、アカウントの下書きとして作成します。有効化、短縮リンク、支払いはアプリ内で行います。",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "未公開です。このページでは、このHeyQRビルドに含まれるREST APIを、そのルートと照合したうえで説明しています。heyqr.meではまだ利用できず、公開されるまで検索結果にも表示されません。"
-            },
             {
               "k": "endpoint",
               "method": "POST",
@@ -4239,11 +4216,6 @@
           "lead": "動的QRコードのリンク先を変更します。印刷済みのQRコードは短縮リンクがそのままなので、すぐに新しいリンク先に切り替わります。",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "未公開です。このページでは、このHeyQRビルドに含まれるREST APIを、そのルートと照合したうえで説明しています。heyqr.meではまだ利用できず、公開されるまで検索結果にも表示されません。"
-            },
-            {
               "k": "h2",
               "id": "read",
               "t": "現在のリンク先を取得"
@@ -4346,11 +4318,6 @@
           "lead": "エラーはすべて同じ形式です。分岐にはメッセージではなくcodeを使ってください。",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "未公開です。このページでは、このHeyQRビルドに含まれるREST APIを、そのルートと照合したうえで説明しています。heyqr.meではまだ利用できず、公開されるまで検索結果にも表示されません。"
-            },
-            {
               "k": "h2",
               "id": "shape",
               "t": "エラーの形式"
@@ -4447,8 +4414,8 @@
           "blocks": [
             {
               "k": "note",
-              "kind": "preview",
-              "t": "未公開です。このページでは、このHeyQRビルドに含まれるREST APIを、そのルートと照合したうえで説明しています。heyqr.meではまだ利用できず、公開されるまで検索結果にも表示されません。"
+              "kind": "info",
+              "t": "必要なもの：HeyQR アカウントと、「ダッシュボード → API キー」で作成した API キー。キーはサーバー上でのみ使い、ブラウザのコードには絶対に含めないでください。静的コードのファイルには一度きりの購入が必要です。購入前のエクスポートは `402 payment_required` と `paymentUrl` を返します。動的コードの短縮リンクは、そのコードが Starter または Studio プランで有効になると機能します。"
             },
             {
               "k": "h2",
@@ -4458,6 +4425,23 @@
             {
               "k": "install",
               "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "quickstart",
+              "t": "クイックスタート"
+            },
+            {
+              "k": "p",
+              "t": "動的 QR コードの下書きを作成し、そのレイアウトとリンク先を読み取ります。ファイルを保存してキーを設定し、Node.js 18 以降で実行します："
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstart"
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstartRun"
             },
             {
               "k": "h2",

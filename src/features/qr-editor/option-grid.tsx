@@ -49,7 +49,13 @@ export function OptionGrid<T extends string>({
               )}
             >
               {selected ? (
-                <span className="absolute end-1.75 top-1.75 grid size-5 place-items-center rounded-full bg-selected-mark text-inverse-foreground">
+                // HEY-187: on a tile the check sits on the tile's corner, so it never covers the picture's edge.
+                <span
+                  className={cn(
+                    "absolute grid size-5 place-items-center rounded-full bg-selected-mark text-inverse-foreground",
+                    variant === "tile" ? "-end-1.5 -top-1.5 ring-2 ring-page" : "end-1.75 top-1.75",
+                  )}
+                >
                   <CheckIcon aria-hidden strokeWidth={3.2} className="size-3" />
                 </span>
               ) : null}

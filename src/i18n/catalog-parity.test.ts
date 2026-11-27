@@ -13,7 +13,21 @@ import { LOCALE_CODES } from "./locales";
  * - No value is blank where English isn't, and none is a raw key path.
  */
 type Json = string | number | boolean | null | Json[] | { [k: string]: Json };
-const FIXED_IN_BLOCKS = new Set(["k", "id", "example", "kind", "page", "icon", "method", "url", "package", "keyCol", "reqCol", "required"]);
+const FIXED_IN_BLOCKS = new Set([
+  "k",
+  "id",
+  "example",
+  "kind",
+  "page",
+  "icon",
+  "method",
+  "url",
+  "package",
+  "keyCol",
+  "reqCol",
+  "required",
+  "pages",
+]);
 
 /** ICU argument names with their type (`count:plural`), ignoring the translated branches inside. */
 function icuArgs(s: string): string[] {

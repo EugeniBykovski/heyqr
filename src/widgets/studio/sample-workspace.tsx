@@ -47,7 +47,7 @@ export async function SampleWorkspace() {
   return (
     <section
       aria-labelledby="ws-title"
-      className="grid reveal gap-8 py-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center lg:gap-14 lg:py-18"
+      className="grid reveal grid-cols-[minmax(0,1fr)] gap-8 py-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center lg:gap-14 lg:py-18"
     >
       <div className="flex flex-col gap-4">
         <span className="text-kicker text-accent-text uppercase">{t("kicker")}</span>
@@ -66,7 +66,8 @@ export async function SampleWorkspace() {
         <div className="flex flex-wrap gap-3 pt-1">
           {/* Design 6.1 guest: the trial needs an account, so it signs in first and opens the trial page, where the
               server says whether this account can still start one. */}
-          <Button asChild variant="primary" size="lg">
+          {/* HEY-187: long translations ("Rozpocznij 7-dniowy darmowy okres próbny") wrap inside the screen. */}
+          <Button asChild variant="primary" size="lg" className="h-auto max-w-full shrink py-2.5 text-balance whitespace-normal">
             <Link href="/sign-in?next=/dashboard/trial">{t("startTrial")}</Link>
           </Button>
           <Button asChild size="lg">

@@ -83,7 +83,8 @@ export function ExploreTypes({ shortLabel }: { shortLabel: string }) {
    * switching tabs swaps the panel in place without the page moving (design 10.2). Hidden variants are invisible
    * and inert, so only the current one is read, tabbed to or clicked. */
   const stacked = (render: (key: ExploreType) => ReactNode) => (
-    <div className="grid">
+    // One shrinkable column: an implicit `auto` track grows to the longest unbreakable line and overflowed 320 px phones.
+    <div className="grid grid-cols-[minmax(0,1fr)]">
       {EXPLORE.map((key) => (
         <div
           key={key}
@@ -170,19 +171,25 @@ export function ExploreTypes({ shortLabel }: { shortLabel: string }) {
         id="xp-panel"
         role="tabpanel"
         aria-labelledby={`xp-tab-${current}`}
-        className="grid gap-6 rounded-2xl border border-border bg-surface p-5 sm:p-7 md:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] md:gap-x-8 lg:grid-cols-[minmax(0,1fr)_20rem_minmax(0,0.8fr)] lg:items-center lg:gap-10"
+        className="grid grid-cols-[minmax(0,1fr)] gap-6 rounded-2xl border border-border bg-surface p-5 sm:p-7 md:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] md:gap-x-8 lg:grid-cols-[minmax(0,1fr)_20rem_minmax(0,0.8fr)] lg:items-center lg:gap-10"
       >
         <div className="md:col-start-1 md:row-start-1 md:self-start lg:self-center">
           {stacked((key) => {
             const isHosted = isHostedType(key);
             return (
               <div className="flex flex-col items-start gap-3">
-                <Badge variant={isHosted ? "accent" : "neutral"}>
+                <Badge variant={isHosted ? "accent" : "neutral"} className="h-auto min-h-6 max-w-full py-1 whitespace-normal">
                   {isHosted ? t("hostedBadge") : key === "website" ? t("websiteBadge") : t("directBadge")}
                 </Badge>
                 <h3 className="text-h2">{t(`types.${key}.short`)}</h3>
                 <p className="text-secondary-foreground">{t(`types.${key}.use`)}</p>
-                <Button variant="primary" size="lg" onClick={create}>
+                {/* HEY-187: a long CTA ("Crear un QR de redes sociales") wraps instead of widening a 320 px phone. */}
+                <Button
+                  variant="primary"
+                  size="lg"
+                  className="h-auto max-w-full shrink py-2.5 text-balance whitespace-normal"
+                  onClick={create}
+                >
                   {t(`types.${key}.cta`)}
                   <ArrowRightIcon aria-hidden />
                 </Button>

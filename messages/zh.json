@@ -54,7 +54,7 @@
   "home": {
     "hero": {
       "eyebrow": "二维码工作室 · 免费设计和预览",
-      "title": "一个真正属于你的二维码。",
+      "title": "创建一个值得扫描的二维码。",
       "lead": "粘贴链接，在这里设置样式。预览随输入实时更新，设计完全免费。",
       "reveal": "美好只需扫码一下。"
     },
@@ -77,7 +77,7 @@
         "clay": "陶土色"
       },
       "caption": "文字说明",
-      "captionDefault": "查看作品集",
+      "captionDefault": "扫码查看我的作品集",
       "continue": "继续设计",
       "priceNote": "设计和预览免费。下载 PNG 和 SVG 每个二维码一次性收费 <b>{price}</b>。",
       "seePricing": "查看价格",
@@ -87,7 +87,8 @@
       "realCode": "真实可扫描的二维码",
       "previewLabel": "你的二维码预览",
       "otherType": "你的草稿是{type}二维码。点击“继续设计”将在编辑器中打开。",
-      "stageCard": "名片 · 90 mm × 50 mm"
+      "stageCard": "名片 · 90 mm × 50 mm",
+      "stageSquare": "方形 · {width} mm × {height} mm"
     },
     "how": {
       "label": "使用方式",
@@ -2101,7 +2102,6 @@
     "privacy": {
       "title": "隐私政策"
     },
-    "draft": "草稿，供所有者和法务审阅。本文本尚未生效，发布前可能会有变动。突出显示的部分仍需确认。",
     "updated": "最后更新：{date}",
     "effectiveNote": "生效日期将在本文本获批后确定。",
     "onThisPage": "本页内容",
@@ -2774,7 +2774,7 @@
   },
   "developers": {
     "metaTitle": "开发者 API",
-    "metaDescription": "在你自己的代码中生成 HeyQR 二维码：用于静态二维码的 @heyqr/qr-core 包，以及即将推出的动态二维码 REST API。",
+    "metaDescription": "在你自己的代码中生成 HeyQR 二维码：REST API 及其 TypeScript SDK @simplex-packages/heyqr-sdk 用于管理你账户中的二维码（包括动态二维码），@heyqr/qr-core 渲染器用于静态二维码。",
     "docs": {
       "search": {
         "label": "搜索文档",
@@ -2803,10 +2803,8 @@
       "backToTop": "返回顶部",
       "previous": "上一页",
       "next": "下一页",
-      "soon": "即将推出",
       "preview": "预览",
       "designPreview": "设计预览",
-      "notPublic": "尚未公开",
       "env": {
         "both": "浏览器和 Node.js",
         "browser": "浏览器",
@@ -2825,8 +2823,7 @@
         "auth": "授权",
         "authValue": "Authorization: Bearer <API 密钥>",
         "method": "方法",
-        "url": "请求 URL",
-        "base": "位于你所使用的 HeyQR 服务器上；公共 API 尚未开放。"
+        "url": "请求 URL"
       },
       "helpful": {
         "question": "本页内容对你有帮助吗？",
@@ -2842,13 +2839,13 @@
         "proposed": "设计提案，并非已发布的约定。"
       },
       "status": {
-        "unpublished": "未发布",
+        "unpublished": "尚未发布到 npm",
         "live": "已上线",
-        "liveOnNpm": "已在 npm 发布",
-        "soon": "即将推出"
+        "liveOnNpm": "已在 npm 发布"
       },
       "products": {
-        "pkgTitle": "npm 包",
+        "sdkTitle": "TypeScript SDK",
+        "sdkText": "REST API 的类型化客户端，在 npm 上名为 @simplex-packages/heyqr-sdk。需要 Node.js 18 或更高版本。",
         "pkgText": "免费。在你的设备上渲染静态二维码。无需账户，无需 API 密钥。",
         "restTitle": "REST API",
         "restText": "从你的服务器创建和管理二维码，包括动态二维码。"
@@ -2860,22 +2857,11 @@
         "unpublishedTitle": "尚未发布到 npm",
         "unpublishedText": "{name} {version} 尚未发布，因此暂时无法安装。本文档中的所有内容都与其当前源码一致。发布时通过邮件通知我："
       },
-      "restSoon": {
-        "cardTitle": "从你的服务器生成动态二维码",
-        "cardText": "使用账户中的 API 密钥，你可以创建二维码、更改动态二维码的目标链接并读取扫描次数。开放时，我们将发布包含真实请求和响应的完整参考文档。",
-        "planned": "计划中",
-        "items": ["账户 API 密钥", "创建单个二维码，或一次最多创建 100 个", "更改动态二维码的目标链接", "每日扫描次数"],
-        "npmLink": "立即使用 npm 包"
-      },
       "waitlist": {
-        "label": "REST API 开放时通过邮件通知我",
         "placeholder": "you@company.com",
-        "join": "加入候补名单",
         "joining": "正在加入…",
         "invalid": "请检查邮箱地址。它需要包含用户名、@ 和域名。",
-        "failed": "暂时无法添加，请重试。",
-        "joined": "你已加入名单。REST API 开放时，我们会发邮件到 {email}。",
-        "hint": "仅在开放时发送一封邮件，不会订阅新闻通讯。"
+        "failed": "暂时无法添加，请重试。"
       },
       "notifyPackages": {
         "label": "包发布时通过邮件通知我",
@@ -2901,7 +2887,7 @@
         "overview": {
           "title": "开发者 API",
           "nav": "概览",
-          "lead": "在你自己的代码中生成 HeyQR 二维码。现在就可以使用免费的 npm 包；动态二维码的 REST API 即将推出。",
+          "lead": "在你自己的代码中生成 HeyQR 二维码。REST API 及其 TypeScript SDK 可在你的服务器上创建和管理账户中的二维码，包括动态二维码；@heyqr/qr-core 在你的设备上渲染静态二维码。",
           "blocks": [
             {
               "k": "products"
@@ -3923,7 +3909,7 @@
                 },
                 {
                   "q": "可以用它生成动态二维码吗？",
-                  "a": "暂时不行。动态二维码需要 HeyQR 短链接、套餐以及我们服务器上的扫描统计。这些将随 REST API 一起提供。"
+                  "a": "@heyqr/qr-core 不行：动态二维码需要 HeyQR 短链接、套餐以及我们服务器上的扫描统计。请改用 REST API 或 TypeScript SDK `@simplex-packages/heyqr-sdk`。"
                 },
                 {
                   "q": "为什么我带 Logo 的二维码检查失败？",
@@ -3970,10 +3956,16 @@
         },
         "rest": {
           "title": "REST API",
-          "lead": "从你的服务器创建二维码、更改动态二维码的目标链接并读取扫描次数。",
+          "lead": "使用 HeyQR 账户中的 API 密钥，在你的服务器上创建二维码并更改动态二维码的目标地址。",
           "blocks": [
             {
-              "k": "restSoon"
+              "k": "note",
+              "kind": "info",
+              "t": "你需要：一个 HeyQR 账户，以及在“控制台 → API 密钥”中创建的 API 密钥。密钥只能在服务器上使用，绝不能放在浏览器代码中。静态二维码的文件需要一次性购买：在此之前，导出会返回 `402 payment_required` 及 `paymentUrl`。动态二维码的短链接在该二维码于 Starter 或 Studio 套餐中上线后生效。"
+            },
+            {
+              "k": "pages",
+              "pages": ["restAuth", "restCreate", "restDestination", "restErrors", "restSdk"]
             }
           ]
         },
@@ -3981,11 +3973,6 @@
           "title": "身份验证",
           "lead": "每个请求都携带一个来自你 HeyQR 账户的 API 密钥。",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "尚未公开。本页介绍的是此 HeyQR 版本中的 REST API，已对照其路由核对。它目前尚未在 heyqr.me 上提供，在正式提供之前也不会出现在搜索结果中。"
-            },
             {
               "k": "h2",
               "id": "keys",
@@ -4045,11 +4032,6 @@
           "title": "创建二维码",
           "lead": "创建一个带有版式的二维码，作为你账户中的草稿。激活、短链接和付款仍在应用内完成。",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "尚未公开。本页介绍的是此 HeyQR 版本中的 REST API，已对照其路由核对。它目前尚未在 heyqr.me 上提供，在正式提供之前也不会出现在搜索结果中。"
-            },
             {
               "k": "endpoint",
               "method": "POST",
@@ -4190,11 +4172,6 @@
           "lead": "将动态二维码指向其他地址。已印刷的二维码保留其短链接，并立即生效。",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "尚未公开。本页介绍的是此 HeyQR 版本中的 REST API，已对照其路由核对。它目前尚未在 heyqr.me 上提供，在正式提供之前也不会出现在搜索结果中。"
-            },
-            {
               "k": "h2",
               "id": "read",
               "t": "读取当前目标链接"
@@ -4297,11 +4274,6 @@
           "lead": "所有错误结构相同。请根据 code 进行分支判断，切勿依赖 message。",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "尚未公开。本页介绍的是此 HeyQR 版本中的 REST API，已对照其路由核对。它目前尚未在 heyqr.me 上提供，在正式提供之前也不会出现在搜索结果中。"
-            },
-            {
               "k": "h2",
               "id": "shape",
               "t": "错误结构"
@@ -4386,8 +4358,8 @@
           "blocks": [
             {
               "k": "note",
-              "kind": "preview",
-              "t": "尚未公开。本页介绍的是此 HeyQR 版本中的 REST API，已对照其路由核对。它目前尚未在 heyqr.me 上提供，在正式提供之前也不会出现在搜索结果中。"
+              "kind": "info",
+              "t": "你需要：一个 HeyQR 账户，以及在“控制台 → API 密钥”中创建的 API 密钥。密钥只能在服务器上使用，绝不能放在浏览器代码中。静态二维码的文件需要一次性购买：在此之前，导出会返回 `402 payment_required` 及 `paymentUrl`。动态二维码的短链接在该二维码于 Starter 或 Studio 套餐中上线后生效。"
             },
             {
               "k": "h2",
@@ -4397,6 +4369,23 @@
             {
               "k": "install",
               "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "quickstart",
+              "t": "快速入门"
+            },
+            {
+              "k": "p",
+              "t": "创建一个动态二维码草稿，然后读取它的布局和目标地址。保存文件、设置密钥，并用 Node.js 18 或更高版本运行："
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstart"
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstartRun"
             },
             {
               "k": "h2",

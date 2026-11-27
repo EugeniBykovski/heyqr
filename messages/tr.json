@@ -54,7 +54,7 @@
   "home": {
     "hero": {
       "eyebrow": "QR stüdyosu · tasarlamak ve önizlemek ücretsiz",
-      "title": "Size ait gibi görünen bir QR kod.",
+      "title": "Taranmaya değer bir QR kod oluşturun.",
       "lead": "Bir bağlantı yapıştırın ve burada biçimlendirin. Önizleme siz yazdıkça güncellenir ve tasarım ücretsizdir.",
       "reveal": "Güzel şeyler bir tarama uzağınızda."
     },
@@ -77,7 +77,7 @@
         "clay": "Kil"
       },
       "caption": "Alt yazı",
-      "captionDefault": "Portfolyoyu görüntüle",
+      "captionDefault": "Portfolyomu görmek için tarayın",
       "continue": "Tasarlamaya devam edin",
       "priceNote": "Tasarlamak ve önizlemek ücretsiz. PNG ve SVG’yi indirmek kod başına bir kez <b>{price}</b> tutar.",
       "seePricing": "Fiyatları görün",
@@ -87,7 +87,8 @@
       "realCode": "Gerçek, taranabilir kod",
       "previewLabel": "QR kodunuzun önizlemesi",
       "otherType": "Taslağınız bir {type} kodu. Tasarlamaya devam ederseniz düzenleyicide açılır.",
-      "stageCard": "Kartvizit · 90 mm × 50 mm"
+      "stageCard": "Kartvizit · 90 mm × 50 mm",
+      "stageSquare": "Kare · {width} mm × {height} mm"
     },
     "how": {
       "label": "Nasıl çalışır",
@@ -2113,7 +2114,6 @@
     "privacy": {
       "title": "Gizlilik Politikası"
     },
-    "draft": "Sahibin ve hukuk ekibinin incelemesi için taslak. Bu metin henüz yürürlükte değildir ve yayımlanmadan önce değişebilir. Vurgulanan bölümlerin hâlâ onaylanması gerekiyor.",
     "updated": "Son güncelleme: {date}",
     "effectiveNote": "Yürürlük tarihi, bu metin onaylandığında belirlenecek.",
     "onThisPage": "Bu sayfada",
@@ -2791,7 +2791,7 @@
   },
   "developers": {
     "metaTitle": "Geliştiriciler için API",
-    "metaDescription": "HeyQR kodlarını kendi kodunuzda oluşturun: statik kodlar için @heyqr/qr-core paketi ve yolda olan, Dinamik kodlar için bir REST API.",
+    "metaDescription": "Kendi kodunuzda HeyQR kodları oluşturun: hesabınızdaki kodlar için REST API ve TypeScript SDK’sı @simplex-packages/heyqr-sdk (dinamik kodlar dahil), statik kodlar için ise @heyqr/qr-core oluşturucusu.",
     "docs": {
       "search": {
         "label": "Belgelerde ara",
@@ -2820,10 +2820,8 @@
       "backToTop": "Başa dön",
       "previous": "Önceki",
       "next": "Sonraki",
-      "soon": "Yakında",
       "preview": "Önizleme",
       "designPreview": "Tasarım önizlemesi",
-      "notPublic": "Henüz herkese açık değil",
       "env": {
         "both": "Tarayıcı ve Node.js",
         "browser": "Tarayıcı",
@@ -2842,8 +2840,7 @@
         "auth": "Yetkilendirme",
         "authValue": "Authorization: Bearer <API key>",
         "method": "Yöntem",
-        "url": "İstek URL’si",
-        "base": "Kullandığınız HeyQR sunucusunda; herkese açık API henüz kullanılamıyor."
+        "url": "İstek URL’si"
       },
       "helpful": {
         "question": "Bu sayfa yardımcı oldu mu?",
@@ -2859,13 +2856,13 @@
         "proposed": "Önerilen tasarım. Yayınlanmış bir sözleşme değildir."
       },
       "status": {
-        "unpublished": "Yayınlanmadı",
+        "unpublished": "Henüz npm’de değil",
         "live": "Yayında",
-        "liveOnNpm": "npm’de yayında",
-        "soon": "Çok yakında"
+        "liveOnNpm": "npm’de yayında"
       },
       "products": {
-        "pkgTitle": "npm paketi",
+        "sdkTitle": "TypeScript SDK",
+        "sdkText": "REST API için tip güvenli bir istemci; npm’de @simplex-packages/heyqr-sdk adıyla. Node.js 18 veya üstü.",
         "pkgText": "Ücretsiz. Statik QR kodlar kendi makinenizde oluşturulur. Hesap yok, API anahtarı yok.",
         "restTitle": "REST API",
         "restText": "Dinamik kodlar dahil kodları sunucunuzdan oluşturun ve yönetin."
@@ -2877,27 +2874,11 @@
         "unpublishedTitle": "Henüz npm’de değil",
         "unpublishedText": "{name} {version} henüz yayınlanmadı, bu yüzden kurulacak bir şey yok. Bu sayfalardaki her şey mevcut kaynağıyla eşleşir. Çıktığında e-posta alın:"
       },
-      "restSoon": {
-        "cardTitle": "Sunucunuzdan Dinamik kodlar",
-        "cardText": "Hesabınızdan alacağınız bir API anahtarı; kod oluşturmanıza, Dinamik kodların yönlendirdiği yeri değiştirmenize ve tarama sayılarını okumanıza olanak tanıyacak. API açıldığında gerçek istek ve yanıtlarla tam başvuru belgesini yayınlayacağız.",
-        "planned": "Planlanan",
-        "items": [
-          "Hesabınız için API anahtarları",
-          "Tek kod veya bir seferde 100’e kadar kod oluşturun",
-          "Bir Dinamik kodun hedefini değiştirin",
-          "Günlük tarama sayıları"
-        ],
-        "npmLink": "npm paketini şimdi kullanın"
-      },
       "waitlist": {
-        "label": "REST API açıldığında e-posta alın",
         "placeholder": "you@company.com",
-        "join": "Bekleme listesine katıl",
         "joining": "Katılınıyor…",
         "invalid": "Adresi kontrol edin. Bir ad, @ ve alan adı gerekir.",
-        "failed": "Sizi şu anda ekleyemedik. Tekrar deneyin.",
-        "joined": "Listedesiniz. REST API açıldığında {email} adresine yazacağız.",
-        "hint": "Açıldığında tek bir e-posta. Bülten yok."
+        "failed": "Sizi şu anda ekleyemedik. Tekrar deneyin."
       },
       "notifyPackages": {
         "label": "Paket yayınlandığında e-posta alın",
@@ -2923,7 +2904,7 @@
         "overview": {
           "title": "Geliştiriciler için API",
           "nav": "Genel bakış",
-          "lead": "HeyQR kodlarını kendi kodunuzda oluşturun. Bugün ücretsiz npm paketiyle başlayın; Dinamik kodlar için bir REST API yolda.",
+          "lead": "Kendi kodunuzda HeyQR kodları oluşturun. REST API ve TypeScript SDK’sı, dinamik kodlar dahil hesabınızdaki kodları sunucunuzdan oluşturur ve yönetir; @heyqr/qr-core statik kodları kendi bilgisayarınızda oluşturur.",
           "blocks": [
             {
               "k": "products"
@@ -3970,7 +3951,7 @@
                 },
                 {
                   "q": "Bununla Dinamik kodlar oluşturabilir miyim?",
-                  "a": "Henüz değil. Bir Dinamik kod; HeyQR kısa bağlantısı, bir plan ve sunucularımızda tarama sayımı gerektirir. Bu, REST API ile gelir."
+                  "a": "@heyqr/qr-core ile olmaz: dinamik bir kod için HeyQR kısa bağlantısı, bir plan ve sunucularımızda tarama sayımı gerekir. Bunlar için REST API’yi veya TypeScript SDK’sı `@simplex-packages/heyqr-sdk`’yı kullanın."
                 },
                 {
                   "q": "Logolu kodum neden başarısız oluyor?",
@@ -4017,10 +3998,16 @@
         },
         "rest": {
           "title": "REST API",
-          "lead": "Sunucunuzdan kod oluşturun, Dinamik kodların yönlendirdiği yeri değiştirin ve tarama sayılarını okuyun.",
+          "lead": "HeyQR hesabınızdaki bir API anahtarıyla sunucunuzdan kod oluşturun ve dinamik kodların yönlendirdiği adresi değiştirin.",
           "blocks": [
             {
-              "k": "restSoon"
+              "k": "note",
+              "kind": "info",
+              "t": "Gerekenler: bir HeyQR hesabı ve Panel → API anahtarları bölümünden alınmış bir API anahtarı. Anahtarı yalnızca sunucuda kullanın, asla tarayıcı kodunda kullanmayın. Statik bir kodun dosyaları için tek seferlik satın alma gerekir: o zamana kadar dışa aktarma `402 payment_required` ve bir `paymentUrl` döndürür. Dinamik bir kodun kısa bağlantısı, kod Starter veya Studio planında etkin olduğunda çalışır."
+            },
+            {
+              "k": "pages",
+              "pages": ["restAuth", "restCreate", "restDestination", "restErrors", "restSdk"]
             }
           ]
         },
@@ -4028,11 +4015,6 @@
           "title": "Kimlik doğrulama",
           "lead": "Her istek, HeyQR hesabınızdan bir API anahtarı taşır.",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "Henüz herkese açık değil. Bu sayfa, HeyQR’ın bu derlemesindeki REST API’yi rotalarına göre kontrol edilmiş şekilde açıklar. Henüz heyqr.me üzerinde kullanılamaz ve kullanılabilir olana kadar aramalarda görünmez."
-            },
             {
               "k": "h2",
               "id": "keys",
@@ -4092,11 +4074,6 @@
           "title": "QR kod oluşturun",
           "lead": "Hesabınızın bir taslağı olarak, düzenleriyle birlikte bir QR kod oluşturur. Etkinleştirme, kısa bağlantılar ve ödeme uygulamada kalır.",
           "blocks": [
-            {
-              "k": "note",
-              "kind": "preview",
-              "t": "Henüz herkese açık değil. Bu sayfa, HeyQR’ın bu derlemesindeki REST API’yi rotalarına göre kontrol edilmiş şekilde açıklar. Henüz heyqr.me üzerinde kullanılamaz ve kullanılabilir olana kadar aramalarda görünmez."
-            },
             {
               "k": "endpoint",
               "method": "POST",
@@ -4242,11 +4219,6 @@
           "lead": "Bir Dinamik kodu başka bir yere yönlendirir. Basılı kodlar kısa bağlantılarını korur ve hemen yeni hedefi izler.",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "Henüz herkese açık değil. Bu sayfa, HeyQR’ın bu derlemesindeki REST API’yi rotalarına göre kontrol edilmiş şekilde açıklar. Henüz heyqr.me üzerinde kullanılamaz ve kullanılabilir olana kadar aramalarda görünmez."
-            },
-            {
               "k": "h2",
               "id": "read",
               "t": "Mevcut hedefi okuyun"
@@ -4349,11 +4321,6 @@
           "lead": "Hatalar tek bir yapıyı paylaşır. Mesaja göre değil, her zaman code değerine göre dallanın.",
           "blocks": [
             {
-              "k": "note",
-              "kind": "preview",
-              "t": "Henüz herkese açık değil. Bu sayfa, HeyQR’ın bu derlemesindeki REST API’yi rotalarına göre kontrol edilmiş şekilde açıklar. Henüz heyqr.me üzerinde kullanılamaz ve kullanılabilir olana kadar aramalarda görünmez."
-            },
-            {
               "k": "h2",
               "id": "shape",
               "t": "Hata yapısı"
@@ -4446,8 +4413,8 @@
           "blocks": [
             {
               "k": "note",
-              "kind": "preview",
-              "t": "Henüz herkese açık değil. Bu sayfa, HeyQR’ın bu derlemesindeki REST API’yi rotalarına göre kontrol edilmiş şekilde açıklar. Henüz heyqr.me üzerinde kullanılamaz ve kullanılabilir olana kadar aramalarda görünmez."
+              "kind": "info",
+              "t": "Gerekenler: bir HeyQR hesabı ve Panel → API anahtarları bölümünden alınmış bir API anahtarı. Anahtarı yalnızca sunucuda kullanın, asla tarayıcı kodunda kullanmayın. Statik bir kodun dosyaları için tek seferlik satın alma gerekir: o zamana kadar dışa aktarma `402 payment_required` ve bir `paymentUrl` döndürür. Dinamik bir kodun kısa bağlantısı, kod Starter veya Studio planında etkin olduğunda çalışır."
             },
             {
               "k": "h2",
@@ -4457,6 +4424,23 @@
             {
               "k": "install",
               "package": "sdk"
+            },
+            {
+              "k": "h2",
+              "id": "quickstart",
+              "t": "Hızlı başlangıç"
+            },
+            {
+              "k": "p",
+              "t": "Dinamik bir QR kod taslağı oluşturun, ardından düzenini ve hedefini okuyun. Dosyayı kaydedin, anahtarınızı ayarlayın ve Node.js 18 veya üstüyle çalıştırın:"
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstart"
+            },
+            {
+              "k": "code",
+              "example": "sdkQuickstartRun"
             },
             {
               "k": "h2",
