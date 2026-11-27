@@ -1772,7 +1772,8 @@
         "leadOne": "Er verschwindet auf allen Geräten aus „Meine QR-Codes“.",
         "leadMany": "Sie verschwinden auf allen Geräten aus „Meine QR-Codes“.",
         "dynamicTitle": "{count, plural, one {Sein Kurzlink funktioniert nicht mehr} other {Ihre Kurzlinks funktionieren nicht mehr}}",
-        "dynamicText": "{links} {count, plural, one {leitet} other {leiten}} ab sofort nicht mehr weiter. Gedruckte Exemplare öffnen eine Seite „Link nicht aktiv“. {count, plural, one {Ein Platz im Tarif wird} other {# Plätze im Tarif werden}} frei.",
+        "dynamicText": "{links} {count, plural, one {leitet} other {leiten}} ab sofort nicht mehr weiter. Gedruckte Exemplare öffnen eine Seite „Link nicht aktiv“.",
+        "dynamicSlots": "{count, plural, one {Ein Platz im Tarif wird} other {# Plätze im Tarif werden}} frei.",
         "staticTitle": "Gedruckte Exemplare funktionieren weiter",
         "staticText": "Ein statischer Code trägt seinen Inhalt im Muster, daher lassen sich gedruckte Exemplare weiter scannen. Du kannst {count, plural, one {diesen Kauf} other {diese # Käufe}} nicht mehr herunterladen oder bearbeiten, und das Löschen wird nicht erstattet.",
         "draftTitle": "{count, plural, one {Der Entwurf wird entfernt} other {# Entwürfe werden entfernt}}",
@@ -1793,7 +1794,7 @@
       "restoredOne": "Code wiederhergestellt.",
       "restoredMany": "{count} Codes wiederhergestellt.",
       "deleteFailed": "Löschen fehlgeschlagen. Versuch es noch einmal.",
-      "restoreFailed": "Wiederherstellen fehlgeschlagen. Rückgängig ist nach dem Löschen einige Minuten lang möglich.",
+      "restoreFailed": "Wiederherstellen fehlgeschlagen. Versuch es noch einmal.",
       "rename": {
         "action": "Umbenennen",
         "actionOne": "{name} umbenennen",
@@ -1803,7 +1804,9 @@
         "saved": "Umbenannt in „{name}“.",
         "empty": "Gib dem Code einen Namen.",
         "failed": "Wir konnten ihn nicht umbenennen. Dein Text ist noch da; versuch es noch einmal."
-      }
+      },
+      "restoreExpired": "Rückgängig ist abgelaufen, die Codes bleiben gelöscht.",
+      "restoreLimit": "Nichts wurde wiederhergestellt: Die Plätze für aktive dynamische Codes in deinem Tarif sind belegt. Gib einen Platz frei und versuch es erneut."
     },
     "printPack": "Print Pack"
   },

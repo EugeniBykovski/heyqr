@@ -103,6 +103,8 @@ export default async function DashboardPage({ params, searchParams }: PageProps<
       statusLabel: t(`status.${status}`),
       meta: t("updated", { date: format.dateTime(qr.updatedAt, { dateStyle: "medium" }) }),
       paid,
+      // HEY-199: only a live, plan-held Dynamic code frees a slot when deleted (not a trial, paused or no-plan code).
+      holdsSlot: qr.model === "dynamic" && qr.status === "active" && !qr.isTrial && access.plan,
       printPackLabel: qr.printPackAt ? t("printPack") : undefined,
       shortLink: qr.shortCode ? `${shortBase.replace(/^https?:\/\//, "")}/${qr.shortCode}` : undefined,
       labels: {

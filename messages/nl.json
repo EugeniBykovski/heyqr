@@ -1772,7 +1772,8 @@
         "leadOne": "Hij verdwijnt op elk apparaat uit Mijn QR-codes.",
         "leadMany": "Ze verdwijnen op elk apparaat uit Mijn QR-codes.",
         "dynamicTitle": "{count, plural, one {De korte link werkt niet meer} other {De korte links werken niet meer}}",
-        "dynamicText": "{links} {count, plural, one {stuurt} other {sturen}} meteen niet meer door. Geprinte exemplaren openen een pagina “link niet actief”. {count, plural, one {Er komt één plek in je abonnement} other {Er komen # plekken in je abonnement}} vrij.",
+        "dynamicText": "{links} {count, plural, one {stuurt} other {sturen}} meteen niet meer door. Geprinte exemplaren openen een pagina “link niet actief”.",
+        "dynamicSlots": "{count, plural, one {Er komt één plek in je abonnement} other {Er komen # plekken in je abonnement}} vrij.",
         "staticTitle": "Geprinte exemplaren blijven werken",
         "staticText": "Een statische code draagt zijn inhoud in het patroon, dus geprinte exemplaren scannen nog steeds. Je kunt {count, plural, one {deze aankoop} other {deze # aankopen}} niet meer downloaden of bewerken, en verwijderen levert geen terugbetaling op.",
         "draftTitle": "{count, plural, one {Het concept wordt verwijderd} other {# concepten worden verwijderd}}",
@@ -1793,7 +1794,7 @@
       "restoredOne": "Code hersteld.",
       "restoredMany": "{count} codes hersteld.",
       "deleteFailed": "Verwijderen mislukt. Probeer het opnieuw.",
-      "restoreFailed": "Herstellen mislukt. Ongedaan maken kan tot een paar minuten na het verwijderen.",
+      "restoreFailed": "Herstellen is niet gelukt. Probeer het opnieuw.",
       "rename": {
         "action": "Hernoemen",
         "actionOne": "{name} hernoemen",
@@ -1803,7 +1804,9 @@
         "saved": "Hernoemd naar “{name}”.",
         "empty": "Geef de code een naam.",
         "failed": "We konden de naam niet wijzigen. Je tekst staat er nog; probeer het opnieuw."
-      }
+      },
+      "restoreExpired": "Ongedaan maken is verlopen, dus de codes blijven verwijderd.",
+      "restoreLimit": "Er is niets hersteld: de plekken voor actieve dynamische codes in je abonnement zijn bezet. Maak er een vrij en probeer het opnieuw."
     },
     "printPack": "Print Pack"
   },

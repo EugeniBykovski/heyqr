@@ -1764,7 +1764,8 @@
         "leadOne": "它将从所有设备上的“我的二维码”中消失。",
         "leadMany": "它们将从所有设备上的“我的二维码”中消失。",
         "dynamicTitle": "{count, plural, other {短链接将失效}}",
-        "dynamicText": "{links} 将立即停止跳转。已印刷的二维码将打开“链接未生效”页面。{count, plural, other {将释放 # 个套餐名额。}}",
+        "dynamicText": "{count, plural, other {{links}}} 将立即停止跳转。已印刷的二维码将打开“链接未生效”页面。",
+        "dynamicSlots": "{count, plural, other {将释放 # 个套餐名额。}}",
         "staticTitle": "已印刷的二维码仍可使用",
         "staticText": "静态二维码的内容直接编码在图案中，因此已印刷的二维码仍可扫描。你将无法再下载或编辑{count, plural, other {这 # 项购买}}，删除也不会退款。",
         "draftTitle": "{count, plural, other {将删除 # 个草稿}}",
@@ -1785,7 +1786,7 @@
       "restoredOne": "二维码已恢复。",
       "restoredMany": "已恢复 {count} 个二维码。",
       "deleteFailed": "无法删除，请重试。",
-      "restoreFailed": "无法恢复。删除后几分钟内可以撤销。",
+      "restoreFailed": "无法恢复。请重试。",
       "rename": {
         "action": "重命名",
         "actionOne": "重命名 {name}",
@@ -1795,7 +1796,9 @@
         "saved": "已重命名为“{name}”。",
         "empty": "请为二维码命名。",
         "failed": "无法重命名。你输入的文字仍保留在这里，请重试。"
-      }
+      },
+      "restoreExpired": "撤销已过期，代码仍处于已删除状态。",
+      "restoreLimit": "未恢复任何内容：你的套餐中可用的动态码名额已用完。请先释放一个名额，然后重试。"
     },
     "printPack": "Print Pack"
   },

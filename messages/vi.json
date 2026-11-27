@@ -1772,7 +1772,8 @@
         "leadOne": "Mã sẽ biến mất khỏi Mã QR của tôi trên mọi thiết bị.",
         "leadMany": "Các mã sẽ biến mất khỏi Mã QR của tôi trên mọi thiết bị.",
         "dynamicTitle": "{count, plural, other {Liên kết rút gọn sẽ ngừng hoạt động}}",
-        "dynamicText": "{links} sẽ ngừng chuyển hướng ngay lập tức. Bản in sẽ mở trang “liên kết không hoạt động”. {count, plural, other {# suất trong gói}} được giải phóng.",
+        "dynamicText": "{count, plural, other {{links}}} sẽ ngừng chuyển hướng ngay lập tức. Bản in sẽ mở trang “liên kết không hoạt động”.",
+        "dynamicSlots": "{count, plural, other {# suất trong gói}} được giải phóng.",
         "staticTitle": "Bản in vẫn hoạt động",
         "staticText": "Mã Tĩnh chứa nội dung ngay trong họa tiết, nên bản in vẫn quét được. Bạn sẽ không thể tải lại hoặc chỉnh sửa {count, plural, other {# giao dịch mua này}} nữa, và việc xóa không được hoàn tiền.",
         "draftTitle": "{count, plural, other {# bản nháp sẽ bị xóa}}",
@@ -1793,7 +1794,7 @@
       "restoredOne": "Đã khôi phục mã.",
       "restoredMany": "Đã khôi phục {count} mã.",
       "deleteFailed": "Không xóa được. Hãy thử lại.",
-      "restoreFailed": "Không khôi phục được. Bạn có thể hoàn tác trong vài phút sau khi xóa.",
+      "restoreFailed": "Không thể khôi phục. Hãy thử lại.",
       "rename": {
         "action": "Đổi tên",
         "actionOne": "Đổi tên {name}",
@@ -1803,7 +1804,9 @@
         "saved": "Đã đổi tên thành “{name}”.",
         "empty": "Hãy đặt tên cho mã.",
         "failed": "Chúng tôi không đổi tên được. Nội dung bạn nhập vẫn còn; hãy thử lại."
-      }
+      },
+      "restoreExpired": "Đã hết thời gian hoàn tác nên các mã vẫn bị xóa.",
+      "restoreLimit": "Không có gì được khôi phục: các suất mã động đang hoạt động trong gói của bạn đã dùng hết. Hãy giải phóng một suất rồi thử lại."
     },
     "printPack": "Print Pack"
   },

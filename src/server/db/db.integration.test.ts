@@ -647,10 +647,11 @@ describe.skipIf(!url)("delete and undo QR codes (real PostgreSQL)", () => {
     });
     expect(resave).toEqual({ ok: false, error: "not_found" });
 
-    expect(await restoreQrCodes(db, other.id, [a.data.qrCodeId])).toEqual([]);
-    expect((await restoreQrCodes(db, owner.id, [a.data.qrCodeId, b.data.qrCodeId])).sort()).toEqual(
-      [a.data.qrCodeId, b.data.qrCodeId].sort(),
-    );
+    expect(await restoreQrCodes(db, other.id, [a.data.qrCodeId])).toEqual({ ok: false, error: "not_found" });
+    expect(await restoreQrCodes(db, owner.id, [a.data.qrCodeId, b.data.qrCodeId])).toEqual({
+      ok: true,
+      ids: [a.data.qrCodeId, b.data.qrCodeId],
+    });
     expect((await live(owner.id)).map((q) => q.name).sort()).toEqual(["Card", "Menu"]);
     const before = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, a.data.qrCodeId) });
     await softDeleteQrCodes(db, owner.id, [a.data.qrCodeId]);
@@ -662,9 +663,158 @@ describe.skipIf(!url)("delete and undo QR codes (real PostgreSQL)", () => {
   it("refuses Undo after the restore window", async () => {
     const c = await saveQrWithLayouts(db, owner.id, { name: "Old", model: "static", content: { type: "text", text: "c" }, layouts });
     if (!c.ok) throw new Error("fixture save failed");
-    const deletedAt = new Date(Date.now() - RESTORE_WINDOW_MS - 60_000);
+    const deletedAt = new Date(Date.now() - RESTORE_WINDOW_MS - 1_000);
     await softDeleteQrCodes(db, owner.id, [c.data.qrCodeId], deletedAt);
-    expect(await restoreQrCodes(db, owner.id, [c.data.qrCodeId])).toEqual([]);
+    expect(await restoreQrCodes(db, owner.id, [c.data.qrCodeId])).toEqual({ ok: false, error: "expired" });
+    // An expired Undo leaves the code deleted, at the same moment.
+    const row = await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, c.data.qrCodeId) });
+    expect(row?.deletedAt).toEqual(deletedAt);
+  });
+
+  it("HEY-199: Undo is all or nothing, owner-only and safe to repeat; the window is 30 s after an 8-second toast", async () => {
+    expect(RESTORE_WINDOW_MS).toBe(30_000);
+    const mk = async (name: string) => {
+      const r = await saveQrWithLayouts(db, owner.id, { name, model: "static", content: { type: "text", text: name }, layouts });
+      if (!r.ok) throw new Error("fixture save failed");
+      return r.data.qrCodeId;
+    };
+    const fresh = await mk("Fresh");
+    const old = await mk("Old one");
+    const now = new Date();
+    await softDeleteQrCodes(db, owner.id, [fresh], now);
+    await softDeleteQrCodes(db, owner.id, [old], new Date(now.getTime() - RESTORE_WINDOW_MS - 1_000));
+    // One expired code in the batch: nothing comes back.
+    expect(await restoreQrCodes(db, owner.id, [fresh, old], now)).toEqual({ ok: false, error: "expired" });
+    expect((await live(owner.id)).some((q) => q.id === fresh)).toBe(false);
+    // Another account's id in the batch: nothing comes back.
+    const theirs = await saveQrWithLayouts(db, other.id, {
+      name: "Theirs",
+      model: "static",
+      content: { type: "text", text: "t" },
+      layouts,
+    });
+    if (!theirs.ok) throw new Error("fixture save failed");
+    expect(await restoreQrCodes(db, owner.id, [fresh, theirs.data.qrCodeId], now)).toEqual({ ok: false, error: "not_found" });
+    expect((await live(owner.id)).some((q) => q.id === fresh)).toBe(false);
+    // Just inside the window, then the same request again: both succeed, the second changes nothing.
+    const inside = new Date(now.getTime() + RESTORE_WINDOW_MS - 1_000);
+    expect(await restoreQrCodes(db, owner.id, [fresh], inside)).toEqual({ ok: true, ids: [fresh] });
+    expect(await restoreQrCodes(db, owner.id, [fresh], inside)).toEqual({ ok: true, ids: [fresh] });
+    expect((await live(owner.id)).filter((q) => q.id === fresh)).toHaveLength(1);
+  });
+});
+
+/*
+ * HEY-199: deleting a live Dynamic code frees its slot and stops its link; Undo takes the slot back under the same lock
+ * order as activation (account row, then code rows), so the plan limit holds when both race for the last slot.
+ */
+describe.skipIf(!url)("delete and Undo with Dynamic slots (HEY-199, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "undo-slot-owner", name: "Owner", email: "owner@undo-slot.test" };
+  const layouts = [{ name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) }];
+  let seq = 0;
+  // Short codes stay reserved forever (HEY-126), so each run uses its own.
+  const run = Date.now().toString(36).slice(-5);
+  const dynamic = async (live: boolean) => {
+    seq += 1;
+    const r = await saveQrWithLayouts(db, owner.id, {
+      name: `Dyn ${seq}`,
+      model: "dynamic",
+      content: { type: "website", url: `https://example.com/${seq}` },
+      destination: `https://example.com/${seq}`,
+      layouts,
+    });
+    if (!r.ok) throw new Error("fixture save failed");
+    if (live)
+      await db
+        .update(schema.qrCode)
+        .set({ status: "active", shortCode: `h${run}${String(seq).padStart(3, "0")}` })
+        .where(eq(schema.qrCode.id, r.data.qrCodeId));
+    return r.data.qrCodeId;
+  };
+  const used = async () => (await accountUsage(db, owner.id)).dynamic.used;
+  /** Starts a round with no live codes: earlier rounds' codes are deleted long ago (outside any Undo window). */
+  const clear = () =>
+    db
+      .update(schema.qrCode)
+      .set({ deletedAt: new Date(0) })
+      .where(and(eq(schema.qrCode.userId, owner.id), isNull(schema.qrCode.deletedAt)));
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 6 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values(owner).onConflictDoNothing();
+    await db.insert(schema.subscription).values({
+      id: "undo-slot-sub",
+      userId: owner.id,
+      stripeSubscriptionId: "sub_undo_slot",
+      stripePriceId: "price_x",
+      status: "active",
+      plan: "starter",
+      activeCodeLimit: 5,
+      currentPeriodStart: new Date(Date.now() - 86_400_000),
+      currentPeriodEnd: new Date(Date.now() + 20 * 86_400_000),
+    });
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(eq(schema.user.id, owner.id));
+    await pool?.end();
+  });
+
+  it("delete frees the slot and stops the link; Undo brings the same short link back; a taken slot blocks the whole batch", async () => {
+    await clear();
+    const liveIds = [await dynamic(true), await dynamic(true), await dynamic(true), await dynamic(true), await dynamic(true)];
+    const [x, y] = liveIds;
+    if (!x || !y) throw new Error("fixture");
+    expect(await used()).toBe(5);
+    const slug = (await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, x) }))?.shortCode ?? "";
+    expect(await resolveShortLink(db, slug)).toMatchObject({ kind: "redirect" });
+    expect(await softDeleteQrCodes(db, owner.id, [x, y])).toHaveLength(2);
+    expect(await used()).toBe(3);
+    expect(await resolveShortLink(db, slug)).not.toMatchObject({ kind: "redirect" });
+    // Undo inside the window with free slots: the same code and short link, redirecting again.
+    expect(await restoreQrCodes(db, owner.id, [x, y])).toEqual({ ok: true, ids: [x, y] });
+    expect(await used()).toBe(5);
+    expect((await db.query.qrCode.findFirst({ where: (q, { eq }) => eq(q.id, x) }))?.shortCode).toBe(slug);
+    expect(await resolveShortLink(db, slug)).toMatchObject({ kind: "redirect" });
+    // Delete both again; two drafts go live in their slots; Undo of both plus a static draft restores none of them.
+    await softDeleteQrCodes(db, owner.id, [x, y]);
+    const a = await dynamic(false);
+    const b = await dynamic(false);
+    expect((await activateDynamicCode(db, owner.id, a, () => `h${run}nA`)).ok).toBe(true);
+    expect((await activateDynamicCode(db, owner.id, b, () => `h${run}nB`)).ok).toBe(true);
+    expect(await used()).toBe(5);
+    const s = await saveQrWithLayouts(db, owner.id, { name: "S", model: "static", content: { type: "text", text: "s" }, layouts });
+    if (!s.ok) throw new Error("fixture save failed");
+    await softDeleteQrCodes(db, owner.id, [s.data.qrCodeId]);
+    expect(await restoreQrCodes(db, owner.id, [x, y, s.data.qrCodeId])).toEqual({ ok: false, error: "limit" });
+    const back = await db.query.qrCode.findMany({ where: (q, { inArray }) => inArray(q.id, [x, y, s.data.qrCodeId]) });
+    expect(back.every((q) => q.deletedAt !== null)).toBe(true);
+    expect(await used()).toBe(5);
+  });
+
+  it("Undo and an activation racing for the last slot: exactly one wins and the limit holds (10 rounds)", async () => {
+    const outcomes: string[] = [];
+    for (let round = 0; round < 10; round++) {
+      await clear();
+      for (let i = 0; i < 4; i++) await dynamic(true);
+      const deleted = await dynamic(true);
+      await softDeleteQrCodes(db, owner.id, [deleted]);
+      const draft = await dynamic(false);
+      expect(await used()).toBe(4);
+      const [undo, act] = await Promise.all([
+        restoreQrCodes(db, owner.id, [deleted]),
+        activateDynamicCode(db, owner.id, draft, () => `h${run}r${String(round).padStart(2, "0")}`),
+      ]);
+      expect([undo.ok, act.ok].filter(Boolean), `round ${round}: ${JSON.stringify({ undo, act })}`).toHaveLength(1);
+      expect(await used()).toBe(5);
+      if (!undo.ok) expect(undo.error).toBe("limit");
+      if (!act.ok) expect(act.error).toBe("limit");
+      outcomes.push(undo.ok ? "undo" : "activation");
+    }
+    // Both orders are legal; record which happened so a run shows the race was real.
+    console.info(`[HEY-199 race] winners: ${outcomes.join(", ")}`);
   });
 });
 
@@ -3635,7 +3785,7 @@ describe.skipIf(!url)("short link registry (HEY-126, real PostgreSQL)", () => {
     const gen = sequence("undo001", "undo002");
     expect(await activateDynamicCode(db, owner.id, other, gen)).toEqual({ ok: true, shortCode: "undo002" });
 
-    expect(await restoreQrCodes(db, owner.id, [id])).toEqual([id]);
+    expect(await restoreQrCodes(db, owner.id, [id])).toEqual({ ok: true, ids: [id] });
     expect(await shortLink("undo001")).toBe(A);
     expect(await activateDynamicCode(db, owner.id, id, () => "undo003")).toEqual({ ok: true, shortCode: "undo001" });
     expect(await changeFresh(db, owner.id, id, B)).toMatchObject({ ok: true, data: { destination: B } });

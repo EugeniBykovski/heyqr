@@ -1768,7 +1768,8 @@
         "leadOne": "It disappears from My QR codes on every device.",
         "leadMany": "They disappear from My QR codes on every device.",
         "dynamicTitle": "{count, plural, one {Its short link stops working} other {Their short links stop working}}",
-        "dynamicText": "{links} {count, plural, one {stops} other {stop}} redirecting right away. Printed copies will open a “link not active” page. {count, plural, one {One plan slot is} other {# plan slots are}} freed.",
+        "dynamicText": "{links} {count, plural, one {stops} other {stop}} redirecting right away. Printed copies will open a “link not active” page.",
+        "dynamicSlots": "{count, plural, one {One plan slot is} other {# plan slots are}} freed.",
         "staticTitle": "Printed copies keep working",
         "staticText": "A static code carries its content in the pattern, so printed copies still scan. You won’t be able to download or edit {count, plural, one {this purchase} other {these # purchases}} again, and deleting doesn’t refund it.",
         "draftTitle": "{count, plural, one {The draft is removed} other {# drafts are removed}}",
@@ -1789,7 +1790,7 @@
       "restoredOne": "Code restored.",
       "restoredMany": "{count} codes restored.",
       "deleteFailed": "Couldn’t delete. Try again.",
-      "restoreFailed": "Couldn’t restore it. Undo is available for a few minutes after deleting.",
+      "restoreFailed": "Couldn’t restore. Try again.",
       "rename": {
         "action": "Rename",
         "actionOne": "Rename {name}",
@@ -1799,7 +1800,9 @@
         "saved": "Renamed to “{name}”.",
         "empty": "Give the code a name.",
         "failed": "We couldn’t rename it. Your text is still here; try again."
-      }
+      },
+      "restoreExpired": "Undo has expired, so the codes stay deleted.",
+      "restoreLimit": "Nothing was restored: your plan’s live Dynamic slots are in use. Free a slot, then try again."
     },
     "printPack": "Print Pack"
   },

@@ -1776,7 +1776,8 @@
         "leadOne": "Her cihazda QR kodlarım’dan kaldırılır.",
         "leadMany": "Her cihazda QR kodlarım’dan kaldırılırlar.",
         "dynamicTitle": "{count, plural, one {Kısa bağlantısı çalışmayı durdurur} other {Kısa bağlantıları çalışmayı durdurur}}",
-        "dynamicText": "{links} {count, plural, one {hemen yönlendirmeyi durdurur} other {hemen yönlendirmeyi durdurur}}. Basılı kopyalar “bağlantı etkin değil” sayfası açar. {count, plural, one {Bir plan yeri} other {# plan yeri}} boşalır.",
+        "dynamicText": "{links} {count, plural, one {hemen yönlendirmeyi durdurur} other {hemen yönlendirmeyi durdurur}}. Basılı kopyalar “bağlantı etkin değil” sayfası açar.",
+        "dynamicSlots": "{count, plural, one {Bir plan yeri} other {# plan yeri}} boşalır.",
         "staticTitle": "Basılı kopyalar çalışmaya devam eder",
         "staticText": "Statik bir kod içeriğini desende taşır, bu yüzden basılı kopyalar taranmaya devam eder. {count, plural, one {Bu satın alımı} other {Bu # satın alımı}} artık indiremez veya düzenleyemezsiniz ve silmek ücret iadesi sağlamaz.",
         "draftTitle": "{count, plural, one {Taslak kaldırılır} other {# taslak kaldırılır}}",
@@ -1797,7 +1798,7 @@
       "restoredOne": "Kod geri yüklendi.",
       "restoredMany": "{count} kod geri yüklendi.",
       "deleteFailed": "Silinemedi. Tekrar deneyin.",
-      "restoreFailed": "Geri yüklenemedi. Geri alma, sildikten sonra birkaç dakika kullanılabilir.",
+      "restoreFailed": "Geri yüklenemedi. Tekrar deneyin.",
       "rename": {
         "action": "Yeniden adlandır",
         "actionOne": "{name} kodunu yeniden adlandır",
@@ -1807,7 +1808,9 @@
         "saved": "“{name}” olarak yeniden adlandırıldı.",
         "empty": "Koda bir ad verin.",
         "failed": "Yeniden adlandıramadık. Metniniz hâlâ burada; tekrar deneyin."
-      }
+      },
+      "restoreExpired": "Geri alma süresi doldu, bu yüzden kodlar silinmiş olarak kalıyor.",
+      "restoreLimit": "Hiçbir şey geri yüklenmedi: planınızdaki aktif dinamik kod yerleri dolu. Bir yer boşaltıp tekrar deneyin."
     },
     "printPack": "Print Pack"
   },
