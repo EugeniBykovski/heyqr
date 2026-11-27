@@ -26,6 +26,9 @@ export function designFromSaved(
 ): EditorDesign {
   const settings = record.editor ?? settingsFromLayout(record.layout);
   const design: EditorDesign = { ...DEFAULT_DESIGN, ...settings, name: qr.name, model: qr.model, content: qr.content };
+  // HEY-195: the stored layout says which color its icon was drawn in; keep it when it isn't the corner-center color.
+  const kept = keptIconColor(record.layout);
+  if (kept && design.iconColor === undefined && design.logo.kind === "icon") design.iconColor = kept;
   if (record.layout.caption.font === undefined) {
     design.captionFont = ORIGINAL_CAPTION_FONT;
     design.captionWeight = record.layout.caption.weight >= 600 ? 700 : 400;
@@ -71,6 +74,8 @@ function settingsFromLayout(layout: Layout): Partial<EditorDesign> {
       : {}),
     ...(preset === "frame" && layout.caption.position === "center" ? { frameTextPosition: "inside" as const } : {}),
     ...(logo?.tile ? { logoTile: true } : {}),
+    // HEY-195: a plate icon saved in another color than the corner centers keeps it (see EditorDesign.iconColor).
+    ...(icon && keptIconColor(layout) ? { iconColor: keptIconColor(layout) } : {}),
     ...(preset === "frame" && layout.colors.caption !== layout.colors.bg ? { frameTextColor: layout.colors.caption } : {}),
     ...(preset === "caption" && layout.border ? { border: true } : {}),
     ...(layout.style.art ? { art: { tint: layout.style.art.tint, tint2: layout.style.art.tint2 }, designMode: "branded" as const } : {}),
@@ -83,4 +88,11 @@ function settingsFromLayout(layout: Layout): Partial<EditorDesign> {
  */
 export function pickLayoutForEdit<T extends { id: string }>(layouts: T[], layoutId?: string): T | undefined {
   return layoutId ? layouts.find((l) => l.id === layoutId) : layouts[0];
+}
+
+/** A plate icon's color in a stored layout when it differs from the corner centers (layouts saved before HEY-195). */
+function keptIconColor(layout: LayoutRecordDesign["layout"]): string | undefined {
+  const logo = layout.style.logo;
+  if (!logo?.iconPath || logo.tile || !logo.iconColor) return undefined;
+  return logo.iconColor.toLowerCase() === layout.colors.eyeIn.toLowerCase() ? undefined : logo.iconColor;
 }

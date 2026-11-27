@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 import { useCarriedState } from "@/shared/lib/locale-carry";
 import { toast } from "sonner";
-import { composeShared, designSettingsOf, designToLayout, type EditorDesign } from "@/entities/qr";
+import { composeShared, designSettingsOf, designToLayout, patchDesign, type EditorDesign } from "@/entities/qr";
 import { Link, useRouter } from "@/i18n/navigation";
 import { addLayout, saveLayoutEdit } from "@/server/actions/qr";
 import { Button } from "@/shared/ui/button";
@@ -68,7 +68,7 @@ export function LayoutEditor({
   const [revision, setRevision] = useState(openedRevision);
   /** HEY-85: the layout was saved elsewhere since this editor opened it; these edits are kept until the user chooses. */
   const [conflict, setConflict] = useState(false);
-  const patch = (p: Partial<EditorDesign>) => setDesign((d) => ({ ...d, ...p }));
+  const patch = (p: Partial<EditorDesign>) => setDesign((d) => patchDesign(d, p));
 
   const layout = useMemo(() => designToLayout(design), [design]);
   const capacity = useMemo(() => layoutCapacity(layout, value), [layout, value]);

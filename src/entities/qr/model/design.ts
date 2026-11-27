@@ -138,6 +138,11 @@ export interface EditorDesign {
   frameTextPosition?: FrameTextPosition;
   /** Design 1.15 "Color tile": a centre icon on a tile in the corner-center colour instead of a plate. */
   logoTile?: boolean;
+  /**
+   * HEY-195: an icon takes the corner-center color (design 1.11). Layouts saved before drew a plate icon in the module
+   * color; reopening one keeps that color here so it looks the same until its icon or corner-center color is changed.
+   */
+  iconColor?: string;
   /** Design "Frame around the layout" for QR + caption (cards always have one). Unset = none, as before. */
   border?: boolean;
   /** Design "Logo → Position": an uploaded image in the code's centre or above the code on a card. Unset = centre. */
@@ -316,7 +321,13 @@ export function designToLayout(d: EditorDesign): Layout {
     : d.logo.kind === "icon"
       ? d.logoTile
         ? { iconPath: CENTER_ICONS[d.logo.icon], size: d.logoSize, plate: "square" as const, tile: true }
-        : { iconPath: CENTER_ICONS[d.logo.icon], size: d.logoSize, plate: d.logoPlate ?? "circle", plateColor: d.bg, iconColor: d.fg }
+        : {
+            iconPath: CENTER_ICONS[d.logo.icon],
+            size: d.logoSize,
+            plate: d.logoPlate ?? "circle",
+            plateColor: d.bg,
+            iconColor: d.iconColor ?? d.eyeIn ?? d.fg,
+          }
       : d.logo.kind === "image"
         ? { href: d.logo.href, size: d.logoSize, plate: d.logoPlate ?? "square", plateColor: d.bg }
         : null;
@@ -365,4 +376,14 @@ export function designToLayout(d: EditorDesign): Layout {
       position: layoutCaptionPosition(d),
     },
   };
+}
+
+/**
+ * Applies an editor change. Choosing or removing an icon, or changing the corner-center color, drops a kept icon color
+ * (HEY-195), so from then on the icon follows the corner-center color as designed.
+ */
+export function patchDesign(d: EditorDesign, p: Partial<EditorDesign>): EditorDesign {
+  const next = { ...d, ...p };
+  if (next.iconColor !== undefined && !("iconColor" in p) && ("logo" in p || "eyeIn" in p)) delete next.iconColor;
+  return next;
 }

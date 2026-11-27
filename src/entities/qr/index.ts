@@ -29,6 +29,7 @@ export {
   captionFontOf,
   QR_INKS,
   designToLayout,
+  patchDesign,
   type CaptionAlign,
   type CaptionPosition,
   type FrameTextPosition,
