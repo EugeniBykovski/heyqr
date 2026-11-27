@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/server/auth";
-import { readPrintSettings } from "@/entities/qr";
+import { readPrintSettings, unsupportedProfile } from "@/entities/qr";
 import { env } from "@/env";
 import { loadPrint } from "@/server/print/load";
 import { printPage } from "@/server/print/print";
@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
   // Design 1.1 / 9.1: the public sample (a fixed demo QR) can be inspected by anyone; nothing of an account is read.
   const sample = sampleBody.safeParse(json);
   if (sample.success) {
+    if (unsupportedProfile(sample.data.settings)) return NextResponse.json({ error: "unsupported_profile" }, { status: 422 });
     const base = samplePrint(env.NEXT_PUBLIC_APP_URL);
     const settings = readPrintSettings(sample.data.settings, base.layout);
     const layout = await withEmbeddedImages(base.layout);

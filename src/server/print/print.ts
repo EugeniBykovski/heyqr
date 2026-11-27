@@ -142,11 +142,70 @@ export function printPage(layout: Layout, value: string, s: PrintSettings, key: 
   };
 }
 
-/** SVG and WebP images become PNG for the PDF (PDFKit embeds PNG and JPEG); 2400 px covers 200 mm at 300 ppi. */
-function pdfReadyImages(svg: string): string {
-  return svg.replace(/href="(data:image\/(?:svg\+xml|webp);base64,[^"]+)"/g, (_m, href: string) => {
-    const wrapper = `<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="2400" viewBox="0 0 100 100"><image href="${href}" width="100" height="100" preserveAspectRatio="xMidYMid meet"/></svg>`;
-    return `href="data:image/png;base64,${rasterizeSvg(wrapper, { width: 2400 }).toString("base64")}"`;
+/** A PNG of an SVG or WebP data URL, `px` wide, for PDFKit (it embeds PNG and JPEG only). */
+function pngOf(href: string, w: number, h: number): string {
+  const wrapper = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><image href="${href}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid meet"/></svg>`;
+  return `data:image/png;base64,${rasterizeSvg(wrapper, { width: w }).toString("base64")}`;
+}
+
+/**
+ * HEY-196: an uploaded SVG logo the PDF can draw as vector, or null. Only a self-contained drawing qualifies: no images,
+ * scripts, foreign objects, entities, or references outside the file (svg-to-pdfkit would read file paths on the server),
+ * so anything else keeps the raster fallback.
+ */
+export function inlineSvgLogo(text: string): { viewBox: string; attrs: string; inner: string } | null {
+  const src = text.replace(/<\?xml[^>]*\?>/, "").trim();
+  if (/<!(?:ENTITY|DOCTYPE)|<(?:image|foreignObject|script|iframe|audio|video|object|embed)\b/i.test(src)) return null;
+  if (/(?:xlink:)?href\s*=\s*["'](?!#)/i.test(src) || /url\(\s*(?!["']?#)/i.test(src) || /@import/i.test(src)) return null;
+  const root = /^<svg\b([^>]*)>([\s\S]*)<\/svg>$/i.exec(src);
+  if (!root) return null;
+  const rootAttrs = root[1] ?? "";
+  const num = (name: string) => Number(new RegExp(`\\s${name}\\s*=\\s*["']\\s*([\\d.]+)`, "i").exec(rootAttrs)?.[1] ?? NaN);
+  const vb = /\sviewBox\s*=\s*["']([^"']+)["']/i.exec(rootAttrs)?.[1];
+  const w = num("width");
+  const h = num("height");
+  const viewBox = vb ?? (w > 0 && h > 0 ? `0 0 ${w} ${h}` : null);
+  if (!viewBox) return null;
+  // Presentation attributes of the root (fill, stroke, style…) still apply to its children, on a group.
+  const attrs = rootAttrs
+    .replace(/\s(?:xmlns(?::\w+)?|width|height|x|y|viewBox|preserveAspectRatio|version|id)\s*=\s*("[^"]*"|'[^']*')/gi, "")
+    .trim();
+  return { viewBox, attrs, inner: root[2] ?? "" };
+}
+
+const attrOf = (attrs: string, name: string) => new RegExp(`\\s${name}="([^"]*)"`).exec(` ${attrs}`)?.[1];
+
+/**
+ * Images ready for the PDF (HEY-196): an SVG logo stays vector when it is self-contained; a WebP becomes a PNG at its
+ * own pixel size (never upsampled, so its detail and the low-resolution warning stay as they are); PNG and JPEG are
+ * embedded as they are. Other SVGs fall back to a 2400 px PNG (200 mm at 300 ppi).
+ */
+export function pdfReadyImages(svg: string): string {
+  return svg.replace(/<image\b([^>]*?)\/>/g, (whole, attrs: string) => {
+    const href = attrOf(attrs, "href");
+    if (!href) return whole;
+    const svgData = /^data:image\/svg\+xml;base64,(.+)$/.exec(href)?.[1];
+    if (svgData) {
+      const logo = inlineSvgLogo(Buffer.from(svgData, "base64").toString("utf8"));
+      if (logo) {
+        const box = ["x", "y", "width", "height"].map((k) => `${k}="${attrOf(attrs, k) ?? "0"}"`).join(" ");
+        const fit = attrOf(attrs, "preserveAspectRatio") ?? "xMidYMid meet";
+        // The image's own opacity, clip and transform (the branded artwork is drawn at 13 %) carry over to the drawing.
+        const carried = ["opacity", "clip-path", "transform"]
+          .map((k) => [k, attrOf(attrs, k)] as const)
+          .filter(([, v]) => v !== undefined)
+          .map(([k, v]) => `${k}="${v}"`)
+          .join(" ");
+        const nested = `<svg ${box} viewBox="${logo.viewBox}" preserveAspectRatio="${fit}"><g ${logo.attrs}>${logo.inner}</g></svg>`;
+        return carried ? `<g ${carried}>${nested}</g>` : nested;
+      }
+      return whole.replace(href, pngOf(href, 2400, 2400));
+    }
+    if (href.startsWith("data:image/webp;")) {
+      const px = rasterSize(href);
+      return whole.replace(href, px ? pngOf(href, px.width, px.height) : pngOf(href, 2400, 2400));
+    }
+    return whole;
   });
 }
 
@@ -203,7 +262,17 @@ export type SpecLabels = Record<
 /** The specifications sheet (design "Color and size sheet"): A4, the sizes and colour values of this print. */
 export async function printSpecPdf(
   page: PrintPage,
-  meta: { name: string; layoutName: string; settings: PrintSettings; fontFile: string; boldFile: string },
+  meta: {
+    name: string;
+    layoutName: string;
+    settings: PrintSettings;
+    fontFile: string;
+    boldFile: string;
+    /** HEY-196: the saved layout revision the files were made from (the same one as the render key). */
+    revision?: string;
+    /** HEY-196: the print page's warnings, already worded (low-resolution logo, small code). */
+    warnings?: string[];
+  },
   labels: SpecLabels,
 ): Promise<Buffer> {
   return pdfBuffer([595.28, 841.89], (doc) => {
@@ -229,9 +298,17 @@ export async function printSpecPdf(
     row(labels.page, `${s.page.width} × ${s.page.height} mm`);
     row(labels.bleed, `${meta.settings.bleed} mm`);
     row(labels.marks, meta.settings.cropMarks ? labels.yes : labels.no);
+    if (labels.safe) row(labels.safe, `${Math.round(s.safe * 10) / 10} mm`);
     row(labels.qr, `${s.qr} mm`);
     row(labels.profile, labels.srgb);
-    if (page.logo) row(labels.logo, page.logo.ppi ? `${page.logo.ppi} ppi` : labels.vector);
+    if (labels.standard && labels.standardValue) row(labels.standard, labels.standardValue);
+    if (page.logo) row(labels.logo, page.logo.ppi ? `${page.logo.ppi} ppi · ${page.logo.mm} mm` : labels.vector);
+    if (labels.warnings) {
+      const list = meta.warnings ?? [];
+      if (list.length === 0) row(labels.warnings, labels.none ?? "—");
+      for (const [i, w] of list.entries()) row(i === 0 ? labels.warnings : "", w);
+    }
+    if (labels.revision && meta.revision) row(labels.revision, meta.revision);
     y += 12;
     doc.font("bold").fontSize(12).fillColor("#0D0D12").text(labels.colors, x, y);
     y += 22;

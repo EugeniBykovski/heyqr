@@ -3,7 +3,7 @@ import path from "node:path";
 import type { Layout } from "@heyqr/qr-core";
 import { NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
-import type { PrintSettings } from "@/entities/qr";
+import { MIN_PRINT_QR_MM, type PrintSettings } from "@/entities/qr";
 import { routing } from "@/i18n/routing";
 import { CAPTION_FONT_DIR, downloadFileName, renderExport } from "../qr/export";
 import { printPdf, printSpecPdf, type PrintPage } from "./print";
@@ -17,7 +17,17 @@ export type PrintFile = "pdf" | "svg" | "spec";
  */
 export async function printFileResponse(
   kind: PrintFile,
-  input: { layout: Layout; page: PrintPage; value: string; settings: PrintSettings; name: string; layoutName: string; locale?: string },
+  input: {
+    layout: Layout;
+    page: PrintPage;
+    value: string;
+    settings: PrintSettings;
+    name: string;
+    layoutName: string;
+    locale?: string;
+    /** HEY-196: the saved layout revision the page was made from, printed on the specifications sheet. */
+    revision?: string;
+  },
 ): Promise<NextResponse> {
   const { layout, page, value, settings, name, layoutName } = input;
   // HEY-69: the finished size in every file name, so proofs at two sizes never overwrite each other.
@@ -39,10 +49,17 @@ export async function printFileResponse(
   }
   const locale = routing.locales.find((l) => l === input.locale) ?? routing.defaultLocale;
   const t = await getTranslations({ locale, namespace: "print.spec" });
-  const keys = ["title", "finished", "page", "bleed", "marks", "qr", "profile", "srgb", "logo", "vector", "colors", "key", "yes", "no"];
+  const keys = [
+    ...["title", "finished", "page", "bleed", "safe", "marks", "qr", "profile", "srgb", "standard", "standardValue", "logo", "vector"],
+    ...["warnings", "none", "revision", "colors", "key", "yes", "no"],
+  ];
   const labels = Object.fromEntries(
     [...keys, ...page.colors.flatMap((c) => c.roles.map((r) => `role_${r}`))].map((k) => [k, t(k as "title")]),
   ) as Parameters<typeof printSpecPdf>[2];
+  // HEY-196: the same warnings as Print Preview, from the same page (upscaling a logo never clears its warning).
+  const warnings = page.warnings.map((w) =>
+    w.code === "logo_low_ppi" ? t("warnLogo", { ppi: w.ppi, px: w.needPx }) : t("warnQr", { mm: w.qrMm, min: MIN_PRINT_QR_MM }),
+  );
   const spec = await printSpecPdf(
     page,
     {
@@ -51,6 +68,8 @@ export async function printFileResponse(
       settings,
       fontFile: path.join(CAPTION_FONT_DIR, "HeyQROnest-Regular.ttf"),
       boldFile: path.join(CAPTION_FONT_DIR, "HeyQROnest-Bold.ttf"),
+      revision: input.revision,
+      warnings,
     },
     labels,
   );
