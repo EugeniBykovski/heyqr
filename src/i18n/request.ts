@@ -5,15 +5,18 @@ import { routing } from "./routing";
 
 type Messages = typeof en;
 
-/** Deep-merges a translation over English, so a missing key shows English instead of a raw key. */
-function withFallback(base: Record<string, unknown>, over: Record<string, unknown>): Record<string, unknown> {
+const isRecord = (v: unknown): v is Record<string, unknown> => Boolean(v) && typeof v === "object" && !Array.isArray(v);
+
+/**
+ * Deep-merges a translation over English, so a missing key shows English instead of a raw key. Only plain objects are
+ * merged key by key; an array (a docs page's blocks, a list of items) is taken whole from the translation. Merging two
+ * arrays as objects turned them into {"0": …, "1": …}, and every translated /developers page failed (HEY-172).
+ */
+export function withFallback(base: Record<string, unknown>, over: Record<string, unknown>): Record<string, unknown> {
   const out: Record<string, unknown> = { ...base };
   for (const [key, value] of Object.entries(over)) {
     const b = base[key];
-    out[key] =
-      value && typeof value === "object" && b && typeof b === "object"
-        ? withFallback(b as Record<string, unknown>, value as Record<string, unknown>)
-        : value;
+    out[key] = isRecord(value) && isRecord(b) ? withFallback(b, value) : value;
   }
   return out;
 }
