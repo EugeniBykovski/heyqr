@@ -334,6 +334,13 @@ async function renderBlock(b: Block, i: number, t: T): Promise<ReactNode> {
               <ExternalLinkIcon aria-hidden className="size-3.5" />
               <span className="sr-only">{t("install.opensNewTab")}</span>
             </a>
+            {/* HEY-188: the overview's install block links straight to the SDK's Quickstart. */}
+            {b.quickstart ? (
+              <Link href="/developers/rest/sdk#quickstart" className="inline-flex items-center gap-1.5 self-start text-label font-semibold">
+                {b.quickstart}
+                <ArrowRightIcon aria-hidden className="size-4" />
+              </Link>
+            ) : null}
             <CodeBlock
               tabs={[
                 { id: "npm", label: "npm", code: cmds.npm },
@@ -370,6 +377,8 @@ async function renderBlock(b: Block, i: number, t: T): Promise<ReactNode> {
               title: t("products.sdkTitle"),
               text: t("products.sdkText"),
               badge: npmBadge(sdk.published),
+              // HEY-188: the published SDK is the primary card, with its package name and version.
+              primary: `${sdk.name} ${sdk.version}`,
             },
             {
               href: "/developers/rest",
@@ -385,25 +394,42 @@ async function renderBlock(b: Block, i: number, t: T): Promise<ReactNode> {
               text: t("products.pkgText"),
               badge: npmBadge(qrCore.published),
             },
-          ].map(({ href, Icon, title, text, badge }) => (
-            <li key={href}>
-              <Link
-                href={href}
-                className="flex h-full items-start gap-3 rounded-xl border border-border bg-surface p-4 hover:border-border-hover"
-              >
-                <span className="bg-accent-bg grid size-10 shrink-0 place-items-center rounded-lg text-accent-text">
-                  <Icon aria-hidden className="size-5" />
-                </span>
-                <span className="flex flex-col gap-1">
-                  <span className="flex flex-wrap items-center gap-2 text-label font-semibold">
-                    {title}
-                    {badge}
+          ].map(
+            ({
+              href,
+              Icon,
+              title,
+              text,
+              badge,
+              primary,
+            }: {
+              href: string;
+              Icon: typeof BracesIcon;
+              title: string;
+              text: string;
+              badge: ReactNode;
+              primary?: string;
+            }) => (
+              <li key={href} className={primary ? "sm:col-span-2" : undefined}>
+                <Link
+                  href={href}
+                  className="flex h-full items-start gap-3 rounded-xl border border-border bg-surface p-4 hover:border-border-hover"
+                >
+                  <span className="bg-accent-bg grid size-10 shrink-0 place-items-center rounded-lg text-accent-text">
+                    <Icon aria-hidden className="size-5" />
                   </span>
-                  <span className="text-caption text-secondary-foreground">{text}</span>
-                </span>
-              </Link>
-            </li>
-          ))}
+                  <span className="flex flex-col gap-1">
+                    <span className="flex flex-wrap items-center gap-2 text-label font-semibold">
+                      {title}
+                      {badge}
+                    </span>
+                    {primary ? <span className="font-mono text-caption text-muted-foreground">{primary}</span> : null}
+                    <span className="text-caption text-secondary-foreground">{text}</span>
+                  </span>
+                </Link>
+              </li>
+            ),
+          )}
         </ul>
       );
     }
@@ -479,6 +505,7 @@ export async function DocsPage({ page, previews }: { page: Page; previews: boole
   });
   const { previous, next } = neighbours(page, previews);
   const qrCore = PACKAGE_RELEASE.qrCore;
+  const sdk = PACKAGE_RELEASE.sdk;
   const route = docsHref(page);
   const isRest = page.group === "rest";
   const footer =
@@ -509,9 +536,10 @@ export async function DocsPage({ page, previews }: { page: Page; previews: boole
             menuOpen: t("menu.open"),
             menuClose: t("menu.close"),
             menuLabel: t("menu.label"),
-            packageName: `${qrCore.name} ${qrCore.version}`,
-            packageStatus: qrCore.published ? t("status.live") : t("status.unpublished"),
-            packageLive: qrCore.published,
+            // HEY-188: the sidebar names the published SDK (qr-core's own status stays on its pages and card).
+            packageName: `${sdk.name} ${sdk.version}`,
+            packageStatus: sdk.published ? t("status.liveOnNpm") : t("status.unpublished"),
+            packageLive: sdk.published,
           }}
         />
         <div className="flex min-w-0 flex-1 gap-12">

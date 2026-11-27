@@ -11,8 +11,10 @@ export type LegalSection = { id: string; title: string; blocks: readonly LegalBl
 export type LegalDocument = {
   id: "terms" | "privacy";
   title: string;
-  /** The date this draft was last changed (ISO). The effective date is set when it is approved. */
+  /** The date the text was last changed (ISO). */
   updated: string;
+  /** HEY-188: the date the document takes effect (ISO), shown with the last-updated date. */
+  effective: string;
   intro: string;
   sections: readonly LegalSection[];
 };

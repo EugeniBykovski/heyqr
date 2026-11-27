@@ -47,14 +47,14 @@ export async function LegalPage({ doc, locale }: { doc: LegalDocument; locale: s
   const t = await getTranslations("legal");
   const format = await getFormatter();
   const english = locale === "en";
-  const updated = format.dateTime(new Date(`${doc.updated}T12:00:00Z`), { dateStyle: "long", timeZone: "UTC" });
+  const date = (iso: string) => format.dateTime(new Date(`${iso}T12:00:00Z`), { dateStyle: "long", timeZone: "UTC" });
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6 lg:py-14">
       <div className="flex flex-col gap-8 lg:grid lg:grid-cols-[14rem_minmax(0,1fr)] lg:items-start lg:gap-12">
         <header className="flex flex-col gap-4 lg:col-span-2">
           <h1 className="text-h1 text-balance">{t(`${doc.id}.title`)}</h1>
           <p className="text-caption text-muted-foreground">
-            {t("updated", { date: updated })} · {t("effectiveNote")}
+            {t("effective", { date: date(doc.effective) })} · {t("updated", { date: date(doc.updated) })}
           </p>
           {english ? null : <p className="rounded-lg bg-subtle px-4 py-3 text-caption text-secondary-foreground">{t("englishOnly")}</p>}
         </header>

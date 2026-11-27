@@ -2111,9 +2111,9 @@
       "title": "Datenschutzerklärung"
     },
     "updated": "Zuletzt aktualisiert: {date}",
-    "effectiveNote": "Das Datum des Inkrafttretens wird festgelegt, sobald dieser Text freigegeben ist.",
+    "effective": "Gültig ab {date}",
     "onThisPage": "Auf dieser Seite",
-    "englishOnly": "Dieser Text ist vorerst nur auf Englisch verfügbar. Eine Übersetzung folgt, sobald der englische Text freigegeben ist.",
+    "englishOnly": "Dieser Text ist vorerst nur auf Englisch verfügbar.",
     "placeholder": "Noch zu bestätigen"
   },
   "errors": {
@@ -2338,6 +2338,7 @@
       "warnQr": "QR-Code {mm} mm: unter {min} mm kann er auf älteren Handys scheitern",
       "revision": "Layout-Revision",
       "colors": "Farben (HEX · sRGB)",
+      "colorsCmyk": "Farben (HEX · sRGB · CMYK)",
       "key": "Render-Schlüssel",
       "yes": "Ja",
       "no": "Nein",
@@ -2392,6 +2393,7 @@
       "qrOk": "Scanbar aus bis zu etwa {cm} cm",
       "profile": "Farbprofil",
       "profileSub": "RGB, keine Konvertierung",
+      "profileSubCmyk": "CMYK · ICC-Profil im PDF eingebettet",
       "logo": "Logo-Auflösung",
       "logoVector": "Vektor",
       "logoNone": "Kein Logo",
@@ -2424,6 +2426,7 @@
       "text": "Die Dateien nutzen die Einstellungen unten. Ändere eine und lade ohne Zusatzkosten erneut herunter.",
       "pdf": "Druck-PDF herunterladen",
       "pdfSub": "sRGB · Seite {w} × {h} mm",
+      "pdfSubCmyk": "CMYK · {profile} · Seite {w} × {h} mm",
       "svg": "Bearbeitbares SVG herunterladen",
       "svgSub": "sRGB · HEX-Farben · {w} × {h} mm",
       "spec": "Druckspezifikationen herunterladen",
@@ -2458,6 +2461,9 @@
       "gracol": "GRACoL 2013",
       "fogra29": "Uncoated FOGRA29",
       "cmykDesc": "CMYK-Konvertierung ist noch nicht verfügbar.",
+      "fogra39Desc": "CMYK für Offsetdruck auf gestrichenem Papier in Europa (ISO 12647-2).",
+      "gracolDesc": "CMYK für Offsetdruck auf gestrichenem Papier in Nordamerika (CGATS.21).",
+      "fogra29Desc": "CMYK für Offsetdruck auf ungestrichenem Papier in Europa (ISO 12647-2).",
       "shop": "<b>Sprich dich mit deiner Druckerei ab.</b> Frag, welches Farbprofil sie braucht. Wenn sie unsicher ist, schick das PDF zusammen mit dem Spezifikationsblatt."
     },
     "colors": {
@@ -2465,7 +2471,8 @@
       "legendHex": "<b>HEX · sRGB</b> bearbeitbares SVG",
       "legendCmyk": "<b>CMYK</b> nur mit einem CMYK-Profil",
       "none": "—",
-      "note": "Die Farben sind in beiden Dateien exakte sRGB-Werte. Der Bildschirm zeigt eine Annäherung an die Druckfarbe."
+      "note": "Die Farben sind in beiden Dateien exakte sRGB-Werte. Der Bildschirm zeigt eine Annäherung an die Druckfarbe.",
+      "noteCmyk": "Das Druck-PDF verwendet diese CMYK-Werte für {profile}; die bearbeitbare SVG behält die exakten sRGB-Werte. Der Bildschirm zeigt eine Annäherung an die Druckfarbe."
     },
     "tech": {
       "title": "Technische Einstellungen",
@@ -2907,8 +2914,18 @@
             },
             {
               "k": "h2",
+              "id": "sdk",
+              "t": "TypeScript SDK"
+            },
+            {
+              "k": "install",
+              "package": "sdk",
+              "quickstart": "Schnellstart"
+            },
+            {
+              "k": "h2",
               "id": "what",
-              "t": "Was du bauen kannst"
+              "t": "@heyqr/qr-core: Was du bauen kannst"
             },
             {
               "k": "list",
@@ -2922,7 +2939,7 @@
             {
               "k": "h2",
               "id": "entries",
-              "t": "Einstiegspunkte"
+              "t": "@heyqr/qr-core: Einstiegspunkte"
             },
             {
               "k": "p",

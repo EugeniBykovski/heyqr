@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { routing } from "@/i18n/routing";
 import { getSession } from "@/server/auth";
+import { printErrorStatus } from "@/server/print/errors";
 import { loadPrint } from "@/server/print/load";
 import { printFileResponse } from "@/server/print/files";
 import { reportAndRethrow, requestIdOf } from "@/server/monitoring";
@@ -31,8 +32,8 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/api/print/fi
       tags: { format: `print-${q.data.file}` },
     });
   const result = await loadPrint(session.user.id, layoutId, params).catch(failed("export.authorize"));
-  if (!result.ok) return NextResponse.json({ error: result.error }, { status: result.error === "not_found" ? 404 : 422 });
-  const { layout, page, value, settings, name, layoutName, unlocked, qrCodeId, revision } = result.ctx;
+  if (!result.ok) return NextResponse.json({ error: result.error }, { status: printErrorStatus(result.error) });
+  const { layout, page, cmyk, value, settings, name, layoutName, unlocked, qrCodeId, revision } = result.ctx;
   // HEY-102: a layout of another code than the one named is refused like another account's.
   if (params.qr !== undefined && params.qr !== "" && params.qr !== qrCodeId)
     return NextResponse.json({ error: "not_found" }, { status: 404 });
@@ -70,8 +71,9 @@ export async function GET(request: NextRequest, ctx: RouteContext<"/api/print/fi
       ext: q.data.file === "svg" ? "svg" : "pdf",
       // HEY-196: `files` versions what the files contain (vector SVG logos, the fuller specifications sheet, the grouped
       // SVG), so a file stored by an earlier build for the same revision and settings is never served in place of a new one.
-      facts: { renderKey: page.renderKey, settings, value, name, layoutName, locale, files: 3 },
+      // HEY-188: version 4 (CMYK files); the settings carry the profile and `icc` the exact ICC file the PDF embeds.
+      facts: { renderKey: page.renderKey, settings, value, name, layoutName, locale, files: 4, icc: cmyk?.sha256 ?? null },
     },
-    () => printFileResponse(q.data.file, { layout, page, value, settings, name, layoutName, locale: q.data.locale, revision }),
+    () => printFileResponse(q.data.file, { layout, page, cmyk, value, settings, name, layoutName, locale: q.data.locale, revision }),
   ).catch(failed("export.deliver"));
 }

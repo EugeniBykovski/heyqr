@@ -2111,9 +2111,9 @@
       "title": "Integritetspolicy"
     },
     "updated": "Senast uppdaterad {date}",
-    "effectiveNote": "Datum för ikraftträdande fastställs när den här texten har godkänts.",
+    "effective": "Gäller från {date}",
     "onThisPage": "På den här sidan",
-    "englishOnly": "Den här texten finns för närvarande bara på engelska. En översättning kommer när den engelska texten har godkänts.",
+    "englishOnly": "Den här texten finns för närvarande bara på engelska.",
     "placeholder": "Ska bekräftas"
   },
   "errors": {
@@ -2338,6 +2338,7 @@
       "warnQr": "QR-kod {mm} mm: under {min} mm kan den misslyckas på äldre telefoner",
       "revision": "Layoutrevision",
       "colors": "Färger (HEX · sRGB)",
+      "colorsCmyk": "Färger (HEX · sRGB · CMYK)",
       "key": "Rendera K",
       "yes": "Ja",
       "no": "Nej",
@@ -2392,6 +2393,7 @@
       "qrOk": "Kan skannas från upp till cirka {cm} cm",
       "profile": "Färgprofil",
       "profileSub": "RGB, ingen konvertering",
+      "profileSubCmyk": "CMYK · ICC-profil inbäddad i PDF:en",
       "logo": "Logotypens upplösning",
       "logoVector": "Vektor",
       "logoNone": "Ingen logotyp",
@@ -2424,6 +2426,7 @@
       "text": "Filerna använder inställningarna nedan. Ändra en och ladda ner igen utan extra kostnad.",
       "pdf": "Ladda ner tryck-PDF",
       "pdfSub": "sRGB · sida {w} × {h} mm",
+      "pdfSubCmyk": "CMYK · {profile} · sida {w} × {h} mm",
       "svg": "Ladda ner redigerbar SVG",
       "svgSub": "sRGB · HEX-färger · {w} × {h} mm",
       "spec": "Ladda ner tryckspecifikationer",
@@ -2458,6 +2461,9 @@
       "gracol": "GRACoL 2013",
       "fogra29": "Uncoated FOGRA29",
       "cmykDesc": "CMYK-konvertering är inte tillgänglig än.",
+      "fogra39Desc": "CMYK för offset på bestruket papper i Europa (ISO 12647-2).",
+      "gracolDesc": "CMYK för offset på bestruket papper i Nordamerika (CGATS.21).",
+      "fogra29Desc": "CMYK för offset på obestruket papper i Europa (ISO 12647-2).",
       "shop": "<b>Stäm av med ditt tryckeri.</b> Fråga vilken färgprofil de behöver. Om de inte är säkra skickar du PDF:en tillsammans med specifikationsbladet."
     },
     "colors": {
@@ -2465,7 +2471,8 @@
       "legendHex": "<b>HEX · sRGB</b> redigerbar SVG",
       "legendCmyk": "<b>CMYK</b> bara med en CMYK-profil",
       "none": "—",
-      "note": "Färgerna är exakta sRGB-värden i båda filerna. Skärmen visar en approximation av den tryckta färgen."
+      "note": "Färgerna är exakta sRGB-värden i båda filerna. Skärmen visar en approximation av den tryckta färgen.",
+      "noteCmyk": "Tryck-PDF:en använder dessa CMYK-värden för {profile}; den redigerbara SVG:n behåller de exakta sRGB-värdena. Skärmen visar en uppskattning av tryckfärgen."
     },
     "tech": {
       "title": "Tekniska inställningar",
@@ -2907,8 +2914,18 @@
             },
             {
               "k": "h2",
+              "id": "sdk",
+              "t": "TypeScript SDK"
+            },
+            {
+              "k": "install",
+              "package": "sdk",
+              "quickstart": "Snabbstart"
+            },
+            {
+              "k": "h2",
               "id": "what",
-              "t": "Vad du kan bygga"
+              "t": "@heyqr/qr-core: Vad du kan bygga"
             },
             {
               "k": "list",
@@ -2922,7 +2939,7 @@
             {
               "k": "h2",
               "id": "entries",
-              "t": "Ingångspunkter"
+              "t": "@heyqr/qr-core: Ingångspunkter"
             },
             {
               "k": "p",

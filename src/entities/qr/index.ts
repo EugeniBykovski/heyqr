@@ -111,7 +111,7 @@ export {
   type BrandRole,
 } from "./model/brand";
 export {
-  AVAILABLE_PROFILES,
+  isPrintProfile,
   CUSTOM_WIDTH,
   DEFAULT_PRINT_SETTINGS,
   effectivePpi,

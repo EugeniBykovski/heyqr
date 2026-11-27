@@ -2115,9 +2115,9 @@
       "title": "Política de privacidad"
     },
     "updated": "Última actualización: {date}",
-    "effectiveNote": "La fecha de entrada en vigor se fijará cuando se apruebe este texto.",
+    "effective": "En vigor desde el {date}",
     "onThisPage": "En esta página",
-    "englishOnly": "Por ahora, este documento solo está disponible en inglés. La traducción llegará cuando se apruebe el texto en inglés.",
+    "englishOnly": "Por ahora, este documento solo está disponible en inglés.",
     "placeholder": "Pendiente de confirmar"
   },
   "errors": {
@@ -2342,6 +2342,7 @@
       "warnQr": "Código QR de {mm} mm: por debajo de {min} mm puede fallar en móviles antiguos",
       "revision": "Revisión del diseño",
       "colors": "Colores (HEX · sRGB)",
+      "colorsCmyk": "Colores (HEX · sRGB · CMYK)",
       "key": "Clave de renderizado",
       "yes": "Sí",
       "no": "No",
@@ -2396,6 +2397,7 @@
       "qrOk": "Se escanea desde unos {cm} cm",
       "profile": "Perfil de color",
       "profileSub": "RGB, sin conversión",
+      "profileSubCmyk": "CMYK · perfil ICC incrustado en el PDF",
       "logo": "Resolución del logo",
       "logoVector": "Vectorial",
       "logoNone": "Sin logo",
@@ -2428,6 +2430,7 @@
       "text": "Los archivos usan la configuración de abajo. Cambia una opción y vuelve a descargar sin costo adicional.",
       "pdf": "Descargar PDF de impresión",
       "pdfSub": "sRGB · página de {w} × {h} mm",
+      "pdfSubCmyk": "CMYK · {profile} · página de {w} × {h} mm",
       "svg": "Descargar SVG editable",
       "svgSub": "sRGB · colores HEX · {w} × {h} mm",
       "spec": "Descargar especificaciones de impresión",
@@ -2462,6 +2465,9 @@
       "gracol": "GRACoL 2013",
       "fogra29": "Uncoated FOGRA29",
       "cmykDesc": "La conversión a CMYK aún no está disponible.",
+      "fogra39Desc": "CMYK para offset en papel estucado en Europa (ISO 12647-2).",
+      "gracolDesc": "CMYK para offset en papel estucado en Norteamérica (CGATS.21).",
+      "fogra29Desc": "CMYK para offset en papel no estucado en Europa (ISO 12647-2).",
       "shop": "<b>Confírmalo con tu imprenta.</b> Pregunta qué perfil de color necesitan. Si no están seguros, envía el PDF junto con la ficha de especificaciones."
     },
     "colors": {
@@ -2469,7 +2475,8 @@
       "legendHex": "<b>HEX · sRGB</b> SVG editable",
       "legendCmyk": "<b>CMYK</b> solo con un perfil CMYK",
       "none": "—",
-      "note": "Los colores son valores sRGB exactos en ambos archivos. La pantalla muestra una aproximación del color impreso."
+      "note": "Los colores son valores sRGB exactos en ambos archivos. La pantalla muestra una aproximación del color impreso.",
+      "noteCmyk": "El PDF de impresión usa estos valores CMYK para {profile}; el SVG editable conserva los valores sRGB exactos. La pantalla muestra una aproximación del color impreso."
     },
     "tech": {
       "title": "Configuración técnica",
@@ -2911,8 +2918,18 @@
             },
             {
               "k": "h2",
+              "id": "sdk",
+              "t": "TypeScript SDK"
+            },
+            {
+              "k": "install",
+              "package": "sdk",
+              "quickstart": "Inicio rápido"
+            },
+            {
+              "k": "h2",
               "id": "what",
-              "t": "Qué puedes crear"
+              "t": "@heyqr/qr-core: Qué puedes crear"
             },
             {
               "k": "list",
@@ -2926,7 +2943,7 @@
             {
               "k": "h2",
               "id": "entries",
-              "t": "Puntos de entrada"
+              "t": "@heyqr/qr-core: Puntos de entrada"
             },
             {
               "k": "p",

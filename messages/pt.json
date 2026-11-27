@@ -2115,9 +2115,9 @@
       "title": "Política de Privacidade"
     },
     "updated": "Última atualização: {date}",
-    "effectiveNote": "A data de vigência será definida quando este texto for aprovado.",
+    "effective": "Em vigor desde {date}",
     "onThisPage": "Nesta página",
-    "englishOnly": "Por enquanto, este documento está disponível apenas em inglês. A tradução virá depois que o texto em inglês for aprovado.",
+    "englishOnly": "Por enquanto, este documento está disponível apenas em inglês.",
     "placeholder": "A confirmar"
   },
   "errors": {
@@ -2342,6 +2342,7 @@
       "warnQr": "QR code de {mm} mm: abaixo de {min} mm pode falhar em celulares antigos",
       "revision": "Revisão do layout",
       "colors": "Cores (HEX · sRGB)",
+      "colorsCmyk": "Cores (HEX · sRGB · CMYK)",
       "key": "Chave de renderização",
       "yes": "Sim",
       "no": "Não",
@@ -2396,6 +2397,7 @@
       "qrOk": "Lido a até cerca de {cm} cm",
       "profile": "Perfil de cor",
       "profileSub": "RGB, sem conversão",
+      "profileSubCmyk": "CMYK · perfil ICC incorporado ao PDF",
       "logo": "Resolução do logo",
       "logoVector": "Vetorial",
       "logoNone": "Sem logo",
@@ -2428,6 +2430,7 @@
       "text": "Os arquivos usam as configurações abaixo. Altere uma e baixe novamente sem custo extra.",
       "pdf": "Baixar PDF de impressão",
       "pdfSub": "sRGB · página de {w} × {h} mm",
+      "pdfSubCmyk": "CMYK · {profile} · página de {w} × {h} mm",
       "svg": "Baixar SVG editável",
       "svgSub": "sRGB · cores HEX · {w} × {h} mm",
       "spec": "Baixar especificações de impressão",
@@ -2462,6 +2465,9 @@
       "gracol": "GRACoL 2013",
       "fogra29": "Uncoated FOGRA29",
       "cmykDesc": "A conversão para CMYK ainda não está disponível.",
+      "fogra39Desc": "CMYK para offset em papel couché na Europa (ISO 12647-2).",
+      "gracolDesc": "CMYK para offset em papel couché na América do Norte (CGATS.21).",
+      "fogra29Desc": "CMYK para offset em papel não revestido na Europa (ISO 12647-2).",
       "shop": "<b>Confirme com sua gráfica.</b> Pergunte qual perfil de cor ela precisa. Se não tiverem certeza, envie o PDF junto com a ficha de especificações."
     },
     "colors": {
@@ -2469,7 +2475,8 @@
       "legendHex": "<b>HEX · sRGB</b> SVG editável",
       "legendCmyk": "<b>CMYK</b> apenas com um perfil CMYK",
       "none": "—",
-      "note": "As cores são valores sRGB exatos nos dois arquivos. A tela mostra uma aproximação da cor impressa."
+      "note": "As cores são valores sRGB exatos nos dois arquivos. A tela mostra uma aproximação da cor impressa.",
+      "noteCmyk": "O PDF de impressão usa estes valores CMYK para {profile}; o SVG editável mantém os valores sRGB exatos. A tela mostra uma aproximação da cor impressa."
     },
     "tech": {
       "title": "Configurações técnicas",
@@ -2911,8 +2918,18 @@
             },
             {
               "k": "h2",
+              "id": "sdk",
+              "t": "TypeScript SDK"
+            },
+            {
+              "k": "install",
+              "package": "sdk",
+              "quickstart": "Início rápido"
+            },
+            {
+              "k": "h2",
               "id": "what",
-              "t": "O que você pode criar"
+              "t": "@heyqr/qr-core: O que você pode criar"
             },
             {
               "k": "list",
@@ -2926,7 +2943,7 @@
             {
               "k": "h2",
               "id": "entries",
-              "t": "Pontos de entrada"
+              "t": "@heyqr/qr-core: Pontos de entrada"
             },
             {
               "k": "p",

@@ -2111,9 +2111,9 @@
       "title": "Privacybeleid"
     },
     "updated": "Laatst bijgewerkt: {date}",
-    "effectiveNote": "De ingangsdatum wordt vastgesteld zodra deze tekst is goedgekeurd.",
+    "effective": "Van kracht vanaf {date}",
     "onThisPage": "Op deze pagina",
-    "englishOnly": "Deze tekst is voorlopig alleen in het Engels beschikbaar. Een vertaling volgt zodra de Engelse tekst is goedgekeurd.",
+    "englishOnly": "Deze tekst is voorlopig alleen in het Engels beschikbaar.",
     "placeholder": "Nog te bevestigen"
   },
   "errors": {
@@ -2338,6 +2338,7 @@
       "warnQr": "QR-code van {mm} mm: onder {min} mm kan hij op oudere telefoons mislukken",
       "revision": "Lay-outrevisie",
       "colors": "Kleuren (HEX · sRGB)",
+      "colorsCmyk": "Kleuren (HEX · sRGB · CMYK)",
       "key": "Renderkenmerk",
       "yes": "Ja",
       "no": "Nee",
@@ -2392,6 +2393,7 @@
       "qrOk": "Scant vanaf maximaal ongeveer {cm} cm",
       "profile": "Kleurprofiel",
       "profileSub": "RGB, geen conversie",
+      "profileSubCmyk": "CMYK · ICC-profiel ingesloten in de pdf",
       "logo": "Logoresolutie",
       "logoVector": "Vector",
       "logoNone": "Geen logo",
@@ -2424,6 +2426,7 @@
       "text": "De bestanden gebruiken de instellingen hieronder. Wijzig er een en download opnieuw zonder extra kosten.",
       "pdf": "Print-PDF downloaden",
       "pdfSub": "sRGB · pagina {w} × {h} mm",
+      "pdfSubCmyk": "CMYK · {profile} · pagina {w} × {h} mm",
       "svg": "Bewerkbare SVG downloaden",
       "svgSub": "sRGB · HEX-kleuren · {w} × {h} mm",
       "spec": "Printspecificaties downloaden",
@@ -2458,6 +2461,9 @@
       "gracol": "GRACoL 2013",
       "fogra29": "Uncoated FOGRA29",
       "cmykDesc": "CMYK-conversie is nog niet beschikbaar.",
+      "fogra39Desc": "CMYK voor offset op gestreken papier in Europa (ISO 12647-2).",
+      "gracolDesc": "CMYK voor offset op gestreken papier in Noord-Amerika (CGATS.21).",
+      "fogra29Desc": "CMYK voor offset op ongestreken papier in Europa (ISO 12647-2).",
       "shop": "<b>Overleg met je drukkerij.</b> Vraag welk kleurprofiel ze nodig hebben. Weten ze het niet zeker, stuur dan de PDF samen met het specificatieblad."
     },
     "colors": {
@@ -2465,7 +2471,8 @@
       "legendHex": "<b>HEX · sRGB</b> bewerkbare SVG",
       "legendCmyk": "<b>CMYK</b> alleen met een CMYK-profiel",
       "none": "—",
-      "note": "Kleuren zijn exacte sRGB-waarden in beide bestanden. Het scherm toont een benadering van de printkleur."
+      "note": "Kleuren zijn exacte sRGB-waarden in beide bestanden. Het scherm toont een benadering van de printkleur.",
+      "noteCmyk": "De drukpdf gebruikt deze CMYK-waarden voor {profile}; de bewerkbare SVG houdt de exacte sRGB-waarden. Het scherm toont een benadering van de gedrukte kleur."
     },
     "tech": {
       "title": "Technische instellingen",
@@ -2907,8 +2914,18 @@
             },
             {
               "k": "h2",
+              "id": "sdk",
+              "t": "TypeScript SDK"
+            },
+            {
+              "k": "install",
+              "package": "sdk",
+              "quickstart": "Snelstart"
+            },
+            {
+              "k": "h2",
               "id": "what",
-              "t": "Wat je kunt bouwen"
+              "t": "@heyqr/qr-core: Wat je kunt bouwen"
             },
             {
               "k": "list",
@@ -2922,7 +2939,7 @@
             {
               "k": "h2",
               "id": "entries",
-              "t": "Entry points"
+              "t": "@heyqr/qr-core: Entry points"
             },
             {
               "k": "p",

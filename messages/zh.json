@@ -2103,9 +2103,9 @@
       "title": "隐私政策"
     },
     "updated": "最后更新：{date}",
-    "effectiveNote": "生效日期将在本文本获批后确定。",
+    "effective": "生效日期：{date}",
     "onThisPage": "本页内容",
-    "englishOnly": "本文本目前仅提供英文版。英文文本获批后将提供译文。",
+    "englishOnly": "本文本目前仅提供英文版。",
     "placeholder": "待确认"
   },
   "errors": {
@@ -2325,6 +2325,7 @@
       "warnQr": "二维码 {mm} mm：小于 {min} mm 时旧手机可能无法识别",
       "revision": "版式修订",
       "colors": "颜色（HEX · sRGB）",
+      "colorsCmyk": "颜色（HEX · sRGB · CMYK）",
       "key": "渲染标识",
       "yes": "是",
       "no": "否",
@@ -2379,6 +2380,7 @@
       "qrOk": "约 {cm} cm 以内可扫描",
       "profile": "颜色配置文件",
       "profileSub": "RGB，不转换",
+      "profileSubCmyk": "CMYK · PDF 中嵌入 ICC 配置文件",
       "logo": "Logo 分辨率",
       "logoVector": "矢量",
       "logoNone": "无 Logo",
@@ -2411,6 +2413,7 @@
       "text": "文件使用以下设置生成。修改设置后可再次下载，不另收费。",
       "pdf": "下载打印 PDF",
       "pdfSub": "sRGB · 页面 {w} × {h} mm",
+      "pdfSubCmyk": "CMYK · {profile} · 页面 {w} × {h} mm",
       "svg": "下载可编辑 SVG",
       "svgSub": "sRGB · HEX 颜色 · {w} × {h} mm",
       "spec": "下载打印规格",
@@ -2445,6 +2448,9 @@
       "gracol": "GRACoL 2013",
       "fogra29": "非涂布纸 FOGRA29",
       "cmykDesc": "暂不支持 CMYK 转换。",
+      "fogra39Desc": "适用于欧洲铜版纸胶印的 CMYK（ISO 12647-2）。",
+      "gracolDesc": "适用于北美铜版纸胶印的 CMYK（CGATS.21）。",
+      "fogra29Desc": "适用于欧洲非涂布纸胶印的 CMYK（ISO 12647-2）。",
       "shop": "<b>请与你的印刷厂确认。</b>询问他们需要哪种颜色配置文件。如果他们不确定，请将 PDF 与规格说明表一起发送。"
     },
     "colors": {
@@ -2452,7 +2458,8 @@
       "legendHex": "<b>HEX · sRGB</b> 可编辑 SVG",
       "legendCmyk": "<b>CMYK</b> 仅适用于 CMYK 配置文件",
       "none": "—",
-      "note": "两个文件中的颜色均为精确的 sRGB 值。屏幕上显示的是印刷颜色的近似效果。"
+      "note": "两个文件中的颜色均为精确的 sRGB 值。屏幕上显示的是印刷颜色的近似效果。",
+      "noteCmyk": "印刷 PDF 使用这些 CMYK 值来匹配 {profile}；可编辑 SVG 保留精确的 sRGB 值。屏幕显示的是印刷颜色的近似效果。"
     },
     "tech": {
       "title": "技术设置",
@@ -2894,8 +2901,18 @@
             },
             {
               "k": "h2",
+              "id": "sdk",
+              "t": "TypeScript SDK"
+            },
+            {
+              "k": "install",
+              "package": "sdk",
+              "quickstart": "快速入门"
+            },
+            {
+              "k": "h2",
               "id": "what",
-              "t": "你可以构建什么"
+              "t": "@heyqr/qr-core: 你可以构建什么"
             },
             {
               "k": "list",
@@ -2909,7 +2926,7 @@
             {
               "k": "h2",
               "id": "entries",
-              "t": "入口"
+              "t": "@heyqr/qr-core: 入口"
             },
             {
               "k": "p",

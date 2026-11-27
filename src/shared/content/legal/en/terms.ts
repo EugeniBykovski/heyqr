@@ -1,10 +1,11 @@
 import type { LegalDocument } from "../types";
 
-/** HEY-193 draft Terms of Service, written from the product's behaviour (docs/legal/REVIEW.md). Not yet approved. */
+/** HEY-193 draft Terms of Service, written from the product's behaviour (docs/legal/REVIEW.md). Effective 2026-11-27 (HEY-188); the [[…]] facts await the owner. */
 export const terms: LegalDocument = {
   id: "terms",
   title: "Terms of Service",
-  updated: "2026-11-26",
+  updated: "2026-11-27",
+  effective: "2026-11-27",
   intro:
     "These terms cover your use of HeyQR at www.heyqr.me: designing, buying and downloading QR codes, Dynamic codes and hosted pages, plans and trials, and the developer API. HeyQR is provided by [[legal name and registered address of the company that runs HeyQR]].",
   sections: [

@@ -2115,9 +2115,9 @@
       "title": "Politique de confidentialité"
     },
     "updated": "Dernière mise à jour : {date}",
-    "effectiveNote": "La date d’entrée en vigueur sera fixée lors de l’approbation de ce texte.",
+    "effective": "En vigueur depuis le {date}",
     "onThisPage": "Sur cette page",
-    "englishOnly": "Ce document n’est disponible qu’en anglais pour le moment. Une traduction suivra une fois le texte anglais approuvé.",
+    "englishOnly": "Ce document n’est disponible qu’en anglais pour le moment.",
     "placeholder": "À confirmer"
   },
   "errors": {
@@ -2342,6 +2342,7 @@
       "warnQr": "QR code de {mm} mm : en dessous de {min} mm, il peut échouer sur d’anciens téléphones",
       "revision": "Révision de la mise en page",
       "colors": "Couleurs (HEX · sRGB)",
+      "colorsCmyk": "Couleurs (HEX · sRGB · CMJN)",
       "key": "Clé de rendu",
       "yes": "Oui",
       "no": "Non",
@@ -2396,6 +2397,7 @@
       "qrOk": "Scannable jusqu’à environ {cm} cm",
       "profile": "Profil colorimétrique",
       "profileSub": "RVB, sans conversion",
+      "profileSubCmyk": "CMJN · profil ICC intégré au PDF",
       "logo": "Résolution du logo",
       "logoVector": "Vectoriel",
       "logoNone": "Aucun logo",
@@ -2428,6 +2430,7 @@
       "text": "Les fichiers utilisent les réglages ci-dessous. Modifiez-en un et téléchargez à nouveau sans frais supplémentaires.",
       "pdf": "Télécharger le PDF d’impression",
       "pdfSub": "sRGB · page {w} × {h} mm",
+      "pdfSubCmyk": "CMJN · {profile} · page {w} × {h} mm",
       "svg": "Télécharger le SVG modifiable",
       "svgSub": "sRGB · couleurs HEX · {w} × {h} mm",
       "spec": "Télécharger les spécifications d’impression",
@@ -2462,6 +2465,9 @@
       "gracol": "GRACoL 2013",
       "fogra29": "Non couché FOGRA29",
       "cmykDesc": "La conversion CMJN n’est pas encore disponible.",
+      "fogra39Desc": "CMJN pour l’offset sur papier couché en Europe (ISO 12647-2).",
+      "gracolDesc": "CMJN pour l’offset sur papier couché en Amérique du Nord (CGATS.21).",
+      "fogra29Desc": "CMJN pour l’offset sur papier non couché en Europe (ISO 12647-2).",
       "shop": "<b>Vérifiez auprès de votre imprimeur.</b> Demandez-lui quel profil colorimétrique il lui faut. En cas de doute, envoyez le PDF avec la fiche de spécifications."
     },
     "colors": {
@@ -2469,7 +2475,8 @@
       "legendHex": "<b>HEX · sRGB</b> SVG modifiable",
       "legendCmyk": "<b>CMJN</b> uniquement avec un profil CMJN",
       "none": "—",
-      "note": "Les couleurs sont des valeurs sRGB exactes dans les deux fichiers. L’écran affiche une approximation de la couleur imprimée."
+      "note": "Les couleurs sont des valeurs sRGB exactes dans les deux fichiers. L’écran affiche une approximation de la couleur imprimée.",
+      "noteCmyk": "Le PDF d’impression utilise ces valeurs CMJN pour {profile} ; le SVG modifiable garde les valeurs sRGB exactes. L’écran affiche une approximation de la couleur imprimée."
     },
     "tech": {
       "title": "Réglages techniques",
@@ -2911,8 +2918,18 @@
             },
             {
               "k": "h2",
+              "id": "sdk",
+              "t": "TypeScript SDK"
+            },
+            {
+              "k": "install",
+              "package": "sdk",
+              "quickstart": "Démarrage rapide"
+            },
+            {
+              "k": "h2",
               "id": "what",
-              "t": "Ce que vous pouvez créer"
+              "t": "@heyqr/qr-core: Ce que vous pouvez créer"
             },
             {
               "k": "list",
@@ -2926,7 +2943,7 @@
             {
               "k": "h2",
               "id": "entries",
-              "t": "Points d’entrée"
+              "t": "@heyqr/qr-core: Points d’entrée"
             },
             {
               "k": "p",

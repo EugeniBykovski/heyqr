@@ -6,6 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { MIN_PRINT_QR_MM, type PrintSettings } from "@/entities/qr";
 import { routing } from "@/i18n/routing";
 import { CAPTION_FONT_DIR, downloadFileName, renderExport } from "../qr/export";
+import type { CmykConverter } from "./cmyk";
 import { groupedPrintSvg, printPdf, printSpecPdf, type PrintPage } from "./print";
 
 export type PrintFile = "pdf" | "svg" | "spec";
@@ -20,6 +21,8 @@ export async function printFileResponse(
   input: {
     layout: Layout;
     page: PrintPage;
+    /** HEY-188: the selected CMYK profile's converter (the print PDF in CMYK); absent or null for sRGB. */
+    cmyk?: CmykConverter | null;
     value: string;
     settings: PrintSettings;
     name: string;
@@ -30,13 +33,15 @@ export async function printFileResponse(
   },
 ): Promise<NextResponse> {
   const { layout, page, value, settings, name, layoutName } = input;
+  const cmyk = input.cmyk ?? undefined;
   // HEY-69: the finished size in every file name, so proofs at two sizes never overwrite each other.
   const size = `${page.sizes.finished.width}x${page.sizes.finished.height}mm`;
   if (kind === "pdf")
     return file(
-      await printPdf(layout, page, settings.bleed),
+      await printPdf(layout, page, settings.bleed, cmyk),
       "application/pdf",
-      downloadFileName(`${name} ${layoutName} print ${size}`, "pdf").header,
+      // HEY-188: a CMYK file names its profile too, so proofs for two presses never overwrite each other.
+      downloadFileName(`${name} ${layoutName} print ${size}${cmyk ? ` ${settings.profile}` : ""}`, "pdf").header,
     );
   if (kind === "svg") {
     // HEY-196: in mm at the finished size, each part of the layout in its own named group.
@@ -59,6 +64,12 @@ export async function printFileResponse(
   const labels = Object.fromEntries(
     [...keys, ...page.colors.flatMap((c) => c.roles.map((r) => `role_${r}`))].map((k) => [k, t(k as "title")]),
   ) as Parameters<typeof printSpecPdf>[2];
+  // HEY-188: a CMYK file's sheet names its profile and ICC file, and lists each colour's CMYK values too.
+  if (cmyk) {
+    const tp = await getTranslations({ locale, namespace: "print.profiles" });
+    labels.srgb = `${tp(settings.profile)} · ${cmyk.description}`;
+    labels.colors = t("colorsCmyk");
+  }
   // HEY-196: the same warnings as Print Preview, from the same page (upscaling a logo never clears its warning).
   const warnings = page.warnings.map((w) =>
     w.code === "logo_low_ppi" ? t("warnLogo", { ppi: w.ppi, px: w.needPx }) : t("warnQr", { mm: w.qrMm, min: MIN_PRINT_QR_MM }),

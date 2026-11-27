@@ -16,7 +16,6 @@ import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import {
-  AVAILABLE_PROFILES,
   CUSTOM_WIDTH,
   PRINT_BLEEDS,
   PRINT_PROFILES,
@@ -38,7 +37,7 @@ import { formatMoney, type Currency } from "@/shared/config/catalog-core";
 type Preview = {
   svg: string;
   sizes: ReturnType<typeof printSizes>;
-  colors: { role: string; roles: string[]; hex: string; srgb: string }[];
+  colors: { role: string; roles: string[]; hex: string; srgb: string; cmyk?: string }[];
   logo: { raster: boolean; px: number | null; ppi: number | null; mm: number } | null;
   warnings: ({ code: "logo_low_ppi"; ppi: number; needPx: number } | { code: "qr_small"; qrMm: number })[];
   renderKey: string;
@@ -72,6 +71,7 @@ export function PrintPreview({
   forSale,
   included,
   sample = false,
+  profiles,
 }: {
   qrCodeId: string;
   layoutId: string;
@@ -92,6 +92,8 @@ export function PrintPreview({
   included?: { left: number; limit: number; resets: string } | null;
   /** Design 1.1: the public sample (demo QR): the page and specifications only; no purchase or files here. */
   sample?: boolean;
+  /** HEY-188: the colour profiles this deployment produces (server/print/profiles.ts); the others stay disabled. */
+  profiles: readonly PrintProfile[];
 }) {
   const t = useTranslations("print");
   // The same file-preparation copy as Export (Handoff · Commerce §3).
@@ -145,6 +147,9 @@ export function PrintPreview({
   }, [confirming]);
 
   const set = (patch: Partial<PrintSettings>) => setSettings((s) => ({ ...s, ...patch }));
+  // HEY-188: a CMYK profile makes the print PDF CMYK; the editable SVG stays sRGB.
+  const cmyk = settings.profile !== "srgb";
+  const profileName = t(`profiles.${settings.profile}`);
   const ready = status === "ready" && preview !== null;
   const unlocked = preview?.unlocked === true;
   const qrSmall = sizes.qr < 20;
@@ -241,7 +246,12 @@ export function PrintPreview({
       sub: qrSmall ? t("keys.qrSmall") : t("keys.qrOk", { cm: Math.round(sizes.qr) }),
       warn: qrSmall,
     },
-    { k: t("keys.profile"), v: t("profiles.srgb"), sub: t("keys.profileSub"), warn: false },
+    {
+      k: t("keys.profile"),
+      v: t(`profiles.${settings.profile}`),
+      sub: cmyk ? t("keys.profileSubCmyk") : t("keys.profileSub"),
+      warn: false,
+    },
     {
       k: t("keys.logo"),
       // Until the page of these settings is back, the resolution isn't known yet (never "No logo" for a logo).
@@ -442,7 +452,13 @@ export function PrintPreview({
                 <p className="text-caption text-secondary-foreground">{t("files.text")}</p>
                 {(
                   [
-                    ["pdf", t("files.pdf"), t("files.pdfSub", { w: sizes.page.width, h: sizes.page.height })],
+                    [
+                      "pdf",
+                      t("files.pdf"),
+                      cmyk
+                        ? t("files.pdfSubCmyk", { profile: profileName, w: sizes.page.width, h: sizes.page.height })
+                        : t("files.pdfSub", { w: sizes.page.width, h: sizes.page.height }),
+                    ],
                     ["svg", t("files.svg"), t("files.svgSub", { w: sizes.finished.width, h: sizes.finished.height })],
                     ["spec", t("files.spec"), t("files.specSub")],
                   ] as const
@@ -663,7 +679,7 @@ export function PrintPreview({
                 {t("profiles.title")}
               </h3>
               {PRINT_PROFILES.map((p: PrintProfile) => {
-                const available = AVAILABLE_PROFILES.includes(p);
+                const available = profiles.includes(p);
                 return (
                   <button
                     key={p}
@@ -683,7 +699,7 @@ export function PrintPreview({
                     <span className="flex flex-col">
                       <b className="text-[0.875rem] font-semibold">{t(`profiles.${p}`)}</b>
                       <span className="text-caption text-muted-foreground">
-                        {available ? t("profiles.srgbDesc") : t("profiles.cmykDesc")}
+                        {!available ? t("profiles.cmykDesc") : p === "srgb" ? t("profiles.srgbDesc") : t(`profiles.${p}Desc`)}
                       </span>
                     </span>
                   </button>
@@ -720,13 +736,15 @@ export function PrintPreview({
                       <span className="flex flex-wrap gap-x-3 font-mono text-[0.75rem] text-secondary-foreground">
                         <span>HEX {c.hex}</span>
                         <span>sRGB {c.srgb}</span>
-                        <span className="text-muted-foreground">CMYK {t("colors.none")}</span>
+                        <span className={c.cmyk ? undefined : "text-muted-foreground"}>CMYK {c.cmyk ?? t("colors.none")}</span>
                       </span>
                     </span>
                   </li>
                 ))}
               </ul>
-              <p className="text-caption text-muted-foreground">{t("colors.note")}</p>
+              <p className="text-caption text-muted-foreground">
+                {cmyk ? t("colors.noteCmyk", { profile: profileName }) : t("colors.note")}
+              </p>
             </div>
 
             <div className="flex flex-col gap-3">

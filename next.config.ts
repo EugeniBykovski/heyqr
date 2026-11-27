@@ -17,12 +17,15 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   // pdfkit reads its font metrics (data/*.afm) from its own folder at runtime, so it must not be bundled.
-  serverExternalPackages: ["@resvg/resvg-js", "zxing-wasm", "pdfkit", "svg-to-pdfkit"],
+  // HEY-188: lcms-wasm loads its lcms.wasm next to itself at runtime, so it stays an external package too.
+  serverExternalPackages: ["@resvg/resvg-js", "zxing-wasm", "pdfkit", "svg-to-pdfkit", "lcms-wasm"],
   transpilePackages: ["@heyqr/qr-core"],
   // Caption fonts read from disk by the export (src/server/qr/export.ts): PNG rasterizing and SVG embedding.
+  // HEY-188: the bundled ICC profiles (assets/icc) and Little CMS's WebAssembly, read by the print routes.
   outputFileTracingIncludes: {
     "/api/export/[layoutId]": ["./public/caption-fonts/*.ttf"],
-    "/api/print/files/[layoutId]": ["./public/caption-fonts/*.ttf"],
+    "/api/print/files/[layoutId]": ["./public/caption-fonts/*.ttf", "./assets/icc/*.icc", "./node_modules/lcms-wasm/dist/lcms.wasm"],
+    "/api/print/preview": ["./assets/icc/*.icc", "./node_modules/lcms-wasm/dist/lcms.wasm"],
     "/api/print/sample": ["./public/caption-fonts/*.ttf"],
   },
   images: {

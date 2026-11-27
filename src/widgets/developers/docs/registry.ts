@@ -32,7 +32,7 @@ export type DocsPage = {
 export const DOCS_GROUPS: readonly DocsGroup[] = ["start", "guides", "ref", "help", "rest"];
 
 export const DOCS_PAGES: readonly DocsPage[] = [
-  { id: "overview", path: "", group: "start", anchors: ["what", "entries", "next"], visibility: "public" },
+  { id: "overview", path: "", group: "start", anchors: ["sdk", "what", "entries", "next"], visibility: "public" },
   { id: "install", path: "install", group: "start", anchors: ["add", "reqs", "wasm"], visibility: "public" },
   { id: "quickstart", path: "quick-start", group: "start", anchors: ["browser", "node"], visibility: "public" },
   { id: "content", path: "content", group: "guides", anchors: ["types", "examples", "contact", "events", "urls"], visibility: "public" },

@@ -14,11 +14,13 @@ describe("legal texts (HEY-193)", () => {
   });
 
   for (const doc of [terms, privacy])
-    it(`${doc.id}: unique section anchors, a dated draft, and open facts left as placeholders`, () => {
+    it(`${doc.id}: unique section anchors, an effective date, and open facts left as placeholders`, () => {
       const ids = doc.sections.map((s) => s.id);
       expect(new Set(ids).size).toBe(ids.length);
       for (const id of ids) expect(id).toMatch(/^[a-z][a-z-]*$/);
       expect(doc.updated).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      // HEY-188: both documents take effect on the confirmed date.
+      expect(doc.effective).toBe("2026-11-27");
       const text = JSON.stringify(doc);
       // Who runs HeyQR and how to reach it are not known yet: they must stay visible placeholders.
       expect(text).toMatch(/\[\[legal name and registered address/);

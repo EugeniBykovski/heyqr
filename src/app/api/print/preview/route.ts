@@ -3,8 +3,10 @@ import { z } from "zod";
 import { getSession } from "@/server/auth";
 import { readPrintSettings, unsupportedProfile } from "@/entities/qr";
 import { env } from "@/env";
+import { printErrorStatus } from "@/server/print/errors";
 import { loadPrint } from "@/server/print/load";
 import { printPage } from "@/server/print/print";
+import { availableProfiles, printConverter } from "@/server/print/profiles";
 import { samplePrint } from "@/server/print/sample";
 import { withEmbeddedImages } from "@/server/qr/export";
 
@@ -21,11 +23,17 @@ export async function POST(request: NextRequest) {
   // Design 1.1 / 9.1: the public sample (a fixed demo QR) can be inspected by anyone; nothing of an account is read.
   const sample = sampleBody.safeParse(json);
   if (sample.success) {
-    if (unsupportedProfile(sample.data.settings)) return NextResponse.json({ error: "unsupported_profile" }, { status: 422 });
+    if (unsupportedProfile(sample.data.settings, availableProfiles()))
+      return NextResponse.json({ error: "unsupported_profile" }, { status: 422 });
     const base = samplePrint(env.NEXT_PUBLIC_APP_URL);
     const settings = readPrintSettings(sample.data.settings, base.layout);
     const layout = await withEmbeddedImages(base.layout);
-    const page = printPage(layout, base.value, settings, { layoutId: "sample", revision: "v1" });
+    const converted = await printConverter(
+      settings.profile,
+      printPage(layout, base.value, settings, { layoutId: "sample", revision: "v1" }),
+    );
+    if (converted === "unavailable") return NextResponse.json({ error: "profile_unavailable" }, { status: 503 });
+    const { page } = converted;
     return NextResponse.json(
       {
         svg: page.svg,
@@ -48,7 +56,7 @@ export async function POST(request: NextRequest) {
   const parsed = body.safeParse(json);
   if (!parsed.success) return NextResponse.json({ error: "invalid" }, { status: 400 });
   const result = await loadPrint(session.user.id, parsed.data.layoutId, parsed.data.settings);
-  if (!result.ok) return NextResponse.json({ error: result.error }, { status: result.error === "not_found" ? 404 : 422 });
+  if (!result.ok) return NextResponse.json({ error: result.error }, { status: printErrorStatus(result.error) });
   const { page, settings, entitled, unlocked, forSale } = result.ctx;
   return NextResponse.json(
     {

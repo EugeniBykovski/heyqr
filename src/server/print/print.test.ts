@@ -41,7 +41,8 @@ describe("print sizes and settings", () => {
       qr: 60,
     });
     expect(readPrintSettings({ width: "100" }, layout).scale).toBe(2);
-    expect(readPrintSettings({ bleed: "7", profile: "fogra39" }, layout)).toMatchObject({ bleed: 3, profile: "srgb" });
+    expect(readPrintSettings({ bleed: "7", profile: "fogra39" }, layout)).toMatchObject({ bleed: 3, profile: "fogra39" });
+    expect(readPrintSettings({ profile: "pdfx4" }, layout).profile).toBe("srgb");
   });
 
   it("the render key changes with the layout revision and every setting", () => {
