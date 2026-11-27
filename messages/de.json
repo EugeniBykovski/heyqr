@@ -54,7 +54,7 @@
   "home": {
     "hero": {
       "eyebrow": "QR-Studio · kostenlos gestalten und ansehen",
-      "title": "Ein QR-Code, der aussieht wie deiner.",
+      "title": "Erstelle einen QR-Code, den man scannen will.",
       "lead": "Füg einen Link ein und gestalte ihn hier. Die Vorschau aktualisiert sich beim Tippen, und das Gestalten ist kostenlos.",
       "reveal": "Gute Dinge sind nur einen Scan entfernt."
     },
@@ -77,7 +77,7 @@
         "clay": "Ton"
       },
       "caption": "Beschriftung",
-      "captionDefault": "Portfolio ansehen",
+      "captionDefault": "Scannen und Portfolio ansehen",
       "continue": "Weiter gestalten",
       "priceNote": "Gestalten und Vorschau sind kostenlos. Der Download von PNG und SVG kostet einmalig <b>{price}</b> pro Code.",
       "seePricing": "Preise ansehen",
@@ -87,7 +87,8 @@
       "realCode": "Echter, scanbarer Code",
       "previewLabel": "Vorschau deines QR-Codes",
       "otherType": "Dein Entwurf ist ein {type}-Code. „Weiter gestalten“ öffnet ihn im Editor.",
-      "stageCard": "Visitenkarte · 90 mm × 50 mm"
+      "stageCard": "Visitenkarte · 90 mm × 50 mm",
+      "stageSquare": "Quadrat · {width} mm × {height} mm"
     },
     "how": {
       "label": "So funktioniert’s",

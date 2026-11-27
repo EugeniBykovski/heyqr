@@ -54,7 +54,7 @@
   "home": {
     "hero": {
       "eyebrow": "Studio QR · projektowanie i podgląd za darmo",
-      "title": "Kod QR, który wygląda jak Twój.",
+      "title": "Stwórz kod QR, który warto zeskanować.",
       "lead": "Wklej link i nadaj mu styl. Podgląd zmienia się w trakcie pisania, a projektowanie jest darmowe.",
       "reveal": "Dobre rzeczy są o jedno skanowanie stąd."
     },
@@ -77,7 +77,7 @@
         "clay": "Glina"
       },
       "caption": "Podpis",
-      "captionDefault": "Zobacz portfolio",
+      "captionDefault": "Zeskanuj, aby zobaczyć moje portfolio",
       "continue": "Projektuj dalej",
       "priceNote": "Projektowanie i podgląd są darmowe. Pobranie plików PNG i SVG kosztuje <b>{price}</b> za kod, jednorazowo.",
       "seePricing": "Zobacz cennik",
@@ -87,7 +87,8 @@
       "realCode": "Prawdziwy, skanowalny kod",
       "previewLabel": "Podgląd Twojego kodu QR",
       "otherType": "Twój szkic to kod typu {type}. „Projektuj dalej” otworzy go w edytorze.",
-      "stageCard": "Wizytówka · 90 mm × 50 mm"
+      "stageCard": "Wizytówka · 90 mm × 50 mm",
+      "stageSquare": "Kwadrat · {width} mm × {height} mm"
     },
     "how": {
       "label": "Jak to działa",

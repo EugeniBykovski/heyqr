@@ -54,7 +54,7 @@
   "home": {
     "hero": {
       "eyebrow": "QR-studio · gratis att designa och förhandsgranska",
-      "title": "En QR-kod som ser ut att vara din.",
+      "title": "Skapa en QR-kod som är värd att skanna.",
       "lead": "Klistra in en länk och ge den stil här. Förhandsvisningen uppdateras medan du skriver, och att designa är gratis.",
       "reveal": "Bra saker finns bara en skanning bort."
     },
@@ -77,7 +77,7 @@
         "clay": "Lera"
       },
       "caption": "Bildtext",
-      "captionDefault": "Visa portfolio",
+      "captionDefault": "Skanna för att se min portfolio",
       "continue": "Fortsätt designa",
       "priceNote": "Gratis att designa och förhandsgranska. Att ladda ner PNG och SVG kostar <b>{price}</b> per kod, en gång.",
       "seePricing": "Se priser",
@@ -87,7 +87,8 @@
       "realCode": "Riktig, skanningsbar kod",
       "previewLabel": "Förhandsvisning av din QR-kod",
       "otherType": "Ditt utkast är en {type}-kod. Fortsätt designa öppnar den i redigeraren.",
-      "stageCard": "Visitkort · 90 mm × 50 mm"
+      "stageCard": "Visitkort · 90 mm × 50 mm",
+      "stageSquare": "Kvadrat · {width} mm × {height} mm"
     },
     "how": {
       "label": "Så fungerar det",

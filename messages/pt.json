@@ -54,7 +54,7 @@
   "home": {
     "hero": {
       "eyebrow": "Estúdio de QR · criar e visualizar é grátis",
-      "title": "Um QR code com a sua cara.",
+      "title": "Crie um QR code que vale a pena escanear.",
       "lead": "Cole um link e personalize aqui. A prévia é atualizada enquanto você digita, e criar é grátis.",
       "reveal": "Coisas boas estão a um escaneamento de distância."
     },
@@ -77,7 +77,7 @@
         "clay": "Argila"
       },
       "caption": "Legenda",
-      "captionDefault": "Ver portfólio",
+      "captionDefault": "Escaneie para ver meu portfólio",
       "continue": "Continuar criando",
       "priceNote": "Criar e visualizar é grátis. Baixar o PNG e o SVG custa <b>{price}</b> por código, uma única vez.",
       "seePricing": "Ver preços",
@@ -87,7 +87,8 @@
       "realCode": "Código real e escaneável",
       "previewLabel": "Prévia do seu QR code",
       "otherType": "Seu rascunho é um código do tipo {type}. Continuar criando o abre no editor.",
-      "stageCard": "Cartão de visita · 90 mm × 50 mm"
+      "stageCard": "Cartão de visita · 90 mm × 50 mm",
+      "stageSquare": "Quadrado · {width} mm × {height} mm"
     },
     "how": {
       "label": "Como funciona",

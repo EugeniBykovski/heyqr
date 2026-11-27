@@ -54,7 +54,7 @@
   "home": {
     "hero": {
       "eyebrow": "Studio QR · thiết kế và xem trước miễn phí",
-      "title": "Mã QR trông như của riêng bạn.",
+      "title": "Tạo mã QR đáng để quét.",
       "lead": "Dán một liên kết và tạo kiểu ngay tại đây. Bản xem trước cập nhật khi bạn gõ, và thiết kế hoàn toàn miễn phí.",
       "reveal": "Điều tuyệt vời chỉ cách một lần quét."
     },
@@ -77,7 +77,7 @@
         "clay": "Đất sét"
       },
       "caption": "Chú thích",
-      "captionDefault": "Xem portfolio",
+      "captionDefault": "Quét để xem portfolio của tôi",
       "continue": "Tiếp tục thiết kế",
       "priceNote": "Thiết kế và xem trước miễn phí. Tải PNG và SVG có giá <b>{price}</b> cho mỗi mã, trả một lần.",
       "seePricing": "Xem bảng giá",
@@ -87,7 +87,8 @@
       "realCode": "Mã thật, quét được",
       "previewLabel": "Bản xem trước mã QR của bạn",
       "otherType": "Bản nháp của bạn là mã {type}. Tiếp tục thiết kế sẽ mở nó trong trình chỉnh sửa.",
-      "stageCard": "Danh thiếp · 90 mm × 50 mm"
+      "stageCard": "Danh thiếp · 90 mm × 50 mm",
+      "stageSquare": "Hình vuông · {width} mm × {height} mm"
     },
     "how": {
       "label": "Cách hoạt động",

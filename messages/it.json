@@ -54,7 +54,7 @@
   "home": {
     "hero": {
       "eyebrow": "Studio QR · progettazione e anteprima gratuite",
-      "title": "Un codice QR che sembra davvero tuo.",
+      "title": "Crea un codice QR che vale la pena scansionare.",
       "lead": "Incolla un link e personalizzalo qui. L’anteprima si aggiorna mentre scrivi, e progettare è gratis.",
       "reveal": "Le cose belle sono a una scansione di distanza."
     },
@@ -77,7 +77,7 @@
         "clay": "Argilla"
       },
       "caption": "Didascalia",
-      "captionDefault": "Guarda il portfolio",
+      "captionDefault": "Scansiona per vedere il mio portfolio",
       "continue": "Continua a progettare",
       "priceNote": "Progettazione e anteprima gratuite. Scaricare PNG e SVG costa <b>{price}</b> per codice, una sola volta.",
       "seePricing": "Vedi i prezzi",
@@ -87,7 +87,8 @@
       "realCode": "Codice reale e leggibile",
       "previewLabel": "Anteprima del tuo codice QR",
       "otherType": "La tua bozza è un codice {type}. Continua a progettare per aprirla nell’editor.",
-      "stageCard": "Biglietto da visita · 90 mm × 50 mm"
+      "stageCard": "Biglietto da visita · 90 mm × 50 mm",
+      "stageSquare": "Quadrato · {width} mm × {height} mm"
     },
     "how": {
       "label": "Come funziona",

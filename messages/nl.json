@@ -54,7 +54,7 @@
   "home": {
     "hero": {
       "eyebrow": "QR-studio · gratis ontwerpen en bekijken",
-      "title": "Een QR-code die er echt uitziet als de jouwe.",
+      "title": "Maak een QR-code die het scannen waard is.",
       "lead": "Plak een link en geef hem hier stijl. Het voorbeeld wordt bijgewerkt terwijl je typt, en ontwerpen is gratis.",
       "reveal": "Mooie dingen zijn maar één scan verwijderd."
     },
@@ -77,7 +77,7 @@
         "clay": "Klei"
       },
       "caption": "Bijschrift",
-      "captionDefault": "Bekijk portfolio",
+      "captionDefault": "Scan om mijn portfolio te bekijken",
       "continue": "Verder ontwerpen",
       "priceNote": "Gratis ontwerpen en bekijken. De PNG en SVG downloaden kost eenmalig <b>{price}</b> per code.",
       "seePricing": "Bekijk prijzen",
@@ -87,7 +87,8 @@
       "realCode": "Echte, scanbare code",
       "previewLabel": "Voorbeeld van je QR-code",
       "otherType": "Je concept is een {type}-code. Met Verder ontwerpen open je het in de editor.",
-      "stageCard": "Visitekaartje · 90 mm × 50 mm"
+      "stageCard": "Visitekaartje · 90 mm × 50 mm",
+      "stageSquare": "Vierkant · {width} mm × {height} mm"
     },
     "how": {
       "label": "Zo werkt het",

@@ -54,7 +54,7 @@
   "home": {
     "hero": {
       "eyebrow": "Estudio QR · diseño y vista previa gratis",
-      "title": "Un código QR que se ve tuyo.",
+      "title": "Crea un código QR que valga la pena escanear.",
       "lead": "Pega un enlace y dale estilo aquí. La vista previa se actualiza mientras escribes, y diseñar es gratis.",
       "reveal": "Lo bueno está a un escaneo de distancia."
     },
@@ -77,7 +77,7 @@
         "clay": "Arcilla"
       },
       "caption": "Texto",
-      "captionDefault": "Ver portafolio",
+      "captionDefault": "Escanea para ver mi portafolio",
       "continue": "Seguir diseñando",
       "priceNote": "Diseñar y previsualizar es gratis. Descargar el PNG y el SVG cuesta <b>{price}</b> por código, una sola vez.",
       "seePricing": "Ver precios",
@@ -87,7 +87,8 @@
       "realCode": "Código real y escaneable",
       "previewLabel": "Vista previa de tu código QR",
       "otherType": "Tu borrador es un código de {type}. Seguir diseñando lo abre en el editor.",
-      "stageCard": "Tarjeta de presentación · 90 mm × 50 mm"
+      "stageCard": "Tarjeta de presentación · 90 mm × 50 mm",
+      "stageSquare": "Cuadrado · {width} mm × {height} mm"
     },
     "how": {
       "label": "Cómo funciona",
