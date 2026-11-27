@@ -67,6 +67,7 @@ describe("Print Pack downloads (HEY-196)", () => {
           designHref="/edit/q1"
           entitled
           forSale
+          profiles={["srgb"]}
         />
       </NextIntlClientProvider>,
     );

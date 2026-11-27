@@ -130,10 +130,12 @@ describe("Print Pack files (HEY-196)", () => {
     expect(page.warnings.find((w) => w.code === "logo_low_ppi")).toBeTruthy();
   });
 
-  it("a CMYK profile is refused by name, never answered with an sRGB file", () => {
-    expect(unsupportedProfile({})).toBeNull();
-    expect(unsupportedProfile({ profile: "srgb" })).toBeNull();
-    for (const p of ["fogra39", "gracol", "fogra29", "pdfx4", "cmyk"]) expect(unsupportedProfile({ profile: p })).toBe(p);
+  it("a profile the deployment does not produce is refused by name, never answered with an sRGB file", () => {
+    const available = ["srgb", "fogra39", "gracol"] as const;
+    expect(unsupportedProfile({}, available)).toBeNull();
+    for (const p of available) expect(unsupportedProfile({ profile: p }, available)).toBeNull();
+    for (const p of ["fogra29", "pdfx4", "cmyk"]) expect(unsupportedProfile({ profile: p }, available)).toBe(p);
+    expect(unsupportedProfile({ profile: "fogra39" }, ["srgb"])).toBe("fogra39");
   });
 
   it("the specifications sheet states the revision, safe area, PDF standard and the page's warnings", async () => {

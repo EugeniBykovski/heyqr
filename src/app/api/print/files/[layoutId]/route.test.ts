@@ -59,6 +59,15 @@ describe("GET /api/print/files/:layoutId", () => {
     expect((await call(`key=${page.renderKey}`)).status).toBe(400);
   });
 
+  it("HEY-188: a profile the deployment doesn't offer is 422, one that fails now is 503; never an sRGB file", async () => {
+    load.mockResolvedValueOnce({ ok: false, error: "unsupported_profile" });
+    const refused = await call(`file=pdf&key=${page.renderKey}&profile=fogra29`);
+    expect([refused.status, await refused.json()]).toEqual([422, { error: "unsupported_profile" }]);
+    load.mockResolvedValueOnce({ ok: false, error: "profile_unavailable" });
+    const down = await call(`file=pdf&key=${page.renderKey}&profile=fogra39`);
+    expect([down.status, await down.json()]).toEqual([503, { error: "profile_unavailable" }]);
+  });
+
   it("402 while the Print Pack is locked; a download link goes back to Print Preview instead", async () => {
     load.mockResolvedValue(ctx(false));
     expect((await call(`file=pdf&key=${page.renderKey}`)).status).toBe(402);
