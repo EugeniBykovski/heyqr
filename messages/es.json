@@ -282,60 +282,43 @@
       "pricing": "Ver precios"
     },
     "studio": {
-      "kicker": "Tu estudio",
-      "welcome": "Hola de nuevo, {name}",
-      "summaryTop": "{name} se escaneó {count, plural, one {# vez} other {# veces}} hoy. Todo lo que creaste está a un toque.",
-      "summary": "Todo lo que creaste está a un toque: archivos, enlaces y escaneos.",
-      "summaryEmpty": "Crea tu primer código y aparecerá aquí con sus archivos y escaneos.",
       "billing": "Plan y facturación",
       "library": "Abrir Mis códigos QR",
-      "kpi": {
-        "codes": "Códigos QR",
-        "codesNote": "{paid} pagados · {drafts, plural, one {# borrador} other {# borradores}}",
-        "scans": "Escaneos · 14 días",
-        "scansNone": "Aún no hay escaneos",
-        "scansDelta": "{delta, number, ::sign-always percent} frente a la semana anterior",
-        "dynamic": "Códigos dinámicos",
-        "dynamicNote": "{left, plural, one {Queda # espacio} other {Quedan # espacios}} en tu plan",
-        "dynamicMeter": "Códigos dinámicos en uso",
-        "files": "Archivos listos",
-        "filesNote": "{count, plural, one {diseño} other {diseños}} para descargar en PNG o SVG"
-      },
       "chart": {
-        "title": "Escaneos · últimos 14 días",
-        "sub": "Todos los códigos dinámicos juntos",
+        "title": "Estadísticas de escaneo",
+        "sub": "Códigos dinámicos · últimos 14 días",
         "empty": "Aquí aparecerán los escaneos de tus códigos dinámicos.",
-        "today": "Hoy",
-        "label": "Escaneos diarios de todos los códigos dinámicos en los últimos 14 días"
+        "label": "Escaneos diarios de todos los códigos dinámicos en los últimos 14 días",
+        "plans": "Las estadísticas de escaneo vienen con Starter y Studio.",
+        "note": "Solo planes dinámicos: totales diarios en Starter, gráficos por código en Studio."
       },
-      "top": "Código principal",
-      "topNote": "{count, plural, one {# escaneo} other {# escaneos}} en 14 días · {link}",
-      "topNone": "Aún no hay códigos dinámicos",
-      "topNoneNote": "Los códigos dinámicos cuentan cada escaneo.",
       "recent": "Códigos recientes",
-      "seeAll": "Ver los {count}",
-      "recentEmpty": "Tus códigos vivirán aquí, con sus archivos y escaneos.",
-      "createFirst": "Crea tu primer código",
-      "open": "Abrir",
+      "recentEmpty": "Tu primer código aparecerá aquí con sus diseños y archivos.",
+      "createFirst": "Crear un código QR",
       "openName": "Abrir {name}",
       "status": {
-        "dynamic": "Dinámico · activo",
-        "paid": "Pagado",
         "draft": "Borrador"
       },
-      "metricScans": "{count, plural, one {# escaneo} other {# escaneos}}",
       "metricLayouts": "{count, plural, one {# diseño} other {# diseños}}",
-      "metricFinish": "Termina para descargar",
-      "perksTitle": "Incluido con tu cuenta",
-      "perks": {
-        "again": "Vuelve a descargar cada diseño pagado, en PNG o SVG, sin costo",
-        "redirect": "Apunta los códigos dinámicos a un nuevo destino sin reimprimir",
-        "scans": "Conteo diario de escaneos de cada código dinámico",
-        "drafts": "Borradores guardados en tu cuenta en todos tus dispositivos",
-        "billing": "Recibos, plan y método de pago en Plan y facturación"
-      },
       "loading": "Cargando tu estudio",
-      "trial": "Prueba gratis · {days, plural, one {queda # día} other {quedan # días}}"
+      "trial": "Prueba gratis · {days, plural, one {queda # día} other {quedan # días}}",
+      "lead": "Hola de nuevo, {name}. Todo lo que creaste está a un toque: archivos, diseños y escaneos.",
+      "leadEmpty": "Hola de nuevo, {name}. Tu primer código aparecerá aquí.",
+      "points": {
+        "side": "Códigos estáticos y dinámicos lado a lado, cada uno con sus diseños y archivos",
+        "files": "Edita el diseño o vuelve a descargar PNG y SVG cuando quieras",
+        "scans": "Estadísticas de escaneo en los planes dinámicos: totales diarios en Starter, por código en Studio",
+        "print": "Los Print Packs se quedan con su QR, listos para enviar a la imprenta"
+      },
+      "onlyYou": "Solo tú puedes ver esto",
+      "printPack": "Print Pack",
+      "notActive": "Inactivo",
+      "edit": "Editar diseño",
+      "download": "Descargar",
+      "editName": "Editar el diseño de {name}",
+      "downloadName": "Descargar {name}",
+      "private": "Privado para {email}. Nadie más puede ver estos códigos.",
+      "metricScans14": "{count, plural, one {# escaneo} other {# escaneos}} · 14 días"
     },
     "workspace": {
       "kicker": "Mis códigos QR",
@@ -597,7 +580,7 @@
     "title": "Inicia sesión en Hey QR",
     "lead": "Tu diseño se guarda en tu cuenta para que puedas descargarlo después del pago.",
     "google": "Continuar con Google",
-    "legal": "Al continuar, aceptas los Términos y la Política de privacidad.",
+    "legal": "Al continuar, aceptas los <terms>Términos</terms> y la <privacy>Política de privacidad</privacy>.",
     "failed": "No se pudo iniciar sesión. Inténtalo de nuevo.",
     "canceled": {
       "draft": "Se canceló el inicio de sesión con Google. Tu diseño sigue guardado en este navegador. Continúa con Google para intentarlo de nuevo.",
@@ -922,7 +905,11 @@
       "smsTo": "Ingresa el número que debe recibir el mensaje.",
       "address": "Ingresa la dirección que debe abrir la app de mapas.",
       "eventTitle": "Ponle un nombre al evento.",
-      "eventStart": "Elige una fecha."
+      "eventStart": "Elige una fecha.",
+      "eventDateInvalid": "Introduce una fecha válida.",
+      "eventEndInvalid": "Introduce la hora de fin en horas y minutos.",
+      "eventEndNeedsStart": "Añade una hora de inicio o borra la hora de fin.",
+      "eventEnd": "El evento termina antes de empezar. Elige una hora de fin posterior."
     },
     "afterScanning": {
       "label": "Después de escanear",
@@ -1546,7 +1533,7 @@
     "text": "El texto del código es demasiado largo. Mantenlo en unos 8 caracteres."
   },
   "export": {
-    "title": "Descarga tu código",
+    "title": "Descarga tu archivo",
     "shortLinkPreview": {
       "mark": "Vista previa",
       "note": "Vista previa con un enlace corto de ejemplo. Tu enlace corto permanente se crea cuando activas este código, y todos los archivos que descargues lo incluyen."
@@ -1569,10 +1556,10 @@
     "dpi": "{dpi} dpi",
     "pixels": "{width} × {height} px",
     "titleBuy": "Descarga tu código QR",
-    "titleGuest": "Listo para descargar",
-    "subGuest": "Revisa el diseño y el archivo, luego inicia sesión con Google para pagar y descargar. Tu diseño se queda tal como está.",
+    "titleGuest": "Descarga tu código QR",
+    "subGuest": "Revisa el diseño y el formato. Verás el total antes de pagar.",
     "subPay": "Revisa el diseño y el formato. Verás el total antes de pagar.",
-    "subEntitled": "Este código es tuyo. Descarga cualquier formato, tantas veces como necesites.",
+    "subEntitled": "Incluido en tu compra. PNG y SVG, tantas veces como quieras.",
     "stageLabel": "Diseño para descargar",
     "layouts": "Diseños de este código",
     "backToDesign": "Volver al diseño",
@@ -1609,7 +1596,7 @@
     },
     "checkoutFailed": "No pudimos abrir el pago. No se cobró nada; inténtalo de nuevo.",
     "continueGoogle": "Continuar con Google",
-    "guestNote": "Diseñar es gratis. Solo pagas cuando descargas.",
+    "guestNote": "Inicia sesión para pagar. Te traeremos de vuelta a este diseño con {format} seleccionado.",
     "receipt": {
       "title": "Recibo",
       "paid": "Pagado",
@@ -1636,7 +1623,8 @@
       "total": "Total",
       "tax": "Los impuestos, si corresponden, se calculan en el pago.",
       "included": "Incluido",
-      "includedShort": "Incluido"
+      "includedShort": "Incluido",
+      "toPay": "A pagar ahora"
     },
     "emptyTitle": "Aún no hay nada para descargar",
     "emptyText": "Primero diseña un código QR. Tu borrador se queda en este navegador hasta que lo descargues.",
@@ -1713,7 +1701,11 @@
     },
     "limit": "los tamaños mayores superan {max} px",
     "subUnlock": "Incluido en {plan}: se usa 1 de tus desbloqueos estáticos mensuales.",
-    "subCredit": "Se usa 1 de tus créditos estáticos."
+    "subCredit": "Se usa 1 de tus créditos estáticos.",
+    "titleDone": "Descargado",
+    "subEntitledPlan": "Incluido en tu plan. Descarga tantas veces como quieras.",
+    "pendingNote": "Suele tardar unos segundos. Mantén esta página abierta.",
+    "includedNotePlan": "Incluido en tu plan. No hay nada que pagar."
   },
   "dashboard": {
     "noMatch": {
@@ -2091,7 +2083,12 @@
     "privacy": {
       "title": "Política de privacidad"
     },
-    "draft": "Esta página es provisional hasta que se apruebe el texto legal."
+    "draft": "Borrador para revisión del propietario y del equipo legal. Este texto aún no está en vigor y puede cambiar antes de publicarse. Las partes resaltadas aún deben confirmarse.",
+    "updated": "Última actualización: {date}",
+    "effectiveNote": "La fecha de entrada en vigor se fijará cuando se apruebe este texto.",
+    "onThisPage": "En esta página",
+    "englishOnly": "Por ahora, este documento solo está disponible en inglés. La traducción llegará cuando se apruebe el texto en inglés.",
+    "placeholder": "Pendiente de confirmar"
   },
   "errors": {
     "notFound": {

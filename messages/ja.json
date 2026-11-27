@@ -282,60 +282,43 @@
       "pricing": "料金を見る"
     },
     "studio": {
-      "kicker": "あなたのスタジオ",
-      "welcome": "おかえりなさい、{name}さん",
-      "summaryTop": "今日、{name}は{count, plural, other {#回}}スキャンされました。作成したものにはすべてワンタップでアクセスできます。",
-      "summary": "ファイル、リンク、スキャン。作成したものにはすべてワンタップでアクセスできます。",
-      "summaryEmpty": "最初のコードを作成すると、ファイルやスキャンとともにここに表示されます。",
       "billing": "プランと請求",
       "library": "マイQRコードを開く",
-      "kpi": {
-        "codes": "QRコード",
-        "codesNote": "支払い済み{paid}件 · 下書き{drafts, plural, other {#件}}",
-        "scans": "スキャン · 14日間",
-        "scansNone": "まだスキャンはありません",
-        "scansDelta": "前週比{delta, number, ::sign-always percent}",
-        "dynamic": "動的コード",
-        "dynamicNote": "プランの残り枠{left, plural, other {#件}}",
-        "dynamicMeter": "使用中の動的コード",
-        "files": "準備済みのファイル",
-        "filesNote": "PNGまたはSVGでダウンロードできる{count, plural, other {レイアウト}}"
-      },
       "chart": {
-        "title": "スキャン · 過去14日間",
-        "sub": "すべての動的コードの合計",
+        "title": "スキャン分析",
+        "sub": "動的コード · 過去14日間",
         "empty": "動的コードのスキャンがここに表示されます。",
-        "today": "今日",
-        "label": "過去14日間の動的コード全体の日別スキャン数"
+        "label": "過去14日間の動的コード全体の日別スキャン数",
+        "plans": "スキャン分析はStarterとStudioで利用できます。",
+        "note": "動的プランのみ：Starterでは日別合計、Studioではコードごとのグラフを表示します。"
       },
-      "top": "トップのコード",
-      "topNote": "14日間で{count, plural, other {#回のスキャン}} · {link}",
-      "topNone": "動的コードはまだありません",
-      "topNoneNote": "動的コードはすべてのスキャンを記録します。",
       "recent": "最近のコード",
-      "seeAll": "すべて表示（{count}）",
-      "recentEmpty": "ここにコードが、ファイルやスキャンとともに表示されます。",
-      "createFirst": "最初のコードを作成",
-      "open": "開く",
+      "recentEmpty": "最初のコードが、レイアウトやファイルとともにここに表示されます。",
+      "createFirst": "QRコードを作成",
       "openName": "{name}を開く",
       "status": {
-        "dynamic": "動的 · 有効",
-        "paid": "支払い済み",
         "draft": "下書き"
       },
-      "metricScans": "{count, plural, other {#回のスキャン}}",
       "metricLayouts": "{count, plural, other {#件のレイアウト}}",
-      "metricFinish": "完成させてダウンロード",
-      "perksTitle": "アカウントに含まれるもの",
-      "perks": {
-        "again": "支払い済みのすべてのレイアウトをPNGまたはSVGで無料で再ダウンロード",
-        "redirect": "再印刷せずに動的コードのリンク先を変更",
-        "scans": "すべての動的コードの日別スキャン数",
-        "drafts": "下書きはアカウントに保存され、どのデバイスでも利用可能",
-        "billing": "領収書、プラン、支払い方法は「プランと請求」で"
-      },
       "loading": "スタジオを読み込んでいます",
-      "trial": "無料トライアル · 残り{days, plural, other {#日}}"
+      "trial": "無料トライアル · 残り{days, plural, other {#日}}",
+      "lead": "おかえりなさい、{name}さん。作成したファイル、レイアウト、スキャンにワンタップでアクセスできます。",
+      "leadEmpty": "おかえりなさい、{name}さん。最初のコードはここに表示されます。",
+      "points": {
+        "side": "静的コードと動的コードを並べて表示し、それぞれのレイアウトとファイルも確認できます",
+        "files": "デザインの編集や、PNG・SVGの再ダウンロードがいつでもできます",
+        "scans": "動的プランではスキャン分析を利用できます：Starterは日別合計、Studioはコードごと",
+        "print": "Print PackはQRと一緒に保存され、そのまま印刷会社に送れます"
+      },
+      "onlyYou": "これはあなただけに表示されます",
+      "printPack": "Print Pack",
+      "notActive": "非アクティブ",
+      "edit": "デザインを編集",
+      "download": "ダウンロード",
+      "editName": "{name}のデザインを編集",
+      "downloadName": "{name}をダウンロード",
+      "private": "{email}専用です。ほかの人はこれらのコードを見ることができません。",
+      "metricScans14": "{count, plural, other {#回スキャン}} · 14日間"
     },
     "workspace": {
       "kicker": "マイQRコード",
@@ -593,7 +576,7 @@
     "title": "Hey QRにログイン",
     "lead": "デザインはアカウントに保存されるため、お支払い後にダウンロードできます。",
     "google": "Googleで続行",
-    "legal": "続行すると、利用規約とプライバシーポリシーに同意したものとみなされます。",
+    "legal": "続行すると、<terms>利用規約</terms>と<privacy>プライバシーポリシー</privacy>に同意したものとみなされます。",
     "failed": "ログインに失敗しました。もう一度お試しください。",
     "canceled": {
       "draft": "Googleログインがキャンセルされました。デザインはこのブラウザに保存されたままです。もう一度お試しになるには「Googleで続行」を選択してください。",
@@ -918,7 +901,11 @@
       "smsTo": "メッセージを受け取る電話番号を入力してください。",
       "address": "地図アプリで開く住所を入力してください。",
       "eventTitle": "イベント名を入力してください。",
-      "eventStart": "日付を選んでください。"
+      "eventStart": "日付を選んでください。",
+      "eventDateInvalid": "正しい日付を入力してください。",
+      "eventEndInvalid": "終了時刻を時と分で入力してください。",
+      "eventEndNeedsStart": "開始時刻を追加するか、終了時刻を削除してください。",
+      "eventEnd": "イベントの終了が開始より前になっています。もっと遅い終了時刻を選んでください。"
     },
     "afterScanning": {
       "label": "スキャン後",
@@ -1542,7 +1529,7 @@
     "text": "コード内のテキストが長すぎます。8文字程度に収めてください。"
   },
   "export": {
-    "title": "コードをダウンロード",
+    "title": "ファイルをダウンロード",
     "shortLinkPreview": {
       "mark": "プレビュー",
       "note": "サンプルの短縮リンクでプレビューしています。このコードを有効にすると永続的な短縮リンクが作成され、ダウンロードするすべてのファイルに含まれます。"
@@ -1565,10 +1552,10 @@
     "dpi": "{dpi} dpi",
     "pixels": "{width} × {height} px",
     "titleBuy": "QRコードをダウンロード",
-    "titleGuest": "ダウンロードの準備ができました",
-    "subGuest": "レイアウトとファイルを確認してから、Googleでログインしてお支払いとダウンロードを行ってください。デザインはそのまま保持されます。",
+    "titleGuest": "QRコードをダウンロード",
+    "subGuest": "レイアウトと形式を確認してください。お支払い前に合計金額が表示されます。",
     "subPay": "レイアウトと形式を確認してください。お支払い前に合計金額が表示されます。",
-    "subEntitled": "このコードはあなたのものです。どの形式でも何度でもダウンロードできます。",
+    "subEntitled": "ご購入内容に含まれています。PNGとSVGを何度でもダウンロードできます。",
     "stageLabel": "ダウンロードするレイアウト",
     "layouts": "このコードのレイアウト",
     "backToDesign": "デザインに戻る",
@@ -1605,7 +1592,7 @@
     },
     "checkoutFailed": "購入手続きを開けませんでした。料金は請求されていません。もう一度お試しください。",
     "continueGoogle": "Googleで続行",
-    "guestNote": "デザインは無料。お支払いはダウンロード時のみです。",
+    "guestNote": "お支払いにはログインしてください。{format}を選択した状態で、このレイアウトにすぐ戻ります。",
     "receipt": {
       "title": "領収書",
       "paid": "支払い済み",
@@ -1632,7 +1619,8 @@
       "total": "合計",
       "tax": "税金がかかる場合は、購入手続き時に計算されます。",
       "included": "含まれています",
-      "includedShort": "込み"
+      "includedShort": "込み",
+      "toPay": "今回のお支払い額"
     },
     "emptyTitle": "ダウンロードできるものはまだありません",
     "emptyText": "まずQRコードをデザインしてください。下書きはダウンロードするまでこのブラウザに保存されます。",
@@ -1709,7 +1697,11 @@
     },
     "limit": "これより大きいサイズは{max} pxを超えます",
     "subUnlock": "{plan}に含まれています：今月の静的ロック解除を1回使用します。",
-    "subCredit": "静的クレジットを1つ使用します。"
+    "subCredit": "静的クレジットを1つ使用します。",
+    "titleDone": "ダウンロード完了",
+    "subEntitledPlan": "プランに含まれています。何度でもダウンロードできます。",
+    "pendingNote": "通常は数秒で完了します。このページを開いたままにしてください。",
+    "includedNotePlan": "プランに含まれています。お支払いは不要です。"
   },
   "dashboard": {
     "noMatch": {
@@ -2087,7 +2079,12 @@
     "privacy": {
       "title": "プライバシーポリシー"
     },
-    "draft": "このページは、法的文書が承認されるまでの仮のページです。"
+    "draft": "所有者および法務担当による確認用の草案です。この文書はまだ効力がなく、公開前に変更される可能性があります。ハイライトされた部分はまだ確認が必要です。",
+    "updated": "最終更新日：{date}",
+    "effectiveNote": "施行日は、この文書が承認された時点で設定されます。",
+    "onThisPage": "このページの内容",
+    "englishOnly": "この文書は現在、英語版のみご利用いただけます。英語版の承認後に翻訳を公開します。",
+    "placeholder": "確認中"
   },
   "errors": {
     "notFound": {

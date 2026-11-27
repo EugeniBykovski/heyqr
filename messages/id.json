@@ -282,60 +282,43 @@
       "pricing": "Lihat harga"
     },
     "studio": {
-      "kicker": "Studio Anda",
-      "welcome": "Selamat datang kembali, {name}",
-      "summaryTop": "{name} dipindai {count, plural, other {# kali}} hari ini. Semua yang Anda buat hanya sejauh satu ketukan.",
-      "summary": "Semua yang Anda buat hanya sejauh satu ketukan: file, tautan, dan pindaian.",
-      "summaryEmpty": "Buat kode pertama Anda dan kode itu akan muncul di sini beserta file dan pindaiannya.",
       "billing": "Paket & tagihan",
       "library": "Buka Kode QR saya",
-      "kpi": {
-        "codes": "Kode QR",
-        "codesNote": "{paid} dibayar · {drafts, plural, other {# draf}}",
-        "scans": "Pindaian · 14 hari",
-        "scansNone": "Belum ada pindaian",
-        "scansDelta": "{delta, number, ::sign-always percent} dibanding minggu lalu",
-        "dynamic": "Kode dinamis",
-        "dynamicNote": "Sisa {left, plural, other {# slot}} di paket Anda",
-        "dynamicMeter": "Kode dinamis yang digunakan",
-        "files": "File siap",
-        "filesNote": "{count, plural, other {tata letak}} untuk diunduh sebagai PNG atau SVG"
-      },
       "chart": {
-        "title": "Pindaian · 14 hari terakhir",
-        "sub": "Semua kode dinamis digabung",
+        "title": "Analitik pindaian",
+        "sub": "Kode dinamis · 14 hari terakhir",
         "empty": "Pindaian kode dinamis Anda akan muncul di sini.",
-        "today": "Hari ini",
-        "label": "Pindaian harian di semua kode dinamis selama 14 hari terakhir"
+        "label": "Pindaian harian di semua kode dinamis selama 14 hari terakhir",
+        "plans": "Analitik pindaian tersedia di Starter dan Studio.",
+        "note": "Hanya paket dinamis: total harian di Starter, grafik per kode di Studio."
       },
-      "top": "Kode teratas",
-      "topNote": "{count, plural, other {# pindaian}} dalam 14 hari · {link}",
-      "topNone": "Belum ada kode dinamis",
-      "topNoneNote": "Kode dinamis menghitung setiap pindaian.",
       "recent": "Kode terbaru",
-      "seeAll": "Lihat semua {count}",
-      "recentEmpty": "Kode Anda akan tersimpan di sini, beserta file dan pindaiannya.",
-      "createFirst": "Buat kode pertama Anda",
-      "open": "Buka",
+      "recentEmpty": "Kode pertama Anda akan muncul di sini beserta tata letak dan filenya.",
+      "createFirst": "Buat kode QR",
       "openName": "Buka {name}",
       "status": {
-        "dynamic": "Dinamis · aktif",
-        "paid": "Dibayar",
         "draft": "Draf"
       },
-      "metricScans": "{count, plural, other {# pindaian}}",
       "metricLayouts": "{count, plural, other {# tata letak}}",
-      "metricFinish": "Selesaikan untuk mengunduh",
-      "perksTitle": "Termasuk dalam akun Anda",
-      "perks": {
-        "again": "Unduh lagi setiap tata letak berbayar, sebagai PNG atau SVG, tanpa biaya",
-        "redirect": "Arahkan kode dinamis ke tujuan baru tanpa mencetak ulang",
-        "scans": "Jumlah pindaian harian untuk setiap kode dinamis",
-        "drafts": "Draf tersimpan di akun Anda di semua perangkat",
-        "billing": "Tanda terima, paket, dan metode pembayaran di Paket & tagihan"
-      },
       "loading": "Memuat studio Anda",
-      "trial": "Uji coba gratis · sisa {days, plural, other {# hari}}"
+      "trial": "Uji coba gratis · sisa {days, plural, other {# hari}}",
+      "lead": "Selamat datang kembali, {name}. Semua yang Anda buat hanya sekali ketuk: file, tata letak, dan pindaian.",
+      "leadEmpty": "Selamat datang kembali, {name}. Kode pertama Anda akan muncul di sini.",
+      "points": {
+        "side": "Kode statis dan dinamis berdampingan, masing-masing dengan tata letak dan filenya",
+        "files": "Edit desain atau unduh lagi PNG dan SVG, kapan saja",
+        "scans": "Analitik pindaian di paket dinamis: total harian di Starter, per kode di Studio",
+        "print": "Print Pack tetap bersama QR-nya, siap dikirim ke percetakan"
+      },
+      "onlyYou": "Hanya Anda yang dapat melihat ini",
+      "printPack": "Print Pack",
+      "notActive": "Tidak aktif",
+      "edit": "Edit desain",
+      "download": "Unduh",
+      "editName": "Edit desain {name}",
+      "downloadName": "Unduh {name}",
+      "private": "Privat untuk {email}. Tidak ada orang lain yang dapat melihat kode ini.",
+      "metricScans14": "{count, plural, other {# pindaian}} · 14 hari"
     },
     "workspace": {
       "kicker": "Kode QR saya",
@@ -597,7 +580,7 @@
     "title": "Masuk ke Hey QR",
     "lead": "Desain Anda disimpan ke akun Anda agar bisa diunduh setelah pembayaran.",
     "google": "Lanjutkan dengan Google",
-    "legal": "Dengan melanjutkan, Anda menyetujui Ketentuan dan Kebijakan Privasi.",
+    "legal": "Dengan melanjutkan, Anda menyetujui <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy>.",
     "failed": "Gagal masuk. Silakan coba lagi.",
     "canceled": {
       "draft": "Masuk dengan Google dibatalkan. Desain Anda masih tersimpan di browser ini. Lanjutkan dengan Google untuk mencoba lagi.",
@@ -922,7 +905,11 @@
       "smsTo": "Masukkan nomor yang akan menerima pesan.",
       "address": "Masukkan alamat yang harus dibuka aplikasi peta.",
       "eventTitle": "Beri nama acara.",
-      "eventStart": "Pilih tanggal."
+      "eventStart": "Pilih tanggal.",
+      "eventDateInvalid": "Masukkan tanggal yang valid.",
+      "eventEndInvalid": "Masukkan waktu selesai dalam jam dan menit.",
+      "eventEndNeedsStart": "Tambahkan waktu mulai, atau hapus waktu selesai.",
+      "eventEnd": "Acara berakhir sebelum dimulai. Pilih waktu selesai yang lebih akhir."
     },
     "afterScanning": {
       "label": "Setelah memindai",
@@ -1546,7 +1533,7 @@
     "text": "Teks di dalam kode terlalu panjang. Batasi sekitar 8 karakter."
   },
   "export": {
-    "title": "Unduh kode Anda",
+    "title": "Unduh file Anda",
     "shortLinkPreview": {
       "mark": "Pratinjau",
       "note": "Pratinjau dengan tautan pendek contoh. Tautan pendek permanen Anda dibuat saat Anda mengaktifkan kode ini, dan setiap file yang Anda unduh berisi tautan tersebut."
@@ -1569,10 +1556,10 @@
     "dpi": "{dpi} dpi",
     "pixels": "{width} × {height} px",
     "titleBuy": "Unduh kode QR Anda",
-    "titleGuest": "Siap diunduh",
-    "subGuest": "Periksa tata letak dan file, lalu masuk dengan Google untuk membayar dan mengunduh. Desain Anda tetap seperti semula.",
+    "titleGuest": "Unduh kode QR Anda",
+    "subGuest": "Periksa tata letak dan format. Anda akan melihat total sebelum membayar.",
     "subPay": "Periksa tata letak dan format. Anda akan melihat total sebelum membayar.",
-    "subEntitled": "Kode ini milik Anda. Unduh format apa pun, sesering yang Anda butuhkan.",
+    "subEntitled": "Sudah termasuk dalam pembelian Anda. PNG dan SVG, sesering yang Anda mau.",
     "stageLabel": "Tata letak untuk diunduh",
     "layouts": "Tata letak kode ini",
     "backToDesign": "Kembali ke desain",
@@ -1609,7 +1596,7 @@
     },
     "checkoutFailed": "Kami tidak dapat membuka checkout. Tidak ada biaya yang ditagih; coba lagi.",
     "continueGoogle": "Lanjutkan dengan Google",
-    "guestNote": "Gratis untuk mendesain. Anda hanya membayar saat mengunduh.",
+    "guestNote": "Masuk untuk membayar. Kami akan membawa Anda langsung kembali ke tata letak ini dengan {format} terpilih.",
     "receipt": {
       "title": "Tanda terima",
       "paid": "Dibayar",
@@ -1636,7 +1623,8 @@
       "total": "Total",
       "tax": "Pajak, jika ada, dihitung saat checkout.",
       "included": "Termasuk",
-      "includedShort": "Termasuk"
+      "includedShort": "Termasuk",
+      "toPay": "Dibayar sekarang"
     },
     "emptyTitle": "Belum ada yang bisa diunduh",
     "emptyText": "Desain kode QR terlebih dahulu. Draf Anda tetap tersimpan di browser ini sampai Anda mengunduhnya.",
@@ -1713,7 +1701,11 @@
     },
     "limit": "ukuran yang lebih besar melebihi {max} px",
     "subUnlock": "Termasuk dalam {plan}: ini menggunakan 1 buka kunci statis bulanan Anda.",
-    "subCredit": "Ini menggunakan 1 kredit statis Anda."
+    "subCredit": "Ini menggunakan 1 kredit statis Anda.",
+    "titleDone": "Telah diunduh",
+    "subEntitledPlan": "Termasuk dalam paket Anda. Unduh sesering yang Anda mau.",
+    "pendingNote": "Biasanya hanya beberapa detik. Harap biarkan halaman ini tetap terbuka.",
+    "includedNotePlan": "Termasuk dalam paket Anda. Tidak perlu membayar."
   },
   "dashboard": {
     "noMatch": {
@@ -2091,7 +2083,12 @@
     "privacy": {
       "title": "Kebijakan Privasi"
     },
-    "draft": "Halaman ini hanya sementara sampai teks hukumnya disetujui."
+    "draft": "Draf untuk ditinjau pemilik dan tim hukum. Teks ini belum berlaku dan dapat berubah sebelum diterbitkan. Bagian yang disorot masih perlu dikonfirmasi.",
+    "updated": "Terakhir diperbarui {date}",
+    "effectiveNote": "Tanggal berlaku akan ditetapkan setelah teks ini disetujui.",
+    "onThisPage": "Di halaman ini",
+    "englishOnly": "Untuk saat ini, dokumen ini hanya tersedia dalam bahasa Inggris. Terjemahan akan menyusul setelah teks bahasa Inggrisnya disetujui.",
+    "placeholder": "Akan dikonfirmasi"
   },
   "errors": {
     "notFound": {

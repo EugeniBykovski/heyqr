@@ -37,7 +37,7 @@ export function GoogleSignInButton({
 }: {
   callbackURL: string;
   errorCallbackURL?: string;
-  /** Export's guest action is the primary button (design 3.1); the sign-in page uses the default. */
+  /** The default (secondary) button is Google's standard look: the sign-in page and Export's guest step (design 3.1, 2.10). */
   variant?: "primary";
 }) {
   const t = useTranslations("auth");

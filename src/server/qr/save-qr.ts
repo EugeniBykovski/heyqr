@@ -4,6 +4,7 @@ import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { createLayoutRecord, type LayoutRecordDesign } from "../../entities/qr/model/design-schema";
 import type { PrepareRecord } from "./update-layout";
 import { supportsMode } from "../../entities/qr/model/modes";
+import { eventDraftOk } from "../../entities/qr/model/content-validation";
 import { isHostedContent, readHostedContent, type AnyQrContent, type HostedContent } from "../../entities/qr/model/hosted";
 import { DRAFT_LIMIT } from "../../shared/config/catalog-core";
 import { newId } from "../db/ids";
@@ -53,6 +54,8 @@ export async function saveQrWithLayouts(
 ): Promise<SaveQrResult> {
   // Of the direct types only website codes can be dynamic; hosted pages are always dynamic (entities/qr/model/modes.ts).
   if (!supportsMode(input.content.type, input.model)) return { ok: false, error: "invalid" };
+  // HEY-193: an event's date and times, when present, must make a correct calendar entry (unfinished drafts are fine).
+  if (!eventDraftOk(input.content)) return { ok: false, error: "invalid" };
   // A hosted draft must match its stored shape (it may still be unfinished: publishing checks the rules).
   const hosted = isHostedContent(input.content) ? readHostedContent(input.content) : null;
   if (isHostedContent(input.content) && !hosted) return { ok: false, error: "invalid" };

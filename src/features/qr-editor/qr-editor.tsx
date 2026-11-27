@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Tabs as TabsPrimitive } from "radix-ui";
 import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState, useTransition } from "react";
+import { useAutoResume } from "./use-auto-resume";
 import { toast } from "sonner";
 import { env } from "@/env";
 import { previewShortLink } from "@/shared/lib/short-link";
@@ -72,7 +73,6 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
   const step: EditorStep = resume ? "design" : isStep(urlStep) ? urlStep : "type";
   const [showErrors, setShowErrors] = useState(false);
   const [saving, startSaving] = useTransition();
-  const autoResumed = useRef(false);
   const patch = (p: Partial<EditorDesign>) => setDesign((d) => ({ ...d, ...p }));
 
   useEffect(() => {
@@ -252,15 +252,8 @@ export function QrEditor({ signedIn, resume }: { signedIn: boolean; resume: bool
     });
   };
 
-  // Coming back from Google sign-in: continue to the export step automatically.
-  const continueAfterSignIn = useEffectEvent(() => {
-    if (autoResumed.current || !complete || !scan?.ok) return;
-    autoResumed.current = true;
-    download();
-  });
-  useEffect(() => {
-    if (resume && signedIn && restored) continueAfterSignIn();
-  }, [resume, signedIn, restored]);
+  // Coming back from Google sign-in: continue to the export step automatically, once the scan check has passed.
+  useAutoResume({ resume, signedIn, restored, ready: complete && Boolean(scan?.ok) }, () => download());
 
   const exportButton = (size: "sm" | "md" | "lg", className?: string) => (
     // HEY-191: while the draft saves, the button stays at full strength and focus (design `.is-loading`), and a

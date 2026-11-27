@@ -282,60 +282,43 @@
       "pricing": "查看价格"
     },
     "studio": {
-      "kicker": "你的工作室",
-      "welcome": "欢迎回来，{name}",
-      "summaryTop": "{name} 今天被扫描了 {count, plural, other {# 次}}。你制作的一切都触手可及。",
-      "summary": "你制作的一切都触手可及：文件、链接和扫描数据。",
-      "summaryEmpty": "制作你的第一个二维码，它会连同文件和扫描数据显示在这里。",
       "billing": "套餐与账单",
       "library": "打开我的二维码",
-      "kpi": {
-        "codes": "二维码",
-        "codesNote": "{paid} 个已付款 · {drafts, plural, other {# 个草稿}}",
-        "scans": "扫描 · 14 天",
-        "scansNone": "暂无扫描",
-        "scansDelta": "较上周 {delta, number, ::sign-always percent}",
-        "dynamic": "动态二维码",
-        "dynamicNote": "你的套餐还剩 {left, plural, other {# 个名额}}",
-        "dynamicMeter": "使用中的动态二维码",
-        "files": "可下载文件",
-        "filesNote": "{count, plural, other {个版式}}可下载为 PNG 或 SVG"
-      },
       "chart": {
-        "title": "扫描 · 最近 14 天",
-        "sub": "所有动态二维码合计",
+        "title": "扫描统计",
+        "sub": "动态二维码 · 最近 14 天",
         "empty": "动态二维码的扫描数据将显示在这里。",
-        "today": "今天",
-        "label": "最近 14 天所有动态二维码的每日扫描次数"
+        "label": "最近 14 天所有动态二维码的每日扫描次数",
+        "plans": "Starter 和 Studio 套餐提供扫描统计。",
+        "note": "仅限动态套餐：Starter 提供每日总数，Studio 提供每个二维码的图表。"
       },
-      "top": "最热门的二维码",
-      "topNote": "14 天内 {count, plural, other {# 次扫描}} · {link}",
-      "topNone": "还没有动态二维码",
-      "topNoneNote": "动态二维码会统计每一次扫描。",
       "recent": "最近的二维码",
-      "seeAll": "查看全部 {count} 个",
-      "recentEmpty": "你的二维码将连同文件和扫描数据显示在这里。",
-      "createFirst": "创建你的第一个二维码",
-      "open": "打开",
+      "recentEmpty": "你的第一个二维码会连同版式和文件显示在这里。",
+      "createFirst": "创建二维码",
       "openName": "打开 {name}",
       "status": {
-        "dynamic": "动态 · 生效中",
-        "paid": "已付款",
         "draft": "草稿"
       },
-      "metricScans": "{count, plural, other {# 次扫描}}",
       "metricLayouts": "{count, plural, other {# 个版式}}",
-      "metricFinish": "完成后即可下载",
-      "perksTitle": "账户包含的权益",
-      "perks": {
-        "again": "所有已付款的版式均可免费重新下载为 PNG 或 SVG",
-        "redirect": "无需重新印刷即可让动态二维码指向新地址",
-        "scans": "每个动态二维码的每日扫描次数",
-        "drafts": "草稿保存到你的账户，所有设备均可访问",
-        "billing": "在“套餐与账单”中查看收据、套餐和付款方式"
-      },
       "loading": "正在加载你的工作室",
-      "trial": "免费试用 · 剩余 {days, plural, other {# 天}}"
+      "trial": "免费试用 · 剩余 {days, plural, other {# 天}}",
+      "lead": "欢迎回来，{name}。你创建的一切都触手可及：文件、版式和扫描数据。",
+      "leadEmpty": "欢迎回来，{name}。你的第一个二维码会出现在这里。",
+      "points": {
+        "side": "静态和动态二维码并排显示，各自附带版式和文件",
+        "files": "随时编辑设计，或重新下载 PNG 和 SVG",
+        "scans": "动态套餐含扫描统计：Starter 提供每日总数，Studio 按二维码统计",
+        "print": "Print Pack 与对应的二维码保存在一起，可直接发给印刷厂"
+      },
+      "onlyYou": "仅你可见",
+      "printPack": "Print Pack",
+      "notActive": "未启用",
+      "edit": "编辑设计",
+      "download": "下载",
+      "editName": "编辑 {name} 的设计",
+      "downloadName": "下载 {name}",
+      "private": "仅 {email} 可见。其他人无法看到这些二维码。",
+      "metricScans14": "{count, plural, other {# 次扫描}} · 14 天"
     },
     "workspace": {
       "kicker": "我的二维码",
@@ -585,7 +568,7 @@
     "title": "登录 Hey QR",
     "lead": "你的设计会保存到账户中，付款后即可下载。",
     "google": "使用 Google 继续",
-    "legal": "继续即表示你同意《条款》和《隐私政策》。",
+    "legal": "继续即表示你同意<terms>《条款》</terms>和<privacy>《隐私政策》</privacy>。",
     "failed": "登录失败，请重试。",
     "canceled": {
       "draft": "Google 登录已取消。你的设计仍保存在此浏览器中。点击“使用 Google 继续”重试。",
@@ -910,7 +893,11 @@
       "smsTo": "请输入接收短信的号码。",
       "address": "请输入地图应用要打开的地址。",
       "eventTitle": "请为活动命名。",
-      "eventStart": "请选择日期。"
+      "eventStart": "请选择日期。",
+      "eventDateInvalid": "请输入有效日期。",
+      "eventEndInvalid": "请按小时和分钟输入结束时间。",
+      "eventEndNeedsStart": "请添加开始时间，或清除结束时间。",
+      "eventEnd": "活动的结束时间早于开始时间。请选择更晚的结束时间。"
     },
     "afterScanning": {
       "label": "扫码后",
@@ -1534,7 +1521,7 @@
     "text": "二维码中的文字太长，请控制在 8 个字符左右。"
   },
   "export": {
-    "title": "下载你的二维码",
+    "title": "下载你的文件",
     "shortLinkPreview": {
       "mark": "预览",
       "note": "使用示例短链接预览。激活此二维码时会创建你的永久短链接，你下载的每个文件都包含该链接。"
@@ -1557,10 +1544,10 @@
     "dpi": "{dpi} dpi",
     "pixels": "{width} × {height} px",
     "titleBuy": "下载你的二维码",
-    "titleGuest": "可以下载了",
-    "subGuest": "检查版式和文件，然后使用 Google 登录以付款并下载。你的设计保持不变。",
+    "titleGuest": "下载你的二维码",
+    "subGuest": "检查版式和格式。付款前你会看到总金额。",
     "subPay": "检查版式和格式。付款前你会看到总金额。",
-    "subEntitled": "这个二维码归你所有。任何格式都可以随时下载，次数不限。",
+    "subEntitled": "已包含在你的购买中。PNG 和 SVG 可随时下载，次数不限。",
     "stageLabel": "要下载的版式",
     "layouts": "此二维码的版式",
     "backToDesign": "返回设计",
@@ -1597,7 +1584,7 @@
     },
     "checkoutFailed": "无法打开结账页面。未产生任何扣费，请重试。",
     "continueGoogle": "使用 Google 继续",
-    "guestNote": "设计免费，下载时才需付款。",
+    "guestNote": "登录后付款。我们会直接带你回到此版式，并保持选中 {format}。",
     "receipt": {
       "title": "收据",
       "paid": "已支付",
@@ -1624,7 +1611,8 @@
       "total": "总计",
       "tax": "如有税费，将在结账时计算。",
       "included": "已包含",
-      "includedShort": "已含"
+      "includedShort": "已含",
+      "toPay": "现在应付"
     },
     "emptyTitle": "暂无可下载内容",
     "emptyText": "请先设计一个二维码。下载前，你的草稿会一直保存在此浏览器中。",
@@ -1701,7 +1689,11 @@
     },
     "limit": "更大尺寸超过 {max} px",
     "subUnlock": "{plan} 套餐已包含：将使用 1 次每月静态解锁。",
-    "subCredit": "将使用 1 个静态额度。"
+    "subCredit": "将使用 1 个静态额度。",
+    "titleDone": "已下载",
+    "subEntitledPlan": "已包含在你的套餐中。可随时下载，次数不限。",
+    "pendingNote": "通常只需几秒钟。请不要关闭此页面。",
+    "includedNotePlan": "已包含在你的套餐中，无需付款。"
   },
   "dashboard": {
     "noMatch": {
@@ -2079,7 +2071,12 @@
     "privacy": {
       "title": "隐私政策"
     },
-    "draft": "在法律文本获批之前，此页面仅为占位内容。"
+    "draft": "草稿，供所有者和法务审阅。本文本尚未生效，发布前可能会有变动。突出显示的部分仍需确认。",
+    "updated": "最后更新：{date}",
+    "effectiveNote": "生效日期将在本文本获批后确定。",
+    "onThisPage": "本页内容",
+    "englishOnly": "本文本目前仅提供英文版。英文文本获批后将提供译文。",
+    "placeholder": "待确认"
   },
   "errors": {
     "notFound": {

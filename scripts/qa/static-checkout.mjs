@@ -2,12 +2,14 @@
  * HEY-182: a Static QR from guest to repeat download, in a real browser against a running HeyQR in test configuration.
  * One run per fresh account; each starts signed out.
  *
- *   node scripts/qa/static-checkout.mjs <chromium|firefox|webkit> <390|834|1440> <fresh|cancel|retry> [tag]
+ *   node scripts/qa/static-checkout.mjs <chromium|firefox|webkit> <390|834|1440> <fresh|branded|cancel|retry> [tag]
  *
  *   fresh   create + design a Static QR as a guest, Export, Continue with Google, sign-in keeps the draft, design and
  *           export choices; Stripe test Checkout (4242); confirmation pending (webhook held back, then delivered);
  *           file preparation; download; ZXing decode of the downloaded file equals the input; access persists after a
  *           reload and in a new session; back from My QR codes, a repeat download with no new Checkout or charge.
+ *   branded fresh, with Branded design (design page 2): sample logo, Artwork look; the paid PNG is checked against the
+ *           saved branded layout (inspect-export: pixel-identical to the server's render) and the logo is still saved.
  *   cancel  the same up to Checkout, then "Back to HeyQR": draft kept, export locked (402), Checkout can be resumed.
  *   retry   paid with 4242, then the first file preparation fails at the storage boundary (QA S3 answers 500 once):
  *           error and Try again; the retry succeeds on the same purchase; another account can't reach the file.
@@ -38,6 +40,8 @@ const SECRET = process.env.BETTER_AUTH_SECRET;
 const STRIPE_KEY = process.env.STRIPE_SECRET_KEY ?? "";
 if (!STRIPE_KEY.startsWith("sk_test_")) throw new Error("STRIPE_SECRET_KEY must be a test-mode key");
 const tag = tagArg ?? `${scenario}-${engineName}-${VW}-${randomBytes(3).toString("hex")}`;
+/** HEY-193 design page 2: the same paid journey with a Branded design. */
+const BRANDED = scenario === "branded";
 const OUT = `${process.env.M}/runs/${tag}`;
 fs.mkdirSync(OUT, { recursive: true });
 const sql = (q) => execFileSync("psql", [DB, "-Atc", q], { encoding: "utf8" }).trim();
@@ -121,18 +125,34 @@ async function guestDesign(p) {
   await p.getByRole("textbox", { name: "Website address" }).fill(input);
   await p.getByRole("textbox", { name: /Name in My QR codes/ }).fill(`HEY-182 ${tag}`);
   await p.getByRole("button", { name: "Continue to design" }).click();
-  await p
-    .getByRole("button", { name: /^Custom design/ })
-    .first()
-    .click();
-  await p.getByRole("tablist", { name: "Design settings" }).waitFor();
-  await p.getByRole("tab", { name: "Pattern" }).click();
-  await p
-    .getByRole("group", { name: /^Modules/ })
-    .getByRole("button", { name: "Dots", exact: true })
-    .click();
-  await p.getByRole("tab", { name: "Colors" }).click();
-  await p.getByRole("group", { name: "Swatches" }).first().getByRole("button", { name: "Forest" }).click();
+  if (BRANDED) {
+    // Design 2.4 → 2.7: Branded design, the sample logo (its colours become the code's), the Artwork look.
+    await p
+      .getByRole("button", { name: /^Branded design/ })
+      .first()
+      .click();
+    await p
+      .getByRole("button", { name: /sample logo/i })
+      .first()
+      .click();
+    await p
+      .getByRole("group", { name: /looks/i })
+      .getByRole("button", { name: /^Artwork/ })
+      .click();
+  } else {
+    await p
+      .getByRole("button", { name: /^Custom design/ })
+      .first()
+      .click();
+    await p.getByRole("tablist", { name: "Design settings" }).waitFor();
+    await p.getByRole("tab", { name: "Pattern" }).click();
+    await p
+      .getByRole("group", { name: /^Modules/ })
+      .getByRole("button", { name: "Dots", exact: true })
+      .click();
+    await p.getByRole("tab", { name: "Colors" }).click();
+    await p.getByRole("group", { name: "Swatches" }).first().getByRole("button", { name: "Forest" }).click();
+  }
   await p.getByRole("status").filter({ hasText: "Scan verified" }).first().waitFor({ timeout: 20000 });
   await shot(p, "guest-design");
   await p.getByRole("button", { name: "Export", exact: true }).first().click();
@@ -202,6 +222,11 @@ async function checkResume(p, user, draft) {
     want.pattern === "dot" && got.pattern === "dot" && want.fg && got.fg?.toLowerCase() === want.fg.toLowerCase(),
     `design changed: draft ${JSON.stringify(want)} saved ${JSON.stringify(got)}`,
   );
+  if (BRANDED) {
+    const brand = { look: findKey(design, "look"), logo: Boolean(findKey(design, "logo")), art: Boolean(findKey(design, "art")) };
+    ok(brand.look === "art" && brand.logo && brand.art, `branding not saved: ${JSON.stringify(brand)}`);
+    got.brand = brand;
+  }
   evidence.saved = { qr, layout, content: row.content, draftDesign: want, savedDesign: got };
   fs.writeFileSync(`${OUT}/draft.json`, JSON.stringify(draft, null, 2));
   await shot(p, "signed-export-locked");
@@ -294,7 +319,7 @@ const s3 = async (path) => (await fetch(S3 + path)).json();
 
 let failed = false;
 try {
-  if (scenario === "fresh") await fresh();
+  if (scenario === "fresh" || BRANDED) await fresh();
   else if (scenario === "cancel") await cancel();
   else if (scenario === "retry") await retry();
   else throw new Error(`unknown scenario ${scenario}`);
@@ -302,7 +327,7 @@ try {
   failed = true;
 }
 // The fresh run stops the Stripe listener to hold a webhook back; whatever happened, leave one running.
-if (scenario === "fresh" && process.env.STRIPE_LISTEN_CMD) {
+if ((scenario === "fresh" || BRANDED) && process.env.STRIPE_LISTEN_CMD) {
   const up = (() => {
     try {
       execFileSync("pgrep", ["-f", "stripe listen"]);
@@ -403,7 +428,12 @@ async function fresh() {
       await fetch(`${S3}/__fail?op=delay&n=5000`);
       execFileSync("stripe", ["events", "resend", events[0].id, "--api-key", STRIPE_KEY], { stdio: "ignore" });
       evidence.webhookEvent = events[0].id;
-      await p.getByRole("button", { name: /^Preparing your PNG/ }).waitFor({ timeout: 60000 });
+      // HEY-193 (design 3.7): the status block, not a button, says the file is being prepared.
+      await p
+        .getByRole("status")
+        .filter({ hasText: /^Preparing your PNG/ })
+        .first()
+        .waitFor({ timeout: 60000 });
       evidence.preparingShot = await shot(p, "preparing-file");
       return `event ${events[0].id} delivered after the pending state; then "Preparing your PNG…"`;
     },
@@ -429,6 +459,21 @@ async function fresh() {
     evidence.readyShot = await shot(p, "file-ready");
     first = await download(p, "paid-first.png");
     evidence.firstDownload = first;
+    if (BRANDED) {
+      const out = execFileSync(
+        "pnpm",
+        ["-s", "exec", "tsx", "--conditions=react-server", "scripts/qa/inspect-export.ts", `${OUT}/paid-first.png`, layout, "--scale=4"],
+        {
+          encoding: "utf8",
+          env: { ...process.env, QA_DATABASE_URL: process.env.QA_DATABASE_URL ?? `postgres://heyqr:heyqr@localhost:5432/${DB}` },
+        },
+      );
+      const r = JSON.parse(out.trim().split("\n").pop());
+      ok(r.payload === expectedPayload, `branded PNG decodes to ${r.payload}`);
+      ok(r.reference?.sameSize && r.reference.differingPixelShare === 0, `branded PNG ≠ saved layout ${JSON.stringify(r.reference)}`);
+      evidence.brandedInspect = r;
+      return `${first.bytes} bytes → ${first.decoded}; pixel-identical to the saved branded layout (${r.reference.width}×${r.reference.height})`;
+    }
     return `${first.bytes} bytes → ${first.decoded}`;
   });
   await check("Persists: after a reload, and in a new browser session, the code is paid (no Pay, file 200)", "stripe-test", p, async () => {

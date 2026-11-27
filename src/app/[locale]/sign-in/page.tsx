@@ -60,7 +60,20 @@ export default async function SignInPage({ params, searchParams }: PageProps<"/[
             {t("backToDesign")}
           </Link>
         ) : null}
-        <p className="text-caption text-muted-foreground">{t("legal")}</p>
+        <p className="text-caption text-muted-foreground">
+          {t.rich("legal", {
+            terms: (chunks) => (
+              <Link href="/terms" className="underline underline-offset-2 hover:text-foreground">
+                {chunks}
+              </Link>
+            ),
+            privacy: (chunks) => (
+              <Link href="/privacy" className="underline underline-offset-2 hover:text-foreground">
+                {chunks}
+              </Link>
+            ),
+          })}
+        </p>
       </Card>
     </section>
   );

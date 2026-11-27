@@ -282,60 +282,43 @@
       "pricing": "Bekijk prijzen"
     },
     "studio": {
-      "kicker": "Je studio",
-      "welcome": "Welkom terug, {name}",
-      "summaryTop": "{name} is vandaag {count, plural, one {# keer} other {# keer}} gescand. Alles wat je hebt gemaakt, is maar één tik verwijderd.",
-      "summary": "Alles wat je hebt gemaakt, is maar één tik verwijderd: bestanden, links en scans.",
-      "summaryEmpty": "Maak je eerste code en hij verschijnt hier met zijn bestanden en scans.",
       "billing": "Abonnement & facturatie",
       "library": "Mijn QR-codes openen",
-      "kpi": {
-        "codes": "QR-codes",
-        "codesNote": "{paid} betaald · {drafts, plural, one {# concept} other {# concepten}}",
-        "scans": "Scans · 14 dagen",
-        "scansNone": "Nog geen scans",
-        "scansDelta": "{delta, number, ::sign-always percent} t.o.v. vorige week",
-        "dynamic": "Dynamische codes",
-        "dynamicNote": "Nog {left, plural, one {# plek} other {# plekken}} in je abonnement",
-        "dynamicMeter": "Dynamische codes in gebruik",
-        "files": "Bestanden klaar",
-        "filesNote": "{count, plural, one {lay-out} other {lay-outs}} om te downloaden als PNG of SVG"
-      },
       "chart": {
-        "title": "Scans · afgelopen 14 dagen",
-        "sub": "Alle dynamische codes samen",
+        "title": "Scanstatistieken",
+        "sub": "Dynamische codes · afgelopen 14 dagen",
         "empty": "Scans van je dynamische codes verschijnen hier.",
-        "today": "Vandaag",
-        "label": "Dagelijkse scans van alle dynamische codes in de afgelopen 14 dagen"
+        "label": "Dagelijkse scans van alle dynamische codes in de afgelopen 14 dagen",
+        "plans": "Scanstatistieken krijg je bij Starter en Studio.",
+        "note": "Alleen bij dynamische abonnementen: dagtotalen bij Starter, grafieken per code bij Studio."
       },
-      "top": "Topcode",
-      "topNote": "{count, plural, one {# scan} other {# scans}} in 14 dagen · {link}",
-      "topNone": "Nog geen dynamische codes",
-      "topNoneNote": "Dynamische codes tellen elke scan.",
       "recent": "Recente codes",
-      "seeAll": "Alle {count} bekijken",
-      "recentEmpty": "Hier komen je codes te staan, met hun bestanden en scans.",
-      "createFirst": "Maak je eerste code",
-      "open": "Openen",
+      "recentEmpty": "Je eerste code verschijnt hier met zijn lay-outs en bestanden.",
+      "createFirst": "Maak een QR-code",
       "openName": "{name} openen",
       "status": {
-        "dynamic": "Dynamisch · actief",
-        "paid": "Betaald",
         "draft": "Concept"
       },
-      "metricScans": "{count, plural, one {# scan} other {# scans}}",
       "metricLayouts": "{count, plural, one {# lay-out} other {# lay-outs}}",
-      "metricFinish": "Rond af om te downloaden",
-      "perksTitle": "Inbegrepen bij je account",
-      "perks": {
-        "again": "Download elke betaalde lay-out gratis opnieuw, als PNG of SVG",
-        "redirect": "Laat dynamische codes ergens anders naartoe wijzen zonder opnieuw te printen",
-        "scans": "Dagelijkse scantellingen voor elke dynamische code",
-        "drafts": "Concepten opgeslagen in je account, op elk apparaat",
-        "billing": "Bonnen, abonnement en betaalmethode in Abonnement & facturatie"
-      },
       "loading": "Je studio laden",
-      "trial": "Gratis proefperiode · nog {days, plural, one {# dag} other {# dagen}}"
+      "trial": "Gratis proefperiode · nog {days, plural, one {# dag} other {# dagen}}",
+      "lead": "Welkom terug, {name}. Alles wat je hebt gemaakt is één tik verwijderd: bestanden, lay-outs en scans.",
+      "leadEmpty": "Welkom terug, {name}. Je eerste code verschijnt hier.",
+      "points": {
+        "side": "Statische en dynamische codes naast elkaar, elk met hun lay-outs en bestanden",
+        "files": "Bewerk het ontwerp of download PNG en SVG opnieuw, wanneer je maar wilt",
+        "scans": "Scanstatistieken bij dynamische abonnementen: dagtotalen bij Starter, per code bij Studio",
+        "print": "Print Packs blijven bij hun QR, klaar om naar de drukker te sturen"
+      },
+      "onlyYou": "Alleen jij kunt dit zien",
+      "printPack": "Print Pack",
+      "notActive": "Niet actief",
+      "edit": "Ontwerp bewerken",
+      "download": "Downloaden",
+      "editName": "Ontwerp van {name} bewerken",
+      "downloadName": "{name} downloaden",
+      "private": "Privé voor {email}. Niemand anders kan deze codes zien.",
+      "metricScans14": "{count, plural, one {# scan} other {# scans}} · 14 dagen"
     },
     "workspace": {
       "kicker": "Mijn QR-codes",
@@ -593,7 +576,7 @@
     "title": "Inloggen bij Hey QR",
     "lead": "Je ontwerp wordt in je account opgeslagen, zodat je het na betaling kunt downloaden.",
     "google": "Doorgaan met Google",
-    "legal": "Door verder te gaan ga je akkoord met de Voorwaarden en het Privacybeleid.",
+    "legal": "Door verder te gaan ga je akkoord met de <terms>Voorwaarden</terms> en het <privacy>Privacybeleid</privacy>.",
     "failed": "Inloggen mislukt. Probeer het opnieuw.",
     "canceled": {
       "draft": "Inloggen met Google is geannuleerd. Je ontwerp staat nog in deze browser. Ga door met Google om het opnieuw te proberen.",
@@ -918,7 +901,11 @@
       "smsTo": "Voer het nummer in dat het bericht moet ontvangen.",
       "address": "Voer het adres in dat de kaarten-app moet openen.",
       "eventTitle": "Geef het evenement een naam.",
-      "eventStart": "Kies een datum."
+      "eventStart": "Kies een datum.",
+      "eventDateInvalid": "Vul een geldige datum in.",
+      "eventEndInvalid": "Vul de eindtijd in als uren en minuten.",
+      "eventEndNeedsStart": "Voeg een begintijd toe of wis de eindtijd.",
+      "eventEnd": "Het evenement eindigt voordat het begint. Kies een latere eindtijd."
     },
     "afterScanning": {
       "label": "Na het scannen",
@@ -1542,7 +1529,7 @@
     "text": "De tekst in de code is te lang. Houd het bij ongeveer 8 tekens."
   },
   "export": {
-    "title": "Download je code",
+    "title": "Download je bestand",
     "shortLinkPreview": {
       "mark": "Voorbeeld",
       "note": "Voorbeeld met een voorbeeld-korte link. Je permanente korte link wordt gemaakt als je deze code activeert, en elk bestand dat je downloadt bevat hem."
@@ -1565,10 +1552,10 @@
     "dpi": "{dpi} dpi",
     "pixels": "{width} × {height} px",
     "titleBuy": "Download je QR-code",
-    "titleGuest": "Klaar om te downloaden",
-    "subGuest": "Controleer de lay-out en het bestand en log dan in met Google om te betalen en te downloaden. Je ontwerp blijft zoals het is.",
+    "titleGuest": "Download je QR-code",
+    "subGuest": "Controleer de lay-out en het formaat. Je ziet het totaal voordat je betaalt.",
     "subPay": "Controleer de lay-out en het formaat. Je ziet het totaal voordat je betaalt.",
-    "subEntitled": "Deze code is van jou. Download elk formaat, zo vaak als je wilt.",
+    "subEntitled": "Inbegrepen in je aankoop. PNG en SVG, zo vaak als je wilt.",
     "stageLabel": "Lay-out om te downloaden",
     "layouts": "Lay-outs van deze code",
     "backToDesign": "Terug naar ontwerp",
@@ -1605,7 +1592,7 @@
     },
     "checkoutFailed": "We konden het afrekenen niet openen. Er is niets afgeschreven; probeer het opnieuw.",
     "continueGoogle": "Doorgaan met Google",
-    "guestNote": "Gratis ontwerpen. Je betaalt pas bij het downloaden.",
+    "guestNote": "Log in om te betalen. We brengen je direct terug naar deze lay-out met {format} geselecteerd.",
     "receipt": {
       "title": "Bon",
       "paid": "Betaald",
@@ -1632,7 +1619,8 @@
       "total": "Totaal",
       "tax": "Eventuele btw wordt berekend bij het afrekenen.",
       "included": "Inbegrepen",
-      "includedShort": "Inbegrepen"
+      "includedShort": "Inbegrepen",
+      "toPay": "Nu te betalen"
     },
     "emptyTitle": "Nog niets om te downloaden",
     "emptyText": "Ontwerp eerst een QR-code. Je concept blijft in deze browser tot je het downloadt.",
@@ -1709,7 +1697,11 @@
     },
     "limit": "grotere formaten zijn meer dan {max} px",
     "subUnlock": "Inbegrepen in {plan}: dit gebruikt 1 van je maandelijkse statische ontgrendelingen.",
-    "subCredit": "Dit gebruikt 1 van je statische tegoeden."
+    "subCredit": "Dit gebruikt 1 van je statische tegoeden.",
+    "titleDone": "Gedownload",
+    "subEntitledPlan": "Inbegrepen in je abonnement. Download zo vaak als je wilt.",
+    "pendingNote": "Dit duurt meestal een paar seconden. Houd deze pagina open.",
+    "includedNotePlan": "Inbegrepen in je abonnement. Niets te betalen."
   },
   "dashboard": {
     "noMatch": {
@@ -2087,7 +2079,12 @@
     "privacy": {
       "title": "Privacybeleid"
     },
-    "draft": "Deze pagina is een tijdelijke versie tot de juridische tekst is goedgekeurd."
+    "draft": "Concept ter beoordeling door de eigenaar en de juridische afdeling. Deze tekst is nog niet van kracht en kan veranderen voordat hij wordt gepubliceerd. Gemarkeerde delen moeten nog worden bevestigd.",
+    "updated": "Laatst bijgewerkt: {date}",
+    "effectiveNote": "De ingangsdatum wordt vastgesteld zodra deze tekst is goedgekeurd.",
+    "onThisPage": "Op deze pagina",
+    "englishOnly": "Deze tekst is voorlopig alleen in het Engels beschikbaar. Een vertaling volgt zodra de Engelse tekst is goedgekeurd.",
+    "placeholder": "Nog te bevestigen"
   },
   "errors": {
     "notFound": {

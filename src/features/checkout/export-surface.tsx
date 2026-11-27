@@ -5,7 +5,6 @@ import {
   ArrowLeftIcon,
   CheckCircle2Icon,
   CheckIcon,
-  CircleAlertIcon,
   DownloadIcon,
   FileTextIcon,
   InfoIcon,
@@ -27,6 +26,7 @@ import { startCheckout, startPrintPackCheckout } from "@/server/actions/qr";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
+import { Progress } from "@/shared/ui/progress";
 import { Segmented } from "@/shared/ui/segmented";
 import { Stage, StageBar, StageCanvas, StageFoot } from "@/shared/ui/stage";
 import { useCarriedState } from "@/shared/lib/locale-carry";
@@ -454,14 +454,29 @@ export function ExportSurface(props: ExportSurfaceProps) {
     if (file.kind !== "idle" && file.kind !== "preparing") setFile({ kind: "idle" });
   };
 
+  // What the purchase covers (design 3.1 / 3.8): under the total, before and after paying.
+  const includes = (
+    <ul className="flex flex-col gap-1.5 text-[0.875rem]">
+      {(props.model === "dynamic" ? (["dyn1", "dyn2", "dyn3"] as const) : (["static1", "static2", "static3"] as const)).map((k) => (
+        <li key={k} className="flex items-start gap-2.5">
+          <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-accent-text" />
+          {t(`incl.${k}`, { limit: offer?.dynamic?.limit ?? 5 })}
+        </li>
+      ))}
+      {ppOn ? (
+        <li className="flex items-start gap-2.5">
+          <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-accent-text" />
+          {t("incl.pp")}
+        </li>
+      ) : null}
+    </ul>
+  );
+
   const action = (() => {
     if (props.mode === "guest") return props.signInAction(settings);
-    if (confirming)
-      return (
-        <Button variant="primary" size="lg" className="w-full" loading>
-          {t("confirming")}
-        </Button>
-      );
+    // Design 3.6 / 3.7: while the webhook or the file is on its way, the action area is a status with a progress bar,
+    // not a button: there is nothing to press, and the layout and format above stay visible.
+    if (confirming) return <ProgressStatus label={t("confirming")} note={t("pendingNote")} />;
     if (!entitled && props.mode === "signed" && props.canUseTrial)
       return (
         <div className="flex flex-col gap-2">
@@ -524,11 +539,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
         </div>
       );
     if (file.kind === "preparing")
-      return (
-        <Button variant="primary" size="lg" className="w-full" loading>
-          {t("preparing", { format: fmt })}
-        </Button>
-      );
+      return <ProgressStatus label={t("preparing", { format: fmt })} note={`${fileDims} · ${props.layoutName}`} />;
     if (file.kind === "ready")
       return (
         <Button asChild variant="primary" size="lg" className="w-full">
@@ -548,7 +559,7 @@ export function ExportSurface(props: ExportSurfaceProps) {
     if (file.kind === "downloaded")
       // The same prepared file again (repeat downloads are free; nothing is asked of the server).
       return (
-        <Button asChild variant="secondary" size="lg" className="w-full">
+        <Button asChild variant="primary" size="lg" className="w-full">
           <a href={file.url} download={file.name}>
             <DownloadIcon aria-hidden />
             {t("downloadAgain")}
@@ -652,13 +663,15 @@ export function ExportSurface(props: ExportSurfaceProps) {
         >
           <header className="flex flex-col gap-1.5">
             <h1 id="export-title" className="text-h2">
-              {props.title}
+              {entitled && file.kind === "downloaded" ? t("titleDone") : props.title}
             </h1>
             <p className="text-secondary-foreground">
               {props.mode === "guest"
                 ? t("subGuest")
                 : entitled
-                  ? t("subEntitled")
+                  ? props.model === "dynamic"
+                    ? t("subEntitledPlan")
+                    : t("subEntitled")
                   : offer?.path === "unlock"
                     ? t("subUnlock", { plan: offer.planName ?? "" })
                     : offer?.path === "credit"
@@ -684,11 +697,14 @@ export function ExportSurface(props: ExportSurfaceProps) {
               </button>
             </Banner>
           ) : null}
-          {props.returnedFromSignIn ? <Banner tone="info">{t.rich("returned", { format: fmt, b: (c) => <b>{c}</b> })}</Banner> : null}
+          {props.returnedFromSignIn ? (
+            <Banner tone="info" icon={<CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0" />}>
+              {t.rich("returned", { format: fmt, b: (c) => <b>{c}</b> })}
+            </Banner>
+          ) : null}
           {props.checkout === "cancelled" && !entitled ? (
             <Banner tone="neutral">{t.rich("cancelled", { b: (c) => <b>{c}</b> })}</Banner>
           ) : null}
-          {confirming ? <Banner tone="info">{t("pending")}</Banner> : null}
           {file.kind === "error" ? (
             <Banner tone="error">{t.rich(`errors.${file.reason}`, { format: fmt, b: (c) => <b>{c}</b> })}</Banner>
           ) : null}
@@ -913,26 +929,17 @@ export function ExportSurface(props: ExportSurfaceProps) {
                     }
                   />
                 </div>
-                <ul className="flex flex-col gap-1.5 text-[0.875rem]">
-                  {(props.model === "dynamic" ? (["dyn1", "dyn2", "dyn3"] as const) : (["static1", "static2", "static3"] as const)).map(
-                    (k) => (
-                      <li key={k} className="flex items-start gap-2.5">
-                        <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-accent-text" />
-                        {t(`incl.${k}`, { limit: offer?.dynamic?.limit ?? 5 })}
-                      </li>
-                    ),
-                  )}
-                  {ppOn ? (
-                    <li className="flex items-start gap-2.5">
-                      <CheckIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-accent-text" />
-                      {t("incl.pp")}
-                    </li>
-                  ) : null}
-                </ul>
+                {includes}
                 <span className="text-caption text-muted-foreground">{t("summary.tax")}</span>
               </>
-            ) : props.receipt ? null : (
-              <Line strong label={t("summary.total")} value={t("summary.included")} />
+            ) : (
+              // Design 3.8 / 3.11: already paid for, so the total is what this download costs now.
+              <>
+                <div className="mt-1 border-t border-border pt-3">
+                  <Line strong label={t("summary.toPay")} value={money(0)} />
+                </div>
+                {includes}
+              </>
             )}
             {!entitled && offer?.path === "limitStatic" ? (
               <LimitPanel
@@ -988,10 +995,12 @@ export function ExportSurface(props: ExportSurfaceProps) {
           {action}
           {/* HEY-180 (design 3.11): the note says what the action costs. Stripe only where the next step is Stripe; once the
               code is paid for, nothing to pay. A plan unlock, a credit or a free slot has no note. */}
-          {props.mode === "guest" ? (
-            <p className="text-center text-caption text-muted-foreground">{t("guestNote")}</p>
+          {confirming || file.kind === "preparing" ? null : props.mode === "guest" ? (
+            <p className="text-center text-caption text-muted-foreground">{t("guestNote", { format: fmt })}</p>
           ) : entitled ? (
-            <p className="text-center text-caption text-muted-foreground">{t("includedNote")}</p>
+            <p className="text-center text-caption text-muted-foreground">
+              {props.model === "dynamic" ? t("includedNotePlan") : t("includedNote")}
+            </p>
           ) : totalCents > 0 || offer?.path === "buy" || offer?.path === "subscribe" || !offer ? (
             <p className="text-center text-caption text-muted-foreground">{t("secure")}</p>
           ) : null}
@@ -1089,8 +1098,20 @@ function Line({ label, value, strong, tone }: { label: string; value: string; st
   );
 }
 
+/** Design 3.6 / 3.7 (`.stack[role=status]`): what is happening, an indeterminate bar, one line of detail. */
+function ProgressStatus({ label, note }: { label: string; note: string }) {
+  return (
+    <div role="status" className="flex flex-col gap-2">
+      <span className="text-label">{label}</span>
+      <Progress />
+      <span className="text-caption text-muted-foreground">{note}</span>
+    </div>
+  );
+}
+
 function Banner({ tone, icon, children }: { tone: "info" | "neutral" | "error" | "ok"; icon?: ReactNode; children: ReactNode }) {
-  const Icon = tone === "error" ? CircleAlertIcon : tone === "ok" ? CheckCircle2Icon : InfoIcon;
+  // Design 3.10: an export error carries the warning triangle.
+  const Icon = tone === "error" ? TriangleAlertIcon : tone === "ok" ? CheckCircle2Icon : InfoIcon;
   return (
     <div
       role={tone === "error" ? "alert" : "status"}

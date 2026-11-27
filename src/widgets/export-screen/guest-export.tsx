@@ -68,7 +68,7 @@ export function GuestExport({
       mode="guest"
       support={support}
       title={t("titleGuest")}
-      heading={name}
+      heading={`${name} · ${tEditor(`presets.${draft.preset}`)}`}
       layout={layout}
       value={value}
       model={draft.model}
@@ -81,7 +81,6 @@ export function GuestExport({
       signInNotice={signInNotice}
       signInAction={(s) => (
         <GoogleSignInButton
-          variant="primary"
           callbackURL={local(`/create?resume=1&${settingsQuery(s)}`)}
           errorCallbackURL={local(`/create/export?${settingsQuery(s)}`)}
         />

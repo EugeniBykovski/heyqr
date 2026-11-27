@@ -282,60 +282,43 @@
       "pricing": "Se priser"
     },
     "studio": {
-      "kicker": "Din studio",
-      "welcome": "Välkommen tillbaka, {name}",
-      "summaryTop": "{name} skannades {count, plural, one {# gång} other {# gånger}} i dag. Allt du har skapat finns ett tryck bort.",
-      "summary": "Allt du har skapat finns ett tryck bort: filer, länkar och skanningar.",
-      "summaryEmpty": "Skapa din första kod så visas den här med sina filer och skanningar.",
       "billing": "Plan och betalning",
       "library": "Öppna Mina QR-koder",
-      "kpi": {
-        "codes": "QR-koder",
-        "codesNote": "{paid} betalda · {drafts, plural, one {# utkast} other {# utkast}}",
-        "scans": "Skanningar · 14 dagar",
-        "scansNone": "Inga skanningar än",
-        "scansDelta": "{delta, number, ::sign-always percent} jämfört med förra veckan",
-        "dynamic": "Dynamiska koder",
-        "dynamicNote": "{left, plural, one {# plats} other {# platser}} kvar i din plan",
-        "dynamicMeter": "Dynamiska koder som används",
-        "files": "Filer klara",
-        "filesNote": "{count, plural, one {layout} other {layouter}} att ladda ner som PNG eller SVG"
-      },
       "chart": {
-        "title": "Skanningar · senaste 14 dagarna",
-        "sub": "Alla dynamiska koder tillsammans",
+        "title": "Skanningsstatistik",
+        "sub": "Dynamiska koder · senaste 14 dagarna",
         "empty": "Skanningar av dina dynamiska koder visas här.",
-        "today": "I dag",
-        "label": "Dagliga skanningar för dynamiska koder de senaste 14 dagarna"
+        "label": "Dagliga skanningar för dynamiska koder de senaste 14 dagarna",
+        "plans": "Skanningsstatistik ingår i Starter och Studio.",
+        "note": "Bara dynamiska planer: dagliga summor i Starter, diagram per kod i Studio."
       },
-      "top": "Toppkod",
-      "topNote": "{count, plural, one {# skanning} other {# skanningar}} på 14 dagar · {link}",
-      "topNone": "Inga dynamiska koder än",
-      "topNoneNote": "Dynamiska koder räknar varje skanning.",
       "recent": "Senaste koder",
-      "seeAll": "Visa alla {count}",
-      "recentEmpty": "Dina koder hamnar här, med sina filer och skanningar.",
-      "createFirst": "Skapa din första kod",
-      "open": "Öppna",
+      "recentEmpty": "Din första kod visas här med sina layouter och filer.",
+      "createFirst": "Skapa en QR-kod",
       "openName": "Öppna {name}",
       "status": {
-        "dynamic": "Dynamisk · aktiv",
-        "paid": "Betald",
         "draft": "Utkast"
       },
-      "metricScans": "{count, plural, one {# skanning} other {# skanningar}}",
       "metricLayouts": "{count, plural, one {# layout} other {# layouter}}",
-      "metricFinish": "Slutför för att ladda ner",
-      "perksTitle": "Ingår i ditt konto",
-      "perks": {
-        "again": "Ladda ner alla betalda layouter igen, som PNG eller SVG, utan kostnad",
-        "redirect": "Peka om dynamiska koder utan att trycka nytt",
-        "scans": "Dagliga skanningar för varje dynamisk kod",
-        "drafts": "Utkast sparas i ditt konto på alla enheter",
-        "billing": "Kvitton, plan och betalningsmetod under Plan och betalning"
-      },
       "loading": "Laddar din studio",
-      "trial": "Gratis provperiod · {days, plural, one {# dag} other {# dagar}} kvar"
+      "trial": "Gratis provperiod · {days, plural, one {# dag} other {# dagar}} kvar",
+      "lead": "Välkommen tillbaka, {name}. Allt du har skapat är bara ett tryck bort: filer, layouter och skanningar.",
+      "leadEmpty": "Välkommen tillbaka, {name}. Din första kod hamnar här.",
+      "points": {
+        "side": "Statiska och dynamiska koder sida vid sida, var och en med sina layouter och filer",
+        "files": "Redigera designen eller ladda ner PNG och SVG igen, när du vill",
+        "scans": "Skanningsstatistik i dynamiska planer: dagliga summor i Starter, per kod i Studio",
+        "print": "Print Packs stannar hos sin QR, redo att skickas till tryckeriet"
+      },
+      "onlyYou": "Bara du kan se det här",
+      "printPack": "Print Pack",
+      "notActive": "Inte aktiv",
+      "edit": "Redigera design",
+      "download": "Ladda ner",
+      "editName": "Redigera designen för {name}",
+      "downloadName": "Ladda ner {name}",
+      "private": "Privat för {email}. Ingen annan kan se de här koderna.",
+      "metricScans14": "{count, plural, one {# skanning} other {# skanningar}} · 14 dagar"
     },
     "workspace": {
       "kicker": "Mina QR-koder",
@@ -593,7 +576,7 @@
     "title": "Logga in på Hey QR",
     "lead": "Din design sparas i ditt konto så att du kan ladda ner den efter betalningen.",
     "google": "Fortsätt med Google",
-    "legal": "Genom att fortsätta godkänner du villkoren och integritetspolicyn.",
+    "legal": "Genom att fortsätta godkänner du <terms>villkoren</terms> och <privacy>integritetspolicyn</privacy>.",
     "failed": "Inloggningen misslyckades. Försök igen.",
     "canceled": {
       "draft": "Inloggningen med Google avbröts. Din design finns kvar i den här webbläsaren. Fortsätt med Google för att försöka igen.",
@@ -918,7 +901,11 @@
       "smsTo": "Ange numret som ska ta emot meddelandet.",
       "address": "Ange adressen som kartappen ska öppna.",
       "eventTitle": "Ge evenemanget ett namn.",
-      "eventStart": "Välj ett datum."
+      "eventStart": "Välj ett datum.",
+      "eventDateInvalid": "Ange ett giltigt datum.",
+      "eventEndInvalid": "Ange sluttiden i timmar och minuter.",
+      "eventEndNeedsStart": "Lägg till en starttid eller rensa sluttiden.",
+      "eventEnd": "Evenemanget slutar innan det börjar. Välj en senare sluttid."
     },
     "afterScanning": {
       "label": "Efter skanningen",
@@ -1542,7 +1529,7 @@
     "text": "Texten i koden är för lång. Håll den till cirka 8 tecken."
   },
   "export": {
-    "title": "Ladda ner din kod",
+    "title": "Ladda ner din fil",
     "shortLinkPreview": {
       "mark": "Förhandsvisning",
       "note": "Förhandsvisning med en exempelkortlänk. Din permanenta kortlänk skapas när du aktiverar koden, och alla filer du laddar ner innehåller den."
@@ -1565,10 +1552,10 @@
     "dpi": "{dpi} dpi",
     "pixels": "{width} × {height} px",
     "titleBuy": "Ladda ner din QR-kod",
-    "titleGuest": "Klar att ladda ner",
-    "subGuest": "Kontrollera layout och fil och logga sedan in med Google för att betala och ladda ner. Din design förblir som den är.",
+    "titleGuest": "Ladda ner din QR-kod",
+    "subGuest": "Kontrollera layout och format. Du ser totalbeloppet innan du betalar.",
     "subPay": "Kontrollera layout och format. Du ser totalbeloppet innan du betalar.",
-    "subEntitled": "Den här koden är din. Ladda ner valfritt format, så ofta du behöver.",
+    "subEntitled": "Ingår i ditt köp. PNG och SVG, så ofta du vill.",
     "stageLabel": "Layout att ladda ner",
     "layouts": "Layouter för den här koden",
     "backToDesign": "Tillbaka till design",
@@ -1605,7 +1592,7 @@
     },
     "checkoutFailed": "Vi kunde inte öppna kassan. Inget har debiterats; försök igen.",
     "continueGoogle": "Fortsätt med Google",
-    "guestNote": "Gratis att designa. Du betalar bara när du laddar ner.",
+    "guestNote": "Logga in för att betala. Vi tar dig direkt tillbaka till den här layouten med {format} valt.",
     "receipt": {
       "title": "Kvitto",
       "paid": "Betald",
@@ -1632,7 +1619,8 @@
       "total": "Totalt",
       "tax": "Eventuell moms beräknas i kassan.",
       "included": "Ingår",
-      "includedShort": "Ingår"
+      "includedShort": "Ingår",
+      "toPay": "Att betala nu"
     },
     "emptyTitle": "Inget att ladda ner än",
     "emptyText": "Designa en QR-kod först. Ditt utkast finns kvar i den här webbläsaren tills du laddar ner det.",
@@ -1709,7 +1697,11 @@
     },
     "limit": "större storlekar överskrider {max} px",
     "subUnlock": "Ingår i {plan}: detta använder 1 av dina månatliga statiska upplåsningar.",
-    "subCredit": "Detta använder 1 av dina statiska krediter."
+    "subCredit": "Detta använder 1 av dina statiska krediter.",
+    "titleDone": "Nedladdad",
+    "subEntitledPlan": "Ingår i din plan. Ladda ner så ofta du vill.",
+    "pendingNote": "Det brukar ta några sekunder. Håll den här sidan öppen.",
+    "includedNotePlan": "Ingår i din plan. Inget att betala."
   },
   "dashboard": {
     "noMatch": {
@@ -2087,7 +2079,12 @@
     "privacy": {
       "title": "Integritetspolicy"
     },
-    "draft": "Den här sidan är en platshållare tills den juridiska texten har godkänts."
+    "draft": "Utkast för granskning av ägaren och juridiken. Texten gäller inte än och kan ändras innan den publiceras. Markerade delar behöver fortfarande bekräftas.",
+    "updated": "Senast uppdaterad {date}",
+    "effectiveNote": "Datum för ikraftträdande fastställs när den här texten har godkänts.",
+    "onThisPage": "På den här sidan",
+    "englishOnly": "Den här texten finns för närvarande bara på engelska. En översättning kommer när den engelska texten har godkänts.",
+    "placeholder": "Ska bekräftas"
   },
   "errors": {
     "notFound": {

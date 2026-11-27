@@ -17,7 +17,11 @@ import { readFileSync } from "node:fs";
 import { inflateSync } from "node:zlib";
 import pg from "pg";
 import { decodeImage, decodeSvg } from "@heyqr/qr-core/verify";
+import { drizzle } from "drizzle-orm/node-postgres";
+import * as schema from "../../src/server/db/schema";
 import { encodedValue, renderExport } from "../../src/server/qr/export";
+import { resolveLogos } from "../../src/server/qr/logo-assets";
+import { logoStore } from "../../src/server/storage/s3";
 
 const [file, layoutId, ...flags] = process.argv.slice(2);
 if (!file || !layoutId) throw new Error("usage: inspect-export.ts <file> <layoutId> [--scale=N] [--colors=#hex,…]");
@@ -94,13 +98,22 @@ const hex = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16))
 const client = new pg.Client({ connectionString: process.env.QA_DATABASE_URL ?? process.env.DATABASE_URL });
 await client.connect();
 const { rows } = await client.query(
-  `select l.design, q.model, q.content, q.short_code from qr_layout l join qr_code q on q.id = l.qr_code_id where l.id = $1`,
+  `select l.design, q.model, q.content, q.short_code, q.user_id from qr_layout l join qr_code q on q.id = l.qr_code_id where l.id = $1`,
   [layoutId],
 );
 await client.end();
 const row = rows[0];
 if (!row) throw new Error(`layout ${layoutId} not found`);
-const layout = row.design.layout;
+// HEY-193: stored logos and artwork images are resolved from private storage for the owner, exactly as every page and
+// /api/export read them (server/qr/repository.ts readable()), so a branded layout renders with its images.
+const store = logoStore();
+let design = row.design;
+if (store) {
+  const pool = new pg.Pool({ connectionString: process.env.QA_DATABASE_URL ?? process.env.DATABASE_URL });
+  [design] = await resolveLogos(drizzle(pool, { schema, casing: "snake_case" }), store, row.user_id, [row.design]);
+  await pool.end();
+}
+const layout = design.layout;
 const value = encodedValue({ model: row.model, content: row.content, shortCode: row.short_code });
 const bytes = readFileSync(file);
 const isSvg = file.endsWith(".svg");

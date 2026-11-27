@@ -282,60 +282,43 @@
       "pricing": "See pricing"
     },
     "studio": {
-      "kicker": "Your studio",
-      "welcome": "Welcome back, {name}",
-      "summaryTop": "{name} was scanned {count, plural, one {# time} other {# times}} today. Everything you made is one tap away.",
-      "summary": "Everything you made is one tap away: files, links and scans.",
-      "summaryEmpty": "Make your first code and it will show up here with its files and scans.",
       "billing": "Plan & billing",
       "library": "Open My QR codes",
-      "kpi": {
-        "codes": "QR codes",
-        "codesNote": "{paid} paid · {drafts, plural, one {# draft} other {# drafts}}",
-        "scans": "Scans · 14 days",
-        "scansNone": "No scans yet",
-        "scansDelta": "{delta, number, ::sign-always percent} vs previous week",
-        "dynamic": "Dynamic codes",
-        "dynamicNote": "{left, plural, one {# slot} other {# slots}} left on your plan",
-        "dynamicMeter": "Dynamic codes in use",
-        "files": "Files ready",
-        "filesNote": "{count, plural, one {layout} other {layouts}} to download as PNG or SVG"
-      },
       "chart": {
-        "title": "Scans · last 14 days",
-        "sub": "All dynamic codes together",
-        "empty": "Scans of your dynamic codes will show up here.",
-        "today": "Today",
-        "label": "Daily scans across dynamic codes for the last 14 days"
+        "title": "Scan analytics",
+        "sub": "Dynamic codes · last 14 days",
+        "empty": "Scans of your Dynamic codes will show up here.",
+        "label": "Daily scans across dynamic codes for the last 14 days",
+        "plans": "Scan analytics come with Starter and Studio.",
+        "note": "Dynamic plans only: daily totals on Starter, per-code charts on Studio."
       },
-      "top": "Top code",
-      "topNote": "{count, plural, one {# scan} other {# scans}} in 14 days · {link}",
-      "topNone": "No dynamic codes yet",
-      "topNoneNote": "Dynamic codes count every scan.",
       "recent": "Recent codes",
-      "seeAll": "See all {count}",
-      "recentEmpty": "Your codes will live here, with their files and scans.",
-      "createFirst": "Create your first code",
-      "open": "Open",
+      "recentEmpty": "Your first code will appear here with its layouts and files.",
+      "createFirst": "Create a QR code",
       "openName": "Open {name}",
       "status": {
-        "dynamic": "Dynamic · active",
-        "paid": "Paid",
         "draft": "Draft"
       },
-      "metricScans": "{count, plural, one {# scan} other {# scans}}",
       "metricLayouts": "{count, plural, one {# layout} other {# layouts}}",
-      "metricFinish": "Finish to download",
-      "perksTitle": "Included with your account",
-      "perks": {
-        "again": "Download every paid layout again, as PNG or SVG, at no cost",
-        "redirect": "Point dynamic codes somewhere new without reprinting",
-        "scans": "Daily scan counts for every dynamic code",
-        "drafts": "Drafts saved to your account on every device",
-        "billing": "Receipts, plan and payment method in Plan & billing"
-      },
       "loading": "Loading your studio",
-      "trial": "Free trial · {days, plural, one {# day} other {# days}} left"
+      "trial": "Free trial · {days, plural, one {# day} other {# days}} left",
+      "lead": "Welcome back, {name}. Everything you made is one tap away: files, layouts and scans.",
+      "leadEmpty": "Welcome back, {name}. Your first code will land here.",
+      "points": {
+        "side": "Static and Dynamic codes side by side, each with its layouts and files",
+        "files": "Edit the design or download PNG and SVG again, any time",
+        "scans": "Scan analytics on Dynamic plans: daily totals on Starter, per code on Studio",
+        "print": "Print Packs stay with their QR, ready to send to the print shop"
+      },
+      "onlyYou": "Only you can see this",
+      "printPack": "Print Pack",
+      "notActive": "Not active",
+      "edit": "Edit design",
+      "download": "Download",
+      "editName": "Edit the design of {name}",
+      "downloadName": "Download {name}",
+      "private": "Private to {email}. Nobody else can see these codes.",
+      "metricScans14": "{count, plural, one {# scan} other {# scans}} · 14 days"
     },
     "workspace": {
       "kicker": "My QR codes",
@@ -589,7 +572,7 @@
     "title": "Sign in to Hey QR",
     "lead": "Your design is saved to your account so you can download it after payment.",
     "google": "Continue with Google",
-    "legal": "By continuing you agree to the Terms and Privacy Policy.",
+    "legal": "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
     "failed": "Sign-in failed. Please try again.",
     "canceled": {
       "draft": "Google sign-in was canceled. Your design is still saved in this browser. Continue with Google to try again.",
@@ -914,7 +897,11 @@
       "smsTo": "Enter the number that should receive the message.",
       "address": "Enter the address the maps app should open.",
       "eventTitle": "Give the event a name.",
-      "eventStart": "Pick a date."
+      "eventStart": "Pick a date.",
+      "eventDateInvalid": "Enter a real date.",
+      "eventEndInvalid": "Enter the end time as hours and minutes.",
+      "eventEndNeedsStart": "Add a start time, or clear the end time.",
+      "eventEnd": "The event ends before it starts. Pick a later end time."
     },
     "afterScanning": {
       "label": "After scanning",
@@ -1538,7 +1525,7 @@
     "text": "The text in the code is too long. Keep it to about 8 characters."
   },
   "export": {
-    "title": "Download your code",
+    "title": "Download your file",
     "shortLinkPreview": {
       "mark": "Preview",
       "note": "Preview with a sample short link. Your permanent short link is created when you activate this code, and every file you download contains it."
@@ -1561,10 +1548,10 @@
     "dpi": "{dpi} dpi",
     "pixels": "{width} × {height} px",
     "titleBuy": "Download your QR code",
-    "titleGuest": "Ready to download",
-    "subGuest": "Check the layout and file, then sign in with Google to pay and download. Your design stays as it is.",
+    "titleGuest": "Download your QR code",
+    "subGuest": "Check the layout and format. You’ll see the total before you pay.",
     "subPay": "Check the layout and format. You’ll see the total before you pay.",
-    "subEntitled": "This code is yours. Download any format, as often as you need.",
+    "subEntitled": "Included in your purchase. PNG and SVG, as often as you like.",
     "stageLabel": "Layout to download",
     "layouts": "Layouts of this code",
     "backToDesign": "Back to design",
@@ -1601,7 +1588,7 @@
     },
     "checkoutFailed": "We couldn’t open checkout. Nothing was charged; try again.",
     "continueGoogle": "Continue with Google",
-    "guestNote": "Free to design. You pay only when you download.",
+    "guestNote": "Sign in to pay. We’ll bring you straight back to this layout with {format} selected.",
     "receipt": {
       "title": "Receipt",
       "paid": "Paid",
@@ -1628,7 +1615,8 @@
       "total": "Total",
       "tax": "Tax, if any, is calculated at checkout.",
       "included": "Included",
-      "includedShort": "Included"
+      "includedShort": "Included",
+      "toPay": "To pay now"
     },
     "emptyTitle": "Nothing to download yet",
     "emptyText": "Design a QR code first. Your draft stays in this browser until you download it.",
@@ -1705,7 +1693,11 @@
     },
     "limit": "larger sizes exceed {max} px",
     "subUnlock": "Included in {plan}: this uses 1 of your monthly static unlocks.",
-    "subCredit": "This uses 1 of your static credits."
+    "subCredit": "This uses 1 of your static credits.",
+    "titleDone": "Downloaded",
+    "subEntitledPlan": "Included in your plan. Download as often as you like.",
+    "pendingNote": "This usually takes a few seconds. Please keep this page open.",
+    "includedNotePlan": "Included in your plan. Nothing to pay."
   },
   "dashboard": {
     "noMatch": {
@@ -2083,7 +2075,12 @@
     "privacy": {
       "title": "Privacy Policy"
     },
-    "draft": "This page is a placeholder until the legal text is approved."
+    "draft": "Draft for owner and legal review. This text isn’t in effect yet and may change before it’s published. Highlighted parts still need to be confirmed.",
+    "updated": "Last updated {date}",
+    "effectiveNote": "The effective date is set when this text is approved.",
+    "onThisPage": "On this page",
+    "englishOnly": "This policy is available in English only for now. A translation will follow once the English text is approved.",
+    "placeholder": "To be confirmed"
   },
   "errors": {
     "notFound": {

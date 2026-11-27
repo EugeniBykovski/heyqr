@@ -282,60 +282,43 @@
       "pricing": "요금 보기"
     },
     "studio": {
-      "kicker": "내 스튜디오",
-      "welcome": "다시 오신 걸 환영해요, {name}님",
-      "summaryTop": "오늘 {name}이(가) {count, plural, other {#번}} 스캔됐어요. 만든 모든 것을 탭 한 번으로 열 수 있어요.",
-      "summary": "만든 모든 것을 탭 한 번으로 열 수 있어요: 파일, 링크, 스캔.",
-      "summaryEmpty": "첫 코드를 만들면 파일, 스캔과 함께 여기에 표시돼요.",
       "billing": "요금제 및 결제 관리",
       "library": "내 QR 코드 열기",
-      "kpi": {
-        "codes": "QR 코드",
-        "codesNote": "결제 {paid}개 · {drafts, plural, other {초안 #개}}",
-        "scans": "스캔 · 14일",
-        "scansNone": "아직 스캔 없음",
-        "scansDelta": "지난주 대비 {delta, number, ::sign-always percent}",
-        "dynamic": "동적 코드",
-        "dynamicNote": "요금제에 {left, plural, other {#개 자리}} 남음",
-        "dynamicMeter": "사용 중인 동적 코드",
-        "files": "준비된 파일",
-        "filesNote": "PNG 또는 SVG로 다운로드할 {count, plural, other {레이아웃}}"
-      },
       "chart": {
-        "title": "스캔 · 최근 14일",
-        "sub": "모든 동적 코드 합계",
+        "title": "스캔 분석",
+        "sub": "동적 코드 · 최근 14일",
         "empty": "동적 코드의 스캔이 여기에 표시돼요.",
-        "today": "오늘",
-        "label": "최근 14일간 동적 코드 전체의 일별 스캔 수"
+        "label": "최근 14일간 동적 코드 전체의 일별 스캔 수",
+        "plans": "스캔 분석은 Starter와 Studio에서 제공돼요.",
+        "note": "동적 요금제 전용: Starter는 일별 합계, Studio는 코드별 차트를 제공해요."
       },
-      "top": "인기 코드",
-      "topNote": "14일간 {count, plural, other {#회 스캔}} · {link}",
-      "topNone": "아직 동적 코드가 없어요",
-      "topNoneNote": "동적 코드는 모든 스캔을 집계해요.",
       "recent": "최근 코드",
-      "seeAll": "전체 {count}개 보기",
-      "recentEmpty": "코드가 파일, 스캔과 함께 여기에 모여요.",
-      "createFirst": "첫 코드 만들기",
-      "open": "열기",
+      "recentEmpty": "첫 코드가 레이아웃, 파일과 함께 여기에 표시돼요.",
+      "createFirst": "QR 코드 만들기",
       "openName": "{name} 열기",
       "status": {
-        "dynamic": "동적 · 활성",
-        "paid": "결제됨",
         "draft": "초안"
       },
-      "metricScans": "{count, plural, other {#회 스캔}}",
       "metricLayouts": "{count, plural, other {레이아웃 #개}}",
-      "metricFinish": "완료하고 다운로드",
-      "perksTitle": "계정에 포함된 혜택",
-      "perks": {
-        "again": "결제한 모든 레이아웃을 PNG 또는 SVG로 무료로 다시 다운로드",
-        "redirect": "다시 인쇄하지 않고 동적 코드의 연결 주소 변경",
-        "scans": "모든 동적 코드의 일별 스캔 수",
-        "drafts": "모든 기기에서 계정에 저장되는 초안",
-        "billing": "요금제 및 결제 관리에서 영수증, 요금제, 결제 수단 확인"
-      },
       "loading": "스튜디오를 불러오는 중",
-      "trial": "무료 체험 · {days, plural, other {#일}} 남음"
+      "trial": "무료 체험 · {days, plural, other {#일}} 남음",
+      "lead": "다시 오신 걸 환영해요, {name}님. 만든 파일, 레이아웃, 스캔을 한 번에 열 수 있어요.",
+      "leadEmpty": "다시 오신 걸 환영해요, {name}님. 첫 코드가 여기에 표시돼요.",
+      "points": {
+        "side": "정적 코드와 동적 코드를 나란히, 각각의 레이아웃과 파일과 함께",
+        "files": "언제든 디자인을 편집하거나 PNG와 SVG를 다시 다운로드하세요",
+        "scans": "동적 요금제의 스캔 분석: Starter는 일별 합계, Studio는 코드별",
+        "print": "Print Pack은 해당 QR과 함께 보관되어 바로 인쇄소에 보낼 수 있어요"
+      },
+      "onlyYou": "나만 볼 수 있어요",
+      "printPack": "Print Pack",
+      "notActive": "비활성",
+      "edit": "디자인 편집",
+      "download": "다운로드",
+      "editName": "{name} 디자인 편집",
+      "downloadName": "{name} 다운로드",
+      "private": "{email} 전용이에요. 다른 사람은 이 코드를 볼 수 없어요.",
+      "metricScans14": "{count, plural, other {스캔 #회}} · 14일"
     },
     "workspace": {
       "kicker": "내 QR 코드",
@@ -585,7 +568,7 @@
     "title": "Hey QR에 로그인",
     "lead": "디자인이 계정에 저장되어 결제 후 다운로드할 수 있어요.",
     "google": "Google로 계속하기",
-    "legal": "계속하면 이용약관 및 개인정보처리방침에 동의하게 돼요.",
+    "legal": "계속하면 <terms>이용약관</terms> 및 <privacy>개인정보 처리방침</privacy>에 동의하게 돼요.",
     "failed": "로그인에 실패했어요. 다시 시도해 주세요.",
     "canceled": {
       "draft": "Google 로그인이 취소됐어요. 디자인은 이 브라우저에 그대로 저장되어 있어요. 다시 시도하려면 Google로 계속하세요.",
@@ -910,7 +893,11 @@
       "smsTo": "메시지를 받을 번호를 입력하세요.",
       "address": "지도 앱에서 열 주소를 입력하세요.",
       "eventTitle": "이벤트 이름을 입력하세요.",
-      "eventStart": "날짜를 선택하세요."
+      "eventStart": "날짜를 선택하세요.",
+      "eventDateInvalid": "올바른 날짜를 입력하세요.",
+      "eventEndInvalid": "종료 시간을 시와 분으로 입력하세요.",
+      "eventEndNeedsStart": "시작 시간을 추가하거나 종료 시간을 지우세요.",
+      "eventEnd": "이벤트가 시작 전에 끝나요. 더 늦은 종료 시간을 선택하세요."
     },
     "afterScanning": {
       "label": "스캔 후",
@@ -1534,7 +1521,7 @@
     "text": "코드 안의 텍스트가 너무 길어요. 8자 정도로 줄여 주세요."
   },
   "export": {
-    "title": "코드 다운로드",
+    "title": "파일 다운로드",
     "shortLinkPreview": {
       "mark": "미리보기",
       "note": "샘플 단축 링크로 표시한 미리보기예요. 영구 단축 링크는 이 코드를 활성화할 때 만들어지며, 다운로드하는 모든 파일에 포함돼요."
@@ -1557,10 +1544,10 @@
     "dpi": "{dpi} dpi",
     "pixels": "{width} × {height} px",
     "titleBuy": "QR 코드 다운로드",
-    "titleGuest": "다운로드 준비 완료",
-    "subGuest": "레이아웃과 파일을 확인한 뒤 Google로 로그인해 결제하고 다운로드하세요. 디자인은 그대로 유지돼요.",
+    "titleGuest": "QR 코드 다운로드",
+    "subGuest": "레이아웃과 형식을 확인하세요. 결제 전에 총액을 확인할 수 있어요.",
     "subPay": "레이아웃과 형식을 확인하세요. 결제 전에 총액을 확인할 수 있어요.",
-    "subEntitled": "이 코드는 내 것이에요. 원하는 형식으로 필요한 만큼 다운로드하세요.",
+    "subEntitled": "구매에 포함되어 있어요. PNG와 SVG를 원하는 만큼 다운로드하세요.",
     "stageLabel": "다운로드할 레이아웃",
     "layouts": "이 코드의 레이아웃",
     "backToDesign": "디자인으로 돌아가기",
@@ -1597,7 +1584,7 @@
     },
     "checkoutFailed": "결제 페이지를 열지 못했어요. 요금이 청구되지 않았으니 다시 시도해 주세요.",
     "continueGoogle": "Google로 계속하기",
-    "guestNote": "디자인은 무료예요. 다운로드할 때만 결제해요.",
+    "guestNote": "결제하려면 로그인하세요. {format}이(가) 선택된 이 레이아웃으로 바로 돌아와요.",
     "receipt": {
       "title": "영수증",
       "paid": "결제 금액",
@@ -1624,7 +1611,8 @@
       "total": "합계",
       "tax": "세금이 있는 경우 결제 시 계산돼요.",
       "included": "포함됨",
-      "includedShort": "포함"
+      "includedShort": "포함",
+      "toPay": "지금 결제할 금액"
     },
     "emptyTitle": "아직 다운로드할 항목이 없어요",
     "emptyText": "먼저 QR 코드를 디자인하세요. 초안은 다운로드할 때까지 이 브라우저에 저장돼요.",
@@ -1701,7 +1689,11 @@
     },
     "limit": "더 큰 크기는 {max} px를 초과해요",
     "subUnlock": "{plan}에 포함: 월간 정적 잠금 해제 중 1회를 사용해요.",
-    "subCredit": "정적 크레딧 1개를 사용해요."
+    "subCredit": "정적 크레딧 1개를 사용해요.",
+    "titleDone": "다운로드 완료",
+    "subEntitledPlan": "요금제에 포함되어 있어요. 원하는 만큼 다운로드하세요.",
+    "pendingNote": "보통 몇 초면 끝나요. 이 페이지를 열어 두세요.",
+    "includedNotePlan": "요금제에 포함되어 있어요. 결제할 금액이 없어요."
   },
   "dashboard": {
     "noMatch": {
@@ -2079,7 +2071,12 @@
     "privacy": {
       "title": "개인정보 처리방침"
     },
-    "draft": "법률 문구가 승인될 때까지 이 페이지는 임시로 표시돼요."
+    "draft": "소유자 및 법무 검토용 초안이에요. 이 문구는 아직 효력이 없으며 게시 전에 변경될 수 있어요. 강조 표시된 부분은 아직 확인이 필요해요.",
+    "updated": "최종 업데이트: {date}",
+    "effectiveNote": "시행일은 이 문구가 승인되면 정해져요.",
+    "onThisPage": "이 페이지의 내용",
+    "englishOnly": "이 문서는 현재 영어로만 제공돼요. 영어 문구가 승인되면 번역본이 제공될 예정이에요.",
+    "placeholder": "확인 예정"
   },
   "errors": {
     "notFound": {
