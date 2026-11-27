@@ -318,7 +318,24 @@
       "editName": "{name}のデザインを編集",
       "downloadName": "{name}をダウンロード",
       "private": "{email}専用です。ほかの人はこれらのコードを見ることができません。",
-      "metricScans14": "{count, plural, other {#回スキャン}} · 14日間"
+      "metricScans14": "{count, plural, other {#回スキャン}} · 14日間",
+      "kpi": {
+        "label": "あなたの数字",
+        "codes": "QRコード",
+        "codesNote": "支払い済み {paid} · {drafts, plural, other {下書き #}}",
+        "scans": "スキャン · 14日間",
+        "scansNone": "まだスキャンはありません",
+        "scansNew": "この2週間で新しく",
+        "scansDelta": "前週比 {delta, number, ::sign-always percent}",
+        "dynamic": "動的QRコード",
+        "dynamicNote": "{left, plural, other {プランの残り枠 #}}",
+        "dynamicNoPlan": "動的QRコードは Starter と Studio に含まれます",
+        "dynamicMeter": "使用中の動的QRコード",
+        "files": "ダウンロードできるファイル",
+        "filesNote": "{count, plural, other {件のレイアウトを PNG または SVG でダウンロードできます}}"
+      },
+      "top": "最もスキャンされたコード",
+      "topScans": "{count, plural, other {14日間で # 回スキャン}}"
     },
     "workspace": {
       "kicker": "マイQRコード",

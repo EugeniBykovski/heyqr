@@ -318,7 +318,24 @@
       "editName": "تعديل تصميم {name}",
       "downloadName": "تنزيل {name}",
       "private": "خاص بـ {email}. لا يمكن لأي شخص آخر رؤية هذه الرموز.",
-      "metricScans14": "{count, plural, zero {لا عمليات مسح} one {عملية مسح واحدة} two {عمليتا مسح} few {# عمليات مسح} many {# عملية مسح} other {# عملية مسح}} · 14 يومًا"
+      "metricScans14": "{count, plural, zero {لا عمليات مسح} one {عملية مسح واحدة} two {عمليتا مسح} few {# عمليات مسح} many {# عملية مسح} other {# عملية مسح}} · 14 يومًا",
+      "kpi": {
+        "label": "أرقامك",
+        "codes": "رموز QR",
+        "codesNote": "{paid} مدفوعة · {drafts, plural, zero {لا مسودات} one {مسودة واحدة} two {مسودتان} few {# مسودات} many {# مسودة} other {# مسودة}}",
+        "scans": "عمليات المسح · 14 يومًا",
+        "scansNone": "لا توجد عمليات مسح بعد",
+        "scansNew": "جديدة في هذين الأسبوعين",
+        "scansDelta": "{delta, number, ::sign-always percent} مقارنة بالأسبوع السابق",
+        "dynamic": "الرموز الديناميكية",
+        "dynamicNote": "{left, plural, zero {لم يتبقَّ أي مكان} one {يتبقى مكان واحد} two {يتبقى مكانان} few {يتبقى # أماكن} many {يتبقى # مكانًا} other {يتبقى # مكان}} في خطتك",
+        "dynamicNoPlan": "الرموز الديناميكية متاحة مع Starter وStudio",
+        "dynamicMeter": "الرموز الديناميكية المستخدمة",
+        "files": "ملفات جاهزة",
+        "filesNote": "{count, plural, zero {تصميم} one {تصميم} two {تصميمان} few {تصاميم} many {تصميمًا} other {تصميم}} للتنزيل بصيغة PNG أو SVG"
+      },
+      "top": "الرمز الأكثر مسحًا",
+      "topScans": "{count, plural, zero {لا عمليات مسح} one {مسح واحد} two {مسحان} few {# عمليات مسح} many {# عملية مسح} other {# عملية مسح}} خلال 14 يومًا"
     },
     "workspace": {
       "kicker": "رموز QR الخاصة بي",

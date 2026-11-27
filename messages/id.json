@@ -318,7 +318,24 @@
       "editName": "Edit desain {name}",
       "downloadName": "Unduh {name}",
       "private": "Privat untuk {email}. Tidak ada orang lain yang dapat melihat kode ini.",
-      "metricScans14": "{count, plural, other {# pindaian}} · 14 hari"
+      "metricScans14": "{count, plural, other {# pindaian}} · 14 hari",
+      "kpi": {
+        "label": "Angka Anda",
+        "codes": "Kode QR",
+        "codesNote": "{paid} dibayar · {drafts, plural, other {# draf}}",
+        "scans": "Pindaian · 14 hari",
+        "scansNone": "Belum ada pindaian",
+        "scansNew": "Baru dalam dua minggu ini",
+        "scansDelta": "{delta, number, ::sign-always percent} dibanding minggu lalu",
+        "dynamic": "Kode dinamis",
+        "dynamicNote": "{left, plural, other {Sisa # slot}} di paket Anda",
+        "dynamicNoPlan": "Kode dinamis tersedia dengan Starter dan Studio",
+        "dynamicMeter": "Kode dinamis yang dipakai",
+        "files": "File siap",
+        "filesNote": "{count, plural, other {tata letak}} untuk diunduh sebagai PNG atau SVG"
+      },
+      "top": "Kode paling banyak dipindai",
+      "topScans": "{count, plural, other {# pindaian}} dalam 14 hari"
     },
     "workspace": {
       "kicker": "Kode QR saya",

@@ -318,7 +318,24 @@
       "editName": "Sửa thiết kế của {name}",
       "downloadName": "Tải xuống {name}",
       "private": "Riêng tư với {email}. Không ai khác có thể thấy các mã này.",
-      "metricScans14": "{count, plural, other {# lượt quét}} · 14 ngày"
+      "metricScans14": "{count, plural, other {# lượt quét}} · 14 ngày",
+      "kpi": {
+        "label": "Số liệu của bạn",
+        "codes": "Mã QR",
+        "codesNote": "{paid} đã thanh toán · {drafts, plural, other {# bản nháp}}",
+        "scans": "Lượt quét · 14 ngày",
+        "scansNone": "Chưa có lượt quét",
+        "scansNew": "Mới trong hai tuần này",
+        "scansDelta": "{delta, number, ::sign-always percent} so với tuần trước",
+        "dynamic": "Mã động",
+        "dynamicNote": "Gói của bạn còn {left, plural, other {# vị trí}}",
+        "dynamicNoPlan": "Mã động có trong Starter và Studio",
+        "dynamicMeter": "Mã động đang dùng",
+        "files": "Tệp sẵn sàng",
+        "filesNote": "{count, plural, other {bố cục}} để tải xuống dạng PNG hoặc SVG"
+      },
+      "top": "Mã được quét nhiều nhất",
+      "topScans": "{count, plural, other {# lượt quét}} trong 14 ngày"
     },
     "workspace": {
       "kicker": "Mã QR của tôi",

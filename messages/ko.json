@@ -318,7 +318,24 @@
       "editName": "{name} 디자인 편집",
       "downloadName": "{name} 다운로드",
       "private": "{email} 전용이에요. 다른 사람은 이 코드를 볼 수 없어요.",
-      "metricScans14": "{count, plural, other {스캔 #회}} · 14일"
+      "metricScans14": "{count, plural, other {스캔 #회}} · 14일",
+      "kpi": {
+        "label": "내 현황",
+        "codes": "QR 코드",
+        "codesNote": "결제 {paid} · {drafts, plural, other {초안 #}}",
+        "scans": "스캔 · 14일",
+        "scansNone": "아직 스캔이 없어요",
+        "scansNew": "이번 2주 동안 새로 생겼어요",
+        "scansDelta": "지난주 대비 {delta, number, ::sign-always percent}",
+        "dynamic": "동적 QR 코드",
+        "dynamicNote": "{left, plural, other {요금제에 #개 남음}}",
+        "dynamicNoPlan": "동적 QR 코드는 Starter와 Studio에 포함돼요",
+        "dynamicMeter": "사용 중인 동적 QR 코드",
+        "files": "준비된 파일",
+        "filesNote": "{count, plural, other {개 레이아웃을 PNG 또는 SVG로 다운로드할 수 있어요}}"
+      },
+      "top": "가장 많이 스캔된 코드",
+      "topScans": "{count, plural, other {14일 동안 #회 스캔}}"
     },
     "workspace": {
       "kicker": "내 QR 코드",

@@ -318,7 +318,24 @@
       "editName": "แก้ไขดีไซน์ของ {name}",
       "downloadName": "ดาวน์โหลด {name}",
       "private": "เป็นส่วนตัวสำหรับ {email} ไม่มีใครอื่นเห็นโค้ดเหล่านี้",
-      "metricScans14": "{count, plural, other {สแกน # ครั้ง}} · 14 วัน"
+      "metricScans14": "{count, plural, other {สแกน # ครั้ง}} · 14 วัน",
+      "kpi": {
+        "label": "ตัวเลขของคุณ",
+        "codes": "คิวอาร์โค้ด",
+        "codesNote": "ชำระแล้ว {paid} · {drafts, plural, other {ฉบับร่าง #}}",
+        "scans": "การสแกน · 14 วัน",
+        "scansNone": "ยังไม่มีการสแกน",
+        "scansNew": "ใหม่ในสองสัปดาห์นี้",
+        "scansDelta": "{delta, number, ::sign-always percent} เทียบกับสัปดาห์ก่อน",
+        "dynamic": "โค้ดแบบไดนามิก",
+        "dynamicNote": "{left, plural, other {เหลือ # ช่อง}} ในแพ็กเกจของคุณ",
+        "dynamicNoPlan": "โค้ดแบบไดนามิกมาพร้อม Starter และ Studio",
+        "dynamicMeter": "โค้ดแบบไดนามิกที่ใช้อยู่",
+        "files": "ไฟล์พร้อมใช้",
+        "filesNote": "{count, plural, other {เลย์เอาต์}} ดาวน์โหลดเป็น PNG หรือ SVG ได้"
+      },
+      "top": "โค้ดที่ถูกสแกนมากที่สุด",
+      "topScans": "{count, plural, other {สแกน # ครั้ง}} ใน 14 วัน"
     },
     "workspace": {
       "kicker": "คิวอาร์โค้ดของฉัน",
