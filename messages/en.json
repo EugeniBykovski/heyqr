@@ -2407,7 +2407,9 @@
       "stale": "The layout changed since this preview. Check the page again before you download.",
       "pdfTitle": "Print PDF",
       "svgTitle": "Editable SVG",
-      "specTitle": "Print specifications"
+      "specTitle": "Print specifications",
+      "readyAs": "Ready · {name}",
+      "downloadedAs": "Downloaded · {name}"
     },
     "size": {
       "title": "Finished size",

@@ -2415,7 +2415,9 @@
       "stale": "La mise en page a changé depuis cet aperçu. Vérifiez à nouveau la page avant de télécharger.",
       "pdfTitle": "PDF d’impression",
       "svgTitle": "SVG modifiable",
-      "specTitle": "Spécifications d’impression"
+      "specTitle": "Spécifications d’impression",
+      "readyAs": "Prêt · {name}",
+      "downloadedAs": "Téléchargé · {name}"
     },
     "size": {
       "title": "Format fini",

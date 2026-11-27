@@ -2415,7 +2415,9 @@
       "stale": "El diseño cambió desde esta vista previa. Revisa la página otra vez antes de descargar.",
       "pdfTitle": "PDF de impresión",
       "svgTitle": "SVG editable",
-      "specTitle": "Especificaciones de impresión"
+      "specTitle": "Especificaciones de impresión",
+      "readyAs": "Listo · {name}",
+      "downloadedAs": "Descargado · {name}"
     },
     "size": {
       "title": "Tamaño final",

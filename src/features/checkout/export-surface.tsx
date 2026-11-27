@@ -30,6 +30,7 @@ import { Progress } from "@/shared/ui/progress";
 import { Segmented } from "@/shared/ui/segmented";
 import { Stage, StageBar, StageCanvas, StageFoot } from "@/shared/ui/stage";
 import { useCarriedState } from "@/shared/lib/locale-carry";
+import { fileNameFrom, preparedFileName } from "@/shared/lib/file-name";
 import { UseTrialButton } from "./trial-actions";
 import { formatMoney, type Currency } from "@/shared/config/catalog-core";
 
@@ -62,18 +63,7 @@ export function settingsQuery(s: ExportSettings): string {
   return q.toString();
 }
 
-/** File name from Content-Disposition: the UTF-8 name (filename*) when sent, else the ASCII one. */
-export function fileNameFrom(header: string | null, fallback: string): string {
-  const star = header?.match(/filename\*=UTF-8''([^;]+)/i)?.[1];
-  if (star) {
-    try {
-      return decodeURIComponent(star);
-    } catch {
-      /* fall through */
-    }
-  }
-  return header?.match(/filename="([^"]+)"/i)?.[1] ?? fallback;
-}
+export { fileNameFrom };
 
 type FileState =
   | { kind: "idle" }
@@ -324,11 +314,8 @@ export function ExportSurface(props: ExportSurfaceProps) {
         });
         return;
       }
-      const type = res.headers.get("Content-Type") ?? "";
       // Without private storage (local dev) the route answers with the file itself, as before.
-      const name = type.includes("application/json")
-        ? (((await res.json().catch(() => ({}))) as { name?: string }).name ?? `qr-code.${settings.format}`)
-        : fileNameFrom(res.headers.get("Content-Disposition"), `qr-code.${settings.format}`);
+      const name = await preparedFileName(res, `qr-code.${settings.format}`);
       setFile({ kind: "ready", url: href, name });
     } catch {
       setFile({ kind: "error", reason: "failed" });

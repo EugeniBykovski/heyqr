@@ -2411,7 +2411,9 @@
       "stale": "Il layout è cambiato dopo questa anteprima. Controlla di nuovo la pagina prima di scaricare.",
       "pdfTitle": "PDF di stampa",
       "svgTitle": "SVG modificabile",
-      "specTitle": "Specifiche di stampa"
+      "specTitle": "Specifiche di stampa",
+      "readyAs": "Pronto · {name}",
+      "downloadedAs": "Scaricato · {name}"
     },
     "size": {
       "title": "Formato finito",

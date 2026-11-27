@@ -2411,7 +2411,9 @@
       "stale": "De lay-out is veranderd sinds dit voorbeeld. Controleer de pagina opnieuw voordat je downloadt.",
       "pdfTitle": "Print-PDF",
       "svgTitle": "Bewerkbare SVG",
-      "specTitle": "Printspecificaties"
+      "specTitle": "Printspecificaties",
+      "readyAs": "Klaar · {name}",
+      "downloadedAs": "Gedownload · {name}"
     },
     "size": {
       "title": "Eindformaat",

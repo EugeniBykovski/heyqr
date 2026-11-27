@@ -2415,7 +2415,9 @@
       "stale": "Bu önizlemeden sonra düzen değişti. İndirmeden önce sayfayı tekrar kontrol edin.",
       "pdfTitle": "Baskı PDF’i",
       "svgTitle": "Düzenlenebilir SVG",
-      "specTitle": "Baskı özellikleri"
+      "specTitle": "Baskı özellikleri",
+      "readyAs": "Hazır · {name}",
+      "downloadedAs": "İndirildi · {name}"
     },
     "size": {
       "title": "Bitmiş boyut",
