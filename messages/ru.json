@@ -318,7 +318,24 @@
       "editName": "Изменить дизайн: {name}",
       "downloadName": "Скачать {name}",
       "private": "Доступно только {email}. Никто другой не видит эти коды.",
-      "metricScans14": "{count, plural, one {# сканирование} few {# сканирования} many {# сканирований} other {# сканирования}} · 14 дней"
+      "metricScans14": "{count, plural, one {# сканирование} few {# сканирования} many {# сканирований} other {# сканирования}} · 14 дней",
+      "kpi": {
+        "label": "Ваши показатели",
+        "codes": "QR-коды",
+        "codesNote": "оплачено: {paid} · {drafts, plural, one {# черновик} few {# черновика} many {# черновиков} other {# черновика}}",
+        "scans": "Сканирования · 14 дней",
+        "scansNone": "Пока нет сканирований",
+        "scansNew": "Новые за эти две недели",
+        "scansDelta": "{delta, number, ::sign-always percent} к прошлой неделе",
+        "dynamic": "Динамические коды",
+        "dynamicNote": "{left, plural, one {Осталось # место} few {Осталось # места} many {Осталось # мест} other {Осталось # места}} в тарифе",
+        "dynamicNoPlan": "Динамические коды входят в Starter и Studio",
+        "dynamicMeter": "Используется динамических кодов",
+        "files": "Готовые файлы",
+        "filesNote": "{count, plural, one {макет} few {макета} many {макетов} other {макета}} для скачивания в PNG или SVG"
+      },
+      "top": "Самый сканируемый код",
+      "topScans": "{count, plural, one {# сканирование} few {# сканирования} many {# сканирований} other {# сканирования}} за 14 дней"
     },
     "workspace": {
       "kicker": "Мои QR-коды",

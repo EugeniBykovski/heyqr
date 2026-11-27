@@ -318,7 +318,24 @@
       "editName": "Рэдагаваць дызайн: {name}",
       "downloadName": "Спампаваць {name}",
       "private": "Даступна толькі {email}. Ніхто іншы не бачыць гэтых кодаў.",
-      "metricScans14": "{count, plural, one {# сканаванне} few {# сканаванні} many {# сканаванняў} other {# сканавання}} · 14 дзён"
+      "metricScans14": "{count, plural, one {# сканаванне} few {# сканаванні} many {# сканаванняў} other {# сканавання}} · 14 дзён",
+      "kpi": {
+        "label": "Вашы паказчыкі",
+        "codes": "QR-коды",
+        "codesNote": "аплачана: {paid} · {drafts, plural, one {# чарнавік} few {# чарнавікі} many {# чарнавікоў} other {# чарнавіка}}",
+        "scans": "Сканаванні · 14 дзён",
+        "scansNone": "Пакуль няма сканаванняў",
+        "scansNew": "Новыя за гэтыя два тыдні",
+        "scansDelta": "{delta, number, ::sign-always percent} да мінулага тыдня",
+        "dynamic": "Дынамічныя коды",
+        "dynamicNote": "{left, plural, one {Засталося # месца} few {Засталося # месцы} many {Засталося # месцаў} other {Засталося # месца}} у тарыфе",
+        "dynamicNoPlan": "Дынамічныя коды ўваходзяць у Starter і Studio",
+        "dynamicMeter": "Выкарыстоўваецца дынамічных кодаў",
+        "files": "Гатовыя файлы",
+        "filesNote": "{count, plural, one {макет} few {макеты} many {макетаў} other {макета}} для спампоўкі ў PNG або SVG"
+      },
+      "top": "Код, які скануюць найчасцей",
+      "topScans": "{count, plural, one {# сканаванне} few {# сканаванні} many {# сканаванняў} other {# сканавання}} за 14 дзён"
     },
     "workspace": {
       "kicker": "Мае QR-коды",

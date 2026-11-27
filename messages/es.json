@@ -318,7 +318,24 @@
       "editName": "Editar el diseño de {name}",
       "downloadName": "Descargar {name}",
       "private": "Privado para {email}. Nadie más puede ver estos códigos.",
-      "metricScans14": "{count, plural, one {# escaneo} other {# escaneos}} · 14 días"
+      "metricScans14": "{count, plural, one {# escaneo} other {# escaneos}} · 14 días",
+      "kpi": {
+        "label": "Tus cifras",
+        "codes": "Códigos QR",
+        "codesNote": "{paid} pagados · {drafts, plural, one {# borrador} other {# borradores}}",
+        "scans": "Escaneos · 14 días",
+        "scansNone": "Aún no hay escaneos",
+        "scansNew": "Nuevos en estas dos semanas",
+        "scansDelta": "{delta, number, ::sign-always percent} frente a la semana anterior",
+        "dynamic": "Códigos dinámicos",
+        "dynamicNote": "{left, plural, one {Te queda # plaza} other {Te quedan # plazas}} en tu plan",
+        "dynamicNoPlan": "Los códigos dinámicos vienen con Starter y Studio",
+        "dynamicMeter": "Códigos dinámicos en uso",
+        "files": "Archivos listos",
+        "filesNote": "{count, plural, one {diseño} other {diseños}} para descargar en PNG o SVG"
+      },
+      "top": "Código más escaneado",
+      "topScans": "{count, plural, one {# escaneo} other {# escaneos}} en 14 días"
     },
     "workspace": {
       "kicker": "Mis códigos QR",

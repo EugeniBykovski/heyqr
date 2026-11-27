@@ -318,7 +318,24 @@
       "editName": "编辑 {name} 的设计",
       "downloadName": "下载 {name}",
       "private": "仅 {email} 可见。其他人无法看到这些二维码。",
-      "metricScans14": "{count, plural, other {# 次扫描}} · 14 天"
+      "metricScans14": "{count, plural, other {# 次扫描}} · 14 天",
+      "kpi": {
+        "label": "你的数据",
+        "codes": "二维码",
+        "codesNote": "已付费 {paid} · {drafts, plural, other {草稿 # 个}}",
+        "scans": "扫描 · 14 天",
+        "scansNone": "还没有扫描",
+        "scansNew": "这两周新增",
+        "scansDelta": "较上周 {delta, number, ::sign-always percent}",
+        "dynamic": "动态二维码",
+        "dynamicNote": "{left, plural, other {套餐还剩 # 个名额}}",
+        "dynamicNoPlan": "动态二维码包含在 Starter 和 Studio 中",
+        "dynamicMeter": "正在使用的动态二维码",
+        "files": "可下载的文件",
+        "filesNote": "{count, plural, other {个版式可下载为 PNG 或 SVG}}"
+      },
+      "top": "扫描最多的码",
+      "topScans": "{count, plural, other {14 天内扫描 # 次}}"
     },
     "workspace": {
       "kicker": "我的二维码",

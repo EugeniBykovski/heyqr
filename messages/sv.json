@@ -318,7 +318,24 @@
       "editName": "Redigera designen för {name}",
       "downloadName": "Ladda ner {name}",
       "private": "Privat för {email}. Ingen annan kan se de här koderna.",
-      "metricScans14": "{count, plural, one {# skanning} other {# skanningar}} · 14 dagar"
+      "metricScans14": "{count, plural, one {# skanning} other {# skanningar}} · 14 dagar",
+      "kpi": {
+        "label": "Dina siffror",
+        "codes": "QR-koder",
+        "codesNote": "{paid} betalda · {drafts, plural, one {# utkast} other {# utkast}}",
+        "scans": "Skanningar · 14 dagar",
+        "scansNone": "Inga skanningar än",
+        "scansNew": "Nya de här två veckorna",
+        "scansDelta": "{delta, number, ::sign-always percent} jämfört med förra veckan",
+        "dynamic": "Dynamiska koder",
+        "dynamicNote": "{left, plural, one {# plats} other {# platser}} kvar i din plan",
+        "dynamicNoPlan": "Dynamiska koder ingår i Starter och Studio",
+        "dynamicMeter": "Dynamiska koder som används",
+        "files": "Filer klara",
+        "filesNote": "{count, plural, one {layout} other {layouter}} att ladda ner som PNG eller SVG"
+      },
+      "top": "Mest skannade kod",
+      "topScans": "{count, plural, one {# skanning} other {# skanningar}} på 14 dagar"
     },
     "workspace": {
       "kicker": "Mina QR-koder",

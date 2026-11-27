@@ -318,7 +318,24 @@
       "editName": "Редагувати дизайн: {name}",
       "downloadName": "Завантажити {name}",
       "private": "Доступно лише {email}. Ніхто інший не бачить цих кодів.",
-      "metricScans14": "{count, plural, one {# сканування} few {# сканування} many {# сканувань} other {# сканування}} · 14 днів"
+      "metricScans14": "{count, plural, one {# сканування} few {# сканування} many {# сканувань} other {# сканування}} · 14 днів",
+      "kpi": {
+        "label": "Ваші показники",
+        "codes": "QR-коди",
+        "codesNote": "оплачено: {paid} · {drafts, plural, one {# чернетка} few {# чернетки} many {# чернеток} other {# чернетки}}",
+        "scans": "Сканування · 14 днів",
+        "scansNone": "Поки немає сканувань",
+        "scansNew": "Нові за ці два тижні",
+        "scansDelta": "{delta, number, ::sign-always percent} до минулого тижня",
+        "dynamic": "Динамічні коди",
+        "dynamicNote": "{left, plural, one {Залишилось # місце} few {Залишилось # місця} many {Залишилось # місць} other {Залишилось # місця}} у тарифі",
+        "dynamicNoPlan": "Динамічні коди входять у Starter і Studio",
+        "dynamicMeter": "Використовується динамічних кодів",
+        "files": "Готові файли",
+        "filesNote": "{count, plural, one {макет} few {макети} many {макетів} other {макета}} для завантаження в PNG або SVG"
+      },
+      "top": "Найчастіше сканований код",
+      "topScans": "{count, plural, one {# сканування} few {# сканування} many {# сканувань} other {# сканування}} за 14 днів"
     },
     "workspace": {
       "kicker": "Мої QR-коди",

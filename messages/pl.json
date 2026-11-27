@@ -318,7 +318,24 @@
       "editName": "Edytuj wygląd: {name}",
       "downloadName": "Pobierz {name}",
       "private": "Widoczne tylko dla {email}. Nikt inny nie widzi tych kodów.",
-      "metricScans14": "{count, plural, one {# skan} few {# skany} many {# skanów} other {# skanu}} · 14 dni"
+      "metricScans14": "{count, plural, one {# skan} few {# skany} many {# skanów} other {# skanu}} · 14 dni",
+      "kpi": {
+        "label": "Twoje liczby",
+        "codes": "Kody QR",
+        "codesNote": "opłacone: {paid} · {drafts, plural, one {# szkic} few {# szkice} many {# szkiców} other {# szkicu}}",
+        "scans": "Skany · 14 dni",
+        "scansNone": "Jeszcze nie ma skanów",
+        "scansNew": "Nowe w tych dwóch tygodniach",
+        "scansDelta": "{delta, number, ::sign-always percent} wobec poprzedniego tygodnia",
+        "dynamic": "Kody dynamiczne",
+        "dynamicNote": "{left, plural, one {Został # wolny slot} few {Zostały # wolne sloty} many {Zostało # wolnych slotów} other {Zostało # wolnego slotu}} w planie",
+        "dynamicNoPlan": "Kody dynamiczne są w planach Starter i Studio",
+        "dynamicMeter": "Używane kody dynamiczne",
+        "files": "Gotowe pliki",
+        "filesNote": "{count, plural, one {układ} few {układy} many {układów} other {układu}} do pobrania jako PNG lub SVG"
+      },
+      "top": "Najczęściej skanowany kod",
+      "topScans": "{count, plural, one {# skan} few {# skany} many {# skanów} other {# skanu}} w 14 dni"
     },
     "workspace": {
       "kicker": "Moje kody QR",

@@ -318,7 +318,24 @@
       "editName": "Edit the design of {name}",
       "downloadName": "Download {name}",
       "private": "Private to {email}. Nobody else can see these codes.",
-      "metricScans14": "{count, plural, one {# scan} other {# scans}} · 14 days"
+      "metricScans14": "{count, plural, one {# scan} other {# scans}} · 14 days",
+      "kpi": {
+        "label": "Your figures",
+        "codes": "QR codes",
+        "codesNote": "{paid} paid · {drafts, plural, one {# draft} other {# drafts}}",
+        "scans": "Scans · 14 days",
+        "scansNone": "No scans yet",
+        "scansNew": "New this fortnight",
+        "scansDelta": "{delta, number, ::sign-always percent} vs previous week",
+        "dynamic": "Dynamic codes",
+        "dynamicNote": "{left, plural, one {# slot} other {# slots}} left on your plan",
+        "dynamicNoPlan": "Dynamic codes come with Starter and Studio",
+        "dynamicMeter": "Dynamic codes in use",
+        "files": "Files ready",
+        "filesNote": "{count, plural, one {layout} other {layouts}} to download as PNG or SVG"
+      },
+      "top": "Top code",
+      "topScans": "{count, plural, one {# scan} other {# scans}} in 14 days"
     },
     "workspace": {
       "kicker": "My QR codes",

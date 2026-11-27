@@ -5,6 +5,7 @@ import { db, schema } from "../db";
 import { logoStore } from "../storage/s3";
 import { resolveLogos } from "./logo-assets";
 import { hasScans, incrementScan, ownerScanSummary, scansByDay } from "./scans";
+import { filesReadyCount, firstScanDay } from "./studio-files";
 import { layoutRevision } from "./update-layout";
 
 /**
@@ -103,31 +104,26 @@ export async function recordScan(qrCodeId: string) {
 export async function studioSummary(userId: string, days = 14) {
   const owned = and(eq(schema.qrCode.userId, userId), isNull(schema.qrCode.deletedAt));
   // HEY-148: scans under the same UTC-day convention as QR details (scans.ts ownerScanSummary).
-  const [codes, { scans, scansByCode }, [files], layoutCounts] = await Promise.all([
+  const [codes, { scans, scansByCode }, filesReady, layoutCounts, first] = await Promise.all([
     listQrCodes(userId),
     ownerScanSummary(db, userId, days),
-    db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(schema.qrLayout)
-      .innerJoin(schema.qrCode, eq(schema.qrCode.id, schema.qrLayout.qrCodeId))
-      .where(
-        and(
-          owned,
-          sql`(${schema.qrCode.model} = 'static' and ${schema.qrCode.purchasedAt} is not null) or (${schema.qrCode.model} = 'dynamic' and ${schema.qrCode.status} = 'active')`,
-        ),
-      ),
+    // HEY-198: owner-scoped as a whole (it used to count every account's active Dynamic layouts too).
+    filesReadyCount(db, userId),
     db
       .select({ qrCodeId: schema.qrLayout.qrCodeId, count: sql<number>`count(*)::int` })
       .from(schema.qrLayout)
       .innerJoin(schema.qrCode, eq(schema.qrCode.id, schema.qrLayout.qrCodeId))
       .where(owned)
       .groupBy(schema.qrLayout.qrCodeId),
+    // HEY-198: how far back the account's scan history goes (week-over-week needs both weeks inside it).
+    firstScanDay(db, userId),
   ]);
   return {
     codes,
     scans,
     scansByCode,
-    filesReady: files?.count ?? 0,
+    filesReady,
+    firstScanDay: first,
     layoutsByCode: new Map(layoutCounts.map((r) => [r.qrCodeId, r.count])),
   };
 }

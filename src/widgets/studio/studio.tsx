@@ -9,6 +9,7 @@ import { userTrial } from "@/server/billing/entitlements";
 import { db } from "@/server/db";
 import { encodedValue } from "@/server/qr/export";
 import { studioSummary } from "@/server/qr/repository";
+import { studioMetrics } from "@/server/qr/studio-metrics";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -41,6 +42,8 @@ export async function Studio({ userId, name, email }: { userId: string; name: st
     accountUsage(db, userId),
   ]);
   const { codes, scans, scansByCode, layoutsByCode } = data;
+  // HEY-198: the account's figures (rules in studio-metrics.ts), shown as tiles inside the workspace.
+  const m = studioMetrics({ ...data, dynamic: usage.dynamic });
   // HEY-185: a Dynamic code counts as live only while its scans redirect (the short link's own rule).
   const access = { plan: Boolean(usage.plan), trial: phase };
   const live = (c: (typeof codes)[number]) => (c.model === "dynamic" ? scansLive(c, access) : c.purchasedAt !== null);
@@ -114,6 +117,66 @@ export async function Studio({ userId, name, email }: { userId: string; name: st
         </div>
 
         <div className="flex flex-col gap-4 p-4 sm:p-5">
+          <dl aria-label={t("kpi.label")} className="grid grid-cols-2 gap-2.5">
+            <div className="flex min-w-0 flex-col gap-1 rounded-lg border border-border bg-subtle p-3">
+              <dt className="text-caption font-semibold text-secondary-foreground">{t("kpi.codes")}</dt>
+              <dd className="text-h3 tabular-nums">{format.number(m.total)}</dd>
+              <dd className="text-caption text-muted-foreground">{t("kpi.codesNote", { paid: m.paid, drafts: m.drafts })}</dd>
+            </div>
+            <div className="flex min-w-0 flex-col gap-1 rounded-lg border border-border bg-subtle p-3">
+              <dt className="text-caption font-semibold text-secondary-foreground">{t("kpi.scans")}</dt>
+              <dd className="text-h3 tabular-nums">{format.number(m.scans)}</dd>
+              <dd
+                className={cn(
+                  "text-caption",
+                  m.weekOverWeek !== null && m.weekOverWeek >= 0 ? "font-semibold text-success" : "text-muted-foreground",
+                )}
+              >
+                {m.weekOverWeek !== null
+                  ? t("kpi.scansDelta", { delta: m.weekOverWeek })
+                  : m.scans > 0
+                    ? t("kpi.scansNew")
+                    : t("kpi.scansNone")}
+              </dd>
+            </div>
+            <div className="flex min-w-0 flex-col gap-1 rounded-lg border border-border bg-subtle p-3">
+              <dt className="text-caption font-semibold text-secondary-foreground">{t("kpi.dynamic")}</dt>
+              <dd className="text-h3 tabular-nums">
+                {m.dynamic.limit > 0 ? `${m.dynamic.used} / ${m.dynamic.limit}` : format.number(m.dynamic.used)}
+              </dd>
+              {m.dynamic.limit > 0 ? (
+                <dd>
+                  <div
+                    role="meter"
+                    aria-label={t("kpi.dynamicMeter")}
+                    aria-valuemin={0}
+                    aria-valuemax={m.dynamic.limit}
+                    aria-valuenow={m.dynamic.used}
+                    className="h-1.5 overflow-hidden rounded-full bg-surface"
+                  >
+                    <span
+                      className="block h-full rounded-full bg-primary"
+                      style={{ width: `${Math.min(100, (m.dynamic.used / m.dynamic.limit) * 100)}%` }}
+                    />
+                  </div>
+                </dd>
+              ) : null}
+              <dd className="text-caption text-muted-foreground">
+                {m.dynamic.limit > 0 ? (
+                  t("kpi.dynamicNote", { left: m.dynamic.remaining })
+                ) : (
+                  <Link href="/dashboard/billing" className="underline underline-offset-2">
+                    {t("kpi.dynamicNoPlan")}
+                  </Link>
+                )}
+              </dd>
+            </div>
+            <div className="flex min-w-0 flex-col gap-1 rounded-lg border border-border bg-subtle p-3">
+              <dt className="text-caption font-semibold text-secondary-foreground">{t("kpi.files")}</dt>
+              <dd className="text-h3 tabular-nums">{format.number(m.filesReady)}</dd>
+              <dd className="text-caption text-muted-foreground">{t("kpi.filesNote", { count: m.filesReady })}</dd>
+            </div>
+          </dl>
           {codes.length ? (
             <ul aria-label={t("recent")} className="flex flex-col divide-y divide-border">
               {codes.slice(0, 3).map((c) => {
@@ -201,6 +264,15 @@ export async function Studio({ userId, name, email }: { userId: string; name: st
                 {analytics ? t("chart.empty") : t("chart.plans")}
               </p>
             )}
+            {m.top ? (
+              <p className="text-caption text-secondary-foreground">
+                <span className="font-semibold text-foreground">{t("top")}: </span>
+                <Link href={`/dashboard/qr/${m.top.id}`} className="font-semibold text-accent-text underline underline-offset-2">
+                  {m.top.name}
+                </Link>{" "}
+                · {t("topScans", { count: m.top.scans })}
+              </p>
+            ) : null}
             <p className="flex items-start gap-2 text-caption text-secondary-foreground">
               <BarChart3Icon aria-hidden className="mt-0.5 size-3.5 shrink-0" />
               {t("chart.note")}

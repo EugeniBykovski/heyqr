@@ -318,7 +318,24 @@
       "editName": "{name} adlı kodun tasarımını düzenle",
       "downloadName": "{name} adlı kodu indir",
       "private": "Yalnızca {email} için özel. Bu kodları başka kimse göremez.",
-      "metricScans14": "{count, plural, one {# tarama} other {# tarama}} · 14 gün"
+      "metricScans14": "{count, plural, one {# tarama} other {# tarama}} · 14 gün",
+      "kpi": {
+        "label": "Rakamlarınız",
+        "codes": "QR kodlar",
+        "codesNote": "{paid} ödenmiş · {drafts, plural, one {# taslak} other {# taslak}}",
+        "scans": "Taramalar · 14 gün",
+        "scansNone": "Henüz tarama yok",
+        "scansNew": "Bu iki haftada yeni",
+        "scansDelta": "önceki haftaya göre {delta, number, ::sign-always percent}",
+        "dynamic": "Dinamik kodlar",
+        "dynamicNote": "Planınızda {left, plural, one {# yer} other {# yer}} kaldı",
+        "dynamicNoPlan": "Dinamik kodlar Starter ve Studio ile gelir",
+        "dynamicMeter": "Kullanımdaki dinamik kodlar",
+        "files": "Hazır dosyalar",
+        "filesNote": "PNG veya SVG olarak indirilecek {count, plural, one {tasarım} other {tasarım}}"
+      },
+      "top": "En çok taranan kod",
+      "topScans": "14 günde {count, plural, one {# tarama} other {# tarama}}"
     },
     "workspace": {
       "kicker": "QR kodlarım",

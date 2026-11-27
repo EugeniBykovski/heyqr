@@ -318,7 +318,24 @@
       "editName": "{name} का डिज़ाइन एडिट करें",
       "downloadName": "{name} डाउनलोड करें",
       "private": "सिर्फ़ {email} के लिए निजी। इन कोड को कोई और नहीं देख सकता।",
-      "metricScans14": "{count, plural, one {# स्कैन} other {# स्कैन}} · 14 दिन"
+      "metricScans14": "{count, plural, one {# स्कैन} other {# स्कैन}} · 14 दिन",
+      "kpi": {
+        "label": "आपके आंकड़े",
+        "codes": "QR कोड",
+        "codesNote": "{paid} भुगतान किए गए · {drafts, plural, one {# ड्राफ़्ट} other {# ड्राफ़्ट}}",
+        "scans": "स्कैन · 14 दिन",
+        "scansNone": "अभी कोई स्कैन नहीं",
+        "scansNew": "इन दो हफ़्तों में नए",
+        "scansDelta": "पिछले हफ़्ते की तुलना में {delta, number, ::sign-always percent}",
+        "dynamic": "डायनेमिक कोड",
+        "dynamicNote": "आपके प्लान में {left, plural, one {# स्लॉट} other {# स्लॉट}} बाकी",
+        "dynamicNoPlan": "डायनेमिक कोड Starter और Studio के साथ मिलते हैं",
+        "dynamicMeter": "इस्तेमाल में डायनेमिक कोड",
+        "files": "तैयार फ़ाइलें",
+        "filesNote": "{count, plural, one {लेआउट} other {लेआउट}} PNG या SVG में डाउनलोड के लिए"
+      },
+      "top": "सबसे ज़्यादा स्कैन वाला कोड",
+      "topScans": "14 दिनों में {count, plural, one {# स्कैन} other {# स्कैन}}"
     },
     "workspace": {
       "kicker": "मेरे QR कोड",

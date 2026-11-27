@@ -318,7 +318,24 @@
       "editName": "Ontwerp van {name} bewerken",
       "downloadName": "{name} downloaden",
       "private": "Privé voor {email}. Niemand anders kan deze codes zien.",
-      "metricScans14": "{count, plural, one {# scan} other {# scans}} · 14 dagen"
+      "metricScans14": "{count, plural, one {# scan} other {# scans}} · 14 dagen",
+      "kpi": {
+        "label": "Jouw cijfers",
+        "codes": "QR-codes",
+        "codesNote": "{paid} betaald · {drafts, plural, one {# concept} other {# concepten}}",
+        "scans": "Scans · 14 dagen",
+        "scansNone": "Nog geen scans",
+        "scansNew": "Nieuw in deze twee weken",
+        "scansDelta": "{delta, number, ::sign-always percent} ten opzichte van vorige week",
+        "dynamic": "Dynamische codes",
+        "dynamicNote": "{left, plural, one {# plek} other {# plekken}} over in je abonnement",
+        "dynamicNoPlan": "Dynamische codes horen bij Starter en Studio",
+        "dynamicMeter": "Dynamische codes in gebruik",
+        "files": "Bestanden klaar",
+        "filesNote": "{count, plural, one {lay-out} other {lay-outs}} om te downloaden als PNG of SVG"
+      },
+      "top": "Meest gescande code",
+      "topScans": "{count, plural, one {# scan} other {# scans}} in 14 dagen"
     },
     "workspace": {
       "kicker": "Mijn QR-codes",
