@@ -17,9 +17,9 @@ describe("README Quickstart (HEY-169)", () => {
     for (const text of [
       "Node.js **18 or later**",
       "Dashboard → API keys",
-      "npm install /tmp/heyqr-sdk-0.1.0.tgz",
-      "**After publication (not available yet):**",
+      // HEY-172: published on npm; the tarball stays documented for unreleased monorepo builds.
       "npm install @heyqr/sdk",
+      "npm install /tmp/heyqr-sdk-<version>.tgz",
       "HEYQR_API_KEY",
       "HEYQR_BASE_URL",
       "node dist/quickstart.js",
@@ -27,9 +27,8 @@ describe("README Quickstart (HEY-169)", () => {
       expect(section, text).toContain(text);
     // Placeholders only: no real-looking key.
     expect(section).not.toMatch(/hqk_(?!X{12}_)[A-Za-z0-9]{12}_/);
-    // The version in the tarball name is the package's.
-    const { version } = JSON.parse(readFileSync(new URL("package.json", dir), "utf8")) as { version: string };
-    expect(section).toContain(`heyqr-sdk-${version}.tgz`);
+    // The release is public, so nothing in the Quickstart still calls npm "not available yet".
+    expect(section).not.toMatch(/not available yet|Pre-release \(now\)/);
   });
 });
 

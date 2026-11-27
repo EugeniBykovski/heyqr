@@ -12,7 +12,7 @@ parts:
   - idempotent `createQr` retries with an Idempotency-Key (HEY-165).
 - **React preview** (HEY-167): `HeyQrPreview` from `@heyqr/sdk/react`, a local QR preview for your own UI.
 
-npm publishing comes later. The HTTP
+Published on npm as [`@heyqr/sdk`](https://www.npmjs.com/package/@heyqr/sdk): `npm install @heyqr/sdk`. The HTTP
 contract itself is [docs/API_V1.md](../../docs/API_V1.md).
 
 This package is separate from [`@heyqr/qr-core`](../qr-core), the free local renderer: nothing here renders a code.
@@ -43,20 +43,14 @@ npm init -y && npm pkg set type=module
 npm install -D typescript @types/node
 ```
 
-Install the SDK:
+Install the SDK from the npm registry:
 
-- **Pre-release (now):** install the packed tarball. In the HeyQR monorepo, run
-  `cd packages/sdk && pnpm pack --pack-destination /tmp`. Then, in your project:
+```sh
+npm install @heyqr/sdk
+```
 
-  ```sh
-  npm install /tmp/heyqr-sdk-0.1.0.tgz
-  ```
-
-- **After publication (not available yet):** install it from the npm registry.
-
-  ```sh
-  npm install @heyqr/sdk
-  ```
+To try an unreleased build from the HeyQR monorepo instead, run `cd packages/sdk && pnpm pack --pack-destination /tmp`
+and install the tarball in your project: `npm install /tmp/heyqr-sdk-<version>.tgz`.
 
 **4. Configure the environment.** Put these in your server's environment (a secret manager, or a `.env` file that
 isn't committed):

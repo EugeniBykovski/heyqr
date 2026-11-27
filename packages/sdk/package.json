@@ -1,7 +1,6 @@
 {
   "name": "@heyqr/sdk",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
   "description": "TypeScript client and types for the hosted HeyQR REST API (v1), and an embeddable React QR preview (@heyqr/sdk/react). ESM, Node 18+.",
   "license": "UNLICENSED",
