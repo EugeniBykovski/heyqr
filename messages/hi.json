@@ -4402,7 +4402,7 @@
         },
         "restSdk": {
           "title": "TypeScript SDK",
-          "lead": "@heyqr/sdk, REST API के लिए एक टाइप्ड क्लाइंट है, Node.js 18 और उसके बाद के लिए। यह कुछ रेंडर नहीं करता: वह काम @heyqr/qr-core का है।",
+          "lead": "@simplex-packages/heyqr-sdk, REST API के लिए एक टाइप्ड क्लाइंट है, Node.js 18 और उसके बाद के लिए। यह कुछ रेंडर नहीं करता: वह काम @heyqr/qr-core का है।",
           "blocks": [
             {
               "k": "note",
@@ -4425,7 +4425,7 @@
             },
             {
               "k": "p",
-              "t": "`HeyQrClient` को API कुंजी चाहिए, इसलिए यह सिर्फ़ सर्वर पर चलता है। ब्राउज़र बंडल में पैकेज ऐसी एंट्री पर जाता है जिसका `HeyQrClient` `server_only` kind की `HeyQrError` फेंकता है। ब्राउज़र में प्रीव्यू के लिए `@heyqr/sdk/react` इस्तेमाल करें।"
+              "t": "`HeyQrClient` को API कुंजी चाहिए, इसलिए यह सिर्फ़ सर्वर पर चलता है। ब्राउज़र बंडल में पैकेज ऐसी एंट्री पर जाता है जिसका `HeyQrClient` `server_only` kind की `HeyQrError` फेंकता है। ब्राउज़र में प्रीव्यू के लिए `@simplex-packages/heyqr-sdk/react` इस्तेमाल करें।"
             },
             {
               "k": "code",

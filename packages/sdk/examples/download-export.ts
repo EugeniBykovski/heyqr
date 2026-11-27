@@ -1,5 +1,5 @@
 /*
- * HEY-163: download a layout's PNG and SVG with @heyqr/sdk and save them.
+ * HEY-163: download a layout's PNG and SVG with @simplex-packages/heyqr-sdk and save them.
  *
  *   HEYQR_API_KEY=hqk_XXXXXXXXXXXX_YOUR-SECRET-PART-GOES-HERE-XXXXXXXXXXXXXXXXXXX \
  *   HEYQR_BASE_URL=http://localhost:3000 \
@@ -12,7 +12,7 @@
  */
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { HeyQrClient, isHeyQrApiError, type DownloadExportError } from "@heyqr/sdk";
+import { HeyQrClient, isHeyQrApiError, type DownloadExportError } from "@simplex-packages/heyqr-sdk";
 
 const env = (name: string, fallback?: string) => {
   const value = process.env[name] ?? fallback;

@@ -3,7 +3,7 @@
  * Server-side only (Node.js 18 or later). HEYQR_API_KEY is a secret: keep it in your server's environment, never in
  * browser code or source control. This script never prints it.
  */
-import { HeyQrClient, isHeyQrApiError } from "@heyqr/sdk";
+import { HeyQrClient, isHeyQrApiError } from "@simplex-packages/heyqr-sdk";
 
 const apiKey = process.env.HEYQR_API_KEY;
 const baseUrl = process.env.HEYQR_BASE_URL;

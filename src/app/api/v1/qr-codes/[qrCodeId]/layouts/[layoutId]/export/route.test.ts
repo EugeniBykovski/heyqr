@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type * as Sdk from "@heyqr/sdk";
+import type * as Sdk from "@simplex-packages/heyqr-sdk";
 import { DEFAULT_DESIGN, designSettingsOf, designToLayout } from "@/entities/qr";
 
 vi.mock("server-only", () => ({}));

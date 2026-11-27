@@ -10,7 +10,7 @@
  * A stale revision (someone saved in between) throws HeyQrApiError 409; this example reports it and stops. Whether to
  * reload and apply the change again is your decision. The SDK never retries on its own.
  */
-import { HeyQrClient, isHeyQrApiError, isRevisionConflict, type UpdateDestinationError } from "@heyqr/sdk";
+import { HeyQrClient, isHeyQrApiError, isRevisionConflict, type UpdateDestinationError } from "@simplex-packages/heyqr-sdk";
 
 const env = (name: string, fallback?: string) => {
   const value = process.env[name] ?? fallback;

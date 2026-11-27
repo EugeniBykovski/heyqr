@@ -18,8 +18,8 @@ describe("README Quickstart (HEY-169)", () => {
       "Node.js **18 or later**",
       "Dashboard → API keys",
       // HEY-172: published on npm; the tarball stays documented for unreleased monorepo builds.
-      "npm install @heyqr/sdk",
-      "npm install /tmp/heyqr-sdk-<version>.tgz",
+      "npm install @simplex-packages/heyqr-sdk",
+      "npm install /tmp/simplex-packages-heyqr-sdk-<version>.tgz",
       "HEYQR_API_KEY",
       "HEYQR_BASE_URL",
       "node dist/quickstart.js",
@@ -61,7 +61,7 @@ describe("README purchase and re-export (HEY-170)", () => {
 
   it("the example uses only the public entry, reads its settings from the environment and never prints the key", () => {
     const source = readFileSync(new URL("examples/purchase-and-export.ts", dir), "utf8");
-    expect([...source.matchAll(/from "(@heyqr\/[^"]+)"/g)].map((m) => m[1])).toEqual(["@heyqr/sdk"]);
+    expect([...source.matchAll(/from "(@(?:heyqr|simplex-packages)\/[^"]+)"/g)].map((m) => m[1])).toEqual(["@simplex-packages/heyqr-sdk"]);
     for (const name of ["HEYQR_API_KEY", "HEYQR_BASE_URL", "HEYQR_QR_ID", "HEYQR_LAYOUT_ID"])
       expect(source).toContain(`process.env.${name}`);
     expect(source).toContain("isPaymentRequired(error)");

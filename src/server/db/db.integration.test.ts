@@ -31,7 +31,7 @@ import { canDownloadCode, ownerStatus, resolveShortLink } from "../billing/acces
 import { apiKeyOwner, createApiKey, generateApiKey, listApiKeys, revokeApiKey } from "../api-keys/keys";
 import { readLayoutForOwner } from "../api/v1/layouts";
 import { authorizeApiExport } from "../api/v1/export";
-import type * as Sdk from "@heyqr/sdk";
+import type * as Sdk from "@simplex-packages/heyqr-sdk";
 import {
   HeyQrClient,
   HeyQrError,
@@ -39,8 +39,8 @@ import {
   isRevisionConflict,
   type FetchLike,
   type UpdateDestinationError,
-} from "@heyqr/sdk";
-import { HeyQrRateLimitError } from "@heyqr/sdk";
+} from "@simplex-packages/heyqr-sdk";
+import { HeyQrRateLimitError } from "@simplex-packages/heyqr-sdk";
 import { createQrForOwner } from "../api/v1/create-qr";
 import { takeRequest, WINDOW_SECONDS } from "../api/v1/rate-limit";
 import { hasScans, incrementScan, ownerScanSummary, scansByDay, utcDay } from "../qr/scans";
@@ -7314,7 +7314,7 @@ describe.skipIf(!url)("public API: export authorization (HEY-158, real PostgreSQ
 
 /*
  * HEY-160 / QR-22.01: response bodies of the real route handlers against SDK-typed samples. Each sample is checked by
- * the compiler against the @heyqr/sdk type (`satisfies`); its shape (keys and value kinds) must equal the response's.
+ * the compiler against the @simplex-packages/heyqr-sdk type (`satisfies`); its shape (keys and value kinds) must equal the response's.
  */
 describe.skipIf(!url)("SDK contract: route responses (HEY-160, real PostgreSQL)", () => {
   let pool: Pool;

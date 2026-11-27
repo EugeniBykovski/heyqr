@@ -1,5 +1,5 @@
 /*
- * HEY-160: a clean consumer of @heyqr/sdk. Compiled on its own (tsconfig here: no DOM, no Node types, no path
+ * HEY-160: a clean consumer of @simplex-packages/heyqr-sdk. Compiled on its own (tsconfig here: no DOM, no Node types, no path
  * aliases), importing only the package's public entry point. Each `@ts-expect-error` is a compile-time check: the line
  * must fail to compile, or this file fails.
  */
@@ -22,7 +22,7 @@ import {
   type GetDestinationError,
   type UpdateDestinationError,
   type UpdateLayoutError,
-} from "@heyqr/sdk";
+} from "@simplex-packages/heyqr-sdk";
 import type {
   CreateQrRequest,
   CreateQrResponse,
@@ -37,10 +37,10 @@ import type {
   UpdateDestinationResult,
   UpdateLayoutRequest,
   UpdateLayoutResult,
-} from "@heyqr/sdk";
+} from "@simplex-packages/heyqr-sdk";
 
 // @ts-expect-error only the public entry point is exported
-import type { QrMode } from "@heyqr/sdk/src/qr-codes";
+import type { QrMode } from "@simplex-packages/heyqr-sdk/src/qr-codes";
 
 /* ── Create a QR ─────────────────────────────────────────────────────────────────────────────────────────────── */
 

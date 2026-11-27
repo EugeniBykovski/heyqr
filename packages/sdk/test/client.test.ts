@@ -11,7 +11,7 @@ import {
   type DownloadExportError,
   type UpdateDestinationError,
   type UpdateLayoutRequest,
-} from "@heyqr/sdk";
+} from "@simplex-packages/heyqr-sdk";
 
 /* HEY-161: the SDK client's one request path, its errors, and where the key may (and may not) appear. */
 const KEY = "hqk_AbCdEfGhIjKl_0123456789abcdefghijklmnopqrstuvwxyzABCDEFG";

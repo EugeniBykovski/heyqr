@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * HEY-167: bundles the `@heyqr/sdk/react` entry (src/react/index.tsx) into dist/react/index.js. HeyQR's renderer
+ * HEY-167: bundles the `@simplex-packages/heyqr-sdk/react` entry (src/react/index.tsx) into dist/react/index.js. HeyQR's renderer
  * (@heyqr/qr-core, a private workspace package) is inlined, so the tarball works without it; React stays external
  * (a peer dependency). The bundle must not contain the server client: checked below. Declarations come from tsc.
  */

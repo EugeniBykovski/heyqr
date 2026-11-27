@@ -2,7 +2,7 @@ import { isHexColor, QrCapacityError, renderQr } from "@heyqr/qr-core";
 import { memo, useEffect, useMemo, type CSSProperties, type ReactNode } from "react";
 
 /*
- * HEY-167 / QR-23.01: `@heyqr/sdk/react`, an embeddable QR preview. It renders locally with HeyQR's own renderer
+ * HEY-167 / QR-23.01: `@simplex-packages/heyqr-sdk/react`, an embeddable QR preview. It renders locally with HeyQR's own renderer
  * (bundled into this entry; nothing is fetched, no API key or account is involved), and never imports the server
  * client. Props are checked before rendering: colours must be hex and shapes come from the renderer's own lists, so
  * nothing a caller passes is written into the SVG markup as text. The value is encoded into modules, never embedded.

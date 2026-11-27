@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import * as browser from "../src/browser";
-import * as server from "@heyqr/sdk";
+import * as server from "@simplex-packages/heyqr-sdk";
 
-/* HEY-168: what a browser bundle gets for "@heyqr/sdk": the same runtime exports, but no API client. */
-describe("@heyqr/sdk in a browser build (HEY-168)", () => {
+/* HEY-168: what a browser bundle gets for "@simplex-packages/heyqr-sdk": the same runtime exports, but no API client. */
+describe("@simplex-packages/heyqr-sdk in a browser build (HEY-168)", () => {
   it("has the same runtime exports as the server entry", () => {
     expect(Object.keys(browser).sort()).toEqual(Object.keys(server).sort());
   });
@@ -17,7 +17,7 @@ describe("@heyqr/sdk in a browser build (HEY-168)", () => {
     }
     expect(error).toBeInstanceOf(server.HeyQrError);
     expect(error).toMatchObject({ name: "HeyQrError", kind: "server_only" });
-    expect(String(error)).toMatch(/server only.*@heyqr\/sdk\/react/);
+    expect(String(error)).toMatch(/server only.*@simplex-packages\/heyqr-sdk\/react/);
     expect(String(error)).not.toContain("hqk_");
   });
 

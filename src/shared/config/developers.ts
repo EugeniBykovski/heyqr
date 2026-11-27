@@ -4,7 +4,7 @@
  */
 export const PACKAGE_RELEASE = {
   qrCore: { name: "@heyqr/qr-core", version: "0.1.0", published: false },
-  sdk: { name: "@heyqr/sdk", version: "0.1.0", published: false },
+  sdk: { name: "@simplex-packages/heyqr-sdk", version: "0.1.0", published: false },
 } as const;
 
 export const npmUrl = (name: string) => `https://www.npmjs.com/package/${name}`;

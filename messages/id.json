@@ -4439,7 +4439,7 @@
         },
         "restSdk": {
           "title": "TypeScript SDK",
-          "lead": "@heyqr/sdk adalah klien bertipe untuk REST API, untuk Node.js 18 dan yang lebih baru. Paket ini tidak merender apa pun: itu tugas @heyqr/qr-core.",
+          "lead": "@simplex-packages/heyqr-sdk adalah klien bertipe untuk REST API, untuk Node.js 18 dan yang lebih baru. Paket ini tidak merender apa pun: itu tugas @heyqr/qr-core.",
           "blocks": [
             {
               "k": "note",
@@ -4462,7 +4462,7 @@
             },
             {
               "k": "p",
-              "t": "`HeyQrClient` memerlukan kunci API, jadi hanya berjalan di server. Di bundle browser, paket ini mengarah ke entri yang `HeyQrClient`-nya melempar `HeyQrError` dengan kind `server_only`. Untuk pratinjau di browser, gunakan `@heyqr/sdk/react`."
+              "t": "`HeyQrClient` memerlukan kunci API, jadi hanya berjalan di server. Di bundle browser, paket ini mengarah ke entri yang `HeyQrClient`-nya melempar `HeyQrError` dengan kind `server_only`. Untuk pratinjau di browser, gunakan `@simplex-packages/heyqr-sdk/react`."
             },
             {
               "k": "code",

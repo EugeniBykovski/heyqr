@@ -1,8 +1,8 @@
 {
-  "name": "@heyqr/sdk",
+  "name": "@simplex-packages/heyqr-sdk",
   "version": "0.1.0",
   "type": "module",
-  "description": "TypeScript client and types for the hosted HeyQR REST API (v1), and an embeddable React QR preview (@heyqr/sdk/react). ESM, Node 18+.",
+  "description": "TypeScript client and types for the hosted HeyQR REST API (v1), and an embeddable React QR preview (@simplex-packages/heyqr-sdk/react). ESM, Node 18+.",
   "license": "UNLICENSED",
   "engines": {
     "node": ">=18"

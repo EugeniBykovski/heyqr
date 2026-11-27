@@ -4382,7 +4382,7 @@
         },
         "restSdk": {
           "title": "TypeScript SDK",
-          "lead": "@heyqr/sdk 是 REST API 的类型化客户端，适用于 Node.js 18 及更高版本。它不负责渲染：渲染由 @heyqr/qr-core 完成。",
+          "lead": "@simplex-packages/heyqr-sdk 是 REST API 的类型化客户端，适用于 Node.js 18 及更高版本。它不负责渲染：渲染由 @heyqr/qr-core 完成。",
           "blocks": [
             {
               "k": "note",
@@ -4405,7 +4405,7 @@
             },
             {
               "k": "p",
-              "t": "`HeyQrClient` 需要 API 密钥，因此只能在服务器上运行。在浏览器打包产物中，该包会解析到另一个入口，其中的 `HeyQrClient` 会抛出 kind 为 `server_only` 的 `HeyQrError`。如需在浏览器中预览，请使用 `@heyqr/sdk/react`。"
+              "t": "`HeyQrClient` 需要 API 密钥，因此只能在服务器上运行。在浏览器打包产物中，该包会解析到另一个入口，其中的 `HeyQrClient` 会抛出 kind 为 `server_only` 的 `HeyQrError`。如需在浏览器中预览，请使用 `@simplex-packages/heyqr-sdk/react`。"
             },
             {
               "k": "code",

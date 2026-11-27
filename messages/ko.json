@@ -4414,7 +4414,7 @@
         },
         "restSdk": {
           "title": "TypeScript SDK",
-          "lead": "@heyqr/sdk는 Node.js 18 이상용 REST API 타입 클라이언트예요. 렌더링은 하지 않아요. 렌더링은 @heyqr/qr-core가 담당해요.",
+          "lead": "@simplex-packages/heyqr-sdk는 Node.js 18 이상용 REST API 타입 클라이언트예요. 렌더링은 하지 않아요. 렌더링은 @heyqr/qr-core가 담당해요.",
           "blocks": [
             {
               "k": "note",
@@ -4437,7 +4437,7 @@
             },
             {
               "k": "p",
-              "t": "`HeyQrClient`는 API 키가 필요하므로 서버에서만 실행돼요. 브라우저 번들에서는 패키지가 `HeyQrClient`가 kind `server_only`인 `HeyQrError`를 던지는 진입점으로 연결돼요. 브라우저 미리보기에는 `@heyqr/sdk/react`를 사용하세요."
+              "t": "`HeyQrClient`는 API 키가 필요하므로 서버에서만 실행돼요. 브라우저 번들에서는 패키지가 `HeyQrClient`가 kind `server_only`인 `HeyQrError`를 던지는 진입점으로 연결돼요. 브라우저 미리보기에는 `@simplex-packages/heyqr-sdk/react`를 사용하세요."
             },
             {
               "k": "code",

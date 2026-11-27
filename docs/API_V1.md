@@ -5,7 +5,7 @@ HEY-155 (create), HEY-156 (read and update a layout), HEY-157 (a Dynamic code's 
 
 Not in v1 yet: changing a code's content (a follow-up ticket).
 
-**TypeScript:** every request, response and error below is typed in [`@heyqr/sdk`](../packages/sdk/README.md)
+**TypeScript:** every request, response and error below is typed in [`@simplex-packages/heyqr-sdk`](../packages/sdk/README.md)
 (HEY-160). Its `HeyQrClient` creates codes, reads layouts and destinations (HEY-161), and updates both from
 their revisions (HEY-162), and downloads PNG and SVG exports, following the signed link (HEY-163). Every call has a timeout,
 can be cancelled, and reports limits and payment errors distinctly (HEY-164).
@@ -50,7 +50,7 @@ Cache-Control: no-store
 { "error": { "code": "rate_limited", "message": "Too many requests for this account. Try again later.", "limit": "api" } }
 ```
 
-`Retry-After` is whole seconds until the window ends. With [`@heyqr/sdk`](../packages/sdk/README.md):
+`Retry-After` is whole seconds until the window ends. With [`@simplex-packages/heyqr-sdk`](../packages/sdk/README.md):
 
 ```ts
 try {
