@@ -334,10 +334,11 @@ export async function restoreQrs(ids: string[]): Promise<ActionResult<{ ids: str
     const user = await requireUser();
     const parsed = idsSchema.safeParse(ids);
     if (!parsed.success) return { ok: false, error: "invalid" };
+    // HEY-199: all or nothing; "limit" and "expired" are told apart so the toast can say why.
     const restored = await restoreQrCodes(db, user.id, parsed.data);
-    if (restored.length === 0) return { ok: false, error: "not_found" };
+    if (!restored.ok) return { ok: false, error: restored.error };
     revalidatePath("/[locale]/dashboard", "layout");
     revalidatePath("/[locale]", "page");
-    return { ok: true, data: { ids: restored } };
+    return { ok: true, data: { ids: restored.ids } };
   });
 }

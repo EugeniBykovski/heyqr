@@ -1789,7 +1789,8 @@
         "leadOne": "すべてのデバイスのマイQRコードから削除されます。",
         "leadMany": "すべてのデバイスのマイQRコードから削除されます。",
         "dynamicTitle": "{count, plural, other {短縮リンクが使えなくなります}}",
-        "dynamicText": "{links}は直ちにリダイレクトを停止します。印刷済みのコードを読み取ると「リンクが無効です」というページが開きます。{count, plural, other {プランの枠が#件}}空きます。",
+        "dynamicText": "{count, plural, other {{links}}}は直ちにリダイレクトを停止します。印刷済みのコードを読み取ると「リンクが無効です」というページが開きます。",
+        "dynamicSlots": "{count, plural, other {プランの枠が#件}}空きます。",
         "staticTitle": "印刷済みのコードは引き続き使えます",
         "staticText": "静的コードは内容をパターン自体に持っているため、印刷済みのコードは引き続き読み取れます。{count, plural, other {この#件の購入}}は今後ダウンロードや編集ができなくなり、削除しても返金はされません。",
         "draftTitle": "{count, plural, other {#件の下書きが削除されます}}",
@@ -1810,7 +1811,7 @@
       "restoredOne": "コードを復元しました。",
       "restoredMany": "{count}件のコードを復元しました。",
       "deleteFailed": "削除できませんでした。もう一度お試しください。",
-      "restoreFailed": "復元できませんでした。元に戻す操作は削除後数分間のみ可能です。",
+      "restoreFailed": "復元できませんでした。もう一度お試しください。",
       "rename": {
         "action": "名前を変更",
         "actionOne": "{name}の名前を変更",
@@ -1820,7 +1821,9 @@
         "saved": "「{name}」に名前を変更しました。",
         "empty": "コードに名前を付けてください。",
         "failed": "名前を変更できませんでした。入力内容はそのまま残っています。もう一度お試しください。"
-      }
+      },
+      "restoreExpired": "元に戻せる時間が過ぎたため、コードは削除されたままです。",
+      "restoreLimit": "何も復元されませんでした。プランの有効な動的コード枠がすべて使用中です。枠を空けてから、もう一度お試しください。"
     },
     "printPack": "Print Pack"
   },

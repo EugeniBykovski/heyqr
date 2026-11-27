@@ -1793,7 +1793,8 @@
         "leadOne": "Ele some de Meus QR codes em todos os dispositivos.",
         "leadMany": "Eles somem de Meus QR codes em todos os dispositivos.",
         "dynamicTitle": "{count, plural, one {O link curto deixa de funcionar} other {Os links curtos deixam de funcionar}}",
-        "dynamicText": "{links} {count, plural, one {deixa} other {deixam}} de redirecionar na hora. As cópias impressas vão abrir uma página de “link inativo”. {count, plural, one {Uma vaga do plano é liberada} other {# vagas do plano são liberadas}}.",
+        "dynamicText": "{links} {count, plural, one {deixa} other {deixam}} de redirecionar na hora. As cópias impressas vão abrir uma página de “link inativo”.",
+        "dynamicSlots": "{count, plural, one {Uma vaga do plano é liberada} other {# vagas do plano são liberadas}}.",
         "staticTitle": "As cópias impressas continuam funcionando",
         "staticText": "Um código estático carrega o conteúdo no próprio padrão, então as cópias impressas continuam sendo lidas. Você não poderá baixar nem editar {count, plural, one {esta compra} other {estas # compras}} novamente, e a exclusão não gera reembolso.",
         "draftTitle": "{count, plural, one {O rascunho é removido} other {# rascunhos são removidos}}",
@@ -1814,7 +1815,7 @@
       "restoredOne": "Código restaurado.",
       "restoredMany": "{count} códigos restaurados.",
       "deleteFailed": "Não foi possível excluir. Tente novamente.",
-      "restoreFailed": "Não foi possível restaurar. É possível desfazer por alguns minutos após a exclusão.",
+      "restoreFailed": "Não foi possível restaurar. Tente de novo.",
       "rename": {
         "action": "Renomear",
         "actionOne": "Renomear {name}",
@@ -1824,7 +1825,9 @@
         "saved": "Renomeado para “{name}”.",
         "empty": "Dê um nome ao código.",
         "failed": "Não conseguimos renomear. Seu texto continua aqui; tente novamente."
-      }
+      },
+      "restoreExpired": "O tempo para desfazer acabou, então os códigos continuam excluídos.",
+      "restoreLimit": "Nada foi restaurado: as vagas de códigos dinâmicos ativos do seu plano estão em uso. Libere uma vaga e tente de novo."
     },
     "printPack": "Print Pack"
   },

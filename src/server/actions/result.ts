@@ -24,7 +24,9 @@ export type ActionResult<T = undefined> =
         // HEY-87: already unlocked (or the Print Pack already bought): nothing to pay, download again instead.
         | "owned"
         // HEY-88: this code's order already has a completed Checkout (payment being confirmed); no second charge.
-        | "processing";
+        | "processing"
+        // HEY-199: Undo came after the restore window; the codes stay deleted.
+        | "expired";
       /** HEY-119: the field the error belongs to, and why (a destination: empty, spaces or invalid). */
       field?: "destination";
       problem?: "empty" | "spaces" | "invalid";

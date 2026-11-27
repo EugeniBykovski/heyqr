@@ -1793,7 +1793,8 @@
         "leadOne": "Kode ini akan hilang dari Kode QR saya di semua perangkat.",
         "leadMany": "Kode-kode ini akan hilang dari Kode QR saya di semua perangkat.",
         "dynamicTitle": "{count, plural, other {Tautan pendek akan berhenti berfungsi}}",
-        "dynamicText": "{links} {count, plural, other {langsung berhenti}} mengalihkan. Salinan cetak akan membuka halaman “tautan tidak aktif”. {count, plural, other {# slot paket}} dikosongkan.",
+        "dynamicText": "{links} {count, plural, other {langsung berhenti}} mengalihkan. Salinan cetak akan membuka halaman “tautan tidak aktif”.",
+        "dynamicSlots": "{count, plural, other {# slot paket}} dikosongkan.",
         "staticTitle": "Salinan cetak tetap berfungsi",
         "staticText": "Kode statis menyimpan kontennya di dalam pola, jadi salinan cetak tetap dapat dipindai. Anda tidak akan bisa mengunduh atau mengedit {count, plural, other {# pembelian ini}} lagi, dan menghapus tidak memberikan pengembalian dana.",
         "draftTitle": "{count, plural, other {# draf dihapus}}",
@@ -1814,7 +1815,7 @@
       "restoredOne": "Kode dipulihkan.",
       "restoredMany": "{count} kode dipulihkan.",
       "deleteFailed": "Tidak dapat menghapus. Coba lagi.",
-      "restoreFailed": "Tidak dapat memulihkannya. Urungkan tersedia selama beberapa menit setelah menghapus.",
+      "restoreFailed": "Tidak bisa memulihkan. Coba lagi.",
       "rename": {
         "action": "Ganti nama",
         "actionOne": "Ganti nama {name}",
@@ -1824,7 +1825,9 @@
         "saved": "Nama diganti menjadi “{name}”.",
         "empty": "Beri nama kode ini.",
         "failed": "Kami tidak dapat mengganti namanya. Teks Anda masih ada di sini; coba lagi."
-      }
+      },
+      "restoreExpired": "Waktu untuk membatalkan sudah habis, jadi kode tetap terhapus.",
+      "restoreLimit": "Tidak ada yang dipulihkan: slot kode dinamis aktif di paket Anda sedang terpakai. Kosongkan satu slot, lalu coba lagi."
     },
     "printPack": "Print Pack"
   },

@@ -33,6 +33,8 @@ export type LibraryItem = {
   printPackLabel?: string;
   meta: string;
   paid: boolean;
+  /** HEY-199: a live Dynamic code using one of the plan's slots, which deleting frees (the delete dialog says so). */
+  holdsSlot?: boolean;
   /** Dynamic codes: the printed short link, named in the delete warning. */
   shortLink?: string;
   labels: { open: string; edit: string; download: string; buy: string };
@@ -87,9 +89,11 @@ export function QrLibraryManager({
 
   const restore = (ids: string[]) =>
     startTransition(async () => {
-      const result = await restoreQrs(ids);
+      const result = await restoreQrs(ids).catch(() => ({ ok: false as const, error: "failed" as const }));
       if (!result.ok) {
-        toast.error(t("restoreFailed"));
+        // HEY-199: all or nothing. Say why, so a person knows whether trying again can help.
+        const key = result.error === "limit" ? "restoreLimit" : result.error === "expired" ? "restoreExpired" : "restoreFailed";
+        toast.error(t(key), { id: "qr-delete" });
         return;
       }
       setHidden((h) => h.filter((id) => !ids.includes(id)));
@@ -135,6 +139,7 @@ export function QrLibraryManager({
   const dynamicPaid = toDelete.filter((i) => i.model === "dynamic" && i.paid);
   const staticPaid = toDelete.filter((i) => i.model === "static" && i.paid);
   const drafts = toDelete.filter((i) => !i.paid);
+  const slots = toDelete.filter((i) => i.holdsSlot).length;
 
   return (
     <div>
@@ -232,6 +237,7 @@ export function QrLibraryManager({
             {dynamicPaid.length ? (
               <Consequence warn title={t("dialog.dynamicTitle", { count: dynamicPaid.length })}>
                 {t("dialog.dynamicText", { count: dynamicPaid.length, links: dynamicPaid.map((i) => i.shortLink ?? i.name).join(", ") })}
+                {slots > 0 ? ` ${t("dialog.dynamicSlots", { count: slots })}` : null}
               </Consequence>
             ) : null}
             {staticPaid.length ? (

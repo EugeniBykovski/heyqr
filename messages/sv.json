@@ -1789,7 +1789,8 @@
         "leadOne": "Den försvinner från Mina QR-koder på alla enheter.",
         "leadMany": "De försvinner från Mina QR-koder på alla enheter.",
         "dynamicTitle": "{count, plural, one {Dess kortlänk slutar fungera} other {Deras kortlänkar slutar fungera}}",
-        "dynamicText": "{links} slutar skicka vidare direkt. Tryckta exemplar öppnar en sida om att länken inte är aktiv. {count, plural, one {En plats i planen} other {# platser i planen}} frigörs.",
+        "dynamicText": "{count, plural, other {{links}}} slutar skicka vidare direkt. Tryckta exemplar öppnar en sida om att länken inte är aktiv.",
+        "dynamicSlots": "{count, plural, one {En plats i planen} other {# platser i planen}} frigörs.",
         "staticTitle": "Tryckta exemplar fortsätter att fungera",
         "staticText": "En statisk kod bär sitt innehåll i mönstret, så tryckta exemplar går fortfarande att skanna. Du kommer inte att kunna ladda ner eller redigera {count, plural, one {det här köpet} other {de här # köpen}} igen, och radering ger ingen återbetalning.",
         "draftTitle": "{count, plural, one {Utkastet tas bort} other {# utkast tas bort}}",
@@ -1810,7 +1811,7 @@
       "restoredOne": "Koden har återställts.",
       "restoredMany": "{count} koder har återställts.",
       "deleteFailed": "Det gick inte att radera. Försök igen.",
-      "restoreFailed": "Det gick inte att återställa. Ångra är tillgängligt i några minuter efter raderingen.",
+      "restoreFailed": "Det gick inte att återställa. Försök igen.",
       "rename": {
         "action": "Byt namn",
         "actionOne": "Byt namn på {name}",
@@ -1820,7 +1821,9 @@
         "saved": "Namnet har ändrats till ”{name}”.",
         "empty": "Ge koden ett namn.",
         "failed": "Vi kunde inte byta namn. Din text finns kvar; försök igen."
-      }
+      },
+      "restoreExpired": "Ångra har gått ut, så koderna förblir raderade.",
+      "restoreLimit": "Inget återställdes: platserna för aktiva dynamiska koder i ditt abonnemang är upptagna. Frigör en plats och försök igen."
     },
     "printPack": "Print Pack"
   },

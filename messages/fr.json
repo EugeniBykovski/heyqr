@@ -1793,7 +1793,8 @@
         "leadOne": "Il disparaît de Mes QR codes sur tous les appareils.",
         "leadMany": "Ils disparaissent de Mes QR codes sur tous les appareils.",
         "dynamicTitle": "{count, plural, one {Son lien court cesse de fonctionner} other {Leurs liens courts cessent de fonctionner}}",
-        "dynamicText": "{links} {count, plural, one {cesse} other {cessent}} de rediriger immédiatement. Les exemplaires imprimés ouvriront une page « lien inactif ». {count, plural, one {Un emplacement du forfait est libéré} other {# emplacements du forfait sont libérés}}.",
+        "dynamicText": "{links} {count, plural, one {cesse} other {cessent}} de rediriger immédiatement. Les exemplaires imprimés ouvriront une page « lien inactif ».",
+        "dynamicSlots": "{count, plural, one {Un emplacement du forfait est libéré} other {# emplacements du forfait sont libérés}}.",
         "staticTitle": "Les exemplaires imprimés continuent de fonctionner",
         "staticText": "Un code statique contient son contenu dans son motif : les exemplaires imprimés restent donc scannables. Vous ne pourrez plus télécharger ni modifier {count, plural, one {cet achat} other {ces # achats}}, et la suppression n’entraîne aucun remboursement.",
         "draftTitle": "{count, plural, one {Le brouillon est supprimé} other {# brouillons sont supprimés}}",
@@ -1814,7 +1815,7 @@
       "restoredOne": "Code restauré.",
       "restoredMany": "{count} codes restaurés.",
       "deleteFailed": "Suppression impossible. Réessayez.",
-      "restoreFailed": "Restauration impossible. L’annulation reste possible quelques minutes après la suppression.",
+      "restoreFailed": "Restauration impossible. Réessayez.",
       "rename": {
         "action": "Renommer",
         "actionOne": "Renommer {name}",
@@ -1824,7 +1825,9 @@
         "saved": "Renommé en « {name} ».",
         "empty": "Donnez un nom au code.",
         "failed": "Impossible de le renommer. Votre texte est toujours là ; réessayez."
-      }
+      },
+      "restoreExpired": "Le délai d’annulation est dépassé : les codes restent supprimés.",
+      "restoreLimit": "Rien n’a été restauré : les emplacements de codes dynamiques actifs de votre forfait sont occupés. Libérez-en un, puis réessayez."
     },
     "printPack": "Print Pack"
   },

@@ -1793,7 +1793,8 @@
         "leadOne": "Desaparece de Mis códigos QR en todos los dispositivos.",
         "leadMany": "Desaparecen de Mis códigos QR en todos los dispositivos.",
         "dynamicTitle": "{count, plural, one {Su enlace corto deja de funcionar} other {Sus enlaces cortos dejan de funcionar}}",
-        "dynamicText": "{links} {count, plural, one {deja} other {dejan}} de redirigir al instante. Las copias impresas abrirán una página de “enlace no activo”. {count, plural, one {Se libera un espacio del plan} other {Se liberan # espacios del plan}}.",
+        "dynamicText": "{links} {count, plural, one {deja} other {dejan}} de redirigir al instante. Las copias impresas abrirán una página de “enlace no activo”.",
+        "dynamicSlots": "{count, plural, one {Se libera un espacio del plan} other {Se liberan # espacios del plan}}.",
         "staticTitle": "Las copias impresas siguen funcionando",
         "staticText": "Un código estático lleva su contenido en el patrón, así que las copias impresas se siguen escaneando. No podrás volver a descargar ni editar {count, plural, one {esta compra} other {estas # compras}}, y eliminar no implica un reembolso.",
         "draftTitle": "{count, plural, one {Se elimina el borrador} other {Se eliminan # borradores}}",
@@ -1814,7 +1815,7 @@
       "restoredOne": "Código restaurado.",
       "restoredMany": "Se restauraron {count} códigos.",
       "deleteFailed": "No se pudo eliminar. Inténtalo de nuevo.",
-      "restoreFailed": "No se pudo restaurar. Puedes deshacer durante unos minutos después de eliminar.",
+      "restoreFailed": "No se pudo restaurar. Inténtalo de nuevo.",
       "rename": {
         "action": "Cambiar nombre",
         "actionOne": "Cambiar nombre de {name}",
@@ -1824,7 +1825,9 @@
         "saved": "Nombre cambiado a “{name}”.",
         "empty": "Ponle un nombre al código.",
         "failed": "No pudimos cambiar el nombre. Tu texto sigue aquí; inténtalo de nuevo."
-      }
+      },
+      "restoreExpired": "El tiempo para deshacer ha pasado, así que los códigos siguen eliminados.",
+      "restoreLimit": "No se restauró nada: los espacios de códigos dinámicos activos de tu plan están ocupados. Libera uno e inténtalo de nuevo."
     },
     "printPack": "Print Pack"
   },

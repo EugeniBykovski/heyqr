@@ -1789,7 +1789,8 @@
         "leadOne": "Scompare da I miei codici QR su tutti i dispositivi.",
         "leadMany": "Scompaiono da I miei codici QR su tutti i dispositivi.",
         "dynamicTitle": "{count, plural, one {Il suo link breve smette di funzionare} other {I loro link brevi smettono di funzionare}}",
-        "dynamicText": "{links} {count, plural, one {smette} other {smettono}} subito di reindirizzare. Le copie stampate apriranno una pagina “link non attivo”. {count, plural, one {Si libera un posto del piano} other {Si liberano # posti del piano}}.",
+        "dynamicText": "{links} {count, plural, one {smette} other {smettono}} subito di reindirizzare. Le copie stampate apriranno una pagina “link non attivo”.",
+        "dynamicSlots": "{count, plural, one {Si libera un posto del piano} other {Si liberano # posti del piano}}.",
         "staticTitle": "Le copie stampate continuano a funzionare",
         "staticText": "Un codice statico contiene il suo contenuto nel motivo, quindi le copie stampate restano leggibili. Non potrai più scaricare né modificare {count, plural, one {questo acquisto} other {questi # acquisti}} e l’eliminazione non prevede rimborso.",
         "draftTitle": "{count, plural, one {La bozza viene rimossa} other {Vengono rimosse # bozze}}",
@@ -1810,7 +1811,7 @@
       "restoredOne": "Codice ripristinato.",
       "restoredMany": "{count} codici ripristinati.",
       "deleteFailed": "Impossibile eliminare. Riprova.",
-      "restoreFailed": "Impossibile ripristinarlo. L’annullamento è disponibile per qualche minuto dopo l’eliminazione.",
+      "restoreFailed": "Impossibile ripristinare. Riprova.",
       "rename": {
         "action": "Rinomina",
         "actionOne": "Rinomina {name}",
@@ -1820,7 +1821,9 @@
         "saved": "Rinominato in “{name}”.",
         "empty": "Dai un nome al codice.",
         "failed": "Non siamo riusciti a rinominarlo. Il testo è ancora qui; riprova."
-      }
+      },
+      "restoreExpired": "Il tempo per annullare è scaduto, quindi i codici restano eliminati.",
+      "restoreLimit": "Non è stato ripristinato nulla: gli slot per i codici dinamici attivi del tuo piano sono occupati. Liberane uno e riprova."
     },
     "printPack": "Print Pack"
   },

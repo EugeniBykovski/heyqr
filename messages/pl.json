@@ -1793,7 +1793,8 @@
         "leadOne": "Zniknie z Moich kodów QR na wszystkich urządzeniach.",
         "leadMany": "Znikną z Moich kodów QR na wszystkich urządzeniach.",
         "dynamicTitle": "{count, plural, one {Jego krótki link przestanie działać} few {Ich krótkie linki przestaną działać} many {Ich krótkie linki przestaną działać} other {Ich krótkie linki przestaną działać}}",
-        "dynamicText": "{links} od razu {count, plural, one {przestaje} few {przestają} many {przestają} other {przestają}} przekierowywać. Wydrukowane kopie otworzą stronę „link nieaktywny”. {count, plural, one {Zwolni się jeden slot planu} few {Zwolnią się # sloty planu} many {Zwolni się # slotów planu} other {Zwolni się # slotu planu}}.",
+        "dynamicText": "{links} od razu {count, plural, one {przestaje} few {przestają} many {przestają} other {przestają}} przekierowywać. Wydrukowane kopie otworzą stronę „link nieaktywny”.",
+        "dynamicSlots": "{count, plural, one {Zwolni się jeden slot planu} few {Zwolnią się # sloty planu} many {Zwolni się # slotów planu} other {Zwolni się # slotu planu}}.",
         "staticTitle": "Wydrukowane kopie nadal działają",
         "staticText": "Kod statyczny przechowuje treść we wzorze, więc wydrukowane kopie nadal się skanują. Nie będzie można już pobrać ani edytować {count, plural, one {tego zakupu} few {tych # zakupów} many {tych # zakupów} other {tych # zakupu}}, a usunięcie nie oznacza zwrotu pieniędzy.",
         "draftTitle": "{count, plural, one {Szkic zostanie usunięty} few {# szkice zostaną usunięte} many {# szkiców zostanie usuniętych} other {# szkicu zostanie usunięte}}",
@@ -1814,7 +1815,7 @@
       "restoredOne": "Kod przywrócony.",
       "restoredMany": "Przywrócono kody: {count}.",
       "deleteFailed": "Nie udało się usunąć. Spróbuj ponownie.",
-      "restoreFailed": "Nie udało się przywrócić. Cofnięcie jest dostępne przez kilka minut po usunięciu.",
+      "restoreFailed": "Nie udało się przywrócić. Spróbuj ponownie.",
       "rename": {
         "action": "Zmień nazwę",
         "actionOne": "Zmień nazwę {name}",
@@ -1824,7 +1825,9 @@
         "saved": "Zmieniono nazwę na „{name}”.",
         "empty": "Nadaj kodowi nazwę.",
         "failed": "Nie udało się zmienić nazwy. Twój tekst nadal tu jest; spróbuj ponownie."
-      }
+      },
+      "restoreExpired": "Czas na cofnięcie minął, więc kody pozostają usunięte.",
+      "restoreLimit": "Nic nie zostało przywrócone: miejsca na aktywne kody dynamiczne w Twoim planie są zajęte. Zwolnij jedno i spróbuj ponownie."
     },
     "printPack": "Print Pack"
   },
