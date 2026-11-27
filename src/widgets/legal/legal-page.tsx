@@ -1,4 +1,3 @@
-import { TriangleAlertIcon } from "lucide-react";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { placeholders, type LegalBlock, type LegalDocument } from "@/shared/content/legal/types";
 
@@ -40,9 +39,9 @@ async function Block({ block }: { block: LegalBlock }) {
 }
 
 /**
- * HEY-193 Terms / Privacy: a readable single column with a draft banner (the text isn't approved yet), the last-updated
- * date, "On this page" section links and anchorable sections. The policy text is English only for now: other
- * languages say so and mark the text as English (lang="en") so screen readers read it correctly.
+ * HEY-193 Terms / Privacy: a readable single column with the last-updated date, "On this page" section links and
+ * anchorable sections (HEY-187: no draft banner). The policy text is English only for now: other languages say so and
+ * mark the text as English (lang="en") so screen readers read it correctly.
  */
 export async function LegalPage({ doc, locale }: { doc: LegalDocument; locale: string }) {
   const t = await getTranslations("legal");
@@ -53,13 +52,6 @@ export async function LegalPage({ doc, locale }: { doc: LegalDocument; locale: s
     <div className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6 lg:py-14">
       <div className="flex flex-col gap-8 lg:grid lg:grid-cols-[14rem_minmax(0,1fr)] lg:items-start lg:gap-12">
         <header className="flex flex-col gap-4 lg:col-span-2">
-          <div
-            role="note"
-            className="flex items-start gap-2.5 rounded-lg border border-warning bg-warning-soft px-4 py-3 text-caption text-warning"
-          >
-            <TriangleAlertIcon aria-hidden className="mt-0.5 size-4 shrink-0" />
-            <span>{t("draft")}</span>
-          </div>
           <h1 className="text-h1 text-balance">{t(`${doc.id}.title`)}</h1>
           <p className="text-caption text-muted-foreground">
             {t("updated", { date: updated })} · {t("effectiveNote")}
