@@ -21,6 +21,7 @@ import { renameQrCode } from "../qr/rename-qr";
 import { changeDestination, destinationHistory } from "../qr/destination";
 import { assignShortCode, SHORT_CODE_ATTEMPTS, ShortCodeExhaustedError } from "../qr/short-code";
 import { saveQrWithLayouts } from "../qr/save-qr";
+import { filesReadyCount, firstScanDay } from "../qr/studio-files";
 import { addLayoutFrom, copyLayout, layoutRevision, removeLayout, updateLayoutDesign, type PrepareRecord } from "../qr/update-layout";
 import { activateTrialCode, startTrial, trialCode, trialCovers, trialPhase } from "../billing/trial";
 import { pauseDynamicCode, resumeDynamicCode } from "../billing/pause";
@@ -8333,5 +8334,66 @@ describe.skipIf(!url)("caption font coverage on save (HEY-181, real PostgreSQL)"
     expect(JSON.stringify(refused)).toContain("扫 码");
     expect(Number((await pool.query("select count(*)::int as n from qr_code where user_id = $1", [u.id])).rows[0].n)).toBe(0);
     expect(await createQrForOwner(db, u.id, body("Меню · Menu"))).toMatchObject({ ok: true });
+  });
+});
+
+/*
+ * HEY-198: "Your studio" counts on the signed-in home are the account's own. "Files ready" used to read
+ * (owned and paid static) or (any active Dynamic), so every account's active Dynamic layouts were counted.
+ */
+describe.skipIf(!url)("Your studio: files ready and scan history are owner-scoped (HEY-198, real PostgreSQL)", () => {
+  let pool: Pool;
+  let db: ReturnType<typeof drizzle<typeof schema>>;
+  const owner = { id: "studio-owner", name: "Owner", email: "owner@studio.test" };
+  const other = { id: "studio-other", name: "Other", email: "other@studio.test" };
+  const layouts = [
+    { name: "Card", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) },
+    { name: "Poster", layout: designToLayout(DEFAULT_DESIGN), editor: designSettingsOf(DEFAULT_DESIGN) },
+  ];
+  const save = async (userId: string, name: string, model: "static" | "dynamic") => {
+    const saved = await saveQrWithLayouts(db, userId, {
+      name,
+      model,
+      content: { type: "website", url: "https://studio.example.test" },
+      ...(model === "dynamic" ? { destination: "https://studio.example.test" } : {}),
+      layouts,
+    });
+    if (!saved.ok) throw new Error("save failed");
+    return saved.data.qrCodeId;
+  };
+
+  beforeAll(async () => {
+    pool = new Pool({ connectionString: url, max: 4 });
+    db = drizzle(pool, { schema, casing: "snake_case" });
+    await db.insert(schema.user).values([owner, other]).onConflictDoNothing();
+    const paid = await save(owner.id, "Paid static", "static");
+    await save(owner.id, "Draft static", "static");
+    const live = await save(owner.id, "Live dynamic", "dynamic");
+    const otherLive = await save(other.id, "Other live", "dynamic");
+    await db.update(schema.qrCode).set({ purchasedAt: new Date() }).where(eq(schema.qrCode.id, paid));
+    await db.update(schema.qrCode).set({ status: "active", shortCode: "studlive" }).where(eq(schema.qrCode.id, live));
+    await db.update(schema.qrCode).set({ status: "active", shortCode: "studothr" }).where(eq(schema.qrCode.id, otherLive));
+    await db.insert(schema.scanDaily).values([
+      { qrCodeId: live, day: "2026-10-30", count: 3 },
+      { qrCodeId: live, day: "2026-11-20", count: 2 },
+      { qrCodeId: otherLive, day: "2026-09-01", count: 9 },
+    ]);
+  });
+  afterAll(async () => {
+    await db?.delete(schema.user).where(inArray(schema.user.id, [owner.id, other.id]));
+    await pool?.end();
+  });
+
+  it("counts only this account's paid static and active Dynamic layouts", async () => {
+    // Owner: paid static (2 layouts) + live Dynamic (2); the draft static and the other account's live code don't count.
+    expect(await filesReadyCount(db, owner.id)).toBe(4);
+    expect(await filesReadyCount(db, other.id)).toBe(2);
+    expect(await filesReadyCount(db, "studio-nobody")).toBe(0);
+  });
+
+  it("the scan history starts at the account's own first scan, as a YYYY-MM-DD string", async () => {
+    expect(await firstScanDay(db, owner.id)).toBe("2026-10-30");
+    expect(await firstScanDay(db, other.id)).toBe("2026-09-01");
+    expect(await firstScanDay(db, "studio-nobody")).toBeNull();
   });
 });
