@@ -2907,8 +2907,18 @@
             },
             {
               "k": "h2",
+              "id": "sdk",
+              "t": "TypeScript SDK"
+            },
+            {
+              "k": "install",
+              "package": "sdk",
+              "quickstart": "Швидкий старт"
+            },
+            {
+              "k": "h2",
               "id": "what",
-              "t": "Що можна створити"
+              "t": "@heyqr/qr-core: Що можна створити"
             },
             {
               "k": "list",
@@ -2922,7 +2932,7 @@
             {
               "k": "h2",
               "id": "entries",
-              "t": "Точки входу"
+              "t": "@heyqr/qr-core: Точки входу"
             },
             {
               "k": "p",

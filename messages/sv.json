@@ -2907,8 +2907,18 @@
             },
             {
               "k": "h2",
+              "id": "sdk",
+              "t": "TypeScript SDK"
+            },
+            {
+              "k": "install",
+              "package": "sdk",
+              "quickstart": "Snabbstart"
+            },
+            {
+              "k": "h2",
               "id": "what",
-              "t": "Vad du kan bygga"
+              "t": "@heyqr/qr-core: Vad du kan bygga"
             },
             {
               "k": "list",
@@ -2922,7 +2932,7 @@
             {
               "k": "h2",
               "id": "entries",
-              "t": "Ingångspunkter"
+              "t": "@heyqr/qr-core: Ingångspunkter"
             },
             {
               "k": "p",

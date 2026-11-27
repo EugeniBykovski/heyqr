@@ -2907,8 +2907,18 @@
             },
             {
               "k": "h2",
+              "id": "sdk",
+              "t": "TypeScript SDK"
+            },
+            {
+              "k": "install",
+              "package": "sdk",
+              "quickstart": "Snelstart"
+            },
+            {
+              "k": "h2",
               "id": "what",
-              "t": "Wat je kunt bouwen"
+              "t": "@heyqr/qr-core: Wat je kunt bouwen"
             },
             {
               "k": "list",
@@ -2922,7 +2932,7 @@
             {
               "k": "h2",
               "id": "entries",
-              "t": "Entry points"
+              "t": "@heyqr/qr-core: Entry points"
             },
             {
               "k": "p",

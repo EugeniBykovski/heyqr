@@ -2907,8 +2907,18 @@
             },
             {
               "k": "h2",
+              "id": "sdk",
+              "t": "TypeScript SDK"
+            },
+            {
+              "k": "install",
+              "package": "sdk",
+              "quickstart": "クイックスタート"
+            },
+            {
+              "k": "h2",
               "id": "what",
-              "t": "作れるもの"
+              "t": "@heyqr/qr-core: 作れるもの"
             },
             {
               "k": "list",
@@ -2922,7 +2932,7 @@
             {
               "k": "h2",
               "id": "entries",
-              "t": "エントリーポイント"
+              "t": "@heyqr/qr-core: エントリーポイント"
             },
             {
               "k": "p",

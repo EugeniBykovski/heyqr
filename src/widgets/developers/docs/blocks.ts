@@ -19,7 +19,7 @@ export type Block =
   | { k: "cards"; items: { page: string; title: string; t: string; icon: string }[] }
   | { k: "faq"; items: { q: string; a: string }[] }
   | { k: "endpoint"; method: string; url: string }
-  | { k: "install"; package: "qrCore" | "sdk" }
+  | { k: "install"; package: "qrCore" | "sdk"; quickstart?: string }
   | { k: "products" }
   /** HEY-187: links to other docs pages, each with its own title and lead (`pages` are page ids, not copy). */
   | { k: "pages"; pages: string[] };

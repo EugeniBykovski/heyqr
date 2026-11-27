@@ -2899,8 +2899,18 @@
             },
             {
               "k": "h2",
+              "id": "sdk",
+              "t": "TypeScript SDK"
+            },
+            {
+              "k": "install",
+              "package": "sdk",
+              "quickstart": "क्विकस्टार्ट"
+            },
+            {
+              "k": "h2",
               "id": "what",
-              "t": "आप क्या बना सकते हैं"
+              "t": "@heyqr/qr-core: आप क्या बना सकते हैं"
             },
             {
               "k": "list",
@@ -2914,7 +2924,7 @@
             {
               "k": "h2",
               "id": "entries",
-              "t": "एंट्री पॉइंट"
+              "t": "@heyqr/qr-core: एंट्री पॉइंट"
             },
             {
               "k": "p",

@@ -2899,8 +2899,18 @@
             },
             {
               "k": "h2",
+              "id": "sdk",
+              "t": "TypeScript SDK"
+            },
+            {
+              "k": "install",
+              "package": "sdk",
+              "quickstart": "빠른 시작"
+            },
+            {
+              "k": "h2",
               "id": "what",
-              "t": "만들 수 있는 것"
+              "t": "@heyqr/qr-core: 만들 수 있는 것"
             },
             {
               "k": "list",
@@ -2914,7 +2924,7 @@
             {
               "k": "h2",
               "id": "entries",
-              "t": "진입점"
+              "t": "@heyqr/qr-core: 진입점"
             },
             {
               "k": "p",

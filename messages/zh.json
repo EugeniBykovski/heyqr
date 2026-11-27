@@ -2894,8 +2894,18 @@
             },
             {
               "k": "h2",
+              "id": "sdk",
+              "t": "TypeScript SDK"
+            },
+            {
+              "k": "install",
+              "package": "sdk",
+              "quickstart": "快速入门"
+            },
+            {
+              "k": "h2",
               "id": "what",
-              "t": "你可以构建什么"
+              "t": "@heyqr/qr-core: 你可以构建什么"
             },
             {
               "k": "list",
@@ -2909,7 +2919,7 @@
             {
               "k": "h2",
               "id": "entries",
-              "t": "入口"
+              "t": "@heyqr/qr-core: 入口"
             },
             {
               "k": "p",
