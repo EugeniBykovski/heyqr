@@ -802,7 +802,12 @@
       "preset": "フレーム{frame}、コード{code}、背景{bg}",
       "white": "ホワイト",
       "graphite": "グラファイト",
-      "violetUi": "バイオレット"
+      "violetUi": "バイオレット",
+      "position": "位置",
+      "positions": {
+        "frame": "フレーム上",
+        "inside": "コードの中"
+      }
     },
     "typeStep": {
       "title": "このコードで何を開きますか？",
@@ -1154,8 +1159,8 @@
     "captionGroup": {
       "position": "位置",
       "positions": {
-        "below": "下",
-        "above": "上",
+        "below": "コードの下",
+        "above": "コードの上",
         "inside": "コードの中"
       },
       "insideHint": "短いテキストがコード中央のプレートに表示されます。隠れる部分が多すぎる場合は、スキャンチェックで短くするよう案内されます。",
@@ -1163,7 +1168,11 @@
       "frameNote": "フレームのテキストは「フレーム」で設定します。",
       "toLayout": "QR＋キャプションを使う",
       "color": "キャプションの色",
-      "insideShortened": "コードの中には{max}文字分のスペースしかないため、「{shown}」と表示されます。キャプションを短くするか、コードの下または上に配置してください。"
+      "insideShortened": "コードの中には{max}文字分のスペースしかないため、「{shown}」と表示されます。キャプションを短くするか、コードの下または上に配置してください。",
+      "positionsHorizontal": {
+        "below": "コードの右",
+        "above": "コードの左"
+      }
     },
     "stage": {
       "history": "履歴",

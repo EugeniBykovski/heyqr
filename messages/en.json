@@ -798,7 +798,12 @@
       "preset": "Frame {frame}, code {code}, background {bg}",
       "white": "White",
       "graphite": "Graphite",
-      "violetUi": "Violet"
+      "violetUi": "Violet",
+      "position": "Position",
+      "positions": {
+        "frame": "On the frame",
+        "inside": "In the code"
+      }
     },
     "typeStep": {
       "title": "What should your code open?",
@@ -1150,8 +1155,8 @@
     "captionGroup": {
       "position": "Position",
       "positions": {
-        "below": "Below",
-        "above": "Above",
+        "below": "Below code",
+        "above": "Above code",
         "inside": "In the code"
       },
       "insideHint": "Short text sits on a plate in the middle of the code. The scan check asks you to shorten it if it hides too much.",
@@ -1159,7 +1164,11 @@
       "frameNote": "The frame’s text is set in Frame.",
       "toLayout": "Use QR + caption",
       "color": "Caption color",
-      "insideShortened": "Inside the code there is room for {max} characters, so it shows “{shown}”. Shorten the caption, or place it below or above the code."
+      "insideShortened": "Inside the code there is room for {max} characters, so it shows “{shown}”. Shorten the caption, or place it below or above the code.",
+      "positionsHorizontal": {
+        "below": "Right of code",
+        "above": "Left of code"
+      }
     },
     "stage": {
       "history": "History",

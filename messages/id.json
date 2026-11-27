@@ -806,7 +806,12 @@
       "preset": "Bingkai {frame}, kode {code}, latar belakang {bg}",
       "white": "Putih",
       "graphite": "Grafit",
-      "violetUi": "Ungu"
+      "violetUi": "Ungu",
+      "position": "Posisi",
+      "positions": {
+        "frame": "Di bingkai",
+        "inside": "Di dalam kode"
+      }
     },
     "typeStep": {
       "title": "Apa yang harus dibuka kode Anda?",
@@ -1158,8 +1163,8 @@
     "captionGroup": {
       "position": "Posisi",
       "positions": {
-        "below": "Di bawah",
-        "above": "Di atas",
+        "below": "Di bawah kode",
+        "above": "Di atas kode",
         "inside": "Di dalam kode"
       },
       "insideHint": "Teks pendek berada di atas alas di tengah kode. Pemeriksaan pindai meminta Anda mempersingkatnya jika menutupi terlalu banyak.",
@@ -1167,7 +1172,11 @@
       "frameNote": "Teks bingkai diatur di Bingkai.",
       "toLayout": "Gunakan QR + keterangan",
       "color": "Warna keterangan",
-      "insideShortened": "Di dalam kode ada ruang untuk {max} karakter, jadi yang tampil “{shown}”. Persingkat keterangan, atau letakkan di bawah atau di atas kode."
+      "insideShortened": "Di dalam kode ada ruang untuk {max} karakter, jadi yang tampil “{shown}”. Persingkat keterangan, atau letakkan di bawah atau di atas kode.",
+      "positionsHorizontal": {
+        "below": "Di kanan kode",
+        "above": "Di kiri kode"
+      }
     },
     "stage": {
       "history": "Riwayat",

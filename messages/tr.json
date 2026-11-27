@@ -806,7 +806,12 @@
       "preset": "Çerçeve {frame}, kod {code}, arka plan {bg}",
       "white": "Beyaz",
       "graphite": "Grafit",
-      "violetUi": "Mor"
+      "violetUi": "Mor",
+      "position": "Konum",
+      "positions": {
+        "frame": "Çerçevede",
+        "inside": "Kodun içinde"
+      }
     },
     "typeStep": {
       "title": "Kodunuz neyi açmalı?",
@@ -1158,8 +1163,8 @@
     "captionGroup": {
       "position": "Konum",
       "positions": {
-        "below": "Altta",
-        "above": "Üstte",
+        "below": "Kodun altında",
+        "above": "Kodun üstünde",
         "inside": "Kodun içinde"
       },
       "insideHint": "Kısa metin, kodun ortasında bir plaka üzerinde durur. Çok fazla alanı gizlerse tarama kontrolü kısaltmanızı ister.",
@@ -1167,7 +1172,11 @@
       "frameNote": "Çerçevenin metni Çerçeve bölümünde ayarlanır.",
       "toLayout": "QR + alt yazı kullan",
       "color": "Alt yazı rengi",
-      "insideShortened": "Kodun içinde {max} karakterlik yer var, bu yüzden “{shown}” gösteriliyor. Alt yazıyı kısaltın veya kodun altına ya da üstüne yerleştirin."
+      "insideShortened": "Kodun içinde {max} karakterlik yer var, bu yüzden “{shown}” gösteriliyor. Alt yazıyı kısaltın veya kodun altına ya da üstüne yerleştirin.",
+      "positionsHorizontal": {
+        "below": "Kodun sağında",
+        "above": "Kodun solunda"
+      }
     },
     "stage": {
       "history": "Geçmiş",

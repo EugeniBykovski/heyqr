@@ -802,7 +802,12 @@
       "preset": "Rahmen {frame}, Code {code}, Hintergrund {bg}",
       "white": "Weiß",
       "graphite": "Graphit",
-      "violetUi": "Violett"
+      "violetUi": "Violett",
+      "position": "Position",
+      "positions": {
+        "frame": "Auf dem Rahmen",
+        "inside": "Im Code"
+      }
     },
     "typeStep": {
       "title": "Was soll dein Code öffnen?",
@@ -1154,8 +1159,8 @@
     "captionGroup": {
       "position": "Position",
       "positions": {
-        "below": "Unten",
-        "above": "Oben",
+        "below": "Unter dem Code",
+        "above": "Über dem Code",
         "inside": "Im Code"
       },
       "insideHint": "Kurzer Text sitzt auf einer Fläche in der Mitte des Codes. Der Scan-Check bittet dich, ihn zu kürzen, wenn er zu viel verdeckt.",
@@ -1163,7 +1168,11 @@
       "frameNote": "Den Rahmentext legst du unter Rahmen fest.",
       "toLayout": "„QR + Beschriftung“ verwenden",
       "color": "Farbe der Beschriftung",
-      "insideShortened": "Im Code ist Platz für {max} Zeichen, daher wird „{shown}“ angezeigt. Kürze die Beschriftung oder setze sie unter oder über den Code."
+      "insideShortened": "Im Code ist Platz für {max} Zeichen, daher wird „{shown}“ angezeigt. Kürze die Beschriftung oder setze sie unter oder über den Code.",
+      "positionsHorizontal": {
+        "below": "Rechts vom Code",
+        "above": "Links vom Code"
+      }
     },
     "stage": {
       "history": "Verlauf",

@@ -14,6 +14,7 @@ import {
   EYE_BALL_SHAPES,
   EYE_FRAME_SHAPES,
   FRAME_STYLES,
+  FRAME_TEXT_POSITIONS,
   MODULE_SHAPES,
   type EditorDesign,
 } from "./design";
@@ -74,6 +75,8 @@ export const designSettingsSchema = z.object({
   frameColor: hex.optional(),
   frameTextColor: hex.optional(),
   captionPosition: oneOf(CAPTION_POSITIONS).optional(),
+  // Optional (HEY-194): frames saved before it have no position and keep their text on the frame.
+  frameTextPosition: oneOf(FRAME_TEXT_POSITIONS).optional(),
   logoTile: z.boolean().optional(),
   border: z.boolean().optional(),
   logoPosition: z.enum(["center", "top"]).optional(),
@@ -230,6 +233,7 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     frameColor,
     frameTextColor,
     captionPosition,
+    frameTextPosition,
     logoTile,
     border,
     logoPosition,
@@ -263,6 +267,7 @@ export function designSettingsOf(design: EditorDesign): DesignSettings {
     ...(frameColor === undefined ? {} : { frameColor }),
     ...(frameTextColor === undefined ? {} : { frameTextColor }),
     ...(captionPosition === undefined ? {} : { captionPosition }),
+    ...(frameTextPosition === undefined ? {} : { frameTextPosition }),
     ...(logoTile === undefined ? {} : { logoTile }),
     ...(border === undefined ? {} : { border }),
     ...(logoPosition === undefined ? {} : { logoPosition }),

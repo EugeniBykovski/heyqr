@@ -29,6 +29,7 @@ import {
   FRAME_PHRASES,
   FRAME_STYLES,
   FRAME_TEXT_MAX,
+  FRAME_TEXT_POSITIONS,
   hasCaptionBand,
   LOGO_PLATES,
   MODULE_SHAPES,
@@ -424,6 +425,17 @@ function FrameGroup({ design, onChange, value }: GroupProps) {
               {tf("textHint")}
             </p>
           </div>
+          {/* Design 1.16 for frames: the text on the frame or in the code (the frame then has no label band). */}
+          <div className="flex min-w-0 flex-col gap-1.5">
+            <span className="text-label">{tf("position")}</span>
+            <Segmented
+              label={tf("position")}
+              value={design.frameTextPosition ?? "frame"}
+              options={FRAME_TEXT_POSITIONS.map((p) => ({ value: p, label: tf(`positions.${p}`) }))}
+              onChange={(frameTextPosition) => onChange({ frameTextPosition })}
+            />
+          </div>
+          {design.frameTextPosition === "inside" ? <InsideNote text={design.caption} /> : null}
           <Section title={tf("quick")}>
             <div className="flex flex-wrap gap-2">
               {FRAME_PHRASES.map((p) => (
@@ -459,6 +471,23 @@ function FrameGroup({ design, onChange, value }: GroupProps) {
           ))}
         </div>
       </Section>
+    </>
+  );
+}
+
+/** Design 1.16: text in the code sits on a plate in the middle; past CENTER_TEXT_MAX it is shortened, and says so. */
+function InsideNote({ text }: { text: string }) {
+  const tc = useTranslations("editor.captionGroup");
+  const inside = centerTextLabel(text);
+  return (
+    <>
+      <p className="-mt-3 text-caption text-muted-foreground">{tc("insideHint")}</p>
+      {inside.shortened ? (
+        <p role="status" className="-mt-3 flex items-start gap-1.5 text-caption font-medium text-warning">
+          <CircleAlertIcon aria-hidden className="mt-0.5 size-3.5 shrink-0" />
+          {tc("insideShortened", { max: CENTER_TEXT_MAX, shown: inside.label })}
+        </p>
+      ) : null}
     </>
   );
 }
@@ -1054,7 +1083,6 @@ function CaptionGroup({
         </Button>
       </div>
     );
-  const inside = centerTextLabel(design.caption);
   const captionColor = (design.captionColor ?? design.fg).toUpperCase();
   return (
     <>
@@ -1080,18 +1108,16 @@ function CaptionGroup({
           <Segmented
             label={tc("position")}
             value={design.captionPosition ?? "below"}
-            options={CAPTION_POSITIONS.map((p) => ({ value: p, label: tc(`positions.${p}`) }))}
+            options={CAPTION_POSITIONS.map((p) => ({
+              value: p,
+              // The horizontal card's caption sits beside the code: right of it, or left of it (design 1.16).
+              label: tc(design.preset === "horizontal" && p !== "inside" ? `positionsHorizontal.${p}` : `positions.${p}`),
+            }))}
             onChange={(captionPosition) => onChange({ captionPosition })}
           />
         </div>
       </div>
-      {design.captionPosition === "inside" ? <p className="-mt-3 text-caption text-muted-foreground">{tc("insideHint")}</p> : null}
-      {design.captionPosition === "inside" && inside.shortened ? (
-        <p role="status" className="-mt-3 flex items-start gap-1.5 text-caption font-medium text-warning">
-          <CircleAlertIcon aria-hidden className="mt-0.5 size-3.5 shrink-0" />
-          {tc("insideShortened", { max: CENTER_TEXT_MAX, shown: inside.label })}
-        </p>
-      ) : null}
+      {design.captionPosition === "inside" ? <InsideNote text={design.caption} /> : null}
       <button
         type="button"
         onClick={onEditColor}

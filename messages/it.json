@@ -802,7 +802,12 @@
       "preset": "Cornice {frame}, codice {code}, sfondo {bg}",
       "white": "Bianco",
       "graphite": "Grafite",
-      "violetUi": "Viola"
+      "violetUi": "Viola",
+      "position": "Posizione",
+      "positions": {
+        "frame": "Sulla cornice",
+        "inside": "Nel codice"
+      }
     },
     "typeStep": {
       "title": "Cosa deve aprire il tuo codice?",
@@ -1154,8 +1159,8 @@
     "captionGroup": {
       "position": "Posizione",
       "positions": {
-        "below": "Sotto",
-        "above": "Sopra",
+        "below": "Sotto il codice",
+        "above": "Sopra il codice",
         "inside": "Nel codice"
       },
       "insideHint": "Il testo breve si trova su uno sfondo al centro del codice. Se copre troppo, la verifica di lettura ti chiede di accorciarlo.",
@@ -1163,7 +1168,11 @@
       "frameNote": "Il testo della cornice si imposta in Cornice.",
       "toLayout": "Usa QR + didascalia",
       "color": "Colore della didascalia",
-      "insideShortened": "Dentro il codice c’è spazio per {max} caratteri, quindi mostra “{shown}”. Accorcia la didascalia oppure mettila sotto o sopra il codice."
+      "insideShortened": "Dentro il codice c’è spazio per {max} caratteri, quindi mostra “{shown}”. Accorcia la didascalia oppure mettila sotto o sopra il codice.",
+      "positionsHorizontal": {
+        "below": "A destra del codice",
+        "above": "A sinistra del codice"
+      }
     },
     "stage": {
       "history": "Cronologia",

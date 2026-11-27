@@ -69,6 +69,7 @@ function settingsFromLayout(layout: Layout): Partial<EditorDesign> {
     ...(hasCaptionBand(preset) && layout.caption.position !== "after"
       ? { captionPosition: layout.caption.position === "before" ? ("above" as const) : ("inside" as const) }
       : {}),
+    ...(preset === "frame" && layout.caption.position === "center" ? { frameTextPosition: "inside" as const } : {}),
     ...(logo?.tile ? { logoTile: true } : {}),
     ...(preset === "frame" && layout.colors.caption !== layout.colors.bg ? { frameTextColor: layout.colors.caption } : {}),
     ...(preset === "caption" && layout.border ? { border: true } : {}),

@@ -806,7 +806,12 @@
       "preset": "Cadre {frame}, code {code}, arrière-plan {bg}",
       "white": "Blanc",
       "graphite": "Graphite",
-      "violetUi": "Violet"
+      "violetUi": "Violet",
+      "position": "Position",
+      "positions": {
+        "frame": "Sur le cadre",
+        "inside": "Dans le code"
+      }
     },
     "typeStep": {
       "title": "Que doit ouvrir votre code ?",
@@ -1158,8 +1163,8 @@
     "captionGroup": {
       "position": "Position",
       "positions": {
-        "below": "En dessous",
-        "above": "Au-dessus",
+        "below": "Sous le code",
+        "above": "Au-dessus du code",
         "inside": "Dans le code"
       },
       "insideHint": "Un texte court s’affiche sur un fond au centre du code. La vérification du scan vous demande de le raccourcir s’il masque trop de surface.",
@@ -1167,7 +1172,11 @@
       "frameNote": "Le texte du cadre se règle dans Cadre.",
       "toLayout": "Utiliser QR + légende",
       "color": "Couleur de la légende",
-      "insideShortened": "Le code a de la place pour {max} caractères, il affiche donc « {shown} ». Raccourcissez la légende ou placez-la en dessous ou au-dessus du code."
+      "insideShortened": "Le code a de la place pour {max} caractères, il affiche donc « {shown} ». Raccourcissez la légende ou placez-la en dessous ou au-dessus du code.",
+      "positionsHorizontal": {
+        "below": "À droite du code",
+        "above": "À gauche du code"
+      }
     },
     "stage": {
       "history": "Historique",
